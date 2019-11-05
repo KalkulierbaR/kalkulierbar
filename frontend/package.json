@@ -5,8 +5,8 @@
   "license": "GPL",
   "scripts": {
     "start": "per-env",
-    "start:prod": "npm run -s serve",
-    "start:dev": "npm run -s dev",
+    "start:production": "npm run -s serve",
+    "start:development": "npm run -s dev",
     "build": "preact build",
     "serve": "preact build && preact serve",
     "dev": "preact watch",
