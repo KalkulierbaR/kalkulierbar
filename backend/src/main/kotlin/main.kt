@@ -13,6 +13,11 @@ fun main(args: Array<String>) {
 
 	val port = 7000
     val app = Javalin.create().start(port)
+	
+	// Catch explicitly thrown exceptions
+	app.exception(KalkulierbarException::class.java) { e, ctx ->
+    	ctx.result(e.message ?: "Unknown exception")
+	}
 
 	// Serve a small overview at the root endpoint listing all active calculus identifiers
     app.get("/") { ctx -> ctx.result("KalkulierbaR API Server\n\nAvailable calculus endpoints:\n${endpoints.map{it.identifier}.joinToString("\n")}") }

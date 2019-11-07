@@ -17,8 +17,8 @@ class ClauseAcceptor: Calculus {
 		// v(,v)* matches arbitrarily long lists of variables, e.g. a,b,!c,d. Let's call that "l"
 		// l(\|l)* matches arbitrarily many lists, e.g. a,b|c,!d,|e
 		// Easy, right?
-		if(!(Regex("/(!)?[a-zA-Z]+(,(!)?[a-zA-Z]+)*(\\|(!)?[a-zA-Z]+(,(!)?[a-zA-Z]+)*)*") matches formula))
-			throw Exception("Invalid input formula format") // This might need an own exception type in the future
+		if(!(Regex("(!)?[a-zA-Z]+(,(!)?[a-zA-Z]+)*(\\|(!)?[a-zA-Z]+(,(!)?[a-zA-Z]+)*)*") matches formula))
+			throw InvalidFormulaFormat("Invalid input formula format. Please adhere to the following format: a,b|!b,c|d,!e,!f with variables in [a-zA-Z]+")
 		
 		var parsed: MutableSet<Set<Pair<String, Boolean>>> = HashSet()
 		val clauses = formula.split("|")
