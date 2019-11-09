@@ -27,6 +27,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
 
 	// Catch explicitly thrown exceptions
 	app.exception(KalkulierbarException::class.java) { e, ctx ->
+		ctx.status(400)
 		ctx.result(e.message ?: "Unknown exception")
 	}
 
@@ -71,4 +72,4 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
 	}
 }
 
-class ApiMisuseException(msg: String) : Exception(msg)
+class ApiMisuseException(msg: String) : KalkulierbarException(msg)
