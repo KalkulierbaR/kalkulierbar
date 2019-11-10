@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.3.50"
     application
     eclipse
+    id("org.jmailen.kotlinter") version "2.1.2"
 }
 
 repositories {
