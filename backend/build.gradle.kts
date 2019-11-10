@@ -3,6 +3,7 @@ plugins {
     application
     eclipse
     id("org.jmailen.kotlinter") version "2.1.2"
+    id("io.gitlab.arturbosch.detekt") version "1.1.1"
 }
 
 repositories {
@@ -24,4 +25,10 @@ eclipse {
     classpath {
         containers("org.jetbrains.kotlin.core.KOTLIN_CONTAINER")
     }
+}
+
+detekt {
+    toolVersion = "1.1.1"
+    input = files("src/main/kotlin")
+    filters = ".*/resources/.*,.*/build/.*"
 }
