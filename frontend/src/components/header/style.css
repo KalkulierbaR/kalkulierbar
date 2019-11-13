@@ -10,6 +10,13 @@
     z-index: 50;
 }
 
+.logo {
+    width: 48px;
+    height: 48px;
+    margin: 4px 0 4px 8px;
+    float: left;
+}
+
 .header h1 {
     float: left;
     margin: 0;
