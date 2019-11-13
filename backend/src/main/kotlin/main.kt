@@ -54,6 +54,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
             val formula = ctx.formParam("formula")
             if (formula == null)
                 throw ApiMisuseException("POST parameter 'formula' needs to be present")
+            ctx.header("Access-Control-Allow-Origin", "*")
             ctx.result(endpoint.parseFormula(formula))
         }
 
@@ -65,6 +66,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
                 throw ApiMisuseException("POST parameter 'state' with state representation needs to be present")
             if (move == null)
                 throw ApiMisuseException("POST parameter 'move' with move representation needs to be present")
+            ctx.header("Access-Control-Allow-Origin", "*")
             ctx.result(endpoint.applyMove(state, move))
         }
 
@@ -73,6 +75,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
             val state = ctx.formParam("state")
             if (state == null)
                 throw ApiMisuseException("POST parameter 'state' with state representation must be present")
+            ctx.header("Access-Control-Allow-Origin", "*")
             ctx.result(if (endpoint.checkClose(state)) "Proof closed" else "Incomplete Proof")
         }
     }
