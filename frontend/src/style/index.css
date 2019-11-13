@@ -1,3 +1,5 @@
+/* General styles applying to all components. They can be overwritten */
+
 html,
 body {
     height: 100%;

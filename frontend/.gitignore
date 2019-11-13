@@ -2,3 +2,5 @@ node_modules
 /build
 /*.log
 *.lock
+package-lock.json
+*.css.d.ts

@@ -9,6 +9,7 @@ if ((module as any).hot) {
     require("preact/debug");
 }
 
+// This is the main App component which handles routing and calls other components
 const App: preact.FunctionalComponent = () => {
     let currentUrl: string;
     const handleRoute = (e: RouterOnChangeArgs) => {
