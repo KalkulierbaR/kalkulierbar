@@ -23,7 +23,11 @@ const App: preact.FunctionalComponent = () => {
         <div id="app">
             <Header />
             <Router onChange={handleRoute}>
-                <Home path="/" calculus="clause" />
+                <Home
+                    path="/"
+                    calculus="clause"
+                    server="http://127.0.0.1:7000"
+                />
             </Router>
         </div>
     );
