@@ -8,17 +8,17 @@
     background: #673ab7;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     z-index: 50;
+    display: flex;
+    align-items: center;
 }
 
 .logo {
     width: 48px;
     height: 48px;
-    margin: 4px 0 4px 8px;
-    float: left;
+    margin: 0 0 0 8px;
 }
 
 .header h1 {
-    float: left;
     margin: 0;
     padding: 0 15px;
     font-size: 24px;
@@ -28,7 +28,6 @@
 }
 
 .header nav {
-    float: right;
     font-size: 100%;
 }
 
