@@ -6,9 +6,25 @@ interface Props {}
 
 // This component is used to display the content of the home subpage
 const Home: preact.FunctionalComponent<Props> = props => {
+    let userInput: string | null = "";
+
+    const onSubmit = (event: Event) => {
+        alert("Submitted form with input: " + userInput);
+        event.preventDefault();
+    }
+
+    const onInput = (event: any) => {
+        const { value } = event.target;
+        userInput = value;
+    }
+
     return (
         <div class={style.home}>
-            <h1>Home</h1>
+            <h3>Bitte gebe eine Klauselmenge ein:</h3>
+            <form onSubmit={onSubmit}>
+                <input type="text" value={userInput} onInput={onInput} />
+                <button type="submit">Submit</button>
+            </form>
         </div>
     );
 };
