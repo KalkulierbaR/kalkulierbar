@@ -4,6 +4,9 @@ import { Route, Router, RouterOnChangeArgs } from "preact-router";
 import Home from "../routes/home";
 import Header from "./header";
 
+// Eventually we will fetch these from the server. For now let's hard code them
+const CALCULI = ["clause"];
+
 if ((module as any).hot) {
     // tslint:disable-next-line:no-var-requires
     require("preact/debug");
@@ -20,7 +23,7 @@ const App: preact.FunctionalComponent = () => {
         <div id="app">
             <Header />
             <Router onChange={handleRoute}>
-                <Route path="/" component={Home} />
+                <Home path="/" calculus="clause" />
             </Router>
         </div>
     );

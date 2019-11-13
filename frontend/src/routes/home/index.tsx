@@ -2,10 +2,12 @@ import { h } from "preact";
 import * as style from "./style.css";
 
 // Interface for properties
-interface Props {}
+interface Props {
+    calculus: string;
+}
 
 // This component is used to display the content of the home subpage
-const Home: preact.FunctionalComponent<Props> = props => {
+const Home: preact.FunctionalComponent<Props> = ({ calculus }) => {
     let userInput: string = "";
 
     const onSubmit = (event: Event) => {
