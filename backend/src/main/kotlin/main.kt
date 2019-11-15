@@ -2,9 +2,9 @@ package main.kotlin
 
 import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
+import kalkulierbar.Calculus
 import kalkulierbar.ClauseAcceptor
 import kalkulierbar.KalkulierbarException
-import main.kotlin.kalkulierbar.Calculus
 
 // List of all active calculi (calculuus?)
 val endpoints: Set<Calculus> = setOf<Calculus>(ClauseAcceptor())

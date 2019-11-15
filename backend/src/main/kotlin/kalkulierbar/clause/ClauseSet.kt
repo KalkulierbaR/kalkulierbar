@@ -1,10 +1,6 @@
-package main.kotlin.kalkulierbar.clause
+package kalkulierbar.clause
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-
-val json = Json(JsonConfiguration.Stable)
 
 @Serializable
 class ClauseSet(private var clauses: MutableSet<Clause> = HashSet()) {

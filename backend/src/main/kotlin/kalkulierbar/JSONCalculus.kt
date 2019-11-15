@@ -1,13 +1,8 @@
 package kalkulierbar
 
-import main.kotlin.kalkulierbar.Calculus
-
 /**
- * Calculus Interface
- *
- * Defines the basic methods each implementing calculus must provide to work with the common API
- *
- * @property identifier Unique (!) name or shorthand of the calculus, used as the API endpoint (i.e. /identifier/parse etc)
+ * Framework for Calculus implementations using JSON for serialization
+ * Handles serialization and deserialization, letting implementing classes work directly on state
  */
 abstract class JSONCalculus<State> : Calculus {
 
@@ -19,6 +14,11 @@ abstract class JSONCalculus<State> : Calculus {
      */
     override fun parseFormula(formula: String) = stateToJson(parseFormulaToState(formula))
 
+    /**
+     * Parses a formula provided as text into an internal state
+     * @param formula logic formula in some given format
+     * @return parsed state object
+     */
     abstract fun parseFormulaToState(formula: String): State
 
     /**
@@ -28,8 +28,15 @@ abstract class JSONCalculus<State> : Calculus {
      * @param move move to apply in the given state
      * @return state representation after move was applied
      */
-    override fun applyMove(json: String, move: String) = stateToJson(applyMoveOnState(jsonToState(json), move))
+    override fun applyMove(state: String, move: String) = stateToJson(applyMoveOnState(jsonToState(state), move))
 
+    /**
+     * Takes in a state object and a move and applies the move to the state if possible
+     * Throws an exception explaining why the move is illegal otherwise
+     * @param state current state object
+     * @param move move to apply in the given state
+     * @return state after the move was applied
+     */
     abstract fun applyMoveOnState(state: State, move: String): State
 
     /**
@@ -37,11 +44,26 @@ abstract class JSONCalculus<State> : Calculus {
      * @param state state representation to validate
      * @return true if the given proof is closed and valid, false otherwise
      */
-    override fun checkClose(json: String) = checkCloseOnState(jsonToState(json))
+    override fun checkClose(state: String) = checkCloseOnState(jsonToState(state))
 
+    /**
+     * Checks if a given state represents a valid, closed proof.
+     * @param state state object to validate
+     * @return true if the given proof is closed and valid, false otherwise
+     */
     abstract fun checkCloseOnState(state: State): Boolean
 
+    /**
+     * Parses a JSON state representation into a State object
+     * @param json JSON state representation
+     * @return parsed state object
+     */
     abstract fun jsonToState(json: String): State
 
+    /**
+     * Serializes a state object to JSON
+     * @param state State object
+     * @return JSON state representation
+     */
     abstract fun stateToJson(state: State): String
 }
