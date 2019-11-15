@@ -46,11 +46,11 @@ class ClauseAcceptor : JSONCalculus<ClauseSet>() {
 
     @kotlinx.serialization.UnstableDefault
     override fun jsonToState(json: String): ClauseSet {
-        return Json.plain.parse(ClauseSet.serializer(), json)
+        return Json.parse(ClauseSet.serializer(), json)
     }
 
     @kotlinx.serialization.UnstableDefault
     override fun stateToJson(state: ClauseSet): String {
-        return Json.plain.stringify(ClauseSet.serializer(), state)
+        return Json.stringify(ClauseSet.serializer(), state)
     }
 }
