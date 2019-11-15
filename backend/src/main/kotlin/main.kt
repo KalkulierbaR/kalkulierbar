@@ -39,6 +39,11 @@ fun httpApi(port: Int, endpoints: Set<CalculusJSON>) {
         ctx.result(e.message ?: "Unknown exception")
     }
 
+    // Add CORS headers for every request
+    app.before { ctx ->
+        ctx.header("Access-Control-Allow-Origin", "*")
+    }
+
     // Serve a small overview at the root endpoint listing all active calculus identifiers
     app.get("/") { ctx ->
         val ids = endpoints.map { it.identifier }
@@ -59,9 +64,7 @@ fun httpApi(port: Int, endpoints: Set<CalculusJSON>) {
             val formula = ctx.formParam("formula")
             if (formula == null)
                 throw ApiMisuseException("POST parameter 'formula' needs to be present")
-            ctx.header("Access-Control-Allow-Origin", "*")
-            val result = endpoint.parseFormulaToJSON(formula)
-            ctx.result(result)
+            ctx.result(endpoint.parseFormula(formula))
         }
 
         // Move endpoint takes state and move parameter values and passes them to calculus implementation
@@ -72,9 +75,7 @@ fun httpApi(port: Int, endpoints: Set<CalculusJSON>) {
                 throw ApiMisuseException("POST parameter 'state' with state representation needs to be present")
             if (move == null)
                 throw ApiMisuseException("POST parameter 'move' with move representation needs to be present")
-            ctx.header("Access-Control-Allow-Origin", "*")
-            val result = endpoint.applyMove(state, move)
-            ctx.result(result)
+            ctx.result(endpoint.applyMove(state, move))
         }
 
         // Close endpoint takes state parameter value and passes it to calculus implementation
@@ -82,7 +83,6 @@ fun httpApi(port: Int, endpoints: Set<CalculusJSON>) {
             val state = ctx.formParam("state")
             if (state == null)
                 throw ApiMisuseException("POST parameter 'state' with state representation must be present")
-            ctx.header("Access-Control-Allow-Origin", "*")
             ctx.result(if (endpoint.checkClose(state)) "Proof closed" else "Incomplete Proof")
         }
     }
