@@ -3,6 +3,7 @@ package kalkulierbar
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.ClauseSetParser
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonDecodingException
 
 class ClauseAcceptor : JSONCalculus<ClauseSet>() {
     override val identifier = "clause"
@@ -46,7 +47,11 @@ class ClauseAcceptor : JSONCalculus<ClauseSet>() {
 
     @kotlinx.serialization.UnstableDefault
     override fun jsonToState(json: String): ClauseSet {
-        return Json.parse(ClauseSet.serializer(), json)
+        try {
+            return Json.parse(ClauseSet.serializer(), json)
+        } catch (e: JsonDecodingException) {
+            throw JsonParseException(e.message ?: "JSON couldn't be parsed")
+        }
     }
 
     @kotlinx.serialization.UnstableDefault
