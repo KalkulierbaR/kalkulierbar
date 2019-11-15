@@ -1,4 +1,4 @@
-package main.kotlin.kalkulierbar
+package kalkulierbar
 
 /**
  * Calculus Interface

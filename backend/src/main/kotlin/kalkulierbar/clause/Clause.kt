@@ -1,4 +1,4 @@
-package main.kotlin.kalkulierbar.clause
+package kalkulierbar.clause
 
 import kotlinx.serialization.Serializable
 
