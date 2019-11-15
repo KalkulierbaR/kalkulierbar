@@ -2,14 +2,13 @@ package kalkulierbar
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import main.kotlin.kalkulierbar.JSONSerializable
-import main.kotlin.kalkulierbar.clause.ClauseSet
-import main.kotlin.kalkulierbar.clause.Clause
 import main.kotlin.kalkulierbar.clause.Atom
+import main.kotlin.kalkulierbar.clause.Clause
+import main.kotlin.kalkulierbar.clause.ClauseSet
 
-val json = Json(JsonConfiguration.Stable)
+val jsonSerialize = Json(JsonConfiguration.Stable)
 
-class ClauseAcceptor : Calculus<ClauseSet>() {
+class ClauseAcceptor : JSONCalculus<ClauseSet>() {
     override val identifier = "clause"
 
     /**
@@ -18,7 +17,7 @@ class ClauseAcceptor : Calculus<ClauseSet>() {
 	 * @param formula set of clauses of logical variables, format: a,b;!b,c;d,!e,!f where variables are [a-zA-Z]+
 	 * @return serialized state representation of the input formula
 	 */
-    override fun parseFormula(formula: String): ClauseSet {
+    override fun parseFormulaToState(formula: String): ClauseSet {
 
         // Yes, I know, regex
         // The code could technically deal with weirder variable names, but let's keep things simple here
@@ -39,16 +38,19 @@ class ClauseAcceptor : Calculus<ClauseSet>() {
             for (member in members) {
                 // Check if the member variable is negated and set a boolean flag accordingly
                 // true -> positive variable / false -> negated variable
+                val atom: Atom
+
                 if (member[0] == '!')
-                    parsedClause.add(Atom(member.substring(1), true))
+                    atom = Atom(member.substring(1), true)
                 else
-                    parsedClause.add(Atom(member))
+                    atom = Atom(member)
+
+                parsedClause.add(atom)
             }
 
             parsed.add(parsedClause)
         }
 
-        // Just return default serialization for now
         return parsed
     }
 
@@ -58,8 +60,8 @@ class ClauseAcceptor : Calculus<ClauseSet>() {
 	 * @param move move representation, has no effect
 	 * @return unchanged state representation
 	 */
-    override fun applyMove(state: ClauseSet, move: String): ClauseSet {
-        return ClauseSet()
+    override fun applyMoveOnState(state: ClauseSet, move: String): ClauseSet {
+        return state
     }
 
     /**
@@ -67,7 +69,7 @@ class ClauseAcceptor : Calculus<ClauseSet>() {
 	 * @param state state representation, has no effect
 	 * @return true
 	 */
-    override fun checkClose(state: ClauseSet): Boolean {
+    override fun checkCloseOnState(state: ClauseSet): Boolean {
         return true
     }
 
@@ -82,7 +84,11 @@ class ClauseAcceptor : Calculus<ClauseSet>() {
         return doc
     }
 
-    override fun fromJSON(state: String): ClauseSet {
-        return json.parse(ClauseSet.serializer(), state)
+    override fun jsonToState(json: String): ClauseSet {
+        return jsonSerialize.parse(ClauseSet.serializer(), json)
+    }
+
+    override fun stateToJson(state: ClauseSet): String {
+        return jsonSerialize.stringify(ClauseSet.serializer(), state)
     }
 }

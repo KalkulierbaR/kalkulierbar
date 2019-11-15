@@ -1,4 +1,6 @@
-package main.kotlin.kalkulierbar
+package kalkulierbar
+
+import main.kotlin.kalkulierbar.Calculus
 
 /**
  * Calculus Interface
@@ -7,8 +9,7 @@ package main.kotlin.kalkulierbar
  *
  * @property identifier Unique (!) name or shorthand of the calculus, used as the API endpoint (i.e. /identifier/parse etc)
  */
-interface Calculus {
-    val identifier: String
+abstract class JSONCalculus<State> : Calculus {
 
     /**
      * Parses a formula provided as text into a state representation
@@ -16,7 +17,9 @@ interface Calculus {
      * @param formula logic formula in some given format
      * @return complete state representation of the input formula
      */
-    fun parseFormula(formula: String): String
+    override fun parseFormula(formula: String) = stateToJson(parseFormulaToState(formula))
+
+    abstract fun parseFormulaToState(formula: String): State
 
     /**
      * Takes in a state representation and a move and applies the move on the state if possible.
@@ -25,20 +28,20 @@ interface Calculus {
      * @param move move to apply in the given state
      * @return state representation after move was applied
      */
-    fun applyMove(state: String, move: String): String
+    override fun applyMove(json: String, move: String) = stateToJson(applyMoveOnState(jsonToState(json), move))
+
+    abstract fun applyMoveOnState(state: State, move: String): State
 
     /**
      * Checks if a given state represents a valid, closed proof.
      * @param state state representation to validate
      * @return true if the given proof is closed and valid, false otherwise
      */
-    fun checkClose(state: String): Boolean
+    override fun checkClose(json: String) = checkCloseOnState(jsonToState(json))
 
-    /**
-     * Provides some API documentation regarding formats used for inputs and outputs, implementation specific
-     * @return plaintext API documentation
-     */
-    fun getDocumentation(): String {
-        return "[no documentation available for this calculus]"
-    }
+    abstract fun checkCloseOnState(state: State): Boolean
+
+    abstract fun jsonToState(json: String): State
+
+    abstract fun stateToJson(state: State): String
 }
