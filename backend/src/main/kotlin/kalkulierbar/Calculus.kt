@@ -5,7 +5,8 @@ package kalkulierbar
  *
  * Defines the basic methods each implementing calculus must provide to work with the common API
  *
- * @property identifier Unique (!) name or shorthand of the calculus, used as the API endpoint (i.e. /identifier/parse etc)
+ * @property identifier Unique (!) name or shorthand of the calculus,
+ * used as the API endpoint (i.e. /identifier/parse etc)
  */
 interface Calculus {
     val identifier: String

@@ -9,6 +9,7 @@ import kalkulierbar.KalkulierbarException
 // List of all active calculi (calculuus?)
 val endpoints: Set<Calculus> = setOf<Calculus>(ClauseAcceptor())
 
+@Suppress("MagicNumber")
 fun main(args: Array<String>) {
 
     // Verify that all calculus implementations have unique names
@@ -23,7 +24,7 @@ fun main(args: Array<String>) {
 /**
  * Starts a Javalin Server and creates API methods for active calculus objects
  */
-@Suppress("ThrowsCount")
+@Suppress("ThrowsCount", "MagicNumber")
 fun httpApi(port: Int, endpoints: Set<Calculus>) {
 
     val app = Javalin.create().start(port)
@@ -42,7 +43,10 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
     // Serve a small overview at the root endpoint listing all active calculus identifiers
     app.get("/") { ctx ->
         val ids = endpoints.map { it.identifier }
-        ctx.result("KalkulierbaR API Server\n\nAvailable calculus endpoints:\n${ids.joinToString("\n")}")
+        ctx.result("""KalkulierbaR API Server
+            
+            Available calculus endpoints:
+            ${ids.joinToString("\n")}""".trimMargin().trimIndent())
     }
 
     // Create API methods for each calculus
@@ -51,7 +55,11 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
 
         // Small documentation at the main calculus endpoint
         app.get("/$name") { ctx ->
-            ctx.result("Calculus \"$name\" loaded.\nInteract via the /parse /move and /close endpoints\n\nCalculus Documentation:\n\n${endpoint.getDocumentation()}")
+            ctx.result("""Calculus "$name" loaded.
+                Interact via the /parse /move and /close endpoints
+                
+                Calculus Documentation:
+                ${endpoint.getDocumentation()}""".trimMargin().trimIndent())
         }
 
         // Parse endpoint takes formula parameter and passes it to calculus implementation
