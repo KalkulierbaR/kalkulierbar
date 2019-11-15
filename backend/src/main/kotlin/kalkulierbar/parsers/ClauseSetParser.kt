@@ -5,24 +5,24 @@ import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 
-class ClauseSetParser() {
+class ClauseSetParser {
 
     companion object Companion {
 
         /**
-	 * Parses a set of clauses from text into a ClauseSet using default clause and atom separators
-	 * @param formula set of clauses of logical variables, format: a,b;!b,c;d,!e,!f where variables are [a-zA-Z]+
-	 * @return ClauseSet representing the input formula
-	 */
+         * Parses a set of clauses from text into a ClauseSet using default clause and atom separators
+         * @param formula set of clauses of logical variables, format: a,b;!b,c;d,!e,!f where variables are [a-zA-Z]+
+         * @return ClauseSet representing the input formula
+         */
         fun parse(formula: String) = parseGeneric(formula, ";", ",")
 
         /**
-	 * Parses a set of clauses from text into a ClauseSet with flexible separators
-	 * @param formula set of clauses of logical variables in textual form
-	 * @param clauseSeparator string separating clauses from each other, e.g. ";"
-	 * @param atomSeparator string separating atoms (variables) from each other, e.g. ","
-	 * @return ClauseSet representing the input formula
-	 */
+         * Parses a set of clauses from text into a ClauseSet with flexible separators
+         * @param formula set of clauses of logical variables in textual form
+         * @param clauseSeparator string separating clauses from each other, e.g. ";"
+         * @param atomSeparator string separating atoms (variables) from each other, e.g. ","
+         * @return ClauseSet representing the input formula
+         */
         fun parseGeneric(formula: String, clauseSeparator: String, atomSeparator: String): ClauseSet {
             // Yes, I know, regex
             // The code could technically deal with weirder variable names, but let's keep things simple here
@@ -37,7 +37,9 @@ class ClauseSetParser() {
             val formatExample = "a${aSep}b$cSep!b${aSep}c${cSep}d$aSep!e$aSep!f"
 
             if (!(Regex(formulaFormat) matches formula))
-                throw InvalidFormulaFormat("Invalid input formula format. Please adhere to the following format: $formatExample with variables in [a-zA-Z]+")
+                throw InvalidFormulaFormat("""Invalid input formula format. 
+                    Please adhere to the following format: $formatExample with variables in [a-zA-Z]+"""
+                        .trimMargin().trimIndent())
 
             val parsed = ClauseSet()
             val clauses = formula.split(clauseSeparator)
