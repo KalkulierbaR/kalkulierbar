@@ -4,12 +4,10 @@ import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.ClauseAcceptor
 import kalkulierbar.KalkulierbarException
-import kotlinx.serialization.json.*
-import main.kotlin.kalkulierbar.CalculusJSON
-import main.kotlin.kalkulierbar.clause.ClauseSet
+import main.kotlin.kalkulierbar.Calculus
 
 // List of all active calculi (calculuus?)
-val endpoints: Set<CalculusJSON> = setOf<CalculusJSON>(ClauseAcceptor())
+val endpoints: Set<Calculus> = setOf<Calculus>(ClauseAcceptor())
 
 fun main(args: Array<String>) {
 
@@ -26,12 +24,9 @@ fun main(args: Array<String>) {
  * Starts a Javalin Server and creates API methods for active calculus objects
  */
 @Suppress("ThrowsCount")
-fun httpApi(port: Int, endpoints: Set<CalculusJSON>) {
+fun httpApi(port: Int, endpoints: Set<Calculus>) {
 
     val app = Javalin.create().start(port)
-
-    val json = Json(JsonConfiguration.Stable)
-    val clauseSetSerializer = ClauseSet.serializer()
 
     // Catch explicitly thrown exceptions
     app.exception(KalkulierbarException::class.java) { e, ctx ->
