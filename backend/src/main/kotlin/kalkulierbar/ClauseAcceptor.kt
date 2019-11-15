@@ -1,6 +1,15 @@
 package kalkulierbar
 
-class ClauseAcceptor : Calculus {
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import main.kotlin.kalkulierbar.JSONSerializable
+import main.kotlin.kalkulierbar.clause.ClauseSet
+import main.kotlin.kalkulierbar.clause.Clause
+import main.kotlin.kalkulierbar.clause.Atom
+
+val json = Json(JsonConfiguration.Stable)
+
+class ClauseAcceptor : Calculus<ClauseSet>() {
     override val identifier = "clause"
 
     /**
@@ -9,7 +18,7 @@ class ClauseAcceptor : Calculus {
 	 * @param formula set of clauses of logical variables, format: a,b;!b,c;d,!e,!f where variables are [a-zA-Z]+
 	 * @return serialized state representation of the input formula
 	 */
-    override fun parseFormula(formula: String): String {
+    override fun parseFormula(formula: String): ClauseSet {
 
         // Yes, I know, regex
         // The code could technically deal with weirder variable names, but let's keep things simple here
@@ -20,27 +29,27 @@ class ClauseAcceptor : Calculus {
         if (!(Regex("(!)?[a-zA-Z]+(,(!)?[a-zA-Z]+)*(;(!)?[a-zA-Z]+(,(!)?[a-zA-Z]+)*)*") matches formula))
             throw InvalidFormulaFormat("Invalid input formula format. Please adhere to the following format: a,b;!b,c;d,!e,!f with variables in [a-zA-Z]+")
 
-        var parsed: MutableSet<Set<Pair<String, Boolean>>> = HashSet()
+        val parsed = ClauseSet()
         val clauses = formula.split(";")
 
         for (clause in clauses) {
             val members = clause.split(",")
-            val parsedClause: MutableSet<Pair<String, Boolean>> = HashSet()
+            val parsedClause = Clause()
 
             for (member in members) {
                 // Check if the member variable is negated and set a boolean flag accordingly
                 // true -> positive variable / false -> negated variable
                 if (member[0] == '!')
-                    parsedClause.add(Pair(member.substring(1), false))
+                    parsedClause.add(Atom(member.substring(1), true))
                 else
-                    parsedClause.add(Pair(member, true))
+                    parsedClause.add(Atom(member))
             }
 
             parsed.add(parsedClause)
         }
 
         // Just return default serialization for now
-        return parsed.toString()
+        return parsed
     }
 
     /**
@@ -49,8 +58,8 @@ class ClauseAcceptor : Calculus {
 	 * @param move move representation, has no effect
 	 * @return unchanged state representation
 	 */
-    override fun applyMove(state: String, move: String): String {
-        return state
+    override fun applyMove(state: ClauseSet, move: String): ClauseSet {
+        return ClauseSet()
     }
 
     /**
@@ -58,7 +67,7 @@ class ClauseAcceptor : Calculus {
 	 * @param state state representation, has no effect
 	 * @return true
 	 */
-    override fun checkClose(state: String): Boolean {
+    override fun checkClose(state: ClauseSet): Boolean {
         return true
     }
 
@@ -71,5 +80,9 @@ class ClauseAcceptor : Calculus {
                 "move and close endpoints are non-functional, parse endpoint takes a set of clauses" +
                 "(format: a,b;!a,c;d for (a v b) ^ (!a v c) ^ (d)) and returns a state representation"
         return doc
+    }
+
+    override fun fromJSON(state: String): ClauseSet {
+        return json.parse(ClauseSet.serializer(), state)
     }
 }

@@ -8,6 +8,19 @@ interface Props {
     server: string;
 }
 
+interface Atom {
+    lit: string;
+    negated: boolean;
+}
+
+interface Clause {
+    atoms: Atom[];
+}
+
+interface ClauseSet {
+    clauses: Clause[];
+}
+
 const normalizeInput = (input: string) => {
     input = input.replace(/\n+/g, "\n");
     input = input.replace(/\n/g, ";");
@@ -30,8 +43,16 @@ const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
             method: "POST",
             body: `formula=${normalizeInput(userInput)}`
         });
-        const parsed = await response.text();
-        console.log(parsed);
+        const parsed = (await response.json()) as ClauseSet;
+        const output = parsed.clauses
+            .map(
+                c =>
+                    `{${c.atoms
+                        .map(a => (a.negated ? `!${a.lit}` : a.lit))
+                        .join(", ")}}`
+            )
+            .join(", ");
+        console.log(output);
     };
 
     const onInput = ({ target }: Event) => {
