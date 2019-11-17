@@ -5,9 +5,10 @@ import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.ClauseAcceptor
 import kalkulierbar.KalkulierbarException
+import kalkulierbar.PropositionalAcceptor
 
 // List of all active calculi (calculuus?)
-val endpoints: Set<Calculus> = setOf<Calculus>(ClauseAcceptor())
+val endpoints: Set<Calculus> = setOf<Calculus>(ClauseAcceptor(), PropositionalAcceptor())
 
 @Suppress("MagicNumber")
 fun main(args: Array<String>) {
