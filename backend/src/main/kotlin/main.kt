@@ -43,10 +43,8 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
     // Serve a small overview at the root endpoint listing all active calculus identifiers
     app.get("/") { ctx ->
         val ids = endpoints.map { it.identifier }
-        ctx.result("""KalkulierbaR API Server
-            
-            Available calculus endpoints:
-            ${ids.joinToString("\n")}""".trimMargin().trimIndent())
+        ctx.result("KalkulierbaR API Server\n\n" +
+            "Available calculus endpoints:\n${ids.joinToString("\n")}")
     }
 
     // Create API methods for each calculus
@@ -55,11 +53,9 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
 
         // Small documentation at the main calculus endpoint
         app.get("/$name") { ctx ->
-            ctx.result("""Calculus "$name" loaded.
-                Interact via the /parse /move and /close endpoints
-                
-                Calculus Documentation:
-                ${endpoint.getDocumentation()}""".trimMargin().trimIndent())
+            ctx.result("Calculus "$name" loaded.\n" +
+                "Interact via the /parse /move and /close endpoints\n\n" +
+                "Calculus Documentation:\n${endpoint.getDocumentation()}")
         }
 
         // Parse endpoint takes formula parameter and passes it to calculus implementation
