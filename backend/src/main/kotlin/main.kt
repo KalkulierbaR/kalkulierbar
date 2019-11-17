@@ -53,7 +53,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>) {
 
         // Small documentation at the main calculus endpoint
         app.get("/$name") { ctx ->
-            ctx.result("Calculus "$name" loaded.\n" +
+            ctx.result("Calculus \"$name\" loaded.\n" +
                 "Interact via the /parse /move and /close endpoints\n\n" +
                 "Calculus Documentation:\n${endpoint.getDocumentation()}")
         }
