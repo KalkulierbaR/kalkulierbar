@@ -21,6 +21,10 @@
     opacity: 0.8;
 }
 
+.send[disabled] {
+    opacity: 0.6;
+}
+
 textarea {
     border: 1px solid lightgray;
     resize: none;
