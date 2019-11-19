@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { useState } from "preact/hooks";
 import * as style from "./style.css";
 
 // Interface for properties
@@ -7,9 +8,17 @@ interface Props {
     server: string;
 }
 
+const normalizeInput = (input: string) => {
+    input = input.replace(/\n+/g, "\n");
+    input = input.replace(/\n/g, ";");
+    input = input.replace(/\s/g, "");
+    console.log(input);
+    return input;
+};
+
 // This component is used to display the content of the home subpage
 const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
-    let userInput: string = "";
+    const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
 
     const onSubmit = async (event: Event) => {
@@ -19,7 +28,7 @@ const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
                 "Content-Type": "text/plain"
             },
             method: "POST",
-            body: `formula=${userInput}`
+            body: `formula=${normalizeInput(userInput)}`
         });
         const parsed = await response.text();
         console.log(parsed);
@@ -27,20 +36,28 @@ const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
 
     const onInput = ({ target }: Event) => {
         const { value } = target as HTMLInputElement;
-        userInput = value;
+        setUserInput(value);
     };
-
+    const onKeyDown = (e: KeyboardEvent) => {
+        if (e.keyCode === 13 && !e.ctrlKey) {
+            e.stopPropagation();
+        }
+        if (e.keyCode === 13 && e.ctrlKey) {
+            onSubmit(e);
+        }
+    };
     return (
         <div class={style.home}>
             <h3>Bitte gebe eine Klauselmenge ein:</h3>
-            <form onSubmit={onSubmit}>
-                <input
-                    name="formula"
-                    type="text"
-                    value={userInput}
-                    onInput={onInput}
-                />
-                <button type="submit">Submit</button>
+            <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
+                <textarea name="formula" value={userInput} onInput={onInput} />
+                <button
+                    class={style.send}
+                    type="submit"
+                    disabled={userInput.length === 0}
+                >
+                    Submit
+                </button>
             </form>
         </div>
     );
