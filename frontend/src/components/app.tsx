@@ -9,6 +9,11 @@ const CALCULI = ["clause"];
 
 const SERVER = "http://127.0.0.1:7000";
 
+/**
+ * Check if server is online 
+ * @param {string} url - The url to send a request to
+ * @returns {Promise} - Promise that resolves when check is done
+ */ 
 async function checkServer(url: string) {
     try {
         await fetch(url);
@@ -19,6 +24,7 @@ async function checkServer(url: string) {
 
 checkServer(SERVER);
 
+// Used for debugging with Yarn
 if ((module as any).hot) {
     // tslint:disable-next-line:no-var-requires
     require("preact/debug");
