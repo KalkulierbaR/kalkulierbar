@@ -1,7 +1,6 @@
 import { h } from "preact";
 import { Route, Router, RouterOnChangeArgs } from "preact-router";
 
-import { async } from "q";
 import Home from "../routes/home";
 import Header from "./header";
 
