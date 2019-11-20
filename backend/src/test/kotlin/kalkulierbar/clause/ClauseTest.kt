@@ -1,8 +1,9 @@
 package kalkulierbar.clause
 
+import kalkulierbar.ClauseAcceptor
+import kalkulierbar.InvalidFormulaFormat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import kalkulierbar.*
 
 /**
  * ClauseAcceptor Test Class
