@@ -44,7 +44,7 @@ const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
     };
 
     const onInput = ({ target }: Event) => {
-        const { value } = target as HTMLInputElement;
+        const { value } = target as HTMLTextAreaElement;
         setUserInput(value);
     };
 
@@ -53,7 +53,7 @@ const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
         if (e.keyCode === 13 && !e.ctrlKey) {
             e.stopPropagation();
         }
-        // Trigger submit when using ctryKey
+        // Trigger submit when using ctrlKey
         // TODO: This should be done via event, don't know why it doesn't work
         if (e.keyCode === 13 && e.ctrlKey) {
             onSubmit(e);
