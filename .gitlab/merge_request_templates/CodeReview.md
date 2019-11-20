@@ -6,7 +6,7 @@ title: Code Review
 
 ### Backend
 
-* [ ] Code ist korrekt formatiert
+* [ ] Gradle Build läuft
 
 * [ ] Code ist übersichtlich und intuitiv verständlich
 
@@ -27,6 +27,8 @@ title: Code Review
 
 * [ ] System Tests angemessen erweitert um evtl. neu implementierte Interaktion zu testen
 
+Mögliche Probleme: -  
+
 ### Frontend
 
 * [ ] Code ist korrekt formatiert
@@ -41,6 +43,8 @@ title: Code Review
 
 * [ ] Manuelle Tests sind erfolgreich  
 (Grundlegende Interaktionen auf min. einem Desktop- und einem Mobilgerät testen)
+
+Mögliche Probleme: -  
 
 ### Third Party Library
 
