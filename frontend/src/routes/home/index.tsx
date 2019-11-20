@@ -26,6 +26,7 @@ const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
     const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
 
+    // Handle Submit event
     const onSubmit = async (event: Event) => {
         event.preventDefault();
         try {
@@ -42,12 +43,14 @@ const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
             console.error(e);
         }
     };
-
+    
+    // Handle Input event
     const onInput = ({ target }: Event) => {
         const { value } = target as HTMLInputElement;
         setUserInput(value);
     };
 
+    // Handle KeyDown event
     const onKeyDown = (e: KeyboardEvent) => {
         // Prevent submit when hitting enter
         if (e.keyCode === 13 && !e.ctrlKey) {
