@@ -28,15 +28,19 @@ const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
 
     const onSubmit = async (event: Event) => {
         event.preventDefault();
-        const response = await fetch(url, {
-            headers: {
-                "Content-Type": "text/plain"
-            },
-            method: "POST",
-            body: `formula=${normalizeInput(userInput)}`
-        });
-        const parsed = await response.text();
-        console.log(parsed);
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+                method: "POST",
+                body: `formula=${normalizeInput(userInput)}`
+            });
+            const parsed = await response.text();
+            console.log(parsed);
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     const onInput = ({ target }: Event) => {
