@@ -3,7 +3,7 @@ package kalkulierbar.clause
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Clause(private var atoms: MutableSet<Atom> = HashSet()) {
+class Clause(private var atoms: MutableList<Atom> = mutableListOf()) {
     fun add(a: Atom) {
         atoms.add(a)
     }

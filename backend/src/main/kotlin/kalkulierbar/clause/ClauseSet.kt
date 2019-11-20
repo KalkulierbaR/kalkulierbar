@@ -3,7 +3,7 @@ package kalkulierbar.clause
 import kotlinx.serialization.Serializable
 
 @Serializable
-class ClauseSet(private var clauses: MutableSet<Clause> = HashSet()) {
+class ClauseSet(private var clauses: MutableList<Clause> = mutableListOf()) {
     fun add(c: Clause) {
         clauses.add(c)
     }
