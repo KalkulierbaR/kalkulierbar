@@ -22,6 +22,8 @@ fun main(args: Array<String>) {
 
 /**
  * Starts a Javalin Server and creates API methods for active calculus objects
+ * @param port Port number to run the local server at
+ * @param endpoints Set of active Calculi to serve
  */
 @Suppress("ThrowsCount")
 fun httpApi(port: Int, endpoints: Set<Calculus>) {
