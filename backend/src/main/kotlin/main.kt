@@ -3,11 +3,10 @@ package main.kotlin
 import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
-import kalkulierbar.ClauseAcceptor
 import kalkulierbar.KalkulierbarException
 
 // List of all active calculi (calculuus?)
-val endpoints: Set<Calculus> = setOf<Calculus>(ClauseAcceptor())
+val endpoints: Set<Calculus> = setOf<Calculus>()
 
 @Suppress("MagicNumber")
 fun main(args: Array<String>) {
