@@ -61,10 +61,10 @@ const Home: preact.FunctionalComponent<Props> = ({ calculus, server }) => {
                 .join(", ");
             console.log(output);
         } catch (e) {
-            cnsole.error(e);
+            console.error(e);
         }
     };
-    
+
     // Handle Input event
     const onInput = ({ target }: Event) => {
         const { value } = target as HTMLTextAreaElement;
