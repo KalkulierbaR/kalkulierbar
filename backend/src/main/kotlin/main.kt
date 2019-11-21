@@ -4,9 +4,10 @@ import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.KalkulierbarException
+import kalkulierbar.PropositionalTableaux
 
 // List of all active calculi (calculuus?)
-val endpoints: Set<Calculus> = setOf<Calculus>()
+val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux())
 
 @Suppress("MagicNumber")
 fun main(args: Array<String>) {
