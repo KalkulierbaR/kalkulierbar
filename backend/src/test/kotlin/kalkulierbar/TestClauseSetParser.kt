@@ -1,7 +1,7 @@
 package kalkulierbar.tests
 
-import kalkulierbar.parsers.ClauseSetParser
 import kalkulierbar.InvalidFormulaFormat
+import kalkulierbar.parsers.ClauseSetParser
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -27,7 +27,7 @@ class TestClauseSetParser {
 
     @Test
     fun testInvalidStrings() {
-        for(tv: String in invalidStrings) {
+        for (tv: String in invalidStrings) {
             Assertions.assertThrows(InvalidFormulaFormat::class.java) {
                 ClauseSetParser.parse(tv)
             }
@@ -36,14 +36,14 @@ class TestClauseSetParser {
 
     @Test
     fun testValidStrings() {
-        for(tv: Pair<String,String> in valid) {
+        for (tv: Pair<String, String> in valid) {
             Assertions.assertEquals(tv.second, ClauseSetParser.parse(tv.first).toString())
         }
     }
 
     @Test
     fun testValidNonGeneric() {
-        for(tv: Pair<String,String> in validNonGeneric) {
+        for (tv: Pair<String, String> in validNonGeneric) {
             Assertions.assertEquals(tv.second, ClauseSetParser.parseGeneric(tv.first, "|", "&").toString())
         }
     }
