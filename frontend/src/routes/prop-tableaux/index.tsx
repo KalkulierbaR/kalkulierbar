@@ -1,5 +1,5 @@
 import { h } from "preact";
-import * as style from "./style.css";
+// import * as style from "./style.css";
 
 import ClauseInput from "../../components/input/clause";
 import { AppStateUpdater } from "../../types/app";

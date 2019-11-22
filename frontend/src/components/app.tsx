@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { Router, RouterOnChangeArgs } from "preact-router";
+import { Router } from "preact-router";
 import { useState } from "preact/hooks";
 
 import Home from "../routes/home";
@@ -8,14 +8,6 @@ import TableauxView from "../routes/prop-tableaux/view";
 import { AppState } from "../types/app";
 import Header from "./header";
 import * as style from "./style.css";
-
-// Eventually we will fetch these from the server. For now let's hard code them
-const CALCULI = [
-    {
-        name: "Tableaux",
-        id: "prop-tableaux"
-    }
-];
 
 const SERVER = "http://127.0.0.1:7000";
 
@@ -44,11 +36,6 @@ if ((module as any).hot) {
 const App: preact.FunctionalComponent = () => {
     const [state, setState] = useState<AppState>({});
 
-    let currentUrl: string;
-    const handleRoute = (e: RouterOnChangeArgs) => {
-        currentUrl = e.url;
-    };
-
     function onChange<K extends keyof AppState>(id: K, newState: AppState[K]) {
         setState(s => ({ ...s, [id]: newState }));
     }
@@ -57,7 +44,7 @@ const App: preact.FunctionalComponent = () => {
         <div id="app">
             <Header />
             <main class={style.main}>
-                <Router onChange={handleRoute}>
+                <Router>
                     <Home path="/" />
 
                     <Tableaux
