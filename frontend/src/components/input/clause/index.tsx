@@ -1,14 +1,14 @@
 import { h } from "preact";
 import { route } from "preact-router";
-import { StateUpdater, useState } from "preact/hooks";
-import { AppState } from "../../../types/app";
+import { useState } from "preact/hooks";
+import { AppState, AppStateUpdater } from "../../../types/app";
 import * as style from "./style.css";
 
 // Interface for properties
 interface Props {
-    calculus: string;
+    calculus: keyof AppState;
     server: string;
-    setState: StateUpdater<AppState>;
+    onChange: AppStateUpdater;
 }
 
 /**
@@ -28,7 +28,7 @@ const normalizeInput = (input: string) => {
 const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
     server,
-    setState
+    onChange
 }) => {
     const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
@@ -45,7 +45,7 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
                 body: `formula=${normalizeInput(userInput)}`
             });
             const parsed = await response.json();
-            setState(s => ({ ...s, [calculus]: parsed }));
+            onChange(calculus, parsed);
             route(`/${calculus}/view`);
         } catch (e) {
             console.error(e);

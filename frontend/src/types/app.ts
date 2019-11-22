@@ -6,3 +6,8 @@ import { TableauxState } from "./tableaux";
 export interface AppState {
     "prop-tableaux"?: TableauxState;
 }
+
+export type AppStateUpdater<K extends keyof AppState = keyof AppState> = (
+    id: K,
+    newState: AppState[K]
+) => void;

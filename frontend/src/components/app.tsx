@@ -49,6 +49,10 @@ const App: preact.FunctionalComponent = () => {
         currentUrl = e.url;
     };
 
+    function onChange<K extends keyof AppState>(id: K, newState: AppState[K]) {
+        setState(s => ({ ...s, [id]: newState }));
+    }
+
     return (
         <div id="app">
             <Header />
@@ -59,11 +63,12 @@ const App: preact.FunctionalComponent = () => {
                     <Tableaux
                         path="/prop-tableaux"
                         server={SERVER}
-                        setState={setState}
+                        onChange={onChange}
                     />
                     <TableauxView
                         path="/prop-tableaux/view"
                         state={state["prop-tableaux"]}
+                        onChange={onChange}
                     />
                 </Router>
             </main>

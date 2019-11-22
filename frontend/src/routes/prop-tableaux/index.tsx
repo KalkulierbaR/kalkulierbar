@@ -1,14 +1,13 @@
 import { h } from "preact";
-import { StateUpdater, useState } from "preact/hooks";
 import * as style from "./style.css";
 
 import ClauseInput from "../../components/input/clause";
-import { AppState } from "../../types/app";
+import { AppStateUpdater } from "../../types/app";
 import { TableauxState } from "../../types/tableaux";
 
 interface Props {
     server: string;
-    setState: StateUpdater<AppState>;
+    onChange: AppStateUpdater<"prop-tableaux">;
 }
 
 const EMPTY_STATE: TableauxState = {
@@ -16,13 +15,13 @@ const EMPTY_STATE: TableauxState = {
     tree: {}
 };
 
-const Tableaux: preact.FunctionalComponent<Props> = ({ server, setState }) => {
+const Tableaux: preact.FunctionalComponent<Props> = ({ server, onChange }) => {
     return (
         <ClauseInput
             path="prop-tableaux/"
             server={server}
             calculus="prop-tableaux"
-            setState={setState}
+            onChange={onChange}
         />
     );
 };
