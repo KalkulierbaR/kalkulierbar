@@ -109,11 +109,11 @@ class TableauxState(val clauseSet: ClauseSet) {
 
 @Serializable
 class TableauxNode(val parent: Int, val spelling: String, val negated: Boolean) {
-    var isLeaf = true
     var isClosed = false
     var closeRef: Int? = null
     val children = mutableListOf<Int>()
-
+    val isLeaf
+        get() = children.size == 0
     /**
      * Pack the node into a well-defined, unambiguous string representation
      * Used to calculate checksums over state objects as JSON representation
