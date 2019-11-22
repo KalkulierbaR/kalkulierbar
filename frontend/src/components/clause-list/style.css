@@ -1,0 +1,11 @@
+.clause-list-item {
+    padding: 8px;
+    cursor: pointer;
+    background-color: #00000000;
+    transition: background-color 0.2s ease-in;
+    margin: 0;
+}
+
+.clause-list-item:hover {
+    background-color: #00000011;
+}
