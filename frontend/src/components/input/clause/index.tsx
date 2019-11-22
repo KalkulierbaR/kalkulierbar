@@ -24,7 +24,7 @@ const normalizeInput = (input: string) => {
     return input;
 };
 
-// This component is used to display the content of the home subpage
+// This component is used to display the content of the home sub page
 const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
     server,
