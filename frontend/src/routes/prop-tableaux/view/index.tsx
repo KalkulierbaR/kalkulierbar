@@ -14,7 +14,8 @@ interface Props {
 const TableauxView: preact.FunctionalComponent<Props> = ({ state }) => {
     // Default state for easy testing
     if (!state) {
-        state = {
+        return <p>Keine Daten vorhanden</p>;
+        /* state = {
             idCounter: 0,
             seal: "",
             clauseSet: {
@@ -43,10 +44,34 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ state }) => {
                     negated: false,
                     isClosed: false,
                     closeRef: null,
+                    children: [1, 3]
+                },
+                {
+                    spelling: "a",
+                    parent: 0,
+                    negated: false,
+                    isClosed: false,
+                    closeRef: null,
+                    children: [2]
+                },
+                {
+                    spelling: "!b",
+                    parent: 1,
+                    negated: false,
+                    isClosed: false,
+                    closeRef: null,
+                    children: []
+                },
+                {
+                    spelling: "c",
+                    parent: 0,
+                    negated: false,
+                    isClosed: false,
+                    closeRef: null,
                     children: []
                 }
             ]
-        };
+        }; */
     }
 
     return (
