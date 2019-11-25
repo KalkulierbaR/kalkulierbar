@@ -69,6 +69,10 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
     }
 }
 
+/**
+ * Class representing a PropositionalTableaux proof
+ * @param clauseSet The clause set to be proven unsatisfiable
+ */
 @Serializable
 class TableauxState(val clauseSet: ClauseSet) {
     var idCounter = 0
@@ -107,6 +111,12 @@ class TableauxState(val clauseSet: ClauseSet) {
     }
 }
 
+/**
+ * Class representing a single node in the proof tree
+ * @param parent ID of the parent node in the proof tree
+ * @param spelling Name of the variable the node represents
+ * @param negated True if the variable is negated, false otherwise
+ */
 @Serializable
 class TableauxNode(val parent: Int, val spelling: String, val negated: Boolean) {
     var isClosed = false
@@ -114,6 +124,7 @@ class TableauxNode(val parent: Int, val spelling: String, val negated: Boolean) 
     val children = mutableListOf<Int>()
     val isLeaf
         get() = children.size == 0
+
     /**
      * Pack the node into a well-defined, unambiguous string representation
      * Used to calculate checksums over state objects as JSON representation
