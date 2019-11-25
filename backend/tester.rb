@@ -88,7 +88,7 @@ end
 class ClauseGenerator
 	def genVar
 		if rand < 0.5
-			length = (2 ** rand(0.0..8.0)).ceil
+			length = (2 ** rand(0.0..4.0)).ceil
 			charset = "abcdefghijklmnopqrstuvqxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split('')
 			(0...length).map{ charset.sample }.join
 		else
@@ -96,35 +96,55 @@ class ClauseGenerator
 		end
 	end
 
-	def genAtom
-		rand() < 0.5 ? "!#{genVar()}" : genVar()
+	def genAtom(clause)
+		res = rand() < 0.5 ? "!#{genVar()}" : genVar()
+		clause.push(res)
+		return res
 	end
 
-	def genDisjunction
+	def genDisjunction(set)
+		clause = []
 		length = (2 ** rand(0.0..4.0)).ceil
-		(0...length).map{ genAtom }.join(',')
+		res = (0...length).map{ genAtom(clause) }.join(',')
+		set.push(clause)
+		return res
 	end
 
-	def genClauseSet
+	def genClauseSet(set = [])
 		length = (2 ** rand(0.0..5.0)).ceil
-		(0...length).map{ genDisjunction }.join(';')
+		(0...length).map{ genDisjunction(set) }.join(';')
 	end
 end
 
-def fuzzClauseAcceptor(trq, count = 200)
+def fuzzClauseParsing(trq, count = 100)
 	logMsg "Fuzzing valid formulas"
 	success = true
 	cg = ClauseGenerator.new
 
 	count.times() {
-		success &= trq.post('/clause/parse', "formula=#{cg.genClauseSet}", /^\{\"clauses\"\:\[.*\]\}$/, 200)
+		clauses = []
+		string = cg.genClauseSet(clauses)
+		success &= trq.post('/prop-tableaux/parse', "formula=#{string}", ->(res){ checkEquiv(JSON.parse(res)['clauseSet']['clauses'], clauses)}, 200)
 	}
 
 	if success
-		logSuccess "Test successful - fuzzed #{count.to_s} requests"
+		logSuccess "Test successful - sent #{count.to_s} requests"
 	else
 		logError "Test failed!"
 	end
+end
+
+def checkEquiv(got, expect)
+	return false unless got.length === expect.length
+	expect.each_with_index { |eClause, i|
+		return false unless eClause.length === got[i]['atoms'].length
+		gClause = got[i]['atoms'].map{ |a| (a['negated'] ? "!" : "") + a['lit']}
+		
+		# Elements in got or expected, but not the intersection of got and expected
+		differring = (eClause | gClause) - (eClause & gClause)
+		return false if differring.length > 0
+	}
+	true
 end
 
 def testInvalidParam(trq)
@@ -133,10 +153,10 @@ def testInvalidParam(trq)
 	formulas = ["", ",", "a,", "a,b;", "a,b;c,", "a,b;c,;e", ",b;c,;e", ";c,;e"]
 	success = true
 
-	success &= trq.post('/clause/parse', "formul=#{cg.genClauseSet}", /parameter.*needs to be present/i, 400)
+	success &= trq.post('/prop-tableaux/parse', "formul=#{cg.genClauseSet()}", /parameter.*needs to be present/i, 400)
 
 	formulas.each { |f|
-		success &= trq.post('/clause/parse', "formula=#{f}", /invalid input formula format/i, 400)
+		success &= trq.post('/prop-tableaux/parse', "formula=#{f}", /invalid input formula format/i, 400)
 	}
 	
 	if success
@@ -146,25 +166,95 @@ def testInvalidParam(trq)
 	end
 end
 
-def testBarelyValidParam(trq)
-	logMsg "Testing valid edge-case formulas"
-	formulas = ["i", "!i", "a;b"]
-
-	expected = [
-		"{\"clauses\":[{\"atoms\":[{\"lit\":\"i\",\"negated\":false}]}]}",
-		"{\"clauses\":[{\"atoms\":[{\"lit\":\"i\",\"negated\":true}]}]}",
-		->(res){ r = JSON.parse(res)['clauses']; valid = r.length == 2; a0 = r[0]['atoms']; a1 = r[1]['atoms']; valid &= a0.length == 1 and a1.length == 1; valid }
-	]
+def testRootNodeCreation(trq, count = 20)
+	logMsg "Testing correct root node creation"
 
 	success = true
+	cg = ClauseGenerator.new
 
-	formulas.each.with_index { |f, i|
-		success &= trq.post('/clause/parse', "formula=#{f}", expected[i])
+	validate = ->(res) {
+		r = JSON.parse(res)
+		valid = (r['idCounter'] === 0 && r['nodes'].length === 1)
+		n = r['nodes'][0]
+		valid &= n['spelling'] === 'true'
+		valid &= !n['isClosed']
+		valid &= !n['negated']
+		valid &= n['parent'] === 0
+		valid &= n['children'].length === 0
+		valid
+	}
+
+	count.times() {
+		string = cg.genClauseSet()
+		success &= trq.post('/prop-tableaux/parse', "formula=#{string}", validate, 200)
 	}
 	
 	if success
-		logSuccess "Test successful - sent #{formulas.length.to_s} requests"
+		logSuccess "Test successful - sent #{count.to_s} requests"
 	else
 		logError "Test failed!"
 	end
 end
+
+def testStateModification(trq, count = 50)
+	logMsg "Testing tamper protection"
+
+	validState = '{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"HY","negated":true}]},{"atoms":[{"lit":"Dm","negated":false},{"lit":"RkIinJe","negated":false}]},{"atoms":[{"lit":"b","negated":false},{"lit":"yiyhdf","negated":true},{"lit":"ncVL","negated":false},{"lit":"b","negated":true},{"lit":"jo","negated":false},{"lit":"c","negated":true},{"lit":"b","negated":true},{"lit":"c","negated":true},{"lit":"a","negated":false},{"lit":"c","negated":true},{"lit":"b","negated":false},{"lit":"d","negated":true},{"lit":"qK","negated":false},{"lit":"WBgVEfNvNDVB","negated":false},{"lit":"Tu","negated":true}]},{"atoms":[{"lit":"c","negated":true},{"lit":"ivEBj","negated":true},{"lit":"pY","negated":true},{"lit":"b","negated":true},{"lit":"b","negated":true},{"lit":"lRtlH","negated":true},{"lit":"b","negated":true},{"lit":"b","negated":true},{"lit":"qfREDoemqpHZZc","negated":false},{"lit":"TeqHfLBAVJIlKj","negated":true},{"lit":"a","negated":false},{"lit":"d","negated":true},{"lit":"nYAHaY","negated":false}]}]},' + 
+		'"idCounter":0,"nodes":[{"parent":0,"spelling":"true","negated":false,"isClosed":false,"closeRef":null,"children":[]}],' +
+		'"seal":"62C78E913380B51D8BE447A16C5C1E983C2CEE06B7B85529DA807C38996EC19D"}'
+
+	parsed = JSON.parse(validState)
+
+	# Test unmodified state
+	success = trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", /Incomplete Proof/, 200)
+
+	count.times() {
+		modified = JSON.parse(validState)
+		modType = rand(1..3)
+		case modType
+		when 1
+			modified['idCounter'] = rand(1..500)
+		when 2
+			tweakNode(modified)
+		when 3
+			tweakClause(modified)
+		end
+
+		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(modified)}", /.*Invalid tamper protection seal.*/, 400)
+	}
+
+	if success
+		logSuccess "Test successful - sent #{(count + 1).to_s} requests"
+	else
+		logError "Test failed!"
+	end
+end
+
+def tweakNode(state)
+	i = rand(0...state['nodes'].length)
+	case rand(1..4)
+	when 1
+		state['nodes'][i]['negated'] = !state['nodes'][i]['negated']
+	when 2
+		state['nodes'][i]['isClosed'] = !state['nodes'][i]['isClosed']
+	when 3
+		state['nodes'][i]['parent'] += rand(1..500)
+	when 4
+		state['nodes'][i]['children'].push(rand(0..500))
+	end
+end
+
+def tweakClause(state)
+	i = rand(0...state['clauseSet']['clauses'].length)
+	j = rand(0...state['clauseSet']['clauses'][i]['atoms'].length)
+	state['clauseSet']['clauses'][i]['atoms'][j]['negated'] = !state['clauseSet']['clauses'][i]['atoms'][j]['negated']
+end
+
+
+trq = TestRequest.new
+
+logMsg("Testing PropositionalTableaux")
+testInvalidParam(trq)
+fuzzClauseParsing(trq)
+testRootNodeCreation(trq)
+testStateModification(trq)
