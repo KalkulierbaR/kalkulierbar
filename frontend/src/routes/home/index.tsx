@@ -4,7 +4,7 @@ import * as style from "./style.css";
 // Interface for properties
 interface Props {}
 
-// This component is used to display the content of the home subpage
+// This component is used to display the content of the home sub page
 const Home: preact.FunctionalComponent<Props> = () => {
     return (
         <div class={style.home}>

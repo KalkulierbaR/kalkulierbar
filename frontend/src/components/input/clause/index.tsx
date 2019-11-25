@@ -6,8 +6,17 @@ import * as style from "./style.css";
 
 // Interface for properties
 interface Props {
+    /**
+     * The calculus to use. Specifies API endpoint
+     */
     calculus: keyof AppState;
+    /**
+     * URL to the server
+     */
     server: string;
+    /**
+     * The function to call, when the state associated with the calculus changed
+     */
     onChange: AppStateUpdater;
 }
 
@@ -24,7 +33,12 @@ const normalizeInput = (input: string) => {
     return input;
 };
 
-// This component is used to display the content of the home sub page
+/*
+ * A component for entering clause sets and sending them to the server.
+ * It also redirects the user after a successful response from the server
+ * to the corresponding view of the calculus
+ *
+ */
 const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
     server,

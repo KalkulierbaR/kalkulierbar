@@ -5,6 +5,9 @@ import { TableauxNode } from "../../types/tableaux";
 import * as style from "./style.css";
 
 interface Props {
+    /**
+     * The nodes of the tree
+     */
     nodes: TableauxNode[];
 }
 
@@ -13,10 +16,19 @@ interface D3Data {
     children?: D3Data[];
 }
 
+// Creates a tree layout function
 const layout = tree();
 
+// Size of the nodes. [width, height]
 const NODE_SIZE: [number, number] = [140, 140];
 
+/**
+ * Transforms the node data received by the server to data
+ * accepted by d3
+ * @param {TableauxNode} node  - the node to transform
+ * @param {TableauxNode[]} nodes  - list of all nodes
+ * @returns {D3Data} - data as d3 parsable
+ */
 const transformNodeToD3Data = (
     node: TableauxNode,
     nodes: TableauxNode[]
@@ -30,6 +42,9 @@ const transformNodeToD3Data = (
     };
 };
 
+/*
+ * A single Node in the tree
+ */
 const TableauxTreeNode: preact.FunctionalComponent<{
     node: HierarchyNode<D3Data>;
 }> = ({ node }) => {
@@ -45,13 +60,18 @@ const TableauxTreeNode: preact.FunctionalComponent<{
     );
 };
 
+/*
+ * Displays nodes as a Tree
+ */
 const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes }) => {
+    // Transform nodes to d3 hierarchy
     const root = hierarchy(transformNodeToD3Data(nodes[0], nodes));
+    // Calculate tree size
     const treeHeight = root.height * NODE_SIZE[1];
     const leaves = root.copy().count().value || 1;
     const treeWidth = leaves * NODE_SIZE[0];
+    // Let d3 calculate our layout
     layout.size([treeWidth, treeHeight]);
-    // layout.nodeSize(NODE_SIZE);
     layout(root);
 
     return (

@@ -12,9 +12,9 @@ interface Props {
 }
 
 const TableauxView: preact.FunctionalComponent<Props> = ({ state }) => {
-    // Default state for easy testing
     if (!state) {
         return <p>Keine Daten vorhanden</p>;
+        // Default state for easy testing
         /* state = {
             idCounter: 0,
             seal: "",

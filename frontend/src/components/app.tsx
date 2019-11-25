@@ -36,6 +36,12 @@ if ((module as any).hot) {
 const App: preact.FunctionalComponent = () => {
     const [state, setState] = useState<AppState>({});
 
+    /**
+     * Updates the state of the given calculus
+     * @param {string} id  - the id of the calculus
+     * @param {any} newState  - new state of the calculus
+     * @returns {void}
+     */
     function onChange<K extends keyof AppState>(id: K, newState: AppState[K]) {
         setState(s => ({ ...s, [id]: newState }));
     }

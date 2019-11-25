@@ -5,6 +5,9 @@ import ClauseInput from "../../components/input/clause";
 import { AppStateUpdater } from "../../types/app";
 
 interface Props {
+    /**
+     * URL of the server
+     */
     server: string;
     onChange: AppStateUpdater<"prop-tableaux">;
 }
