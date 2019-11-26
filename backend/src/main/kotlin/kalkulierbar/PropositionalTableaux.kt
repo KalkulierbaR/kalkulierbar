@@ -36,11 +36,11 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
     override fun applyMoveOnState(state: TableauxState, move: String): TableauxState {
         try {
             val tableauxMove = Json.parse(TableauxMove.serializer(), move)
-            
+
             // Pass expand or close moves to relevant subfunction
-            if(tableauxMove.type == 'c')
+            if (tableauxMove.type == "c")
                 return applyMoveCloseBranch(state, tableauxMove.id1, tableauxMove.id2)
-            else if(tableauxMove.type == 'e')
+            else if (tableauxMove.type == "e")
                 return applyMoveExpandLeaf(state, tableauxMove.id1, tableauxMove.id2)
             else
                 throw InvalidMoveFormat("Unknown move. Valid moves are e (expand) or c (close).")
@@ -49,7 +49,55 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         }
     }
 
-    private fun applyMoveCloseBranch(state: TableauxState, leafID: Int, closeNodeID: Int) = state
+    /**
+     * Closes a branch in the proof tree is all relevant conditions are met
+     * For rule specification see docs/PropositionalTableaux.md
+     * @param state Current proof state
+     * @param leafID Leaf node of the branch to be closed
+     * @param closeNodeID Ancestor of the leaf to be used for closure
+     * @return New state after rule was applied
+     */
+    @Suppress("ThrowsCount", "ComplexMethod")
+    private fun applyMoveCloseBranch(state: TableauxState, leafID: Int, closeNodeID: Int): TableauxState {
+
+        // Verify that both leaf and closeNode are valid nodes
+        if (leafID >= state.nodes.size || leafID < 0)
+            throw InvalidMoveFormat("Node with ID $leafID does not exist")
+        if (closeNodeID >= state.nodes.size || closeNodeID < 0)
+            throw InvalidMoveFormat("Node with ID $closeNodeID does not exist")
+
+        val leaf = state.nodes.get(leafID)
+        val closeNode = state.nodes.get(closeNodeID)
+
+        // Verify that leaf is actually a leaf
+        if (!leaf.isLeaf)
+            throw InvalidMoveFormat("Node '$leaf' with ID $leafID is not a leaf")
+
+        // Verify that leaf is not already closed
+        if (leaf.isClosed)
+            throw InvalidMoveFormat("Leaf '$leaf' is already closed, no need to close again")
+
+        // Verify that leaf and closeNode reference the same variable
+        if (!(leaf.spelling == closeNode.spelling))
+            throw InvalidMoveFormat("Leaf '$leaf' and node '$closeNode' do not reference the same variable")
+
+        // Verify that negation checks out
+        if (leaf.negated == closeNode.negated) {
+            val noneOrBoth = if (leaf.negated) "both of them" else "neither of them"
+            val msg = "Leaf '$leaf' and node '$closeNode' reference the same variable, but $noneOrBoth are negated"
+            throw InvalidMoveFormat(msg)
+        }
+
+        // Verify that closeNode is transitive parent of leaf
+        if (!state.nodeIsParentOf(closeNodeID, leafID))
+            throw InvalidMoveFormat("Node '$closeNode' is not an ancestor of leaf '$leaf'")
+
+        // Close branch
+        leaf.closeRef = closeNodeID
+        leaf.isClosed = true
+
+        return state
+    }
 
     private fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int) = state
 
@@ -98,6 +146,22 @@ class TableauxState(val clauseSet: ClauseSet) {
     var seal = ""
 
     /**
+     * Check whether a node is a (transitive) parent of another node
+     * @param parentID Node to check parenthood of
+     * @param childID Child node of suspected parent
+     * @return true iff the parentID is a true ancestor of the childID
+     */
+    @Suppress("ReturnCount")
+    fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
+        val child = nodes.get(childID)
+        if (child.parent == parentID)
+            return true
+        if (child.parent == 0 && parentID != 0)
+            return false
+        return nodeIsParentOf(child.parent, parentID)
+    }
+
+    /**
      * Generate a checksum of the current state to detect state objects being
      * modified or corrupted while in transit
      * Call before exporting state
@@ -143,6 +207,10 @@ class TableauxNode(val parent: Int, val spelling: String, val negated: Boolean) 
     val isLeaf
         get() = children.size == 0
 
+    override fun toString(): String {
+        return if (negated) "!$spelling" else spelling
+    }
+
     /**
      * Pack the node into a well-defined, unambiguous string representation
      * Used to calculate checksums over state objects as JSON representation
@@ -166,4 +234,4 @@ class TableauxNode(val parent: Int, val spelling: String, val negated: Boolean) 
  * @param id2 For expand moves: ID of the clause to expand. For close moves: ID of the node to close with
  */
 @Serializable
-class TableauxMove(val type: Char, val id1: Int, val id2: Int)
+class TableauxMove(val type: String, val id1: Int, val id2: Int)
