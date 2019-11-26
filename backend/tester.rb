@@ -27,6 +27,30 @@ class TestRequest
 		logMsg "Targeting endpoint #{@host}:#{@port}, #{@headers} headers"
 	end
 
+	def getPostResponse(path, data, debug = false)
+		uri = URI("http://#{@host}#{path}")
+
+		req = Net::HTTP::Post.new(uri, initheader = getHeaders)
+		
+		req.body = data
+
+		logMsg "Sending request to #{path}" if debug
+
+		begin
+			response = @net.request(req)
+		rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+			logMsg "Network Error: #{e.to_s}\n---------------- request body: #{data}"
+			return nil
+		end
+
+		if response.code != "200"
+			logMsg("Unexpected HTTP status: #{response.code.to_s} - #{response.msg}\n---------------- response: #{response.body}\n---------------- request body: #{data}")
+			return nil
+		end
+
+		return response.body
+	end
+
 	def post(path, data, responseValidator, expectedStatus = '200', debug = false)
 		uri = URI("http://#{@host}#{path}")
 
@@ -174,7 +198,7 @@ def testRootNodeCreation(trq, count = 20)
 
 	validate = ->(res) {
 		r = JSON.parse(res)
-		valid = (r['idCounter'] === 0 && r['nodes'].length === 1)
+		valid = r['nodes'].length === 1
 		n = r['nodes'][0]
 		valid &= n['spelling'] === 'true'
 		valid &= !n['isClosed']
@@ -198,33 +222,33 @@ end
 
 def testStateModification(trq, count = 50)
 	logMsg "Testing tamper protection"
+	cg = ClauseGenerator.new
+	iterations = count / 10
+	success = true
 
-	validState = '{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"HY","negated":true}]},{"atoms":[{"lit":"Dm","negated":false},{"lit":"RkIinJe","negated":false}]},{"atoms":[{"lit":"b","negated":false},{"lit":"yiyhdf","negated":true},{"lit":"ncVL","negated":false},{"lit":"b","negated":true},{"lit":"jo","negated":false},{"lit":"c","negated":true},{"lit":"b","negated":true},{"lit":"c","negated":true},{"lit":"a","negated":false},{"lit":"c","negated":true},{"lit":"b","negated":false},{"lit":"d","negated":true},{"lit":"qK","negated":false},{"lit":"WBgVEfNvNDVB","negated":false},{"lit":"Tu","negated":true}]},{"atoms":[{"lit":"c","negated":true},{"lit":"ivEBj","negated":true},{"lit":"pY","negated":true},{"lit":"b","negated":true},{"lit":"b","negated":true},{"lit":"lRtlH","negated":true},{"lit":"b","negated":true},{"lit":"b","negated":true},{"lit":"qfREDoemqpHZZc","negated":false},{"lit":"TeqHfLBAVJIlKj","negated":true},{"lit":"a","negated":false},{"lit":"d","negated":true},{"lit":"nYAHaY","negated":false}]}]},' + 
-		'"idCounter":0,"nodes":[{"parent":0,"spelling":"true","negated":false,"isClosed":false,"closeRef":null,"children":[]}],' +
-		'"seal":"62C78E913380B51D8BE447A16C5C1E983C2CEE06B7B85529DA807C38996EC19D"}'
+	iterations.times() {
+		validState = trq.getPostResponse('/prop-tableaux/parse', "formula=#{cg.genClauseSet}")
+		parsed = JSON.parse(validState)
 
-	parsed = JSON.parse(validState)
+		# Test unmodified state
+		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", /Incomplete Proof/, 200)
 
-	# Test unmodified state
-	success = trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", /Incomplete Proof/, 200)
+		10.times() {
+			modified = JSON.parse(validState)
+			modType = rand(1..2)
+			case modType
+			when 1
+				tweakNode(modified)
+			when 2
+				tweakClause(modified)
+			end
 
-	count.times() {
-		modified = JSON.parse(validState)
-		modType = rand(1..3)
-		case modType
-		when 1
-			modified['idCounter'] = rand(1..500)
-		when 2
-			tweakNode(modified)
-		when 3
-			tweakClause(modified)
-		end
-
-		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(modified)}", /.*Invalid tamper protection seal.*/, 400)
+			success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(modified)}", /.*Invalid tamper protection seal.*/, 400)
+		}
 	}
 
 	if success
-		logSuccess "Test successful - sent #{(count + 1).to_s} requests"
+		logSuccess "Test successful - sent #{(iterations * 11).to_s} requests"
 	else
 		logError "Test failed!"
 	end
