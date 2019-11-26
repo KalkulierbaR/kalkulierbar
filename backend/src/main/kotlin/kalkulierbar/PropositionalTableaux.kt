@@ -75,7 +75,6 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
  */
 @Serializable
 class TableauxState(val clauseSet: ClauseSet) {
-    var idCounter = 0
     val nodes = mutableListOf<TableauxNode>(TableauxNode(0, "true", false))
     var seal = ""
 
@@ -107,7 +106,7 @@ class TableauxState(val clauseSet: ClauseSet) {
     fun getHash(): String {
         val nodesHash = nodes.map { it.getHash() }.joinToString("|")
         val clauseSetHash = clauseSet.toString()
-        return "tableauxstate|$idCounter|$clauseSetHash|[$nodesHash]"
+        return "tableauxstate|$clauseSetHash|[$nodesHash]"
     }
 }
 
