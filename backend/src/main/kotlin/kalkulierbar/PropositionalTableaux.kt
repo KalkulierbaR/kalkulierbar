@@ -32,7 +32,26 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
      * @param move move to apply in the given state
      * @return state after the move was applied
      */
-    override fun applyMoveOnState(state: TableauxState, move: String) = state
+    @kotlinx.serialization.UnstableDefault
+    override fun applyMoveOnState(state: TableauxState, move: String): TableauxState {
+        try {
+            val tableauxMove = Json.parse(TableauxMove.serializer(), move)
+            
+            // Pass expand or close moves to relevant subfunction
+            if(tableauxMove.type == 'c')
+                return applyMoveCloseBranch(state, tableauxMove.id1, tableauxMove.id2)
+            else if(tableauxMove.type == 'e')
+                return applyMoveExpandLeaf(state, tableauxMove.id1, tableauxMove.id2)
+            else
+                throw InvalidMoveFormat("Unknown move. Valid moves are e (expand) or c (close).")
+        } catch (e: JsonDecodingException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON move")
+        }
+    }
+
+    private fun applyMoveCloseBranch(state: TableauxState, leafID: Int, closeNodeID: Int) = state
+
+    private fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int) = state
 
     /**
      * Checks if a given state represents a valid, closed proof.
@@ -139,3 +158,12 @@ class TableauxNode(val parent: Int, val spelling: String, val negated: Boolean) 
         return "$spelling;$neg;$parent;$ref;$leaf;$closed;($childlist)"
     }
 }
+
+/**
+ * Class representing a rule application in a PropositionalTableaux
+ * @param type 'c' for a branch close move, 'e' for an expand move
+ * @param id1 ID of the leaf to apply the rule on
+ * @param id2 For expand moves: ID of the clause to expand. For close moves: ID of the node to close with
+ */
+@Serializable
+class TableauxMove(val type: Char, val id1: Int, val id2: Int)
