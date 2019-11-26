@@ -1,5 +1,6 @@
-import { hierarchy, HierarchyNode, tree } from "d3";
+import { event, hierarchy, HierarchyNode, select, tree, zoom } from "d3";
 import { h } from "preact";
+import { useEffect } from "preact/hooks";
 import { TableauxNode } from "../../types/tableaux";
 
 import * as style from "./style.css";
@@ -74,14 +75,34 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes }) => {
     layout.size([treeWidth, treeHeight]);
     layout(root);
 
+    useEffect(() => {
+        // Get the elements to manipulate
+        const svg = select(`.${style.svg}`);
+        const g = select(".g");
+
+        // Add zoom and drag behavior
+        svg.call(
+            zoom().on("zoom", () => {
+                g.attr(
+                    "transform",
+                    `translate(${event.transform.x} ${event.transform.y +
+                        16}) scale(${event.transform.k})`
+                );
+            })
+        );
+    });
+
     return (
         <div class="card">
             <svg
                 class={style.svg}
-                width={`${treeWidth + 16}px`}
+                width="100%"
                 height={`${treeHeight + 16}px`}
+                style="min-height: 60vh"
+                viewBox={`0 0 ${treeWidth} ${treeHeight + 16}`}
+                preserveAspectRatio="xMidyMid meet"
             >
-                <g style="transform: translateY(16px)">
+                <g class="g" transform="translate(0 16)">
                     <g class="links">
                         {root.links().map(l => (
                             <line
