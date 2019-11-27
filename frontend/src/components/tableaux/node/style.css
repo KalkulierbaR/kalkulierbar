@@ -1,0 +1,8 @@
+.node {
+    transform: none;
+    cursor: pointer;
+}
+
+.bg {
+    fill: rgba(0, 0, 0, 0.15);
+}
