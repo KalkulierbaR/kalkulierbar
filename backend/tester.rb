@@ -281,7 +281,7 @@ def testStateModification(trq, count = 50)
 		parsed = JSON.parse(validState)
 
 		# Test unmodified state
-		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", /Incomplete Proof/, 200)
+		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", "false", 200)
 
 		10.times() {
 			modified = JSON.parse(validState)
