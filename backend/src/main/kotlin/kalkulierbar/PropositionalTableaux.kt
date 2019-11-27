@@ -5,7 +5,6 @@ import kalkulierbar.parsers.ClauseSetParser
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecodingException
-import java.lang.IllegalArgumentException
 
 /**
  * Implementation of a simple tableaux calculus on propositional clause sets
@@ -40,26 +39,21 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
      * @param state state object to validate
      * @return true if the given proof is closed and valid, false otherwise
      */
-    override fun checkCloseOnState(state: TableauxState) : Boolean {
-        var closedParent : TableauxNode
-        //Iterating over every Leaf-Node
-        for(node in state.nodes){
-            if(node.isLeaf){
-                //state closed -> Node is leaf and is closed
-                if(!node.isClosed)
+    override fun checkCloseOnState(state: TableauxState): Boolean {
+        // Iterating over every Leaf-Node
+        for (node in state.nodes) {
+            if (node.isLeaf) {
+                // state closed -> Every lead is closed
+                if (node.closeRef == null || !node.isClosed)
                     return false
-                closedParent = state.nodes[node.closeRef!!]
-                //One node has to be negated, the other not
-                if(node.negated && closedParent.negated || !node.negated && !closedParent.negated)
-                    return false
-                //The two nodes have to be of the same spelling to be closed
-                if(node.spelling != closedParent.spelling)
+                val closedParent = state.nodes[node.closeRef!!]
+                // One node has to be negated, the other not, both nodes have to have same spelling
+                if (node.negated == closedParent.negated || node.spelling != closedParent.spelling)
                     return false
             }
         }
         return true
     }
-
 
     /**
      * Parses a JSON state representation into a TableauxState object
