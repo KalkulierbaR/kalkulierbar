@@ -10,7 +10,7 @@ interface Props {
     clauseSet: ClauseSet;
 }
 
-// Displays clauses in a clause.
+// Displays clauses of the set as a list.
 const ClauseList: preact.FunctionalComponent<Props> = ({ clauseSet }) => {
     return (
         <div class="card">

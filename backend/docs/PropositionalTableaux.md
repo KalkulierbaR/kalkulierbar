@@ -2,7 +2,7 @@
 
 ## Format Specification
 
-The input to a Propositional Tableaux proof is the clause set whose insatisfiability is to be proven. Details regarding the input format specification can be found in `ClauseSet.md`.
+The input to a Propositional Tableaux proof is the clause set whose insatisfiability is to be proven. Details regarding the input format specification can be found in [ClauseSet.md](./ClauseSet.md).
 
 ## Rule Specification
 

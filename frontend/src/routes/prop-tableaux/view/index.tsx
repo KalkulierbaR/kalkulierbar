@@ -16,7 +16,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ state }) => {
         return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
         /* state = {
-            idCounter: 0,
             seal: "",
             clauseSet: {
                 clauses: [

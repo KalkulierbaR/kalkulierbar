@@ -10,7 +10,6 @@ export interface TableauxNode {
 }
 
 export interface TableauxState {
-    idCounter: number;
     seal: string;
     clauseSet: ClauseSet;
     nodes: TableauxNode[];
