@@ -39,6 +39,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
      * @param state state object to validate
      * @return true if the given proof is closed and valid, false otherwise
      */
+    @Suppress("ReturnCount")
     override fun checkCloseOnState(state: TableauxState): Boolean {
         // Iterating over every Leaf-Node
         for (node in state.nodes) {
