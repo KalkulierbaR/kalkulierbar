@@ -90,7 +90,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
  */
 @Serializable
 class TableauxState(val clauseSet: ClauseSet) {
-    val nodes = mutableListOf<TableauxNode>(TableauxNode(0, "true", false))
+    val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
     var seal = ""
 
     /**
@@ -132,7 +132,7 @@ class TableauxState(val clauseSet: ClauseSet) {
  * @param negated True if the variable is negated, false otherwise
  */
 @Serializable
-class TableauxNode(val parent: Int, val spelling: String, val negated: Boolean) {
+class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean) {
     var isClosed = false
     var closeRef: Int? = null
     val children = mutableListOf<Int>()
