@@ -1,0 +1,30 @@
+/* Styles for the home component */
+
+.send {
+    border: none;
+    box-shadow: none;
+    background-color: #673ab7;
+    color: #fff;
+    font-size: 1em;
+    border-radius: 5px;
+    padding: 4px 8px;
+    transition: opacity 0.2s ease-in;
+}
+
+.send:hover {
+    opacity: 0.8;
+}
+
+.send[disabled] {
+    opacity: 0.6;
+}
+
+textarea {
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+    resize: none;
+    width: 100%;
+    min-height: 92px;
+    font-size: 1.3em;
+    margin-block-end: 8px;
+}
