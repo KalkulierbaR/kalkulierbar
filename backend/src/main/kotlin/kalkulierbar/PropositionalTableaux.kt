@@ -99,7 +99,31 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         return state
     }
 
-    private fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int) = state
+    private fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int): TableauxState {
+        // Verify that both leaf and clause are valid
+        if (leafID >= state.nodes.size || leafID < 0)
+            throw InvalidMoveFormat("Node with ID $leafID does not exist")
+        if (clauseID >= state.clauseSet.clauses.size || state.clauseSet.clauses.size < 0)
+            throw InvalidMoveFormat("Clause with ID $clauseID does not exist")
+
+        val leaf = state.nodes[leafID]
+        val clause = state.clauseSet.clauses[clauseID]
+
+        // Verify that leaf is actually a leaf
+        if (!leaf.isLeaf)
+            throw InvalidMoveFormat("Node '$leaf' with ID $leafID is not a leaf")
+
+        // Adding every atom in clause to leaf and set parameters
+        for (atom in clause.atoms) {
+            val newLeaf = TableauxNode(leafID, atom.lit, atom.negated)
+            state.nodes.add(newLeaf)
+
+            val stateNodeSize = state.nodes.size
+            leaf.children.add(stateNodeSize - 1)
+        }
+
+        return state
+    }
 
     /**
      * Checks if a given state represents a valid, closed proof.
