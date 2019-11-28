@@ -253,7 +253,7 @@ def testRootNodeCreation(trq, count = 20)
 		valid &= n['spelling'] === 'true'
 		valid &= !n['isClosed']
 		valid &= !n['negated']
-		valid &= n['parent'] === 0
+		valid &= n['parent'] === nil
 		valid &= n['children'].length === 0
 		valid
 	}
@@ -313,7 +313,7 @@ def tweakNode(state)
 	when 2
 		state['nodes'][i]['isClosed'] = !state['nodes'][i]['isClosed']
 	when 3
-		state['nodes'][i]['parent'] += rand(1..500)
+		state['nodes'][i]['parent'] = (state['nodes'][i]['parent'] == nil ? rand(1..500) : state['nodes'][i]['parent'] + rand(1..500))
 	when 4
 		state['nodes'][i]['children'].push(rand(0..500))
 	end
