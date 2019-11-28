@@ -158,7 +158,7 @@ class TableauxState(val clauseSet: ClauseSet) {
             return true
         if (child.parent == 0 && parentID != 0)
             return false
-        return nodeIsParentOf(child.parent, parentID)
+        return nodeIsParentOf(parentID, child.parent)
     }
 
     /**
