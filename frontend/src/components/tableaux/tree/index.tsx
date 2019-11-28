@@ -19,6 +19,9 @@ export interface D3Data {
     id: number;
     name: string;
     isLeaf: boolean;
+    negated: boolean;
+    isClosed: boolean;
+    closeRef: number | null;
     children?: D3Data[];
 }
 
@@ -46,7 +49,10 @@ const transformNodeToD3Data = (id: number, nodes: TableauxNode[]): D3Data => {
         id,
         name: node.spelling,
         isLeaf,
-        children
+        children,
+        negated: node.negated,
+        isClosed: node.isClosed,
+        closeRef: node.closeRef
     };
 };
 

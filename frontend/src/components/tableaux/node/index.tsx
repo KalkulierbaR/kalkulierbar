@@ -23,6 +23,8 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
 
     const ref = createRef<SVGTextElement>();
 
+    const name = `${node.data.negated ? "!" : ""}${node.data.name}`;
+
     const handleClick = () => {
         if (ref.current) {
             const box = ref.current.getBBox();
@@ -52,12 +54,14 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             <text
                 ref={ref}
                 text-anchor="middle"
-                class={style.node}
+                class={
+                    style.node + (node.data.isClosed ? " " + style.closed : " ")
+                }
                 onClick={handleClick}
                 x={(node as any).x}
                 y={(node as any).y}
             >
-                {node.data.name}
+                {name}
             </text>
         </g>
     );

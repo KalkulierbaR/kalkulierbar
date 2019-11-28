@@ -5,6 +5,7 @@ import * as style from "./style.css";
 
 import ClauseList from "../../../components/clause-list";
 import TableauxTreeView from "../../../components/tableaux/tree";
+import exampleState from "./example";
 
 interface Props {
     server: string;
@@ -21,13 +22,13 @@ const sendMove = async (
     try {
         const res = await fetch(url, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "text/plain"
             },
             method: "POST",
             body: `move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`
         });
         const parsed = await res.json();
-        console.log(parsed);
+
         // TODO: handle errors
         stateChanger("prop-tableaux", parsed);
     } catch (e) {
@@ -51,62 +52,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
-        state = {
-            seal: "",
-            clauseSet: {
-                clauses: [
-                    {
-                        atoms: [
-                            {
-                                lit: "a",
-                                negated: false
-                            },
-                            {
-                                lit: "b",
-                                negated: true
-                            }
-                        ]
-                    },
-                    {
-                        atoms: [{ lit: "d", negated: false }]
-                    }
-                ]
-            },
-            nodes: [
-                {
-                    spelling: "true",
-                    parent: -1,
-                    negated: false,
-                    isClosed: false,
-                    closeRef: null,
-                    children: [1, 3]
-                },
-                {
-                    spelling: "a",
-                    parent: 0,
-                    negated: false,
-                    isClosed: false,
-                    closeRef: null,
-                    children: [2]
-                },
-                {
-                    spelling: "!b",
-                    parent: 1,
-                    negated: false,
-                    isClosed: false,
-                    closeRef: null,
-                    children: []
-                },
-                {
-                    spelling: "c",
-                    parent: 0,
-                    negated: false,
-                    isClosed: false,
-                    closeRef: null,
-                    children: []
-                }
-            ]
-        };
+        state = exampleState;
     }
 
     const url = `${server}/prop-tableaux/`;
