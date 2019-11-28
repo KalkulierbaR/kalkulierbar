@@ -43,7 +43,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
             else if (tableauxMove.type == "e")
                 return applyMoveExpandLeaf(state, tableauxMove.id1, tableauxMove.id2)
             else
-                throw InvalidMoveFormat("Unknown move. Valid moves are e (expand) or c (close).")
+                throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close).")
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         }
@@ -62,35 +62,35 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
 
         // Verify that both leaf and closeNode are valid nodes
         if (leafID >= state.nodes.size || leafID < 0)
-            throw InvalidMoveFormat("Node with ID $leafID does not exist")
+            throw IllegalMove("Node with ID $leafID does not exist")
         if (closeNodeID >= state.nodes.size || closeNodeID < 0)
-            throw InvalidMoveFormat("Node with ID $closeNodeID does not exist")
+            throw IllegalMove("Node with ID $closeNodeID does not exist")
 
         val leaf = state.nodes.get(leafID)
         val closeNode = state.nodes.get(closeNodeID)
 
         // Verify that leaf is actually a leaf
         if (!leaf.isLeaf)
-            throw InvalidMoveFormat("Node '$leaf' with ID $leafID is not a leaf")
+            throw IllegalMove("Node '$leaf' with ID $leafID is not a leaf")
 
         // Verify that leaf is not already closed
         if (leaf.isClosed)
-            throw InvalidMoveFormat("Leaf '$leaf' is already closed, no need to close again")
+            throw IllegalMove("Leaf '$leaf' is already closed, no need to close again")
 
         // Verify that leaf and closeNode reference the same variable
         if (!(leaf.spelling == closeNode.spelling))
-            throw InvalidMoveFormat("Leaf '$leaf' and node '$closeNode' do not reference the same variable")
+            throw IllegalMove("Leaf '$leaf' and node '$closeNode' do not reference the same variable")
 
         // Verify that negation checks out
         if (leaf.negated == closeNode.negated) {
             val noneOrBoth = if (leaf.negated) "both of them" else "neither of them"
             val msg = "Leaf '$leaf' and node '$closeNode' reference the same variable, but $noneOrBoth are negated"
-            throw InvalidMoveFormat(msg)
+            throw IllegalMove(msg)
         }
 
         // Verify that closeNode is transitive parent of leaf
         if (!state.nodeIsParentOf(closeNodeID, leafID))
-            throw InvalidMoveFormat("Node '$closeNode' is not an ancestor of leaf '$leaf'")
+            throw IllegalMove("Node '$closeNode' is not an ancestor of leaf '$leaf'")
 
         // Close branch
         leaf.closeRef = closeNodeID
@@ -99,19 +99,20 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         return state
     }
 
+    @Suppress("ThrowsCount")
     private fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int): TableauxState {
         // Verify that both leaf and clause are valid
         if (leafID >= state.nodes.size || leafID < 0)
-            throw InvalidMoveFormat("Node with ID $leafID does not exist")
+            throw IllegalMove("Node with ID $leafID does not exist")
         if (clauseID >= state.clauseSet.clauses.size || state.clauseSet.clauses.size < 0)
-            throw InvalidMoveFormat("Clause with ID $clauseID does not exist")
+            throw IllegalMove("Clause with ID $clauseID does not exist")
 
         val leaf = state.nodes[leafID]
         val clause = state.clauseSet.clauses[clauseID]
 
         // Verify that leaf is actually a leaf
         if (!leaf.isLeaf)
-            throw InvalidMoveFormat("Node '$leaf' with ID $leafID is not a leaf")
+            throw IllegalMove("Node '$leaf' with ID $leafID is not a leaf")
 
         // Adding every atom in clause to leaf and set parameters
         for (atom in clause.atoms) {
