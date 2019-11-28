@@ -1,18 +1,24 @@
 import { HierarchyNode, select } from "d3";
 import { createRef, h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 import { D3Data } from "../tree";
 
 import * as style from "./style.css";
 
+interface Props {
+    node: HierarchyNode<D3Data>;
+    selected: boolean;
+    onClick: (n: D3Data) => void;
+}
+
 /*
  * A single Node in the tree
  */
-const TableauxTreeNode: preact.FunctionalComponent<{
-    node: HierarchyNode<D3Data>;
-}> = ({ node }) => {
-    const [selected, setSelected] = useState(false);
-
+const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
+    node,
+    onClick,
+    selected
+}) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
     const ref = createRef<SVGTextElement>();
@@ -24,7 +30,7 @@ const TableauxTreeNode: preact.FunctionalComponent<{
             box.x -= 2;
             setDims(box);
         }
-        setSelected(s => !s);
+        onClick(node.data);
     };
 
     const { width, height, x: bgX, y: bgY } = dims;
