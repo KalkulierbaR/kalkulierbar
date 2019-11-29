@@ -92,6 +92,10 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         if (!state.nodeIsParentOf(closeNodeID, leafID))
             throw InvalidMoveFormat("Node '$closeNode' is not an ancestor of leaf '$leaf'")
 
+        // Ensure that tree root node cannot be used to close variables of same spelling ('true')
+        if (closeNodeID == 0)
+            throw InvalidMoveFormat("The root node cannot be used for branch closure")
+
         // Close branch
         leaf.closeRef = closeNodeID
         leaf.isClosed = true
@@ -156,7 +160,7 @@ class TableauxState(val clauseSet: ClauseSet) {
         val child = nodes.get(childID)
         if (child.parent == parentID)
             return true
-        if (child.parent == 0 && parentID != 0)
+        if (child.parent == 0)
             return false
         return nodeIsParentOf(parentID, child.parent)
     }
