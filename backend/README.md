@@ -11,4 +11,8 @@
 
 -   `gradle`: Installs dependencies
 
+-   `gradle build`: build, test, and analyze the project
+
 -   `gradle run`: creates build and runs it
+
+-   `gradle run --args='--global'` or `gradle run --args='-g'`: same as run, but listens on `0.0.0.0` rather than `localhost`
