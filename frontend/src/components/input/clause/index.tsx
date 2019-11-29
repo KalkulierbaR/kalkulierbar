@@ -2,6 +2,7 @@ import { h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 import { AppState, AppStateUpdater } from "../../../types/app";
+import Btn from "../../btn";
 import * as style from "./style.css";
 
 // Interface for properties
@@ -89,14 +90,15 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
         <div class="card">
             <h3>Bitte gebe eine Klauselmenge ein:</h3>
             <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
-                <textarea name="formula" value={userInput} onInput={onInput} />
-                <button
-                    class={style.send}
-                    type="submit"
-                    disabled={userInput.length === 0}
-                >
-                    Submit
-                </button>
+                <textarea
+                    name="formula"
+                    class={style.input}
+                    value={userInput}
+                    onInput={onInput}
+                />
+                <Btn type="submit" disabled={userInput.length === 0}>
+                    Senden
+                </Btn>
             </form>
         </div>
     );
