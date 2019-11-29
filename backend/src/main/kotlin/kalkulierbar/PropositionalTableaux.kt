@@ -104,7 +104,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         // Verify that both leaf and clause are valid
         if (leafID >= state.nodes.size || leafID < 0)
             throw IllegalMove("Node with ID $leafID does not exist")
-        if (clauseID >= state.clauseSet.clauses.size || state.clauseSet.clauses.size < 0)
+        if (clauseID >= state.clauseSet.clauses.size || clauseID < 0)
             throw IllegalMove("Clause with ID $clauseID does not exist")
 
         val leaf = state.nodes[leafID]
