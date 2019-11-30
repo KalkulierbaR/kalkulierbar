@@ -1,0 +1,14 @@
+.link {
+    fill: none;
+    stroke: rgb(218, 218, 218);
+    stroke-width: 2px;
+}
+
+.node {
+    transform: none;
+}
+
+.svg {
+    display: block;
+    margin: 0 auto;
+}

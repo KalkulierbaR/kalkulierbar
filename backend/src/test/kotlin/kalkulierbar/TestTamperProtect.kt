@@ -1,0 +1,58 @@
+package kalkulierbar.tests
+
+import kalkulierbar.TamperProtect
+import kotlin.random.Random
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+
+class TestTamperProtect {
+
+    val tv1 = Pair("", "0D9A6E6CCA519AEFA10F211186D8F4F8BCC5132816027D6260134B59A440CA6C")
+    val tv2 = Pair("smoke&mirrors", "7323EC61EE548AF565BA2D874AD8E9FC3F363E4726833283B25B9AC9F54E42EF")
+
+    val words = listOf("fog", "haze", "watermelon", "zombie", "factory", "dance", "dream", "silent", "weep", "lightbulb", "shine", "dim", "utopia")
+
+    @Test
+    fun testSealGeneration() {
+        Assertions.assertEquals(tv1.second, TamperProtect.seal(tv1.first))
+        Assertions.assertEquals(tv2.second, TamperProtect.seal(tv2.first))
+    }
+
+    @Test
+    fun testVerification() {
+        Assertions.assertEquals(true, TamperProtect.verify(tv1.first, tv1.second))
+        Assertions.assertEquals(true, TamperProtect.verify(tv2.first, tv2.second))
+
+        Assertions.assertEquals(false, TamperProtect.verify(tv1.first, tv2.second))
+        Assertions.assertEquals(false, TamperProtect.verify(tv2.first, tv1.second))
+    }
+
+    @Test
+    fun testCombined() {
+        var payload: String
+        for (i in 1..50) {
+            payload = genPoem()
+            val seal = TamperProtect.seal(payload)
+            println(payload)
+            Assertions.assertEquals(true, TamperProtect.verify(payload, seal))
+
+            val delete = Random.nextInt(payload.length - 1)
+            payload = payload.removeRange(delete, delete + 1)
+
+            Assertions.assertEquals(false, TamperProtect.verify(payload, seal))
+        }
+    }
+
+    fun genPoem(): String {
+        val length = Random.nextInt(2, 15)
+        var poem = ""
+        for (i in 1..length) {
+            poem += "${ranWord()} "
+        }
+        return poem
+    }
+
+    fun ranWord(): String {
+        return words.random()
+    }
+}

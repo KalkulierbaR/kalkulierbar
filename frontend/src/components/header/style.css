@@ -29,8 +29,20 @@
     color: #fff;
 }
 
+.main-link {
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
 .header nav {
     font-size: 100%;
+    justify-self: flex-end;
+    padding: 0 16px;
 }
 
 .header nav a {
@@ -52,5 +64,5 @@
 }
 
 .header nav a.active {
-    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 3px #fff solid;
 }

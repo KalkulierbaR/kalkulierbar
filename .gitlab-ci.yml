@@ -1,0 +1,36 @@
+
+#defines stages
+stages:
+  - frontend
+  - backend
+
+#Frontend: yarn build
+yarn:
+  stage: frontend
+  image: node
+  cache:
+    paths:
+      - frontend/node_modules/
+      - .yarn
+  before_script:
+    - cd frontend
+  script:
+    - yarn
+    - yarn build
+  after_script:
+    - cd ..
+
+#Backend: gradle build
+gradle:
+  stage: backend
+  image: gradle:jdk11
+  cache:
+    paths:
+      - .gradle/wrapper
+      - .gradle/caches
+  before_script:
+    - cd backend
+  script:
+    - gradle build
+  after_script:
+    - cd ..

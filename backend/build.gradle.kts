@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.3.50"
     application
     eclipse
+    jacoco
     id("org.jmailen.kotlinter") version "2.1.2"
     id("io.gitlab.arturbosch.detekt") version "1.1.1"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.3.50"
@@ -9,10 +10,12 @@ plugins {
 
 repositories {
     jcenter()
+    maven("https://jitpack.io")
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation("com.github.komputing:khash:0.9")
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.5.2")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")

@@ -31,6 +31,7 @@
     "build/*"
   ],
   "devDependencies": {
+    "@types/d3": "^5.7.2",
     "@types/jest": "^23.3.10",
     "@types/webpack-env": "^1.13.9",
     "css-loader": "^1.0.1",
@@ -53,6 +54,7 @@
     "typings-for-css-modules-loader": "^1.7.0"
   },
   "dependencies": {
+    "d3": "^5.14.2",
     "preact": "^10.0.0",
     "preact-jsx-chai": "^3.0.0",
     "preact-markup": "^2.0.0",

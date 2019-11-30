@@ -3,12 +3,13 @@ package main.kotlin
 import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
-import kalkulierbar.ClauseAcceptor
 import kalkulierbar.KalkulierbarException
-import kalkulierbar.PropositionalAcceptor
+import kalkulierbar.PropositionalTableaux
+import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.server.ServerConnector
 
 // List of all active calculi (calculuus?)
-val endpoints: Set<Calculus> = setOf<Calculus>(ClauseAcceptor(), PropositionalAcceptor())
+val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux())
 
 @Suppress("MagicNumber")
 fun main(args: Array<String>) {
@@ -19,16 +20,36 @@ fun main(args: Array<String>) {
 
     val port = 7000
 
-    httpApi(port, endpoints)
+    // Only listen globally if cli argument is present
+    val listenGlobally = args.size > 0 && (args[0] == "--global" || args[0] == "-g")
+
+    httpApi(port, endpoints, listenGlobally)
 }
 
 /**
  * Starts a Javalin Server and creates API methods for active calculus objects
+ * @param port Port number to run the local server at
+ * @param endpoints Set of active Calculi to serve
  */
 @Suppress("ThrowsCount", "MagicNumber")
-fun httpApi(port: Int, endpoints: Set<Calculus>) {
+fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false) {
 
-    val app = Javalin.create().start(port)
+    val host = if (listenGlobally) "0.0.0.0" else "localhost"
+
+    val app = Javalin.create { config ->
+        // Set a Jetty server manually for more config options
+        config.server {
+            // Create and configure Jetty server
+            Server().apply {
+                connectors = arrayOf(ServerConnector(this).apply {
+                    this.host = host
+                    this.port = port
+                })
+            }
+        }
+    }
+
+    app.start()
 
     // Catch explicitly thrown exceptions
     app.exception(KalkulierbarException::class.java) { e, ctx ->
