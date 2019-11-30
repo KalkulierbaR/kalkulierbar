@@ -1,6 +1,6 @@
 import { event, hierarchy, select, tree, zoom } from "d3";
 import { h } from "preact";
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 import { TableauxNode } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
@@ -12,10 +12,16 @@ interface Props {
      * The nodes of the tree
      */
     nodes: TableauxNode[];
+    onClose: (leaf: number, pred: number) => void;
 }
 
 export interface D3Data {
+    id: number;
     name: string;
+    isLeaf: boolean;
+    negated: boolean;
+    isClosed: boolean;
+    closeRef: number | null;
     children?: D3Data[];
 }
 
@@ -28,29 +34,41 @@ const NODE_SIZE: [number, number] = [140, 140];
 /**
  * Transforms the node data received by the server to data
  * accepted by d3
- * @param {TableauxNode} node  - the node to transform
+ * @param {number} id  - the node to transform
  * @param {TableauxNode[]} nodes  - list of all nodes
  * @returns {D3Data} - data as d3 parsable
  */
-const transformNodeToD3Data = (
-    node: TableauxNode,
-    nodes: TableauxNode[]
-): D3Data => {
-    const children = node.children.length
-        ? node.children.map(c => transformNodeToD3Data(nodes[c], nodes))
-        : undefined;
+const transformNodeToD3Data = (id: number, nodes: TableauxNode[]): D3Data => {
+    const node = nodes[id];
+    const isLeaf = !node.children.length;
+    const children = isLeaf
+        ? undefined
+        : node.children.map(c => transformNodeToD3Data(c, nodes));
+
     return {
+        id,
         name: node.spelling,
-        children
+        isLeaf,
+        children,
+        negated: node.negated,
+        isClosed: node.isClosed,
+        closeRef: node.closeRef
     };
 };
 
 /*
  * Displays nodes as a Tree
  */
-const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes }) => {
+const TableauxTreeView: preact.FunctionalComponent<Props> = ({
+    nodes,
+    onClose
+}) => {
+    const [selectedNode, setSelectedNode] = useState<number | undefined>(
+        undefined
+    );
+
     // Transform nodes to d3 hierarchy
-    const root = hierarchy(transformNodeToD3Data(nodes[0], nodes));
+    const root = hierarchy(transformNodeToD3Data(0, nodes));
     // Calculate tree size
     const treeHeight = root.height * NODE_SIZE[1];
     const leaves = root.copy().count().value || 1;
@@ -58,6 +76,18 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes }) => {
     // Let d3 calculate our layout
     layout.size([treeWidth, treeHeight]);
     layout(root);
+
+    const handleClick = (n: D3Data) => {
+        if (selectedNode === undefined && n.isLeaf) {
+            // We have no Node selected. Select this one
+            setSelectedNode(n.id);
+        } else if (selectedNode !== undefined) {
+            // We already have a node selected. Try close
+            // If we can't do it, let server handle it
+            onClose(selectedNode, n.id);
+            setSelectedNode(undefined);
+        }
+    };
 
     useEffect(() => {
         // Get the elements to manipulate
@@ -100,7 +130,11 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes }) => {
                     </g>
                     <g class="nodes">
                         {root.descendants().map(n => (
-                            <TableauxTreeNode node={n} />
+                            <TableauxTreeNode
+                                onClick={handleClick}
+                                node={n}
+                                selected={n.data.id === selectedNode}
+                            />
                         ))}
                     </g>
                 </g>

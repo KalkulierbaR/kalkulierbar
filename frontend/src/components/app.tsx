@@ -60,6 +60,7 @@ const App: preact.FunctionalComponent = () => {
                     />
                     <TableauxView
                         path="/prop-tableaux/view"
+                        server={SERVER}
                         state={state["prop-tableaux"]}
                         onChange={onChange}
                     />
