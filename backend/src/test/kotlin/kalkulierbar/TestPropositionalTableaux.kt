@@ -91,7 +91,7 @@ class TestPropositionalTableaux {
         var state = instance.parseFormulaToState("a,b,c;d")
         val hash = state.getHash()
 
-        Assertions.assertThrows(IllegalMove::class.java) {
+        Assertions.assertThrows(InvalidMoveFormat::class.java) {
             instance.applyMoveOnState(state, "{\"type\":\"d\", \"id1\": 1, \"id2\": 0}")
         }
 
@@ -143,11 +143,11 @@ class TestPropositionalTableaux {
 
         val hash = state.getHash()
 
-        Assertions.assertThrows(IllegalMove::class.java) {
+        Assertions.assertThrows(InvalidMoveFormat::class.java) {
             instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 1, \"id2\": 0}")
         }
 
-        Assertions.assertThrows(IllegalMove::class.java) {
+        Assertions.assertThrows(InvalidMoveFormat::class.java) {
             instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": -15, \"id2\": 0}")
         }
 
@@ -161,11 +161,11 @@ class TestPropositionalTableaux {
 
         val hash = state.getHash()
 
-        Assertions.assertThrows(IllegalMove::class.java) {
+        Assertions.assertThrows(InvalidMoveFormat::class.java) {
             instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 2}")
         }
 
-        Assertions.assertThrows(IllegalMove::class.java) {
+        Assertions.assertThrows(InvalidMoveFormat::class.java) {
             instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": -3}")
         }
 
@@ -182,11 +182,11 @@ class TestPropositionalTableaux {
 
         val hash = state.getHash()
 
-        Assertions.assertThrows(IllegalMove::class.java) {
+        Assertions.assertThrows(InvalidMoveFormat::class.java) {
             instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 0}")
         }
 
-        Assertions.assertThrows(IllegalMove::class.java) {
+        Assertions.assertThrows(InvalidMoveFormat::class.java) {
             instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 1, \"id2\": 0}")
         }
 
