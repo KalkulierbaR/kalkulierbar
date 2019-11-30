@@ -9,3 +9,11 @@
 .clause-list-item:hover {
     background-color: #00000011;
 }
+
+.clause-selected {
+    background-color: #683ab74d;
+}
+
+.clause-selected:hover {
+    background-color: #683ab74d;
+}

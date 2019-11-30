@@ -4,7 +4,7 @@ import { TableauxState } from "../../../types/tableaux";
 import * as style from "./style.css";
 
 import ClauseList from "../../../components/clause-list";
-import TableauxTreeView from "../../../components/tableaux-tree";
+import TableauxTreeView from "../../../components/tableaux/tree";
 
 interface Props {
     state?: TableauxState;
@@ -13,9 +13,9 @@ interface Props {
 
 const TableauxView: preact.FunctionalComponent<Props> = ({ state }) => {
     if (!state) {
-        return <p>Keine Daten vorhanden</p>;
+        // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
-        /* state = {
+        state = {
             seal: "",
             clauseSet: {
                 clauses: [
@@ -70,7 +70,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ state }) => {
                     children: []
                 }
             ]
-        }; */
+        };
     }
 
     return (

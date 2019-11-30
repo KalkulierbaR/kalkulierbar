@@ -1,7 +1,9 @@
-import { event, hierarchy, HierarchyNode, select, tree, zoom } from "d3";
+import { event, hierarchy, select, tree, zoom } from "d3";
 import { h } from "preact";
 import { useEffect } from "preact/hooks";
-import { TableauxNode } from "../../types/tableaux";
+
+import { TableauxNode } from "../../../types/tableaux";
+import TableauxTreeNode from "../node";
 
 import * as style from "./style.css";
 
@@ -12,7 +14,7 @@ interface Props {
     nodes: TableauxNode[];
 }
 
-interface D3Data {
+export interface D3Data {
     name: string;
     children?: D3Data[];
 }
@@ -44,24 +46,6 @@ const transformNodeToD3Data = (
 };
 
 /*
- * A single Node in the tree
- */
-const TableauxTreeNode: preact.FunctionalComponent<{
-    node: HierarchyNode<D3Data>;
-}> = ({ node }) => {
-    return (
-        <text
-            text-anchor="middle"
-            class={style.node}
-            x={(node as any).x}
-            y={(node as any).y}
-        >
-            {node.data.name}
-        </text>
-    );
-};
-
-/*
  * Displays nodes as a Tree
  */
 const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes }) => {
@@ -88,7 +72,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes }) => {
                     `translate(${event.transform.x} ${event.transform.y +
                         16}) scale(${event.transform.k})`
                 );
-            })
+            }) as any
         );
     });
 

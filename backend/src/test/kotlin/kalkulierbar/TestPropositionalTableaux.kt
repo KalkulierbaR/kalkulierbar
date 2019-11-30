@@ -1,6 +1,8 @@
 package kalkulierbar.tests
 
+import kalkulierbar.IllegalMove
 import kalkulierbar.InvalidFormulaFormat
+import kalkulierbar.JsonParseException
 import kalkulierbar.PropositionalTableaux
 import kalkulierbar.TableauxNode
 import kotlin.test.Test
@@ -9,7 +11,7 @@ import kotlin.test.assertFailsWith
 
 class TestPropositionalTableaux {
 
-    var instance = PropositionalTableaux()
+    val instance = PropositionalTableaux()
 
     val invalidString1 = "a,b;c,!d;e,&;g,h,i,!j"
     val invalidString2 = "richtig; oder,!falsch"
@@ -30,7 +32,7 @@ class TestPropositionalTableaux {
      */
 
     @Test
-    fun testInvalidStrings() {
+    fun testParseInvalidStrings() {
         assertFailsWith<InvalidFormulaFormat> {
             instance.parseFormulaToState(invalidString1)
         }
@@ -43,14 +45,14 @@ class TestPropositionalTableaux {
     }
 
     @Test
-    fun testValidString() {
+    fun testParseValidString() {
         val state1 = instance.parseFormulaToState(validString1)
         val state2 = instance.parseFormulaToState(validString2)
         val state3 = instance.parseFormulaToState(validString3)
 
-        var root1 = state1.nodes[0]
-        var root2 = state2.nodes[0]
-        var root3 = state3.nodes[0]
+        val root1 = state1.nodes[0]
+        val root2 = state2.nodes[0]
+        val root3 = state3.nodes[0]
 
         assertEquals(state1.nodes.size, 1)
         assertEquals(root1.parent, null)
@@ -69,7 +71,7 @@ class TestPropositionalTableaux {
     }
 
     @Test
-    fun testEdgeCases() {
+    fun testParseEdgeCases() {
         assertFailsWith<InvalidFormulaFormat> {
             instance.parseFormulaToState(emptyString)
         }
@@ -82,6 +84,140 @@ class TestPropositionalTableaux {
         assertFailsWith<InvalidFormulaFormat> {
             instance.parseFormulaToState(edgeCase3)
         }
+    }
+
+    /*
+        Test applyMoveOnState
+    */
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testUnknownMove() {
+        var state = instance.parseFormulaToState("a,b,c;d")
+        val hash = state.getHash()
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, "{\"type\":\"d\", \"id1\": 1, \"id2\": 0}")
+        }
+
+        assertEquals(hash, state.getHash()) // Verify that state has not been modified
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testExpandValidA() {
+        var state = instance.parseFormulaToState("a,b,c;d")
+
+        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 0}")
+
+        assertEquals(4, state.nodes.size)
+        assertEquals(3, state.nodes.get(0).children.size)
+        assertEquals("tableauxstate|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]", state.getHash())
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testExpandValidB() {
+        var state = instance.parseFormulaToState("a,b,c;d")
+
+        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 1}")
+
+        assertEquals(2, state.nodes.size)
+        assertEquals(1, state.nodes.get(0).children.size)
+        assertEquals("tableauxstate|{a, b, c}, {d}|[true;p;null;-;i;o;(1)|d;p;0;-;l;o;()]", state.getHash())
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testExpandValidC() {
+        var state = instance.parseFormulaToState("a,b,c;d")
+
+        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 0}")
+        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 3, \"id2\": 1}")
+
+        assertEquals(5, state.nodes.size)
+        assertEquals(3, state.nodes.get(0).children.size)
+        assertEquals(1, state.nodes.get(3).children.size)
+        assertEquals("tableauxstate|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;i;o;(4)|d;p;3;-;l;o;()]", state.getHash())
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testExpandLeafIndexOOB() {
+        var state = instance.parseFormulaToState("a,b;c")
+
+        val hash = state.getHash()
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 1, \"id2\": 0}")
+        }
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": -15, \"id2\": 0}")
+        }
+
+        assertEquals(hash, state.getHash()) // Verify that state has not been modified
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testExpandClauseIndexOOB() {
+        var state = instance.parseFormulaToState("a,b;c")
+
+        val hash = state.getHash()
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 2}")
+        }
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": -3}")
+        }
+
+        assertEquals(hash, state.getHash()) // Verify that state has not been modified
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testExpandOnNonLeaf() {
+        var state = instance.parseFormulaToState("a,b;c")
+
+        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 1}")
+        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 1, \"id2\": 1}")
+
+        val hash = state.getHash()
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 0}")
+        }
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 1, \"id2\": 0}")
+        }
+
+        assertEquals(hash, state.getHash()) // Verify that state has not been modified
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testExpandNullValues() {
+        var state = instance.parseFormulaToState("a,b;c")
+
+        val hash = state.getHash()
+
+        assertFailsWith<JsonParseException> {
+            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": null, \"id2\": 2}")
+        }
+
+        assertFailsWith<JsonParseException> {
+            instance.applyMoveOnState(state, "{\"type\":null, \"id1\": 0, \"id2\": -3}")
+        }
+
+        assertFailsWith<JsonParseException> {
+            instance.applyMoveOnState(state, "{\"type\":null, \"id1\": 0, \"id2\": null}")
+        }
+
+        assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
     /*
