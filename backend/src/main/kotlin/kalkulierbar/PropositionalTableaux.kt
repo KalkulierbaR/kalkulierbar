@@ -39,7 +39,22 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
      * @param state state object to validate
      * @return true if the given proof is closed and valid, false otherwise
      */
-    override fun checkCloseOnState(state: TableauxState) = false
+    @Suppress("ReturnCount")
+    override fun checkCloseOnState(state: TableauxState): Boolean {
+        // Iterating over every Leaf-Node
+        for (node in state.nodes) {
+            if (node.isLeaf) {
+                // state closed -> Every leaf is closed
+                if (node.closeRef == null || !node.isClosed)
+                    return false
+                val closedParent = state.nodes[node.closeRef!!]
+                // One node has to be negated, the other not, both nodes have to have same spelling
+                if (node.negated == closedParent.negated || node.spelling != closedParent.spelling)
+                    return false
+            }
+        }
+        return true
+    }
 
     /**
      * Parses a JSON state representation into a TableauxState object
@@ -75,7 +90,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
  */
 @Serializable
 class TableauxState(val clauseSet: ClauseSet) {
-    val nodes = mutableListOf<TableauxNode>(TableauxNode(0, "true", false))
+    val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
     var seal = ""
 
     /**
@@ -117,7 +132,7 @@ class TableauxState(val clauseSet: ClauseSet) {
  * @param negated True if the variable is negated, false otherwise
  */
 @Serializable
-class TableauxNode(val parent: Int, val spelling: String, val negated: Boolean) {
+class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean) {
     var isClosed = false
     var closeRef: Int? = null
     val children = mutableListOf<Int>()
