@@ -1,4 +1,5 @@
 import { Fragment, h } from "preact";
+import { useState } from "preact/hooks";
 import { AppStateUpdater } from "../../../types/app";
 import { TableauxState } from "../../../types/tableaux";
 import * as style from "./style.css";
@@ -11,7 +12,55 @@ interface Props {
     onChange: AppStateUpdater<"prop-tableaux">;
 }
 
+// Availble edit modes to modify the tree
+const EDIT_MODE_EXTEND = "EDIT_MODE_EXTEND";
+const EDIT_MODE_CLOSE = "EDIT_MODE_CLOSE";
+
+// View for the Tableaux ClauseList and Tree
 const TableauxView: preact.FunctionalComponent<Props> = ({ state }) => {
+    const [selectedEditMode, setSelectedEditMode] = useState("");
+    const [selectedClauseId, setSelectedClauseId] = useState("");
+    const [selectedLeafNodeId, setSelectedLeafNodeId] = useState("");
+    const [selectedNoneLeafNodeId, setSelectedNoneLeafNodeId] = useState("");
+
+    // Callback function which is called when a clause is selected by the user
+    const selectClauseCallback = (newClauseKey: string) => {
+        setSelectedNoneLeafNodeId("");
+
+        if(newClauseKey === selectedClauseId){
+            setSelectedClauseId("");
+            setSelectedLeafNodeId("")
+            setSelectedEditMode("");
+        }
+        else{
+            setSelectedClauseId(newClauseKey);
+            setSelectedEditMode(EDIT_MODE_EXTEND);
+            checkExtendMove();
+        }
+    };
+
+    // Callback function which is called when a lead node is selected by the user
+    const selectLeafNodeCallback = (newLeafNodeId: string) => {
+        setSelectedLeafNodeId(newLeafNodeId);
+
+        if(selectedEditMode === EDIT_MODE_EXTEND){
+            checkExtendMove();
+        }
+        else if(selectedEditMode === EDIT_MODE_CLOSE){
+
+        }
+        else{
+            // Show dialog to user to decide upon the desired move
+        }
+    }
+
+    // Check if the extend move can be applied
+    const checkExtendMove = () => {
+        if(selectedClauseId !== "" && selectedLeafNodeId !== ""){
+            
+        }
+    }
+
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
@@ -77,8 +126,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ state }) => {
         <Fragment>
             <h2>Tableaux View</h2>
             <div class={style.view}>
-                <ClauseList clauseSet={state.clauseSet} />
-                <TableauxTreeView nodes={state.nodes} />
+                <ClauseList clauseSet={state.clauseSet} selectedClauseId={selectedClauseId} selectClauseCallback={selectClauseCallback} />
+                <TableauxTreeView nodes={state.nodes} selectedLeafNodeId={selectedLeafNodeId} selectLeafNodeCallback={selectLeafNodeCallback} />
             </div>
         </Fragment>
     );

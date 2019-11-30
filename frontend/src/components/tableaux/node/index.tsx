@@ -1,6 +1,6 @@
-import { HierarchyNode, select } from "d3";
+import { HierarchyNode } from "d3";
 import { createRef, h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 import { D3Data } from "../tree";
 
 import * as style from "./style.css";
@@ -10,12 +10,16 @@ import * as style from "./style.css";
  */
 const TableauxTreeNode: preact.FunctionalComponent<{
     node: HierarchyNode<D3Data>;
-}> = ({ node }) => {
+    selectedLeafNodeId: string;
+    selectLeafNodeCallback: CallableFunction;
+}> = ({ node, selectedLeafNodeId, selectLeafNodeCallback }) => {
     const [selected, setSelected] = useState(false);
 
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
     const ref = createRef<SVGTextElement>();
+
+    const isLeafNode = node.children === undefined;
 
     const handleClick = () => {
         if (ref.current) {
@@ -25,6 +29,9 @@ const TableauxTreeNode: preact.FunctionalComponent<{
             setDims(box);
         }
         setSelected(s => !s);
+        if(isLeafNode){
+            selectLeafNodeCallback(node.id);
+        }
     };
 
     const { width, height, x: bgX, y: bgY } = dims;

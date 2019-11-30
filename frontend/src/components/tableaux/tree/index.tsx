@@ -12,6 +12,8 @@ interface Props {
      * The nodes of the tree
      */
     nodes: TableauxNode[];
+    selectedLeafNodeId: string;
+    selectLeafNodeCallback: CallableFunction;
 }
 
 export interface D3Data {
@@ -48,13 +50,15 @@ const transformNodeToD3Data = (
 /*
  * Displays nodes as a Tree
  */
-const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes }) => {
+const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes, selectedLeafNodeId, selectLeafNodeCallback }) => {
     // Transform nodes to d3 hierarchy
     const root = hierarchy(transformNodeToD3Data(nodes[0], nodes));
+
     // Calculate tree size
     const treeHeight = root.height * NODE_SIZE[1];
     const leaves = root.copy().count().value || 1;
     const treeWidth = leaves * NODE_SIZE[0];
+    
     // Let d3 calculate our layout
     layout.size([treeWidth, treeHeight]);
     layout(root);
@@ -100,7 +104,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes }) => {
                     </g>
                     <g class="nodes">
                         {root.descendants().map(n => (
-                            <TableauxTreeNode node={n} />
+                            <TableauxTreeNode node={n} selectedLeafNodeId={selectedLeafNodeId} selectLeafNodeCallback={selectLeafNodeCallback} />
                         ))}
                     </g>
                 </g>
