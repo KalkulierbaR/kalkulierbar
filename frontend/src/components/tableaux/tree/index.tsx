@@ -96,19 +96,17 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     const closingEdge = (blattID :number)=>{
         const blatt = root.descendants().filter(n => n.data.id === blattID);
         const closer = root.descendants().filter(n => n.data.id === blatt[0].data.closeRef);
-        const x1 = (blatt[0] as any).x;
-        const y1 = (blatt[0] as any).y;
-        const x2 = (closer[0] as any).x;
-        const y2 = (closer[0] as any).y;
+        const x1 = (blatt[0] as any).x -10;
+        const y1 = (blatt[0] as any).y -5;
+        const x2 = (closer[0] as any).x -10;
+        const y2 = (closer[0] as any).y -5;
+
+        const d = "M "+ x1 +" "+ y1 +" Q "+ (x1 -(y1-y2)/2) +" "+ ((y1+y2)/2) +" "+ (x2) + " " + (y2);
 
         return(
-        <line
-            class={style.link}
-            x1={x1-10}
-            x2={x2-10}
-            y1={y1}
-            y2={y2}
-        />)
+            <path d={d}
+            class={style.link}/>
+            )
     };
 
     return (
