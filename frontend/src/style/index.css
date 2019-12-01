@@ -1,5 +1,12 @@
 /* General styles applying to all components. They can be overwritten */
 
+:root {
+    --kbar-accent-color: #673ab7;
+    --kbar-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+        0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    --kbar-border-radius: 4px;
+}
+
 html,
 body {
     height: 100%;
@@ -24,10 +31,9 @@ body {
 
 .card {
     background-color: #fff;
-    border-radius: 4px;
+    border-radius: var(--kbar-border-radius);
     padding: 16px;
-    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-        0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--kbar-shadow);
     margin-bottom: 16px;
 }
 
