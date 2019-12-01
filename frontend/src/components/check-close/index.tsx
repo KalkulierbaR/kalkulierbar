@@ -30,11 +30,11 @@ const CheckCloseBtn: preact.FunctionalComponent<Props> = ({
             if (response.status !== 200) {
                 onError(await response.text());
             } else {
-                const parsed = await response.text();
-                if (parsed === "Proof closed") {
-                    onSuccess(parsed);
+                const closed = (await response.json()) as boolean;
+                if (closed) {
+                    onSuccess("Der Baum ist geschlossen");
                 } else {
-                    onError(parsed);
+                    onError("Der Baum ist nicht geschlossen");
                 }
             }
         } catch (e) {
