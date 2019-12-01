@@ -47,6 +47,14 @@ const App: preact.FunctionalComponent = () => {
     const handleError = (msg: string) =>
         addNotification({ type: NotificationType.Error, message: msg });
 
+    const handleSuccess = (msg: string) =>
+        addNotification({ type: NotificationType.Success, message: msg });
+
+    const handleMessage = (
+        msg: string,
+        type: NotificationType = NotificationType.None
+    ) => addNotification({ type, message: msg });
+
     useEffect(() => {
         checkServer(SERVER, handleError);
     }, []);
@@ -80,6 +88,7 @@ const App: preact.FunctionalComponent = () => {
                         state={state["prop-tableaux"]}
                         onChange={onChange}
                         onError={handleError}
+                        onSuccess={handleSuccess}
                     />
                 </Router>
             </main>

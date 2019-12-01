@@ -4,6 +4,7 @@ import { AppStateUpdater } from "../../../types/app";
 import { TableauxMove, TableauxState } from "../../../types/tableaux";
 import * as style from "./style.css";
 
+import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
 import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
@@ -14,6 +15,7 @@ interface Props {
     state?: TableauxState;
     onChange: AppStateUpdater<"prop-tableaux">;
     onError: (msg: string) => void;
+    onSuccess: (msg: string) => void;
 }
 
 const sendMove = async (
@@ -81,7 +83,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
     state,
     server,
     onChange,
-    onError
+    onError,
+    onSuccess
 }) => {
     const [selectedEditMode, setSelectedEditMode] = useState<
         number | undefined
@@ -175,11 +178,20 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
         <Fragment>
             <h2>Tableaux View</h2>
             <div class={style.view}>
-                <ClauseList
-                    clauseSet={state.clauseSet}
-                    selectedClauseId={selectedClauseId}
-                    selectClauseCallback={selectClauseCallback}
-                />
+                <div>
+                    <ClauseList
+                        clauseSet={state.clauseSet}
+                        selectedClauseId={selectedClauseId}
+                        selectClauseCallback={selectClauseCallback}
+                    />
+                    <CheckCloseBtn
+                        server={server}
+                        calculus="prop-tableaux"
+                        state={state}
+                        onError={onError}
+                        onSuccess={onSuccess}
+                    />
+                </div>
                 <TableauxTreeView
                     nodes={state.nodes}
                     selectedNodeId={selectedNodeId}
