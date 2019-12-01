@@ -9,7 +9,7 @@ interface Props {
      */
     clauseSet: ClauseSet;
     selectedClauseId: number | undefined;
-    selectClauseCallback: CallableFunction;
+    selectClauseCallback: (id: number) => void;
 }
 
 // Displays clauses of the set as a list.
@@ -18,17 +18,11 @@ const ClauseList: preact.FunctionalComponent<Props> = ({
     selectedClauseId,
     selectClauseCallback
 }) => {
-    // Handle Click event
-    const onClick = ({ target }: Event) => {
-        const { id } = target as HTMLParagraphElement;
-        selectClauseCallback(parseInt(id));
-    };
-
     return (
         <div class="card">
             {clauseSet.clauses.map((c, index) => (
                 <p
-                    onClick={onClick}
+                    onClick={() => selectClauseCallback(index)}
                     class={
                         style.clauseListItem +
                         " " +
