@@ -7,15 +7,27 @@ import TableauxTreeNode from "../node";
 
 import * as style from "./style.css";
 
+/**
+ * Properties Interface for the TableauxTreeView component
+ */
 interface Props {
     /**
      * The nodes of the tree
      */
     nodes: TableauxNode[];
+    /**
+     * The id of a node if one is selected
+     */
     selectedNodeId: number | undefined;
+    /**
+     * The function to call, when the user selects a node
+     */
     selectNodeCallback: (node: D3Data) => void;
 }
 
+/**
+ * Properties Interface for a node
+ */
 export interface D3Data {
     id: number;
     name: string;
@@ -58,7 +70,7 @@ const transformNodeToD3Data = (id: number, nodes: TableauxNode[]): D3Data => {
 };
 
 /*
- * Displays nodes as a Tree
+ * A component displaying nodes as a TableauxTree
  */
 const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
@@ -67,6 +79,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
 }) => {
     // Transform nodes to d3 hierarchy
     const root = hierarchy(transformNodeToD3Data(0, nodes));
+
     // Calculate tree size
     const treeHeight = root.height * NODE_SIZE[1];
     const leaves = root.copy().count().value || 1;
@@ -118,7 +131,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                     <g class="nodes">
                         {root.descendants().map(n => (
                             <TableauxTreeNode
-                                onClick={selectNodeCallback}
+                                selectNodeCallback={selectNodeCallback}
                                 node={n}
                                 selected={n.data.id === selectedNodeId}
                             />

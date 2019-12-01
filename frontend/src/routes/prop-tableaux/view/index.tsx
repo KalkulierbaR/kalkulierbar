@@ -9,13 +9,15 @@ import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import exampleState from "./example";
 
-
-interface Props {
-    server: string;
-    state?: TableauxState;
-    onChange: AppStateUpdater<"prop-tableaux">;
-}
-
+/**
+ * A asynchronous function to send requested move to backend
+ * Updates app state with response from backend
+ * @param {string} url - The url of the backend endpoint
+ * @param {TableauxState} state - The sate containing the clauseSet and nodes
+ * @param {TableauxMove} move - The TableauxMove which shall be requested 
+ * @param {AppStateUpdater} stateChanger - A function to change app state
+ * @returns {void}
+ */
 const sendMove = async (
     url: string,
     state: TableauxState,
@@ -39,6 +41,7 @@ const sendMove = async (
     }
 };
 
+// Wrapper to send the close move request
 const sendClose = (
     url: string,
     state: TableauxState,
@@ -47,6 +50,7 @@ const sendClose = (
     pred: number
 ) => sendMove(url, state, { type: "c", id1: leaf, id2: pred }, stateChanger);
 
+// Wrapper to send the extend move request
 const sendExtend = (
     url: string,
     state: TableauxState,
@@ -55,74 +59,74 @@ const sendExtend = (
     clause: number
 ) => sendMove(url, state, { type: "e", id1: leaf, id2: clause }, stateChanger);
 
-// Availble edit modes to modify the tree
-const EDIT_MODE_EXTEND = 0;
-const EDIT_MODE_CLOSE = 1;
+// Properties Interface for the TableauxView component
+interface Props {
+    server: string;
+    state?: TableauxState;
+    onChange: AppStateUpdater<"prop-tableaux">;
+}
 
+// Component displaying the content of the prop-tableaux route
 const TableauxView: preact.FunctionalComponent<Props> = ({
     state,
     server,
     onChange
 }) => {
-
-    const [selectedEditMode, setSelectedEditMode] = useState<number | undefined>(undefined);
     const [selectedClauseId, setSelectedClauseId] = useState<number | undefined>(undefined);
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(undefined);
 
     const url = `${server}/prop-tableaux/`;
     const moveUrl = url + "move";
 
-    // Callback function which is called when a clause is selected by the user
+    /**
+     * The function to call, when the user selects a clause
+     * @param {number} newClauseId - The id of the clause, which was clicked on
+     * @returns {void}
+     */
     const selectClauseCallback = (newClauseId: number) => {
         if(newClauseId === selectedClauseId){
+            // The same clause was selected again => deselect it
             setSelectedClauseId(undefined);
-            setSelectedNodeId(undefined)
-            setSelectedEditMode(undefined);
+            setSelectedNodeId(undefined);
         }
         else{
             setSelectedClauseId(newClauseId);
-            setSelectedEditMode(EDIT_MODE_EXTEND);
-
+            
             if(selectedNodeId !== undefined){
+                // The clause and node have been selected => send extend move request to backend
                 sendExtend(moveUrl, state!, onChange, selectedNodeId, newClauseId)
-                setSelectedEditMode(undefined);
                 setSelectedNodeId(undefined);
                 setSelectedClauseId(undefined);
             }
         }
     };
 
-    // Callback function which is called when a node is selected by the user
+    /**
+     * The function to call, when the user selects a node
+     * @param {D3Data} newNode - The id of the clause, which was clicked on
+     * @returns {void}
+     */
     const selectNodeCallback = (newNode: D3Data) => {
-        
-        if(newNode.id === selectedNodeId){
-            setSelectedNodeId(undefined);            
-            setSelectedEditMode(undefined);
-        }
-        else if (newNode.isLeaf) {
-            // Select new leaf node
-            setSelectedNodeId(newNode.id);
-        } 
-        else if (selectedNodeId !== undefined) {
-            // We already have a node selected. Try close
-            // If we can't do it, let server handle it
-            sendClose(moveUrl, state!, onChange, selectedNodeId, newNode.id)
+        if(newNode.id === selectedNodeId){        
+            // The same node was selected again => deselect it
             setSelectedNodeId(undefined);
         }
+        else if (newNode.isLeaf) {
+            // If the newly selected node is a leaf => accept new node id
+            setSelectedNodeId(newNode.id);
 
-        if(selectedEditMode === EDIT_MODE_EXTEND){
             if(selectedClauseId !== undefined){
+                // The clause and node have been selected => send extend move request to backend
                 sendExtend(moveUrl, state!, onChange, newNode.id, selectedClauseId)
-                setSelectedEditMode(undefined);
                 setSelectedNodeId(undefined);
                 setSelectedClauseId(undefined);
             }
-        }
-        else if(selectedEditMode === EDIT_MODE_CLOSE){
-            // Do stuff specific to EDIT_MODE_CLOSE
-        }
-        else{
-            // Show dialog to user to decide upon the desired move
+        } 
+        else if (selectedNodeId !== undefined) {
+            // We already have a leaf node selected => Try close move
+            // If we can't do it, let server handle it
+            sendClose(moveUrl, state!, onChange, selectedNodeId, newNode.id)
+            setSelectedNodeId(undefined);
         }
     }
 
@@ -136,7 +140,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
         <Fragment>
             <h2>Tableaux View</h2>
             <div class={style.view}>
-                <ClauseList clauseSet={state.clauseSet} selectedClauseId={selectedClauseId} selectClauseCallback={selectClauseCallback} />
+                <ClauseList 
+                    clauseSet={state.clauseSet} 
+                    selectedClauseId={selectedClauseId} 
+                    selectClauseCallback={selectClauseCallback} 
+                />
                 <TableauxTreeView
                     nodes={state.nodes}
                     selectedNodeId={selectedNodeId}
