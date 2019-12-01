@@ -5,9 +5,9 @@ import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.JsonParseException
 import kalkulierbar.PropositionalTableaux
 import kalkulierbar.TableauxNode
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.Test
 
 class TestPropositionalTableaux {
 
