@@ -94,7 +94,13 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
             
             if(selectedNodeId !== undefined){
                 // The clause and node have been selected => send extend move request to backend
-                sendExtend(moveUrl, state!, onChange, selectedNodeId, newClauseId)
+                sendExtend(
+                    moveUrl, 
+                    state!, 
+                    onChange, 
+                    selectedNodeId, 
+                    newClauseId
+                );
                 setSelectedNodeId(undefined);
                 setSelectedClauseId(undefined);
             }
@@ -117,7 +123,13 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
 
             if(selectedClauseId !== undefined){
                 // The clause and node have been selected => send extend move request to backend
-                sendExtend(moveUrl, state!, onChange, newNode.id, selectedClauseId)
+                sendExtend(
+                    moveUrl, 
+                    state!, 
+                    onChange, 
+                    newNode.id, 
+                    selectedClauseId
+                );
                 setSelectedNodeId(undefined);
                 setSelectedClauseId(undefined);
             }
@@ -128,7 +140,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
             sendClose(moveUrl, state!, onChange, selectedNodeId, newNode.id)
             setSelectedNodeId(undefined);
         }
-    }
+    };
 
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;

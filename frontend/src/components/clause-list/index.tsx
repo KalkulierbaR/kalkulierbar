@@ -20,22 +20,25 @@ interface Props {
 }
 
 // Component to display a set of clauses as a list
-const ClauseList: preact.FunctionalComponent<Props> = ({clauseSet, selectedClauseId, selectClauseCallback}) => {
-
-    /**
-     * Handle the onClick event of an item in the clause list
-     * @param {EventTarget} target - The HTML element which was clicked
-     * @returns {void}
-     */
-    const onClick = ({ target }: Event) => {
-        const { id } = target as HTMLParagraphElement;
-        selectClauseCallback(parseInt(id));
-    };
+const ClauseList: preact.FunctionalComponent<Props> = ({
+    clauseSet, 
+    selectedClauseId, 
+    selectClauseCallback
+}) => {
     
     return (
         <div class="card">
             {clauseSet.clauses.map((c, index) => (
-                <p id={String(index)} onClick={onClick} class={style.clauseListItem + " " + (index === selectedClauseId ? style.clauseSelected : "")} >{clauseToString(c)}</p>
+                <p
+                    onClick={() => selectClauseCallback(index)}
+                    class={
+                        style.clauseListItem +
+                        " " +
+                        (index === selectedClauseId ? style.clauseSelected : "")
+                    }
+                >
+                    {clauseToString(c)}
+                </p>
             ))}
         </div>
     );
