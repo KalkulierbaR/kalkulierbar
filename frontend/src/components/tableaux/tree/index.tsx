@@ -71,7 +71,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     const treeHeight = root.height * NODE_SIZE[1];
     const leaves = root.copy().count().value || 1;
     const treeWidth = leaves * NODE_SIZE[0];
-    
+
     // Let d3 calculate our layout
     layout.size([treeWidth, treeHeight]);
     layout(root);

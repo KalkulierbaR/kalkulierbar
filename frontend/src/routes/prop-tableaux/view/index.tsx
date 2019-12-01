@@ -9,7 +9,6 @@ import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import exampleState from "./example";
 
-
 interface Props {
     server: string;
     state?: TableauxState;
@@ -64,27 +63,37 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
     server,
     onChange
 }) => {
-
-    const [selectedEditMode, setSelectedEditMode] = useState<number | undefined>(undefined);
-    const [selectedClauseId, setSelectedClauseId] = useState<number | undefined>(undefined);
-    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(undefined);
+    const [selectedEditMode, setSelectedEditMode] = useState<
+        number | undefined
+    >(undefined);
+    const [selectedClauseId, setSelectedClauseId] = useState<
+        number | undefined
+    >(undefined);
+    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
+        undefined
+    );
 
     const url = `${server}/prop-tableaux/`;
     const moveUrl = url + "move";
 
     // Callback function which is called when a clause is selected by the user
     const selectClauseCallback = (newClauseId: number) => {
-        if(newClauseId === selectedClauseId){
+        if (newClauseId === selectedClauseId) {
             setSelectedClauseId(undefined);
-            setSelectedNodeId(undefined)
+            setSelectedNodeId(undefined);
             setSelectedEditMode(undefined);
-        }
-        else{
+        } else {
             setSelectedClauseId(newClauseId);
             setSelectedEditMode(EDIT_MODE_EXTEND);
 
-            if(selectedNodeId !== undefined){
-                sendExtend(moveUrl, state!, onChange, selectedNodeId, newClauseId)
+            if (selectedNodeId !== undefined) {
+                sendExtend(
+                    moveUrl,
+                    state!,
+                    onChange,
+                    selectedNodeId,
+                    newClauseId
+                );
                 setSelectedEditMode(undefined);
                 setSelectedNodeId(undefined);
                 setSelectedClauseId(undefined);
@@ -94,37 +103,38 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
 
     // Callback function which is called when a node is selected by the user
     const selectNodeCallback = (newNode: D3Data) => {
-        
-        if(newNode.id === selectedNodeId){
-            setSelectedNodeId(undefined);            
+        if (newNode.id === selectedNodeId) {
+            setSelectedNodeId(undefined);
             setSelectedEditMode(undefined);
-        }
-        else if (newNode.isLeaf) {
+        } else if (newNode.isLeaf) {
             // Select new leaf node
             setSelectedNodeId(newNode.id);
-        } 
-        else if (selectedNodeId !== undefined) {
+        } else if (selectedNodeId !== undefined) {
             // We already have a node selected. Try close
             // If we can't do it, let server handle it
-            sendClose(moveUrl, state!, onChange, selectedNodeId, newNode.id)
+            sendClose(moveUrl, state!, onChange, selectedNodeId, newNode.id);
             setSelectedNodeId(undefined);
         }
 
-        if(selectedEditMode === EDIT_MODE_EXTEND){
-            if(selectedClauseId !== undefined){
-                sendExtend(moveUrl, state!, onChange, newNode.id, selectedClauseId)
+        if (selectedEditMode === EDIT_MODE_EXTEND) {
+            if (selectedClauseId !== undefined) {
+                sendExtend(
+                    moveUrl,
+                    state!,
+                    onChange,
+                    newNode.id,
+                    selectedClauseId
+                );
                 setSelectedEditMode(undefined);
                 setSelectedNodeId(undefined);
                 setSelectedClauseId(undefined);
             }
-        }
-        else if(selectedEditMode === EDIT_MODE_CLOSE){
+        } else if (selectedEditMode === EDIT_MODE_CLOSE) {
             // Do stuff specific to EDIT_MODE_CLOSE
-        }
-        else{
+        } else {
             // Show dialog to user to decide upon the desired move
         }
-    }
+    };
 
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
@@ -136,7 +146,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
         <Fragment>
             <h2>Tableaux View</h2>
             <div class={style.view}>
-                <ClauseList clauseSet={state.clauseSet} selectedClauseId={selectedClauseId} selectClauseCallback={selectClauseCallback} />
+                <ClauseList
+                    clauseSet={state.clauseSet}
+                    selectedClauseId={selectedClauseId}
+                    selectClauseCallback={selectClauseCallback}
+                />
                 <TableauxTreeView
                     nodes={state.nodes}
                     selectedNodeId={selectedNodeId}
