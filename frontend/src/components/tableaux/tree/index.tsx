@@ -93,6 +93,24 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         );
     });
 
+    const closingEdge = (blattID :number)=>{
+        const blatt = root.descendants().filter(n => n.data.id === blattID);
+        const closer = root.descendants().filter(n => n.data.id === blatt[0].data.closeRef);
+        const x1 = (blatt[0] as any).x;
+        const y1 = (blatt[0] as any).y;
+        const x2 = (closer[0] as any).x;
+        const y2 = (closer[0] as any).y;
+
+        return(
+        <line
+            class={style.link}
+            x1={x1-10}
+            x2={x2-10}
+            y1={y1}
+            y2={y2}
+        />)
+    };
+
     return (
         <div class="card">
             <svg
@@ -122,6 +140,13 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                 node={n}
                                 selected={n.data.id === selectedNodeId}
                             />
+                        ))}
+                    </g>
+                    <g class="closingEdge">
+                        {root.descendants().map(n =>(
+                            n.data.isClosed ? (
+                                closingEdge(n.data.id)
+                            ) : null
                         ))}
                     </g>
                 </g>
