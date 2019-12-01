@@ -4,6 +4,11 @@
     width: 100%;
 }
 
+.notifications {
+    position: fixed;
+    bottom: 16px;
+}
+
 @media (min-width: 700px) {
     .main {
         width: 80%;
