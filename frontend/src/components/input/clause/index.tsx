@@ -18,6 +18,7 @@ interface Props {
      * The function to call, when the state associated with the calculus changed
      */
     onChange: AppStateUpdater;
+    onError: (msg: string) => void;
 }
 
 /**
@@ -42,7 +43,8 @@ const normalizeInput = (input: string) => {
 const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
     server,
-    onChange
+    onChange,
+    onError
 }) => {
     const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
@@ -58,11 +60,15 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
                 method: "POST",
                 body: `formula=${normalizeInput(userInput)}`
             });
-            const parsed = await response.json();
-            onChange(calculus, parsed);
-            route(`/${calculus}/view`);
+            if (response.status !== 200) {
+                onError(await response.text());
+            } else {
+                const parsed = await response.json();
+                onChange(calculus, parsed);
+                route(`/${calculus}/view`);
+            }
         } catch (e) {
-            console.error(e);
+            onError((e as Error).message);
         }
     };
 

@@ -13,13 +13,15 @@ interface Props {
     server: string;
     state?: TableauxState;
     onChange: AppStateUpdater<"prop-tableaux">;
+    onError: (msg: string) => void;
 }
 
 const sendMove = async (
     url: string,
     state: TableauxState,
     move: TableauxMove,
-    stateChanger: AppStateUpdater<"prop-tableaux">
+    stateChanger: AppStateUpdater<"prop-tableaux">,
+    onError: (msg: string) => void
 ) => {
     try {
         const res = await fetch(url, {
@@ -29,12 +31,13 @@ const sendMove = async (
             method: "POST",
             body: `move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`
         });
+        if (res.status !== 200) {
+            onError(await res.text());
+        }
         const parsed = await res.json();
-
-        // TODO: handle errors
         stateChanger("prop-tableaux", parsed);
     } catch (e) {
-        console.log(e);
+        onError((e as Error).message);
     }
 };
 
@@ -42,17 +45,33 @@ const sendClose = (
     url: string,
     state: TableauxState,
     stateChanger: AppStateUpdater<"prop-tableaux">,
+    onError: (msg: string) => void,
     leaf: number,
     pred: number
-) => sendMove(url, state, { type: "c", id1: leaf, id2: pred }, stateChanger);
+) =>
+    sendMove(
+        url,
+        state,
+        { type: "c", id1: leaf, id2: pred },
+        stateChanger,
+        onError
+    );
 
 const sendExtend = (
     url: string,
     state: TableauxState,
     stateChanger: AppStateUpdater<"prop-tableaux">,
+    onError: (msg: string) => void,
     leaf: number,
     clause: number
-) => sendMove(url, state, { type: "e", id1: leaf, id2: clause }, stateChanger);
+) =>
+    sendMove(
+        url,
+        state,
+        { type: "e", id1: leaf, id2: clause },
+        stateChanger,
+        onError
+    );
 
 // Availble edit modes to modify the tree
 const EDIT_MODE_EXTEND = 0;
@@ -61,7 +80,8 @@ const EDIT_MODE_CLOSE = 1;
 const TableauxView: preact.FunctionalComponent<Props> = ({
     state,
     server,
-    onChange
+    onChange,
+    onError
 }) => {
     const [selectedEditMode, setSelectedEditMode] = useState<
         number | undefined
@@ -91,6 +111,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
                     moveUrl,
                     state!,
                     onChange,
+                    onError,
                     selectedNodeId,
                     newClauseId
                 );
@@ -112,7 +133,14 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
         } else if (selectedNodeId !== undefined) {
             // We already have a node selected. Try close
             // If we can't do it, let server handle it
-            sendClose(moveUrl, state!, onChange, selectedNodeId, newNode.id);
+            sendClose(
+                moveUrl,
+                state!,
+                onChange,
+                onError,
+                selectedNodeId,
+                newNode.id
+            );
             setSelectedNodeId(undefined);
         }
 
@@ -122,6 +150,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
                     moveUrl,
                     state!,
                     onChange,
+                    onError,
                     newNode.id,
                     selectedClauseId
                 );
