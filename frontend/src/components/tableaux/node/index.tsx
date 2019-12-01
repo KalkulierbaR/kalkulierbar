@@ -5,9 +5,7 @@ import { D3Data } from "../tree";
 
 import * as style from "./style.css";
 
-/**
- * Properties Interface for the TableauxTreeNode component
- */
+// Properties Interface for the TableauxTreeNode component
 interface Props {
     /**
      * The single tree node to represent
@@ -23,9 +21,7 @@ interface Props {
     selectNodeCallback: (node: D3Data) => void;
 }
 
-/*
- * A component representing a single Node of a TableauxTree
- */
+// Component representing a single Node of a TableauxTree
 const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     node,
     selectNodeCallback,

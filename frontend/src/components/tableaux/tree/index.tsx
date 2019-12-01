@@ -7,9 +7,7 @@ import TableauxTreeNode from "../node";
 
 import * as style from "./style.css";
 
-/**
- * Properties Interface for the TableauxTreeView component
- */
+// Properties Interface for the TableauxTreeView component
 interface Props {
     /**
      * The nodes of the tree
@@ -25,9 +23,7 @@ interface Props {
     selectNodeCallback: (node: D3Data) => void;
 }
 
-/**
- * Properties Interface for a node
- */
+// Interface for a node
 export interface D3Data {
     id: number;
     name: string;
@@ -69,9 +65,7 @@ const transformNodeToD3Data = (id: number, nodes: TableauxNode[]): D3Data => {
     };
 };
 
-/*
- * A component displaying nodes as a TableauxTree
- */
+// Component displaying nodes as a TableauxTree
 const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
     selectedNodeId,
