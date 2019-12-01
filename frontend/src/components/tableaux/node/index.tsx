@@ -5,21 +5,25 @@ import { D3Data } from "../tree";
 
 import * as style from "./style.css";
 
+interface Props {
+    node: HierarchyNode<D3Data>;
+    selected: boolean;
+    onClick: (n: D3Data) => void;
+}
+
 /*
  * A single Node in the tree
  */
-const TableauxTreeNode: preact.FunctionalComponent<{
-    node: HierarchyNode<D3Data>;
-    selectedLeafNodeId: string;
-    selectLeafNodeCallback: CallableFunction;
-}> = ({ node, selectedLeafNodeId, selectLeafNodeCallback }) => {
-    const [selected, setSelected] = useState(false);
-
+const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
+    node,
+    onClick,
+    selected
+}) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
     const ref = createRef<SVGTextElement>();
 
-    const isLeafNode = node.children === undefined;
+    const name = `${node.data.negated ? "!" : ""}${node.data.name}`;
 
     const handleClick = () => {
         if (ref.current) {
@@ -28,10 +32,7 @@ const TableauxTreeNode: preact.FunctionalComponent<{
             box.x -= 2;
             setDims(box);
         }
-        setSelected(s => !s);
-        if(isLeafNode){
-            selectLeafNodeCallback(node.id);
-        }
+        onClick(node.data);
     };
 
     const { width, height, x: bgX, y: bgY } = dims;
@@ -53,12 +54,14 @@ const TableauxTreeNode: preact.FunctionalComponent<{
             <text
                 ref={ref}
                 text-anchor="middle"
-                class={style.node}
+                class={
+                    style.node + (node.data.isClosed ? " " + style.closed : " ")
+                }
                 onClick={handleClick}
                 x={(node as any).x}
                 y={(node as any).y}
             >
-                {node.data.name}
+                {name}
             </text>
         </g>
     );

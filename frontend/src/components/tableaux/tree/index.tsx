@@ -12,12 +12,17 @@ interface Props {
      * The nodes of the tree
      */
     nodes: TableauxNode[];
-    selectedLeafNodeId: string;
-    selectLeafNodeCallback: CallableFunction;
+    selectedNodeId: number | undefined;
+    selectNodeCallback: (node: D3Data) => void;
 }
 
 export interface D3Data {
+    id: number;
     name: string;
+    isLeaf: boolean;
+    negated: boolean;
+    isClosed: boolean;
+    closeRef: number | null;
     children?: D3Data[];
 }
 
@@ -30,30 +35,38 @@ const NODE_SIZE: [number, number] = [140, 140];
 /**
  * Transforms the node data received by the server to data
  * accepted by d3
- * @param {TableauxNode} node  - the node to transform
+ * @param {number} id  - the node to transform
  * @param {TableauxNode[]} nodes  - list of all nodes
  * @returns {D3Data} - data as d3 parsable
  */
-const transformNodeToD3Data = (
-    node: TableauxNode,
-    nodes: TableauxNode[]
-): D3Data => {
-    const children = node.children.length
-        ? node.children.map(c => transformNodeToD3Data(nodes[c], nodes))
-        : undefined;
+const transformNodeToD3Data = (id: number, nodes: TableauxNode[]): D3Data => {
+    const node = nodes[id];
+    const isLeaf = !node.children.length;
+    const children = isLeaf
+        ? undefined
+        : node.children.map(c => transformNodeToD3Data(c, nodes));
+
     return {
+        id,
         name: node.spelling,
-        children
+        isLeaf,
+        children,
+        negated: node.negated,
+        isClosed: node.isClosed,
+        closeRef: node.closeRef
     };
 };
 
 /*
  * Displays nodes as a Tree
  */
-const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes, selectedLeafNodeId, selectLeafNodeCallback }) => {
+const TableauxTreeView: preact.FunctionalComponent<Props> = ({
+    nodes,
+    selectedNodeId,
+    selectNodeCallback
+}) => {
     // Transform nodes to d3 hierarchy
-    const root = hierarchy(transformNodeToD3Data(nodes[0], nodes));
-
+    const root = hierarchy(transformNodeToD3Data(0, nodes));
     // Calculate tree size
     const treeHeight = root.height * NODE_SIZE[1];
     const leaves = root.copy().count().value || 1;
@@ -104,7 +117,11 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({ nodes, selectedLe
                     </g>
                     <g class="nodes">
                         {root.descendants().map(n => (
-                            <TableauxTreeNode node={n} selectedLeafNodeId={selectedLeafNodeId} selectLeafNodeCallback={selectLeafNodeCallback} />
+                            <TableauxTreeNode
+                                onClick={selectNodeCallback}
+                                node={n}
+                                selected={n.data.id === selectedNodeId}
+                            />
                         ))}
                     </g>
                 </g>

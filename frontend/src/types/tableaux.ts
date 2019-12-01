@@ -14,3 +14,9 @@ export interface TableauxState {
     clauseSet: ClauseSet;
     nodes: TableauxNode[];
 }
+
+export interface TableauxMove {
+    type: "c" | "e";
+    id1: number;
+    id2: number;
+}
