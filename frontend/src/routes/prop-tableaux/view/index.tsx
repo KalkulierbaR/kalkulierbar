@@ -35,9 +35,10 @@ const sendMove = async (
         });
         if (res.status !== 200) {
             onError(await res.text());
+        } else {
+            const parsed = await res.json();
+            stateChanger("prop-tableaux", parsed);
         }
-        const parsed = await res.json();
-        stateChanger("prop-tableaux", parsed);
     } catch (e) {
         onError((e as Error).message);
     }
