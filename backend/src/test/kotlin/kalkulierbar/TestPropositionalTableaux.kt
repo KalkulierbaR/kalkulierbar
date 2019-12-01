@@ -7,7 +7,7 @@ import kalkulierbar.PropositionalTableaux
 import kalkulierbar.TableauxNode
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 
 class TestPropositionalTableaux {
 
@@ -219,6 +219,10 @@ class TestPropositionalTableaux {
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
+
+    /*
+        Test checkCloseOnState
+    */
 
     @Test
     fun testCheckCloseSimple() {
