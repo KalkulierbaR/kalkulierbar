@@ -8,6 +8,10 @@
     fill: #683ab74d;
 }
 
+.invisible {
+    fill: transparent;
+}
+
 .closed {
     fill: green;
 }

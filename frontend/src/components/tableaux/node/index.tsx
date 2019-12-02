@@ -1,6 +1,6 @@
 import { HierarchyNode } from "d3";
 import { createRef, h } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { D3Data } from "../tree";
 
 import * as style from "./style.css";
@@ -25,39 +25,37 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
 
     const name = `${node.data.negated ? "!" : ""}${node.data.name}`;
 
-    const handleClick = () => {
+    useEffect(() => {
         if (ref.current) {
             const box = ref.current.getBBox();
-            box.width += 4;
-            box.x -= 2;
+            box.width += 16;
+            box.x -= 8;
+            box.height += 8;
+            box.y -= 4;
             setDims(box);
         }
+    }, []);
+
+    const handleClick = () => {
         onClick(node.data);
     };
 
     const { width, height, x: bgX, y: bgY } = dims;
 
-    const bg = selected ? (
-        <rect
-            class={style.bg}
-            x={bgX}
-            y={bgY}
-            width={width}
-            height={height}
-            rx="4"
-        />
-    ) : null;
-
     return (
-        <g>
-            {bg}
+        <g onClick={handleClick} class={style.node}>
+            <rect
+                class={selected ? style.bg : style.invisible}
+                x={bgX}
+                y={bgY}
+                width={width}
+                height={height}
+                rx="4"
+            />
             <text
                 ref={ref}
                 text-anchor="middle"
-                class={
-                    style.node + (node.data.isClosed ? " " + style.closed : " ")
-                }
-                onClick={handleClick}
+                class={node.data.isClosed ? style.closed : undefined}
                 x={(node as any).x}
                 y={(node as any).y}
             >
