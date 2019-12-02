@@ -1,5 +1,5 @@
 import { event, hierarchy, select, tree, zoom } from "d3";
-import { h } from "preact";
+import { Fragment, h } from "preact";
 import { useEffect } from "preact/hooks";
 
 import { TableauxNode } from "../../../types/tableaux";
@@ -93,20 +93,24 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         );
     });
 
-    const closingEdge = (blattID :number)=>{
-        const blatt = root.descendants().filter(n => n.data.id === blattID);
-        const closer = root.descendants().filter(n => n.data.id === blatt[0].data.closeRef);
-        const x1 = (blatt[0] as any).x -10;
-        const y1 = (blatt[0] as any).y -5;
-        const x2 = (closer[0] as any).x -10;
-        const y2 = (closer[0] as any).y -5;
+    // Component to display an edge in a graph
+    const ClosingEdge: preact.FunctionalComponent<{leafId: number}> = ({leafId}) => {
+        // Filter the root descendants to get the nodes which shall be connected by the edge
+        const leafFilterResult = root.descendants().filter(n => n.data.id === leafId);
+        const closeRefFilterResult = root.descendants().filter(n => n.data.id === leafFilterResult[0].data.closeRef);
 
-        const d = "M "+ x1 +" "+ y1 +" Q "+ (x1 -(y1-y2)/2) +" "+ ((y1+y2)/2) +" "+ (x2) + " " + (y2);
+        // Calculate coordinates
+        const x1 = (leafFilterResult[0] as any).x - 10;
+        const y1 = (leafFilterResult[0] as any).y - 5;
+        const x2 = (closeRefFilterResult[0] as any).x - 10;
+        const y2 = (closeRefFilterResult[0] as any).y - 5;
+
+        // Calculate edge
+        const d = "M " + x1 + " " + y1 + " Q " + (x1 - (y1 - y2) / 2) + " " + ((y1 + y2) / 2) + " " + (x2) + " " + (y2);
 
         return(
-            <path d={d}
-            class={style.link}/>
-            )
+            <path d={d} class={style.link}/>
+        )
     };
 
     return (
@@ -133,18 +137,16 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                     </g>
                     <g class="nodes">
                         {root.descendants().map(n => (
-                            <TableauxTreeNode
-                                onClick={selectNodeCallback}
-                                node={n}
-                                selected={n.data.id === selectedNodeId}
-                            />
-                        ))}
-                    </g>
-                    <g class="closingEdge">
-                        {root.descendants().map(n =>(
-                            n.data.isClosed ? (
-                                closingEdge(n.data.id)
-                            ) : null
+                            <Fragment>
+                                <TableauxTreeNode
+                                    onClick={selectNodeCallback}
+                                    node={n}
+                                    selected={n.data.id === selectedNodeId}
+                                />
+                                {n.data.isClosed ? (
+                                    <ClosingEdge leafId={n.data.id} />
+                                ) : null}
+                            </Fragment>
                         ))}
                     </g>
                 </g>
