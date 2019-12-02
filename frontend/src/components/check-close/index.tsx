@@ -17,6 +17,12 @@ const CheckCloseBtn: preact.FunctionalComponent<Props> = ({
     onError,
     onSuccess
 }) => {
+    /**
+     * Sends a request to the server to check, if the tree is closed and
+     * shows the result to the user
+     *
+     * @returns {Promise<void>} - Resolves when the request is done
+     */
     const handleClick = async () => {
         const url = `${server}/${calculus}/close`;
         try {
