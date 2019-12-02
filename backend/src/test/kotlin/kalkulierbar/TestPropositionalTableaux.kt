@@ -6,6 +6,7 @@ import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.JsonParseException
 import kalkulierbar.PropositionalTableaux
 import kalkulierbar.TableauxNode
+import kalkulierbar.TableauxState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -107,7 +108,7 @@ class TestPropositionalTableaux {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testApplyMoveNullValues() {
-        var state = instance.parseFormulaToState("a,b;c")
+        val state = instance.parseFormulaToState("a,b;c")
 
         val hash = state.getHash()
 
@@ -170,7 +171,7 @@ class TestPropositionalTableaux {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testExpandLeafIndexOOB() {
-        var state = instance.parseFormulaToState("a,b;c")
+        val state = instance.parseFormulaToState("a,b;c")
 
         val hash = state.getHash()
 
@@ -247,7 +248,7 @@ class TestPropositionalTableaux {
 
         for (i in nodes.indices) {
             val parentThisNode = nodes[i].parent
-            state.nodes[parentThisNode].children.add(i + 1)
+            state.nodes[parentThisNode!!].children.add(i + 1)
         }
         return state
     }
@@ -267,7 +268,7 @@ class TestPropositionalTableaux {
 
         assertEquals(true, state.nodes[3].isClosed)
         assertEquals(2, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|{a, b}, {!b}|[true;p;0;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;o;(3)|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|{a, b}, {!b}|[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;o;(3)|b;n;2;2;l;c;()]", state.getHash())
     }
 
     @Test
@@ -290,7 +291,7 @@ class TestPropositionalTableaux {
         assertEquals(false, state.nodes[4].isClosed)
 
         assertEquals(1, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|{a, b, c}, {!a}, {!b}, {!c}|[true;p;0;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]", state.getHash())
     }
 
     @Test
@@ -317,13 +318,15 @@ class TestPropositionalTableaux {
 
         assertEquals(1, state.nodes[4].closeRef)
         assertEquals(2, state.nodes[5].closeRef)
-        assertEquals("tableauxstate|{a, b, c}, {!a}, {!b}, {!c}|[true;p;0;-;i;o;(1,2,3)|a;p;0;-;i;o;(4)|b;p;0;-;i;o;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;o;(4)|b;p;0;-;i;o;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]", state.getHash())
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testCloseLeafIndexOOB() {
-        var state = instance.parseFormulaToState("a,b;c")
+        val state = instance.parseFormulaToState("a,b;c")
+
+        val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 42, \"id2\": 1}")
@@ -339,7 +342,7 @@ class TestPropositionalTableaux {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testExpandNullValues() {
-        val state = instance.parseFormulaToState("a,b;c")
+        var state = instance.parseFormulaToState("a,b;c")
 
         val nodes = listOf(
                 TableauxNode(0, "a", false),
