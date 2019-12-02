@@ -1,4 +1,4 @@
-import { event, hierarchy, select, tree, zoom } from "d3";
+import { event, hierarchy, HierarchyNode, select, tree, zoom } from "d3";
 import { Fragment, h } from "preact";
 import { useEffect } from "preact/hooks";
 
@@ -57,6 +57,54 @@ const transformNodeToD3Data = (id: number, nodes: TableauxNode[]): D3Data => {
     };
 };
 
+/**
+ *
+ * @param {HierarchyNode<D3Data>} node - The node whose ancestor we want
+ * @param {number} id - Id of the ancestor
+ * @returns {HierarchyNode<D3Data>} - The ancestor
+ */
+const getAncestorById = (node: HierarchyNode<D3Data>, id: number) =>
+    node.ancestors().find(n => n.data.id === id)!;
+
+interface ClosingEdgeProps {
+    leaf: HierarchyNode<D3Data>;
+    pred: HierarchyNode<D3Data>;
+}
+
+// Component to display an edge in a graph
+const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
+    leaf,
+    pred
+}) => {
+    // Calculate coordinates
+    const x1 = (leaf as any).x - 3;
+    const y1 = (leaf as any).y - 16;
+    const x2 = (pred as any).x - 3;
+    const y2 = (pred as any).y + 4;
+
+    // Calculate edge
+    // M -> move to point x1,y1
+    // Q -> draw quadratic curve (type of Bezier Curve https://developer.mozilla.org/de/docs/Web/SVG/Tutorial/Pfade)
+    //      xC,yC of the control point
+    //      x2,y2 of the target
+    // should look like d="M x1 x2 Q xC yC x2 y2"
+    const d =
+        "M " +
+        x1 +
+        " " +
+        y1 +
+        " Q " +
+        (x1 - (y1 - y2) / 2) +
+        " " +
+        (y1 + y2) / 2 +
+        " " +
+        x2 +
+        " " +
+        y2;
+
+    return <path d={d} class={style.link} />;
+};
+
 /*
  * Displays nodes as a Tree
  */
@@ -93,48 +141,6 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         );
     });
 
-    // TODO: Move this component out of TableauxTreeView. It should not be declared in here!
-    // Component to display an edge in a graph
-    const ClosingEdge: preact.FunctionalComponent<{ leafId: number }> = ({
-        leafId
-    }) => {
-        // Filter the root descendants to get the nodes which shall be connected by the edge
-        const leafFilterResult = root
-            .descendants()
-            .filter(n => n.data.id === leafId)[0];
-        const closeRefFilterResult = root
-            .descendants()
-            .filter(n => n.data.id === leafFilterResult.data.closeRef)[0];
-
-        // Calculate coordinates
-        const x1 = (leafFilterResult as any).x - 3;
-        const y1 = (leafFilterResult as any).y - 16;
-        const x2 = (closeRefFilterResult as any).x - 3;
-        const y2 = (closeRefFilterResult as any).y + 4;
-
-        // Calculate edge
-        // M -> move to point x1,y1
-        // Q -> draw quadratic curve (type of Bezier Curve https://developer.mozilla.org/de/docs/Web/SVG/Tutorial/Pfade)
-        //      xC,yC of the controlepoint
-        //      x2,y2 of the target
-        // should look like d="M x1 x2 Q xC yC x2 y2"
-        const d =
-            "M " +
-            x1 +
-            " " +
-            y1 +
-            " Q " +
-            (x1 - (y1 - y2) / 2) +
-            " " +
-            (y1 + y2) / 2 +
-            " " +
-            x2 +
-            " " +
-            y2;
-
-        return <path d={d} class={style.link} />;
-    };
-
     return (
         <div class="card">
             <svg
@@ -166,7 +172,13 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     selected={n.data.id === selectedNodeId}
                                 />
                                 {n.data.isClosed ? (
-                                    <ClosingEdge leafId={n.data.id} />
+                                    <ClosingEdge
+                                        leaf={n}
+                                        pred={getAncestorById(
+                                            n,
+                                            n.data.closeRef!
+                                        )}
+                                    />
                                 ) : null}
                             </Fragment>
                         ))}
