@@ -93,17 +93,24 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         );
     });
 
+    // TODO: Move this component out of TableauxTreeView. It should not be declared in here!
     // Component to display an edge in a graph
-    const ClosingEdge: preact.FunctionalComponent<{leafId: number}> = ({leafId}) => {
+    const ClosingEdge: preact.FunctionalComponent<{ leafId: number }> = ({
+        leafId
+    }) => {
         // Filter the root descendants to get the nodes which shall be connected by the edge
-        const leafFilterResult = root.descendants().filter(n => n.data.id === leafId)[0];
-        const closeRefFilterResult = root.descendants().filter(n => n.data.id === leafFilterResult.data.closeRef)[0];
+        const leafFilterResult = root
+            .descendants()
+            .filter(n => n.data.id === leafId)[0];
+        const closeRefFilterResult = root
+            .descendants()
+            .filter(n => n.data.id === leafFilterResult.data.closeRef)[0];
 
         // Calculate coordinates
-        const x1 = (leafFilterResult as any).x - 10;
-        const y1 = (leafFilterResult as any).y - 5;
-        const x2 = (closeRefFilterResult as any).x - 10;
-        const y2 = (closeRefFilterResult as any).y - 5;
+        const x1 = (leafFilterResult as any).x - 3;
+        const y1 = (leafFilterResult as any).y - 16;
+        const x2 = (closeRefFilterResult as any).x - 3;
+        const y2 = (closeRefFilterResult as any).y + 4;
 
         // Calculate edge
         // M -> move to point x1,y1
@@ -111,11 +118,21 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         //      xC,yC of the controlepoint
         //      x2,y2 of the target
         // should look like d="M x1 x2 Q xC yC x2 y2"
-        const d = "M " + x1 + " " + y1 + " Q " + (x1 - (y1 - y2) / 2) + " " + ((y1 + y2) / 2) + " " + (x2) + " " + (y2);
+        const d =
+            "M " +
+            x1 +
+            " " +
+            y1 +
+            " Q " +
+            (x1 - (y1 - y2) / 2) +
+            " " +
+            (y1 + y2) / 2 +
+            " " +
+            x2 +
+            " " +
+            y2;
 
-        return(
-            <path d={d} class={style.link}/>
-        )
+        return <path d={d} class={style.link} />;
     };
 
     return (
