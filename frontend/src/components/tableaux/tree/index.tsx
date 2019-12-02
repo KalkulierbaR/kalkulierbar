@@ -96,16 +96,21 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     // Component to display an edge in a graph
     const ClosingEdge: preact.FunctionalComponent<{leafId: number}> = ({leafId}) => {
         // Filter the root descendants to get the nodes which shall be connected by the edge
-        const leafFilterResult = root.descendants().filter(n => n.data.id === leafId);
-        const closeRefFilterResult = root.descendants().filter(n => n.data.id === leafFilterResult[0].data.closeRef);
+        const leafFilterResult = root.descendants().filter(n => n.data.id === leafId)[0];
+        const closeRefFilterResult = root.descendants().filter(n => n.data.id === leafFilterResult.data.closeRef)[0];
 
         // Calculate coordinates
-        const x1 = (leafFilterResult[0] as any).x - 10;
-        const y1 = (leafFilterResult[0] as any).y - 5;
-        const x2 = (closeRefFilterResult[0] as any).x - 10;
-        const y2 = (closeRefFilterResult[0] as any).y - 5;
+        const x1 = (leafFilterResult as any).x - 10;
+        const y1 = (leafFilterResult as any).y - 5;
+        const x2 = (closeRefFilterResult as any).x - 10;
+        const y2 = (closeRefFilterResult as any).y - 5;
 
         // Calculate edge
+        // M -> move to point x1,y1
+        // Q -> draw quadratic curve (type of Bezier Curve https://developer.mozilla.org/de/docs/Web/SVG/Tutorial/Pfade)
+        //      xC,yC of the controlepoint
+        //      x2,y2 of the target
+        // should look like d="M x1 x2 Q xC yC x2 y2"
         const d = "M " + x1 + " " + y1 + " Q " + (x1 - (y1 - y2) / 2) + " " + ((y1 + y2) / 2) + " " + (x2) + " " + (y2);
 
         return(
