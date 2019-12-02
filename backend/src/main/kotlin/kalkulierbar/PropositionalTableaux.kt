@@ -126,6 +126,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         if (!leaf.isLeaf)
             throw IllegalMove("Node '$leaf' with ID $leafID is not a leaf")
 
+if (leaf.isClosed)
+    throw IllegalMove("Node '$leaf' width ID $leafID is already closed")
+
         // Adding every atom in clause to leaf and set parameters
         for (atom in clause.atoms) {
             val newLeaf = TableauxNode(leafID, atom.lit, atom.negated)
