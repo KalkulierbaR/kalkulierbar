@@ -25,6 +25,7 @@ interface Props {
  * @param {TableauxState} state - The sate containing the clauseSet and nodes
  * @param {TableauxMove} move - The TableauxMove which shall be requested
  * @param {AppStateUpdater} stateChanger - A function to change app state
+ * @param {Function} onError - Error handler
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 const sendMove = async (
@@ -58,6 +59,7 @@ const sendMove = async (
  * @param {string} url - URL of the move endpoint for the current calculus
  * @param {TableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
+ * @param {Function} onError - Error handler
  * @param {number} leaf - The selected leaf
  * @param {number} pred - The selected predecessor
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
@@ -83,6 +85,7 @@ const sendClose = (
  * @param {string} url - URL of the move endpoint for the current calculus
  * @param {TableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
+ * @param {Function} onError - Error handler
  * @param {number} leaf - The selected leaf
  * @param {number} clause - The selected clause
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
@@ -169,8 +172,20 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
         } else if (newNode.isLeaf) {
             // If the newly selected node is a leaf => accept new node id
             setSelectedNodeId(newNode.id);
+        } else if (selectedClauseId !== undefined) {
+            // The clause and node have been selected => send extend move request to backend
+            sendExtend(
+                moveUrl,
+                state!,
+                onChange,
+                onError,
+                newNode.id,
+                selectedClauseId
+            );
+            setSelectedNodeId(undefined);
+            setSelectedClauseId(undefined);
         } else if (selectedNodeId !== undefined) {
-            // We already have a node selected. Try close
+            // We already have a leaf node selected => Try close move
             // If we can't do it, let server handle it
             sendClose(
                 moveUrl,
@@ -180,25 +195,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
                 selectedNodeId,
                 newNode.id
             );
-            setSelectedNodeId(undefined);
-        }
-            if (selectedClauseId !== undefined) {
-                // The clause and node have been selected => send extend move request to backend
-                sendExtend(
-                    moveUrl,
-                    state!,
-                    onChange,
-                    onError,
-                    newNode.id,
-                    selectedClauseId
-                );
-                setSelectedNodeId(undefined);
-                setSelectedClauseId(undefined);
-            }
-        } else if (selectedNodeId !== undefined) {
-            // We already have a leaf node selected => Try close move
-            // If we can't do it, let server handle it
-            sendClose(moveUrl, state!, onChange, selectedNodeId, newNode.id);
             setSelectedNodeId(undefined);
         }
     };
