@@ -103,6 +103,14 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         return state
     }
 
+    /**
+     * Expand a leaf in the proof tree using a specified clause
+     * For rule specification see docs/PropositionalTableaux.md
+     * @param state Current proof state
+     * @param leafID Leaf node to expand on
+     * @param clauseID Clause to use for expansion
+     * @return New state after rule was applied
+     */
     @Suppress("ThrowsCount")
     private fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int): TableauxState {
         // Verify that both leaf and clause are valid
@@ -117,6 +125,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         // Verify that leaf is actually a leaf
         if (!leaf.isLeaf)
             throw IllegalMove("Node '$leaf' with ID $leafID is not a leaf")
+
+        if (leaf.isClosed)
+            throw IllegalMove("Node '$leaf' width ID $leafID is already closed")
 
         // Adding every atom in clause to leaf and set parameters
         for (atom in clause.atoms) {

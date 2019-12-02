@@ -1,10 +1,14 @@
 import { h } from "preact";
 import * as style from "./style.css";
 
-// Interface for properties
+/**
+ * Properties Interface for the Home component
+ */
 interface Props {}
 
-// This component is used to display the content of the home sub page
+/*
+ * The component displaying the content of the home route
+ */
 const Home: preact.FunctionalComponent<Props> = () => {
     return (
         <div class={style.home}>
