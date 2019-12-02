@@ -4,7 +4,7 @@ import { useState } from "preact/hooks";
 import { AppState, AppStateUpdater } from "../../../types/app";
 import * as style from "./style.css";
 
-// Interface for properties
+// Properties Interface for the ClauseInput component
 interface Props {
     /**
      * The calculus to use. Specifies API endpoint
@@ -37,7 +37,6 @@ const normalizeInput = (input: string) => {
  * A component for entering clause sets and sending them to the server.
  * It also redirects the user after a successful response from the server
  * to the corresponding view of the calculus
- *
  */
 const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
@@ -47,7 +46,11 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
     const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
 
-    // Handle Submit event
+    /**
+     * Handle the Submit event of the form
+     * @param {Event} event - The submit event
+     * @returns {void}
+     */
     const onSubmit = async (event: Event) => {
         event.preventDefault();
         try {
@@ -66,21 +69,29 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
         }
     };
 
-    // Handle Input event
+    /**
+     * Handle the Input event of the textarea
+     * @param {EventTarget} target - The HTML element which received input
+     * @returns {void}
+     */
     const onInput = ({ target }: Event) => {
         const { value } = target as HTMLTextAreaElement;
         setUserInput(value);
     };
 
-    // Handle KeyDown event
+    /**
+     * Handle the KeyDown event of the textarea
+     * @param {KeyboardEvent} e - The keyboard event
+     * @returns {void}
+     */
     const onKeyDown = (e: KeyboardEvent) => {
-        // Prevent submit when hitting enter
         if (e.keyCode === 13 && !e.ctrlKey) {
+            // Prevent submit when hitting enter
             e.stopPropagation();
         }
-        // Trigger submit when using ctrlKey
-        // TODO: This should be done via event, don't know why it doesn't work
         if (e.keyCode === 13 && e.ctrlKey) {
+            // Trigger submit when using ctrlKey
+            // TODO: This should be done via event, don't know why it doesn't work
             onSubmit(e);
         }
     };

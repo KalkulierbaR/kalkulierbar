@@ -4,10 +4,6 @@
     stroke-width: 2px;
 }
 
-.node {
-    transform: none;
-}
-
 .svg {
     display: block;
     margin: 0 auto;
