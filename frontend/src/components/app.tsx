@@ -1,11 +1,11 @@
 import { h } from "preact";
 import { Router } from "preact-router";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 import Home from "../routes/home";
 import Tableaux from "../routes/prop-tableaux";
 import TableauxView from "../routes/prop-tableaux/view";
-import { AppState, Notification } from "../types/app";
+import { AppState, Notification, NotificationType } from "../types/app";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.css";
@@ -15,17 +15,16 @@ const SERVER = "http://127.0.0.1:7000";
 /**
  * Check if server is online
  * @param {string} url - The url to send a request to
+ * @param {Function} onError - Error handler
  * @returns {Promise} - Promise that resolves when check is done
  */
-async function checkServer(url: string) {
+async function checkServer(url: string, onError: (msg: string) => void) {
     try {
         await fetch(url);
     } catch (e) {
-        console.error(`Server ${url} appears to be offline`);
+        onError(`Server ${url} appears to be offline`);
     }
 }
-
-checkServer(SERVER);
 
 // Used for debugging with Yarn
 if ((module as any).hot) {
@@ -44,6 +43,21 @@ const App: preact.FunctionalComponent = () => {
     const removeNotification = (idx: number) => {
         setNotifications(notifications.filter((_, i) => idx !== i));
     };
+
+    const handleError = (msg: string) =>
+        addNotification({ type: NotificationType.Error, message: msg });
+
+    const handleSuccess = (msg: string) =>
+        addNotification({ type: NotificationType.Success, message: msg });
+
+    const handleMessage = (
+        msg: string,
+        type: NotificationType = NotificationType.None
+    ) => addNotification({ type, message: msg });
+
+    useEffect(() => {
+        checkServer(SERVER, handleError);
+    }, []);
 
     /**
      * Updates the state of the given calculus
@@ -66,12 +80,15 @@ const App: preact.FunctionalComponent = () => {
                         path="/prop-tableaux"
                         server={SERVER}
                         onChange={onChange}
+                        onError={handleError}
                     />
                     <TableauxView
                         path="/prop-tableaux/view"
                         server={SERVER}
                         state={state["prop-tableaux"]}
                         onChange={onChange}
+                        onError={handleError}
+                        onSuccess={handleSuccess}
                     />
                 </Router>
             </main>

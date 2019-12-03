@@ -10,15 +10,21 @@ interface Props {
      */
     server: string;
     onChange: AppStateUpdater<"prop-tableaux">;
+    onError: (msg: string) => void;
 }
 
-const Tableaux: preact.FunctionalComponent<Props> = ({ server, onChange }) => {
+const Tableaux: preact.FunctionalComponent<Props> = ({
+    server,
+    onChange,
+    onError
+}) => {
     return (
         <ClauseInput
             path="prop-tableaux/"
             server={server}
             calculus="prop-tableaux"
             onChange={onChange}
+            onError={onError}
         />
     );
 };

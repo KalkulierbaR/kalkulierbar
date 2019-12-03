@@ -104,7 +104,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         app.post("/$name/close") { ctx ->
             val state = ctx.formParam("state")
                     ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
-            ctx.result(if (endpoint.checkClose(state)) "Proof closed" else "Incomplete Proof")
+            ctx.result(if (endpoint.checkClose(state)) "true" else "false")
         }
     }
 }

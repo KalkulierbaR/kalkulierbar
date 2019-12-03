@@ -2,6 +2,7 @@ import { h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 import { AppState, AppStateUpdater } from "../../../types/app";
+import Btn from "../../btn";
 import * as style from "./style.css";
 
 // Properties Interface for the ClauseInput component
@@ -18,6 +19,7 @@ interface Props {
      * The function to call, when the state associated with the calculus changed
      */
     onChange: AppStateUpdater;
+    onError: (msg: string) => void;
 }
 
 /**
@@ -41,7 +43,8 @@ const normalizeInput = (input: string) => {
 const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
     server,
-    onChange
+    onChange,
+    onError
 }) => {
     const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
@@ -61,11 +64,15 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
                 method: "POST",
                 body: `formula=${normalizeInput(userInput)}`
             });
-            const parsed = await response.json();
-            onChange(calculus, parsed);
-            route(`/${calculus}/view`);
+            if (response.status !== 200) {
+                onError(await response.text());
+            } else {
+                const parsed = await response.json();
+                onChange(calculus, parsed);
+                route(`/${calculus}/view`);
+            }
         } catch (e) {
-            console.error(e);
+            onError((e as Error).message);
         }
     };
 
@@ -100,14 +107,15 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
         <div class="card">
             <h3>Bitte gebe eine Klauselmenge ein:</h3>
             <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
-                <textarea name="formula" value={userInput} onInput={onInput} />
-                <button
-                    class={style.send}
-                    type="submit"
-                    disabled={userInput.length === 0}
-                >
-                    Submit
-                </button>
+                <textarea
+                    name="formula"
+                    class={style.input}
+                    value={userInput}
+                    onInput={onInput}
+                />
+                <Btn type="submit" disabled={userInput.length === 0}>
+                    Senden
+                </Btn>
             </form>
         </div>
     );
