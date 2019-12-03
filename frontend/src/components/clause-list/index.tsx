@@ -3,21 +3,29 @@ import { clauseToString } from "../../helpers/clause";
 import { ClauseSet } from "../../types/clause";
 import * as style from "./style.css";
 
+// Properties Interface for the ClauseList component
 interface Props {
     /**
      * The clause set to display
      */
     clauseSet: ClauseSet;
+    /**
+     * The selected clause to have a unique background style
+     */
     selectedClauseId: number | undefined;
-    selectClauseCallback: (id: number) => void;
+    /**
+     * The function to call, when the user selects a clause
+     */
+    selectClauseCallback: CallableFunction;
 }
 
-// Displays clauses of the set as a list.
+// Component to display a set of clauses as a list
 const ClauseList: preact.FunctionalComponent<Props> = ({
-    clauseSet,
-    selectedClauseId,
+    clauseSet, 
+    selectedClauseId, 
     selectClauseCallback
 }) => {
+    
     return (
         <div class="card">
             {clauseSet.clauses.map((c, index) => (

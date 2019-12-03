@@ -5,24 +5,33 @@ import { D3Data } from "../tree";
 
 import * as style from "./style.css";
 
+// Properties Interface for the TableauxTreeNode component
 interface Props {
+    /**
+     * The single tree node to represent
+     */
     node: HierarchyNode<D3Data>;
+    /**
+     * Boolean to change the style of the node if it is selected
+     */
     selected: boolean;
-    onClick: (n: D3Data) => void;
+    /**
+     * The function to call, when the user selects this node
+     */
+    selectNodeCallback: (node: D3Data) => void;
 }
 
-/*
- * A single Node in the tree
- */
+// Component representing a single Node of a TableauxTree
 const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     node,
-    onClick,
+    selectNodeCallback,
     selected
 }) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
-
+    
     const ref = createRef<SVGTextElement>();
 
+    // The nodes name which is displayed
     const name = `${node.data.negated ? "!" : ""}${node.data.name}`;
 
     useEffect(() => {
@@ -35,9 +44,12 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             setDims(box);
         }
     }, []);
-
+    /**
+     * Handle the onClick event of the node
+     * @returns {void}
+     */
     const handleClick = () => {
-        onClick(node.data);
+        selectNodeCallback(node.data);
     };
 
     const { width, height, x: bgX, y: bgY } = dims;

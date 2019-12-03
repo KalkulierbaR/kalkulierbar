@@ -1,21 +1,29 @@
 import { event, hierarchy, HierarchyNode, select, tree, zoom } from "d3";
 import { Fragment, h } from "preact";
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 import { TableauxNode } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
 import * as style from "./style.css";
 
+// Properties Interface for the TableauxTreeView component
 interface Props {
     /**
      * The nodes of the tree
      */
     nodes: TableauxNode[];
+    /**
+     * The id of a node if one is selected
+     */
     selectedNodeId: number | undefined;
+    /**
+     * The function to call, when the user selects a node
+     */
     selectNodeCallback: (node: D3Data) => void;
 }
 
+// Interface for a node
 export interface D3Data {
     id: number;
     name: string;
@@ -105,9 +113,13 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     return <path d={d} class={style.link} />;
 };
 
-/*
- * Displays nodes as a Tree
- */
+interface Transform {
+    x: number;
+    y: number;
+    k: number;
+}
+
+// Component displaying nodes as a TableauxTree
 const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
     selectedNodeId,
@@ -115,6 +127,9 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
 }) => {
     // Transform nodes to d3 hierarchy
     const root = hierarchy(transformNodeToD3Data(0, nodes));
+
+    const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
+
     // Calculate tree size
     const treeHeight = root.height * NODE_SIZE[1];
     const leaves = root.copy().count().value || 1;
@@ -127,16 +142,12 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     useEffect(() => {
         // Get the elements to manipulate
         const svg = select(`.${style.svg}`);
-        const g = select(".g");
 
         // Add zoom and drag behavior
         svg.call(
             zoom().on("zoom", () => {
-                g.attr(
-                    "transform",
-                    `translate(${event.transform.x} ${event.transform.y +
-                        16}) scale(${event.transform.k})`
-                );
+                const { x, y, k } = event.transform as Transform;
+                setTransform({ x, y, k });
             }) as any
         );
     });
@@ -151,7 +162,10 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                 viewBox={`0 0 ${treeWidth} ${treeHeight + 16}`}
                 preserveAspectRatio="xMidyMid meet"
             >
-                <g class="g" transform="translate(0 16)">
+                <g
+                    transform={`translate(${transform.x} ${transform.y +
+                        16}) scale(${transform.k})`}
+                >
                     <g class="links">
                         {root.links().map(l => (
                             <line
@@ -167,7 +181,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                         {root.descendants().map(n => (
                             <Fragment>
                                 <TableauxTreeNode
-                                    onClick={selectNodeCallback}
+                                    selectNodeCallback={selectNodeCallback}
                                     node={n}
                                     selected={n.data.id === selectedNodeId}
                                 />
