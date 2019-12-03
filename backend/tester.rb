@@ -54,7 +54,7 @@ class TestRequest
 	# Get the response for a request without performing any validation
 	# data is post data to send in form encoding
 	# i.e. "formula=a,b;c&something=somethingelse"
-	def getPostResponse(path, data, debug = false)
+	def getPostResponse(path, data, debug = false, silent = false)
 		uri = URI("http://#{@host}#{path}")
 
 		req = Net::HTTP::Post.new(uri, initheader = getHeaders)
@@ -67,13 +67,17 @@ class TestRequest
 		begin
 			response = @net.request(req)
 		rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
-			logMsg "Network Error: #{e.to_s}\n---------------- request body: #{data}"
+			if !silent
+				logMsg "Network Error: #{e.to_s}\n---------------- request body: #{data}"
+			end
 			return nil
 		end
 
-		# Catch unexpected status codes
+		# Catch and log unexpected status code
 		if response.code != "200"
-			logMsg("Unexpected HTTP status: #{response.code.to_s} - #{response.msg}\n---------------- response: #{response.body}\n---------------- request body: #{data}")
+			if !silent
+				logMsg("Unexpected HTTP status: #{response.code.to_s} - #{response.msg}\n---------------- response: #{response.body}\n---------------- request body: #{data}")
+			end
 			return nil
 		end
 
@@ -326,6 +330,102 @@ def tweakClause(state)
 	state['clauseSet']['clauses'][i]['atoms'][j]['negated'] = !state['clauseSet']['clauses'][i]['atoms'][j]['negated']
 end
 
+def tryCloseUncloseable(trq, iterations = 13, verbose = false)
+	logMsg "Trying to close unclosable proof"
+	
+	if bogoATP(trq, "b,c;!a,b;!c;!b,!c", iterations, verbose)
+		logError "Test failed"
+	else
+		logSuccess "Test successful"
+	end
+end
+
+def tryCloseTrivial(trq, iterations = 3, verbose = false)
+	logMsg "Trying to close a trivial proof"
+	
+	if bogoATP(trq, "a,b;!a;!b", iterations, verbose)
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
+def tryCloseCloseable(trq, iterations = 15, verbose = false)
+	logMsg "Trying to close a proof"
+	
+	if bogoATP(trq, "a,b,c;a,!b;!a;!c", iterations, verbose)
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
+def bogoATP(trq, formula, iterations, verbose = false)
+	rqcount = 1
+	state = trq.getPostResponse('/prop-tableaux/parse', "formula=#{formula}")
+	parsed = JSON.parse(state)
+
+	# Apply all single-literal clauses to improve closability and control tree fanout
+	lid = 0
+	parsed['clauseSet']['clauses'].each_with_index { |c,i|
+		if c['atoms'].length == 1
+			logMsg "Pre-expanding clause #{i.to_s} on node #{lid.to_s}" if verbose
+			state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"e\",id1:#{lid.to_s},id2:#{i.to_s}}")
+			lid += 1
+			rqcount += 1
+		end
+	}
+
+	parsed = JSON.parse(state)
+
+	# BogoATP loop, close everything closeable, then expand a random leaf
+	iterations.times() {
+
+		# Try closing all leaves
+		parsed['nodes'].each_with_index { |n, i|
+			if n['children'].length == 0 && !n['isClosed']
+				# Brute-force close with every available ID
+				parsed['nodes'].length.times() { |j|
+					newstate = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"c\",id1:#{i.to_s},id2:#{j.to_s}}", false, true)
+					rqcount += 1
+
+					if newstate != nil
+						logMsg "Closed node #{n['negated'] ? "!" : ""}#{n['spelling']} with node ID #{j.to_s}" if verbose
+						state = newstate
+						break
+					end
+				}
+			end
+		}
+
+		# Try closing the proof
+		logMsg "Trying to close proof" if verbose
+		if !trq.post('/prop-tableaux/close', "state=#{state}", "false", 200)
+			logMsg "BogoATP Proof closed - #{rqcount.to_s} requests sent"
+			return true
+		end
+
+		rqcount += 1
+		parsed = JSON.parse(state)
+
+		# Expand a random leaf with a random clause
+		clauseID = rand(0...parsed['clauseSet']['clauses'].length)
+		leafID = parsed['nodes'].each_with_index.filter{ |n,i| n['children'].length == 0 && !n['isClosed'] }.map { |x,i| i }.sample
+
+		logMsg "Expanding leaf #{leafID.to_s} with clause #{clauseID.to_s}" if verbose
+		state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"e\",id1:#{leafID.to_s},id2:#{clauseID.to_s}}")
+		rqcount += 1
+
+		parsed = JSON.parse(state)
+
+		# I love not having some tool tell me how long my lines can be
+		# Isn't it beautiful?
+		logMsg parsed['nodes'].map { |e| "(#{e['negated'] ? "!" : ""}#{e['spelling']}|#{e['parent'].to_s}|#{e['isClosed'] || e['children'].length > 0 ? "c" : "o"})" }.join(', ') if verbose
+	}
+
+	logMsg "BogoATP Proof search unsuccessful - #{rqcount.to_s} requests sent"
+	return false
+end
 
 trq = TestRequest.new
 
@@ -334,3 +434,6 @@ testInvalidParam(trq)
 fuzzClauseParsing(trq)
 testRootNodeCreation(trq)
 testStateModification(trq)
+tryCloseTrivial(trq)
+tryCloseCloseable(trq)
+tryCloseUncloseable(trq)
