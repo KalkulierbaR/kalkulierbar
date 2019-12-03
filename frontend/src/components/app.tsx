@@ -5,8 +5,9 @@ import { useState } from "preact/hooks";
 import Home from "../routes/home";
 import Tableaux from "../routes/prop-tableaux";
 import TableauxView from "../routes/prop-tableaux/view";
-import { AppState } from "../types/app";
+import { AppState, Notification } from "../types/app";
 import Header from "./header";
+import Snackbar from "./snackbar";
 import * as style from "./style.css";
 
 const SERVER = "http://127.0.0.1:7000";
@@ -35,6 +36,14 @@ if ((module as any).hot) {
 // This is the main App component which handles routing and calls other components
 const App: preact.FunctionalComponent = () => {
     const [state, setState] = useState<AppState>({});
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+
+    const addNotification = (n: Notification) =>
+        setNotifications([...notifications, n]);
+
+    const removeNotification = (idx: number) => {
+        setNotifications(notifications.filter((_, i) => idx !== i));
+    };
 
     /**
      * Updates the state of the given calculus
@@ -66,6 +75,14 @@ const App: preact.FunctionalComponent = () => {
                     />
                 </Router>
             </main>
+            <div class={style.notifications}>
+                {notifications.map((n, i) => (
+                    <Snackbar
+                        notification={n}
+                        onDelete={() => removeNotification(i)}
+                    />
+                ))}
+            </div>
         </div>
     );
 };
