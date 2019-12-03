@@ -28,7 +28,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     selected
 }) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
-    
+
     const ref = createRef<SVGTextElement>();
 
     // The nodes name which is displayed
@@ -43,7 +43,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             box.y -= 4;
             setDims(box);
         }
-    }, []);
+    });
     /**
      * Handle the onClick event of the node
      * @returns {void}
