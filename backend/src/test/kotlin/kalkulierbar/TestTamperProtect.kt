@@ -2,8 +2,8 @@ package kalkulierbar.tests
 
 import kalkulierbar.TamperProtect
 import kotlin.random.Random
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class TestTamperProtect {
 
@@ -14,17 +14,17 @@ class TestTamperProtect {
 
     @Test
     fun testSealGeneration() {
-        Assertions.assertEquals(tv1.second, TamperProtect.seal(tv1.first))
-        Assertions.assertEquals(tv2.second, TamperProtect.seal(tv2.first))
+        assertEquals(tv1.second, TamperProtect.seal(tv1.first))
+        assertEquals(tv2.second, TamperProtect.seal(tv2.first))
     }
 
     @Test
     fun testVerification() {
-        Assertions.assertEquals(true, TamperProtect.verify(tv1.first, tv1.second))
-        Assertions.assertEquals(true, TamperProtect.verify(tv2.first, tv2.second))
+        assertEquals(true, TamperProtect.verify(tv1.first, tv1.second))
+        assertEquals(true, TamperProtect.verify(tv2.first, tv2.second))
 
-        Assertions.assertEquals(false, TamperProtect.verify(tv1.first, tv2.second))
-        Assertions.assertEquals(false, TamperProtect.verify(tv2.first, tv1.second))
+        assertEquals(false, TamperProtect.verify(tv1.first, tv2.second))
+        assertEquals(false, TamperProtect.verify(tv2.first, tv1.second))
     }
 
     @Test
@@ -34,12 +34,12 @@ class TestTamperProtect {
             payload = genPoem()
             val seal = TamperProtect.seal(payload)
             println(payload)
-            Assertions.assertEquals(true, TamperProtect.verify(payload, seal))
+            assertEquals(true, TamperProtect.verify(payload, seal))
 
             val delete = Random.nextInt(payload.length - 1)
             payload = payload.removeRange(delete, delete + 1)
 
-            Assertions.assertEquals(false, TamperProtect.verify(payload, seal))
+            assertEquals(false, TamperProtect.verify(payload, seal))
         }
     }
 
