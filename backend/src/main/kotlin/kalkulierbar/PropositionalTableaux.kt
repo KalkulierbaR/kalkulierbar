@@ -194,6 +194,18 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         state.computeSeal()
         return Json.stringify(TableauxState.serializer(), state)
     }
+
+    /**
+     * Provides some API documentation regarding formats used for inputs and outputs
+     * @return plaintext API documentation
+     */
+    fun getDocumentation(): String {
+        return """Takes a clause set as an input, format a,!b;b,!c;d with variables in [a-zA-Z]+\n
+            |Possible moves are expand and close of the following JSON format:\n
+            |Expand: {type: "e", id1: <ID of leaf to expand on>, id2: <ID of clause to expand>}\n
+            |Close: {type: "c", id1: <ID of leaf to close>, id2: <ID of node to close with>}\n
+            |where IDs are the positions of the node or clause in the nodes or clauses list of the state object."""
+    }
 }
 
 /**
