@@ -1,0 +1,11 @@
+/* Styles for the Clause input component */
+
+.input {
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+    resize: none;
+    width: 100%;
+    min-height: 92px;
+    font-size: 1.3em;
+    margin-block-end: 8px;
+}

@@ -1,0 +1,17 @@
+.node {
+    transform: none;
+    cursor: pointer;
+}
+
+.bg {
+    /* fill: rgba(0, 0, 0, 0.15); */
+    fill: #683ab74d;
+}
+
+.invisible {
+    fill: transparent;
+}
+
+.closed {
+    fill: green;
+}

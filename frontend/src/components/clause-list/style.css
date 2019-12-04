@@ -1,0 +1,19 @@
+.clause-list-item {
+    padding: 8px;
+    cursor: pointer;
+    background-color: #00000000;
+    transition: background-color 0.2s ease-in;
+    margin: 0;
+}
+
+.clause-list-item:hover {
+    background-color: #00000011;
+}
+
+.clause-selected {
+    background-color: #683ab74d;
+}
+
+.clause-selected:hover {
+    background-color: #683ab74d;
+}
