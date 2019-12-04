@@ -6,6 +6,7 @@ import * as style from "./style.css";
 
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
+import TreeControlFAB from "../../../components/tableaux/fab";
 import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import exampleState from "./example";
@@ -231,6 +232,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
                     selectNodeCallback={selectNodeCallback}
                 />
             </div>
+            <TreeControlFAB />
         </Fragment>
     );
 };
