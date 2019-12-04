@@ -82,17 +82,25 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             throw IllegalMove(msg)
         }
 
-        // Verify that closeNode is transitive parent of leaf
-        if (!state.nodeIsParentOf(closeNodeID, leafID))
-            throw IllegalMove("Node '$closeNode' is not an ancestor of leaf '$leaf'")
-
         // Ensure that tree root node cannot be used to close variables of same spelling ('true')
         if (closeNodeID == 0)
             throw IllegalMove("The root node cannot be used for branch closure")
 
+        // Verify that closeNode is transitive parent of leaf
+        if (!state.nodeIsParentOf(closeNodeID, leafID))
+            throw IllegalMove("Node '$closeNode' is not an ancestor of leaf '$leaf'")
+
         // Close branch
         leaf.closeRef = closeNodeID
-        leaf.isClosed = true
+        var node = leaf
+
+        // Set isClosed to true for all nodes dominated by leaf in reverse tree
+        while (node.isLeaf || node.children.size == 1) {
+            node.isClosed = true
+            if (node.parent == null)
+                break
+            node = state.nodes.get(node.parent!!)
+        }
 
         return state
     }
