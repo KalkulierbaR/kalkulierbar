@@ -2,6 +2,7 @@ package kalkulierbar
 
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.ClauseSetParser
+import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecodingException
@@ -46,6 +47,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
                 throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close).")
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
+        } catch (e: MissingFieldException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON move - missing field")
         }
     }
 
@@ -71,7 +74,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
 
         // Verify that leaf is actually a leaf
         if (!leaf.isLeaf)
-            throw IllegalMove("Node '$leaf' with ID $leafID is not a leaf")
+            throw IllegalMove("Node '$leaf' is not a leaf")
 
         // Verify that leaf is not already closed
         if (leaf.isClosed)
@@ -124,10 +127,10 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
 
         // Verify that leaf is actually a leaf
         if (!leaf.isLeaf)
-            throw IllegalMove("Node '$leaf' with ID $leafID is not a leaf")
+            throw IllegalMove("Node '$leaf' is not a leaf")
 
         if (leaf.isClosed)
-            throw IllegalMove("Node '$leaf' width ID $leafID is already closed")
+            throw IllegalMove("Node '$leaf' is already closed")
 
         // Adding every atom in clause to leaf and set parameters
         for (atom in clause.atoms) {
@@ -176,6 +179,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
             return parsed
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON state")
+        } catch (e: MissingFieldException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON state - missing field")
         }
     }
 
@@ -289,4 +294,4 @@ class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean)
  * @param id2 For expand moves: ID of the clause to expand. For close moves: ID of the node to close with
  */
 @Serializable
-class TableauxMove(val type: String, val id1: Int, val id2: Int)
+data class TableauxMove(val type: String, val id1: Int, val id2: Int)
