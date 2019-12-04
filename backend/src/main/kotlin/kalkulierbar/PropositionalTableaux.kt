@@ -199,7 +199,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
      * Provides some API documentation regarding formats used for inputs and outputs
      * @return plaintext API documentation
      */
-    fun getDocumentation(): String {
+    override fun getDocumentation(): String {
         return """Takes a clause set as an input, format a,!b;b,!c;d with variables in [a-zA-Z]+\n
             |Possible moves are expand and close of the following JSON format:\n
             |Expand: {type: "e", id1: <ID of leaf to expand on>, id2: <ID of clause to expand>}\n
