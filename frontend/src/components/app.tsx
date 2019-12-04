@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { createContext, h } from "preact";
 import { Router } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
@@ -11,6 +11,10 @@ import Snackbar from "./snackbar";
 import * as style from "./style.css";
 
 const SERVER = "http://127.0.0.1:7000";
+
+export const SmallScreen = createContext<boolean>(false);
+
+const SMALL_SCREEN_THRESHOLD = 700;
 
 /**
  * Check if server is online
@@ -26,6 +30,12 @@ async function checkServer(url: string, onError: (msg: string) => void) {
     }
 }
 
+const updateSmallScreen = (setter: (s: boolean) => void) => {
+    const width = window.innerWidth;
+    const small = width < SMALL_SCREEN_THRESHOLD;
+    setter(small);
+};
+
 // Used for debugging with Yarn
 if ((module as any).hot) {
     // tslint:disable-next-line:no-var-requires
@@ -36,6 +46,7 @@ if ((module as any).hot) {
 const App: preact.FunctionalComponent = () => {
     const [state, setState] = useState<AppState>({});
     const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [smallScreen, setSmallScreen] = useState<boolean>(false);
 
     const addNotification = (n: Notification) =>
         setNotifications([...notifications, n]);
@@ -57,6 +68,10 @@ const App: preact.FunctionalComponent = () => {
 
     useEffect(() => {
         checkServer(SERVER, handleError);
+        updateSmallScreen(setSmallScreen);
+        window.addEventListener("resize", () =>
+            updateSmallScreen(setSmallScreen)
+        );
     }, []);
 
     /**
@@ -71,35 +86,37 @@ const App: preact.FunctionalComponent = () => {
 
     return (
         <div id="app">
-            <Header />
-            <main class={style.main}>
-                <Router>
-                    <Home path="/" />
+            <SmallScreen.Provider value={smallScreen}>
+                <Header />
+                <main class={style.main}>
+                    <Router>
+                        <Home path="/" />
 
-                    <Tableaux
-                        path="/prop-tableaux"
-                        server={SERVER}
-                        onChange={onChange}
-                        onError={handleError}
-                    />
-                    <TableauxView
-                        path="/prop-tableaux/view"
-                        server={SERVER}
-                        state={state["prop-tableaux"]}
-                        onChange={onChange}
-                        onError={handleError}
-                        onSuccess={handleSuccess}
-                    />
-                </Router>
-            </main>
-            <div class={style.notifications}>
-                {notifications.map((n, i) => (
-                    <Snackbar
-                        notification={n}
-                        onDelete={() => removeNotification(i)}
-                    />
-                ))}
-            </div>
+                        <Tableaux
+                            path="/prop-tableaux"
+                            server={SERVER}
+                            onChange={onChange}
+                            onError={handleError}
+                        />
+                        <TableauxView
+                            path="/prop-tableaux/view"
+                            server={SERVER}
+                            state={state["prop-tableaux"]}
+                            onChange={onChange}
+                            onError={handleError}
+                            onSuccess={handleSuccess}
+                        />
+                    </Router>
+                </main>
+                <div class={style.notifications}>
+                    {notifications.map((n, i) => (
+                        <Snackbar
+                            notification={n}
+                            onDelete={() => removeNotification(i)}
+                        />
+                    ))}
+                </div>
+            </SmallScreen.Provider>
         </div>
     );
 };

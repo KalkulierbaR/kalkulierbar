@@ -1,8 +1,9 @@
 import { event, hierarchy, HierarchyNode, select, tree, zoom } from "d3";
 import { Fragment, h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useContext, useEffect, useState } from "preact/hooks";
 
 import { TableauxNode } from "../../../types/tableaux";
+import { SmallScreen } from "../../app";
 import TableauxTreeNode from "../node";
 
 import * as style from "./style.css";
@@ -37,9 +38,6 @@ export interface D3Data {
 // Creates a tree layout function
 const layout = tree();
 
-// Size of the nodes. [width, height]
-const NODE_SIZE: [number, number] = [140, 140];
-
 /**
  * Transforms the node data received by the server to data
  * accepted by d3
@@ -67,12 +65,12 @@ const transformNodeToD3Data = (id: number, nodes: TableauxNode[]): D3Data => {
 
 /**
  *
- * @param {HierarchyNode<D3Data>} node - The node whose ancestor we want
+ * @param {Array<HierarchyNode<D3Data>>} nodes - The nodes we iterate over
  * @param {number} id - Id of the ancestor
  * @returns {HierarchyNode<D3Data>} - The ancestor
  */
-const getAncestorById = (node: HierarchyNode<D3Data>, id: number) =>
-    node.ancestors().find(n => n.data.id === id)!;
+const getNodeById = (nodes: Array<HierarchyNode<D3Data>>, id: number) =>
+    nodes.find(n => n.data.id === id)!;
 
 interface ClosingEdgeProps {
     leaf: HierarchyNode<D3Data>;
@@ -119,6 +117,8 @@ interface Transform {
     k: number;
 }
 
+const INIT_TRANSFORM: Transform = { x: 0, y: 0, k: 1 };
+
 // Component displaying nodes as a TableauxTree
 const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
@@ -128,12 +128,17 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     // Transform nodes to d3 hierarchy
     const root = hierarchy(transformNodeToD3Data(0, nodes));
 
-    const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
+    const smallScreen = useContext(SmallScreen);
+
+    // Size of the nodes. [width, height]
+    const nodeSize: [number, number] = smallScreen ? [70, 70] : [140, 140];
+
+    const [transform, setTransform] = useState<Transform>(INIT_TRANSFORM);
 
     // Calculate tree size
-    const treeHeight = root.height * NODE_SIZE[1];
+    const treeHeight = root.height * nodeSize[1];
     const leaves = root.copy().count().value || 1;
-    const treeWidth = leaves * NODE_SIZE[0];
+    const treeWidth = leaves * nodeSize[0];
 
     // Let d3 calculate our layout
     layout.size([treeWidth, treeHeight]);
@@ -150,6 +155,12 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                 setTransform({ x, y, k });
             }) as any
         );
+
+        // Experimental
+        (window as any).goToNode = (n: number) => {
+            const { x, y } = getNodeById(root.descendants(), n) as any;
+            setTransform({ x: treeWidth / 2 - x, y: treeHeight / 2 - y, k: 1 });
+        };
     });
 
     return (
@@ -188,8 +199,8 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                 {n.data.isClosed ? (
                                     <ClosingEdge
                                         leaf={n}
-                                        pred={getAncestorById(
-                                            n,
+                                        pred={getNodeById(
+                                            n.ancestors(),
                                             n.data.closeRef!
                                         )}
                                     />
