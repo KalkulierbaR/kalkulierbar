@@ -11,7 +11,7 @@ import kotlinx.serialization.json.JsonDecodingException
  * Implementation of a simple tableaux calculus on propositional clause sets
  * For calculus specification see docs/PropositionalTableaux.md
  */
-class PropositionalTableaux : JSONCalculus<TableauxState>() {
+class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
 
     override val identifier = "prop-tableaux"
 
@@ -33,23 +33,14 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
      * @param move move to apply in the given state
      * @return state after the move was applied
      */
-    @kotlinx.serialization.UnstableDefault
-    override fun applyMoveOnState(state: TableauxState, move: String): TableauxState {
-        try {
-            val tableauxMove = Json.parse(TableauxMove.serializer(), move)
-
-            // Pass expand or close moves to relevant subfunction
-            if (tableauxMove.type == "c")
-                return applyMoveCloseBranch(state, tableauxMove.id1, tableauxMove.id2)
-            else if (tableauxMove.type == "e")
-                return applyMoveExpandLeaf(state, tableauxMove.id1, tableauxMove.id2)
-            else
-                throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close).")
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move - missing field")
-        }
+    override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
+        // Pass expand or close moves to relevant subfunction
+        if (move.type == "c")
+            return applyMoveCloseBranch(state, move.id1, move.id2)
+        else if (move.type == "e")
+            return applyMoveExpandLeaf(state, move.id1, move.id2)
+        else
+            throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close).")
     }
 
     /**
@@ -193,6 +184,22 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
     override fun stateToJson(state: TableauxState): String {
         state.computeSeal()
         return Json.stringify(TableauxState.serializer(), state)
+    }
+
+    /*
+     * Parses a JSON move representation into a TableauxMove object
+     * @param json JSON move representation
+     * @return parsed move object
+     */
+    @kotlinx.serialization.UnstableDefault
+    override fun jsonToMove(json: String): TableauxMove {
+        try {
+            return Json.parse(TableauxMove.serializer(), json)
+        } catch (e: JsonDecodingException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON move")
+        } catch (e: MissingFieldException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON move - missing field")
+        }
     }
 
     /**

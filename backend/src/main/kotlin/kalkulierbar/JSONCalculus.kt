@@ -4,7 +4,7 @@ package kalkulierbar
  * Framework for Calculus implementations using JSON for serialization
  * Handles serialization and deserialization, letting implementing classes work directly on state
  */
-abstract class JSONCalculus<State> : Calculus {
+abstract class JSONCalculus<State, Move> : Calculus {
 
     /**
      * Parses a formula provided as text into a state representation
@@ -28,7 +28,11 @@ abstract class JSONCalculus<State> : Calculus {
      * @param move move to apply in the given state
      * @return state representation after move was applied
      */
-    override fun applyMove(state: String, move: String) = stateToJson(applyMoveOnState(jsonToState(state), move))
+    override fun applyMove(state: String, move: String): String {
+        val stateObj = jsonToState(state)
+        val moveObj = jsonToMove(move)
+        return stateToJson(applyMoveOnState(stateObj, moveObj))
+    }
 
     /**
      * Takes in a state object and a move and applies the move to the state if possible
@@ -37,7 +41,7 @@ abstract class JSONCalculus<State> : Calculus {
      * @param move move to apply in the given state
      * @return state after the move was applied
      */
-    abstract fun applyMoveOnState(state: State, move: String): State
+    abstract fun applyMoveOnState(state: State, move: Move): State
 
     /**
      * Checks if a given state represents a valid, closed proof.
@@ -66,4 +70,11 @@ abstract class JSONCalculus<State> : Calculus {
      * @return JSON state representation
      */
     abstract fun stateToJson(state: State): String
+
+    /**
+     * Parses a JSON move representation into a Move object
+     * @param json JSON move representation
+     * @return parsed move object
+     */
+    abstract fun jsonToMove(json: String): Move
 }
