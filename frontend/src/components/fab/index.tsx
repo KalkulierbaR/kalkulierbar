@@ -8,7 +8,7 @@ interface Props {
     extended?: boolean;
     label: string;
     icon: ComponentChild;
-    onClick: () => void;
+    onClick?: () => void;
 }
 
 const FAB: preact.FunctionalComponent<Props> = ({

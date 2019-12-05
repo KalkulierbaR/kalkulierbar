@@ -163,6 +163,12 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         };
     });
 
+    useEffect(() => {
+        window.addEventListener("kbar-center-tree", () => {
+            setTransform(INIT_TRANSFORM);
+        });
+    }, []);
+
     return (
         <div class="card">
             <svg

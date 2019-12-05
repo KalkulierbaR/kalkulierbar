@@ -1,0 +1,20 @@
+.control {
+    position: fixed;
+    z-index: 2;
+    bottom: 8px;
+    right: 8px;
+}
+
+.menu {
+    position: absolute;
+    bottom: 48px;
+    right: 0;
+    transform: translateX(200px);
+    animation: fly-in 0.4s ease forwards;
+}
+
+@keyframes fly-in {
+    to {
+        transform: none;
+    }
+}
