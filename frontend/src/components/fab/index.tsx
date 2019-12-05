@@ -8,6 +8,7 @@ interface Props {
     extended?: boolean;
     label: string;
     icon: ComponentChild;
+    onClick: () => void;
 }
 
 const FAB: preact.FunctionalComponent<Props> = ({
@@ -15,7 +16,8 @@ const FAB: preact.FunctionalComponent<Props> = ({
     disabled = false,
     extended = false,
     label,
-    icon
+    icon,
+    onClick
 }) => {
     const classes = classMap({
         [style.mini]: mini,
@@ -26,6 +28,7 @@ const FAB: preact.FunctionalComponent<Props> = ({
             class={style.fab + classes}
             disabled={disabled}
             aria-label={label}
+            onClick={onClick}
         >
             {icon}
             {extended && <span class={style.label}>{label}</span>}
