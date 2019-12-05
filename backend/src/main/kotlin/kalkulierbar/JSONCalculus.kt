@@ -46,16 +46,16 @@ abstract class JSONCalculus<State, Move> : Calculus {
     /**
      * Checks if a given state represents a valid, closed proof.
      * @param state state representation to validate
-     * @return true if the given proof is closed and valid, false otherwise
+     * @return string representing proof state (closed/open) with an optional message
      */
     override fun checkClose(state: String) = checkCloseOnState(jsonToState(state))
 
     /**
      * Checks if a given state represents a valid, closed proof.
      * @param state state object to validate
-     * @return true if the given proof is closed and valid, false otherwise
+     * @return string representing proof state (closed/open) with an optional message
      */
-    abstract fun checkCloseOnState(state: State): Boolean
+    abstract fun checkCloseOnState(state: State): String
 
     /**
      * Parses a JSON state representation into a State object

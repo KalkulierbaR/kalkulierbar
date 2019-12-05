@@ -31,9 +31,9 @@ interface Calculus {
     /**
      * Checks if a given state represents a valid, closed proof.
      * @param state state representation to validate
-     * @return true if the given proof is closed and valid, false otherwise
+     * @return string representing proof state (closed/open) with an optional message
      */
-    fun checkClose(state: String): Boolean
+    fun checkClose(state: String): String
 
     /**
      * Provides some API documentation regarding formats used for inputs and outputs, implementation specific
