@@ -196,7 +196,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
  * @param clauseSet The clause set to be proven unsatisfiable
  */
 @Serializable
-class TableauxState(val clauseSet: ClauseSet) {
+class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.NORMAL, val restrictDoubleVars: Boolean = false) {
     val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
     var seal = ""
 
@@ -290,3 +290,7 @@ class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean)
  */
 @Serializable
 class TableauxMove(val type: String, val id1: Int, val id2: Int)
+
+enum class TableauxType {
+    NORMAL, WEAKLYCONNECTED, STRONGLYCONNECTED
+}
