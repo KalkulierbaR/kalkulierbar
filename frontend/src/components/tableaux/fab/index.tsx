@@ -6,9 +6,7 @@ interface Props {}
 
 const TreeControlFAB: preact.FunctionalComponent<Props> = () => {
     return (
-        <FAB>
-            <CloseIcon fill="#fff" />
-        </FAB>
+        <FAB icon={<CloseIcon fill="#fff" />} label="Open Menu" mini={true} extended={true} />
     );
 };
 
