@@ -218,13 +218,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
                         selectedClauseId={selectedClauseId}
                         selectClauseCallback={selectClauseCallback}
                     />
-                    <CheckCloseBtn
-                        server={server}
-                        calculus="prop-tableaux"
-                        state={state}
-                        onError={onError}
-                        onSuccess={onSuccess}
-                    />
+                    <CheckCloseBtn calculus="prop-tableaux" state={state} />
                 </div>
                 <TableauxTreeView
                     nodes={state.nodes}
@@ -232,7 +226,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
                     selectNodeCallback={selectNodeCallback}
                 />
             </div>
-            <TreeControlFAB />
+            <TreeControlFAB state={state} />
         </Fragment>
     );
 };
