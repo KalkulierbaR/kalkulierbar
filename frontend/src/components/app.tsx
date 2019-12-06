@@ -2,6 +2,7 @@ import { createContext, h } from "preact";
 import { Router } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
+import { checkClose as checkCloseHelper, checkCloseFn } from "../helpers/api";
 import Home from "../routes/home";
 import Tableaux from "../routes/prop-tableaux";
 import TableauxView from "../routes/prop-tableaux/view";
@@ -13,6 +14,7 @@ import * as style from "./style.css";
 const SERVER = "http://127.0.0.1:7000";
 
 export const SmallScreen = createContext<boolean>(false);
+export const CheckClose = createContext<checkCloseFn | undefined>(undefined);
 
 const SMALL_SCREEN_THRESHOLD = 700;
 
@@ -84,38 +86,42 @@ const App: preact.FunctionalComponent = () => {
         setState(s => ({ ...s, [id]: newState }));
     }
 
+    const checkClose = checkCloseHelper(SERVER, handleError, handleSuccess);
+
     return (
         <div id="app">
             <SmallScreen.Provider value={smallScreen}>
-                <Header />
-                <main class={style.main}>
-                    <Router>
-                        <Home path="/" />
+                <CheckClose.Provider value={checkClose}>
+                    <Header />
+                    <main class={style.main}>
+                        <Router>
+                            <Home path="/" />
 
-                        <Tableaux
-                            path="/prop-tableaux"
-                            server={SERVER}
-                            onChange={onChange}
-                            onError={handleError}
-                        />
-                        <TableauxView
-                            path="/prop-tableaux/view"
-                            server={SERVER}
-                            state={state["prop-tableaux"]}
-                            onChange={onChange}
-                            onError={handleError}
-                            onSuccess={handleSuccess}
-                        />
-                    </Router>
-                </main>
-                <div class={style.notifications}>
-                    {notifications.map((n, i) => (
-                        <Snackbar
-                            notification={n}
-                            onDelete={() => removeNotification(i)}
-                        />
-                    ))}
-                </div>
+                            <Tableaux
+                                path="/prop-tableaux"
+                                server={SERVER}
+                                onChange={onChange}
+                                onError={handleError}
+                            />
+                            <TableauxView
+                                path="/prop-tableaux/view"
+                                server={SERVER}
+                                state={state["prop-tableaux"]}
+                                onChange={onChange}
+                                onError={handleError}
+                                onSuccess={handleSuccess}
+                            />
+                        </Router>
+                    </main>
+                    <div class={style.notifications}>
+                        {notifications.map((n, i) => (
+                            <Snackbar
+                                notification={n}
+                                onDelete={() => removeNotification(i)}
+                            />
+                        ))}
+                    </div>
+                </CheckClose.Provider>
             </SmallScreen.Provider>
         </div>
     );
