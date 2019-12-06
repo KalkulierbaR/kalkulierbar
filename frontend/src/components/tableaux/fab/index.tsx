@@ -3,6 +3,7 @@ import { useContext, useState } from "preact/hooks";
 import FAB from "../../fab";
 import CloseIcon from "../../icons/close";
 
+import { nextOpenLeaf } from "../../../helpers/tableaux";
 import { TableauxState } from "../../../types/tableaux";
 import { CheckClose } from "../../app";
 import CenterIcon from "../../icons/center";
@@ -41,9 +42,13 @@ const TreeControlFAB: preact.FunctionalComponent<Props> = ({ state }) => {
                 extended={true}
                 showIconAtEnd={true}
                 onClick={() => {
+                    const node = nextOpenLeaf(state.nodes);
+                    if (node === undefined) {
+                        return;
+                    }
                     dispatchEvent(
                         new CustomEvent("kbar-go-to-node", {
-                            detail: { node: 1 }
+                            detail: { node }
                         })
                     );
                 }}
