@@ -4,6 +4,7 @@ import { AppStateUpdater } from "../../../types/app";
 import { TableauxMove, TableauxState } from "../../../types/tableaux";
 import * as style from "./style.css";
 
+import { SmallScreen } from "../../../components/app";
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
 import TreeControlFAB from "../../../components/tableaux/fab";
@@ -119,8 +120,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
     state,
     server,
     onChange,
-    onError,
-    onSuccess
+    onError
 }) => {
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
@@ -212,14 +212,23 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
         <Fragment>
             <h2>Tableaux View</h2>
             <div class={style.view}>
-                <div>
-                    <ClauseList
-                        clauseSet={state.clauseSet}
-                        selectedClauseId={selectedClauseId}
-                        selectClauseCallback={selectClauseCallback}
-                    />
-                    <CheckCloseBtn calculus="prop-tableaux" state={state} />
-                </div>
+                <SmallScreen.Consumer>
+                    {s =>
+                        !s && (
+                            <div>
+                                <ClauseList
+                                    clauseSet={state!.clauseSet}
+                                    selectedClauseId={selectedClauseId}
+                                    selectClauseCallback={selectClauseCallback}
+                                />
+                                <CheckCloseBtn
+                                    calculus="prop-tableaux"
+                                    state={state}
+                                />
+                            </div>
+                        )
+                    }
+                </SmallScreen.Consumer>
                 <TableauxTreeView
                     nodes={state.nodes}
                     selectedNodeId={selectedNodeId}
