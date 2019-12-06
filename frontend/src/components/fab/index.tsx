@@ -9,7 +9,7 @@ interface Props {
     label: string;
     icon: ComponentChild;
     showIconAtEnd?: boolean;
-    onClick?: () => void;
+    onClick?: (e: MouseEvent) => void;
     class?: string;
 }
 

@@ -6,7 +6,7 @@ interface Props {
     open?: boolean;
     label: string;
     onClose: () => void;
-    onConfirm: () => void;
+    onConfirm?: () => void;
 }
 
 const Dialog: preact.FunctionalComponent<Props> = ({
@@ -24,7 +24,7 @@ const Dialog: preact.FunctionalComponent<Props> = ({
                 <div class={style.content}>{children}</div>
                 <div class={style.actions}>
                     <Btn onClick={onClose}>Cancel</Btn>
-                    <Btn onClick={onConfirm}>OK</Btn>
+                    {onConfirm && <Btn onClick={onConfirm}>OK</Btn>}
                 </div>
             </div>
         </div>

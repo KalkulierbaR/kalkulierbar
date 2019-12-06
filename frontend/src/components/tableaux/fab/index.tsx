@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 import { useContext, useState } from "preact/hooks";
 import FAB from "../../fab";
 import CloseIcon from "../../icons/close";
@@ -6,23 +6,27 @@ import CloseIcon from "../../icons/close";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
 import { TableauxState } from "../../../types/tableaux";
 import { CheckClose } from "../../app";
+import ClauseList from "../../clause-list";
 import AddIcon from "../../icons/add";
 import CenterIcon from "../../icons/center";
 import CheckIcon from "../../icons/check";
 import CheckCircleIcon from "../../icons/check-circle";
 import ExploreIcon from "../../icons/explore";
 import MoreIcon from "../../icons/more";
+import Dialog from "./dialog";
 import * as style from "./style.css";
 
 interface Props {
     state: TableauxState;
     selectedNodeId?: number;
+    selectedClauseCallback: (n: number) => void;
 }
 
 interface MenuProps {
     show: boolean;
     setShow: (v: boolean) => void;
     state: TableauxState;
+    selectedClauseCallback: (n: number) => void;
 }
 
 const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
@@ -80,39 +84,60 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
 
 const MenuNodeSelected: preact.FunctionalComponent<MenuProps> = ({
     show,
-    setShow
+    setShow,
+    state,
+    selectedClauseCallback
 }) => {
+    const [showDialog, setShowDialog] = useState(false);
+
     return (
-        <menu
-            class={style.menu + (show ? " " + style.show : "")}
-            onClick={() => setShow(false)}
-        >
-            <FAB
-                class={style.delay1}
-                icon={<AddIcon />}
-                label="Expand"
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() => {
-                    console.log("e");
-                }}
-            />
-            <FAB
-                icon={<CheckIcon />}
-                label="Close"
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() => console.log("c")}
-            />
-        </menu>
+        <Fragment>
+            <menu
+                class={style.menu + (show ? " " + style.show : "")}
+                onClick={() => setShow(false)}
+            >
+                <FAB
+                    class={style.delay1}
+                    icon={<AddIcon />}
+                    label="Expand"
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() => {
+                        setShowDialog(!showDialog);
+                    }}
+                />
+                <FAB
+                    icon={<CheckIcon />}
+                    label="Close"
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() => console.log("c")}
+                />
+            </menu>
+            <Dialog
+                open={showDialog}
+                label="Choose Clause"
+                onClose={() => setShowDialog(false)}
+            >
+                <ClauseList
+                    clauseSet={state.clauseSet}
+                    selectedClauseId={undefined}
+                    selectClauseCallback={(id: number) => {
+                        setShowDialog(false);
+                        selectedClauseCallback(id);
+                    }}
+                />
+            </Dialog>
+        </Fragment>
     );
 };
 
 const TreeControlFAB: preact.FunctionalComponent<Props> = ({
     state,
-    selectedNodeId
+    selectedNodeId,
+    selectedClauseCallback
 }) => {
     const [show, setShow] = useState(false);
 
@@ -127,9 +152,19 @@ const TreeControlFAB: preact.FunctionalComponent<Props> = ({
 
     const menu =
         selectedNodeId === undefined ? (
-            <MenuNonSelected show={show} setShow={setShow} state={state} />
+            <MenuNonSelected
+                show={show}
+                setShow={setShow}
+                state={state}
+                selectedClauseCallback={selectedClauseCallback}
+            />
         ) : (
-            <MenuNodeSelected show={show} setShow={setShow} state={state} />
+            <MenuNodeSelected
+                show={show}
+                setShow={setShow}
+                state={state}
+                selectedClauseCallback={selectedClauseCallback}
+            />
         );
 
     return (

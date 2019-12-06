@@ -237,7 +237,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
                     </div>
                 )}
             </SmallScreen.Consumer>
-            <TreeControlFAB state={state} selectedNodeId={selectedNodeId} />
+            <TreeControlFAB
+                state={state}
+                selectedNodeId={selectedNodeId}
+                selectedClauseCallback={selectClauseCallback}
+            />
         </Fragment>
     );
 };
