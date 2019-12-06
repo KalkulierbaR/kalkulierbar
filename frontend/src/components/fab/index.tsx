@@ -10,6 +10,7 @@ interface Props {
     icon: ComponentChild;
     showIconAtEnd?: boolean;
     onClick?: () => void;
+    class?: string;
 }
 
 const FAB: preact.FunctionalComponent<Props> = ({
@@ -19,7 +20,8 @@ const FAB: preact.FunctionalComponent<Props> = ({
     label,
     icon,
     showIconAtEnd = false,
-    onClick
+    onClick,
+    class: c
 }) => {
     const classes = classMap({
         [style.mini]: mini,
@@ -30,7 +32,7 @@ const FAB: preact.FunctionalComponent<Props> = ({
 
     return (
         <button
-            class={style.fab + classes}
+            class={style.fab + classes + " " + c}
             disabled={disabled}
             aria-label={label}
             onClick={onClick}
