@@ -12,7 +12,7 @@
     justify-content: space-evenly;
     position: absolute;
     bottom: 48px;
-    right: 0;
+    right: -200px;
     pointer-events: none;
     padding: 0;
 }
@@ -23,12 +23,12 @@
 
 .menu > * {
     margin-top: 8px;
-    transform: translateX(200px);
+    transform: none;
     transition: transform 0.4s ease-in-out;
 }
 
 .menu.show > * {
-    transform: none;
+    transform: translateX(-200px);
 }
 
 .delay-1 {
@@ -36,4 +36,5 @@
 }
 
 .delay-2 {
+    transition-delay: 0.08s;
 }
