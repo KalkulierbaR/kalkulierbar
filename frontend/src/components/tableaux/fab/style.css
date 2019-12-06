@@ -13,6 +13,11 @@
     position: absolute;
     bottom: 48px;
     right: 0;
+    pointer-events: none;
+}
+
+.menu.show {
+    pointer-events: unset;
 }
 
 .menu > * {
