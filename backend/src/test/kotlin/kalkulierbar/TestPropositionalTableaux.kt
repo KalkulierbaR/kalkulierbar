@@ -448,6 +448,40 @@ class TestPropositionalTableaux {
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testSubtreeCloseMarking() {
+        var state = instance.parseFormulaToState("b,a;!b;!a,b")
+
+        val nodes = listOf(
+                TableauxNode(0, "b", false),
+                TableauxNode(0, "a", false),
+                TableauxNode(1, "b", false),
+                TableauxNode(1, "a", false),
+                TableauxNode(2, "b", true),
+                TableauxNode(5, "a", true),
+                TableauxNode(5, "b", false)
+        )
+        state = createArtificialExpandState(nodes, state)
+
+        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 7, \"id2\": 5}")
+
+        assertEquals(true, state.nodes.get(7).isClosed)
+        assertEquals(false, state.nodes.get(5).isClosed)
+
+        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 6, \"id2\": 2}")
+
+        println(state.getHash())
+
+        assertEquals(true, state.nodes.get(7).isClosed)
+        assertEquals(true, state.nodes.get(6).isClosed)
+        assertEquals(true, state.nodes.get(5).isClosed)
+        assertEquals(true, state.nodes.get(2).isClosed)
+        assertEquals(false, state.nodes.get(0).isClosed)
+        assertEquals(null, state.nodes.get(5).closeRef)
+        assertEquals(null, state.nodes.get(2).closeRef)
+    }
+
     /*
         Test checkCloseOnState
     */
