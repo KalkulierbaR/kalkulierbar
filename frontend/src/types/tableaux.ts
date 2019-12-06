@@ -20,3 +20,9 @@ export interface TableauxMove {
     id1: number;
     id2: number;
 }
+
+export interface TableauxTreeGoToEvent extends CustomEvent {
+    detail: {
+        node: number;
+    };
+}

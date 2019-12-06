@@ -7,6 +7,7 @@ import { TableauxState } from "../../../types/tableaux";
 import { CheckClose } from "../../app";
 import CenterIcon from "../../icons/center";
 import CheckCircleIcon from "../../icons/check-circle";
+import ExploreIcon from "../../icons/explore";
 import MoreIcon from "../../icons/more";
 import * as style from "./style.css";
 
@@ -28,7 +29,25 @@ const TreeControlFAB: preact.FunctionalComponent<Props> = ({ state }) => {
     );
 
     const menu = (
-        <menu class={style.menu + (show ? " " + style.show : "")}>
+        <menu
+            class={style.menu + (show ? " " + style.show : "")}
+            onClick={() => setShow(false)}
+        >
+            <FAB
+                class={style.delay2}
+                icon={<ExploreIcon />}
+                label="Next Leaf"
+                mini={true}
+                extended={true}
+                showIconAtEnd={true}
+                onClick={() => {
+                    dispatchEvent(
+                        new CustomEvent("kbar-go-to-node", {
+                            detail: { node: 1 }
+                        })
+                    );
+                }}
+            />
             <FAB
                 class={style.delay1}
                 icon={<CheckCircleIcon />}

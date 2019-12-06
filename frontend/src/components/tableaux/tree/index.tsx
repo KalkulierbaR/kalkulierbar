@@ -1,8 +1,8 @@
 import { event, hierarchy, HierarchyNode, select, tree, zoom } from "d3";
 import { Fragment, h } from "preact";
-import { useContext, useEffect, useState } from "preact/hooks";
+import { useContext, useEffect, useRef, useState } from "preact/hooks";
 
-import { TableauxNode } from "../../../types/tableaux";
+import { TableauxNode, TableauxTreeGoToEvent } from "../../../types/tableaux";
 import { SmallScreen } from "../../app";
 import TableauxTreeNode from "../node";
 
@@ -125,6 +125,9 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     selectedNodeId,
     selectNodeCallback
 }) => {
+    // This is the reference to our SVG element
+    const svgRef = useRef<any>();
+
     // Transform nodes to d3 hierarchy
     const root = hierarchy(transformNodeToD3Data(0, nodes));
 
@@ -134,6 +137,17 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     const nodeSize: [number, number] = smallScreen ? [70, 70] : [140, 140];
 
     const [transform, setTransform] = useState<Transform>(INIT_TRANSFORM);
+
+    // If we have a SVG, set its zoom to our transform
+    // Unfortunately, none of the methods that should work, do
+    // so this is pretty dirty
+    if (svgRef.current) {
+        const e = svgRef.current;
+        const t = e.__zoom;
+        t.x = transform.x;
+        t.y = transform.y;
+        t.k = transform.k;
+    }
 
     // Calculate tree size
     const treeHeight = root.height * nodeSize[1];
@@ -147,7 +161,6 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     useEffect(() => {
         // Get the elements to manipulate
         const svg = select(`.${style.svg}`);
-
         // Add zoom and drag behavior
         svg.call(
             zoom().on("zoom", () => {
@@ -167,16 +180,23 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         window.addEventListener("kbar-center-tree", () => {
             setTransform(INIT_TRANSFORM);
         });
+
+        window.addEventListener("kbar-go-to-node", e => {
+            const { node: id } = (e as TableauxTreeGoToEvent).detail;
+            const { x, y } = getNodeById(root.descendants(), id) as any;
+            setTransform({ x: treeWidth / 2 - x, y: treeHeight / 2 - y, k: 1 });
+        });
     }, []);
 
     return (
         <div class="card">
             <svg
+                ref={svgRef}
                 class={style.svg}
                 width="100%"
                 height={`${treeHeight + 16}px`}
                 style="min-height: 60vh"
-                viewBox={`0 0 ${treeWidth} ${treeHeight + 16}`}
+                viewBox={`0 0 ${treeWidth} ${treeHeight + 32}`}
                 preserveAspectRatio="xMidyMid meet"
             >
                 <g
