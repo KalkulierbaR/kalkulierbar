@@ -95,7 +95,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
         var node = leaf
 
         // Set isClosed to true for all nodes dominated by leaf in reverse tree
-        while (node.isLeaf || node.children.fold(true){ acc, e -> acc && state.nodes.get(e).isClosed }) {
+        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && state.nodes.get(e).isClosed }) {
             node.isClosed = true
             if (node.parent == null)
                 break
@@ -146,7 +146,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     /**
      * Checks if a given state represents a valid, closed proof.
      * @param state state object to validate
-     * @return string representing proof closed state (true/false) 
+     * @return string representing proof closed state (true/false)
      */
     @Suppress("ReturnCount")
     override fun checkCloseOnState(state: TableauxState): String {

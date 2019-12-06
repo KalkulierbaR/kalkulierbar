@@ -400,7 +400,6 @@ class TestPropositionalTableaux {
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testSubtreeCloseMarking() {
         var state = instance.parseFormulaToState("b,a;!b;!a,b")
 
@@ -415,12 +414,12 @@ class TestPropositionalTableaux {
         )
         state = createArtificialExpandState(nodes, state)
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 7, \"id2\": 5}")
+        state = instance.applyMoveOnState(state, TableauxMove("c", 7, 5))
 
         assertEquals(true, state.nodes.get(7).isClosed)
         assertEquals(false, state.nodes.get(5).isClosed)
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 6, \"id2\": 2}")
+        state = instance.applyMoveOnState(state, TableauxMove("c", 6, 2))
 
         println(state.getHash())
 
