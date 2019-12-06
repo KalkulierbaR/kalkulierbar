@@ -38,5 +38,9 @@
 }
 
 .label {
-    margin-left: 8px;
+    margin-right: 8px;
+}
+
+svg + .label {
+    margin: 0 0 0 8px;
 }

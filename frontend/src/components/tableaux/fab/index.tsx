@@ -28,6 +28,7 @@ const TreeControlFAB: preact.FunctionalComponent<Props> = () => {
                 label="Center"
                 mini={true}
                 extended={true}
+                showIconAtEnd={true}
                 onClick={() => {
                     dispatchEvent(new CustomEvent("kbar-center-tree"));
                 }}

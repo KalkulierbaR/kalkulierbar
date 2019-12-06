@@ -8,6 +8,7 @@ interface Props {
     extended?: boolean;
     label: string;
     icon: ComponentChild;
+    showIconAtEnd?: boolean;
     onClick?: () => void;
 }
 
@@ -17,12 +18,16 @@ const FAB: preact.FunctionalComponent<Props> = ({
     extended = false,
     label,
     icon,
+    showIconAtEnd = false,
     onClick
 }) => {
     const classes = classMap({
         [style.mini]: mini,
         [style.extended]: extended
     });
+
+    const labelEl = extended ? <span class={style.label}>{label}</span> : null;
+
     return (
         <button
             class={style.fab + classes}
@@ -30,8 +35,9 @@ const FAB: preact.FunctionalComponent<Props> = ({
             aria-label={label}
             onClick={onClick}
         >
+            {showIconAtEnd && labelEl}
             {icon}
-            {extended && <span class={style.label}>{label}</span>}
+            {!showIconAtEnd && labelEl}
         </button>
     );
 };
