@@ -1,9 +1,8 @@
 import { event, hierarchy, HierarchyNode, select, tree, zoom } from "d3";
-import { Fragment, h } from "preact";
-import { useContext, useEffect, useRef, useState } from "preact/hooks";
+import { Component, Fragment, h } from "preact";
+import { useRef } from "preact/hooks";
 
 import { TableauxNode, TableauxTreeGoToEvent } from "../../../types/tableaux";
-import { SmallScreen } from "../../app";
 import TableauxTreeNode from "../node";
 
 import * as style from "./style.css";
@@ -22,6 +21,14 @@ interface Props {
      * The function to call, when the user selects a node
      */
     selectNodeCallback: (node: D3Data) => void;
+    smallScreen: boolean;
+}
+
+interface State {
+    transform: Transform;
+    root?: HierarchyNode<D3Data>;
+    treeHeight: number;
+    treeWidth: number;
 }
 
 // Interface for a node
@@ -119,125 +126,154 @@ interface Transform {
 
 const INIT_TRANSFORM: Transform = { x: 0, y: 0, k: 1 };
 
-// Component displaying nodes as a TableauxTree
-const TableauxTreeView: preact.FunctionalComponent<Props> = ({
-    nodes,
-    selectedNodeId,
-    selectNodeCallback
-}) => {
-    // This is the reference to our SVG element
-    const svgRef = useRef<any>();
+class TableauxTreeView extends Component<Props, State> {
 
-    // Transform nodes to d3 hierarchy
-    const root = hierarchy(transformNodeToD3Data(0, nodes));
+    public static getDerivedStateFromProps(props: Props) {
+        const { nodes, smallScreen } = props;
 
-    const smallScreen = useContext(SmallScreen);
+        // Transform nodes to d3 hierarchy
+        const root = hierarchy(transformNodeToD3Data(0, nodes));
+        // Size of the nodes. [width, height]
+        const nodeSize: [number, number] = smallScreen ? [70, 70] : [140, 140];
+        // Calculate tree size
+        const treeHeight = root.height * nodeSize[1];
+        const leaves = root.copy().count().value || 1;
+        const treeWidth = leaves * nodeSize[0];
 
-    // Size of the nodes. [width, height]
-    const nodeSize: [number, number] = smallScreen ? [70, 70] : [140, 140];
+        // Let d3 calculate our layout
+        layout.size([treeWidth, treeHeight]);
+        layout(root);
+        return {
+            root,
+            treeHeight,
+            treeWidth
+        };
+    }
+    public state = {
+        transform: INIT_TRANSFORM,
+        root: undefined as HierarchyNode<D3Data> | undefined,
+        treeHeight: 0,
+        treeWidth: 0
+    };
 
-    const [transform, setTransform] = useState<Transform>(INIT_TRANSFORM);
-
-    // If we have a SVG, set its zoom to our transform
-    // Unfortunately, none of the methods that should work, do
-    // so this is pretty dirty
-    if (svgRef.current) {
-        const e = svgRef.current;
-        const t = e.__zoom;
-        t.x = transform.x;
-        t.y = transform.y;
-        t.k = transform.k;
+    public setTransform(transform: Transform) {
+        this.setState(s => ({ ...s, transform }));
     }
 
-    // Calculate tree size
-    const treeHeight = root.height * nodeSize[1];
-    const leaves = root.copy().count().value || 1;
-    const treeWidth = leaves * nodeSize[0];
-
-    // Let d3 calculate our layout
-    layout.size([treeWidth, treeHeight]);
-    layout(root);
-
-    useEffect(() => {
+    public bindZoom() {
         // Get the elements to manipulate
         const svg = select(`.${style.svg}`);
         // Add zoom and drag behavior
         svg.call(
             zoom().on("zoom", () => {
                 const { x, y, k } = event.transform as Transform;
-                setTransform({ x, y, k });
+                this.setTransform({ x, y, k });
             }) as any
         );
+    }
 
-        // Experimental
-        (window as any).goToNode = (n: number) => {
-            const { x, y } = getNodeById(root.descendants(), n) as any;
-            setTransform({ x: treeWidth / 2 - x, y: treeHeight / 2 - y, k: 1 });
-        };
-    });
-
-    useEffect(() => {
+    public componentDidMount() {
+        this.bindZoom();
         window.addEventListener("kbar-center-tree", () => {
-            setTransform(INIT_TRANSFORM);
+            this.setTransform(INIT_TRANSFORM);
         });
 
         window.addEventListener("kbar-go-to-node", e => {
             const { node: id } = (e as TableauxTreeGoToEvent).detail;
-            const { x, y } = getNodeById(root.descendants(), id) as any;
-            setTransform({ x: treeWidth / 2 - x, y: treeHeight / 2 - y, k: 1 });
+            const { x, y } = getNodeById(
+                this.state.root!.descendants(),
+                id
+            ) as any;
+            this.setTransform({
+                x: this.state.treeWidth / 2 - x,
+                y: this.state.treeHeight / 2 - y,
+                k: 1
+            });
         });
-    }, []);
+    }
 
-    return (
-        <div class="card">
-            <svg
-                ref={svgRef}
-                class={style.svg}
-                width="100%"
-                height={`${treeHeight + 16}px`}
-                style="min-height: 60vh"
-                viewBox={`0 0 ${treeWidth} ${treeHeight + 32}`}
-                preserveAspectRatio="xMidyMid meet"
-            >
-                <g
-                    transform={`translate(${transform.x} ${transform.y +
-                        16}) scale(${transform.k})`}
+    public componentDidUpdate() {
+        this.bindZoom();
+    }
+
+    public goToNode(n: number) {
+        const { x, y } = getNodeById(this.state.root!.descendants(), n) as any;
+        this.setTransform({
+            x: this.state.treeWidth / 2 - x,
+            y: this.state.treeHeight / 2 - y,
+            k: 1
+        });
+    }
+
+    public render() {
+        const { selectedNodeId, selectNodeCallback } = this.props;
+        const { root, treeHeight, treeWidth, transform } = this.state;
+
+        // This is the reference to our SVG element
+        const svgRef = useRef<any>();
+
+        // If we have a SVG, set its zoom to our transform
+        // Unfortunately, none of the methods that should work, do
+        // so this is pretty dirty
+        if (svgRef.current) {
+            const e = svgRef.current;
+            const t = e.__zoom;
+            t.x = transform.x;
+            t.y = transform.y;
+            t.k = transform.k;
+        }
+
+        return (
+            <div class="card">
+                <svg
+                    ref={svgRef}
+                    class={style.svg}
+                    width="100%"
+                    height={`${treeHeight + 16}px`}
+                    style="min-height: 60vh"
+                    viewBox={`0 0 ${treeWidth} ${treeHeight + 32}`}
+                    preserveAspectRatio="xMidyMid meet"
                 >
-                    <g class="links">
-                        {root.links().map(l => (
-                            <line
-                                class={style.link}
-                                x1={(l.source as any).x}
-                                y1={(l.source as any).y + 6}
-                                x2={(l.target as any).x}
-                                y2={(l.target as any).y - 18}
-                            />
-                        ))}
-                    </g>
-                    <g class="nodes">
-                        {root.descendants().map(n => (
-                            <Fragment>
-                                <TableauxTreeNode
-                                    selectNodeCallback={selectNodeCallback}
-                                    node={n}
-                                    selected={n.data.id === selectedNodeId}
+                    <g
+                        transform={`translate(${transform.x} ${transform.y +
+                            16}) scale(${transform.k})`}
+                    >
+                        <g class="links">
+                            {root!.links().map(l => (
+                                <line
+                                    class={style.link}
+                                    x1={(l.source as any).x}
+                                    y1={(l.source as any).y + 6}
+                                    x2={(l.target as any).x}
+                                    y2={(l.target as any).y - 18}
                                 />
-                                {n.data.isClosed ? (
-                                    <ClosingEdge
-                                        leaf={n}
-                                        pred={getNodeById(
-                                            n.ancestors(),
-                                            n.data.closeRef!
-                                        )}
+                            ))}
+                        </g>
+                        <g class="nodes">
+                            {root!.descendants().map(n => (
+                                <Fragment>
+                                    <TableauxTreeNode
+                                        selectNodeCallback={selectNodeCallback}
+                                        node={n}
+                                        selected={n.data.id === selectedNodeId}
                                     />
-                                ) : null}
-                            </Fragment>
-                        ))}
+                                    {n.data.isClosed ? (
+                                        <ClosingEdge
+                                            leaf={n}
+                                            pred={getNodeById(
+                                                n.ancestors(),
+                                                n.data.closeRef!
+                                            )}
+                                        />
+                                    ) : null}
+                                </Fragment>
+                            ))}
+                        </g>
                     </g>
-                </g>
-            </svg>
-        </div>
-    );
-};
+                </svg>
+            </div>
+        );
+    }
+}
 
 export default TableauxTreeView;

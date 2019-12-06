@@ -211,10 +211,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
     return (
         <Fragment>
             <h2>Tableaux View</h2>
-            <div class={style.view}>
-                <SmallScreen.Consumer>
-                    {s =>
-                        !s && (
+            <SmallScreen.Consumer>
+                {s => (
+                    <div class={style.view}>
+                        {!s && (
                             <div>
                                 <ClauseList
                                     clauseSet={state!.clauseSet}
@@ -226,15 +226,17 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
                                     state={state}
                                 />
                             </div>
-                        )
-                    }
-                </SmallScreen.Consumer>
-                <TableauxTreeView
-                    nodes={state.nodes}
-                    selectedNodeId={selectedNodeId}
-                    selectNodeCallback={selectNodeCallback}
-                />
-            </div>
+                        )}
+
+                        <TableauxTreeView
+                            nodes={state!.nodes}
+                            smallScreen={s}
+                            selectedNodeId={selectedNodeId}
+                            selectNodeCallback={selectNodeCallback}
+                        />
+                    </div>
+                )}
+            </SmallScreen.Consumer>
             <TreeControlFAB state={state} />
         </Fragment>
     );
