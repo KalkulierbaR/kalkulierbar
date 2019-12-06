@@ -2,10 +2,13 @@ import { h } from "preact";
 
 interface Props {
     size?: number;
-    fill: string;
+    fill?: string;
 }
 
-const CenterIcon: preact.FunctionalComponent<Props> = ({ size = 24, fill }) => (
+const CenterIcon: preact.FunctionalComponent<Props> = ({
+    size = 24,
+    fill = "#fff"
+}) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width={size}
