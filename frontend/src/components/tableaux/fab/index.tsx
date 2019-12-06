@@ -6,7 +6,9 @@ import CloseIcon from "../../icons/close";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
 import { TableauxState } from "../../../types/tableaux";
 import { CheckClose } from "../../app";
+import AddIcon from "../../icons/add";
 import CenterIcon from "../../icons/center";
+import CheckIcon from "../../icons/check";
 import CheckCircleIcon from "../../icons/check-circle";
 import ExploreIcon from "../../icons/explore";
 import MoreIcon from "../../icons/more";
@@ -14,22 +16,22 @@ import * as style from "./style.css";
 
 interface Props {
     state: TableauxState;
+    selectedNodeId?: number;
 }
 
-const TreeControlFAB: preact.FunctionalComponent<Props> = ({ state }) => {
-    const [show, setShow] = useState(false);
+interface MenuProps {
+    show: boolean;
+    setShow: (v: boolean) => void;
+    state: TableauxState;
+}
+
+const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
+    show,
+    setShow,
+    state
+}) => {
     const checkClose = useContext(CheckClose)!;
-
-    const SIZE = 32;
-    const FILL = "#fff";
-
-    const icon = show ? (
-        <CloseIcon fill={FILL} size={SIZE} />
-    ) : (
-        <MoreIcon fill={FILL} size={SIZE} />
-    );
-
-    const menu = (
+    return (
         <menu
             class={style.menu + (show ? " " + style.show : "")}
             onClick={() => setShow(false)}
@@ -74,6 +76,61 @@ const TreeControlFAB: preact.FunctionalComponent<Props> = ({ state }) => {
             />
         </menu>
     );
+};
+
+const MenuNodeSelected: preact.FunctionalComponent<MenuProps> = ({
+    show,
+    setShow
+}) => {
+    return (
+        <menu
+            class={style.menu + (show ? " " + style.show : "")}
+            onClick={() => setShow(false)}
+        >
+            <FAB
+                class={style.delay1}
+                icon={<AddIcon />}
+                label="Expand"
+                mini={true}
+                extended={true}
+                showIconAtEnd={true}
+                onClick={() => {
+                    console.log("e");
+                }}
+            />
+            <FAB
+                icon={<CheckIcon />}
+                label="Close"
+                mini={true}
+                extended={true}
+                showIconAtEnd={true}
+                onClick={() => console.log("c")}
+            />
+        </menu>
+    );
+};
+
+const TreeControlFAB: preact.FunctionalComponent<Props> = ({
+    state,
+    selectedNodeId
+}) => {
+    const [show, setShow] = useState(false);
+
+    const SIZE = 32;
+    const FILL = "#fff";
+
+    const icon = show ? (
+        <CloseIcon fill={FILL} size={SIZE} />
+    ) : (
+        <MoreIcon fill={FILL} size={SIZE} />
+    );
+
+    const menu =
+        selectedNodeId === undefined ? (
+            <MenuNonSelected show={show} setShow={setShow} state={state} />
+        ) : (
+            <MenuNodeSelected show={show} setShow={setShow} state={state} />
+        );
 
     return (
         <div class={style.control}>
