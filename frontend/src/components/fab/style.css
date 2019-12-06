@@ -39,6 +39,7 @@
 
 .label {
     margin-right: 8px;
+    white-space: nowrap;
 }
 
 svg + .label {
