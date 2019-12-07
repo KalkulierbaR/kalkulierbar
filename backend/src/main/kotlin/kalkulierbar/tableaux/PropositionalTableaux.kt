@@ -221,6 +221,60 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     }
 
     /**
+     * Verifies that a proof tree is strongly connected
+     *
+     * This method will return false even if the current tree can be transformed
+     * into a strongly connected tree by applying close moves
+     * @param state state object to check for strong connectedness
+     * @return true iff the proof tree is strongly connected
+     */
+    private fun checkStronglyConnected(state: TableauxState): Boolean {
+        val startNodes = state.nodes[0].children
+        return startNodes.fold(true) { acc, id -> acc && checkStronglyConnectedSubtree(state, id) }
+        return false
+    }
+
+    /**
+     * Verifies that a subtree proof tree is strongy connected
+     *
+     * This method does NOT exclude the root from the connectedness criteria
+     * therefore it should not be used on the global proof tree root directly
+     *
+     * This method will return false even if the current tree can be transformed
+     * into a strongly connected tree by applying close moves.
+     * @param state state object to check for strong connectedness
+     * @param root ID of the node whose subtree should be checked
+     * @return true iff the proof tree is strongly connected
+     */
+    private fun checkStronglyConnectedSubtree(state: TableauxState, root: Int): Boolean {
+        val node = state.nodes.get(root)
+
+        // A subtree is strongly connected iff:
+        //      1. The root is a leaf OR at least one child of the root is a leaf, closed with the root
+        //      2. All child-subtrees are strongly connected themselves
+
+        if (node.isLeaf)
+            return true
+
+        var isClosedWithChild = false
+        var allChildrenStronglyConnected = true
+
+        for (num in node.children) {
+            val child = state.nodes[num]
+            // At least one child is closed with root
+            if (child.isLeaf && child.isClosed && child.closeRef == root)
+                isClosedWithChild = true
+            // All children are also strongly connected
+            if (!checkStronglyConnectedSubtree(state, num)) {
+                allChildrenStronglyConnected = false
+                break
+            }
+        }
+
+        return false
+    }
+
+    /**
      * Parses a JSON state representation into a TableauxState object
      * @param json JSON state representation
      * @return parsed state object
