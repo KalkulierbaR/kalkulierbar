@@ -281,7 +281,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
      */
     private fun checkDoubleVars(state: TableauxState): Boolean {
         val startNodes = state.nodes[0].children
-        return startNodes.fold(true) { acc, id -> acc && checkDoubleVarsSubtree(state, id, mutableListOf<String>()) }
+        return startNodes.fold(true) { acc, id -> acc && checkDoubleVarsSubtree(state, id, mutableListOf<String> ()) }
     }
 
     /**
