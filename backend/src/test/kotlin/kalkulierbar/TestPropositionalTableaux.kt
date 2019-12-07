@@ -4,10 +4,10 @@ package kalkulierbar.tests
 import kalkulierbar.IllegalMove
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.JsonParseException
-import kalkulierbar.PropositionalTableaux
-import kalkulierbar.TableauxMove
-import kalkulierbar.TableauxNode
-import kalkulierbar.TableauxState
+import kalkulierbar.tableaux.PropositionalTableaux
+import kalkulierbar.tableaux.TableauxMove
+import kalkulierbar.tableaux.TableauxNode
+import kalkulierbar.tableaux.TableauxState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

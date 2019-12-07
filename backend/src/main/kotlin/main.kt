@@ -4,7 +4,7 @@ import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.KalkulierbarException
-import kalkulierbar.PropositionalTableaux
+import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
