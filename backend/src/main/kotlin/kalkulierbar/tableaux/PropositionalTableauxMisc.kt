@@ -12,6 +12,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val restrictDoubleVars: Boolean = false) {
     val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
+    val root
+        get() = nodes.get(0)
     val leaves
         get() = nodes.filter { it.isLeaf }
     var seal = ""
@@ -30,25 +32,6 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
         if (child.parent == 0 || child.parent == null)
             return false
         return nodeIsParentOf(parentID, child.parent)
-    }
-
-    fun nodeIsCloseable(nodeID: Int): Boolean {
-        val node = nodes.get(nodeID)
-        return node.isLeaf && nodeAncestryContainsAtom(nodeID, Atom(node.spelling, node.negated))
-    }
-
-    fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom): Boolean {
-        var node = nodes.get(nodeID)
-
-        // Walk up the tree from start node
-        while (node.parent != null) {
-            node = nodes.get(node.parent!!)
-            // Check if current node is identical to atom
-            if (node.spelling == atom.lit && node.negated == atom.negated)
-                return true
-        }
-
-        return false
     }
 
     /**
