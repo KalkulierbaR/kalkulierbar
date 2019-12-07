@@ -275,6 +275,56 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     }
 
     /**
+     * Verifies that a proof tree has no double variables
+     * @param state state object to check for double variables
+     * @return true iff the proof tree has no double variables in a single path
+     */
+    private fun checkDoubleVars(state: TableauxState): Boolean {
+        val startNodes = state.nodes[0].children
+        return startNodes.fold(true) { acc, id -> acc && checkDoubleVarsSubtree(state, id, mutableListOf<String>()) }
+    }
+
+    /**
+     * Verifies that a subtree proof tree contains no double variable names in a path
+     *
+     * This method does NOT exclude the root from the connectedness criteria
+     * therefore it should be not used on the global proof tree root directly
+     *
+     * @param state : state object to check for double variables
+     * @param root : ID of the node to check
+     * @param lst : list of unique node spellings in a path of elder nodes
+     * @return true iff the proof tree has no double variables in a single path
+     */
+    private fun checkDoubleVarsSubtree(state: TableauxState, root: Int, lst: MutableList<String>): Boolean {
+        val node = state.nodes[root]
+
+        // Leaf tree can't have double variables
+        if (node.isLeaf)
+            return true
+
+        // Spelling of root with negation
+        val rootSpelling = node.toString()
+        var noDoubleVars = true
+
+        // Every node in tree has unique spelling (a, !a)
+        if (lst.contains(rootSpelling))
+            return false
+
+        // Add this nodes spelling to list
+        lst.add(rootSpelling)
+
+        // Pass list to every children so they can check if they are in list
+        for (num in node.children) {
+            if (!checkDoubleVarsSubtree(state, num, lst)) {
+                noDoubleVars = false
+                break
+            }
+        }
+
+        return noDoubleVars
+    }
+
+    /**
      * Parses a JSON state representation into a TableauxState object
      * @param json JSON state representation
      * @return parsed state object
