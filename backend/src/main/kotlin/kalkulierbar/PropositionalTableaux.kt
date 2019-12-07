@@ -1,5 +1,6 @@
 package kalkulierbar
 
+import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.ClauseSetParser
 import kotlinx.serialization.MissingFieldException
@@ -228,7 +229,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
  * @param clauseSet The clause set to be proven unsatisfiable
  */
 @Serializable
-class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.NORMAL, val restrictDoubleVars: Boolean = false) {
+class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val restrictDoubleVars: Boolean = false) {
     val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
     var seal = ""
 
@@ -246,6 +247,25 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
         if (child.parent == 0 || child.parent == null)
             return false
         return nodeIsParentOf(parentID, child.parent)
+    }
+
+    fun nodeIsCloseable(nodeID: Int): Boolean {
+        val node = nodes.get(nodeID)
+        return node.isLeaf && nodeAncestryContainsAtom(nodeID, Atom(node.spelling, node.negated))
+    }
+
+    fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom): Boolean {
+        var node = nodes.get(nodeID)
+
+        // Walk up the tree from start node
+        while (node.parent != null) {
+            node = nodes.get(node.parent!!)
+            // Check if current node is identical to atom
+            if (node.spelling == atom.lit && node.negated == atom.negated)
+                return true
+        }
+
+        return false
     }
 
     /**
@@ -276,7 +296,7 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
     fun getHash(): String {
         val nodesHash = nodes.map { it.getHash() }.joinToString("|")
         val clauseSetHash = clauseSet.toString()
-        return "tableauxstate|$clauseSetHash|[$nodesHash]"
+        return "tableauxstate|$type|$restrictDoubleVars|$clauseSetHash|[$nodesHash]"
     }
 }
 
@@ -324,5 +344,5 @@ class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean)
 data class TableauxMove(val type: String, val id1: Int, val id2: Int)
 
 enum class TableauxType {
-    NORMAL, WEAKLYCONNECTED, STRONGLYCONNECTED
+    UNCONNECTED, WEAKLYCONNECTED, STRONGLYCONNECTED
 }

@@ -131,7 +131,7 @@ class TestPropositionalTableaux {
         assertEquals(4, state.nodes.size)
         assertEquals(3, state.nodes.get(0).children.size)
 
-        assertEquals("tableauxstate|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]", state.getHash())
     }
 
     @Test
@@ -143,7 +143,7 @@ class TestPropositionalTableaux {
         assertEquals(2, state.nodes.size)
         assertEquals(1, state.nodes.get(0).children.size)
 
-        assertEquals("tableauxstate|{a, b, c}, {d}|[true;p;null;-;i;o;(1)|d;p;0;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1)|d;p;0;-;l;o;()]", state.getHash())
     }
 
     @Test
@@ -157,7 +157,7 @@ class TestPropositionalTableaux {
         assertEquals(3, state.nodes.get(0).children.size)
         assertEquals(1, state.nodes.get(3).children.size)
 
-        assertEquals("tableauxstate|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;i;o;(4)|d;p;3;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;i;o;(4)|d;p;3;-;l;o;()]", state.getHash())
     }
 
     @Test
@@ -255,7 +255,7 @@ class TestPropositionalTableaux {
 
         assertEquals(true, state.nodes[3].isClosed)
         assertEquals(2, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|{a, b}, {!b}|[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b}, {!b}|[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]", state.getHash())
     }
 
     @Test
@@ -277,7 +277,7 @@ class TestPropositionalTableaux {
         assertEquals(false, state.nodes[4].isClosed)
 
         assertEquals(1, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]", state.getHash())
     }
 
     @Test
@@ -303,7 +303,7 @@ class TestPropositionalTableaux {
 
         assertEquals(1, state.nodes[4].closeRef)
         assertEquals(2, state.nodes[5].closeRef)
-        assertEquals("tableauxstate|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]", state.getHash())
     }
 
     @Test
