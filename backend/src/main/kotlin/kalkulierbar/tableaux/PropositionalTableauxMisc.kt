@@ -1,7 +1,6 @@
 package kalkulierbar.tableaux
 
 import kalkulierbar.TamperProtect
-import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
 import kotlinx.serialization.Serializable
 
