@@ -167,6 +167,60 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     }
 
     /**
+     * Verifies that a proof tree is weakly connected
+     *
+     * This method will return false even if the current tree can be transformed
+     * into a weakly connected tree by applying close moves
+     * @param state state object to check for weak connectedness
+     * @return true iff the proof tree is weakly connected
+     */
+    private fun checkWeaklyConnected(state: TableauxState): Boolean {
+        val startNodes = state.nodes.get(0).children
+        return startNodes.fold(true) { acc, id -> acc && checkWeaklyConnectedSubtree(state, id) }
+    }
+
+    /**
+     * Verifies that a subtree proof tree is weakly connected
+     *
+     * This method does NOT exclude the root from the connectedness criteria
+     * therefore it should not be used on the global proof tree root directly
+     *
+     * This method will return false even if the current tree can be transformed
+     * into a weakly connected tree by applying close moves
+     * @param state state object to check for weak connectedness
+     * @param root ID of the node whose subtree should be checked
+     * @return true iff the proof tree is weakly connected
+     */
+    private fun checkWeaklyConnectedSubtree(state: TableauxState, root: Int): Boolean {
+        val node = state.nodes.get(root)
+
+        // A subtree is weakly connected iff:
+        // 1. The root is a leaf OR at least one child of the root is a closed leaf
+        // 2. All child-subtrees are weakly connected themselves
+
+        // Leaves are trivially weakly connected
+        if (node.isLeaf)
+            return true
+
+        var hasDirectlyClosedChild = false
+        var allChildrenWeaklyConnected = true
+
+        for (id in node.children) {
+            val child = state.nodes.get(id)
+            // At least one child is a closed leaf
+            if (child.isLeaf && child.isClosed)
+                hasDirectlyClosedChild = true
+            // All children are weakly connected themselves
+            if (!checkWeaklyConnectedSubtree(state, id)) {
+                allChildrenWeaklyConnected = false
+                break
+            }
+        }
+
+        return hasDirectlyClosedChild && allChildrenWeaklyConnected
+    }
+
+    /**
      * Parses a JSON state representation into a TableauxState object
      * @param json JSON state representation
      * @return parsed state object
