@@ -1,5 +1,8 @@
 package kalkulierbar
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+
 /**
  * Framework for Calculus implementations using JSON for serialization
  * Handles serialization and deserialization, letting implementing classes work directly on state
@@ -48,14 +51,15 @@ abstract class JSONCalculus<State, Move> : Calculus {
      * @param state state representation to validate
      * @return string representing proof state (closed/open) with an optional message
      */
-    override fun checkClose(state: String) = checkCloseOnState(jsonToState(state))
+    @kotlinx.serialization.UnstableDefault
+    override fun checkClose(state: String) = closeToJson(checkCloseOnState(jsonToState(state)))
 
     /**
      * Checks if a given state represents a valid, closed proof.
      * @param state state object to validate
      * @return string representing proof state (closed/open) with an optional message
      */
-    abstract fun checkCloseOnState(state: State): String
+    abstract fun checkCloseOnState(state: State): CloseMessage
 
     /**
      * Parses a JSON state representation into a State object
@@ -77,4 +81,15 @@ abstract class JSONCalculus<State, Move> : Calculus {
      * @return parsed move object
      */
     abstract fun jsonToMove(json: String): Move
+
+    /**
+     * Serializes a close message to JSON
+     * @param close CloseMessage object to serialize
+     * @return JSON close message
+     */
+    @kotlinx.serialization.UnstableDefault
+    fun closeToJson(close: CloseMessage) = Json.stringify(CloseMessage.serializer(), close)
 }
+
+@Serializable
+data class CloseMessage(val closed: Boolean, val msg: String)

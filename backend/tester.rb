@@ -285,7 +285,7 @@ def testStateModification(trq, count = 50)
 		parsed = JSON.parse(validState)
 
 		# Test unmodified state
-		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", "false", 200)
+		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", /\{"closed":false.*/, 200)
 
 		10.times() {
 			modified = JSON.parse(validState)
@@ -400,7 +400,7 @@ def bogoATP(trq, formula, iterations, verbose = false)
 
 		# Try closing the proof
 		logMsg "Trying to close proof" if verbose
-		if !trq.post('/prop-tableaux/close', "state=#{state}", "false", 200)
+		if !trq.post('/prop-tableaux/close', "state=#{state}", /\{"closed":false.*/, 200)
 			logMsg "BogoATP Proof closed - #{rqcount.to_s} requests sent"
 			return true
 		end
