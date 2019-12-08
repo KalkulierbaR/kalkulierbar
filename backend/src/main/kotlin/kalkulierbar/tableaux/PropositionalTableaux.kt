@@ -134,7 +134,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
 
                 // check list for double atom name
                 if (names.contains(atomName))
-                    throw IllegalMove("Clause with ID $clauseID can not be attached because of a double variable in tree")
+                    throw IllegalMove("Tree already contains Atom \"$atomName\" (double variables not allowed!)")
 
                 // If atomName compatible then add to name list
                 else
