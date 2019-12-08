@@ -1,5 +1,6 @@
 package kalkulierbar.tableaux
 
+import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
@@ -203,8 +204,23 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
      * @param state state object to validate
      * @return string representing proof closed state (true/false)
      */
-    @Suppress("ReturnCount")
-    override fun checkCloseOnState(state: TableauxState) = state.root.isClosed.toString()
+    override fun checkCloseOnState(state: TableauxState): CloseMessage {
+        var msg = "The proof tree is not closed"
+
+        if (state.root.isClosed) {
+            var connectedness = "unconnected"
+            if (checkConnectedness(state, TableauxType.STRONGLYCONNECTED))
+                connectedness = "strongly connected"
+            else if (checkConnectedness(state, TableauxType.WEAKLYCONNECTED))
+                connectedness = "weakly connected"
+
+            val regularity = if (checkRegularity(state)) "regular " else ""
+
+            msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux"
+        }
+
+        return CloseMessage(state.root.isClosed, msg)
+    }
 
     /**
      * Verifies that a proof tree is weakly/strongly connected
