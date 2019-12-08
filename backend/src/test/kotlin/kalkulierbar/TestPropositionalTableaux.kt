@@ -438,7 +438,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testCheckCloseSimple() {
-        val state = instance.parseFormulaToState("a,!a")
+        var state = instance.parseFormulaToState("a,!a")
 
         assertEquals("false", instance.checkCloseOnState(state))
 
@@ -454,17 +454,14 @@ class TestPropositionalTableaux {
         assertEquals("false", instance.checkCloseOnState(state))
 
         // Now close the proof
-        val a = state.nodes.get(2)
-
-        a.closeRef = 1
-        a.isClosed = true
+        state = instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
 
         assertEquals("true", instance.checkCloseOnState(state))
     }
 
     @Test
     fun testCheckClose() {
-        val state = instance.parseFormulaToState("a,b;!a,!b")
+        var state = instance.parseFormulaToState("a,b;!a,!b")
 
         assertEquals("false", instance.checkCloseOnState(state))
 
@@ -484,57 +481,59 @@ class TestPropositionalTableaux {
         assertEquals("false", instance.checkCloseOnState(state))
 
         // Now close the proof
-        val a = state.nodes.get(3)
-        val b = state.nodes.get(4)
-
-        a.closeRef = 1
-        b.closeRef = 2
-        a.isClosed = true
-        b.isClosed = true
+        state = instance.applyMoveOnState(state, TableauxMove("c", 3, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 4, 2))
 
         assertEquals("true", instance.checkCloseOnState(state))
     }
 
     @Test
-    fun testCheckCloseIncorrectState() {
-        val state = instance.parseFormulaToState("a,b;!a,!b")
+    fun testCheckCloseComplex() {
+        var state = instance.parseFormulaToState("a,b;!b;!a")
 
-        state.nodes.add(TableauxNode(0, "a", true))
-        state.nodes.get(0).children.add(1)
-
-        assertEquals("false", instance.checkCloseOnState(state))
-
-        // Just mark the leaf as closed without doing anything
-        state.nodes.get(1).isClosed = true
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 2, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 4, 2))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 5, 1))
 
         assertEquals("false", instance.checkCloseOnState(state))
 
-        // Set a closeRef, too
-        state.nodes.get(1).closeRef = 0
+        state = instance.applyMoveOnState(state, TableauxMove("c", 3, 2))
 
         assertEquals("false", instance.checkCloseOnState(state))
 
-        // Set the closeRef to itself
-        state.nodes.get(1).closeRef = 1
+        state = instance.applyMoveOnState(state, TableauxMove("c", 7, 5))
 
         assertEquals("false", instance.checkCloseOnState(state))
+
+        state = instance.applyMoveOnState(state, TableauxMove("c", 6, 4))
+
+        assertEquals("true", instance.checkCloseOnState(state))
     }
 
     @Test
-    fun testCheckCloseIncorrectState2() {
-        val state = instance.parseFormulaToState("a,!a")
+    fun testCheckCloseNegative() {
+        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c")
 
         val nodes = listOf(
             TableauxNode(0, "a", false),
-            TableauxNode(1, "a", true)
+            TableauxNode(0, "b", false),
+            TableauxNode(0, "c", false),
+            TableauxNode(1, "a", true),
+            TableauxNode(2, "b", true),
+            TableauxNode(3, "c", true)
             )
 
         state.nodes.addAll(nodes)
-        state.nodes.get(0).children.add(1)
-        state.nodes.get(1).children.add(2)
+        state.nodes.get(0).children.addAll(listOf(1, 2, 3))
+        state.nodes.get(1).children.add(4)
+        state.nodes.get(2).children.add(5)
+        state.nodes.get(3).children.add(6)
 
         // Don't close proof completely
-        state.nodes.get(2).closeRef = 1
+        state = instance.applyMoveOnState(state, TableauxMove("c", 6, 3))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 4, 1))
 
         assertEquals("false", instance.checkCloseOnState(state))
     }

@@ -167,21 +167,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
      * @return string representing proof closed state (true/false)
      */
     @Suppress("ReturnCount")
-    override fun checkCloseOnState(state: TableauxState): String {
-        // Iterating over every Leaf-Node
-        for (node in state.nodes) {
-            if (node.isLeaf) {
-                // state closed -> Every lead is closed
-                if (node.closeRef == null || !node.isClosed)
-                    return "false"
-                val closedParent = state.nodes[node.closeRef!!]
-                // One node has to be negated, the other not, both nodes have to have same spelling
-                if (node.negated == closedParent.negated || node.spelling != closedParent.spelling)
-                    return "false"
-            }
-        }
-        return "true"
-    }
+    override fun checkCloseOnState(state: TableauxState) = state.root.isClosed.toString()
 
     /**
      * Checks if the given state meets all requirements wrt regularity and connectedness
