@@ -125,8 +125,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
         val leaf = state.nodes[leafID]
         val clause = state.clauseSet.clauses[clauseID]
 
-        // Move should be compatible with restrictDoubleVars
-        if (state.restrictDoubleVars) {
+        // Move should be compatible with regularity restriction
+        if (state.regular) {
             val names = collectSubtreeNames(state, 0)
 
             for (atom in clause.atoms) {
@@ -198,7 +198,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             TableauxType.STRONGLYCONNECTED -> connectedness = checkConnectedness(state, true)
         }
 
-        regularity = !state.restrictDoubleVars || false
+        regularity = !state.regular || false
 
         return connectedness && regularity
     }
@@ -264,16 +264,17 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     }
 
     /**
-     * Verifies that a proof tree has no double variables
+     * Verifies that no path in the proof tree has double variables
+     * (i.e. the proof tree is regular)
      *
      * This method DOES exclude the root from the connectedness criteria
      * therefore it CAN be used on the global proof tree root directly.
      *
-     * @param state state object to check for double variables
-     * @return true iff the proof tree has no double variables
+     * @param state state object to check for regularity
+     * @return true iff the proof tree is regular
      */
-    private fun checkDoubleVars(state: TableauxState): Boolean {
-        val startNodes = state.nodes[0].children
+    private fun checkRegularity(state: TableauxState): Boolean {
+        val startNodes = state.root.children
 
         // The root node can't have any double vars
         if (startNodes.isEmpty())
@@ -295,38 +296,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     }
 
     /**
-     * Verifies that a subtree proof tree contains no double variable names
-     *
-     * This method does NOT exclude the root from the connectedness criteria
-     * therefore it should be not used on the global proof tree root directly
-     *
-     * @param state : state object to check for double variables
-     * @param root : ID of the node to check
-     * @return true iff the proof tree has no double variables
-     */
-    private fun checkDoubleVarsSubtree(state: TableauxState, root: Int): Boolean {
-        val node = state.nodes[root]
-
-        // Leaf tree can't have double variables
-        if (node.isLeaf)
-            return true
-
-        // Get unique spelling of each child node and root
-        var lst = collectSubtreeNames(state, root)
-
-        // Check list for double variables
-        for (i in lst.indices)
-            for (j in lst.indices)
-                if (lst[i] == lst[j] && i != j)
-                    return false
-        return true
-    }
-
-    /**
      * Collects all unique names of the root and child nodes and their child nodes respectively.
-     *
-     * This method CAN be used on the on the global proof tree root.
-     * -> Global proof tree root-name is "true"
      *
      * @param state : state object to search in node tree
      * @param root : ID of the subtree node from which to collect the names

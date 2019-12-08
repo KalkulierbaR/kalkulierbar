@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @param clauseSet The clause set to be proven unsatisfiable
  */
 @Serializable
-class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val restrictDoubleVars: Boolean = false) {
+class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val regular: Boolean = false) {
     val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
     val root
         get() = nodes.get(0)
@@ -59,7 +59,7 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
     fun getHash(): String {
         val nodesHash = nodes.map { it.getHash() }.joinToString("|")
         val clauseSetHash = clauseSet.toString()
-        return "tableauxstate|$type|$restrictDoubleVars|$clauseSetHash|[$nodesHash]"
+        return "tableauxstate|$type|$regular|$clauseSetHash|[$nodesHash]"
     }
 }
 
