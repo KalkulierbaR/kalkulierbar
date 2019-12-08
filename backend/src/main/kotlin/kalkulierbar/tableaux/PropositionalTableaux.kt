@@ -127,18 +127,18 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
 
         // Move should be compatible with regularity restriction
         if (state.regular) {
-            val names = collectSubtreeNames(state, 0)
-
             for (atom in clause.atoms) {
                 val atomName = atom.toString()
 
-                // check list for double atom name
-                if (names.contains(atomName))
-                    throw IllegalMove("Tree already contains Atom \"$atomName\" (double variables not allowed!)")
+                // Add atom spelling to list
+                var lst = mutableListOf<String>()
+                lst.add(atom.toString())
 
-                // If atomName compatible then add to name list
-                else
-                    names.add(atomName)
+                // check if similar predecessor exists
+                val isPathRegular = checkRegularitySubtree(state, 0, lst)
+
+                if (!isPathRegular)
+                    throw IllegalMove("Path from tree root already contains Atom \"$atomName\" (double variables not allowed!)")
             }
         }
 
@@ -253,54 +253,44 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
      * Verifies that no path in the proof tree has double variables
      * (i.e. the proof tree is regular)
      *
-     * This method DOES exclude the root from the connectedness criteria
-     * therefore it CAN be used on the global proof tree root directly.
-     *
      * @param state state object to check for regularity
      * @return true iff the proof tree is regular
      */
     private fun checkRegularity(state: TableauxState): Boolean {
-        val startNodes = state.root.children
+        val startNodes = state.root.children // root is excluded from connectedness criteria
 
-        // The root node can't have any double vars
-        if (startNodes.isEmpty())
-            return true
-
-        // collect spelling of child nodes
-        var lst = mutableListOf<String>()
-
-        for (id in startNodes)
-            lst.addAll(collectSubtreeNames(state, id))
-
-        // Check list for double variables
-        for (i in lst.indices)
-            for (j in lst.indices)
-                if (lst[i] == lst[j] && i != j)
-                    return false
-
-        return true
+        return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, mutableListOf<String>()) }
     }
 
     /**
-     * Collects all unique names of the root and child nodes and their child nodes respectively.
+     * Checks every path from root of a subtree to leaf for regularity
      *
-     * @param state : state object to search in node tree
-     * @param root : ID of the subtree node from which to collect the names
-     * @return A list containing all unique node names of the given subtree
+     * @param state : state object to search in subtree
+     * @param root : ID of the subtree node from which to check
+     * @param lst : list of unique node names of predecessor
+     * @return true iff every path from root node to a leaf is regular
      */
-    private fun collectSubtreeNames(state: TableauxState, root: Int): MutableList<String> {
+    private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<String>): Boolean {
         val node = state.nodes[root]
-        var lst = mutableListOf<String>()
 
-        // Add node spelling to list iff node is leaf
+        // A leaf without parents is regular
+        if (node.isLeaf && lst.isEmpty())
+            return true
+
+        // If node is in list of predecessors return false
+        if (lst.contains(node.toString()))
+            return false
+
+        // Add node spelling to list of predecessors
         lst.add(node.toString())
-        if (node.isLeaf)
-            return lst
 
+        // Check children for double vars in path and their children respectively
         for (id in node.children) {
-            lst.addAll(collectSubtreeNames(state, id))
+            val isChildRegular = checkRegularitySubtree(state, id, lst)
+            if (!isChildRegular)
+                return false
         }
-        return lst
+        return true
     }
 
     /**
