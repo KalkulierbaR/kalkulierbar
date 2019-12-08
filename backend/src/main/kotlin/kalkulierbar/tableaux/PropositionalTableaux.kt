@@ -302,26 +302,37 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
         if (node.isLeaf)
             return true
 
-        // Spelling of root with negation
-        val rootSpelling = node.toString()
-        var noDoubleVars = true
+        // Get unique spelling of each child node and root
+        var lst = collectChildNames(state, root)
 
-        // Every node in tree has unique spelling (a, !a)
-        if (lst.contains(rootSpelling))
-            return false
+        // Check list for double variables
+        for (i in lst.indices)
+            for (j in lst.indices)
+                if (lst[i] == lst[j] && i != j)
+                    return false
+        return true
+    }
 
-        // Add this nodes spelling to list
-        lst.add(rootSpelling)
+    /**
+     * Collects all unique names of the root and child nodes and their child nodes respectively.
+     *
+     * @param state : state object to search in node tree
+     * @param root : ID of the subtree node from which to collect the names
+     * @return A list containing all unique names of the given subtree
+     */
+    private fun collectChildNames(state: TableauxState, root: Int): MutableList<String> {
+        val node = state.nodes[root]
+        var lst = mutableListOf<String>()
 
-        // Pass list to every children so they can check if they are in list
-        for (num in node.children) {
-            if (!checkDoubleVarsSubtree(state, num, lst)) {
-                noDoubleVars = false
-                break
-            }
+        // Add node spelling to list iff node is leaf
+        lst.add(node.toString())
+        if (node.isLeaf)
+            return lst
+
+        for (id in node.children) {
+            lst.addAll(collectChildNames(state, id))
         }
-
-        return noDoubleVars
+        return lst
     }
 
     /**
