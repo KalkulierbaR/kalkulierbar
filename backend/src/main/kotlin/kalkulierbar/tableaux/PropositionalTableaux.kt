@@ -125,6 +125,23 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
         val leaf = state.nodes[leafID]
         val clause = state.clauseSet.clauses[clauseID]
 
+        // Move should be compatible with restrictDoubleVars
+        if (state.restrictDoubleVars) {
+            val names = collectSubtreeNames(state, 0)
+
+            for (atom in clause.atoms) {
+                val atomName = atom.toString()
+
+                // check list for double atom name
+                if (names.contains(atomName))
+                    throw IllegalMove("Clause with ID $clauseID can not be attached because of a double variable in tree")
+
+                // If atomName compatible then add to name list
+                else
+                    names.add(atomName)
+            }
+        }
+
         // Verify that leaf is actually a leaf
         if (!leaf.isLeaf)
             throw IllegalMove("Node '$leaf' is not a leaf")
@@ -294,7 +311,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
         var lst = mutableListOf<String>()
 
         for (id in startNodes)
-            lst.addAll(collectChildNames(state, id))
+            lst.addAll(collectSubtreeNames(state, id))
 
         // Check list for double variables
         for (i in lst.indices)
@@ -323,7 +340,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             return true
 
         // Get unique spelling of each child node and root
-        var lst = collectChildNames(state, root)
+        var lst = collectSubtreeNames(state, root)
 
         // Check list for double variables
         for (i in lst.indices)
@@ -336,11 +353,14 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     /**
      * Collects all unique names of the root and child nodes and their child nodes respectively.
      *
+     * This method CAN be used on the on the global proof tree root.
+     * -> Global proof tree root-name is "true"
+     *
      * @param state : state object to search in node tree
      * @param root : ID of the subtree node from which to collect the names
-     * @return A list containing all unique names of the given subtree
+     * @return A list containing all unique node names of the given subtree
      */
-    private fun collectChildNames(state: TableauxState, root: Int): MutableList<String> {
+    private fun collectSubtreeNames(state: TableauxState, root: Int): MutableList<String> {
         val node = state.nodes[root]
         var lst = mutableListOf<String>()
 
@@ -350,7 +370,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             return lst
 
         for (id in node.children) {
-            lst.addAll(collectChildNames(state, id))
+            lst.addAll(collectSubtreeNames(state, id))
         }
         return lst
     }
