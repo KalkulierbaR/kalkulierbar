@@ -276,26 +276,46 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
 
     /**
      * Verifies that a proof tree has no double variables
+     *
+     * This method DOES exclude the root from the connectedness criteria
+     * therefore it CAN be used on the global proof tree rot directly.
+     *
      * @param state state object to check for double variables
-     * @return true iff the proof tree has no double variables in a single path
+     * @return true iff the proof tree has no double variables
      */
     private fun checkDoubleVars(state: TableauxState): Boolean {
         val startNodes = state.nodes[0].children
-        return startNodes.fold(true) { acc, id -> acc && checkDoubleVarsSubtree(state, id, mutableListOf<String> ()) }
+
+        // The root node can't have any double vars
+        if (startNodes.isEmpty())
+            return true
+
+        // collect spelling of child nodes
+        var lst = mutableListOf<String>()
+
+        for (id in startNodes)
+            lst.addAll(collectChildNames(state, id))
+
+        // Check list for double variables
+        for (i in lst.indices)
+            for (j in lst.indices)
+                if (lst[i] == lst[j] && i != j)
+                    return false
+
+        return true
     }
 
     /**
-     * Verifies that a subtree proof tree contains no double variable names in a path
+     * Verifies that a subtree proof tree contains no double variable names
      *
      * This method does NOT exclude the root from the connectedness criteria
      * therefore it should be not used on the global proof tree root directly
      *
      * @param state : state object to check for double variables
      * @param root : ID of the node to check
-     * @param lst : list of unique node spellings in a path of elder nodes
-     * @return true iff the proof tree has no double variables in a single path
+     * @return true iff the proof tree has no double variables
      */
-    private fun checkDoubleVarsSubtree(state: TableauxState, root: Int, lst: MutableList<String>): Boolean {
+    private fun checkDoubleVarsSubtree(state: TableauxState, root: Int): Boolean {
         val node = state.nodes[root]
 
         // Leaf tree can't have double variables
