@@ -184,118 +184,90 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     }
 
     /**
-     * Verifies that a proof tree is weakly connected
-     *
-     * This method will return false even if the current tree can be transformed
-     * into a weakly connected tree by applying close moves
-     * @param state state object to check for weak connectedness
-     * @return true iff the proof tree is weakly connected
+     * Checks if the given state meets all requirements wrt regularity and connectedness
+     * @param state state object to check
+     * @return true iff the proof tree meets all required criteria
      */
-    private fun checkWeaklyConnected(state: TableauxState): Boolean {
-        val startNodes = state.nodes.get(0).children
-        return startNodes.fold(true) { acc, id -> acc && checkWeaklyConnectedSubtree(state, id) }
+    private fun checkRestrictions(state: TableauxState): Boolean {
+        var connectedness: Boolean
+        var regularity: Boolean
+
+        when (state.type) {
+            TableauxType.UNCONNECTED -> connectedness = true
+            TableauxType.WEAKLYCONNECTED -> connectedness = checkConnectedness(state, false)
+            TableauxType.STRONGLYCONNECTED -> connectedness = checkConnectedness(state, true)
+        }
+
+        regularity = !state.restrictDoubleVars || false
+
+        return connectedness && regularity
     }
 
     /**
-     * Verifies that a subtree proof tree is weakly connected
+     * Verifies that a proof tree is weakly/strongly connected
+     *
+     * This method will return false even if the current tree can be transformed
+     * into a weakly connected tree by applying close moves
+     * @param state state object to check for connectedness
+     * @param strong true for strong connectedness, false for weak connectedness
+     * @return true iff the proof tree is strongly/weakly connected
+     */
+    private fun checkConnectedness(state: TableauxState, strong: Boolean): Boolean {
+        val startNodes = state.root.children // root is excluded from connectedness criteria
+
+        return startNodes.fold(true) { acc, id -> acc && checkConnectedSubtree(state, id, strong) }
+    }
+
+    /**
+     * Verifies that a subtree proof tree is weakly/strongly connected
      *
      * This method does NOT exclude the root from the connectedness criteria
      * therefore it should not be used on the global proof tree root directly
      *
      * This method will return false even if the current tree can be transformed
-     * into a weakly connected tree by applying close moves
-     * @param state state object to check for weak connectedness
+     * into a weakly/strongly connected tree by applying close moves
+     * @param state state object to check for connectedness
      * @param root ID of the node whose subtree should be checked
-     * @return true iff the proof tree is weakly connected
+     * @param strong true for strong connectedness, false for weak connectedness
+     * @return true iff the proof tree is weakly/strongly connected
      */
-    private fun checkWeaklyConnectedSubtree(state: TableauxState, root: Int): Boolean {
+    private fun checkConnectedSubtree(state: TableauxState, root: Int, strong: Boolean): Boolean {
         val node = state.nodes.get(root)
 
-        // A subtree is weakly connected iff:
+        // A subtree is weakly/strongly connected iff:
         // 1. The root is a leaf OR at least one child of the root is a closed leaf
-        // 2. All child-subtrees are weakly connected themselves
+        // 1a. For strong connectedness: The closed child is closed with the root
+        // 2. All child-subtrees are weakly/strongly connected themselves
 
-        // Leaves are trivially weakly connected
+        // Leaves are trivially connected
         if (node.isLeaf)
             return true
 
         var hasDirectlyClosedChild = false
-        var allChildrenWeaklyConnected = true
+        var allChildrenConnected = true
 
         for (id in node.children) {
             val child = state.nodes.get(id)
-            // At least one child is a closed leaf
-            if (child.isLeaf && child.isClosed)
+
+            val closedCondition = child.isClosed && (!strong || child.closeRef == root)
+
+            if (child.isLeaf && closedCondition)
                 hasDirectlyClosedChild = true
-            // All children are weakly connected themselves
-            if (!checkWeaklyConnectedSubtree(state, id)) {
-                allChildrenWeaklyConnected = false
+            // All children are connected themselves
+            if (!checkConnectedSubtree(state, id, strong)) {
+                allChildrenConnected = false
                 break
             }
         }
 
-        return hasDirectlyClosedChild && allChildrenWeaklyConnected
-    }
-
-    /**
-     * Verifies that a proof tree is strongly connected
-     *
-     * This method will return false even if the current tree can be transformed
-     * into a strongly connected tree by applying close moves
-     * @param state state object to check for strong connectedness
-     * @return true iff the proof tree is strongly connected
-     */
-    private fun checkStronglyConnected(state: TableauxState): Boolean {
-        val startNodes = state.nodes[0].children
-        return startNodes.fold(true) { acc, id -> acc && checkStronglyConnectedSubtree(state, id) }
-        return false
-    }
-
-    /**
-     * Verifies that a subtree proof tree is strongy connected
-     *
-     * This method does NOT exclude the root from the connectedness criteria
-     * therefore it should not be used on the global proof tree root directly
-     *
-     * This method will return false even if the current tree can be transformed
-     * into a strongly connected tree by applying close moves.
-     * @param state state object to check for strong connectedness
-     * @param root ID of the node whose subtree should be checked
-     * @return true iff the proof tree is strongly connected
-     */
-    private fun checkStronglyConnectedSubtree(state: TableauxState, root: Int): Boolean {
-        val node = state.nodes.get(root)
-
-        // A subtree is strongly connected iff:
-        //      1. The root is a leaf OR at least one child of the root is a leaf, closed with the root
-        //      2. All child-subtrees are strongly connected themselves
-
-        if (node.isLeaf)
-            return true
-
-        var isClosedWithChild = false
-        var allChildrenStronglyConnected = true
-
-        for (num in node.children) {
-            val child = state.nodes[num]
-            // At least one child is closed with root
-            if (child.isLeaf && child.isClosed && child.closeRef == root)
-                isClosedWithChild = true
-            // All children are also strongly connected
-            if (!checkStronglyConnectedSubtree(state, num)) {
-                allChildrenStronglyConnected = false
-                break
-            }
-        }
-
-        return false
+        return hasDirectlyClosedChild && allChildrenConnected
     }
 
     /**
      * Verifies that a proof tree has no double variables
      *
      * This method DOES exclude the root from the connectedness criteria
-     * therefore it CAN be used on the global proof tree rot directly.
+     * therefore it CAN be used on the global proof tree root directly.
      *
      * @param state state object to check for double variables
      * @return true iff the proof tree has no double variables
