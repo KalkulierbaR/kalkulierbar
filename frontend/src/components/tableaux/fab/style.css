@@ -1,8 +1,8 @@
 .control {
     position: fixed;
     z-index: 2;
-    bottom: 8px;
-    right: 8px;
+    bottom: 16px;
+    right: 16px;
 }
 
 .menu {
