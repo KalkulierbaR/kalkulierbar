@@ -3,6 +3,7 @@ package kalkulierbar.tableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
+import kalkulierbar.clause.Atom
 import kalkulierbar.parsers.ClauseSetParser
 import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.json.Json
@@ -131,8 +132,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
                 val atomName = atom.toString()
 
                 // Add atom spelling to list
-                var lst = mutableListOf<String>()
-                lst.add(atom.toString())
+                var lst = mutableListOf<Atom>()
+                lst.add(atom)
 
                 // check if similar predecessor exists
                 val isPathRegular = checkRegularitySubtree(state, 0, lst)
@@ -184,7 +185,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             TableauxType.STRONGLYCONNECTED -> connectedness = checkConnectedness(state, true)
         }
 
-        regularity = !state.regular || false
+        regularity = !state.regular || checkRegularity(state)
 
         return connectedness && regularity
     }
@@ -259,7 +260,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     private fun checkRegularity(state: TableauxState): Boolean {
         val startNodes = state.root.children // root is excluded from connectedness criteria
 
-        return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, mutableListOf<String>()) }
+        return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, mutableListOf<Atom>()) }
     }
 
     /**
@@ -270,7 +271,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
      * @param lst : list of unique node names of predecessor
      * @return true iff every path from root node to a leaf is regular
      */
-    private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<String>): Boolean {
+    private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<Atom>): Boolean {
         val node = state.nodes[root]
 
         // A leaf without parents is regular
@@ -278,16 +279,15 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             return true
 
         // If node is in list of predecessors return false
-        if (lst.contains(node.toString()))
+        if (lst.contains(node.toAtom()))
             return false
 
         // Add node spelling to list of predecessors
-        lst.add(node.toString())
+        lst.add(node.toAtom())
 
         // Check children for double vars in path and their children respectively
         for (id in node.children) {
-            val isChildRegular = checkRegularitySubtree(state, id, lst)
-            if (!isChildRegular)
+            if (!checkRegularitySubtree(state, id, lst))
                 return false
         }
         return true

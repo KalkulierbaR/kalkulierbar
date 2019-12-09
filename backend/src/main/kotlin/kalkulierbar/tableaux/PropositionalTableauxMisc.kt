@@ -1,6 +1,7 @@
 package kalkulierbar.tableaux
 
 import kalkulierbar.TamperProtect
+import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
 import kotlinx.serialization.Serializable
 
@@ -95,6 +96,8 @@ class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean)
         val childlist = children.joinToString(",")
         return "$spelling;$neg;$parent;$ref;$leaf;$closed;($childlist)"
     }
+
+    fun toAtom() = Atom(spelling, negated)
 }
 
 /**
