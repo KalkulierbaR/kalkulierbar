@@ -16,6 +16,10 @@ interface Props {
      */
     selected: boolean;
     /**
+     * Style for the rectangle filling
+     */
+    filling: string;
+    /**
      * The function to call, when the user selects this node
      */
     selectNodeCallback: (node: D3Data) => void;
@@ -24,8 +28,10 @@ interface Props {
 // Component representing a single Node of a TableauxTree
 const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     node,
-    selectNodeCallback,
-    selected
+    selected,
+    filling,    
+    selectNodeCallback
+
 }) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
@@ -49,15 +55,25 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const handleClick = () => {
-        selectNodeCallback(node.data);
+        if(! node.data.isClosed){
+            selectNodeCallback(node.data);
+        }
     };
 
     const { width, height, x: bgX, y: bgY } = dims;
 
     return (
-        <g onClick={handleClick} class={style.node}>
+        <g onClick={handleClick} class={
+            style.node 
+            + " " 
+            + (node.data.isClosed ? style.closed : "")
+            }>
             <rect
-                class={selected ? style.bg : style.invisible}
+                class={
+                    filling
+                    + " "
+                    + (selected ? style.selected : "")
+                }
                 x={bgX}
                 y={bgY}
                 width={width}
@@ -67,7 +83,6 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             <text
                 ref={ref}
                 text-anchor="middle"
-                class={node.data.isClosed ? style.closed : undefined}
                 x={(node as any).x}
                 y={(node as any).y}
             >

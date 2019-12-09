@@ -5,13 +5,51 @@
 
 .bg {
     /* fill: rgba(0, 0, 0, 0.15); */
-    fill: #683ab74d;
+    fill: #95ff64e0;
 }
 
-.invisible {
-    fill: transparent;
+.selected {
+    stroke: rgb(66, 66, 66);
+    stroke-width: 2;
+}
+
+.bgGrey {
+    fill: rgba(0, 0, 0, 0.15);
 }
 
 .closed {
-    fill: green;
+    opacity: 50%;
+    cursor: default;
+}
+
+.fGrey {
+    fill: rgba(0, 0, 0, 0.15);
+}
+
+.f1 {
+    fill: #ff4848;
+}
+.f2 {
+    fill: #ffee00;
+}
+.f3 {
+    fill: #66ff00;
+}
+.f4 {
+    fill: #36ffa1;
+}
+.f5 {
+    fill: #00ffff;
+}
+.f6 {
+    fill: #63a9fa;
+}
+.f7 {
+    fill: #8e82ff;
+}
+.f8 {
+    fill: #ce78ff;
+}
+.f9 {
+    fill: #ff537e;
 }

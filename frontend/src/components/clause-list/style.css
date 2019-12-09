@@ -11,9 +11,6 @@
 }
 
 .clause-selected {
-    background-color: #683ab74d;
-}
-
-.clause-selected:hover {
-    background-color: #683ab74d;
+    border: solid #00000065 2px;
+    background-color: #00000011;
 }

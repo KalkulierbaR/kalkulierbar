@@ -5,6 +5,7 @@ import { useEffect, useState } from "preact/hooks";
 import { TableauxNode } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
+import * as nodeStyle from "../node/style.css";
 import * as style from "./style.css";
 
 // Properties Interface for the TableauxTreeView component
@@ -152,14 +153,28 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         );
     });
 
+    const nodeFillingStyles = [nodeStyle.f1, nodeStyle.f2, nodeStyle.f3, nodeStyle.f4, nodeStyle.f5, nodeStyle.f6, nodeStyle.f7, nodeStyle.f8, nodeStyle.f9];
+
+    const getNodeFillingStyle = (n: HierarchyNode<D3Data>) => {
+        if(n.data.id === 0 || n.data.isClosed){
+            return nodeStyle.fGrey;
+        }
+        {
+            const nodeName = n.data.name;
+            const firstCharCode = nodeName.charCodeAt(0);
+            const styleIndex = firstCharCode % nodeFillingStyles.length;
+            return nodeFillingStyles[styleIndex];
+        }
+    }
+
     return (
         <div class="card">
             <svg
                 class={style.svg}
                 width="100%"
-                height={`${treeHeight + 16}px`}
+                height={`${treeHeight + 64}px`}
                 style="min-height: 60vh"
-                viewBox={`0 0 ${treeWidth} ${treeHeight + 16}`}
+                viewBox={`0 -10 ${treeWidth} ${treeHeight + 64}`}
                 preserveAspectRatio="xMidyMid meet"
             >
                 <g
@@ -184,8 +199,9 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     selectNodeCallback={selectNodeCallback}
                                     node={n}
                                     selected={n.data.id === selectedNodeId}
+                                    filling={getNodeFillingStyle(n)}
                                 />
-                                {n.data.isClosed ? (
+                                {n.data.isClosed && n.data.isLeaf ? (
                                     <ClosingEdge
                                         leaf={n}
                                         pred={getAncestorById(
