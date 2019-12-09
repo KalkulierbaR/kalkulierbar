@@ -38,3 +38,10 @@
 .delay-2 {
     transition-delay: 0.08s;
 }
+
+@media (min-width: 700px) {
+    .control {
+        bottom: 32px;
+        right: 32px;
+    }
+}
