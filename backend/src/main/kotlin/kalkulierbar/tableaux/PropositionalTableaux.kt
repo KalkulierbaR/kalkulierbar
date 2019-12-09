@@ -118,6 +118,10 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
      */
     @Suppress("ThrowsCount")
     private fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int): TableauxState {
+        // Don't allow further expand moves if connectedness requires close moves to be applied first
+        if (!checkConnectedness(state, state.type))
+            throw IllegalMove("The proof tree is currently not sufficiently connected, please close branches first to restore connectedness before expanding more leaves")
+
         // Verify that both leaf and clause are valid
         if (leafID >= state.nodes.size || leafID < 0)
             throw IllegalMove("Node with ID $leafID does not exist")
@@ -145,6 +149,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             leaf.children.add(state.nodes.size - 1)
         }
 
+        // Verify compliance with connectedness criteria
+        verifyExpandConnectedness(state, leafID)
+
         return state
     }
 
@@ -158,14 +165,36 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     private fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
         for (atom in clause.atoms) {
             // Add atom spelling to list
-            var lst = mutableListOf<Atom>()
-            lst.add(atom)
+            var lst = mutableListOf<Atom>(atom)
 
             // check if similar predecessor exists
             val isPathRegular = checkRegularitySubtree(state, 0, lst)
 
             if (!isPathRegular)
                 throw IllegalMove("Expanding this clause would introduce a duplicate node '$atom' on the branch, making the tree irregular")
+        }
+    }
+
+    /**
+     * Check if expanding a leaf violates connectedness
+     * Throws an explaining exception if the move violates the selected connectedness level
+     * @param state current state object with the expansion already applied
+     * @param leafID ID of the expanded leaf
+     */
+    private fun verifyExpandConnectedness(state: TableauxState, leafID: Int) {
+        val leaf = state.nodes.get(leafID)
+        val children = leaf.children
+
+        // Expansion on root does not need to fulfill connectedness
+        if (leafID == 0)
+            return
+
+        if (state.type == TableauxType.WEAKLYCONNECTED) {
+            if (!children.fold(false) { acc, id -> acc || state.nodeIsCloseable(id) })
+                throw IllegalMove("No literal in this clause would be closeable, making the tree unconnected")
+        } else if (state.type == TableauxType.STRONGLYCONNECTED) {
+            if (!children.fold(false) { acc, id -> acc || state.nodeIsDirectlyCloseable(id) })
+                throw IllegalMove("No literal in this clause would be closeable with '$leaf', making the tree not strongly connected")
         }
     }
 
@@ -183,12 +212,16 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
      * This method will return false even if the current tree can be transformed
      * into a weakly connected tree by applying close moves
      * @param state state object to check for connectedness
-     * @param strong true for strong connectedness, false for weak connectedness
+     * @param ctype type of connectedness to check for
      * @return true iff the proof tree is strongly/weakly connected
      */
-    private fun checkConnectedness(state: TableauxState, strong: Boolean): Boolean {
+    private fun checkConnectedness(state: TableauxState, ctype: TableauxType): Boolean {
         val startNodes = state.root.children // root is excluded from connectedness criteria
 
+        if (ctype == TableauxType.UNCONNECTED)
+            return true
+
+        val strong = (ctype == TableauxType.STRONGLYCONNECTED)
         return startNodes.fold(true) { acc, id -> acc && checkConnectedSubtree(state, id, strong) }
     }
 

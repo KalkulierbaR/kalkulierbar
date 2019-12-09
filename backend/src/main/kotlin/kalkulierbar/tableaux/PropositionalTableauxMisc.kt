@@ -35,6 +35,50 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
     }
 
     /**
+     * Check if a given node can be closed
+     * @param nodeID ID of the node to check
+     * @return true is the node can be closed, false otherwise
+     */
+    fun nodeIsCloseable(nodeID: Int): Boolean {
+        val node = nodes.get(nodeID)
+        return node.isLeaf && nodeAncestryContainsAtom(nodeID, node.toAtom().not())
+    }
+
+    /**
+     * Check if a given node can be closed with its immediate parent
+     * @param nodeID ID of the node to check
+     * @return true is the node can be closed directly, false otherwise
+     */
+    fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
+        val node = nodes.get(nodeID)
+        if (node.parent == null)
+            return false
+        val parent = nodes.get(node.parent)
+
+        return node.isLeaf && node.toAtom() == parent.toAtom().not()
+    }
+
+    /**
+     * Check if a node's ancestry includes a specified atom
+     * @param nodeID ID of the node to check
+     * @param atom the atom to search for
+     * @return true iff the node's transitive parents include the given atom
+     */
+    fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom): Boolean {
+        var node = nodes.get(nodeID)
+
+        // Walk up the tree from start node
+        while (node.parent != null) {
+            node = nodes.get(node.parent!!)
+            // Check if current node is identical to atom
+            if (node.toAtom() == atom)
+                return true
+        }
+
+        return false
+    }
+
+    /**
      * Generate a checksum of the current state to detect state objects being
      * modified or corrupted while in transit
      * Call before exporting state
