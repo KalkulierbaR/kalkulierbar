@@ -171,26 +171,6 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     override fun checkCloseOnState(state: TableauxState) = state.root.isClosed.toString()
 
     /**
-     * Checks if the given state meets all requirements wrt regularity and connectedness
-     * @param state state object to check
-     * @return true iff the proof tree meets all required criteria
-     */
-    private fun checkRestrictions(state: TableauxState): Boolean {
-        var connectedness: Boolean
-        var regularity: Boolean
-
-        when (state.type) {
-            TableauxType.UNCONNECTED -> connectedness = true
-            TableauxType.WEAKLYCONNECTED -> connectedness = checkConnectedness(state, false)
-            TableauxType.STRONGLYCONNECTED -> connectedness = checkConnectedness(state, true)
-        }
-
-        regularity = !state.regular || checkRegularity(state)
-
-        return connectedness && regularity
-    }
-
-    /**
      * Verifies that a proof tree is weakly/strongly connected
      *
      * This method will return false even if the current tree can be transformed
