@@ -274,10 +274,6 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<Atom>): Boolean {
         val node = state.nodes[root]
 
-        // A leaf without parents is regular
-        if (node.isLeaf && lst.isEmpty())
-            return true
-
         // If node is in list of predecessors return false
         if (lst.contains(node.toAtom()))
             return false
