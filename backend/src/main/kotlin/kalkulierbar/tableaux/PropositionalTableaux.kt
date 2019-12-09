@@ -4,6 +4,7 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.clause.Atom
+import kalkulierbar.clause.Clause
 import kalkulierbar.parsers.ClauseSetParser
 import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.json.Json
@@ -126,23 +127,6 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
         val leaf = state.nodes[leafID]
         val clause = state.clauseSet.clauses[clauseID]
 
-        // Move should be compatible with regularity restriction
-        if (state.regular) {
-            for (atom in clause.atoms) {
-                val atomName = atom.toString()
-
-                // Add atom spelling to list
-                var lst = mutableListOf<Atom>()
-                lst.add(atom)
-
-                // check if similar predecessor exists
-                val isPathRegular = checkRegularitySubtree(state, 0, lst)
-
-                if (!isPathRegular)
-                    throw IllegalMove("Path from tree root already contains Atom \"$atomName\" (double variables not allowed!)")
-            }
-        }
-
         // Verify that leaf is actually a leaf
         if (!leaf.isLeaf)
             throw IllegalMove("Node '$leaf' is not a leaf")
@@ -150,16 +134,39 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
         if (leaf.isClosed)
             throw IllegalMove("Node '$leaf' is already closed")
 
+        // Move should be compatible with regularity restriction
+        if (state.regular)
+            verifyExpandRegularity(state, leafID, clause)
+
         // Adding every atom in clause to leaf and set parameters
         for (atom in clause.atoms) {
             val newLeaf = TableauxNode(leafID, atom.lit, atom.negated)
             state.nodes.add(newLeaf)
-
-            val stateNodeSize = state.nodes.size
-            leaf.children.add(stateNodeSize - 1)
+            leaf.children.add(state.nodes.size - 1)
         }
 
         return state
+    }
+
+    /**
+     * Check if expanding a leaf violates regularity
+     * Throws an explaining exception if the move violates regularity
+     * @param state current state object
+     * @param leafID ID of the leaf to be expanded
+     * @param clause Clause object to be used for expansion
+     */
+    private fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
+        for (atom in clause.atoms) {
+            // Add atom spelling to list
+            var lst = mutableListOf<Atom>()
+            lst.add(atom)
+
+            // check if similar predecessor exists
+            val isPathRegular = checkRegularitySubtree(state, 0, lst)
+
+            if (!isPathRegular)
+                throw IllegalMove("Expanding this clause would introduce a duplicate node '$atom' on the branch, making the tree irregular")
+        }
     }
 
     /**
