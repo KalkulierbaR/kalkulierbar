@@ -50,7 +50,7 @@ const CheckCloseBtn: preact.FunctionalComponent<Props> = ({
 
     return (
         <div class="card">
-            <Btn onClick={handleClick}>Prüfen</Btn>
+            <Btn onClick={handleClick}>Check</Btn>
         </div>
     );
 };

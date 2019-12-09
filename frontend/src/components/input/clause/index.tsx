@@ -114,7 +114,7 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
                     onInput={onInput}
                 />
                 <Btn type="submit" disabled={userInput.length === 0}>
-                    Senden
+                    Send
                 </Btn>
             </form>
         </div>
