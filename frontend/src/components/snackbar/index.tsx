@@ -5,7 +5,13 @@ import CloseIcon from "../icons/close";
 import * as style from "./style.css";
 
 interface Props {
+    /**
+     * The notification to display.
+     */
     notification: Notification;
+    /**
+     * Delete handler.
+     */
     onDelete: () => void;
 }
 

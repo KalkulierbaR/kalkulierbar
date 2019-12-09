@@ -17,6 +17,9 @@ interface Props {
      * The function to call, when the user selects a clause
      */
     selectClauseCallback: CallableFunction;
+    /**
+     * Additional className for the element
+     */
     className?: string;
 }
 

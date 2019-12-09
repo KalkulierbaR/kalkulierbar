@@ -1,7 +1,13 @@
 import { h } from "preact";
 
 interface Props {
+    /**
+     * Width and height of the icon. Defaults to `24`.
+     */
     size?: number;
+    /**
+     * The fill color to use. Defaults to `#fff`.
+     */
     fill?: string;
 }
 

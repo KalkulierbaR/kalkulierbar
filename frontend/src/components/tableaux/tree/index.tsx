@@ -21,13 +21,28 @@ interface Props {
      * The function to call, when the user selects a node
      */
     selectNodeCallback: (node: D3Data) => void;
+    /**
+     * Informs the element that the screen is small.
+     */
     smallScreen: boolean;
 }
 
 interface State {
+    /**
+     * Current transform applied to the tree.
+     */
     transform: Transform;
+    /**
+     * Current root of the tree.
+     */
     root?: HierarchyNode<D3Data>;
+    /**
+     * Height of the tree.
+     */
     treeHeight: number;
+    /**
+     * Width of the tree.
+     */
     treeWidth: number;
 }
 
@@ -121,13 +136,15 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
 interface Transform {
     x: number;
     y: number;
+    /**
+     * Scale factor.
+     */
     k: number;
 }
 
 const INIT_TRANSFORM: Transform = { x: 0, y: 0, k: 1 };
 
 class TableauxTreeView extends Component<Props, State> {
-
     public static getDerivedStateFromProps(props: Props) {
         const { nodes, smallScreen } = props;
 
@@ -149,6 +166,7 @@ class TableauxTreeView extends Component<Props, State> {
             treeWidth
         };
     }
+
     public state = {
         transform: INIT_TRANSFORM,
         root: undefined as HierarchyNode<D3Data> | undefined,
@@ -160,6 +178,11 @@ class TableauxTreeView extends Component<Props, State> {
         this.setState(s => ({ ...s, transform }));
     }
 
+    /**
+     * Sets up our zoom listener on the svg element.
+     * Has to be run after every render (As far as I know)
+     * @returns {void} - nothing. JSDoc is dumb.
+     */
     public bindZoom() {
         // Get the elements to manipulate
         const svg = select(`.${style.svg}`);
@@ -174,6 +197,7 @@ class TableauxTreeView extends Component<Props, State> {
 
     public componentDidMount() {
         this.bindZoom();
+
         window.addEventListener("kbar-center-tree", () => {
             this.setTransform(INIT_TRANSFORM);
         });
@@ -196,6 +220,11 @@ class TableauxTreeView extends Component<Props, State> {
         this.bindZoom();
     }
 
+    /**
+     * Centers the tree on node `n`.
+     * @param {number} n - the id of the node to which we should go.
+     * @returns {void} - nothing. JSDoc is dumb.
+     */
     public goToNode(n: number) {
         const { x, y } = getNodeById(this.state.root!.descendants(), n) as any;
         this.setTransform({

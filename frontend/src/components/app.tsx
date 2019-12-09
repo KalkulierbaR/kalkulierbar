@@ -13,6 +13,7 @@ import * as style from "./style.css";
 
 const SERVER = "http://127.0.0.1:7000";
 
+// Create our contexts.
 export const SmallScreen = createContext<boolean>(false);
 export const CheckClose = createContext<checkCloseFn | undefined>(undefined);
 
@@ -32,6 +33,11 @@ async function checkServer(url: string, onError: (msg: string) => void) {
     }
 }
 
+/**
+ * Updates the setter with the new small screen info
+ * @param {Function} setter - the function to call with the new value.
+ * @returns {void} - nothing. JSDoc is dumb.
+ */
 const updateSmallScreen = (setter: (s: boolean) => void) => {
     const width = window.innerWidth;
     const small = width < SMALL_SCREEN_THRESHOLD;

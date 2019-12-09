@@ -17,15 +17,37 @@ import Dialog from "./dialog";
 import * as style from "./style.css";
 
 interface Props {
+    /**
+     * The state of tableaux calculus
+     */
     state: TableauxState;
+    /**
+     * The id of the currently selected node.
+     * Defaults to `undefined`
+     */
     selectedNodeId?: number;
+    /**
+     * Handler for selecting a clause with id `n`.
+     */
     selectedClauseCallback: (n: number) => void;
 }
 
 interface MenuProps {
+    /**
+     * Shows the menu.
+     */
     show: boolean;
+    /**
+     * Handler for changing visibility.
+     */
     setShow: (v: boolean) => void;
+    /**
+     * The state of tableaux calculus
+     */
     state: TableauxState;
+    /**
+     * Handler for selecting a clause with id `n`.
+     */
     selectedClauseCallback: (n: number) => void;
 }
 
