@@ -10,7 +10,7 @@ import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.css";
 
-const SERVER = `http://${window.location.hostname}:7000`;
+const SERVER = `http://${location.hostname}:7000`;
 
 /**
  * Check if server is online
