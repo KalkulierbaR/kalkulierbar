@@ -105,7 +105,7 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
 
     return (
         <div class="card">
-            <h3>Bitte gebe eine Klauselmenge ein:</h3>
+            <h3>Please enter a set of clauses:</h3>
             <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
                 <textarea
                     name="formula"
@@ -114,7 +114,7 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
                     onInput={onInput}
                 />
                 <Btn type="submit" disabled={userInput.length === 0}>
-                    Senden
+                    Send
                 </Btn>
             </form>
         </div>
