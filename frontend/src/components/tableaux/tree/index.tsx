@@ -153,18 +153,25 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         );
     });
 
+    // Available node filling styles
     const nodeFillingStyles = [nodeStyle.f1, nodeStyle.f2, nodeStyle.f3, nodeStyle.f4, nodeStyle.f5, nodeStyle.f6, nodeStyle.f7, nodeStyle.f8, nodeStyle.f9];
 
+    /**
+     * Get the appropriate filling style for a node
+     * @param {HierarchyNode<D3Data>} n - The node to style 
+     * @returns {string} - The css style class
+     */
     const getNodeFillingStyle = (n: HierarchyNode<D3Data>) => {
         if(n.data.id === 0 || n.data.isClosed){
+            // This node is the root or it is marked as closed
             return nodeStyle.fGrey;
         }
-        {
-            const nodeName = n.data.name;
-            const firstCharCode = nodeName.charCodeAt(0);
-            const styleIndex = firstCharCode % nodeFillingStyles.length;
-            return nodeFillingStyles[styleIndex];
-        }
+        
+        // Select a filling style based on the first character of the node's name
+        const nodeName = n.data.name;
+        const firstCharCode = nodeName.charCodeAt(0);
+        const styleIndex = firstCharCode % nodeFillingStyles.length;
+        return nodeFillingStyles[styleIndex];
     }
 
     return (

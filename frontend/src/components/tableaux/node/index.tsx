@@ -16,7 +16,7 @@ interface Props {
      */
     selected: boolean;
     /**
-     * Style for the rectangle filling
+     * Style for the rectangle's filling of this node
      */
     filling: string;
     /**
@@ -50,6 +50,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             setDims(box);
         }
     });
+    
     /**
      * Handle the onClick event of the node
      * @returns {void}

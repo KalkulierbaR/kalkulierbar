@@ -3,18 +3,9 @@
     cursor: pointer;
 }
 
-.bg {
-    /* fill: rgba(0, 0, 0, 0.15); */
-    fill: #95ff64e0;
-}
-
 .selected {
     stroke: rgb(66, 66, 66);
     stroke-width: 2;
-}
-
-.bgGrey {
-    fill: rgba(0, 0, 0, 0.15);
 }
 
 .closed {
