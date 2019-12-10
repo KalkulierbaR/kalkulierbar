@@ -34,3 +34,17 @@ Close moves are encoded as `{"type":"c","id1":<ID of leaf to close>,"id2":<ID of
 ## Closing a Proof
 
 A proof can be closed if and only if every leaf of the proof tree has been closed by applying the `close` move on that leaf. A closed proof shows that the clause set used is unsatisfiable.
+
+# Variants
+
+## Regularity
+
+A proof may be restricted to a regular tableaux which does not permit duplicate atoms (nodes sharing the same variable name and negation state) on any root-to-leaf path in the proof tree. Attempts to use the expand rule which would introduce a duplicate atom on a root-to-leaf path will fail.
+
+## Weak Connectedness
+
+With weak connectedness enabled, every non-leaf and non-root node has to have at least one child that is a closed leaf. Attempts to expand a clause which would result in no closable children will fail. After expanding a clause, no further expand moves can be applied until at least on of the new leaves created is closed, thus restoring connectedness.
+
+## Strong Connectedness
+
+Strong connectedness is completely analogous to weak connectedness with the exception that at least one new leaf has to be closed **with its direct parent node**. As with weak connectedness, attempts to expand clauses not resulting in a thus closeable leaf will fail.
