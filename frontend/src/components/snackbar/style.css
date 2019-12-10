@@ -9,7 +9,11 @@
     border-left: 5px solid var(--type-color);
     border-right: 5px solid transparent;
     color: hsla(0, 0%, 100%, 0.87);
-    min-width: 334px;
+    max-width: calc(100vw - 96px);
+}
+
+.snack:last-child {
+    margin-bottom: 0;
 }
 
 .error {
@@ -32,4 +36,10 @@
     background-color: transparent;
     color: #fff;
     cursor: pointer;
+}
+
+@media (min-width: 700px) {
+    .snack {
+        max-width: 500px;
+    }
 }
