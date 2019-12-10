@@ -101,7 +101,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState>() {
         var node = leaf
 
         // Set isClosed to true for all nodes dominated by leaf in reverse tree
-        while (node.isLeaf || node.children.fold(true){ acc, e -> acc && state.nodes.get(e).isClosed }) {
+        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && state.nodes.get(e).isClosed }) {
             node.isClosed = true
             if (node.parent == null)
                 break
