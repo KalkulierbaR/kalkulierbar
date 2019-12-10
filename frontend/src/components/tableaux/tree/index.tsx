@@ -2,7 +2,11 @@ import { event, hierarchy, HierarchyNode, select, tree, zoom } from "d3";
 import { Component, Fragment, h } from "preact";
 import { useRef } from "preact/hooks";
 
-import { TableauxNode, TableauxTreeGoToEvent } from "../../../types/tableaux";
+import {
+    SelectNodeOptions,
+    TableauxNode,
+    TableauxTreeGoToEvent
+} from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
 import * as style from "./style.css";
@@ -20,7 +24,7 @@ interface Props {
     /**
      * The function to call, when the user selects a node
      */
-    selectNodeCallback: (node: D3Data) => void;
+    selectNodeCallback: (node: D3Data, options?: SelectNodeOptions) => void;
     /**
      * Informs the element that the screen is small.
      */
@@ -203,16 +207,7 @@ class TableauxTreeView extends Component<Props, State> {
         });
 
         window.addEventListener("kbar-go-to-node", e => {
-            const { node: id } = (e as TableauxTreeGoToEvent).detail;
-            const { x, y } = getNodeById(
-                this.state.root!.descendants(),
-                id
-            ) as any;
-            this.setTransform({
-                x: this.state.treeWidth / 2 - x,
-                y: this.state.treeHeight / 2 - y,
-                k: 1
-            });
+            this.goToNode((e as TableauxTreeGoToEvent).detail.node);
         });
     }
 
@@ -226,7 +221,10 @@ class TableauxTreeView extends Component<Props, State> {
      * @returns {void} - nothing. JSDoc is dumb.
      */
     public goToNode(n: number) {
-        const { x, y } = getNodeById(this.state.root!.descendants(), n) as any;
+        const node = getNodeById(this.state.root!.descendants(), n);
+        this.props.selectNodeCallback(node.data, { ignoreClause: true });
+
+        const { x, y } = node as any;
         this.setTransform({
             x: this.state.treeWidth / 2 - x,
             y: this.state.treeHeight / 2 - y,

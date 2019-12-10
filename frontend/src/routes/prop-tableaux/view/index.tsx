@@ -1,7 +1,11 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import { AppStateUpdater } from "../../../types/app";
-import { TableauxMove, TableauxState } from "../../../types/tableaux";
+import {
+    SelectNodeOptions,
+    TableauxMove,
+    TableauxState
+} from "../../../types/tableaux";
 import * as style from "./style.css";
 
 import { SmallScreen } from "../../../components/app";
@@ -166,15 +170,19 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
      * @param {D3Data} newNode - The id of the clause, which was clicked on
      * @returns {void}
      */
-    const selectNodeCallback = (newNode: D3Data) => {
+    const selectNodeCallback = (
+        newNode: D3Data,
+        { ignoreClause = false }: SelectNodeOptions = {}
+    ) => {
         if (newNode.id === selectedNodeId) {
             // The same node was selected again => deselect it
             setSelectedNodeId(undefined);
         } else if (newNode.isLeaf) {
             // If the newly selected node is a leaf => accept new node id
             setSelectedNodeId(newNode.id);
-
-            if (selectedClauseId !== undefined) {
+            if (ignoreClause) {
+                setSelectedClauseId(undefined);
+            } else if (selectedClauseId !== undefined) {
                 // The clause and node have been selected => send extend move request to backend
                 sendExtend(
                     moveUrl,

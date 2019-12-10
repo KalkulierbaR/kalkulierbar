@@ -26,3 +26,11 @@ export interface TableauxTreeGoToEvent extends CustomEvent {
         node: number;
     };
 }
+
+export interface SelectNodeOptions {
+    /**
+     * Ignores any selected clause and deselects all clauses.
+     * Defaults to `false`.
+     */
+    ignoreClause?: boolean;
+}
