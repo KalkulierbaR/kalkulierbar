@@ -15,7 +15,7 @@ const example: TableauxState = {
     },
     nodes: [
         {
-            parent: 0,
+            parent: null,
             spelling: "true",
             negated: false,
             isClosed: false,
