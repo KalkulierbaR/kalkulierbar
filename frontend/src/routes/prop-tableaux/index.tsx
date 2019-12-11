@@ -1,9 +1,10 @@
 import { Fragment, h } from "preact";
-// import * as style from "./style.css";
+import * as style from "./style.css";
 
 import Switch from "../../components/switch";
 
 import ClauseInput from "../../components/input/clause";
+import Radio from "../../components/radio";
 import { AppStateUpdater } from "../../types/app";
 
 interface Props {
@@ -29,8 +30,13 @@ const Tableaux: preact.FunctionalComponent<Props> = ({
                 onChange={onChange}
                 onError={onError}
             />
-            <div class="card">
+            <div class={`card ${style.form}`}>
                 <Switch label="Regular" />
+                <div class={style.radioGroup}>
+                    <Radio group="connected" label="Unconnected" />
+                    <Radio group="connected" label="Strongly Connected" />
+                    <Radio group="connected" label="Weakly Connected" />
+                </div>
             </div>
         </Fragment>
     );

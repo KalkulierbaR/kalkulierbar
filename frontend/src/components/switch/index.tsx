@@ -1,4 +1,4 @@
-import { Component, createRef, Fragment, h } from "preact";
+import { Component, createRef, h } from "preact";
 import * as style from "./style.css";
 
 import { MDCSwitch } from "@material/switch";
@@ -35,7 +35,7 @@ export default class Switch extends Component<Props, {}> {
 
     public render({ label }: Props) {
         return (
-            <Fragment>
+            <div class={style.container}>
                 <div class="mdc-switch" ref={this.switch}>
                     <div class="mdc-switch__track" />
                     <div class={`mdc-switch__thumb-underlay ${style.noRipple}`}>
@@ -54,7 +54,7 @@ export default class Switch extends Component<Props, {}> {
                 <label class={style.label} onClick={this.clickLabel}>
                     {label}
                 </label>
-            </Fragment>
+            </div>
         );
     }
 
