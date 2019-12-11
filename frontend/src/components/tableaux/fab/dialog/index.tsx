@@ -31,9 +31,20 @@ const Dialog: preact.FunctionalComponent<Props> = ({
     onClose,
     onConfirm
 }) => {
+    const handleClick = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+
+        if (!target.classList.contains(style.dialog)) {
+            e.stopPropagation();
+            return;
+        }
+
+        onClose();
+    };
+
     const c = `${style.dialog} ${open ? style.open : ""}`;
     return (
-        <div class={c}>
+        <div class={c} onClick={handleClick}>
             <div class={"card " + style.container}>
                 <h2>{label}</h2>
                 <div class={style.content}>{children}</div>
