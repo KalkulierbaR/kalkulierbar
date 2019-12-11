@@ -1,0 +1,9 @@
+/* Fixes Google's stupid ripple bug */
+.no-ripple::before {
+    content: none !important;
+}
+
+.label {
+    margin-left: 8px;
+    cursor: pointer;
+}

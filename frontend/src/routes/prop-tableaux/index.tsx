@@ -1,5 +1,7 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 // import * as style from "./style.css";
+
+import Switch from "../../components/switch";
 
 import ClauseInput from "../../components/input/clause";
 import { AppStateUpdater } from "../../types/app";
@@ -19,13 +21,18 @@ const Tableaux: preact.FunctionalComponent<Props> = ({
     onError
 }) => {
     return (
-        <ClauseInput
-            path="prop-tableaux/"
-            server={server}
-            calculus="prop-tableaux"
-            onChange={onChange}
-            onError={onError}
-        />
+        <Fragment>
+            <ClauseInput
+                path="prop-tableaux/"
+                server={server}
+                calculus="prop-tableaux"
+                onChange={onChange}
+                onError={onError}
+            />
+            <div class="card">
+                <Switch label="Regular" />
+            </div>
+        </Fragment>
     );
 };
 
