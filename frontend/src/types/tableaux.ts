@@ -22,7 +22,7 @@ export interface TableauxMove {
 }
 
 export enum TableauxType {
-    unconncted = "UNCONNECTED",
+    unconnected = "UNCONNECTED",
     weak = "WEAKLYCONNECTED",
     strong = "STRONGLYCONNECTED"
 }

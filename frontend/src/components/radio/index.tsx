@@ -5,11 +5,19 @@ import "@material/radio/dist/mdc.radio.css";
 
 interface Props {
     group: string;
+    id: string;
     label?: string;
+    checked?: boolean;
+    onSelect?: (e: Event) => void;
 }
 
-const Radio: preact.FunctionalComponent<Props> = ({ group, label }) => {
-    const id = `r-${Math.random()}`;
+const Radio: preact.FunctionalComponent<Props> = ({
+    group,
+    label,
+    checked = false,
+    onSelect,
+    id
+}) => {
     return (
         <div class={style.container}>
             <div class="mdc-radio">
@@ -18,6 +26,8 @@ const Radio: preact.FunctionalComponent<Props> = ({ group, label }) => {
                     type="radio"
                     id={id}
                     name={group}
+                    checked={checked}
+                    onInput={(e: Event) => onSelect && onSelect(e)}
                 />
                 <div class="mdc-radio__background">
                     <div class="mdc-radio__outer-circle" />
