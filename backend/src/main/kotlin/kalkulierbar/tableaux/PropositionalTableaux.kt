@@ -14,7 +14,7 @@ import kotlinx.serialization.json.JsonDecodingException
  * Implementation of a simple tableaux calculus on propositional clause sets
  * For calculus specification see docs/PropositionalTableaux.md
  */
-class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
+class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, TableauxParam>() {
 
     override val identifier = "prop-tableaux"
 
@@ -24,9 +24,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
      * @param formula propositional clause set, format a,!b;!c,d
      * @return parsed state object
      */
-    override fun parseFormulaToState(formula: String): TableauxState {
+    override fun parseFormulaToState(formula: String, params: TableauxParam): TableauxState {
         val clauses = ClauseSetParser.parse(formula)
-        return TableauxState(clauses)
+        return TableauxState(clauses, params.type, params.regular)
     }
 
     /**
@@ -355,6 +355,22 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         } catch (e: MissingFieldException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move - missing field")
+        }
+    }
+
+    /*
+     * Parses a JSON parameter representation into a TableauxParam object
+     * @param json JSON parameter representation
+     * @return parsed param object
+     */
+    @kotlinx.serialization.UnstableDefault
+    override fun jsonToParam(json: String): TableauxParam {
+        try {
+            return Json.parse(TableauxParam.serializer(), json)
+        } catch (e: JsonDecodingException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON params")
+        } catch (e: MissingFieldException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON params - missing field")
         }
     }
 

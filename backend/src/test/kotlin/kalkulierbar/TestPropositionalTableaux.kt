@@ -7,7 +7,9 @@ import kalkulierbar.JsonParseException
 import kalkulierbar.tableaux.PropositionalTableaux
 import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxNode
+import kalkulierbar.tableaux.TableauxParam
 import kalkulierbar.tableaux.TableauxState
+import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -15,6 +17,7 @@ import kotlin.test.assertFailsWith
 class TestPropositionalTableaux {
 
     val instance = PropositionalTableaux()
+    val opts = TableauxParam(TableauxType.UNCONNECTED, false)
 
     val invalidString1 = "a,b;c,!d;e,&;g,h,i,!j"
     val invalidString2 = "richtig; oder,!falsch"
@@ -37,21 +40,21 @@ class TestPropositionalTableaux {
     @Test
     fun testParseInvalidStrings() {
         assertFailsWith<InvalidFormulaFormat> {
-            instance.parseFormulaToState(invalidString1)
+            instance.parseFormulaToState(invalidString1, opts)
         }
         assertFailsWith<InvalidFormulaFormat> {
-            instance.parseFormulaToState(invalidString2)
+            instance.parseFormulaToState(invalidString2, opts)
         }
         assertFailsWith<InvalidFormulaFormat> {
-            instance.parseFormulaToState(invalidString3)
+            instance.parseFormulaToState(invalidString3, opts)
         }
     }
 
     @Test
     fun testParseValidString() {
-        val state1 = instance.parseFormulaToState(validString1)
-        val state2 = instance.parseFormulaToState(validString2)
-        val state3 = instance.parseFormulaToState(validString3)
+        val state1 = instance.parseFormulaToState(validString1, opts)
+        val state2 = instance.parseFormulaToState(validString2, opts)
+        val state3 = instance.parseFormulaToState(validString3, opts)
 
         val root1 = state1.nodes[0]
         val root2 = state2.nodes[0]
@@ -76,16 +79,16 @@ class TestPropositionalTableaux {
     @Test
     fun testParseEdgeCases() {
         assertFailsWith<InvalidFormulaFormat> {
-            instance.parseFormulaToState(emptyString)
+            instance.parseFormulaToState(emptyString, opts)
         }
         assertFailsWith<InvalidFormulaFormat> {
-            instance.parseFormulaToState(edgeCase1)
+            instance.parseFormulaToState(edgeCase1, opts)
         }
         assertFailsWith<InvalidFormulaFormat> {
-            instance.parseFormulaToState(edgeCase2)
+            instance.parseFormulaToState(edgeCase2, opts)
         }
         assertFailsWith<InvalidFormulaFormat> {
-            instance.parseFormulaToState(edgeCase3)
+            instance.parseFormulaToState(edgeCase3, opts)
         }
     }
 
@@ -95,7 +98,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testUnknownMove() {
-        val state = instance.parseFormulaToState("a,b,c;d")
+        val state = instance.parseFormulaToState("a,b,c;d", opts)
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
@@ -107,7 +110,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testApplyMoveNullValues() {
-        val state = instance.parseFormula("a,b;c")
+        val state = instance.parseFormula("a,b;c", "{\"type\":\"UNCONNECTED\",\"regular\":false}")
 
         assertFailsWith<JsonParseException> {
             instance.applyMove(state, "{\"type\":\"e\", \"id1\": null, \"id2\": 2}")
@@ -124,7 +127,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testExpandValidA() {
-        var state = instance.parseFormulaToState("a,b,c;d")
+        var state = instance.parseFormulaToState("a,b,c;d", opts)
 
         state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
 
@@ -136,7 +139,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testExpandValidB() {
-        var state = instance.parseFormulaToState("a,b,c;d")
+        var state = instance.parseFormulaToState("a,b,c;d", opts)
 
         state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
 
@@ -148,7 +151,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testExpandValidC() {
-        var state = instance.parseFormulaToState("a,b,c;d")
+        var state = instance.parseFormulaToState("a,b,c;d", opts)
 
         state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
         state = instance.applyMoveOnState(state, TableauxMove("e", 3, 1))
@@ -162,7 +165,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testExpandLeafIndexOOB() {
-        val state = instance.parseFormulaToState("a,b;c")
+        val state = instance.parseFormulaToState("a,b;c", opts)
 
         val hash = state.getHash()
 
@@ -179,7 +182,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testExpandClauseIndexOOB() {
-        val state = instance.parseFormulaToState("a,b;c")
+        val state = instance.parseFormulaToState("a,b;c", opts)
 
         val hash = state.getHash()
 
@@ -196,7 +199,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testExpandOnNonLeaf() {
-        var state = instance.parseFormulaToState("a,b;c")
+        var state = instance.parseFormulaToState("a,b;c", opts)
 
         state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
         state = instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
@@ -216,7 +219,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testExpandClosedLeaf() {
-        var state = instance.parseFormulaToState("a;!a")
+        var state = instance.parseFormulaToState("a;!a", opts)
 
         state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
         state = instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
@@ -243,7 +246,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testApplyCloseValidA() {
-        var state = instance.parseFormulaToState("a,b;!b")
+        var state = instance.parseFormulaToState("a,b;!b", opts)
 
         val nodes = listOf(
                 TableauxNode(0, "a", false),
@@ -260,7 +263,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testApplyCloseValidB() {
-        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c")
+        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c", opts)
 
         val nodes = listOf(
                 TableauxNode(0, "b", true),
@@ -282,7 +285,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testApplyCloseValidC() {
-        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c")
+        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c", opts)
 
         val nodes = listOf(
                 TableauxNode(0, "a", false),
@@ -308,7 +311,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testCloseLeafIndexOOB() {
-        val state = instance.parseFormulaToState("a,b;c")
+        val state = instance.parseFormulaToState("a,b;c", opts)
 
         val hash = state.getHash()
 
@@ -325,7 +328,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testCloseIndexOOB() {
-        var state = instance.parseFormulaToState("a,b;c")
+        var state = instance.parseFormulaToState("a,b;c", opts)
 
         val nodes = listOf(
                 TableauxNode(0, "a", false),
@@ -350,7 +353,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testCloseOnNonLeaf() {
-        var state = instance.parseFormulaToState("a,b;c")
+        var state = instance.parseFormulaToState("a,b;c", opts)
 
         val nodes = listOf(
                 TableauxNode(0, "c", false),
@@ -373,7 +376,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testCloseWithNonPath() {
-        var state = instance.parseFormulaToState("a,b;!b")
+        var state = instance.parseFormulaToState("a,b;!b", opts)
 
         val nodes = listOf(
                 TableauxNode(0, "a", false),
@@ -401,7 +404,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testSubtreeCloseMarking() {
-        var state = instance.parseFormulaToState("b,a;!b;!a,b")
+        var state = instance.parseFormulaToState("b,a;!b;!a,b", opts)
 
         val nodes = listOf(
                 TableauxNode(0, "b", false),
@@ -438,7 +441,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testCheckCloseSimple() {
-        var state = instance.parseFormulaToState("a,!a")
+        var state = instance.parseFormulaToState("a,!a", opts)
 
         assertEquals("false", instance.checkCloseOnState(state))
 
@@ -461,7 +464,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testCheckClose() {
-        var state = instance.parseFormulaToState("a,b;!a,!b")
+        var state = instance.parseFormulaToState("a,b;!a,!b", opts)
 
         assertEquals("false", instance.checkCloseOnState(state))
 
@@ -489,7 +492,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testCheckCloseComplex() {
-        var state = instance.parseFormulaToState("a,b;!b;!a")
+        var state = instance.parseFormulaToState("a,b;!b;!a", opts)
 
         state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
         state = instance.applyMoveOnState(state, TableauxMove("e", 2, 1))
@@ -514,7 +517,7 @@ class TestPropositionalTableaux {
 
     @Test
     fun testCheckCloseNegative() {
-        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c")
+        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c", opts)
 
         val nodes = listOf(
             TableauxNode(0, "a", false),

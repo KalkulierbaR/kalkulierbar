@@ -88,7 +88,9 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         app.post("/$name/parse") { ctx ->
             val formula = ctx.formParam("formula")
                     ?: throw ApiMisuseException("POST parameter 'formula' needs to be present")
-            ctx.result(endpoint.parseFormula(formula))
+            val params = ctx.formParam("params")
+                    ?: throw ApiMisuseException("POST parameter 'params' needs to be present")
+            ctx.result(endpoint.parseFormula(formula, params))
         }
 
         // Move endpoint takes state and move parameter values and passes them to calculus implementation
