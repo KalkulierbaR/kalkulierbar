@@ -97,11 +97,10 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     //      x2,y2 of the target
     // should look like d="M x1 x2 Q xC yC x2 y2"
     // Todo: use Stringtemplates
-    const controlpoint = (x1 - (y1 + y2) / 2);
-    console.log(controlpoint);
-  //  if (x1 > x2){
-   //     controlpoint = (x1 + (y1 - y2) / 2);
- //   }
+    let controlpoint = (x1 - (y1 - y2) / 2);
+    if (x1 > x2){
+        controlpoint = (x1 + (y1 - y2) / 2);
+    }
     const d =
         "M " +
         x1 +
@@ -115,7 +114,7 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
         x2 +
         " " +
         y2;
-
+ //   console.log('M ${x1} ${y1} Q ${controlpoint} ${(y1 + y2) / 2} ${x2} ${y2}')
     return <path d={d} class={style.link} />;
 };
 
