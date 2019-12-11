@@ -29,6 +29,7 @@ interface Props {
  * @returns {string} - Normalized clause string
  */
 const normalizeInput = (input: string) => {
+    input = input.replace(/\n+$/, "");
     input = input.replace(/\n+/g, "\n");
     input = input.replace(/\n/g, ";");
     input = input.replace(/\s/g, "");

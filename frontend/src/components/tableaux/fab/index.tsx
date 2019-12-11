@@ -83,14 +83,6 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
             />
             <FAB
                 class={style.delay1}
-                icon={<CheckCircleIcon />}
-                label="Check"
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() => checkClose("prop-tableaux", state)}
-            />
-            <FAB
                 icon={<CenterIcon />}
                 label="Center"
                 mini={true}
@@ -99,6 +91,14 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
                 onClick={() => {
                     dispatchEvent(new CustomEvent("kbar-center-tree"));
                 }}
+            />
+            <FAB
+                icon={<CheckCircleIcon />}
+                label="Check"
+                mini={true}
+                extended={true}
+                showIconAtEnd={true}
+                onClick={() => checkClose("prop-tableaux", state)}
             />
         </menu>
     );

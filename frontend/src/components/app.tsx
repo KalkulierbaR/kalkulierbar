@@ -53,26 +53,25 @@ if ((module as any).hot) {
 // This is the main App component which handles routing and calls other components
 const App: preact.FunctionalComponent = () => {
     const [state, setState] = useState<AppState>({});
-    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [notification, setNotification] = useState<Notification | undefined>(
+        undefined
+    );
     const [smallScreen, setSmallScreen] = useState<boolean>(false);
 
-    const addNotification = (n: Notification) =>
-        setNotifications([...notifications, n]);
-
-    const removeNotification = (idx: number) => {
-        setNotifications(notifications.filter((_, i) => idx !== i));
+    const removeNotification = () => {
+        setNotification(undefined);
     };
 
     const handleError = (msg: string) =>
-        addNotification({ type: NotificationType.Error, message: msg });
+        setNotification({ type: NotificationType.Error, message: msg });
 
     const handleSuccess = (msg: string) =>
-        addNotification({ type: NotificationType.Success, message: msg });
+        setNotification({ type: NotificationType.Success, message: msg });
 
     const handleMessage = (
         msg: string,
         type: NotificationType = NotificationType.None
-    ) => addNotification({ type, message: msg });
+    ) => setNotification({ type, message: msg });
 
     useEffect(() => {
         checkServer(SERVER, handleError);
@@ -120,12 +119,12 @@ const App: preact.FunctionalComponent = () => {
                         </Router>
                     </main>
                     <div class={style.notifications}>
-                        {notifications.map((n, i) => (
+                        {notification && (
                             <Snackbar
-                                notification={n}
-                                onDelete={() => removeNotification(i)}
+                                notification={notification}
+                                onDelete={() => removeNotification()}
                             />
-                        ))}
+                        )}
                     </div>
                 </CheckClose.Provider>
             </SmallScreen.Provider>
