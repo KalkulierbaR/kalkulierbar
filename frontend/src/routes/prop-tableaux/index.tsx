@@ -7,7 +7,7 @@ import { useState } from "preact/hooks";
 import ClauseInput from "../../components/input/clause";
 import Radio from "../../components/radio";
 import { AppStateUpdater } from "../../types/app";
-import { TableauxType } from "../../types/tableaux";
+import { TableauxParams, TableauxType } from "../../types/tableaux";
 
 interface Props {
     /**
@@ -32,6 +32,8 @@ const Tableaux: preact.FunctionalComponent<Props> = ({
         setTabType(target.id as TableauxType);
     };
 
+    const params: TableauxParams = { type: tabType, regular };
+
     return (
         <Fragment>
             <ClauseInput
@@ -40,6 +42,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({
                 calculus="prop-tableaux"
                 onChange={onChange}
                 onError={onError}
+                params={params}
             />
             <div class="card">
                 <h3>Parameters</h3>

@@ -2,6 +2,7 @@ import { h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 import { AppState, AppStateUpdater } from "../../../types/app";
+import { TableauxParams } from "../../../types/tableaux";
 import Btn from "../../btn";
 import * as style from "./style.css";
 
@@ -15,6 +16,7 @@ interface Props {
      * URL to the server
      */
     server: string;
+    params: TableauxParams;
     /**
      * The function to call, when the state associated with the calculus changed
      */
@@ -44,7 +46,8 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
     server,
     onChange,
-    onError
+    onError,
+    params
 }) => {
     const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
@@ -56,13 +59,16 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
      */
     const onSubmit = async (event: Event) => {
         event.preventDefault();
+        console.log(params);
         try {
             const response = await fetch(url, {
                 headers: {
                     "Content-Type": "text/plain"
                 },
                 method: "POST",
-                body: `formula=${normalizeInput(userInput)}`
+                body: `formula=${normalizeInput(
+                    userInput
+                )}&params=${JSON.stringify(params)}`
             });
             if (response.status !== 200) {
                 onError(await response.text());

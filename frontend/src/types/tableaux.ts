@@ -26,3 +26,8 @@ export enum TableauxType {
     weak = "WEAKLYCONNECTED",
     strong = "STRONGLYCONNECTED"
 }
+
+export interface TableauxParams {
+    type: TableauxType;
+    regular: boolean;
+}
