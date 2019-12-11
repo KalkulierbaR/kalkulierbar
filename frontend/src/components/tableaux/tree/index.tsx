@@ -96,13 +96,18 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     //      xC,yC of the control point
     //      x2,y2 of the target
     // should look like d="M x1 x2 Q xC yC x2 y2"
+    // Todo: use Stringtemplates
+    let controlpoint = (x1 - (y1 - y2) / 2);
+    if (y1 > y2){
+        controlpoint = (x1 + (y1 - y2) / 2);
+    }
     const d =
         "M " +
         x1 +
         " " +
         y1 +
         " Q " +
-        (x1 - (y1 - y2) / 2) +
+        controlpoint +
         " " +
         (y1 + y2) / 2 +
         " " +
