@@ -64,16 +64,12 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     const { width, height, x: bgX, y: bgY } = dims;
 
     return (
-        <g onClick={handleClick} class={
-            style.node 
-            + " " 
-            + (node.data.isClosed ? style.closed : "")
-            }>
+        <g onClick={handleClick} class={node.data.isClosed ? style.nodeClosed : style.node}>
             <rect
                 class={
                     filling
                     + " "
-                    + (selected ? style.selected : "")
+                    + (selected ? style.rectSelected : "")
                 }
                 x={bgX}
                 y={bgY}
@@ -84,6 +80,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             <text
                 ref={ref}
                 text-anchor="middle"
+                class={node.data.isClosed ? style.textClosed : ""}
                 x={(node as any).x}
                 y={(node as any).y}
             >

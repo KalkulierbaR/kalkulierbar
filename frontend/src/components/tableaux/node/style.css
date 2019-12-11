@@ -3,34 +3,42 @@
     cursor: pointer;
 }
 
-.selected {
+.rectSelected {
     stroke: rgb(66, 66, 66);
     stroke-width: 2;
 }
 
-.closed {
-    opacity: 50%;
+.nodeClosed {
+    transform: none;
     cursor: default;
 }
 
-.fGrey {
-    fill: rgba(0, 0, 0, 0.15);
+.textClosed {
+    fill: #555555;
+}
+
+.fClosed {
+    fill: rgb(218, 218, 218);
+}
+
+.fDefault {
+    fill: #bb94ff;
 }
 
 .f1 {
-    fill: #ff4848;
+    fill: #bfd6f6;
 }
 .f2 {
-    fill: #ffee00;
+    fill: #8dbdff;
 }
 .f3 {
-    fill: #66ff00;
+    fill: #64a1f4;
 }
 .f4 {
-    fill: #36ffa1;
+    fill: #4a91f2;
 }
 .f5 {
-    fill: #00ffff;
+    fill: #3b7dd8;
 }
 .f6 {
     fill: #63a9fa;
