@@ -153,28 +153,6 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         );
     });
 
-    // Available node filling styles
-    // const nodeFillingStyles = [nodeStyle.f1, nodeStyle.f2, nodeStyle.f3, nodeStyle.f4, nodeStyle.f5];
-
-    /**
-     * Get the appropriate filling style for a node
-     * @param {HierarchyNode<D3Data>} n - The node to style 
-     * @returns {string} - The css style class
-     */
-    const getNodeFillingStyle = (n: HierarchyNode<D3Data>) => {
-        if(n.data.isClosed){
-            return nodeStyle.fClosed;
-        }
-        
-        // Select a filling style based on the first character of the node's name
-        // const nodeName = n.data.name;
-        // const firstCharCode = nodeName.charCodeAt(0);
-        // const styleIndex = firstCharCode % nodeFillingStyles.length;
-        // return nodeFillingStyles[styleIndex];
-
-        return nodeStyle.fDefault;
-    }
-
     return (
         <div class="card">
             <svg
@@ -185,31 +163,12 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                 viewBox={`0 -10 ${treeWidth} ${treeHeight + 64}`}
                 preserveAspectRatio="xMidyMid meet"
             >
-                <g
-                    transform={`translate(${transform.x} ${transform.y +
-                        16}) scale(${transform.k})`}
-                >
-                    <g class="links">
-                        {root.links().map(l => (
-                            <line
-                                class={style.link}
-                                x1={(l.source as any).x}
-                                y1={(l.source as any).y + 6}
-                                x2={(l.target as any).x}
-                                y2={(l.target as any).y - 18}
-                            />
-                        ))}
-                    </g>
-                    <g class="nodes">
-                        {root.descendants().map(n => (
-                            <Fragment>
-                                <TableauxTreeNode
-                                    selectNodeCallback={selectNodeCallback}
-                                    node={n}
-                                    selected={n.data.id === selectedNodeId}
-                                    filling={getNodeFillingStyle(n)}
-                                />
-                                {n.data.isClosed && n.data.isLeaf ? (
+                <g transform={`translate(${transform.x} ${transform.y + 16}) scale(${transform.k})`}>
+                    <g>
+                        {<Fragment>
+                            {/* First render ClosingEdges -> keep order to avoid overlapping */ 
+                            root.descendants().map(n => (
+                                n.data.isClosed && n.data.isLeaf ? (
                                     <ClosingEdge
                                         leaf={n}
                                         pred={getAncestorById(
@@ -217,9 +176,28 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                             n.data.closeRef!
                                         )}
                                     />
-                                ) : null}
-                            </Fragment>
-                        ))}
+                                ) : null
+                            ))}
+                            {/* Second render links between nodes */
+                            root.links().map(l => (
+                                <line
+                                    class={style.link}
+                                    x1={(l.source as any).x}
+                                    y1={(l.source as any).y + 6}
+                                    x2={(l.target as any).x}
+                                    y2={(l.target as any).y - 18}
+                                />
+                            ))}
+                            {/* Third render nodes -> renders above all previous elements */
+                            root.descendants().map(n => (
+                                <TableauxTreeNode
+                                    selectNodeCallback={selectNodeCallback}
+                                    node={n}
+                                    selected={n.data.id === selectedNodeId}
+                                    filling={n.data.isClosed ? nodeStyle.fClosed : nodeStyle.fDefault}
+                                />
+                            ))}
+                        </Fragment>}
                     </g>
                 </g>
             </svg>
