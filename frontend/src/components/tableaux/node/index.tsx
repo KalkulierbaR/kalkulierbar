@@ -32,7 +32,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     const ref = createRef<SVGTextElement>();
 
     // The nodes name which is displayed
-    const name = `${node.data.negated ? "!" : ""}${node.data.name}`;
+    const name = `${node.data.negated ? "¬" : ""}${node.data.name}`;
 
     useEffect(() => {
         if (!ref.current) {

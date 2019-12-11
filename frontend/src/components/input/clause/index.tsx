@@ -113,6 +113,7 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
                     class={style.input}
                     value={userInput}
                     onInput={onInput}
+                    autocapitalize="off"
                 />
                 <Btn type="submit" disabled={userInput.length === 0}>
                     Senden
