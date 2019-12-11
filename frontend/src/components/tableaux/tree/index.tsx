@@ -85,10 +85,10 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     pred
 }) => {
     // Calculate coordinates
-    const x1 = (leaf as any).x - 3;
-    const y1 = (leaf as any).y - 16;
-    const x2 = (pred as any).x - 3;
-    const y2 = (pred as any).y + 4;
+    const x1 = (leaf as any).x;
+    const y1 = (leaf as any).y;
+    const x2 = (pred as any).x;
+    const y2 = (pred as any).y;
 
     // Calculate edge
     // M -> move to point x1,y1
@@ -97,10 +97,11 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     //      x2,y2 of the target
     // should look like d="M x1 x2 Q xC yC x2 y2"
     // Todo: use Stringtemplates
-    let controlpoint = (x1 - (y1 - y2) / 2);
-    if (y1 > y2){
-        controlpoint = (x1 + (y1 - y2) / 2);
-    }
+    const controlpoint = (x1 - (y1 + y2) / 2);
+    console.log(controlpoint);
+  //  if (x1 > x2){
+   //     controlpoint = (x1 + (y1 - y2) / 2);
+ //   }
     const d =
         "M " +
         x1 +
