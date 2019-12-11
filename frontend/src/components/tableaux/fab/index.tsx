@@ -9,7 +9,6 @@ import { CheckClose } from "../../app";
 import ClauseList from "../../clause-list";
 import AddIcon from "../../icons/add";
 import CenterIcon from "../../icons/center";
-import CheckIcon from "../../icons/check";
 import CheckCircleIcon from "../../icons/check-circle";
 import ExploreIcon from "../../icons/explore";
 import MoreIcon from "../../icons/more";
@@ -119,7 +118,6 @@ const MenuNodeSelected: preact.FunctionalComponent<MenuProps> = ({
                 onClick={() => setShow(false)}
             >
                 <FAB
-                    class={style.delay1}
                     icon={<AddIcon />}
                     label="Expand"
                     mini={true}
@@ -128,14 +126,6 @@ const MenuNodeSelected: preact.FunctionalComponent<MenuProps> = ({
                     onClick={() => {
                         setShowDialog(!showDialog);
                     }}
-                />
-                <FAB
-                    icon={<CheckIcon />}
-                    label="Close"
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() => console.log("c")}
                 />
             </menu>
             <Dialog
