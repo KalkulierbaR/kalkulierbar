@@ -1,7 +1,7 @@
 import { ClauseSet } from "./clause";
 
 export interface TableauxNode {
-    parent: number;
+    parent: number | null;
     spelling: string;
     negated: boolean;
     isClosed: boolean;
@@ -13,6 +13,8 @@ export interface TableauxState {
     seal: string;
     clauseSet: ClauseSet;
     nodes: TableauxNode[];
+    type: TableauxType;
+    regular: boolean;
 }
 
 export interface TableauxMove {
