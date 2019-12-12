@@ -161,7 +161,8 @@ const TreeControlFAB: preact.FunctionalComponent<Props> = ({
     ) : (
         <MoreIcon fill={FILL} size={SIZE} />
     );
-
+    
+    // Choose a menu based upon if a node is selected
     const menu =
         selectedNodeId === undefined ? (
             <MenuNonSelected

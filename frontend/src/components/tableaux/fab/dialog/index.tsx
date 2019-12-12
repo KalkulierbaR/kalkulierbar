@@ -31,6 +31,12 @@ const Dialog: preact.FunctionalComponent<Props> = ({
     onClose,
     onConfirm
 }) => {
+
+    /**
+     * Handle the click event
+     * @param {MouseEvent} e - The event to handle 
+     * @returns {void}
+     */
     const handleClick = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
 
@@ -42,7 +48,9 @@ const Dialog: preact.FunctionalComponent<Props> = ({
         onClose();
     };
 
+    // Choose styles
     const c = `${style.dialog} ${open ? style.open : ""}`;
+
     return (
         <div class={c} onClick={handleClick}>
             <div class={"card " + style.container}>
