@@ -17,7 +17,7 @@ const CheckCloseBtn: preact.FunctionalComponent<Props> = ({
             {checkClose => (
                 <div class="card">
                     <Btn onClick={() => checkClose!(calculus, state)}>
-                        Prüfen
+                        Check
                     </Btn>
                 </div>
             )}
