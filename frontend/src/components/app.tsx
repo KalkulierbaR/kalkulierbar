@@ -2,6 +2,7 @@ import { h } from "preact";
 import { Router } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
+import Confetti from "../helpers/confetti";
 import Home from "../routes/home";
 import Tableaux from "../routes/prop-tableaux";
 import TableauxView from "../routes/prop-tableaux/view";
@@ -57,6 +58,13 @@ const App: preact.FunctionalComponent = () => {
 
     useEffect(() => {
         checkServer(SERVER, handleError);
+        const cf = new Confetti({ speed: 10, maxCount: 150 });
+
+        window.addEventListener("kbar-confetti", () => {
+            cf.start();
+
+            setTimeout(() => cf.stop(), 2000);
+        });
     }, []);
 
     /**

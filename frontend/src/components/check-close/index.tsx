@@ -39,6 +39,7 @@ const CheckCloseBtn: preact.FunctionalComponent<Props> = ({
                 const closed = (await response.json()) as boolean;
                 if (closed) {
                     onSuccess("Der Baum ist geschlossen");
+                    dispatchEvent(new CustomEvent("kbar-confetti"));
                 } else {
                     onError("Der Baum ist nicht geschlossen");
                 }

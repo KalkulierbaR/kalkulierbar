@@ -35,14 +35,15 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     const name = `${node.data.negated ? "!" : ""}${node.data.name}`;
 
     useEffect(() => {
-        if (ref.current) {
-            const box = ref.current.getBBox();
-            box.width += 16;
-            box.x -= 8;
-            box.height += 8;
-            box.y -= 4;
-            setDims(box);
+        if (!ref.current) {
+            return;
         }
+        const box = ref.current.getBBox();
+        box.width += 16;
+        box.x -= 8;
+        box.height += 8;
+        box.y -= 4;
+        setDims(box);
     });
     /**
      * Handle the onClick event of the node
