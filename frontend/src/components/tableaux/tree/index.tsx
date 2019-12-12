@@ -185,7 +185,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     node={n}
                                     selected={n.data.id === selectedNodeId}
                                 />
-                                {n.data.isClosed ? (
+                                {n.data.closeRef !== null ? (
                                     <ClosingEdge
                                         leaf={n}
                                         pred={getAncestorById(
