@@ -29,9 +29,8 @@ interface Props {
 const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     node,
     selected,
-    filling,    
+    filling,
     selectNodeCallback
-
 }) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
@@ -50,13 +49,13 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             setDims(box);
         }
     });
-    
+
     /**
      * Handle the onClick event of the node
      * @returns {void}
      */
     const handleClick = () => {
-        if(! node.data.isClosed){
+        if (!node.data.isClosed) {
             selectNodeCallback(node.data);
         }
     };
@@ -64,13 +63,12 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     const { width, height, x: bgX, y: bgY } = dims;
 
     return (
-        <g onClick={handleClick} class={node.data.isClosed ? style.nodeClosed : style.node}>
+        <g
+            onClick={handleClick}
+            class={node.data.isClosed ? style.nodeClosed : style.node}
+        >
             <rect
-                class={
-                    filling
-                    + " "
-                    + (selected ? style.rectSelected : "")
-                }
+                class={filling + " " + (selected ? style.rectSelected : "")}
                 x={bgX}
                 y={bgY}
                 width={width}

@@ -163,41 +163,52 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                 viewBox={`0 -10 ${treeWidth} ${treeHeight + 64}`}
                 preserveAspectRatio="xMidyMid meet"
             >
-                <g transform={`translate(${transform.x} ${transform.y + 16}) scale(${transform.k})`}>
+                <g
+                    transform={`translate(${transform.x} ${transform.y +
+                        16}) scale(${transform.k})`}
+                >
                     <g>
-                        {<Fragment>
-                            {/* First render ClosingEdges -> keep order to avoid overlapping */ 
-                            root.descendants().map(n => (
-                                n.data.isClosed && n.data.isLeaf ? (
-                                    <ClosingEdge
-                                        leaf={n}
-                                        pred={getAncestorById(
-                                            n,
-                                            n.data.closeRef!
-                                        )}
+                        {
+                            <Fragment>
+                                {/* First render ClosingEdges -> keep order to avoid overlapping */
+                                root
+                                    .descendants()
+                                    .map(n =>
+                                        n.data.isClosed && n.data.isLeaf ? (
+                                            <ClosingEdge
+                                                leaf={n}
+                                                pred={getAncestorById(
+                                                    n,
+                                                    n.data.closeRef!
+                                                )}
+                                            />
+                                        ) : null
+                                    )}
+                                {/* Second render links between nodes */
+                                root.links().map(l => (
+                                    <line
+                                        class={style.link}
+                                        x1={(l.source as any).x}
+                                        y1={(l.source as any).y + 6}
+                                        x2={(l.target as any).x}
+                                        y2={(l.target as any).y - 18}
                                     />
-                                ) : null
-                            ))}
-                            {/* Second render links between nodes */
-                            root.links().map(l => (
-                                <line
-                                    class={style.link}
-                                    x1={(l.source as any).x}
-                                    y1={(l.source as any).y + 6}
-                                    x2={(l.target as any).x}
-                                    y2={(l.target as any).y - 18}
-                                />
-                            ))}
-                            {/* Third render nodes -> renders above all previous elements */
-                            root.descendants().map(n => (
-                                <TableauxTreeNode
-                                    selectNodeCallback={selectNodeCallback}
-                                    node={n}
-                                    selected={n.data.id === selectedNodeId}
-                                    filling={n.data.isClosed ? nodeStyle.fClosed : nodeStyle.fDefault}
-                                />
-                            ))}
-                        </Fragment>}
+                                ))}
+                                {/* Third render nodes -> renders above all previous elements */
+                                root.descendants().map(n => (
+                                    <TableauxTreeNode
+                                        selectNodeCallback={selectNodeCallback}
+                                        node={n}
+                                        selected={n.data.id === selectedNodeId}
+                                        filling={
+                                            n.data.isClosed
+                                                ? nodeStyle.fClosed
+                                                : nodeStyle.fDefault
+                                        }
+                                    />
+                                ))}
+                            </Fragment>
+                        }
                     </g>
                 </g>
             </svg>
