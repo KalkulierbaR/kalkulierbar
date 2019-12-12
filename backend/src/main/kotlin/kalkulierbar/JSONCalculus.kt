@@ -13,8 +13,9 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param params optional parameters for the calculus
      * @return complete state representation of the input formula
      */
-    override fun parseFormula(formula: String, params: String): String {
-        return stateToJson(parseFormulaToState(formula, jsonToParam(params)))
+    override fun parseFormula(formula: String, params: String?): String {
+        val paramsObj = if (params == null) null else jsonToParam(params)
+        return stateToJson(parseFormulaToState(formula, paramsObj))
     }
 
     /**
@@ -22,7 +23,7 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param formula logic formula in some given format
      * @return parsed state object
      */
-    abstract fun parseFormulaToState(formula: String, params: Param): State
+    abstract fun parseFormulaToState(formula: String, params: Param?): State
 
     /**
      * Takes in a state representation and a move and applies the move on the state if possible.

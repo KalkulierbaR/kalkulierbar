@@ -85,16 +85,16 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         // Parse endpoint takes formula parameter and passes it to calculus implementation
         app.post("/$name/parse") { ctx ->
             val map = ctx.formParamMap()
-            val formula = getParam(map, "formula")
-            val params = getParam(map, "params")
+            val formula = getParam(map, "formula")!!
+            val params = getParam(map, "params", true)
             ctx.result(endpoint.parseFormula(formula, params))
         }
 
         // Move endpoint takes state and move parameter values and passes them to calculus implementation
         app.post("/$name/move") { ctx ->
             val map = ctx.formParamMap()
-            val state = getParam(map, "state")
-            val move = getParam(map, "move")
+            val state = getParam(map, "state")!!
+            val move = getParam(map, "move")!!
             ctx.result(endpoint.applyMove(state, move))
         }
 
@@ -109,12 +109,19 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
 
 /*
  * Get a request parameter from the Javalin provided parameter map
+ * Will never return null unless the optional parameter is true
  * @param map Javalin parameter map
  * @param key parameter name
- * @return Value associated with the parameter key 
+ * @param optional true if no exception should be raised for missing values
+ * @return Value associated with the parameter key, null if not found and optional
  */
-fun getParam(map: Map<String, List<String>>, key: String): String {
+fun getParam(map: Map<String, List<String>>, key: String, optional: Boolean = false): String? {
     val lst = map.get(key)
-            ?: throw ApiMisuseException("POST parameter '$key' needs to be present")
+
+    if (lst == null && !optional)
+        throw ApiMisuseException("POST parameter '$key' needs to be present")
+    else if (lst == null)
+        return null
+
     return lst.get(0)
 }

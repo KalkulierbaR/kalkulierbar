@@ -22,9 +22,12 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      * @param formula propositional clause set, format a,!b;!c,d
      * @return parsed state object
      */
-    override fun parseFormulaToState(formula: String, params: TableauxParam): TableauxState {
+    override fun parseFormulaToState(formula: String, params: TableauxParam?): TableauxState {
         val clauses = ClauseSetParser.parse(formula)
-        return TableauxState(clauses, params.type, params.regular)
+        if (params == null)
+            return TableauxState(clauses)
+        else
+            return TableauxState(clauses, params.type, params.regular)
     }
 
     /**

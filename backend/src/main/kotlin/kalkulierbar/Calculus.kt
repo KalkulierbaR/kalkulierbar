@@ -18,7 +18,7 @@ interface Calculus {
      * @param params optional parameters for the calculus
      * @return complete state representation of the input formula
      */
-    fun parseFormula(formula: String, params: String): String
+    fun parseFormula(formula: String, params: String?): String
 
     /**
      * Takes in a state representation and a move and applies the move on the state if possible.
