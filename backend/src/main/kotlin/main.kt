@@ -113,7 +113,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
  * @param key parameter name
  * @return Value associated with the parameter key 
  */
-fun getParam(map: Map<String,List<String>>, key: String): String {
+fun getParam(map: Map<String, List<String>>, key: String): String {
     val lst = map.get(key)
             ?: throw ApiMisuseException("POST parameter '$key' needs to be present")
     return lst.get(0)
