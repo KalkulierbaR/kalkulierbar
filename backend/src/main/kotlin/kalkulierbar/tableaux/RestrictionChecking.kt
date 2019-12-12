@@ -13,7 +13,7 @@ import kalkulierbar.clause.Clause
  */
 fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
     var lst = mutableListOf<Atom>()
-    val leaf = state.leaves[leafID]
+    val leaf = state.nodes[leafID]
 
     // Create list of predecessor
     var predecessor = TableauxNode(null, "override", false)
@@ -29,7 +29,7 @@ fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
         // Add extended Atom to list of predecessors
         lst.add(atom)
 
-        // check if similar predecessor exists (leafID because we only want to check)
+        // check if similar predecessor exists
         val isPathRegular = checkRegularitySubtree(state, leafID, lst)
 
         if (!isPathRegular)
