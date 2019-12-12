@@ -12,15 +12,30 @@ import kalkulierbar.clause.Clause
  * @param clause Clause object to be used for expansion
  */
 fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
-    for (atom in clause.atoms) {
-        // Add atom spelling to list
-        var lst = mutableListOf<Atom>(atom)
+    var lst = mutableListOf<Atom>()
+    val leaf = state.leaves[leafID]
 
-        // check if similar predecessor exists
-        val isPathRegular = checkRegularitySubtree(state, 0, lst)
+    // Create list of predecessor
+    var predecessor = TableauxNode(null, "override", false)
+    if (leaf.parent != null)
+        predecessor = state.nodes[leaf.parent]
+
+    while (predecessor.parent != null) {
+        lst.add(predecessor.toAtom())
+        predecessor = state.nodes[predecessor.parent!!]
+    }
+
+    for (atom in clause.atoms) {
+        // Add extended Atom to list of predecessors
+        lst.add(atom)
+
+        // check if similar predecessor exists (leafID because we only want to check)
+        val isPathRegular = checkRegularitySubtree(state, leafID, lst)
 
         if (!isPathRegular)
             throw IllegalMove("Expanding this clause would introduce a duplicate node '$atom' on the branch, making the tree irregular")
+
+        lst.remove(atom)
     }
 }
 
