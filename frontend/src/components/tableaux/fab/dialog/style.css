@@ -17,6 +17,8 @@
 
 .container {
     min-width: 60vw;
+    max-height: 60vh;
+    overflow-y: scroll;
 }
 
 .content > * {
