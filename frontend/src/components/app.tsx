@@ -68,6 +68,7 @@ const App: preact.FunctionalComponent = () => {
     const handleSuccess = (msg: string) =>
         setNotification({ type: NotificationType.Success, message: msg });
 
+    // @ts-ignore
     const handleMessage = (
         msg: string,
         type: NotificationType = NotificationType.None
