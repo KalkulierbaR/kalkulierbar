@@ -1,6 +1,8 @@
 package kalkulierbar.tests
 
+import kalkulierbar.IllegalMove
 import kalkulierbar.tableaux.PropositionalTableaux
+import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxNode
 import kalkulierbar.tableaux.TableauxParam
 import kalkulierbar.tableaux.TableauxState
@@ -8,6 +10,7 @@ import kalkulierbar.tableaux.TableauxType
 import kalkulierbar.tableaux.checkRegularity
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class TestRegularity {
     val instance = PropositionalTableaux()
@@ -145,5 +148,58 @@ class TestRegularity {
         state = createState(nodes, state)
 
         assertEquals(false, checkRegularity(state))
+    }
+
+    @Test
+    fun testRegularityExpandValidA() {
+        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c", opts)
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+
+        val expectedHash = "tableauxstate|UNCONNECTED|true|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]"
+        assertEquals(expectedHash, state.getHash())
+    }
+
+    @Test
+    fun testRegularityExpandValidB() {
+        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c", opts)
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
+
+        val expectedHash = "tableauxstate|UNCONNECTED|true|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|a;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;-;l;o;()|c;p;1;-;l;o;()]"
+        assertEquals(expectedHash, state.getHash())
+    }
+
+    @Test
+    fun testRegularityExpandInvalidA() {
+        var state = instance.parseFormulaToState("a,b,c;a;b;c", opts)
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, TableauxMove("e", 2, 0))
+        }
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
+        }
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, TableauxMove("e", 2, 2))
+        }
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, TableauxMove("e", 3, 3))
+        }
+    }
+
+    @Test
+    fun testRegularityExpandInvalidB() {
+        var state = instance.parseFormulaToState("a;b;!a", opts)
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 2, 2))
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, TableauxMove("e", 3, 0))
+        }
     }
 }
