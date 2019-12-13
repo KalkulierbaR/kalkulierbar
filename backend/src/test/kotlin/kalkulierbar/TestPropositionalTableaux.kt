@@ -92,6 +92,13 @@ class TestPropositionalTableaux {
         }
     }
 
+    @Test
+    fun testParseDefaultParams() {
+        val state = instance.parseFormulaToState("a;b", null)
+        assertEquals(TableauxType.UNCONNECTED, state.type)
+        assertEquals(false, state.regular)
+    }
+
     /*
         Test applyMoveOnState
     */
@@ -400,6 +407,51 @@ class TestPropositionalTableaux {
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
+    }
+
+    @Test
+    fun testCloseClosedLeaf() {
+        var state = instance.parseFormulaToState("c;!c", opts)
+
+        val nodes = listOf(
+                TableauxNode(0, "c", false),
+                TableauxNode(1, "c", true)
+        )
+        state = createArtificialExpandState(nodes, state)
+        state = instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
+        }
+    }
+
+    @Test
+    fun testCloseWrongVariable() {
+        var state = instance.parseFormulaToState("a;!c", opts)
+
+        val nodes = listOf(
+                TableauxNode(0, "a", false),
+                TableauxNode(1, "c", true)
+        )
+        state = createArtificialExpandState(nodes, state)
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
+        }
+    }
+
+    @Test
+    fun testCloseWithRoot() {
+        var state = instance.parseFormulaToState("!true", opts)
+
+        val nodes = listOf(
+                TableauxNode(0, "true", true)
+        )
+        state = createArtificialExpandState(nodes, state)
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, TableauxMove("c", 1, 0))
+        }
     }
 
     @Test
