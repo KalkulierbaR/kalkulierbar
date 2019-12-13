@@ -36,9 +36,9 @@ const ClauseList: preact.FunctionalComponent<Props> = ({
                 <p
                     onClick={() => selectClauseCallback(index)}
                     class={
-                        style.clauseListItem +
-                        " " +
-                        (index === selectedClauseId ? style.clauseSelected : "")
+                        style.clauseListItem
+                        + " "
+                        + (index === selectedClauseId ? style.clauseSelected : "")
                     }
                 >
                     {clauseToString(c)}
