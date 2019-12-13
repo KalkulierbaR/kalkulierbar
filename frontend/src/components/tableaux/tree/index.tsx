@@ -122,9 +122,9 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     //      x2,y2 of the target
     // should look like d="M x1 x2 Q xC yC x2 y2"
     // Todo: use Stringtemplates
-    let controlpoint = (x1 - (y1 - y2) / 2);
-    if (x1 > x2){
-        controlpoint = (x1 + (y1 - y2) / 2);
+    let controlpoint = x1 - (y1 - y2) / 2;
+    if (x1 > x2) {
+        controlpoint = x1 + (y1 - y2) / 2;
     }
     const d =
         "M " +
@@ -139,7 +139,7 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
         x2 +
         " " +
         y2;
- //   console.log('M ${x1} ${y1} Q ${controlpoint} ${(y1 + y2) / 2} ${x2} ${y2}')
+    //   console.log('M ${x1} ${y1} Q ${controlpoint} ${(y1 + y2) / 2} ${x2} ${y2}')
     return <path d={d} class={style.link} />;
 };
 
@@ -278,12 +278,12 @@ class TableauxTreeView extends Component<Props, State> {
                                     root!
                                         .descendants()
                                         .map(n =>
-                                            n.data.isClosed && n.data.isLeaf ? (
+                                            n.data.closeRef !== null ? (
                                                 <ClosingEdge
                                                     leaf={n}
                                                     pred={getNodeById(
                                                         n.ancestors(),
-                                                        n.data.closeRef!
+                                                        n.data.closeRef
                                                     )}
                                                 />
                                             ) : null
@@ -301,9 +301,13 @@ class TableauxTreeView extends Component<Props, State> {
                                     {/* Third render nodes -> renders above all previous elements */
                                     root!.descendants().map(n => (
                                         <TableauxTreeNode
-                                            selectNodeCallback={selectNodeCallback}
+                                            selectNodeCallback={
+                                                selectNodeCallback
+                                            }
                                             node={n}
-                                            selected={n.data.id === selectedNodeId}
+                                            selected={
+                                                n.data.id === selectedNodeId
+                                            }
                                             filling={
                                                 n.data.isClosed
                                                     ? nodeStyle.fClosed
