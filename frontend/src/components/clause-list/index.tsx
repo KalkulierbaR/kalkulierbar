@@ -17,17 +17,21 @@ interface Props {
      * The function to call, when the user selects a clause
      */
     selectClauseCallback: CallableFunction;
+    /**
+     * Additional className for the element
+     */
+    className?: string;
 }
 
 // Component to display a set of clauses as a list
 const ClauseList: preact.FunctionalComponent<Props> = ({
-    clauseSet, 
-    selectedClauseId, 
-    selectClauseCallback
+    clauseSet,
+    selectedClauseId,
+    selectClauseCallback,
+    className
 }) => {
-    
     return (
-        <div class="card">
+        <div class={`card ${className}`}>
             {clauseSet.clauses.map((c, index) => (
                 <p
                     onClick={() => selectClauseCallback(index)}
