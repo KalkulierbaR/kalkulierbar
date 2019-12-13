@@ -5,6 +5,14 @@ import { AppState, AppStateUpdater } from "../../../types/app";
 import Btn from "../../btn";
 import * as style from "./style.css";
 
+declare module "preact" {
+    namespace JSX {
+        interface HTMLAttributes<RefType extends EventTarget = EventTarget> {
+            autocapitalize?: "off";
+        }
+    }
+}
+
 // Properties Interface for the ClauseInput component
 interface Props {
     /**
