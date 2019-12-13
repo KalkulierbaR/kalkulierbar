@@ -3,6 +3,8 @@ package kalkulierbar.tests
 import kalkulierbar.JsonParseException
 import kalkulierbar.tableaux.PropositionalTableaux
 import kalkulierbar.tableaux.TableauxMove
+import kalkulierbar.tableaux.TableauxParam
+import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -80,6 +82,36 @@ class TestPropositionalJson {
 
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
+        }
+    }
+
+    /*
+        Test jsonToParam
+    */
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testJsonParamValid() {
+        val json = "{\"type\": \"UNCONNECTED\", \"regular\": false}"
+        val param = instance.jsonToParam(json)
+        assertEquals(TableauxParam(TableauxType.UNCONNECTED, false), param)
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testJsonParamNull() {
+        val json = "{\"type\": \"WEAKLYCONNECTED\", \"regular\": null}"
+        assertFailsWith<JsonParseException> {
+            instance.jsonToParam(json)
+        }
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testJsonParamMissingField() {
+        val json = "{\"type\": \"STRONGLYCONNECTED\"}"
+        assertFailsWith<JsonParseException> {
+            instance.jsonToParam(json)
         }
     }
 }
