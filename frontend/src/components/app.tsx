@@ -1,7 +1,8 @@
-import { h } from "preact";
+import { createContext, h } from "preact";
 import { Router } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
+import { checkClose as checkCloseHelper, checkCloseFn } from "../helpers/api";
 import Home from "../routes/home";
 import Tableaux from "../routes/prop-tableaux";
 import TableauxView from "../routes/prop-tableaux/view";
@@ -10,7 +11,13 @@ import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.css";
 
-const SERVER = "http://127.0.0.1:7000";
+const SERVER = `http://${location.hostname}:7000`;
+
+// Create our contexts.
+export const SmallScreen = createContext<boolean>(false);
+export const CheckClose = createContext<checkCloseFn | undefined>(undefined);
+
+const SMALL_SCREEN_THRESHOLD = 700;
 
 /**
  * Check if server is online
@@ -26,6 +33,17 @@ async function checkServer(url: string, onError: (msg: string) => void) {
     }
 }
 
+/**
+ * Updates the setter with the new small screen info
+ * @param {Function} setter - the function to call with the new value.
+ * @returns {void} - nothing. JSDoc is dumb.
+ */
+const updateSmallScreen = (setter: (s: boolean) => void) => {
+    const width = window.innerWidth;
+    const small = width < SMALL_SCREEN_THRESHOLD;
+    setter(small);
+};
+
 // Used for debugging with Yarn
 if ((module as any).hot) {
     // tslint:disable-next-line:no-var-requires
@@ -35,28 +53,32 @@ if ((module as any).hot) {
 // This is the main App component which handles routing and calls other components
 const App: preact.FunctionalComponent = () => {
     const [state, setState] = useState<AppState>({});
-    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [notification, setNotification] = useState<Notification | undefined>(
+        undefined
+    );
+    const [smallScreen, setSmallScreen] = useState<boolean>(false);
 
-    const addNotification = (n: Notification) =>
-        setNotifications([...notifications, n]);
-
-    const removeNotification = (idx: number) => {
-        setNotifications(notifications.filter((_, i) => idx !== i));
+    const removeNotification = () => {
+        setNotification(undefined);
     };
 
     const handleError = (msg: string) =>
-        addNotification({ type: NotificationType.Error, message: msg });
+        setNotification({ type: NotificationType.Error, message: msg });
 
     const handleSuccess = (msg: string) =>
-        addNotification({ type: NotificationType.Success, message: msg });
+        setNotification({ type: NotificationType.Success, message: msg });
 
     const handleMessage = (
         msg: string,
         type: NotificationType = NotificationType.None
-    ) => addNotification({ type, message: msg });
+    ) => setNotification({ type, message: msg });
 
     useEffect(() => {
         checkServer(SERVER, handleError);
+        updateSmallScreen(setSmallScreen);
+        window.addEventListener("resize", () =>
+            updateSmallScreen(setSmallScreen)
+        );
     }, []);
 
     /**
@@ -69,37 +91,43 @@ const App: preact.FunctionalComponent = () => {
         setState(s => ({ ...s, [id]: newState }));
     }
 
+    const checkClose = checkCloseHelper(SERVER, handleError, handleSuccess);
+
     return (
         <div id="app">
-            <Header />
-            <main class={style.main}>
-                <Router>
-                    <Home path="/" />
+            <SmallScreen.Provider value={smallScreen}>
+                <CheckClose.Provider value={checkClose}>
+                    <Header />
+                    <main class={style.main}>
+                        <Router>
+                            <Home path="/" />
 
-                    <Tableaux
-                        path="/prop-tableaux"
-                        server={SERVER}
-                        onChange={onChange}
-                        onError={handleError}
-                    />
-                    <TableauxView
-                        path="/prop-tableaux/view"
-                        server={SERVER}
-                        state={state["prop-tableaux"]}
-                        onChange={onChange}
-                        onError={handleError}
-                        onSuccess={handleSuccess}
-                    />
-                </Router>
-            </main>
-            <div class={style.notifications}>
-                {notifications.map((n, i) => (
-                    <Snackbar
-                        notification={n}
-                        onDelete={() => removeNotification(i)}
-                    />
-                ))}
-            </div>
+                            <Tableaux
+                                path="/prop-tableaux"
+                                server={SERVER}
+                                onChange={onChange}
+                                onError={handleError}
+                            />
+                            <TableauxView
+                                path="/prop-tableaux/view"
+                                server={SERVER}
+                                state={state["prop-tableaux"]}
+                                onChange={onChange}
+                                onError={handleError}
+                                onSuccess={handleSuccess}
+                            />
+                        </Router>
+                    </main>
+                    <div class={style.notifications}>
+                        {notification && (
+                            <Snackbar
+                                notification={notification}
+                                onDelete={() => removeNotification()}
+                            />
+                        )}
+                    </div>
+                </CheckClose.Provider>
+            </SmallScreen.Provider>
         </div>
     );
 };

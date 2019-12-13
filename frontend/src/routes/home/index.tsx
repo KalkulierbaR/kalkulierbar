@@ -13,7 +13,7 @@ const Home: preact.FunctionalComponent<Props> = () => {
     return (
         <div class={style.home}>
             <div className="card">
-                <h3>Wähle ein Kalkül</h3>
+                <h3>Choose a calculus</h3>
                 <ul>
                     <li>
                         <a href="/prop-tableaux">Tableaux</a>
