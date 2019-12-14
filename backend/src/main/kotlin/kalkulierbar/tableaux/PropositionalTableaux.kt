@@ -5,6 +5,7 @@ import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.parsers.ClauseSetParser
 import kotlinx.serialization.MissingFieldException
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecodingException
 
@@ -183,6 +184,10 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
             throw JsonParseException(e.message ?: "Could not parse JSON state")
         } catch (e: MissingFieldException) {
             throw JsonParseException(e.message ?: "Could not parse JSON state - missing field")
+        } catch (e: SerializationException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON state")
+        } catch (e: NumberFormatException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON state - invalid number format")
         }
     }
 
@@ -210,6 +215,10 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         } catch (e: MissingFieldException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move - missing field")
+        } catch (e: SerializationException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON move")
+        } catch (e: NumberFormatException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON move - invalid number format")
         }
     }
 
@@ -226,6 +235,10 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
             throw JsonParseException(e.message ?: "Could not parse JSON params")
         } catch (e: MissingFieldException) {
             throw JsonParseException(e.message ?: "Could not parse JSON params - missing field")
+        } catch (e: SerializationException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON params")
+        } catch (e: NumberFormatException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON params - invalid number format")
         }
     }
 
