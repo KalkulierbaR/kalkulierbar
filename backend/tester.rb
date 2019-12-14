@@ -333,17 +333,17 @@ end
 def tryCloseUncloseable(trq, iterations = 13, verbose = false)
 	logMsg "Trying to close unclosable proof"
 	
-	if bogoATP(trq, "b,c;!a,b;!c;!b,!c", iterations, verbose)
+	if bogoATP(trq, "b,c;!a,b;!c;!b,!c", "UNCONNECTED", false, iterations, verbose)
 		logError "Test failed"
 	else
 		logSuccess "Test successful"
 	end
 end
 
-def tryCloseTrivial(trq, iterations = 3, verbose = false)
+def tryCloseTrivial(trq, iterations = 5, verbose = false)
 	logMsg "Trying to close a trivial proof"
 	
-	if bogoATP(trq, "a,b;!a;!b", iterations, verbose)
+	if bogoATP(trq, "a,b;!a;!b", "UNCONNECTED", false, iterations, verbose)
 		logSuccess "Test successful"
 	else
 		logError "Test failed"
@@ -353,28 +353,52 @@ end
 def tryCloseCloseable(trq, iterations = 15, verbose = false)
 	logMsg "Trying to close a proof"
 	
-	if bogoATP(trq, "a,b,c;a,!b;!a;!c", iterations, verbose)
+	if bogoATP(trq, "a,b,c;a,!b;!a;!c", "UNCONNECTED", false, iterations, verbose)
 		logSuccess "Test successful"
 	else
 		logError "Test failed"
 	end
 end
 
-def bogoATP(trq, formula, iterations, verbose = false)
+def tryCloseConnected(trq, iterations = 15, verbose = false)
+	logMsg "Trying to close a strongly connected proof"
+	
+	if bogoATP(trq, "a,b,c,d,e,f;a,!b;!a;!c;d,!e;!d;!f", "STRONGLYCONNECTED", false, iterations, verbose)
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
+def tryCloseRegular(trq, iterations = 15, verbose = false)
+	logMsg "Trying to close a regular proof"
+	
+	if bogoATP(trq, "a,b,c,d,e,f;a,!b;!a;!c;d,!e;!d;!f", "UNCONNECTED", true, iterations, verbose)
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
+def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterations = 10, verbose = false)
 	rqcount = 1
-	state = trq.getPostResponse('/prop-tableaux/parse', "formula=#{formula}")
+	moves = 0
+	state = trq.getPostResponse('/prop-tableaux/parse', "formula=#{formula}&params={\"type\":\"#{connectedness.to_s}\",\"regular\":#{regular.to_s}}")
 	parsed = JSON.parse(state)
 
 	# Apply all single-literal clauses to improve closability and control tree fanout
-	lid = 0
-	parsed['clauseSet']['clauses'].each_with_index { |c,i|
-		if c['atoms'].length == 1
-			logMsg "Pre-expanding clause #{i.to_s} on node #{lid.to_s}" if verbose
-			state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"e\",id1:#{lid.to_s},id2:#{i.to_s}}")
-			lid += 1
-			rqcount += 1
-		end
-	}
+	if connectedness == "UNCONNECTED"
+		lid = 0
+		parsed['clauseSet']['clauses'].each_with_index { |c,i|
+			if c['atoms'].length == 1
+				logMsg "Pre-expanding clause #{i.to_s} on node #{lid.to_s}" if verbose
+				state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"e\",id1:#{lid.to_s},id2:#{i.to_s}}")
+				lid += 1
+				rqcount += 1
+				moves += 1
+			end
+		}
+	end
 
 	parsed = JSON.parse(state)
 
@@ -391,6 +415,7 @@ def bogoATP(trq, formula, iterations, verbose = false)
 
 					if newstate != nil
 						logMsg "Closed node #{n['negated'] ? "!" : ""}#{n['spelling']} with node ID #{j.to_s}" if verbose
+						moves += 1
 						state = newstate
 						break
 					end
@@ -401,20 +426,28 @@ def bogoATP(trq, formula, iterations, verbose = false)
 		# Try closing the proof
 		logMsg "Trying to close proof" if verbose
 		if !trq.post('/prop-tableaux/close', "state=#{state}", "false", 200)
-			logMsg "BogoATP Proof closed - #{rqcount.to_s} requests sent"
+			logMsg "BogoATP Proof closed - #{rqcount.to_s} requests sent / #{moves.to_s} moves applied"
 			return true
 		end
 
 		rqcount += 1
 		parsed = JSON.parse(state)
 
-		# Expand a random leaf with a random clause
-		clauseID = rand(0...parsed['clauseSet']['clauses'].length)
-		leafID = parsed['nodes'].each_with_index.filter{ |n,i| n['children'].length == 0 && !n['isClosed'] }.map { |x,i| i }.sample
-
-		logMsg "Expanding leaf #{leafID.to_s} with clause #{clauseID.to_s}" if verbose
-		state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"e\",id1:#{leafID.to_s},id2:#{clauseID.to_s}}")
-		rqcount += 1
+		# Try expanding a leaf
+		leaves = parsed['nodes'].each_with_index.filter{ |n,i| n['children'].length == 0 && !n['isClosed'] }.map { |x,i| i }.shuffle
+		clauses = (0...parsed['clauseSet']['clauses'].length).to_a.shuffle
+		leaves.each { |l|
+			clauses.each { |c|
+				newstate = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"e\",id1:#{l.to_s},id2:#{c.to_s}}", false, true)
+				rqcount += 1
+				if newstate != nil
+					logMsg "Expanded leaf #{l.to_s} with clause #{c.to_s}" if verbose
+					state = newstate
+					moves += 1
+					break
+				end
+			}
+		}
 
 		parsed = JSON.parse(state)
 
@@ -423,7 +456,7 @@ def bogoATP(trq, formula, iterations, verbose = false)
 		logMsg parsed['nodes'].map { |e| "(#{e['negated'] ? "!" : ""}#{e['spelling']}|#{e['parent'].to_s}|#{e['isClosed'] || e['children'].length > 0 ? "c" : "o"})" }.join(', ') if verbose
 	}
 
-	logMsg "BogoATP Proof search unsuccessful - #{rqcount.to_s} requests sent"
+	logMsg "BogoATP Proof search unsuccessful - #{rqcount.to_s} requests sent / #{moves.to_s} moves applied"
 	return false
 end
 
@@ -436,4 +469,6 @@ testRootNodeCreation(trq)
 testStateModification(trq)
 tryCloseTrivial(trq)
 tryCloseCloseable(trq)
+tryCloseConnected(trq)
+tryCloseRegular(trq)
 tryCloseUncloseable(trq)
