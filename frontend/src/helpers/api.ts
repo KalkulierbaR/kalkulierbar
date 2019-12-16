@@ -34,11 +34,11 @@ export const checkClose = (
         if (response.status !== 200) {
             onError(await response.text());
         } else {
-            const closed = (await response.json()) as boolean;
+            const {closed, msg} = await response.json();
             if (closed) {
-                onSuccess("Der Baum ist geschlossen");
+                onSuccess(msg);
             } else {
-                onError("Der Baum ist nicht geschlossen");
+                onError(msg);
             }
         }
     } catch (e) {
