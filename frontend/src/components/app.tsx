@@ -2,8 +2,8 @@ import { createContext, h } from "preact";
 import { Router } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
-import Confetti from "../helpers/confetti";
 import { checkClose as checkCloseHelper, checkCloseFn } from "../helpers/api";
+import Confetti from "../helpers/confetti";
 import Home from "../routes/home";
 import Tableaux from "../routes/prop-tableaux";
 import TableauxView from "../routes/prop-tableaux/view";
