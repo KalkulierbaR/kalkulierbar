@@ -10,6 +10,9 @@ const supportsAnimationFrame =
     (window as any).oRequestAnimationFrame ||
     (window as any).msRequestAnimationFrame;
 
+/**
+ * Creates a confetti effect
+ */
 export default class Confetti {
     protected canvas: HTMLCanvasElement;
     protected context: CanvasRenderingContext2D;
@@ -17,7 +20,6 @@ export default class Confetti {
     protected speed: number; // set the particle animation speed
     protected frameInterval: number; // the confetti animation frame interval in milliseconds
     protected alpha: number; // the alpha opacity of the confetti (between 0 and 1, where 1 is opaque and 0 is invisible)
-    protected gradient: boolean; // whether to use gradients for the confetti particles
     protected particles: Particle[] = [];
 
     private pause: boolean = false;
@@ -26,13 +28,16 @@ export default class Confetti {
     private streamingConfetti = false;
     // private animationTimer: number | null = null;
 
+    /**
+     *
+     * @param {ConfettiOptions} param0 options
+     */
     constructor({
         canvas,
         maxCount = 150,
         speed = 2,
         frameInterval = 15,
-        alpha = 1.0,
-        gradient = false
+        alpha = 1.0
     }: ConfettiOptions = {}) {
         if (canvas === undefined) {
             canvas = document.createElement("canvas") as HTMLCanvasElement;
@@ -61,9 +66,15 @@ export default class Confetti {
         this.speed = speed;
         this.frameInterval = frameInterval;
         this.alpha = alpha;
-        this.gradient = gradient;
     }
 
+    /**
+     *
+     * @param {number} timeout - timeout
+     * @param {number} min - min of particles
+     * @param {number} max - max of particles
+     * @returns {void}
+     */
     public start(timeout?: number, min?: number, max?: number) {
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -172,6 +183,10 @@ export default class Confetti {
         }
     }
 
+    /**
+     * Updates particle positions
+     * @returns {void}
+     */
     public updateParticles() {
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -210,6 +225,11 @@ export default class Confetti {
         }
     }
 
+    /**
+     * Renders particles
+     * @param {CanvasRenderingContext2D} context - context for render
+     * @returns {void}
+     */
     public drawParticles(context: CanvasRenderingContext2D) {
         let x;
         let x2;
@@ -220,19 +240,7 @@ export default class Confetti {
             x2 = particle.x + particle.tilt;
             x = x2 + particle.diameter / 2;
             y2 = particle.y + particle.tilt + particle.diameter / 2;
-            if (this.gradient) {
-                const gradient = context.createLinearGradient(
-                    x,
-                    particle.y,
-                    x2,
-                    y2
-                );
-                gradient.addColorStop(0, particle.color);
-                gradient.addColorStop(1.0, particle.color2);
-                context.strokeStyle = gradient;
-            } else {
-                context.strokeStyle = particle.color;
-            }
+            context.strokeStyle = particle.color;
             context.moveTo(x, particle.y);
             context.lineTo(x2, y2);
             context.stroke();

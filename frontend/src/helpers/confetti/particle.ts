@@ -2,7 +2,6 @@
 
 export interface Particle {
     color: string;
-    color2: string;
     x: number;
     y: number;
     diameter: number;
@@ -27,8 +26,6 @@ export function resetParticle(
     alpha: number
 ) {
     particle.color =
-        colors[(Math.random() * colors.length) | 0] + (alpha + ")");
-    particle.color2 =
         colors[(Math.random() * colors.length) | 0] + (alpha + ")");
     particle.x = Math.random() * width;
     particle.y = Math.random() * height - height;
