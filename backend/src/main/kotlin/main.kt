@@ -4,7 +4,7 @@ import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.KalkulierbarException
-import kalkulierbar.PropositionalTableaux
+import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
@@ -104,7 +104,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         app.post("/$name/close") { ctx ->
             val state = ctx.formParam("state")
                     ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
-            ctx.result(if (endpoint.checkClose(state)) "true" else "false")
+            ctx.result(endpoint.checkClose(state))
         }
     }
 }

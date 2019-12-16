@@ -22,3 +22,8 @@ export interface Notification {
     message: string;
     type: NotificationType;
 }
+
+export interface CheckCloseResponse {
+    closed: boolean;
+    msg: string;
+}

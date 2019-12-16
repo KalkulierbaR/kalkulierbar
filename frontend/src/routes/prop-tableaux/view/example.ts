@@ -55,7 +55,7 @@ const example: TableauxState = {
             children: []
         }
     ],
-    seal: "8BBC0009855AECFF0AB4B574A5B80B79DA98CC27F9B1746B09833050F6CC28F8"
+    seal: "145EFCF5C1F92835DF727F79F47FEB808AC9BB397337D6460B36EF49871A3A38"
 };
 
 export default example;

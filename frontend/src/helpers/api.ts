@@ -1,4 +1,4 @@
-import { AppState } from "../types/app";
+import { AppState, CheckCloseResponse } from "../types/app";
 
 export type checkCloseFn<K extends keyof AppState = keyof AppState> = (
     calculus: K,
@@ -34,11 +34,14 @@ export const checkClose = (
         if (response.status !== 200) {
             onError(await response.text());
         } else {
-            const closed = (await response.json()) as boolean;
+            const {
+                closed,
+                msg
+            } = (await response.json()) as CheckCloseResponse;
             if (closed) {
-                onSuccess("Der Baum ist geschlossen");
+                onSuccess(msg);
             } else {
-                onError("Der Baum ist nicht geschlossen");
+                onError(msg);
             }
         }
     } catch (e) {

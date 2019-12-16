@@ -4,9 +4,10 @@ package kalkulierbar.tests
 import kalkulierbar.IllegalMove
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.JsonParseException
-import kalkulierbar.PropositionalTableaux
-import kalkulierbar.TableauxNode
-import kalkulierbar.TableauxState
+import kalkulierbar.tableaux.PropositionalTableaux
+import kalkulierbar.tableaux.TableauxMove
+import kalkulierbar.tableaux.TableauxNode
+import kalkulierbar.tableaux.TableauxState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -93,152 +94,139 @@ class TestPropositionalTableaux {
     */
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testUnknownMove() {
         val state = instance.parseFormulaToState("a,b,c;d")
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"d\", \"id1\": 1, \"id2\": 0}")
+            instance.applyMoveOnState(state, TableauxMove("d", 1, 0))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testApplyMoveNullValues() {
-        val state = instance.parseFormulaToState("a,b;c")
-
-        val hash = state.getHash()
+        val state = instance.parseFormula("a,b;c")
 
         assertFailsWith<JsonParseException> {
-            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": null, \"id2\": 2}")
+            instance.applyMove(state, "{\"type\":\"e\", \"id1\": null, \"id2\": 2}")
         }
 
         assertFailsWith<JsonParseException> {
-            instance.applyMoveOnState(state, "{\"type\":null, \"id1\": 0, \"id2\": -3}")
+            instance.applyMove(state, "{\"type\":null, \"id1\": 0, \"id2\": -3}")
         }
 
         assertFailsWith<JsonParseException> {
-            instance.applyMoveOnState(state, "{\"type\":null, \"id1\": 0, \"id2\": null}")
+            instance.applyMove(state, "{\"type\":null, \"id1\": 0, \"id2\": null}")
         }
-
-        assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testExpandValidA() {
         var state = instance.parseFormulaToState("a,b,c;d")
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 0}")
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
 
         assertEquals(4, state.nodes.size)
         assertEquals(3, state.nodes.get(0).children.size)
 
-        assertEquals("tableauxstate|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]", state.getHash())
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testExpandValidB() {
         var state = instance.parseFormulaToState("a,b,c;d")
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 1}")
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
 
         assertEquals(2, state.nodes.size)
         assertEquals(1, state.nodes.get(0).children.size)
 
-        assertEquals("tableauxstate|{a, b, c}, {d}|[true;p;null;-;i;o;(1)|d;p;0;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1)|d;p;0;-;l;o;()]", state.getHash())
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testExpandValidC() {
         var state = instance.parseFormulaToState("a,b,c;d")
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 0}")
-        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 3, \"id2\": 1}")
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 3, 1))
 
         assertEquals(5, state.nodes.size)
         assertEquals(3, state.nodes.get(0).children.size)
         assertEquals(1, state.nodes.get(3).children.size)
 
-        assertEquals("tableauxstate|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;i;o;(4)|d;p;3;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;i;o;(4)|d;p;3;-;l;o;()]", state.getHash())
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testExpandLeafIndexOOB() {
         val state = instance.parseFormulaToState("a,b;c")
 
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 1, \"id2\": 0}")
+            instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": -15, \"id2\": 0}")
+            instance.applyMoveOnState(state, TableauxMove("e", -15, 0))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testExpandClauseIndexOOB() {
         val state = instance.parseFormulaToState("a,b;c")
 
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 2}")
+            instance.applyMoveOnState(state, TableauxMove("e", 0, 2))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": -3}")
+            instance.applyMoveOnState(state, TableauxMove("e", 0, -3))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testExpandOnNonLeaf() {
         var state = instance.parseFormulaToState("a,b;c")
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 1}")
-        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 1, \"id2\": 1}")
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
 
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 0}")
+            instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 1, \"id2\": 0}")
+            instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testExpandClosedLeaf() {
         var state = instance.parseFormulaToState("a;!a")
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 0, \"id2\": 0}")
-        state = instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 1, \"id2\": 1}")
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
 
         val leaf = state.nodes.get(2)
         leaf.isClosed = true
         leaf.closeRef = 1
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": 2, \"id2\": 0}")
+            instance.applyMoveOnState(state, TableauxMove("e", 2, 0))
         }
     }
 
@@ -254,7 +242,6 @@ class TestPropositionalTableaux {
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testApplyCloseValidA() {
         var state = instance.parseFormulaToState("a,b;!b")
 
@@ -264,15 +251,14 @@ class TestPropositionalTableaux {
                 TableauxNode(2, "b", true)
         )
         state = createArtificialExpandState(nodes, state)
-        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 3, \"id2\": 2}")
+        state = instance.applyMoveOnState(state, TableauxMove("c", 3, 2))
 
         assertEquals(true, state.nodes[3].isClosed)
         assertEquals(2, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|{a, b}, {!b}|[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b}, {!b}|[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]", state.getHash())
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testApplyCloseValidB() {
         var state = instance.parseFormulaToState("a,b,c;!a;!b;!c")
 
@@ -283,7 +269,7 @@ class TestPropositionalTableaux {
                 TableauxNode(1, "c", false)
         )
         state = createArtificialExpandState(nodes, state)
-        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 3, \"id2\": 1}")
+        state = instance.applyMoveOnState(state, TableauxMove("c", 3, 1))
 
         assertEquals(true, state.nodes[3].isClosed)
 
@@ -291,11 +277,10 @@ class TestPropositionalTableaux {
         assertEquals(false, state.nodes[4].isClosed)
 
         assertEquals(1, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]", state.getHash())
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testApplyCloseValidC() {
         var state = instance.parseFormulaToState("a,b,c;!a;!b;!c")
 
@@ -308,8 +293,8 @@ class TestPropositionalTableaux {
         )
         state = createArtificialExpandState(nodes, state)
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 4, \"id2\": 1}")
-        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 5, \"id2\": 2}")
+        state = instance.applyMoveOnState(state, TableauxMove("c", 4, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 5, 2))
 
         assertEquals(true, state.nodes[4].isClosed)
         assertEquals(true, state.nodes[5].isClosed)
@@ -318,59 +303,27 @@ class TestPropositionalTableaux {
 
         assertEquals(1, state.nodes[4].closeRef)
         assertEquals(2, state.nodes[5].closeRef)
-        assertEquals("tableauxstate|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]", state.getHash())
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testCloseLeafIndexOOB() {
         val state = instance.parseFormulaToState("a,b;c")
 
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 42, \"id2\": 1}")
+            instance.applyMoveOnState(state, TableauxMove("c", 42, 1))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": -15, \"id2\": 1}")
+            instance.applyMoveOnState(state, TableauxMove("c", -15, 1))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
-    fun testExpandNullValues() {
-        var state = instance.parseFormulaToState("a,b;c")
-
-        val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(0, "b", false),
-                TableauxNode(1, "a", false),
-                TableauxNode(1, "b", false)
-        )
-        state = createArtificialExpandState(nodes, state)
-
-        val hash = state.getHash()
-
-        assertFailsWith<JsonParseException> {
-            instance.applyMoveOnState(state, "{\"type\":\"e\", \"id1\": null, \"id2\": 2}")
-        }
-
-        assertFailsWith<JsonParseException> {
-            instance.applyMoveOnState(state, "{\"type\":null, \"id1\": 0, \"id2\": -3}")
-        }
-
-        assertFailsWith<JsonParseException> {
-            instance.applyMoveOnState(state, "{\"type\":null, \"id1\": 0, \"id2\": null}")
-        }
-
-        assertEquals(hash, state.getHash()) // Verify that state has not been modified
-    }
-
-    @Test
-    @kotlinx.serialization.UnstableDefault
     fun testCloseIndexOOB() {
         var state = instance.parseFormulaToState("a,b;c")
 
@@ -385,18 +338,17 @@ class TestPropositionalTableaux {
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 3, \"id2\": 403}")
+            instance.applyMoveOnState(state, TableauxMove("c", 3, 403))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 4, \"id2\": -3}")
+            instance.applyMoveOnState(state, TableauxMove("c", 4, -3))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testCloseOnNonLeaf() {
         var state = instance.parseFormulaToState("a,b;c")
 
@@ -409,18 +361,17 @@ class TestPropositionalTableaux {
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 1, \"id2\": 2}")
+            instance.applyMoveOnState(state, TableauxMove("c", 1, 2))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 2, \"id2\": 1}")
+            instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
 
     @Test
-    @kotlinx.serialization.UnstableDefault
     fun testCloseWithNonPath() {
         var state = instance.parseFormulaToState("a,b;!b")
 
@@ -438,11 +389,11 @@ class TestPropositionalTableaux {
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 4, \"id2\": 5}")
+            instance.applyMoveOnState(state, TableauxMove("c", 4, 5))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 5, \"id2\": 4}")
+            instance.applyMoveOnState(state, TableauxMove("c", 5, 4))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
@@ -464,12 +415,12 @@ class TestPropositionalTableaux {
         )
         state = createArtificialExpandState(nodes, state)
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 7, \"id2\": 5}")
+        state = instance.applyMoveOnState(state, TableauxMove("c", 7, 5))
 
         assertEquals(true, state.nodes.get(7).isClosed)
         assertEquals(false, state.nodes.get(5).isClosed)
 
-        state = instance.applyMoveOnState(state, "{\"type\":\"c\", \"id1\": 6, \"id2\": 2}")
+        state = instance.applyMoveOnState(state, TableauxMove("c", 6, 2))
 
         println(state.getHash())
 
@@ -485,11 +436,12 @@ class TestPropositionalTableaux {
     /*
         Test checkCloseOnState
     */
+
     @Test
     fun testCheckCloseSimple() {
-        val state = instance.parseFormulaToState("a,!a")
+        var state = instance.parseFormulaToState("a,!a")
 
-        assertEquals(false, instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         val nodes = listOf(
             TableauxNode(0, "a", false),
@@ -500,22 +452,19 @@ class TestPropositionalTableaux {
         state.nodes.get(0).children.add(1)
         state.nodes.get(1).children.add(2)
 
-        assertEquals(false, instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         // Now close the proof
-        val a = state.nodes.get(2)
+        state = instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
 
-        a.closeRef = 1
-        a.isClosed = true
-
-        assertEquals(true, instance.checkCloseOnState(state))
+        assertEquals(true, instance.checkCloseOnState(state).closed)
     }
 
     @Test
     fun testCheckClose() {
-        val state = instance.parseFormulaToState("a,b;!a,!b")
+        var state = instance.parseFormulaToState("a,b;!a,!b")
 
-        assertEquals(false, instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         val nodes = listOf(
             TableauxNode(0, "a", false),
@@ -530,61 +479,63 @@ class TestPropositionalTableaux {
         state.nodes.get(1).children.add(3)
         state.nodes.get(2).children.add(4)
 
-        assertEquals(false, instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         // Now close the proof
-        val a = state.nodes.get(3)
-        val b = state.nodes.get(4)
+        state = instance.applyMoveOnState(state, TableauxMove("c", 3, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 4, 2))
 
-        a.closeRef = 1
-        b.closeRef = 2
-        a.isClosed = true
-        b.isClosed = true
-
-        assertEquals(true, instance.checkCloseOnState(state))
+        assertEquals(true, instance.checkCloseOnState(state).closed)
     }
 
     @Test
-    fun testCheckCloseIncorrectState() {
-        val state = instance.parseFormulaToState("a,b;!a,!b")
+    fun testCheckCloseComplex() {
+        var state = instance.parseFormulaToState("a,b;!b;!a")
 
-        state.nodes.add(TableauxNode(0, "a", true))
-        state.nodes.get(0).children.add(1)
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 2, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 4, 2))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 5, 1))
 
-        assertEquals(false, instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
-        // Just mark the leaf as closed without doing anything
-        state.nodes.get(1).isClosed = true
+        state = instance.applyMoveOnState(state, TableauxMove("c", 3, 2))
 
-        assertEquals(false, instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
-        // Set a closeRef, too
-        state.nodes.get(1).closeRef = 0
+        state = instance.applyMoveOnState(state, TableauxMove("c", 7, 5))
 
-        assertEquals(false, instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
-        // Set the closeRef to itself
-        state.nodes.get(1).closeRef = 1
+        state = instance.applyMoveOnState(state, TableauxMove("c", 6, 4))
 
-        assertEquals(false, instance.checkCloseOnState(state))
+        assertEquals(true, instance.checkCloseOnState(state).closed)
     }
 
     @Test
-    fun testCheckCloseIncorrectState2() {
-        val state = instance.parseFormulaToState("a,!a")
+    fun testCheckCloseNegative() {
+        var state = instance.parseFormulaToState("a,b,c;!a;!b;!c")
 
         val nodes = listOf(
             TableauxNode(0, "a", false),
-            TableauxNode(1, "a", true)
+            TableauxNode(0, "b", false),
+            TableauxNode(0, "c", false),
+            TableauxNode(1, "a", true),
+            TableauxNode(2, "b", true),
+            TableauxNode(3, "c", true)
             )
 
         state.nodes.addAll(nodes)
-        state.nodes.get(0).children.add(1)
-        state.nodes.get(1).children.add(2)
+        state.nodes.get(0).children.addAll(listOf(1, 2, 3))
+        state.nodes.get(1).children.add(4)
+        state.nodes.get(2).children.add(5)
+        state.nodes.get(3).children.add(6)
 
         // Don't close proof completely
-        state.nodes.get(2).closeRef = 1
+        state = instance.applyMoveOnState(state, TableauxMove("c", 6, 3))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 4, 1))
 
-        assertEquals(false, instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
     }
 }
