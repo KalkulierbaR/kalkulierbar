@@ -40,6 +40,7 @@ export const checkClose = (
             } = (await response.json()) as CheckCloseResponse;
             if (closed) {
                 onSuccess(msg);
+                dispatchEvent(new CustomEvent("kbar-confetti"));
             } else {
                 onError(msg);
             }
