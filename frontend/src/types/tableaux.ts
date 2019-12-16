@@ -33,3 +33,17 @@ export interface TableauxParams {
     type: TableauxType;
     regular: boolean;
 }
+
+export interface TableauxTreeGoToEvent extends CustomEvent {
+    detail: {
+        node: number;
+    };
+}
+
+export interface SelectNodeOptions {
+    /**
+     * Ignores any selected clause and deselects all clauses.
+     * Defaults to `false`.
+     */
+    ignoreClause?: boolean;
+}

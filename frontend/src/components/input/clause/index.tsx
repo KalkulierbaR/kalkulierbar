@@ -6,6 +6,14 @@ import { TableauxParams } from "../../../types/tableaux";
 import Btn from "../../btn";
 import * as style from "./style.css";
 
+declare module "preact" {
+    namespace JSX {
+        interface HTMLAttributes<RefType extends EventTarget = EventTarget> {
+            autocapitalize?: "off";
+        }
+    }
+}
+
 // Properties Interface for the ClauseInput component
 interface Props {
     /**
@@ -31,6 +39,7 @@ interface Props {
  * @returns {string} - Normalized clause string
  */
 const normalizeInput = (input: string) => {
+    input = input.replace(/\n+$/, "");
     input = input.replace(/\n+/g, "\n");
     input = input.replace(/\n/g, ";");
     input = input.replace(/\s/g, "");
@@ -111,16 +120,17 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
 
     return (
         <div class="card">
-            <h3>Bitte gebe eine Klauselmenge ein:</h3>
+            <h3>Please enter a set of clauses:</h3>
             <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
                 <textarea
                     name="formula"
                     class={style.input}
                     value={userInput}
                     onInput={onInput}
+                    autocapitalize="off"
                 />
                 <Btn type="submit" disabled={userInput.length === 0}>
-                    Senden
+                    Send
                 </Btn>
             </form>
         </div>

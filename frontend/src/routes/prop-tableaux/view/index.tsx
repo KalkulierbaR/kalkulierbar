@@ -1,11 +1,17 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import { AppStateUpdater } from "../../../types/app";
-import { TableauxMove, TableauxState } from "../../../types/tableaux";
+import {
+    SelectNodeOptions,
+    TableauxMove,
+    TableauxState
+} from "../../../types/tableaux";
 import * as style from "./style.css";
 
+import { SmallScreen } from "../../../components/app";
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
+import TreeControlFAB from "../../../components/tableaux/fab";
 import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import exampleState from "./example";
@@ -118,8 +124,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
     state,
     server,
     onChange,
-    onError,
-    onSuccess
+    onError
 }) => {
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
@@ -165,15 +170,19 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
      * @param {D3Data} newNode - The id of the clause, which was clicked on
      * @returns {void}
      */
-    const selectNodeCallback = (newNode: D3Data) => {
+    const selectNodeCallback = (
+        newNode: D3Data,
+        { ignoreClause = false }: SelectNodeOptions = {}
+    ) => {
         if (newNode.id === selectedNodeId) {
             // The same node was selected again => deselect it
             setSelectedNodeId(undefined);
         } else if (newNode.isLeaf) {
             // If the newly selected node is a leaf => accept new node id
             setSelectedNodeId(newNode.id);
-
-            if (selectedClauseId !== undefined) {
+            if (ignoreClause) {
+                setSelectedClauseId(undefined);
+            } else if (selectedClauseId !== undefined) {
                 // The clause and node have been selected => send extend move request to backend
                 sendExtend(
                     moveUrl,
@@ -210,27 +219,37 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
     return (
         <Fragment>
             <h2>Tableaux View</h2>
-            <div class={style.view}>
-                <div>
-                    <ClauseList
-                        clauseSet={state.clauseSet}
-                        selectedClauseId={selectedClauseId}
-                        selectClauseCallback={selectClauseCallback}
-                    />
-                    <CheckCloseBtn
-                        server={server}
-                        calculus="prop-tableaux"
-                        state={state}
-                        onError={onError}
-                        onSuccess={onSuccess}
-                    />
-                </div>
-                <TableauxTreeView
-                    nodes={state.nodes}
-                    selectedNodeId={selectedNodeId}
-                    selectNodeCallback={selectNodeCallback}
-                />
-            </div>
+            <SmallScreen.Consumer>
+                {s => (
+                    <div class={style.view}>
+                        {!s && (
+                            <div>
+                                <ClauseList
+                                    clauseSet={state!.clauseSet}
+                                    selectedClauseId={selectedClauseId}
+                                    selectClauseCallback={selectClauseCallback}
+                                />
+                                <CheckCloseBtn
+                                    calculus="prop-tableaux"
+                                    state={state}
+                                />
+                            </div>
+                        )}
+
+                        <TableauxTreeView
+                            nodes={state!.nodes}
+                            smallScreen={s}
+                            selectedNodeId={selectedNodeId}
+                            selectNodeCallback={selectNodeCallback}
+                        />
+                    </div>
+                )}
+            </SmallScreen.Consumer>
+            <TreeControlFAB
+                state={state}
+                selectedNodeId={selectedNodeId}
+                selectedClauseCallback={selectClauseCallback}
+            />
         </Fragment>
     );
 };

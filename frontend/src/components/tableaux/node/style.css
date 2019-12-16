@@ -3,15 +3,24 @@
     cursor: pointer;
 }
 
-.bg {
-    /* fill: rgba(0, 0, 0, 0.15); */
-    fill: #683ab74d;
+.rectSelected {
+    stroke: rgb(66, 66, 66);
+    stroke-width: 2;
 }
 
-.invisible {
-    fill: transparent;
+.nodeClosed {
+    transform: none;
+    cursor: default;
 }
 
-.closed {
-    fill: green;
+.textClosed {
+    fill: #555555;
+}
+
+.fClosed {
+    fill: rgb(218, 218, 218);
+}
+
+.fDefault {
+    fill: #d4bcff;
 }
