@@ -24,11 +24,17 @@ interface Props {
      * URL to the server
      */
     server: string;
+    /**
+     * The params containing the TableauxType and if regular was selected
+     */
     params: TableauxParams;
     /**
      * The function to call, when the state associated with the calculus changed
      */
     onChange: AppStateUpdater;
+    /**
+     * The function to call, when there is an error
+     */
     onError: (msg: string) => void;
 }
 

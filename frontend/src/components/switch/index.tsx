@@ -6,7 +6,13 @@ import { MDCSwitch } from "@material/switch";
 import "@material/switch/dist/mdc.switch.css";
 
 interface Props {
+    /**
+     * The function to call, when the switch changes state
+     */
     onChange?: (checked: boolean) => void;
+    /**
+     * The switch's label
+     */
     label?: string;
 }
 
@@ -58,6 +64,10 @@ export default class Switch extends Component<Props, {}> {
         );
     }
 
+    /**
+     * Handle the change of the switch's state
+     * @returns {void}
+     */
     private _changeHandler() {
         if (!this.formElement.current || !this.props.onChange) {
             return;
@@ -65,6 +75,10 @@ export default class Switch extends Component<Props, {}> {
         this.props.onChange(this.formElement.current.checked);
     }
 
+    /**
+     * Handle clicks on the switch's label
+     * @returns {void}
+     */
     private _clickLabel() {
         if (!this.formElement.current) {
             return;

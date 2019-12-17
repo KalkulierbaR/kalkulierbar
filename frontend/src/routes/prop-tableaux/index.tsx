@@ -14,7 +14,13 @@ interface Props {
      * URL of the server
      */
     server: string;
+    /**
+     * The function to call, when the state associated with the calculus changed
+     */
     onChange: AppStateUpdater<"prop-tableaux">;
+    /**
+     * The function to call, when there is an error
+     */
     onError: (msg: string) => void;
 }
 
@@ -26,6 +32,11 @@ const Tableaux: preact.FunctionalComponent<Props> = ({
     const [tabType, setTabType] = useState(TableauxType.unconnected);
     const [regular, setRegular] = useState(false);
 
+    /**
+     * Handle the selection of a TableauxType
+     * @param {Event} e - The event to handle
+     * @returns {void}
+     */
     const handleSelect = (e: Event) => {
         const target = e.target as HTMLInputElement;
 
