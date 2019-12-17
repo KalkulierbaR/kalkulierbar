@@ -6,7 +6,6 @@ import kalkulierbar.tableaux.PropositionalTableaux
 import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxNode
 import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxState
 import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -251,16 +250,5 @@ class TestCloseLeaf {
         assertEquals(false, state.nodes.get(0).isClosed)
         assertEquals(null, state.nodes.get(5).closeRef)
         assertEquals(null, state.nodes.get(2).closeRef)
-    }
-
-    // ApplyCose state creation helper function
-    private fun createArtificialExpandState(nodes: List<TableauxNode>, state: TableauxState): TableauxState {
-        state.nodes.addAll(nodes)
-
-        for (i in nodes.indices) {
-            val parentThisNode = nodes[i].parent
-            state.nodes[parentThisNode!!].children.add(i + 1)
-        }
-        return state
     }
 }

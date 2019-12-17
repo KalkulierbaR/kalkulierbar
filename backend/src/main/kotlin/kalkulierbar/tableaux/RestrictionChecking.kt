@@ -91,7 +91,7 @@ fun checkConnectedness(state: TableauxState, ctype: TableauxType): Boolean {
  * @param strong true for strong connectedness, false for weak connectedness
  * @return true iff the proof tree is weakly/strongly connected
  */
-fun checkConnectedSubtree(state: TableauxState, root: Int, strong: Boolean): Boolean {
+private fun checkConnectedSubtree(state: TableauxState, root: Int, strong: Boolean): Boolean {
     val node = state.nodes.get(root)
 
     // A subtree is weakly/strongly connected iff:
@@ -144,7 +144,7 @@ fun checkRegularity(state: TableauxState): Boolean {
  * @param lst : list of unique node names of predecessor
  * @return true iff every path from root node to a leaf is regular
  */
-fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<Atom>): Boolean {
+private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<Atom>): Boolean {
     val node = state.nodes[root]
 
     // If node is in list of predecessors return false
