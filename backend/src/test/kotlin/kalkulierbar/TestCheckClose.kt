@@ -18,7 +18,7 @@ class TestCheckClose {
     fun testCheckCloseSimple() {
         var state = instance.parseFormulaToState("a,!a", opts)
 
-        assertEquals("false", instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         val nodes = listOf(
                 TableauxNode(0, "a", false),
@@ -29,19 +29,19 @@ class TestCheckClose {
         state.nodes.get(0).children.add(1)
         state.nodes.get(1).children.add(2)
 
-        assertEquals("false", instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         // Now close the proof
         state = instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
 
-        assertEquals("true", instance.checkCloseOnState(state))
+        assertEquals(true, instance.checkCloseOnState(state).closed)
     }
 
     @Test
     fun testCheckClose() {
         var state = instance.parseFormulaToState("a,b;!a,!b", opts)
 
-        assertEquals("false", instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         val nodes = listOf(
                 TableauxNode(0, "a", false),
@@ -56,13 +56,13 @@ class TestCheckClose {
         state.nodes.get(1).children.add(3)
         state.nodes.get(2).children.add(4)
 
-        assertEquals("false", instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         // Now close the proof
         state = instance.applyMoveOnState(state, TableauxMove("c", 3, 1))
         state = instance.applyMoveOnState(state, TableauxMove("c", 4, 2))
 
-        assertEquals("true", instance.checkCloseOnState(state))
+        assertEquals(true, instance.checkCloseOnState(state).closed)
     }
 
     @Test
@@ -75,19 +75,19 @@ class TestCheckClose {
         state = instance.applyMoveOnState(state, TableauxMove("e", 4, 2))
         state = instance.applyMoveOnState(state, TableauxMove("e", 5, 1))
 
-        assertEquals("false", instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         state = instance.applyMoveOnState(state, TableauxMove("c", 3, 2))
 
-        assertEquals("false", instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         state = instance.applyMoveOnState(state, TableauxMove("c", 7, 5))
 
-        assertEquals("false", instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
 
         state = instance.applyMoveOnState(state, TableauxMove("c", 6, 4))
 
-        assertEquals("true", instance.checkCloseOnState(state))
+        assertEquals(true, instance.checkCloseOnState(state).closed)
     }
 
     @Test
@@ -113,6 +113,6 @@ class TestCheckClose {
         state = instance.applyMoveOnState(state, TableauxMove("c", 6, 3))
         state = instance.applyMoveOnState(state, TableauxMove("c", 4, 1))
 
-        assertEquals("false", instance.checkCloseOnState(state))
+        assertEquals(false, instance.checkCloseOnState(state).closed)
     }
 }
