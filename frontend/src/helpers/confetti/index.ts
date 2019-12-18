@@ -64,7 +64,9 @@ export default class Confetti {
         }
         this.canvas = canvas;
         this.maxCount = maxCount;
-        this.speed = speed;
+        // Adjust speed to make it equally fast on all displays,
+        // even 4k
+        this.speed = (speed * canvas.height) / 1000;
         this.frameInterval = frameInterval;
         this.alpha = alpha;
     }
