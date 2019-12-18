@@ -37,23 +37,24 @@ export default class Confetti {
         maxCount = 150,
         speed = 2,
         frameInterval = 15,
-        alpha = 1.0
+        alpha = 1.0,
+        paddingTop = 56
     }: ConfettiOptions = {}) {
         if (canvas === undefined) {
             canvas = document.createElement("canvas") as HTMLCanvasElement;
             canvas.setAttribute("id", "confetti-canvas");
             canvas.setAttribute(
                 "style",
-                "display:block;z-index:999999;pointer-events:none;position:fixed;top:0"
+                `display:block;z-index:999999;pointer-events:none;position:fixed;top:${paddingTop}px`
             );
             document.body.prepend(canvas);
             canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.height = window.innerHeight - paddingTop;
             window.addEventListener(
                 "resize",
                 () => {
                     this.canvas.width = window.innerWidth;
-                    this.canvas.height = window.innerHeight;
+                    this.canvas.height = window.innerHeight - paddingTop;
                 },
                 true
             );
