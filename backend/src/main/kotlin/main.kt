@@ -37,6 +37,9 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
     val host = if (listenGlobally) "0.0.0.0" else "localhost"
 
     val app = Javalin.create { config ->
+        // Enable CORS headers
+        config.enableCorsForAllOrigins()
+
         // Set a Jetty server manually for more config options
         config.server {
             // Create and configure Jetty server
@@ -55,11 +58,6 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
     app.exception(KalkulierbarException::class.java) { e, ctx ->
         ctx.status(400)
         ctx.result(e.message ?: "Unknown exception")
-    }
-
-    // Add CORS headers for every request
-    app.before { ctx ->
-        ctx.header("Access-Control-Allow-Origin", "*")
     }
 
     // Serve a small overview at the root endpoint listing all active calculus identifiers
@@ -86,17 +84,17 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
 
         // Parse endpoint takes formula parameter and passes it to calculus implementation
         app.post("/$name/parse") { ctx ->
-            val formula = ctx.formParam("formula")
-                    ?: throw ApiMisuseException("POST parameter 'formula' needs to be present")
-            ctx.result(endpoint.parseFormula(formula))
+            val map = ctx.formParamMap()
+            val formula = getParam(map, "formula")!!
+            val params = getParam(map, "params", true)
+            ctx.result(endpoint.parseFormula(formula, params))
         }
 
         // Move endpoint takes state and move parameter values and passes them to calculus implementation
         app.post("/$name/move") { ctx ->
-            val state = ctx.formParam("state")
-                    ?: throw ApiMisuseException("POST parameter 'state' with state representation needs to be present")
-            val move = ctx.formParam("move")
-                    ?: throw ApiMisuseException("POST parameter 'move' with move representation needs to be present")
+            val map = ctx.formParamMap()
+            val state = getParam(map, "state")!!
+            val move = getParam(map, "move")!!
             ctx.result(endpoint.applyMove(state, move))
         }
 
@@ -107,4 +105,23 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
             ctx.result(endpoint.checkClose(state))
         }
     }
+}
+
+/*
+ * Get a request parameter from the Javalin provided parameter map
+ * Will never return null unless the optional parameter is true
+ * @param map Javalin parameter map
+ * @param key parameter name
+ * @param optional true if no exception should be raised for missing values
+ * @return Value associated with the parameter key, null if not found and optional
+ */
+fun getParam(map: Map<String, List<String>>, key: String, optional: Boolean = false): String? {
+    val lst = map.get(key)
+
+    if (lst == null && !optional)
+        throw ApiMisuseException("POST parameter '$key' needs to be present")
+    else if (lst == null)
+        return null
+
+    return lst.get(0)
 }

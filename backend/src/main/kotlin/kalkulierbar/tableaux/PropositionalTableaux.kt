@@ -4,10 +4,9 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
-import kalkulierbar.clause.Atom
-import kalkulierbar.clause.Clause
 import kalkulierbar.parsers.ClauseSetParser
 import kotlinx.serialization.MissingFieldException
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecodingException
 
@@ -15,7 +14,7 @@ import kotlinx.serialization.json.JsonDecodingException
  * Implementation of a simple tableaux calculus on propositional clause sets
  * For calculus specification see docs/PropositionalTableaux.md
  */
-class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
+class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, TableauxParam>() {
 
     override val identifier = "prop-tableaux"
 
@@ -25,9 +24,12 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
      * @param formula propositional clause set, format a,!b;!c,d
      * @return parsed state object
      */
-    override fun parseFormulaToState(formula: String): TableauxState {
+    override fun parseFormulaToState(formula: String, params: TableauxParam?): TableauxState {
         val clauses = ClauseSetParser.parse(formula)
-        return TableauxState(clauses)
+        if (params == null)
+            return TableauxState(clauses)
+        else
+            return TableauxState(clauses, params.type, params.regular)
     }
 
     /**
@@ -157,49 +159,6 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     }
 
     /**
-     * Check if expanding a leaf violates regularity
-     * Throws an explaining exception if the move violates regularity
-     * @param state current state object
-     * @param leafID ID of the leaf to be expanded
-     * @param clause Clause object to be used for expansion
-     */
-    private fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
-        for (atom in clause.atoms) {
-            // Add atom spelling to list
-            var lst = mutableListOf<Atom>(atom)
-
-            // check if similar predecessor exists
-            val isPathRegular = checkRegularitySubtree(state, 0, lst)
-
-            if (!isPathRegular)
-                throw IllegalMove("Expanding this clause would introduce a duplicate node '$atom' on the branch, making the tree irregular")
-        }
-    }
-
-    /**
-     * Check if expanding a leaf violates connectedness
-     * Throws an explaining exception if the move violates the selected connectedness level
-     * @param state current state object with the expansion already applied
-     * @param leafID ID of the expanded leaf
-     */
-    private fun verifyExpandConnectedness(state: TableauxState, leafID: Int) {
-        val leaf = state.nodes.get(leafID)
-        val children = leaf.children
-
-        // Expansion on root does not need to fulfill connectedness
-        if (leafID == 0)
-            return
-
-        if (state.type == TableauxType.WEAKLYCONNECTED) {
-            if (!children.fold(false) { acc, id -> acc || state.nodeIsCloseable(id) })
-                throw IllegalMove("No literal in this clause would be closeable, making the tree unconnected")
-        } else if (state.type == TableauxType.STRONGLYCONNECTED) {
-            if (!children.fold(false) { acc, id -> acc || state.nodeIsDirectlyCloseable(id) })
-                throw IllegalMove("No literal in this clause would be closeable with '$leaf', making the tree not strongly connected")
-        }
-    }
-
-    /**
      * Checks if a given state represents a valid, closed proof.
      * @param state state object to validate
      * @return string representing proof closed state (true/false)
@@ -223,109 +182,6 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
     }
 
     /**
-     * Verifies that a proof tree is weakly/strongly connected
-     *
-     * This method will return false even if the current tree can be transformed
-     * into a weakly connected tree by applying close moves
-     * @param state state object to check for connectedness
-     * @param ctype type of connectedness to check for
-     * @return true iff the proof tree is strongly/weakly connected
-     */
-    private fun checkConnectedness(state: TableauxState, ctype: TableauxType): Boolean {
-        val startNodes = state.root.children // root is excluded from connectedness criteria
-
-        if (ctype == TableauxType.UNCONNECTED)
-            return true
-
-        val strong = (ctype == TableauxType.STRONGLYCONNECTED)
-        return startNodes.fold(true) { acc, id -> acc && checkConnectedSubtree(state, id, strong) }
-    }
-
-    /**
-     * Verifies that a subtree proof tree is weakly/strongly connected
-     *
-     * This method does NOT exclude the root from the connectedness criteria
-     * therefore it should not be used on the global proof tree root directly
-     *
-     * This method will return false even if the current tree can be transformed
-     * into a weakly/strongly connected tree by applying close moves
-     * @param state state object to check for connectedness
-     * @param root ID of the node whose subtree should be checked
-     * @param strong true for strong connectedness, false for weak connectedness
-     * @return true iff the proof tree is weakly/strongly connected
-     */
-    private fun checkConnectedSubtree(state: TableauxState, root: Int, strong: Boolean): Boolean {
-        val node = state.nodes.get(root)
-
-        // A subtree is weakly/strongly connected iff:
-        // 1. The root is a leaf OR at least one child of the root is a closed leaf
-        // 1a. For strong connectedness: The closed child is closed with the root
-        // 2. All child-subtrees are weakly/strongly connected themselves
-
-        // Leaves are trivially connected
-        if (node.isLeaf)
-            return true
-
-        var hasDirectlyClosedChild = false
-        var allChildrenConnected = true
-
-        for (id in node.children) {
-            val child = state.nodes.get(id)
-
-            val closedCondition = child.isClosed && (!strong || child.closeRef == root)
-
-            if (child.isLeaf && closedCondition)
-                hasDirectlyClosedChild = true
-            // All children are connected themselves
-            if (!checkConnectedSubtree(state, id, strong)) {
-                allChildrenConnected = false
-                break
-            }
-        }
-
-        return hasDirectlyClosedChild && allChildrenConnected
-    }
-
-    /**
-     * Verifies that no path in the proof tree has double variables
-     * (i.e. the proof tree is regular)
-     *
-     * @param state state object to check for regularity
-     * @return true iff the proof tree is regular
-     */
-    private fun checkRegularity(state: TableauxState): Boolean {
-        val startNodes = state.root.children // root is excluded from connectedness criteria
-
-        return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, mutableListOf<Atom>()) }
-    }
-
-    /**
-     * Checks every path from root of a subtree to leaf for regularity
-     *
-     * @param state : state object to search in subtree
-     * @param root : ID of the subtree node from which to check
-     * @param lst : list of unique node names of predecessor
-     * @return true iff every path from root node to a leaf is regular
-     */
-    private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<Atom>): Boolean {
-        val node = state.nodes[root]
-
-        // If node is in list of predecessors return false
-        if (lst.contains(node.toAtom()))
-            return false
-
-        // Add node spelling to list of predecessors
-        lst.add(node.toAtom())
-
-        // Check children for double vars in path and their children respectively
-        for (id in node.children) {
-            if (!checkRegularitySubtree(state, id, lst))
-                return false
-        }
-        return true
-    }
-
-    /**
      * Parses a JSON state representation into a TableauxState object
      * @param json JSON state representation
      * @return parsed state object
@@ -344,6 +200,10 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             throw JsonParseException(e.message ?: "Could not parse JSON state")
         } catch (e: MissingFieldException) {
             throw JsonParseException(e.message ?: "Could not parse JSON state - missing field")
+        } catch (e: SerializationException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON state")
+        } catch (e: NumberFormatException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON state - invalid number format")
         }
     }
 
@@ -371,6 +231,30 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove>() {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         } catch (e: MissingFieldException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move - missing field")
+        } catch (e: SerializationException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON move")
+        } catch (e: NumberFormatException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON move - invalid number format")
+        }
+    }
+
+    /*
+     * Parses a JSON parameter representation into a TableauxParam object
+     * @param json JSON parameter representation
+     * @return parsed param object
+     */
+    @kotlinx.serialization.UnstableDefault
+    override fun jsonToParam(json: String): TableauxParam {
+        try {
+            return Json.parse(TableauxParam.serializer(), json)
+        } catch (e: JsonDecodingException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON params")
+        } catch (e: MissingFieldException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON params - missing field")
+        } catch (e: SerializationException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON params")
+        } catch (e: NumberFormatException) {
+            throw JsonParseException(e.message ?: "Could not parse JSON params - invalid number format")
         }
     }
 

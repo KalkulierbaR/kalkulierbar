@@ -2,6 +2,7 @@ import { h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 import { AppState, AppStateUpdater } from "../../../types/app";
+import { TableauxParams } from "../../../types/tableaux";
 import Btn from "../../btn";
 import * as style from "./style.css";
 
@@ -24,9 +25,16 @@ interface Props {
      */
     server: string;
     /**
+     * The params containing the TableauxType and if regular was selected
+     */
+    params: TableauxParams;
+    /**
      * The function to call, when the state associated with the calculus changed
      */
     onChange: AppStateUpdater;
+    /**
+     * The function to call, when there is an error
+     */
     onError: (msg: string) => void;
 }
 
@@ -53,7 +61,8 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
     server,
     onChange,
-    onError
+    onError,
+    params
 }) => {
     const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
@@ -65,13 +74,16 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
      */
     const onSubmit = async (event: Event) => {
         event.preventDefault();
+        console.log(params);
         try {
             const response = await fetch(url, {
                 headers: {
                     "Content-Type": "text/plain"
                 },
                 method: "POST",
-                body: `formula=${normalizeInput(userInput)}`
+                body: `formula=${normalizeInput(
+                    userInput
+                )}&params=${JSON.stringify(params)}`
             });
             if (response.status !== 200) {
                 onError(await response.text());

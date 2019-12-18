@@ -1,4 +1,4 @@
-import { TableauxState } from "../../../types/tableaux";
+import { TableauxState, TableauxType } from "../../../types/tableaux";
 
 const example: TableauxState = {
     clauseSet: {
@@ -13,6 +13,8 @@ const example: TableauxState = {
             { atoms: [{ lit: "c", negated: true }] }
         ]
     },
+    type: TableauxType.unconnected,
+    regular: false,
     nodes: [
         {
             parent: null,

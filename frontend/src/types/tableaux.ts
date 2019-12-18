@@ -13,12 +13,25 @@ export interface TableauxState {
     seal: string;
     clauseSet: ClauseSet;
     nodes: TableauxNode[];
+    type: TableauxType;
+    regular: boolean;
 }
 
 export interface TableauxMove {
     type: "c" | "e";
     id1: number;
     id2: number;
+}
+
+export enum TableauxType {
+    unconnected = "UNCONNECTED",
+    weak = "WEAKLYCONNECTED",
+    strong = "STRONGLYCONNECTED"
+}
+
+export interface TableauxParams {
+    type: TableauxType;
+    regular: boolean;
 }
 
 export interface TableauxTreeGoToEvent extends CustomEvent {

@@ -153,6 +153,15 @@ class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean)
 @Serializable
 data class TableauxMove(val type: String, val id1: Int, val id2: Int)
 
+/**
+ * Class representing parameter settings for a regular tableaux
+ * @param type minimum connectedness setting for the tableaux
+ *      UNCONNECTED, WEAKLYCONNECTED or STRONGYLCONNECTED
+ * @param regular set to true to enforce regularity
+ */
+@Serializable
+data class TableauxParam(val type: TableauxType, val regular: Boolean)
+
 enum class TableauxType {
     UNCONNECTED, WEAKLYCONNECTED, STRONGLYCONNECTED
 }
