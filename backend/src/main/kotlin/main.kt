@@ -5,11 +5,12 @@ import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.KalkulierbarException
 import kalkulierbar.tableaux.PropositionalTableaux
+import main.kotlin.kalkulierbar.resolution.PropositionalResolution
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
 // List of all active calculi (calculuus?)
-val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux())
+val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution())
 
 @Suppress("MagicNumber")
 fun main(args: Array<String>) {
