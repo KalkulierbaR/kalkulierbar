@@ -15,9 +15,10 @@ interface Calculus {
      * Parses a formula provided as text into a state representation
      * Note that the used format for both the formula and the state may differ for different implementations
      * @param formula logic formula in some given format
+     * @param params optional parameters for the calculus
      * @return complete state representation of the input formula
      */
-    fun parseFormula(formula: String): String
+    fun parseFormula(formula: String, params: String?): String
 
     /**
      * Takes in a state representation and a move and applies the move on the state if possible.
@@ -31,9 +32,9 @@ interface Calculus {
     /**
      * Checks if a given state represents a valid, closed proof.
      * @param state state representation to validate
-     * @return true if the given proof is closed and valid, false otherwise
+     * @return string representing proof state (closed/open) with an optional message
      */
-    fun checkClose(state: String): Boolean
+    fun checkClose(state: String): String
 
     /**
      * Provides some API documentation regarding formats used for inputs and outputs, implementation specific

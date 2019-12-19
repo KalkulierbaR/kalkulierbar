@@ -6,7 +6,7 @@ import { Atom, Clause } from "../types/clause";
  * @returns {string} - formatted atom
  */
 export const atomToString = (atom: Atom) =>
-    `${atom.negated ? "!" : ""}${atom.lit}`;
+    `${atom.negated ? "¬" : ""}${atom.lit}`;
 
 /**
  *
