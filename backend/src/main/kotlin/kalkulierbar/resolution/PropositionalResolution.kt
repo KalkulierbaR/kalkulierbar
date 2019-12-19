@@ -26,7 +26,8 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
     }
 
     override fun checkCloseOnState(state: ResolutionState): CloseMessage {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val hasEmptyClause = state.clauseSet.clauses.any { it.atoms.isEmpty() }
+        return CloseMessage(hasEmptyClause, "The proof is closed.")
     }
 
     @UnstableDefault

@@ -108,7 +108,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
     }
 }
 
-/*
+/**
  * Get a request parameter from the Javalin provided parameter map
  * Will never return null unless the optional parameter is true
  * @param map Javalin parameter map
