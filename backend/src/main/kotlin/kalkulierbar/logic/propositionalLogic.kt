@@ -153,6 +153,8 @@ class Impl(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode
         return Or(Not(leftChild), rightChild)
     }
 
+    override fun negationPushdown() = this.toBasicOps().negationPushdown()
+
     override fun convertNNFtoClauseSet() = this.toBasicOps().convertNNFtoClauseSet()
 
     override fun toString() = "($leftChild --> $rightChild)"
@@ -164,6 +166,8 @@ class Equiv(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNod
         rightChild = rightChild.toBasicOps()
         return Or(And(leftChild, rightChild), And(Not(leftChild), Not(rightChild)))
     }
+
+    override fun negationPushdown() = this.toBasicOps().negationPushdown()
 
     override fun convertNNFtoClauseSet() = this.toBasicOps().convertNNFtoClauseSet()
 
