@@ -1,22 +1,24 @@
 package kalkulierbar.tableaux
 
-import kalkulierbar.TamperProtect
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
 import kotlinx.serialization.Serializable
+import main.kotlin.kalkulierbar.TamperProofState
 
 /**
  * Class representing a PropositionalTableaux proof
  * @param clauseSet The clause set to be proven unsatisfiable
  */
 @Serializable
-class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val regular: Boolean = false) {
-    val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
+class TableauxState(val clauseSet: ClauseSet,
+                    val type: TableauxType = TableauxType.UNCONNECTED,
+                    val regular: Boolean = false) : TamperProofState() {
+    val nodes = mutableListOf(TableauxNode(null, "true", false))
     val root
-        get() = nodes.get(0)
+        get() = nodes[0]
     val leaves
         get() = nodes.filter { it.isLeaf }
-    var seal = ""
+    override var seal = ""
 
     /**
      * Check whether a node is a (transitive) parent of another node
@@ -50,10 +52,10 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
      * @return true is the node can be closed directly, false otherwise
      */
     fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
-        val node = nodes.get(nodeID)
+        val node = nodes[nodeID]
         if (node.parent == null)
             return false
-        val parent = nodes.get(node.parent)
+        val parent = nodes[node.parent]
 
         return node.isLeaf && node.toAtom() == parent.toAtom().not()
     }
@@ -64,12 +66,12 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
      * @param atom the atom to search for
      * @return true iff the node's transitive parents include the given atom
      */
-    fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom): Boolean {
-        var node = nodes.get(nodeID)
+    private fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom): Boolean {
+        var node = nodes[nodeID]
 
         // Walk up the tree from start node
         while (node.parent != null) {
-            node = nodes.get(node.parent!!)
+            node = nodes[node.parent!!]
             // Check if current node is identical to atom
             if (node.toAtom() == atom)
                 return true
@@ -78,31 +80,8 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
         return false
     }
 
-    /**
-     * Generate a checksum of the current state to detect state objects being
-     * modified or corrupted while in transit
-     * Call before exporting state
-     */
-    fun computeSeal() {
-        val payload = getHash()
-        seal = TamperProtect.seal(payload)
-    }
-
-    /**
-     * Verify the state object checksum
-     * Call after importing state
-     * @return true iff the current seal is valid
-     */
-    fun verifySeal() = TamperProtect.verify(getHash(), seal)
-
-    /**
-     * Pack the state into a well-defined, unambiguous string representation
-     * Used to calculate checksums over state objects as JSON representation
-     * might differ slightly between clients, encodings, etc
-     * @return Canonical state representation
-     */
-    fun getHash(): String {
-        val nodesHash = nodes.map { it.getHash() }.joinToString("|")
+    override fun getHash(): String {
+        val nodesHash = nodes.joinToString("|") { it.getHash() }
         val clauseSetHash = clauseSet.toString()
         return "tableauxstate|$type|$regular|$clauseSetHash|[$nodesHash]"
     }

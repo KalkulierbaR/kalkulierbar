@@ -11,6 +11,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecodingException
+import main.kotlin.kalkulierbar.TamperProofState
 
 class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Any>() {
     override val identifier = "prop-resolution"
@@ -55,7 +56,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
         val (pos, neg) = atoms2.partition { !it.negated }
 
         for (a1 in atoms1) {
-            val other = if (a1.negated) pos else neg;
+            val other = if (a1.negated) pos else neg
             if (other.isEmpty())
                 continue
             val a2 = other[0]
@@ -74,7 +75,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
     override fun checkCloseOnState(state: ResolutionState): CloseMessage {
         val hasEmptyClause = state.clauseSet.clauses.any { it.atoms.isEmpty() }
         val msg = if (hasEmptyClause) "The proof is closed." else "The proof is not closed."
-        return CloseMessage(hasEmptyClause, "The proof is closed.")
+        return CloseMessage(hasEmptyClause, msg)
     }
 
     @UnstableDefault
@@ -125,33 +126,10 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
 }
 
 @Serializable
-class ResolutionState(val clauseSet: ClauseSet) {
-    var seal = ""
+class ResolutionState(val clauseSet: ClauseSet) : TamperProofState() {
+    override var seal = ""
 
-    /**
-     * Generate a checksum of the current state to detect state objects being
-     * modified or corrupted while in transit
-     * Call before exporting state
-     */
-    fun computeSeal() {
-        val payload = getHash()
-        seal = TamperProtect.seal(payload)
-    }
-
-    /**
-     * Verify the state object checksum
-     * Call after importing state
-     * @return true iff the current seal is valid
-     */
-    fun verifySeal() = TamperProtect.verify(getHash(), seal)
-
-    /**
-     * Pack the state into a well-defined, unambiguous string representation
-     * Used to calculate checksums over state objects as JSON representation
-     * might differ slightly between clients, encodings, etc
-     * @return Canonical state representation
-     */
-    fun getHash(): String {
+    override fun getHash(): String {
         val clauseSetHash = clauseSet.toString()
         return "resolutionstate|$clauseSetHash"
     }
