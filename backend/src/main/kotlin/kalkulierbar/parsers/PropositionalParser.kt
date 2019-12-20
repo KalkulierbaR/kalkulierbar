@@ -76,7 +76,7 @@ class PropositionalParser(formula: String) {
     private fun parseParen(): PropositionalLogicNode {
         if (nextTokenIs("(")) {
             consume()
-            val exp = parseOr()
+            val exp = parseEquiv()
             consume(")")
             return exp
         } else {
