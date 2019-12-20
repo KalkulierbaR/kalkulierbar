@@ -4,7 +4,7 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
-import kalkulierbar.parsers.ClauseSetParser
+import kalkulierbar.parsers.FlexibleClauseSetParser
 import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -25,7 +25,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      * @return parsed state object
      */
     override fun parseFormulaToState(formula: String, params: TableauxParam?): TableauxState {
-        val clauses = ClauseSetParser.parse(formula)
+        val clauses = FlexibleClauseSetParser.parse(formula)
         if (params == null)
             return TableauxState(clauses)
         else
