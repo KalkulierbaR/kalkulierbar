@@ -17,51 +17,51 @@ class PropositionalParser(formula: String) {
     fun parse() = parseEquiv()
 
     private fun parseEquiv(): PropositionalLogicNode {
-        val leftOp = parseImpl()
+        var stub = parseImpl()
 
-        if (nextTokenIs("<=>")) {
+        while (nextTokenIs("<=>")) {
             consume()
             val rightOp = parseImpl()
-            return Equiv(leftOp, rightOp)
-        } else {
-            return leftOp
+            stub = Equiv(stub, rightOp)
         }
+
+        return stub
     }
 
     private fun parseImpl(): PropositionalLogicNode {
-        val leftOp = parseOr()
+        var stub = parseOr()
 
-        if (nextTokenIs("-->")) {
+        while (nextTokenIs("-->")) {
             consume()
             val rightOp = parseOr()
-            return Impl(leftOp, rightOp)
-        } else {
-            return leftOp
+            stub = Impl(stub, rightOp)
         }
+
+        return stub
     }
 
     private fun parseOr(): PropositionalLogicNode {
-        val leftOp = parseAnd()
+        var stub = parseAnd()
 
-        if (nextTokenIs("|")) {
+        while (nextTokenIs("|")) {
             consume()
             val rightOp = parseAnd()
-            return Or(leftOp, rightOp)
-        } else {
-            return leftOp
+            stub = Or(stub, rightOp)
         }
+
+        return stub
     }
 
     private fun parseAnd(): PropositionalLogicNode {
-        val leftOp = parseNot()
+        var stub = parseNot()
 
-        if (nextTokenIs("&")) {
+        while (nextTokenIs("&")) {
             consume()
             val rightOp = parseNot()
-            return And(leftOp, rightOp)
-        } else {
-            return leftOp
+            stub = And(stub, rightOp)
         }
+
+        return stub
     }
 
     private fun parseNot(): PropositionalLogicNode {
@@ -140,7 +140,7 @@ class PropositionalParser(formula: String) {
         // differently from the rest of the variable in the future
         // Note that the current implementation implies/requires that
         // VarStartChars is a subset of VarChars
-        private val permittedVarStartChars = Regex("[a-zA-Z]")
+        private val permittedVarStartChars = Regex("[a-zA-Z0-9]")
         private val permittedVarChars = permittedVarStartChars
 
         fun tokenize(formula: String): MutableList<String> {
@@ -154,7 +154,7 @@ class PropositionalParser(formula: String) {
             return tokens
         }
 
-        @Suppress("ComplexMethod")
+        @Suppress("ComplexMethod", "MagicNumber")
         private fun extractToken(formula: String, index: Int, tokens: MutableList<String>): Int {
             var i = index
             if (oneCharToken matches formula[i].toString()) {
@@ -169,7 +169,7 @@ class PropositionalParser(formula: String) {
             } else if (whitespace matches formula[i].toString()) {
                 i += 1
             } else if (permittedVarStartChars matches formula[i].toString()) {
-                extractIdentifier(formula, i, tokens)
+                i = extractIdentifier(formula, i, tokens)
             } else {
                 throw InvalidFormulaFormat("Incorrect formula syntax at char $i")
             }
