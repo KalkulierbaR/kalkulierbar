@@ -2,8 +2,8 @@ package kalkulierbar.tableaux
 
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
+import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
-import main.kotlin.kalkulierbar.TamperProofState
 
 /**
  * Class representing a PropositionalTableaux proof
@@ -14,7 +14,7 @@ class TableauxState(
     val clauseSet: ClauseSet,
     val type: TableauxType = TableauxType.UNCONNECTED,
     val regular: Boolean = false
-) : TamperProofState() {
+) : ProtectedState() {
     val nodes = mutableListOf(TableauxNode(null, "true", false))
     val root
         get() = nodes[0]
