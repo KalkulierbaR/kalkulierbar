@@ -8,13 +8,13 @@ import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.ClauseSetParser
+import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecodingException
-import main.kotlin.kalkulierbar.TamperProofState
 
 class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Any>() {
     override val identifier = "prop-resolution"
@@ -129,7 +129,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
 }
 
 @Serializable
-class ResolutionState(val clauseSet: ClauseSet) : TamperProofState() {
+class ResolutionState(val clauseSet: ClauseSet) : ProtectedState() {
     override var seal = ""
 
     override fun getHash(): String {
