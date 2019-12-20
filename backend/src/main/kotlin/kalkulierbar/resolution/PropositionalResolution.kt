@@ -1,9 +1,8 @@
 package main.kotlin.kalkulierbar.resolution
 
-import kalkulierbar.CloseMessage
-import kalkulierbar.JSONCalculus
-import kalkulierbar.JsonParseException
-import kalkulierbar.TamperProtect
+import kalkulierbar.*
+import kalkulierbar.clause.Atom
+import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.ClauseSetParser
 import kotlinx.serialization.MissingFieldException
@@ -22,11 +21,59 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
     }
 
     override fun applyMoveOnState(state: ResolutionState, move: ResolutionMove): ResolutionState {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val cId1 = move.c1
+        val cId2 = move.c2
+        val clauses = state.clauseSet.clauses
+        val spelling = move.spelling
+
+        // Verify that the clause ids are valid
+        if (cId1 == cId2)
+            throw IllegalMove("Same clauses")
+        if (cId1 < 0 || cId1 >= clauses.size)
+            throw IllegalMove("There is no clause with id $cId1")
+        if (cId2 < 0 || cId2 >= clauses.size)
+            throw IllegalMove("There is no clause with id $cId2")
+
+        val c1 = clauses[cId1]
+        val c2 = clauses[cId2]
+
+        val atomsInC1 = c1.atoms.filter { it.lit == spelling }
+        val atomsInC2 = c2.atoms.filter { it.lit == spelling }
+        if (atomsInC1.isEmpty())
+            throw IllegalMove("Error 1")
+        if (atomsInC2.isEmpty())
+            throw IllegalMove("Error 2")
+
+        val (a1, a2) = findResCandidates(atomsInC1, atomsInC2) ?: throw IllegalMove("No Candidates found")
+
+        clauses.add(buildClause(c1, a1, c2, a2))
+
+        return state
+    }
+
+    private fun findResCandidates(atoms1: List<Atom>, atoms2: List<Atom>): Pair<Atom, Atom>? {
+        val (pos, neg) = atoms2.partition { !it.negated }
+
+        for (a1 in atoms1) {
+            val other = if (a1.negated) pos else neg;
+            if (other.isEmpty())
+                continue
+            val a2 = other[0]
+            return Pair(a1, a2)
+        }
+
+        return null
+    }
+
+    private fun buildClause(c1: Clause, a1: Atom, c2: Clause, a2: Atom): Clause {
+        val atoms = c1.atoms.filter { it.lit != a1.lit || it.negated != a1.negated }.toMutableList() +
+                c2.atoms.filter { it.lit != a2.lit || it.negated != a2.negated }.toMutableList()
+        return Clause(atoms.distinct().toMutableList())
     }
 
     override fun checkCloseOnState(state: ResolutionState): CloseMessage {
         val hasEmptyClause = state.clauseSet.clauses.any { it.atoms.isEmpty() }
+        val msg = if (hasEmptyClause) "The proof is closed." else "The proof is not closed."
         return CloseMessage(hasEmptyClause, "The proof is closed.")
     }
 
@@ -99,11 +146,11 @@ class ResolutionState(val clauseSet: ClauseSet) {
     fun verifySeal() = TamperProtect.verify(getHash(), seal)
 
     /**
-    * Pack the state into a well-defined, unambiguous string representation
-    * Used to calculate checksums over state objects as JSON representation
-    * might differ slightly between clients, encodings, etc
-    * @return Canonical state representation
-    */
+     * Pack the state into a well-defined, unambiguous string representation
+     * Used to calculate checksums over state objects as JSON representation
+     * might differ slightly between clients, encodings, etc
+     * @return Canonical state representation
+     */
     fun getHash(): String {
         val clauseSetHash = clauseSet.toString()
         return "resolutionstate|$clauseSetHash"
@@ -111,4 +158,4 @@ class ResolutionState(val clauseSet: ClauseSet) {
 }
 
 @Serializable
-data class ResolutionMove(val c1: Int, val c2: Int)
+data class ResolutionMove(val c1: Int, val c2: Int, val spelling: String)
