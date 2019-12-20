@@ -1,6 +1,9 @@
 package main.kotlin.kalkulierbar.resolution
 
-import kalkulierbar.*
+import kalkulierbar.CloseMessage
+import kalkulierbar.IllegalMove
+import kalkulierbar.JSONCalculus
+import kalkulierbar.JsonParseException
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
