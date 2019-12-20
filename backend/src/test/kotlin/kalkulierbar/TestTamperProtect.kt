@@ -1,6 +1,6 @@
 package kalkulierbar.tests
 
-import kalkulierbar.TamperProtect
+import kalkulierbar.tamperprotect.TamperProtect
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
