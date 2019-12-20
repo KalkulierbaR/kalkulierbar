@@ -85,11 +85,14 @@ class PropositionalParser(formula: String) {
     }
 
     private fun parseVar(): PropositionalLogicNode {
+        if (tokens.size == 0)
+            throw InvalidFormulaFormat("Expected variable identifier but got end of input")
+
         if (!nextTokenIsVariable()) {
-        val context = tokens.joinToString(" ")
-        val got = tokens.first()
-        throw InvalidFormulaFormat("Expected variable identifier but got reserved token '$got' at '$context'")
-    }
+            val context = tokens.joinToString(" ")
+            val got = tokens.first()
+            throw InvalidFormulaFormat("Expected variable identifier but got reserved token '$got' at '$context'")
+        }
         val exp = Var(tokens.first())
         consume()
         return exp
