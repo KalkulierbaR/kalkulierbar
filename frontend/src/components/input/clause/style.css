@@ -1,11 +1,13 @@
 /* Styles for the Clause input component */
 
 .input {
-    border: 1px solid #e2e2e2;
-    border-radius: 3px;
+    border: 2px solid var(--kbar-accent-color);
+    border-radius: var(--kbar-border-radius);
     resize: none;
     width: 100%;
     min-height: 92px;
     font-size: 1.3em;
     margin-block-end: 8px;
+    background-color: var(--kbar-3dp-color);
+    color: var(--kbar-primary-text-color);
 }

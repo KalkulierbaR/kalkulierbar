@@ -14,8 +14,8 @@ const Home: preact.FunctionalComponent<Props> = () => {
         <div class={style.home}>
             <div className="card">
                 <h3>Choose a calculus</h3>
-                <ul>
-                    <li>
+                <ul class={style.calculusList}>
+                    <li class={style.calculusListItem}>
                         <a href="/prop-tableaux">Tableaux</a>
                     </li>
                 </ul>
