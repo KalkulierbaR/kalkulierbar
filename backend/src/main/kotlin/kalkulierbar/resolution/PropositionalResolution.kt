@@ -32,7 +32,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
 
         // Verify that the clause ids are valid
         if (cId1 == cId2)
-            throw IllegalMove("Same clauses")
+            throw IllegalMove("Both ids refer to the same clause.")
         if (cId1 < 0 || cId1 >= clauses.size)
             throw IllegalMove("There is no clause with id $cId1")
         if (cId2 < 0 || cId2 >= clauses.size)
@@ -41,12 +41,13 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
         val c1 = clauses[cId1]
         val c2 = clauses[cId2]
 
+        // Filter clauses for atoms with correct spelling
         val atomsInC1 = c1.atoms.filter { it.lit == spelling }
         val atomsInC2 = c2.atoms.filter { it.lit == spelling }
         if (atomsInC1.isEmpty())
-            throw IllegalMove("Error 1")
+            throw IllegalMove("Clause $cId1 does not contain atoms with spelling $spelling.")
         if (atomsInC2.isEmpty())
-            throw IllegalMove("Error 2")
+            throw IllegalMove("Clause $cId2 does not contain atoms with spelling $spelling.")
 
         val (a1, a2) = findResCandidates(atomsInC1, atomsInC2) ?: throw IllegalMove("No Candidates found")
 
@@ -55,6 +56,13 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
         return state
     }
 
+    /**
+     * Searches two atom lists for resolution candidates and returns the first.
+     * The lists have to be filtered for the spelling already.
+     * @param atoms1 The first list of atoms
+     * @param atoms2 The second list of atoms
+     * @return A pair of the two atoms for resolution.
+     */
     private fun findResCandidates(atoms1: List<Atom>, atoms2: List<Atom>): Pair<Atom, Atom>? {
         val (pos, neg) = atoms2.partition { !it.negated }
 
@@ -69,6 +77,14 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
         return null
     }
 
+    /**
+     * Builds a new clause according to resolution.
+     * @param c1 The first clause for resolution
+     * @param a1 The atom to filter out of c1
+     * @param c2 The second clause for resolution
+     * @param a2 The atom to filter out of c2
+     * @return A new clause that contains all elements of c1 and c2 except for a1 and a2
+     */
     private fun buildClause(c1: Clause, a1: Atom, c2: Clause, a2: Atom): Clause {
         val atoms = c1.atoms.filter { it.lit != a1.lit || it.negated != a1.negated }.toMutableList() +
                 c2.atoms.filter { it.lit != a2.lit || it.negated != a2.negated }.toMutableList()
@@ -125,6 +141,14 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
 
     override fun jsonToParam(json: String): Any {
         return 0
+    }
+
+    override fun getDocumentation(): String {
+        return """Takes a clause set as an input, format a,!b;b,!c;d with variables in [a-zA-Z]+
+            |There is only one move, the resolution move of the following JSON format:
+            |{ c1: <ID of first clause>, c2: <ID of second clause>, spelling: <The literal on which the resolution is done> }
+            |where IDs are the position of the clause in the clause list.
+        """.trimMargin()
     }
 }
 
