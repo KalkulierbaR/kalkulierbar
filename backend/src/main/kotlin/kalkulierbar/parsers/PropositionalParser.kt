@@ -172,21 +172,15 @@ class PropositionalParser(formula: String) {
             } else if (whitespace matches formula[i].toString()) {
                 i += 1
             } else if (permittedVarStartChars matches formula[i].toString()) {
-                i = extractIdentifier(formula, i, tokens)
+                var identifier = ""
+                while (i < formula.length && permittedVarChars matches formula[i].toString()) {
+                    identifier += formula[i]
+                    i += 1
+                }
+                tokens.add(identifier)
             } else {
                 throw InvalidFormulaFormat("Incorrect formula syntax at char $i")
             }
-            return i
-        }
-
-        private fun extractIdentifier(formula: String, index: Int, tokens: MutableList<String>): Int {
-            var identifier = ""
-            var i = index
-            while (i < formula.length && permittedVarChars matches formula[i].toString()) {
-                identifier += formula[i]
-                i += 1
-            }
-            tokens.add(identifier)
             return i
         }
     }
