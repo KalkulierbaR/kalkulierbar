@@ -12,6 +12,8 @@ class ClauseSet(var clauses: MutableList<Clause> = mutableListOf()) {
         c.forEach { add(it) }
     }
 
+    fun unite(cs: ClauseSet) = addAll(cs.clauses)
+
     override fun toString(): String {
         return clauses.joinToString(", ")
     }

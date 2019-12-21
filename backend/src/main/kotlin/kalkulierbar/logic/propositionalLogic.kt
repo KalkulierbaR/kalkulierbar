@@ -6,25 +6,13 @@ import kalkulierbar.clause.ClauseSet
 
 abstract class PropositionalLogicNode {
     abstract fun toBasicOps(): PropositionalLogicNode
-    abstract fun negationPushdown(): PropositionalLogicNode
-    abstract fun convertNNFtoClauseSet(): ClauseSet
-
-    fun naiveCNF(): ClauseSet {
-        val nnf = this.negationPushdown()
-        return nnf.convertNNFtoClauseSet()
-    }
+    abstract fun naiveCNF(): ClauseSet
 }
 
 abstract class BinaryOp(var leftChild: PropositionalLogicNode, var rightChild: PropositionalLogicNode) : PropositionalLogicNode() {
     override fun toBasicOps(): PropositionalLogicNode {
         leftChild = leftChild.toBasicOps()
         rightChild = rightChild.toBasicOps()
-        return this
-    }
-
-    override fun negationPushdown(): PropositionalLogicNode {
-        leftChild = leftChild.negationPushdown()
-        rightChild = rightChild.negationPushdown()
         return this
     }
 
@@ -39,11 +27,6 @@ abstract class UnaryOp(var child: PropositionalLogicNode) : PropositionalLogicNo
         return this
     }
 
-    override fun negationPushdown(): PropositionalLogicNode {
-        child = child.negationPushdown()
-        return this
-    }
-
     override fun toString(): String {
         return "(uop $child)"
     }
@@ -51,10 +34,9 @@ abstract class UnaryOp(var child: PropositionalLogicNode) : PropositionalLogicNo
 
 class Var(var spelling: String) : PropositionalLogicNode() {
     override fun toBasicOps() = this
-    override fun negationPushdown() = this
     override fun toString() = spelling
 
-    override fun convertNNFtoClauseSet(): ClauseSet {
+    override fun naiveCNF(): ClauseSet {
         val atom = Atom(spelling, false)
         val clause = Clause(mutableListOf(atom))
         return ClauseSet(mutableListOf(clause))
@@ -63,71 +45,67 @@ class Var(var spelling: String) : PropositionalLogicNode() {
 
 class Not(child: PropositionalLogicNode) : UnaryOp(child) {
 
-    override fun negationPushdown(): PropositionalLogicNode {
-        var res = this as PropositionalLogicNode
+    override fun naiveCNF(): ClauseSet {
+        val res: ClauseSet
 
         when (child) {
             is Not -> {
                 val childNot = child as Not
                 // Eliminate double negation
-                res = childNot.child.negationPushdown()
+                res = childNot.child.naiveCNF()
             }
             is Or -> {
                 val childOr = child as Or
                 // De-Morgan Or
-                res = And(Not(childOr.leftChild), Not(childOr.rightChild)).negationPushdown()
+                res = And(Not(childOr.leftChild), Not(childOr.rightChild)).naiveCNF()
             }
             is And -> {
                 val childAnd = child as And
                 // De-Morgan And
-                res = Or(Not(childAnd.leftChild), Not(childAnd.rightChild)).negationPushdown()
+                res = Or(Not(childAnd.leftChild), Not(childAnd.rightChild)).naiveCNF()
             }
             is Impl -> {
                 val childImpl = child as Impl
                 // !(a->b) = !(!a v b) = a^!b
-                res = And(childImpl.leftChild, Not(childImpl.rightChild)).negationPushdown()
+                res = And(childImpl.leftChild, Not(childImpl.rightChild)).naiveCNF()
             }
             is Equiv -> {
                 val childEquiv = child as Equiv
                 val implA = Impl(childEquiv.leftChild, childEquiv.rightChild)
                 val implB = Impl(childEquiv.rightChild, childEquiv.leftChild)
                 // Translate equivalence into implications
-                res = Not(And(implA, implB)).negationPushdown()
+                res = Not(And(implA, implB)).naiveCNF()
             }
+            is Var -> {
+                val childVar = child as Var
+                val atom = Atom(childVar.spelling, true)
+                val clause = Clause(mutableListOf(atom))
+                return ClauseSet(mutableListOf(clause))
+            }
+            else -> throw Exception("Unknown PropositionalLogicNode encountered during naive CNF transformation")
         }
 
         return res
-    }
-
-    override fun convertNNFtoClauseSet(): ClauseSet {
-        if (!(this.child is Var))
-            throw Exception("Child of Not isn't a Var - convertNNFtoClauseSet called on non-NNF formula?")
-
-        val variable = this.child as Var
-        val atom = Atom(variable.spelling, true)
-        val clause = Clause(mutableListOf(atom))
-        return ClauseSet(mutableListOf(clause))
     }
 
     override fun toString() = "!$child"
 }
 
 class And(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
-    override fun convertNNFtoClauseSet(): ClauseSet {
-        val leftClauses = leftChild.convertNNFtoClauseSet().clauses
-        val rightClauses = rightChild.convertNNFtoClauseSet().clauses
-        val cs = ClauseSet(leftClauses)
-        cs.addAll(rightClauses)
-        return cs
+    override fun naiveCNF(): ClauseSet {
+        val leftCS = leftChild.naiveCNF()
+        val rightCS = rightChild.naiveCNF()
+        leftCS.unite(rightCS)
+        return leftCS
     }
 
     override fun toString() = "($leftChild ∧ $rightChild)"
 }
 
 class Or(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
-    override fun convertNNFtoClauseSet(): ClauseSet {
-        val leftClauses = leftChild.convertNNFtoClauseSet().clauses
-        val rightClauses = rightChild.convertNNFtoClauseSet().clauses
+    override fun naiveCNF(): ClauseSet {
+        val leftClauses = leftChild.naiveCNF().clauses
+        val rightClauses = rightChild.naiveCNF().clauses
         val cs = ClauseSet()
 
         for (lc in leftClauses) {
@@ -153,9 +131,7 @@ class Impl(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode
         return Or(Not(leftChild), rightChild)
     }
 
-    override fun negationPushdown() = this.toBasicOps().negationPushdown()
-
-    override fun convertNNFtoClauseSet() = this.toBasicOps().convertNNFtoClauseSet()
+    override fun naiveCNF() = this.toBasicOps().naiveCNF()
 
     override fun toString() = "($leftChild --> $rightChild)"
 }
@@ -167,9 +143,7 @@ class Equiv(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNod
         return Or(And(leftChild, rightChild), And(Not(leftChild), Not(rightChild)))
     }
 
-    override fun negationPushdown() = this.toBasicOps().negationPushdown()
-
-    override fun convertNNFtoClauseSet() = this.toBasicOps().convertNNFtoClauseSet()
+    override fun naiveCNF() = this.toBasicOps().naiveCNF()
 
     override fun toString() = "($leftChild <=> $rightChild)"
 }
