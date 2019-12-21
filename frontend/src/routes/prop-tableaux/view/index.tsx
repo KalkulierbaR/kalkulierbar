@@ -1,68 +1,27 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import { AppStateUpdater } from "../../../types/app";
-import {
-    SelectNodeOptions,
-    TableauxMove,
-    TableauxState
-} from "../../../types/tableaux";
+import { SelectNodeOptions, TableauxState } from "../../../types/tableaux";
 import * as style from "./style.css";
 
-import { SmallScreen } from "../../../components/app";
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
 import TreeControlFAB from "../../../components/tableaux/fab";
 import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
+import { sendMove } from "../../../helpers/api";
+import {
+    handleError,
+    updateCalculusState,
+    useAppState
+} from "../../../helpers/app-state";
 import exampleState from "./example";
 
-interface Props {
-    server: string;
-    state?: TableauxState;
-    onChange: AppStateUpdater<"prop-tableaux">;
-    onError: (msg: string) => void;
-    onSuccess: (msg: string) => void;
-}
-
-/**
- * A asynchronous function to send requested move to backend
- * Updates app state with response from backend
- * @param {string} url - The url of the backend endpoint
- * @param {TableauxState} state - The sate containing the clauseSet and nodes
- * @param {TableauxMove} move - The TableauxMove which shall be requested
- * @param {AppStateUpdater} stateChanger - A function to change app state
- * @param {Function} onError - Error handler
- * @returns {Promise<void>} - Promise that resolves after the request has been handled
- */
-const sendMove = async (
-    url: string,
-    state: TableauxState,
-    move: TableauxMove,
-    stateChanger: AppStateUpdater<"prop-tableaux">,
-    onError: (msg: string) => void
-) => {
-    try {
-        const res = await fetch(url, {
-            headers: {
-                "Content-Type": "text/plain"
-            },
-            method: "POST",
-            body: `move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`
-        });
-        if (res.status !== 200) {
-            onError(await res.text());
-        } else {
-            const parsed = await res.json();
-            stateChanger("prop-tableaux", parsed);
-        }
-    } catch (e) {
-        onError((e as Error).message);
-    }
-};
+interface Props {}
 
 /**
  * Wrapper to send close request
- * @param {string} url - URL of the move endpoint for the current calculus
+ * @param {string} server - URL of server
  * @param {TableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
  * @param {Function} onError - Error handler
@@ -71,15 +30,16 @@ const sendMove = async (
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 const sendClose = (
-    url: string,
+    server: string,
     state: TableauxState,
-    stateChanger: AppStateUpdater<"prop-tableaux">,
+    stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
     leaf: number,
     pred: number
 ) =>
     sendMove(
-        url,
+        server,
+        "prop-tableaux",
         state,
         { type: "c", id1: leaf, id2: pred },
         stateChanger,
@@ -88,7 +48,7 @@ const sendClose = (
 
 /**
  * Wrapper to send move request
- * @param {string} url - URL of the move endpoint for the current calculus
+ * @param {string} server - URL of the server
  * @param {TableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
  * @param {Function} onError - Error handler
@@ -97,15 +57,16 @@ const sendClose = (
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 const sendExtend = (
-    url: string,
+    server: string,
     state: TableauxState,
-    stateChanger: AppStateUpdater<"prop-tableaux">,
+    stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
     leaf: number,
     clause: number
 ) =>
     sendMove(
-        url,
+        server,
+        "prop-tableaux",
         state,
         { type: "e", id1: leaf, id2: clause },
         stateChanger,
@@ -113,19 +74,15 @@ const sendExtend = (
     );
 
 // Properties Interface for the TableauxView component
-interface Props {
-    server: string;
-    state?: TableauxState;
-    onChange: AppStateUpdater<"prop-tableaux">;
-}
+interface Props {}
 
 // Component displaying the content of the prop-tableaux route
-const TableauxView: preact.FunctionalComponent<Props> = ({
-    state,
-    server,
-    onChange,
-    onError
-}) => {
+const TableauxView: preact.FunctionalComponent<Props> = () => {
+    const [
+        { server, ["prop-tableaux"]: cState, smallScreen },
+        dispatch
+    ] = useAppState();
+    let state = cState;
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
     >(undefined);
@@ -133,8 +90,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
         undefined
     );
 
-    const url = `${server}/prop-tableaux/`;
-    const moveUrl = url + "move";
+    const onError = handleError(dispatch);
+    const onChange = updateCalculusState(dispatch);
 
     /**
      * The function to call, when the user selects a clause
@@ -152,7 +109,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
             if (selectedNodeId !== undefined) {
                 // The clause and node have been selected => send extend move request to backend
                 sendExtend(
-                    moveUrl,
+                    server,
                     state!,
                     onChange,
                     onError,
@@ -185,7 +142,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
             } else if (selectedClauseId !== undefined) {
                 // The clause and node have been selected => send extend move request to backend
                 sendExtend(
-                    moveUrl,
+                    server,
                     state!,
                     onChange,
                     onError,
@@ -199,7 +156,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
             // We already have a leaf node selected => Try close move
             // If we can't do it, let server handle it
             sendClose(
-                moveUrl,
+                server,
                 state!,
                 onChange,
                 onError,
@@ -214,37 +171,33 @@ const TableauxView: preact.FunctionalComponent<Props> = ({
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
         state = exampleState;
+        updateCalculusState(dispatch)("prop-tableaux", state);
     }
 
     return (
         <Fragment>
             <h2>Tableaux View</h2>
-            <SmallScreen.Consumer>
-                {s => (
-                    <div class={style.view}>
-                        {!s && (
-                            <div>
-                                <ClauseList
-                                    clauseSet={state!.clauseSet}
-                                    selectedClauseId={selectedClauseId}
-                                    selectClauseCallback={selectClauseCallback}
-                                />
-                                <CheckCloseBtn
-                                    calculus="prop-tableaux"
-                                    state={state}
-                                />
-                            </div>
-                        )}
 
-                        <TableauxTreeView
-                            nodes={state!.nodes}
-                            smallScreen={s}
-                            selectedNodeId={selectedNodeId}
-                            selectNodeCallback={selectNodeCallback}
+            <div class={style.view}>
+                {!smallScreen && (
+                    <div>
+                        <ClauseList
+                            clauseSet={state!.clauseSet}
+                            selectedClauseId={selectedClauseId}
+                            selectClauseCallback={selectClauseCallback}
                         />
+                        <CheckCloseBtn calculus="prop-tableaux" />
                     </div>
                 )}
-            </SmallScreen.Consumer>
+
+                <TableauxTreeView
+                    nodes={state!.nodes}
+                    smallScreen={smallScreen}
+                    selectedNodeId={selectedNodeId}
+                    selectNodeCallback={selectNodeCallback}
+                />
+            </div>
+
             <TreeControlFAB
                 state={state}
                 selectedNodeId={selectedNodeId}

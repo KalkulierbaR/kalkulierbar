@@ -3,9 +3,14 @@ import { useContext, useState } from "preact/hooks";
 import FAB from "../../fab";
 import CloseIcon from "../../icons/close";
 
+import { checkClose } from "../../../helpers/api";
+import {
+    handleError,
+    handleSuccess,
+    useAppState
+} from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
 import { TableauxState } from "../../../types/tableaux";
-import { CheckClose } from "../../app";
 import ClauseList from "../../clause-list";
 import AddIcon from "../../icons/add";
 import CenterIcon from "../../icons/center";
@@ -55,7 +60,9 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
     setShow,
     state
 }) => {
-    const checkClose = useContext(CheckClose)!;
+    const [{ server }, dispatch] = useAppState();
+    const onError = handleError(dispatch);
+    const onSuccess = handleSuccess(dispatch);
     return (
         <menu
             class={style.menu + (show ? " " + style.show : "")}
@@ -97,7 +104,15 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
                 mini={true}
                 extended={true}
                 showIconAtEnd={true}
-                onClick={() => checkClose("prop-tableaux", state)}
+                onClick={() =>
+                    checkClose(
+                        server,
+                        onError,
+                        onSuccess,
+                        "prop-tableaux",
+                        state
+                    )
+                }
             />
         </menu>
     );
@@ -161,7 +176,7 @@ const TreeControlFAB: preact.FunctionalComponent<Props> = ({
     ) : (
         <MoreIcon fill={FILL} size={SIZE} />
     );
-    
+
     // Choose a menu based upon if a node is selected
     const menu =
         selectedNodeId === undefined ? (
