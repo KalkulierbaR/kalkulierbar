@@ -4,34 +4,6 @@ import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 
-abstract class PropositionalLogicNode {
-    abstract fun toBasicOps(): PropositionalLogicNode
-    abstract fun naiveCNF(): ClauseSet
-}
-
-abstract class BinaryOp(var leftChild: PropositionalLogicNode, var rightChild: PropositionalLogicNode) : PropositionalLogicNode() {
-    override fun toBasicOps(): PropositionalLogicNode {
-        leftChild = leftChild.toBasicOps()
-        rightChild = rightChild.toBasicOps()
-        return this
-    }
-
-    override fun toString(): String {
-        return "( $leftChild bop $rightChild)"
-    }
-}
-
-abstract class UnaryOp(var child: PropositionalLogicNode) : PropositionalLogicNode() {
-    override fun toBasicOps(): PropositionalLogicNode {
-        child = child.toBasicOps()
-        return this
-    }
-
-    override fun toString(): String {
-        return "(uop $child)"
-    }
-}
-
 class Var(var spelling: String) : PropositionalLogicNode() {
     override fun toBasicOps() = this
     override fun toString() = spelling
@@ -41,9 +13,28 @@ class Var(var spelling: String) : PropositionalLogicNode() {
         val clause = Clause(mutableListOf(atom))
         return ClauseSet(mutableListOf(clause))
     }
+
+    override fun tseytin(cs: ClauseSet, index: Int) = index + 1
+
+    override fun getTseytinName(index: Int) = "var$spelling"
 }
 
 class Not(child: PropositionalLogicNode) : UnaryOp(child) {
+
+    override fun tseytin(cs: ClauseSet, index: Int): Int {
+        var i = index
+        val selfVar = getTseytinName(i)
+        i += 1
+        val childVar = child.getTseytinName(i)
+        i = child.tseytin(cs, i)
+        val clauseA = Clause(mutableListOf(Atom(childVar, true), Atom(selfVar, true)))
+        val clauseB = Clause(mutableListOf(Atom(childVar, false), Atom(selfVar, false)))
+
+        cs.addAll(listOf(clauseA, clauseB))
+        return i
+    }
+
+    override fun getTseytinName(index: Int) = "not$index"
 
     override fun naiveCNF(): ClauseSet {
         val res: ClauseSet
@@ -92,6 +83,26 @@ class Not(child: PropositionalLogicNode) : UnaryOp(child) {
 }
 
 class And(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
+
+    override fun tseytin(cs: ClauseSet, index: Int): Int {
+        var i = index
+        val selfVar = getTseytinName(i)
+        i += 1
+        val leftChildVar = leftChild.getTseytinName(i)
+        i = leftChild.tseytin(cs, i)
+        val rightChildVar = rightChild.getTseytinName(i)
+        i = rightChild.tseytin(cs, i)
+
+        val clauseA = Clause(mutableListOf(Atom(leftChildVar, false), Atom(selfVar, true)))
+        val clauseB = Clause(mutableListOf(Atom(rightChildVar, false), Atom(selfVar, true)))
+        val clauseC = Clause(mutableListOf(Atom(leftChildVar, true), Atom(rightChildVar, true), Atom(selfVar, false)))
+        cs.addAll(listOf(clauseA, clauseB, clauseC))
+
+        return i
+    }
+
+    override fun getTseytinName(index: Int) = "and$index"
+
     override fun naiveCNF(): ClauseSet {
         val leftCS = leftChild.naiveCNF()
         val rightCS = rightChild.naiveCNF()
@@ -103,6 +114,26 @@ class And(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode)
 }
 
 class Or(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
+
+    override fun tseytin(cs: ClauseSet, index: Int): Int {
+        var i = index
+        val selfVar = getTseytinName(i)
+        i += 1
+        val leftChildVar = leftChild.getTseytinName(i)
+        i = leftChild.tseytin(cs, i)
+        val rightChildVar = rightChild.getTseytinName(i)
+        i = rightChild.tseytin(cs, i)
+
+        val clauseA = Clause(mutableListOf(Atom(leftChildVar, true), Atom(selfVar, false)))
+        val clauseB = Clause(mutableListOf(Atom(rightChildVar, true), Atom(selfVar, false)))
+        val clauseC = Clause(mutableListOf(Atom(leftChildVar, false), Atom(rightChildVar, false), Atom(selfVar, true)))
+        cs.addAll(listOf(clauseA, clauseB, clauseC))
+
+        return i
+    }
+
+    override fun getTseytinName(index: Int) = "or$index"
+
     override fun naiveCNF(): ClauseSet {
         val leftClauses = leftChild.naiveCNF().clauses
         val rightClauses = rightChild.naiveCNF().clauses
@@ -131,6 +162,25 @@ class Impl(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode
         return Or(Not(leftChild), rightChild)
     }
 
+    override fun tseytin(cs: ClauseSet, index: Int): Int {
+        var i = index
+        val selfVar = getTseytinName(i)
+        i += 1
+        val leftChildVar = leftChild.getTseytinName(i)
+        i = leftChild.tseytin(cs, i)
+        val rightChildVar = rightChild.getTseytinName(i)
+        i = rightChild.tseytin(cs, i)
+
+        val clauseA = Clause(mutableListOf(Atom(leftChildVar, false), Atom(selfVar, false)))
+        val clauseB = Clause(mutableListOf(Atom(rightChildVar, true), Atom(selfVar, false)))
+        val clauseC = Clause(mutableListOf(Atom(leftChildVar, true), Atom(rightChildVar, false), Atom(selfVar, true)))
+        cs.addAll(listOf(clauseA, clauseB, clauseC))
+
+        return i
+    }
+
+    override fun getTseytinName(index: Int) = "impl$index"
+
     override fun naiveCNF() = this.toBasicOps().naiveCNF()
 
     override fun toString() = "($leftChild --> $rightChild)"
@@ -142,6 +192,26 @@ class Equiv(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNod
         rightChild = rightChild.toBasicOps()
         return Or(And(leftChild, rightChild), And(Not(leftChild), Not(rightChild)))
     }
+
+    override fun tseytin(cs: ClauseSet, index: Int): Int {
+        var i = index
+        val selfVar = getTseytinName(i)
+        i += 1
+        val leftChildVar = leftChild.getTseytinName(i)
+        i = leftChild.tseytin(cs, i)
+        val rightChildVar = rightChild.getTseytinName(i)
+        i = rightChild.tseytin(cs, i)
+
+        val clauseA = Clause(mutableListOf(Atom(leftChildVar, false), Atom(rightChildVar, true), Atom(selfVar, true)))
+        val clauseB = Clause(mutableListOf(Atom(leftChildVar, true), Atom(rightChildVar, false), Atom(selfVar, true)))
+        val clauseC = Clause(mutableListOf(Atom(leftChildVar, true), Atom(rightChildVar, true), Atom(selfVar, false)))
+        val clauseD = Clause(mutableListOf(Atom(leftChildVar, false), Atom(rightChildVar, false), Atom(selfVar, false)))
+        cs.addAll(listOf(clauseA, clauseB, clauseC, clauseD))
+
+        return i
+    }
+
+    override fun getTseytinName(index: Int) = "equiv$index"
 
     override fun naiveCNF() = this.toBasicOps().naiveCNF()
 
