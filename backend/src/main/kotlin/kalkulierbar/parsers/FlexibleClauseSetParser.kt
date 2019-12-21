@@ -2,6 +2,7 @@ package kalkulierbar.parsers
 
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.clause.ClauseSet
+import kalkulierbar.logic.PropositionalLogicNode
 
 class FlexibleClauseSetParser {
 
@@ -13,7 +14,7 @@ class FlexibleClauseSetParser {
          * @param formula formula or clause set to parse
          * @return ClauseSet representing the input formula
          */
-        fun parse(formula: String): ClauseSet {
+        fun parse(formula: String, strategy: CnfStrategy = CnfStrategy.OPTIMAL): ClauseSet {
 
             // Detect a ClauseSet input from the presence of ; or ,
             // which are forbidden in propositional formulae
@@ -26,11 +27,34 @@ class FlexibleClauseSetParser {
                 }
             } else {
                 try {
-                    return PropositionalParser(formula).parse().naiveCNF()
+                    return convertToCNF(PropositionalParser(formula).parse(), strategy)
                 } catch (e: InvalidFormulaFormat) {
                     throw InvalidFormulaFormat("Parsing as propositional formula failed: ${e.message ?: "unknown error"}")
                 }
             }
         }
+
+        fun convertToCNF(formula: PropositionalLogicNode, strategy: CnfStrategy): ClauseSet {
+            val res: ClauseSet
+
+            when (strategy) {
+                CnfStrategy.NAIVE -> res = formula.naiveCNF()
+                CnfStrategy.TSEYTIN -> res = formula.tseytinCNF()
+                CnfStrategy.OPTIMAL -> {
+                    val naive = formula.naiveCNF()
+                    val tseytin = formula.tseytinCNF()
+                    if (naive.clauses.size > tseytin.clauses.size)
+                        res = tseytin
+                    else
+                        res = naive
+                }
+            }
+
+            return res
+        }
     }
+}
+
+enum class CnfStrategy {
+    NAIVE, TSEYTIN, OPTIMAL
 }
