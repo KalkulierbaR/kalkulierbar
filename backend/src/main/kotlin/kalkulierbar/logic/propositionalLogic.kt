@@ -5,22 +5,50 @@ import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 
 class Var(var spelling: String) : PropositionalLogicNode() {
-    override fun toBasicOps() = this
-    override fun toString() = spelling
 
+    /**
+     * Translates arbitrary formulae into equivalent representations
+     * using only basic operations (var, not, and, or)
+     * @return representation of this LogicNode using only basic logic operations
+     */
+    override fun toBasicOps() = this
+
+    /**
+     * Recursively applies Tseytin transformation on a logic node
+     * Adds generated CNF snippets to a given ClauseSet
+     * CNF snippets based on http://gauss.ececs.uc.edu/Courses/c626/lectures/BDD/st.pdf
+     * @param cs ClauseSet to add generated clauses to
+     * @param index ID of the current node in the logic tree (pre-order numbering)
+     * @return ID of the next logic tree node (pre-order numbering)
+     */
+    override fun tseytin(cs: ClauseSet, index: Int) = index + 1
+
+    override fun getTseytinName(index: Int) = "var$spelling"
+
+    /**
+     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
+     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
+     * @return ClauseSet equivalent to this logic node
+     */
     override fun naiveCNF(): ClauseSet {
         val atom = Atom(spelling, false)
         val clause = Clause(mutableListOf(atom))
         return ClauseSet(mutableListOf(clause))
     }
 
-    override fun tseytin(cs: ClauseSet, index: Int) = index + 1
-
-    override fun getTseytinName(index: Int) = "var$spelling"
+    override fun toString() = spelling
 }
 
 class Not(child: PropositionalLogicNode) : UnaryOp(child) {
 
+    /**
+     * Recursively applies Tseytin transformation on a logic node
+     * Adds generated CNF snippets to a given ClauseSet
+     * CNF snippets based on http://gauss.ececs.uc.edu/Courses/c626/lectures/BDD/st.pdf
+     * @param cs ClauseSet to add generated clauses to
+     * @param index ID of the current node in the logic tree (pre-order numbering)
+     * @return ID of the next logic tree node (pre-order numbering)
+     */
     override fun tseytin(cs: ClauseSet, index: Int): Int {
         var i = index
         val selfVar = getTseytinName(i)
@@ -36,9 +64,15 @@ class Not(child: PropositionalLogicNode) : UnaryOp(child) {
 
     override fun getTseytinName(index: Int) = "not$index"
 
+    /**
+     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
+     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
+     * @return ClauseSet equivalent to this logic node
+     */
     override fun naiveCNF(): ClauseSet {
         val res: ClauseSet
 
+        // Perform Negation-Pushdown
         when (child) {
             is Not -> {
                 val childNot = child as Not
@@ -84,6 +118,14 @@ class Not(child: PropositionalLogicNode) : UnaryOp(child) {
 
 class And(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
 
+    /**
+     * Recursively applies Tseytin transformation on a logic node
+     * Adds generated CNF snippets to a given ClauseSet
+     * CNF snippets based on http://gauss.ececs.uc.edu/Courses/c626/lectures/BDD/st.pdf
+     * @param cs ClauseSet to add generated clauses to
+     * @param index ID of the current node in the logic tree (pre-order numbering)
+     * @return ID of the next logic tree node (pre-order numbering)
+     */
     override fun tseytin(cs: ClauseSet, index: Int): Int {
         var i = index
         val selfVar = getTseytinName(i)
@@ -103,6 +145,11 @@ class And(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode)
 
     override fun getTseytinName(index: Int) = "and$index"
 
+    /**
+     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
+     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
+     * @return ClauseSet equivalent to this logic node
+     */
     override fun naiveCNF(): ClauseSet {
         val leftCS = leftChild.naiveCNF()
         val rightCS = rightChild.naiveCNF()
@@ -115,6 +162,14 @@ class And(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode)
 
 class Or(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
 
+    /**
+     * Recursively applies Tseytin transformation on a logic node
+     * Adds generated CNF snippets to a given ClauseSet
+     * CNF snippets based on http://gauss.ececs.uc.edu/Courses/c626/lectures/BDD/st.pdf
+     * @param cs ClauseSet to add generated clauses to
+     * @param index ID of the current node in the logic tree (pre-order numbering)
+     * @return ID of the next logic tree node (pre-order numbering)
+     */
     override fun tseytin(cs: ClauseSet, index: Int): Int {
         var i = index
         val selfVar = getTseytinName(i)
@@ -134,6 +189,11 @@ class Or(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) 
 
     override fun getTseytinName(index: Int) = "or$index"
 
+    /**
+     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
+     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
+     * @return ClauseSet equivalent to this logic node
+     */
     override fun naiveCNF(): ClauseSet {
         val leftClauses = leftChild.naiveCNF().clauses
         val rightClauses = rightChild.naiveCNF().clauses
@@ -156,12 +216,26 @@ class Or(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) 
 }
 
 class Impl(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
+
+    /**
+     * Translates arbitrary formulae into equivalent representations
+     * using only basic operations (var, not, and, or)
+     * @return representation of this LogicNode using only basic logic operations
+     */
     override fun toBasicOps(): PropositionalLogicNode {
         leftChild = leftChild.toBasicOps()
         rightChild = rightChild.toBasicOps()
         return Or(Not(leftChild), rightChild)
     }
 
+    /**
+     * Recursively applies Tseytin transformation on a logic node
+     * Adds generated CNF snippets to a given ClauseSet
+     * CNF snippets based on http://gauss.ececs.uc.edu/Courses/c626/lectures/BDD/st.pdf
+     * @param cs ClauseSet to add generated clauses to
+     * @param index ID of the current node in the logic tree (pre-order numbering)
+     * @return ID of the next logic tree node (pre-order numbering)
+     */
     override fun tseytin(cs: ClauseSet, index: Int): Int {
         var i = index
         val selfVar = getTseytinName(i)
@@ -181,18 +255,37 @@ class Impl(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode
 
     override fun getTseytinName(index: Int) = "impl$index"
 
+    /**
+     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
+     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
+     * @return ClauseSet equivalent to this logic node
+     */
     override fun naiveCNF() = this.toBasicOps().naiveCNF()
 
     override fun toString() = "($leftChild --> $rightChild)"
 }
 
 class Equiv(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
+
+    /**
+     * Translates arbitrary formulae into equivalent representations
+     * using only basic operations (var, not, and, or)
+     * @return representation of this LogicNode using only basic logic operations
+     */
     override fun toBasicOps(): PropositionalLogicNode {
         leftChild = leftChild.toBasicOps()
         rightChild = rightChild.toBasicOps()
         return Or(And(leftChild, rightChild), And(Not(leftChild), Not(rightChild)))
     }
 
+    /**
+     * Recursively applies Tseytin transformation on a logic node
+     * Adds generated CNF snippets to a given ClauseSet
+     * CNF snippets based on http://gauss.ececs.uc.edu/Courses/c626/lectures/BDD/st.pdf
+     * @param cs ClauseSet to add generated clauses to
+     * @param index ID of the current node in the logic tree (pre-order numbering)
+     * @return ID of the next logic tree node (pre-order numbering)
+     */
     override fun tseytin(cs: ClauseSet, index: Int): Int {
         var i = index
         val selfVar = getTseytinName(i)
@@ -213,6 +306,11 @@ class Equiv(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNod
 
     override fun getTseytinName(index: Int) = "equiv$index"
 
+    /**
+     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
+     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
+     * @return ClauseSet equivalent to this logic node
+     */
     override fun naiveCNF() = this.toBasicOps().naiveCNF()
 
     override fun toString() = "($leftChild <=> $rightChild)"
