@@ -1,22 +1,16 @@
-import { createContext, h } from "preact";
+import { h } from "preact";
 import { Router } from "preact-router";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 
-import { checkClose as checkCloseHelper, checkCloseFn } from "../helpers/api";
+import { AppStateProvider, useAppState } from "../helpers/app-state";
 import Confetti from "../helpers/confetti";
 import Home from "../routes/home";
 import Tableaux from "../routes/prop-tableaux";
 import TableauxView from "../routes/prop-tableaux/view";
-import { AppState, Notification, NotificationType } from "../types/app";
+import { AppStateActionType } from "../types/app";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.css";
-
-const SERVER = `http://${location.hostname}:7000`;
-
-// Create our contexts.
-export const SmallScreen = createContext<boolean>(false);
-export const CheckClose = createContext<checkCloseFn | undefined>(undefined);
 
 const SMALL_SCREEN_THRESHOLD = 700;
 
@@ -53,30 +47,18 @@ if ((module as any).hot) {
 
 // This is the main App component which handles routing and calls other components
 const App: preact.FunctionalComponent = () => {
-    const [state, setState] = useState<AppState>({});
-    const [notification, setNotification] = useState<Notification | undefined>(
-        undefined
-    );
-    const [smallScreen, setSmallScreen] = useState<boolean>(false);
-
-    const removeNotification = () => {
-        setNotification(undefined);
-    };
-
-    const handleError = (msg: string) =>
-        setNotification({ type: NotificationType.Error, message: msg });
-
-    const handleSuccess = (msg: string) =>
-        setNotification({ type: NotificationType.Success, message: msg });
-
-    // @ts-ignore
-    const handleMessage = (
-        msg: string,
-        type: NotificationType = NotificationType.None
-    ) => setNotification({ type, message: msg });
+    const {
+        notification,
+        server,
+        dispatch,
+        onError,
+        removeNotification
+    } = useAppState();
+    const setSmallScreen = (small: boolean) =>
+        dispatch({ type: AppStateActionType.SET_SMALL_SCREEN, value: small });
 
     useEffect(() => {
-        checkServer(SERVER, handleError);
+        checkServer(server, onError);
 
         const cf = new Confetti({ speed: 10, maxCount: 150 });
 
@@ -92,55 +74,27 @@ const App: preact.FunctionalComponent = () => {
         );
     }, []);
 
-    /**
-     * Updates the state of the given calculus
-     * @param {string} id  - the id of the calculus
-     * @param {any} newState  - new state of the calculus
-     * @returns {void}
-     */
-    function onChange<K extends keyof AppState>(id: K, newState: AppState[K]) {
-        setState(s => ({ ...s, [id]: newState }));
-    }
-
-    const checkClose = checkCloseHelper(SERVER, handleError, handleSuccess);
-
     return (
         <div id="app">
-            <SmallScreen.Provider value={smallScreen}>
-                <CheckClose.Provider value={checkClose}>
-                    <Header />
-                    <main class={style.main}>
-                        <Router>
-                            <Home path="/" />
+            <Header />
+            <main class={style.main}>
+                <Router>
+                    <Home path="/" />
 
-                            <Tableaux
-                                path="/prop-tableaux"
-                                server={SERVER}
-                                onChange={onChange}
-                                onError={handleError}
-                            />
-                            <TableauxView
-                                path="/prop-tableaux/view"
-                                server={SERVER}
-                                state={state["prop-tableaux"]}
-                                onChange={onChange}
-                                onError={handleError}
-                                onSuccess={handleSuccess}
-                            />
-                        </Router>
-                    </main>
-                    <div class={style.notifications}>
-                        {notification && (
-                            <Snackbar
-                                notification={notification}
-                                onDelete={() => removeNotification()}
-                            />
-                        )}
-                    </div>
-                </CheckClose.Provider>
-            </SmallScreen.Provider>
+                    <Tableaux path="/prop-tableaux" />
+                    <TableauxView path="/prop-tableaux/view" />
+                </Router>
+            </main>
+            <div class={style.notifications}>
+                {notification && (
+                    <Snackbar
+                        notification={notification}
+                        onDelete={removeNotification}
+                    />
+                )}
+            </div>
         </div>
     );
 };
 
-export default App;
+export default AppStateProvider(App);
