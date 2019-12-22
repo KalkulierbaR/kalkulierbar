@@ -1,10 +1,6 @@
 import { h } from "preact";
 import { checkClose as closeHelper } from "../../helpers/api";
-import {
-    handleError,
-    handleSuccess,
-    useAppState
-} from "../../helpers/app-state";
+import { useAppState } from "../../helpers/app-state";
 import { Calculus } from "../../types/app";
 import Btn from "../btn";
 
@@ -16,9 +12,7 @@ interface Props {
 }
 
 const CheckCloseBtn: preact.FunctionalComponent<Props> = ({ calculus }) => {
-    const [{ server, [calculus]: state }, dispatch] = useAppState();
-    const onError = handleError(dispatch);
-    const onSuccess = handleSuccess(dispatch);
+    const { server, [calculus]: state, onError, onSuccess } = useAppState();
     const checkClose = () =>
         closeHelper(server, onError, onSuccess, calculus, state);
     return (

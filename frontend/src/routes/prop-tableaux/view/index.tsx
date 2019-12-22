@@ -10,11 +10,7 @@ import TreeControlFAB from "../../../components/tableaux/fab";
 import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import { sendMove } from "../../../helpers/api";
-import {
-    handleError,
-    updateCalculusState,
-    useAppState
-} from "../../../helpers/app-state";
+import { useAppState } from "../../../helpers/app-state";
 import exampleState from "./example";
 
 interface Props {}
@@ -78,10 +74,13 @@ interface Props {}
 
 // Component displaying the content of the prop-tableaux route
 const TableauxView: preact.FunctionalComponent<Props> = () => {
-    const [
-        { server, ["prop-tableaux"]: cState, smallScreen },
-        dispatch
-    ] = useAppState();
+    const {
+        server,
+        ["prop-tableaux"]: cState,
+        smallScreen,
+        onError,
+        onChange
+    } = useAppState();
     let state = cState;
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
@@ -89,9 +88,6 @@ const TableauxView: preact.FunctionalComponent<Props> = () => {
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
         undefined
     );
-
-    const onError = handleError(dispatch);
-    const onChange = updateCalculusState(dispatch);
 
     /**
      * The function to call, when the user selects a clause
@@ -171,7 +167,7 @@ const TableauxView: preact.FunctionalComponent<Props> = () => {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
         state = exampleState;
-        updateCalculusState(dispatch)("prop-tableaux", state);
+        onChange("prop-tableaux", state);
     }
 
     return (

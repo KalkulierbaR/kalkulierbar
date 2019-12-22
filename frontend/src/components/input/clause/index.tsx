@@ -1,11 +1,7 @@
 import { h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
-import {
-    handleError,
-    updateCalculusState,
-    useAppState
-} from "../../../helpers/app-state";
+import { useAppState } from "../../../helpers/app-state";
 import { Calculus } from "../../../types/app";
 import { TableauxParams } from "../../../types/tableaux";
 import Btn from "../../btn";
@@ -51,12 +47,9 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params
 }) => {
-    const [{ server }, dispatch] = useAppState();
+    const { server, onError, onChange } = useAppState();
     const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
-
-    const onError = handleError(dispatch);
-    const onChange = updateCalculusState(dispatch);
 
     /**
      * Handle the Submit event of the form

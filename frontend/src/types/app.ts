@@ -12,6 +12,18 @@ export interface AppState {
     "prop-tableaux"?: TableauxState;
 }
 
+export interface DerivedAppState extends AppState {
+    onError: (msg: string) => void;
+    onSuccess: (msg: string) => void;
+    onMessage: (msg: string, type: NotificationType) => void;
+    removeNotification: () => void;
+    onChange: <C extends Calculus = Calculus>(
+        calculus: C,
+        state: AppState[C]
+    ) => void;
+    dispatch: (a: AppStateAction) => void;
+}
+
 interface AppStateActionBase {
     type: AppStateActionType;
 }

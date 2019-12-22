@@ -1,14 +1,10 @@
 import { Fragment, h } from "preact";
-import { useContext, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 import FAB from "../../fab";
 import CloseIcon from "../../icons/close";
 
 import { checkClose } from "../../../helpers/api";
-import {
-    handleError,
-    handleSuccess,
-    useAppState
-} from "../../../helpers/app-state";
+import { useAppState } from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
 import { TableauxState } from "../../../types/tableaux";
 import ClauseList from "../../clause-list";
@@ -60,9 +56,8 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
     setShow,
     state
 }) => {
-    const [{ server }, dispatch] = useAppState();
-    const onError = handleError(dispatch);
-    const onSuccess = handleSuccess(dispatch);
+    const { server, onError, onSuccess } = useAppState();
+
     return (
         <menu
             class={style.menu + (show ? " " + style.show : "")}

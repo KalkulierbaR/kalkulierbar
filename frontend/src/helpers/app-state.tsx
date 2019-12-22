@@ -6,6 +6,7 @@ import {
     AppStateAction,
     AppStateActionType,
     Calculus,
+    DerivedAppState,
     NotificationType,
     RemoveNotification
 } from "../types/app";
@@ -32,18 +33,6 @@ export const RemoveNotificationAction: RemoveNotification = {
     type: AppStateActionType.REMOVE_NOTIFICATION
 };
 
-export const handleError = (dispatch: (state: AppStateAction) => void) => (
-    msg: string
-) => dispatch(createErrorNotification(msg));
-
-export const handleSuccess = (dispatch: (state: AppStateAction) => void) => (
-    msg: string
-) => dispatch(createSuccessNotification(msg));
-
-export const removeNotification = (
-    dispatch: (state: AppStateAction) => void
-) => () => dispatch(RemoveNotificationAction);
-
 export const createNotification = (
     message: string,
     type: NotificationType
@@ -68,21 +57,38 @@ export const updateCalculusState = <C extends Calculus = Calculus>(
     });
 };
 
-export type AppContext = [AppState, (action: AppStateAction) => void];
+const derive = (
+    state: AppState,
+    dispatch: (a: AppStateAction) => void
+): DerivedAppState => ({
+    ...state,
+    onError: (msg: string) => dispatch(createErrorNotification(msg)),
+    onSuccess: (msg: string) => dispatch(createSuccessNotification(msg)),
+    onMessage: (msg: string, type: NotificationType) =>
+        dispatch(createNotification(msg, type)),
+    removeNotification: () => dispatch(RemoveNotificationAction),
+    onChange: updateCalculusState(dispatch),
+    dispatch
+});
 
-export const AppStateCtx = createContext<AppContext>([
-    INIT_APP_STATE,
-    () => {}
-]);
+export const AppStateCtx = createContext<DerivedAppState>(
+    derive(INIT_APP_STATE, () => {})
+);
 
 export const useAppState = () => useContext(AppStateCtx);
 
 export const AppStateProvider = (
     App: preact.FunctionalComponent
-): preact.FunctionalComponent => () => (
-    <AppStateCtx.Provider
-        value={useReducer<AppState, AppStateAction>(reducer, INIT_APP_STATE)}
-    >
-        <App />
-    </AppStateCtx.Provider>
-);
+): preact.FunctionalComponent => () => {
+    const [state, dispatch] = useReducer<AppState, AppStateAction>(
+        reducer,
+        INIT_APP_STATE
+    );
+    const derived = derive(state, dispatch);
+
+    return (
+        <AppStateCtx.Provider value={derived}>
+            <App />
+        </AppStateCtx.Provider>
+    );
+};

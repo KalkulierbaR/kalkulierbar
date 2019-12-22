@@ -2,12 +2,7 @@ import { h } from "preact";
 import { Router } from "preact-router";
 import { useEffect } from "preact/hooks";
 
-import {
-    AppStateProvider,
-    handleError,
-    removeNotification,
-    useAppState
-} from "../helpers/app-state";
+import { AppStateProvider, useAppState } from "../helpers/app-state";
 import Confetti from "../helpers/confetti";
 import Home from "../routes/home";
 import Tableaux from "../routes/prop-tableaux";
@@ -52,12 +47,18 @@ if ((module as any).hot) {
 
 // This is the main App component which handles routing and calls other components
 const App: preact.FunctionalComponent = () => {
-    const [{ notification, server }, dispatch] = useAppState();
+    const {
+        notification,
+        server,
+        dispatch,
+        onError,
+        removeNotification
+    } = useAppState();
     const setSmallScreen = (small: boolean) =>
         dispatch({ type: AppStateActionType.SET_SMALL_SCREEN, value: small });
 
     useEffect(() => {
-        checkServer(server, handleError(dispatch));
+        checkServer(server, onError);
 
         const cf = new Confetti({ speed: 10, maxCount: 150 });
 
@@ -88,7 +89,7 @@ const App: preact.FunctionalComponent = () => {
                 {notification && (
                     <Snackbar
                         notification={notification}
-                        onDelete={removeNotification(dispatch)}
+                        onDelete={removeNotification}
                     />
                 )}
             </div>
