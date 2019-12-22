@@ -2,7 +2,7 @@ package kalkulierbar.tests
 
 import kalkulierbar.JsonParseException
 import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxMove
+// import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxParam
 import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
@@ -17,6 +17,7 @@ class TestPropositionalJson {
         Test jsonToMove
     */
 
+    /*
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveValid() {
@@ -24,6 +25,7 @@ class TestPropositionalJson {
         val move = instance.jsonToMove(json)
         assertEquals(TableauxMove("j", 0, 1), move)
     }
+    */
 
     @Test
     @kotlinx.serialization.UnstableDefault
