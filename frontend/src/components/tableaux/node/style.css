@@ -4,7 +4,7 @@
 }
 
 .rectSelected {
-    stroke: rgb(66, 66, 66);
+    stroke: hsl(0, 0%, 26%, 1);
     stroke-width: 2;
 }
 
@@ -23,4 +23,11 @@
 
 .fDefault {
     fill: #d4bcff;
+}
+
+@media (prefers-color-scheme: dark) {
+    .rectSelected {
+        stroke: #fff;
+        stroke-width: 2;
+    }
 }

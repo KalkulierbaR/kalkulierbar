@@ -10,6 +10,8 @@
     --kbar-bg-color: #fafafa;
     --kbar-card-color: #fff;
     --kbar-3dp-color: #fff;
+    --kbar-8dp-color: rgb(218, 218, 218);
+    --kbar-selected-color: #d4bcff;
     --kbar-primary-text-color: #444;
     --kbar-link-color: var(--kbar-accent-color);
     --mdc-theme-secondary: var(--kbar-accent-color);
@@ -56,6 +58,8 @@ h3 {
         --kbar-primary-text-color: #fff;
         --kbar-link-color: #c2a1fd;
         --kbar-3dp-color: #242424;
+        --kbar-8dp-color: #2d2d2d;
+        --kbar-selected-color: var(--kbar-accent-color);
     }
 
     .mdc-switch:not(.mdc-switch--checked) .mdc-switch__thumb {
