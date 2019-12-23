@@ -3,6 +3,7 @@ package kalkulierbar.tests
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.JsonParseException
+import kalkulierbar.tableaux.MoveType
 import kalkulierbar.tableaux.PropositionalTableaux
 import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxParam
@@ -16,6 +17,7 @@ class TestExpandLeaf {
     val instance = PropositionalTableaux()
     val opts = TableauxParam(TableauxType.UNCONNECTED, false)
 
+    /*
     @Test
     fun testUnknownMove() {
         val state = instance.parseFormulaToState("a,b,c;d", opts)
@@ -27,6 +29,7 @@ class TestExpandLeaf {
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
     }
+    */
 
     @Test
     fun testApplyMoveNullValues() {
@@ -49,7 +52,7 @@ class TestExpandLeaf {
     fun testExpandValidA() {
         var state = instance.parseFormulaToState("a,b,c;d", opts)
 
-        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
 
         assertEquals(4, state.nodes.size)
         assertEquals(3, state.nodes.get(0).children.size)
@@ -61,7 +64,7 @@ class TestExpandLeaf {
     fun testExpandValidB() {
         var state = instance.parseFormulaToState("a,b,c;d", opts)
 
-        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 1))
 
         assertEquals(2, state.nodes.size)
         assertEquals(1, state.nodes.get(0).children.size)
@@ -73,8 +76,8 @@ class TestExpandLeaf {
     fun testExpandValidC() {
         var state = instance.parseFormulaToState("a,b,c;d", opts)
 
-        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
-        state = instance.applyMoveOnState(state, TableauxMove("e", 3, 1))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 3, 1))
 
         assertEquals(5, state.nodes.size)
         assertEquals(3, state.nodes.get(0).children.size)
@@ -90,11 +93,11 @@ class TestExpandLeaf {
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 0))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("e", -15, 0))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, -15, 0))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
@@ -107,11 +110,11 @@ class TestExpandLeaf {
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("e", 0, 2))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 2))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("e", 0, -3))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, -3))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
@@ -121,17 +124,17 @@ class TestExpandLeaf {
     fun testExpandOnNonLeaf() {
         var state = instance.parseFormulaToState("a,b;c", opts)
 
-        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
-        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 1))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
 
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 0))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
@@ -141,15 +144,15 @@ class TestExpandLeaf {
     fun testExpandClosedLeaf() {
         var state = instance.parseFormulaToState("a;!a", opts)
 
-        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
-        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
 
         val leaf = state.nodes.get(2)
         leaf.isClosed = true
         leaf.closeRef = 1
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("e", 2, 0))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 2, 0))
         }
     }
 }
