@@ -1,8 +1,8 @@
 package kalkulierbar.tableaux
 
-import kalkulierbar.TamperProtect
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
+import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
 /**
@@ -10,13 +10,13 @@ import kotlinx.serialization.Serializable
  * @param clauseSet The clause set to be proven unsatisfiable
  */
 @Serializable
-class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val regular: Boolean = false) {
+class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val regular: Boolean = false) : ProtectedState() {
     val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
     val root
         get() = nodes.get(0)
     val leaves
         get() = nodes.filter { it.isLeaf }
-    var seal = ""
+    override var seal = ""
 
     /**
      * Check whether a node is a (transitive) parent of another node
@@ -79,29 +79,12 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
     }
 
     /**
-     * Generate a checksum of the current state to detect state objects being
-     * modified or corrupted while in transit
-     * Call before exporting state
-     */
-    fun computeSeal() {
-        val payload = getHash()
-        seal = TamperProtect.seal(payload)
-    }
-
-    /**
-     * Verify the state object checksum
-     * Call after importing state
-     * @return true iff the current seal is valid
-     */
-    fun verifySeal() = TamperProtect.verify(getHash(), seal)
-
-    /**
      * Pack the state into a well-defined, unambiguous string representation
      * Used to calculate checksums over state objects as JSON representation
      * might differ slightly between clients, encodings, etc
      * @return Canonical state representation
      */
-    fun getHash(): String {
+    override fun getHash(): String {
         val nodesHash = nodes.map { it.getHash() }.joinToString("|")
         val clauseSetHash = clauseSet.toString()
         return "tableauxstate|$type|$regular|$clauseSetHash|[$nodesHash]"
