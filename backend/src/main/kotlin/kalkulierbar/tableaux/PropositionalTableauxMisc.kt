@@ -129,12 +129,12 @@ class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean)
 
 /**
  * Class representing a rule application in a PropositionalTableaux
- * @param type EXPAND for a branch expand move, CLOSE for a branch close move
+ * @param type 'c' for a branch close move, 'e' for an expand move
  * @param id1 ID of the leaf to apply the rule on
  * @param id2 For expand moves: ID of the clause to expand. For close moves: ID of the node to close with
  */
 @Serializable
-data class TableauxMove(val type: MoveType, val id1: Int, val id2: Int)
+data class TableauxMove(val type: String, val id1: Int, val id2: Int)
 
 /**
  * Class representing parameter settings for a regular tableaux
@@ -147,8 +147,4 @@ data class TableauxParam(val type: TableauxType, val regular: Boolean)
 
 enum class TableauxType {
     UNCONNECTED, WEAKLYCONNECTED, STRONGLYCONNECTED
-}
-
-enum class MoveType {
-    EXPAND, CLOSE
 }

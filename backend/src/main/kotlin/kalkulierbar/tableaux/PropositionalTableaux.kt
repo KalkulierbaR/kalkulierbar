@@ -41,9 +41,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      */
     override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
         // Pass expand or close moves to relevant subfunction
-        if (move.type == MoveType.CLOSE)
+        if (move.type == "c")
             return applyMoveCloseBranch(state, move.id1, move.id2)
-        else if (move.type == MoveType.EXPAND)
+        else if (move.type == "e")
             return applyMoveExpandLeaf(state, move.id1, move.id2)
         else
             throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close).")

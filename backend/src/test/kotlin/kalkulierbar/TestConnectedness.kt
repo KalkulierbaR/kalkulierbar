@@ -2,7 +2,6 @@
 package kalkulierbar.tests
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.MoveType
 import kalkulierbar.tableaux.PropositionalTableaux
 import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxParam
@@ -23,11 +22,11 @@ class TestConnectedness {
     fun testConnectednessValidA() {
         var state = instance.parseFormulaToState("a,b,c;!a,b", optsWeak)
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 5, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 4, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 5, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 6, 1))
 
         val isConnected = checkConnectedness(state, TableauxType.WEAKLYCONNECTED)
         assertTrue(isConnected)
@@ -39,11 +38,11 @@ class TestConnectedness {
     fun testConnectednessValidB() {
         var state = instance.parseFormulaToState("!a,b;a", optsWeak)
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 2, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 3, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 3, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 4, 1))
 
         val isConnected = checkConnectedness(state, TableauxType.WEAKLYCONNECTED)
         assertTrue(isConnected)
@@ -55,12 +54,12 @@ class TestConnectedness {
     fun testConnectednessInvalidA() {
         var state = instance.parseFormulaToState("a,b,c;!a,b", optsStrong)
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 4, 1))
 
         assertFailsWith<IllegalMove> {
-            state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 5, 1))
+            state = instance.applyMoveOnState(state, TableauxMove("e", 5, 1))
         }
 
         val isConnected = checkConnectedness(state, TableauxType.STRONGLYCONNECTED)
@@ -73,12 +72,12 @@ class TestConnectedness {
     fun testConnectednessInvalidB() {
         var state = instance.parseFormulaToState("!a,b;a", optsStrong)
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 2, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
 
         assertFailsWith<IllegalMove> {
-            state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 3, 0))
+            state = instance.applyMoveOnState(state, TableauxMove("e", 3, 0))
         }
 
         val isConnected = checkConnectedness(state, TableauxType.STRONGLYCONNECTED)
@@ -91,13 +90,13 @@ class TestConnectedness {
     fun testWeakConnectednessNotClosing() {
         var state = instance.parseFormulaToState("!a,b;a", optsWeak)
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 2, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 3, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 3, 0))
 
         assertFailsWith<IllegalMove> {
-            state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 5, 1))
+            state = instance.applyMoveOnState(state, TableauxMove("e", 5, 1))
         }
 
         val isConnected = checkConnectedness(state, TableauxType.WEAKLYCONNECTED)
@@ -110,10 +109,10 @@ class TestConnectedness {
     fun testStrongConnectednessWrongExpand() {
         var state = instance.parseFormulaToState("!a,b;a", optsStrong)
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
+        state = instance.applyMoveOnState(state, TableauxMove("e", 0, 0))
 
         assertFailsWith<IllegalMove> {
-            state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 0))
+            state = instance.applyMoveOnState(state, TableauxMove("e", 1, 0))
         }
 
         println(state.getHash())
