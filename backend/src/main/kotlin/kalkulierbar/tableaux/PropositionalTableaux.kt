@@ -40,13 +40,14 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      * @return state after the move was applied
      */
     override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
-        // Pass expand or close moves to relevant subfunction
-        if (move.type == MoveType.CLOSE)
-            return applyMoveCloseBranch(state, move.id1, move.id2)
-        else if (move.type == MoveType.EXPAND)
-            return applyMoveExpandLeaf(state, move.id1, move.id2)
-        else
-            throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close).")
+        // Pass expand, close, undo moves to relevant subfunction
+        when (move.type) {
+            MoveType.CLOSE -> return applyMoveCloseBranch(state, move.id1, move.id2)
+            MoveType.EXPAND -> return applyMoveExpandLeaf(state, move.id1, move.id2)
+            MoveType.UNDO -> return applyMoveUndo(state)
+
+            else -> throw IllegalMove("Unknown move. Valid moves are EXPAND (expand), CLOSE (close) or UNDO (undo).")
+        }
     }
 
     /**
@@ -108,6 +109,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
             node = state.nodes.get(node.parent!!)
         }
 
+        // Add move to state history
+        state.moveHistory.add(TableauxMove(MoveType.CLOSE, leafID, closeNodeID))
+
         return state
     }
 
@@ -154,6 +158,73 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
 
         // Verify compliance with connectedness criteria
         verifyExpandConnectedness(state, leafID)
+
+        // Add move to state history
+        state.moveHistory.add(TableauxMove(MoveType.EXPAND, leafID, clauseID))
+
+        return state
+    }
+
+    /**
+     *  Undo the last executed move
+     *  @param state Current prove State
+     *  @return New state after undoing last move
+     */
+    private fun applyMoveUndo(state: TableauxState): TableauxState {
+        // Throw error if no moves were made already
+        val history = state.moveHistory
+        if (history.isEmpty())
+            throw IllegalMove("Can't undo in initial state")
+
+        val top = history[state.moveHistory.size - 1]
+
+        // Pass undo move to relevant expand and close subfunction
+        when (top.type) {
+            MoveType.CLOSE -> return undoClose(state, top)
+            MoveType.EXPAND -> return undoExpand(state, top)
+
+            else -> throw IllegalMove("Something went wrong: ???") // ?
+        }
+    }
+
+    /**
+     *  Undo close move
+     *  @param state Current prove State
+     *  @param top The last move executed
+     *  @return New state after undoing latest close move
+     */
+    private fun undoClose(state: TableauxState, top: TableauxMove): TableauxState {
+        val leafID = top.id1
+        val leaf = state.nodes[leafID]
+        val closeReference = state.nodes[leaf.closeRef!!]
+
+        // revert close reference to null
+        closeReference.closeRef = null
+        closeReference.isClosed = false
+        leaf.closeRef = null
+        leaf.isClosed = false
+
+        // Remove this undo from list
+        state.moveHistory.remove(top)
+
+        return state
+    }
+
+    /**
+     *  Undo expand move
+     *  @param state Current prove State
+     *  @parm top The last move executed
+     *  @return New state after undoing latest expand move
+     */
+    private fun undoExpand(state: TableauxState, top: TableauxMove): TableauxState {
+        val leafID = top.id1
+        val leaf = state.nodes[leafID]
+
+        // Remove all children
+        leaf.children.clear()
+
+        // Remove this undo from list
+        state.moveHistory.remove(top)
 
         return state
     }

@@ -17,6 +17,7 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
     val leaves
         get() = nodes.filter { it.isLeaf }
     override var seal = ""
+    val moveHistory = mutableListOf<TableauxMove>()
 
     /**
      * Check whether a node is a (transitive) parent of another node
@@ -129,8 +130,8 @@ class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean)
 
 /**
  * Class representing a rule application in a PropositionalTableaux
- * @param type EXPAND for a branch expand move, CLOSE for a branch close move
- * @param id1 ID of the leaf to apply the rule on
+ * @param type EXPAND for a branch expand move, CLOSE for a branch close move, UNDO for a undo move
+ * @param id1 ID of the leaf to apply the rule on, For undo moves: ID of the leaf
  * @param id2 For expand moves: ID of the clause to expand. For close moves: ID of the node to close with
  */
 @Serializable
@@ -150,5 +151,5 @@ enum class TableauxType {
 }
 
 enum class MoveType {
-    EXPAND, CLOSE
+    EXPAND, CLOSE, UNDO
 }
