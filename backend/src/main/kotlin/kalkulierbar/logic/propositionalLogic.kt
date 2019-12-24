@@ -1,5 +1,6 @@
 package kalkulierbar.logic
 
+import kalkulierbar.KalkulierbarException
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
@@ -107,7 +108,10 @@ class Not(child: PropositionalLogicNode) : UnaryOp(child) {
                 val clause = Clause(mutableListOf(atom))
                 return ClauseSet(mutableListOf(clause))
             }
-            else -> throw Exception("Unknown PropositionalLogicNode encountered during naive CNF transformation")
+            else -> {
+                val msg = "Unknown PropositionalLogicNode encountered during naive CNF transformation"
+                throw KalkulierbarException(msg)
+            }
         }
 
         return res

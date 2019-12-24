@@ -23,13 +23,15 @@ class FlexibleClauseSetParser {
                 try {
                     return ClauseSetParser.parse(formula)
                 } catch (e: InvalidFormulaFormat) {
-                    throw InvalidFormulaFormat("Parsing as clause set failed: ${e.message ?: "unknown error"}")
+                    val msg = "Parsing as clause set failed: ${e.message ?: "unknown error"}"
+                    throw InvalidFormulaFormat(msg)
                 }
             } else {
                 try {
                     return convertToCNF(PropositionalParser(formula).parse(), strategy)
                 } catch (e: InvalidFormulaFormat) {
-                    throw InvalidFormulaFormat("Parsing as propositional formula failed: ${e.message ?: "unknown error"}")
+                    val msg = "Parsing as propositional formula failed: ${e.message ?: "unknown error"}"
+                    throw InvalidFormulaFormat(msg)
                 }
             }
         }
