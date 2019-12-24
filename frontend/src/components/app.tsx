@@ -5,6 +5,8 @@ import { useEffect, useState } from "preact/hooks";
 import { checkClose as checkCloseHelper, checkCloseFn } from "../helpers/api";
 import Confetti from "../helpers/confetti";
 import Home from "../routes/home";
+import Resolution from "../routes/prop-resolution";
+import ResolutionView from "../routes/prop-resolution/view";
 import Tableaux from "../routes/prop-tableaux";
 import TableauxView from "../routes/prop-tableaux/view";
 import { AppState, Notification, NotificationType } from "../types/app";
@@ -123,6 +125,21 @@ const App: preact.FunctionalComponent = () => {
                                 path="/prop-tableaux/view"
                                 server={SERVER}
                                 state={state["prop-tableaux"]}
+                                onChange={onChange}
+                                onError={handleError}
+                                onSuccess={handleSuccess}
+                            />
+                            
+                            <Resolution
+                                path="/prop-resolution"
+                                server={SERVER}
+                                onChange={onChange}
+                                onError={handleError}
+                            />
+                            <ResolutionView
+                                path="/prop-resolution/view"
+                                server={SERVER}
+                                state={state["prop-resolution"]}
                                 onChange={onChange}
                                 onError={handleError}
                                 onSuccess={handleSuccess}

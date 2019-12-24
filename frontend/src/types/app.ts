@@ -1,3 +1,4 @@
+import { ResolutionState } from "./resolution";
 import { TableauxState } from "./tableaux";
 
 /**
@@ -5,6 +6,7 @@ import { TableauxState } from "./tableaux";
  */
 export interface AppState {
     "prop-tableaux"?: TableauxState;
+    "prop-resolution"?: ResolutionState;
 }
 
 export type AppStateUpdater<K extends keyof AppState = keyof AppState> = (
