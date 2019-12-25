@@ -19,3 +19,23 @@ export interface Clause {
 export interface ClauseSet {
     clauses: Clause[];
 }
+
+/**
+ * CandidateClause is a clause that is a candidate for a proof operation
+ */
+export interface CandidateClause extends Clause {
+    atoms: Atom[];
+    candidateLiterals: string[];
+}
+
+/**
+ * CandidateClauseSet are clauses that are candidates for a proof operation
+ */
+export class CandidateClauseSet implements ClauseSet{
+    public clauses: CandidateClause[];
+    
+    constructor(clauses: CandidateClause[]){
+        this.clauses = clauses;
+    }
+
+}

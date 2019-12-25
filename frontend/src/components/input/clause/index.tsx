@@ -31,7 +31,7 @@ interface Props {
     /**
      * The function to call, when the state associated with the calculus changed
      */
-    onChange: AppStateUpdater;
+    onChange: AppStateUpdater<keyof AppState>;
     /**
      * The function to call, when there is an error
      */
