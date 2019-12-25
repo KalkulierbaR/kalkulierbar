@@ -28,7 +28,7 @@ class FlexibleClauseSetParser {
                 }
             } else {
                 try {
-                    return convertToCNF(PropositionalParser(formula).parse(), strategy)
+                    return convertToCNF(PropositionalParser().parse(formula), strategy)
                 } catch (e: InvalidFormulaFormat) {
                     val msg = "Parsing as propositional formula failed: ${e.message ?: "unknown error"}"
                     throw InvalidFormulaFormat(msg)

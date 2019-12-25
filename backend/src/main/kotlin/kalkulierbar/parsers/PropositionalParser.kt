@@ -14,14 +14,21 @@ import kalkulierbar.logic.Var
  * Supports basic operations (and, or, not) as well
  * as implications and equivalences.
  * For format specification, see docs/PropositionalFormula.md
- * @param formula Formula to parse
  */
 @Suppress("TooManyFunctions")
-class PropositionalParser(formula: String) {
+class PropositionalParser {
 
-    private val tokens = tokenize(formula)
+    private var tokens = mutableListOf<String>()
 
-    fun parse() = parseEquiv()
+    /**
+     * Parses a propositional formula
+     * @param formula input formula
+     * @return PropositionalLogicNode representing the formula
+     */
+    fun parse(formula: String): PropositionalLogicNode {
+        tokens = tokenize(formula)
+        return parseEquiv()
+    }
 
     private fun parseEquiv(): PropositionalLogicNode {
         var stub = parseImpl()
