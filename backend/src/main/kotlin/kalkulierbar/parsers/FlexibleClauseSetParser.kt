@@ -36,6 +36,19 @@ class FlexibleClauseSetParser {
             }
         }
 
+        /**
+         * Converts a propositional formula to a ClauseSet using a given conversion strategy
+         * Available strategies are:
+         *   NAIVE  : Conversion by conversion to negation normal form and expansion
+                      May result in exponential blowup, output formula is equivalent to input
+         *   TSEYTIN: Tseytin conversion, introduces new variables, output size is linear in terms
+                      of input size, output formula is equivalent in terms of satisfiability
+         *   OPTIMAL: Chooses among NAIVE or TSEYTIN based on which conversion results in the smaller
+                      formula
+         * @param formula formula to convert
+         * @param strategy conversion strategy to apply
+         * @return ClauseSet representation of the input formula
+         */
         fun convertToCNF(formula: PropositionalLogicNode, strategy: CnfStrategy): ClauseSet {
             val res: ClauseSet
 
