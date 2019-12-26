@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @param clauseSet The clause set to be proven unsatisfiable
  */
 @Serializable
-class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val regular: Boolean = false) : ProtectedState() {
+class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val regular: Boolean = false, val undoEnable: Boolean = false) : ProtectedState() {
     val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
     val root
         get() = nodes.get(0)
