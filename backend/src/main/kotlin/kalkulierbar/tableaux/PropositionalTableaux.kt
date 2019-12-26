@@ -178,12 +178,20 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
 
         val top = history[state.moveHistory.size - 1]
 
+        // Remove this undo from list
+        state.moveHistory.remove(top)
+
         // Pass undo move to relevant expand and close subfunction
         when (top.type) {
             MoveType.CLOSE -> return undoClose(state, top)
             MoveType.EXPAND -> return undoExpand(state, top)
 
-            else -> throw IllegalMove("Something went wrong: ???") // ?
+            else -> {
+                // add removed element to list before throwing error
+                // -> state remains the same
+                state.moveHistory.add(top)
+                throw IllegalMove("Something went wrong: ???")
+            } // ?
         }
     }
 
@@ -204,9 +212,6 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         leaf.closeRef = null
         leaf.isClosed = false
 
-        // Remove this undo from list
-        state.moveHistory.remove(top)
-
         return state
     }
 
@@ -219,12 +224,15 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
     private fun undoExpand(state: TableauxState, top: TableauxMove): TableauxState {
         val leafID = top.id1
         val leaf = state.nodes[leafID]
+        val children = leaf.children
 
-        // Remove all children
+        // remove child nodes from nodes list
+        for (id in children) {
+            state.nodes.removeAt(id)
+        }
+
+        // Remove all leaf-children
         leaf.children.clear()
-
-        // Remove this undo from list
-        state.moveHistory.remove(top)
 
         return state
     }
