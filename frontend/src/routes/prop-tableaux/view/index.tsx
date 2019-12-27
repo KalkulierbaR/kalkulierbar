@@ -2,7 +2,7 @@ import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import { AppStateUpdater } from "../../../types/app";
 import { SelectNodeOptions, TableauxState } from "../../../types/tableaux";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
