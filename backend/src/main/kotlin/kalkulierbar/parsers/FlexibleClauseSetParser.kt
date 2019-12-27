@@ -1,5 +1,6 @@
 package kalkulierbar.parsers
 
+import kalkulierbar.FormulaConversionException
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.PropositionalLogicNode
@@ -50,18 +51,24 @@ class FlexibleClauseSetParser {
          * @return ClauseSet representation of the input formula
          */
         fun convertToCNF(formula: PropositionalLogicNode, strategy: CnfStrategy): ClauseSet {
-            val res: ClauseSet
+            var res: ClauseSet
 
             when (strategy) {
                 CnfStrategy.NAIVE -> res = formula.naiveCNF()
                 CnfStrategy.TSEYTIN -> res = formula.tseytinCNF()
                 CnfStrategy.OPTIMAL -> {
-                    val naive = formula.naiveCNF()
                     val tseytin = formula.tseytinCNF()
-                    if (naive.clauses.size > tseytin.clauses.size)
+                    // Naive transformation might fail for large a large formula
+                    // Fall back to tseytin if so
+                    try {
+                        val naive = formula.naiveCNF()
+                        if (naive.clauses.size > tseytin.clauses.size)
+                            res = tseytin
+                        else
+                            res = naive
+                    } catch (e: FormulaConversionException) {
                         res = tseytin
-                    else
-                        res = naive
+                    }
                 }
             }
 

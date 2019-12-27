@@ -1,6 +1,6 @@
 package kalkulierbar.logic
 
-import kalkulierbar.KalkulierbarException
+import kalkulierbar.FormulaConversionException
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
@@ -110,7 +110,7 @@ class Not(child: PropositionalLogicNode) : UnaryOp(child) {
             }
             else -> {
                 val msg = "Unknown PropositionalLogicNode encountered during naive CNF transformation"
-                throw KalkulierbarException(msg)
+                throw FormulaConversionException(msg)
             }
         }
 
@@ -202,6 +202,11 @@ class Or(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) 
         val leftClauses = leftChild.naiveCNF().clauses
         val rightClauses = rightChild.naiveCNF().clauses
         val cs = ClauseSet()
+
+        // Not limiting resulting clause amount causes server to run out of memory attempting conversion
+        // Don't mess with exponential growth
+        if (leftClauses.size * rightClauses.size > 100000)
+            throw FormulaConversionException("Naive CNF transformation resulted in too heavy blow-up")
 
         for (lc in leftClauses) {
             for (rc in rightClauses) {
