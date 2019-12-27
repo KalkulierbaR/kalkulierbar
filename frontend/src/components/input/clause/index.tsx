@@ -1,7 +1,8 @@
 import { h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
-import { AppState, AppStateUpdater } from "../../../types/app";
+import { useAppState } from "../../../helpers/app-state";
+import { Calculus } from "../../../types/app";
 import { TableauxParams } from "../../../types/tableaux";
 import Btn from "../../btn";
 import * as style from "./style.css";
@@ -19,23 +20,8 @@ interface Props {
     /**
      * The calculus to use. Specifies API endpoint
      */
-    calculus: keyof AppState;
-    /**
-     * URL to the server
-     */
-    server: string;
-    /**
-     * The params containing the TableauxType and if regular was selected
-     */
+    calculus: Calculus;
     params: TableauxParams;
-    /**
-     * The function to call, when the state associated with the calculus changed
-     */
-    onChange: AppStateUpdater;
-    /**
-     * The function to call, when there is an error
-     */
-    onError: (msg: string) => void;
 }
 
 /**
@@ -49,7 +35,7 @@ const normalizeInput = (input: string) => {
     input = input.replace(/\n+/g, "\n");
     input = input.replace(/\n/g, ";");
     input = input.replace(/\s/g, "");
-    return input;
+    return encodeURIComponent(input);
 };
 
 /*
@@ -59,11 +45,9 @@ const normalizeInput = (input: string) => {
  */
 const ClauseInput: preact.FunctionalComponent<Props> = ({
     calculus,
-    server,
-    onChange,
-    onError,
     params
 }) => {
+    const { server, onError, onChange } = useAppState();
     const [userInput, setUserInput] = useState("");
     const url = `${server}/${calculus}/parse`;
 
