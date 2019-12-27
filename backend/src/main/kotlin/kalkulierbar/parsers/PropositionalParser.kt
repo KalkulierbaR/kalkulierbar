@@ -30,6 +30,10 @@ class PropositionalParser {
         return parseEquiv()
     }
 
+    /**
+     * Parses a series of 0 or more equivalences
+     * @return PropositionalLogicNode representing the series of equivalences
+     */
     private fun parseEquiv(): PropositionalLogicNode {
         var stub = parseImpl()
 
@@ -42,6 +46,10 @@ class PropositionalParser {
         return stub
     }
 
+    /**
+     * Parses a series of 0 or more implications
+     * @return PropositionalLogicNode representing the series of implications
+     */
     private fun parseImpl(): PropositionalLogicNode {
         var stub = parseOr()
 
@@ -54,6 +62,10 @@ class PropositionalParser {
         return stub
     }
 
+    /**
+     * Parses a series of 0 or more or-operations
+     * @return PropositionalLogicNode representing the series of or-operations
+     */
     private fun parseOr(): PropositionalLogicNode {
         var stub = parseAnd()
 
@@ -66,6 +78,10 @@ class PropositionalParser {
         return stub
     }
 
+    /**
+     * Parses a series of 0 or more and-operations
+     * @return PropositionalLogicNode representing the series of and-operations
+     */
     private fun parseAnd(): PropositionalLogicNode {
         var stub = parseNot()
 
@@ -78,6 +94,10 @@ class PropositionalParser {
         return stub
     }
 
+    /**
+     * Parses a unary not
+     * @return PropositionalLogicNode representing the negated formula
+     */
     private fun parseNot(): PropositionalLogicNode {
         if (nextTokenIs("!")) {
             consume()
@@ -87,6 +107,10 @@ class PropositionalParser {
         }
     }
 
+    /**
+     * Parses a parenthesis in a formula
+     * @return PropositionalLogicNode representing the contents of the parenthesis
+     */
     private fun parseParen(): PropositionalLogicNode {
         if (nextTokenIs("(")) {
             consume()
@@ -98,6 +122,10 @@ class PropositionalParser {
         }
     }
 
+    /**
+     * Parses a variable in a formula
+     * @return PropositionalLogicNode representing the variable
+     */
     private fun parseVar(): PropositionalLogicNode {
         if (tokens.size == 0)
             throw InvalidFormulaFormat("Expected variable identifier but got end of input")
