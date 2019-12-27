@@ -1,8 +1,10 @@
 require 'net/http'
 require 'json'
 require 'date'
+require 'cgi'
 
 require_relative 'clausegenerator.class'
+require_relative 'formulagenerator.class'
 require_relative 'testrequest.class'
 require_relative 'bogoatp.class'
 
@@ -41,7 +43,7 @@ end
 =end
 
 def fuzzClauseParsing(trq, count = 100)
-	logMsg "Fuzzing valid formulas"
+	logMsg "Fuzzing valid clause sets"
 	success = true
 	cg = ClauseGenerator.new
 
@@ -72,6 +74,26 @@ def checkEquiv(got, expect)
 	true
 end
 
+def fuzzFormulaParsing(trq, count = 100)
+	logMsg "Fuzzing valid formulas"
+	success = true
+	fg = FormulaGenerator.new
+
+	count.times() {
+		raw = fg.generate
+		string = CGI.escape(raw)
+		# For simplicity, check only that parsing is successful
+		#puts raw
+		success &= trq.post('/prop-tableaux/parse', "formula=#{string}", /.*/, 200)
+	}
+
+	if success
+		logSuccess "Test successful - sent #{count.to_s} requests"
+	else
+		logError "Test failed!"
+	end
+end
+
 def testInvalidParam(trq)
 	cg = ClauseGenerator.new
 	logMsg "Testing invalid formulas"
@@ -81,7 +103,7 @@ def testInvalidParam(trq)
 	success &= trq.post('/prop-tableaux/parse', "formul=#{cg.genClauseSet()}", /parameter.*needs to be present/i, 400)
 
 	formulas.each { |f|
-		success &= trq.post('/prop-tableaux/parse', "formula=#{f}", /invalid input formula format/i, 400)
+		success &= trq.post('/prop-tableaux/parse', "formula=#{f}", /^parsing as .* failed:/i, 400)
 	}
 	
 	if success
@@ -132,7 +154,7 @@ def testStateModification(trq, count = 50)
 		parsed = JSON.parse(validState)
 
 		# Test unmodified state
-		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", "false", 200)
+		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", /.*/, 200)
 
 		10.times() {
 			modified = JSON.parse(validState)
@@ -187,10 +209,10 @@ def tryCloseUncloseable(trq, iterations = 10, verbose = false)
 	end
 end
 
-def tryCloseTrivial(trq, iterations = 5, verbose = false)
+def tryCloseTrivial(trq, iterations = 7, verbose = false)
 	logMsg "Trying to close a trivial proof"
 	
-	if bogoATP(trq, "a,b;!a;!b", "UNCONNECTED", false, iterations, verbose)
+	if bogoATP(trq, "a,b;!a;!b", "WEAKLYCONNECTED", false, iterations, verbose)
 		logSuccess "Test successful"
 	else
 		logError "Test failed"
@@ -227,7 +249,7 @@ def tryCloseRegular(trq, iterations = 15, verbose = false)
 	end
 end
 
-def testRegularityRestriction(trq, iterations = 10, verbose = false)
+def testRegularityRestriction(trq, iterations = 5, verbose = false)
 	logMsg "Testing regularity restriction with random clause sets"
 	cg = ClauseGenerator.new
 	success = true
@@ -269,11 +291,12 @@ trq = TestRequest.new
 logMsg("Testing PropositionalTableaux")
 testInvalidParam(trq)
 fuzzClauseParsing(trq)
+fuzzFormulaParsing(trq)
 testRootNodeCreation(trq)
 testStateModification(trq)
 tryCloseTrivial(trq)
 tryCloseCloseable(trq)
 tryCloseConnected(trq)
 tryCloseRegular(trq)
-tryCloseUncloseable(trq, 10)
-testRegularityRestriction(trq, 5)
+tryCloseUncloseable(trq)
+testRegularityRestriction(trq)
