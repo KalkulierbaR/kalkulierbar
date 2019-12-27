@@ -3,8 +3,6 @@ import * as style from "./style.scss";
 
 import { MDCSwitch } from "@material/switch";
 
-import "@material/switch/dist/mdc.switch.css";
-
 interface Props {
     /**
      * The function to call, when the switch changes state
