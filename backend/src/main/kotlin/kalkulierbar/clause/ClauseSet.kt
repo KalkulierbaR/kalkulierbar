@@ -9,7 +9,10 @@ class ClauseSet(var clauses: MutableList<Clause> = mutableListOf()) {
     }
 
     fun addAll(c: Collection<Clause>) {
-        c.forEach { add(it) }
+        c.forEach {
+            if (!clauses.contains(it))
+                add(it)
+        }
     }
 
     fun unite(cs: ClauseSet) = addAll(cs.clauses)
