@@ -86,7 +86,7 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      */
     abstract fun jsonToMove(json: String): Move
 
-    /*
+    /**
      * Parses a JSON parameter representation into a Param object
      * @param json JSON parameter representation
      * @return parsed param object
