@@ -31,9 +31,6 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
         CandidateClauseSet | undefined
     >(undefined);
 
-    const url = `${server}/prop-resolution/`;
-    const moveUrl = url + "move";
-
     /**
      * The function to call, when the user selects a clause
      * @param {number} newClauseId - The id of the clause, which was clicked on
@@ -90,7 +87,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             }
             // Send resolve move to backend
             sendMove(
-                moveUrl,
+                server,
                 "prop-resolution",
                 state!,
                 { id1: selectedClauseId, id2: newClauseId, spelling: resolventLiteral },
