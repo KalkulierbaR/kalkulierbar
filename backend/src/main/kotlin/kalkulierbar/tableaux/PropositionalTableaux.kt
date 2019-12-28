@@ -46,7 +46,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         else if (move.type == "e")
             applyMoveExpandLeaf(state, move.id1, move.id2)
         else
-            throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close).")
+            throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close)")
     }
 
     /**
