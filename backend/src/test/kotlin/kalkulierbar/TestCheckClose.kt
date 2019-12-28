@@ -5,10 +5,10 @@ import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxNode
 import kalkulierbar.tableaux.TableauxParam
 import kalkulierbar.tableaux.TableauxType
-import main.kotlin.kalkulierbar.resolution.PropositionalResolution
-import main.kotlin.kalkulierbar.resolution.ResolutionMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import main.kotlin.kalkulierbar.resolution.PropositionalResolution
+import main.kotlin.kalkulierbar.resolution.ResolutionMove
 
 class TestCheckClose {
 
