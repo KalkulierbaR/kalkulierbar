@@ -1,7 +1,7 @@
 import { ResolutionState } from "./resolution";
 import { TableauxState } from "./tableaux";
 
-export type Calculus = "prop-tableaux";
+export type Calculus = "prop-tableaux" | "prop-resolution";
 
 /**
  * State of all calculi

@@ -85,6 +85,8 @@ const App: preact.FunctionalComponent = () => {
 
                     <Tableaux path="/prop-tableaux" />
                     <TableauxView path="/prop-tableaux/view" />
+                    <Resolution path="/prop-resolution" />
+                    <ResolutionView path="/prop-resolution/view" />
                 </Router>
             </main>
             <div class={style.notifications}>

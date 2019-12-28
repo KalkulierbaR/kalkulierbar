@@ -3,10 +3,10 @@ import { useState } from "preact/hooks";
 import { AppStateUpdater } from "../../../types/app";
 import * as style from "./style.css";
 
-import { SmallScreen } from "../../../components/app";
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
-import { CandidateClause, CandidateClauseSet } from "../../../types/clause";
+import {useAppState} from "../../../helpers/app-state";
+import { CandidateClauseSet } from "../../../types/clause";
 import { ResolutionMove, ResolutionState } from "../../../types/resolution";
 import exampleState from "./example";
 
@@ -55,19 +55,18 @@ const sendMove = async (
 };
 
 // Properties Interface for the ResolutionView component
-interface Props {
-    server: string;
-    state?: ResolutionState;
-    onChange: AppStateUpdater<"prop-resolution">;
-}
+interface Props {}
 
 // Component displaying the content of the prop-tableaux route
-const ResolutionView: preact.FunctionalComponent<Props> = ({
-    state,
-    server,
-    onChange,
-    onError
-}) => {
+const ResolutionView: preact.FunctionalComponent<Props> = () => {
+    const {
+        server,
+        ["prop-resolution"]: cState,
+        onError,
+        onChange
+    } = useAppState();
+    let state = cState;
+
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
     >(undefined);
@@ -154,25 +153,19 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({
     return (
         <Fragment>
             <h2>Resolution View</h2>
-            <SmallScreen.Consumer>
-                {s => (
-                    <div class={style.view}>
-                        {!s && (
-                            <div>
-                                <ClauseList
-                                    clauseSet={candidateClauseSet !== undefined ? candidateClauseSet : state!.clauseSet}
-                                    selectedClauseId={selectedClauseId}
-                                    selectClauseCallback={selectClauseCallback}
-                                />
-                                <CheckCloseBtn
-                                    calculus="prop-resolution"
-                                    state={state}
-                                />
-                            </div>
-                        )}
-                    </div>
-                )}
-            </SmallScreen.Consumer>
+            <div class={style.view}>
+                <div>
+                    <ClauseList
+                        clauseSet={candidateClauseSet !== undefined ? candidateClauseSet : state!.clauseSet}
+                        selectedClauseId={selectedClauseId}
+                        selectClauseCallback={selectClauseCallback}
+                    />
+                    <CheckCloseBtn
+                        calculus="prop-resolution"
+                        state={state}
+                    />
+                </div>
+            </div>
         </Fragment>
     );
 };
