@@ -1,8 +1,8 @@
 package kalkulierbar.tests.resolution
 
+import kalkulierbar.IllegalMove
 import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.resolution.ResolutionMove
-import kalkulierbar.IllegalMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
