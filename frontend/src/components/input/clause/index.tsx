@@ -21,7 +21,7 @@ interface Props {
      * The calculus to use. Specifies API endpoint
      */
     calculus: Calculus;
-    params: TableauxParams;
+    params?: TableauxParams;
 }
 
 /**

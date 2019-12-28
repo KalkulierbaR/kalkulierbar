@@ -1,58 +1,15 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import { AppStateUpdater } from "../../../types/app";
 import * as style from "./style.css";
 
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
+import {sendMove} from "../../../helpers/api";
 import {useAppState} from "../../../helpers/app-state";
 import { CandidateClauseSet } from "../../../types/clause";
-import { ResolutionMove, ResolutionState } from "../../../types/resolution";
 import exampleState from "./example";
 
-interface Props {
-    server: string;
-    state?: ResolutionState;
-    onChange: AppStateUpdater<"prop-resolution">;
-    onError: (msg: string) => void;
-    onSuccess: (msg: string) => void;
-}
-
-/**
- * A asynchronous function to send requested move to backend
- * Updates app state with response from backend
- * @param {string} url - The url of the backend endpoint
- * @param {ResolutionState} state - The sate containing the clauseSet and nodes
- * @param {ResolutionMove} move - The move to apply on the state
- * @param {AppStateUpdater} stateChanger - A function to change app state
- * @param {Function} onError - Error handler
- * @returns {Promise<void>} - Promise that resolves after the request has been handled
- */
-const sendMove = async (
-    url: string,
-    state: ResolutionState,
-    move: ResolutionMove,
-    stateChanger: AppStateUpdater<"prop-resolution">,
-    onError: (msg: string) => void
-) => {
-    try {
-        const res = await fetch(url, {
-            headers: {
-                "Content-Type": "text/plain"
-            },
-            method: "POST",
-            body: `move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`
-        });
-        if (res.status !== 200) {
-            onError(await res.text());
-        } else {
-            const parsed = await res.json();
-            stateChanger("prop-resolution", parsed);
-        }
-    } catch (e) {
-        onError((e as Error).message);
-    }
-};
+interface Props {}
 
 // Properties Interface for the ResolutionView component
 interface Props {}
@@ -102,12 +59,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                         }
                     });
                 });
-                if(literals.length){
-                    newCandidateClauseSet.clauses[index] = {
-                        atoms: clause.atoms, 
-                        candidateLiterals: literals
-                    };
+                if (!literals.length) {
+                    return;
                 }
+                newCandidateClauseSet.clauses[index] = {
+                    atoms: clause.atoms,
+                    candidateLiterals: literals
+                };
             });
 
             // Set the new candidate clause set
@@ -133,6 +91,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             // Send resolve move to backend
             sendMove(
                 moveUrl,
+                "prop-resolution",
                 state!,
                 { id1: selectedClauseId, id2: newClauseId, spelling: resolventLiteral },
                 onChange,
@@ -162,7 +121,6 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                     />
                     <CheckCloseBtn
                         calculus="prop-resolution"
-                        state={state}
                     />
                 </div>
             </div>

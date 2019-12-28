@@ -88,7 +88,7 @@ export const sendMove = async <C extends Calculus = Calculus>(
             onError(await res.text());
         } else {
             const parsed = await res.json();
-            stateChanger("prop-tableaux", parsed);
+            stateChanger(calculus, parsed);
         }
     } catch (e) {
         onError((e as Error).message);
