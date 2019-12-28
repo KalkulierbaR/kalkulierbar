@@ -1,9 +1,9 @@
 package kalkulierbar.tests.resolution
 
+import kalkulierbar.resolution.PropositionalResolution
+import kalkulierbar.resolution.ResolutionMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import main.kotlin.kalkulierbar.resolution.PropositionalResolution
-import main.kotlin.kalkulierbar.resolution.ResolutionMove
 
 class TestCheckClose {
 
