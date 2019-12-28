@@ -48,7 +48,7 @@ def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterat
 
 		# Try closing the proof
 		logMsg "Trying to close proof" if verbose
-		if !trq.post('/prop-tableaux/close', "state=#{state}", "false", 200)
+		if !trq.post('/prop-tableaux/close', "state=#{state}", /.*false.*/, 200)
 			logMsg "BogoATP Proof closed - #{rqcount.to_s} requests sent / #{moves.to_s} moves applied"
 			logMsg generateDOT(parsed['nodes']) if verbose
 			return getTree ? parsed['nodes'] : true

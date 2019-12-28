@@ -5,6 +5,7 @@ require 'date'
 require_relative 'clausegenerator.class'
 require_relative 'testrequest.class'
 require_relative 'bogoatp.class'
+require_relative 'resolutionBogoATP.class'
 
 def logMsg(msg, c = "0")
 	STDERR.puts "[#{Time.now.strftime('%d/%m %H:%M:%S')}] \e[#{c}m#{msg}\e[0m"
@@ -49,6 +50,24 @@ def fuzzClauseParsing(trq, count = 100)
 		clauses = []
 		string = cg.genClauseSet(clauses)
 		success &= trq.post('/prop-tableaux/parse', "formula=#{string}", ->(res){ checkEquiv(JSON.parse(res)['clauseSet']['clauses'], clauses)}, 200)
+	}
+
+	if success
+		logSuccess "Test successful - sent #{count.to_s} requests"
+	else
+		logError "Test failed!"
+	end
+end
+
+def testResolutionInitialState(trq, count = 30)
+	logMsg "Testing initial resolution states"
+	success = true
+	cg = ClauseGenerator.new
+
+	count.times() {
+		clauses = []
+		string = cg.genClauseSet(clauses)
+		success &= trq.post('/prop-resolution/parse', "formula=#{string}", ->(res){ checkEquiv(JSON.parse(res)['clauseSet']['clauses'], clauses)}, 200)
 	}
 
 	if success
@@ -132,7 +151,7 @@ def testStateModification(trq, count = 50)
 		parsed = JSON.parse(validState)
 
 		# Test unmodified state
-		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", "false", 200)
+		success &= trq.post('/prop-tableaux/close', "state=#{JSON.dump(parsed)}", /.*/, 200)
 
 		10.times() {
 			modified = JSON.parse(validState)
@@ -188,9 +207,19 @@ def tryCloseUncloseable(trq, iterations = 10, verbose = false)
 end
 
 def tryCloseTrivial(trq, iterations = 5, verbose = false)
-	logMsg "Trying to close a trivial proof"
+	logMsg "Trying to close a trivial tableaux proof"
 	
 	if bogoATP(trq, "a,b;!a;!b", "UNCONNECTED", false, iterations, verbose)
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
+def tryCloseTrivialResolution(trq, iterations = 10, verbose = false)
+	logMsg "Trying to close a trivial resolution proof"
+	
+	if resolutionBogoATP(trq, "a,b;!a;!b", iterations, verbose)
 		logSuccess "Test successful"
 	else
 		logError "Test failed"
@@ -275,5 +304,8 @@ tryCloseTrivial(trq)
 tryCloseCloseable(trq)
 tryCloseConnected(trq)
 tryCloseRegular(trq)
-tryCloseUncloseable(trq, 10)
-testRegularityRestriction(trq, 5)
+tryCloseUncloseable(trq)
+testRegularityRestriction(trq)
+
+testResolutionInitialState(trq)
+tryCloseTrivialResolution(trq)
