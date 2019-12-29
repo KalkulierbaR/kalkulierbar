@@ -16,9 +16,9 @@
 .home a {
     text-decoration: none;
     color: var(--kbar-link-color);
-}
 
-.home a:hover,
-.home a:focus {
-    opacity: 0.8;
+    &:hover,
+    &:focus {
+        opacity: 0.8;
+    }
 }

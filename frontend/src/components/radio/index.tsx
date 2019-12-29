@@ -1,7 +1,5 @@
 import { h } from "preact";
-import * as style from "./style.css";
-
-import "@material/radio/dist/mdc.radio.css";
+import * as style from "./style.scss";
 
 interface Props {
     group: string;

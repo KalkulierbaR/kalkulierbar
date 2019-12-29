@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { clauseToString } from "../../helpers/clause";
 import { ClauseSet } from "../../types/clause";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 // Properties Interface for the ClauseList component
 interface Props {
@@ -36,9 +36,9 @@ const ClauseList: preact.FunctionalComponent<Props> = ({
                 <p
                     onClick={() => selectClauseCallback(index)}
                     class={
-                        style.clauseListItem
-                        + " "
-                        + (index === selectedClauseId ? style.clauseSelected : "")
+                        style.clauseListItem +
+                        " " +
+                        (index === selectedClauseId ? style.clauseSelected : "")
                     }
                 >
                     {clauseToString(c)}

@@ -3,7 +3,7 @@ import { createRef, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { D3Data } from "../tree";
 
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 // Properties Interface for the TableauxTreeNode component
 interface Props {

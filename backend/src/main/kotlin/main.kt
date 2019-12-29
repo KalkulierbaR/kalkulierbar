@@ -4,12 +4,13 @@ import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.KalkulierbarException
+import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
 // List of all active calculi (calculuus?)
-val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux())
+val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution())
 
 @Suppress("MagicNumber")
 fun main(args: Array<String>) {
@@ -107,7 +108,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
     }
 }
 
-/*
+/**
  * Get a request parameter from the Javalin provided parameter map
  * Will never return null unless the optional parameter is true
  * @param map Javalin parameter map

@@ -1,34 +1,16 @@
 import { Fragment, h } from "preact";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 import Switch from "../../components/switch";
 
 import { useState } from "preact/hooks";
 import ClauseInput from "../../components/input/clause";
 import Radio from "../../components/radio";
-import { AppStateUpdater } from "../../types/app";
 import { TableauxParams, TableauxType } from "../../types/tableaux";
 
-interface Props {
-    /**
-     * URL of the server
-     */
-    server: string;
-    /**
-     * The function to call, when the state associated with the calculus changed
-     */
-    onChange: AppStateUpdater<"prop-tableaux">;
-    /**
-     * The function to call, when there is an error
-     */
-    onError: (msg: string) => void;
-}
+interface Props {}
 
-const Tableaux: preact.FunctionalComponent<Props> = ({
-    server,
-    onChange,
-    onError
-}) => {
+const Tableaux: preact.FunctionalComponent<Props> = () => {
     const [tabType, setTabType] = useState(TableauxType.unconnected);
     const [regular, setRegular] = useState(false);
 
@@ -47,14 +29,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({
 
     return (
         <Fragment>
-            <ClauseInput
-                path="prop-tableaux/"
-                server={server}
-                calculus="prop-tableaux"
-                onChange={onChange}
-                onError={onError}
-                params={params}
-            />
+            <ClauseInput calculus="prop-tableaux" params={params} />
             <div class="card">
                 <h3>Parameters</h3>
                 <div class={style.form}>

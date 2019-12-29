@@ -1,3 +1,7 @@
+:global {
+    @import "@material/switch/mdc-switch";
+}
+
 .container {
     display: inline-block;
     padding: 0 12px;

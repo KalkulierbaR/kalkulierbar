@@ -1,4 +1,4 @@
-package kalkulierbar.tests
+package kalkulierbar.tests.tableaux
 
 import kalkulierbar.JsonParseException
 import kalkulierbar.tableaux.PropositionalTableaux

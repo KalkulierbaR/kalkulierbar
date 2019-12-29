@@ -4,16 +4,16 @@
     background-color: #00000000;
     transition: background-color 0.2s ease-in;
     margin: 0;
-}
 
-.clause-list-item:hover {
-    background-color: var(--kbar-8dp-color);
+    &:hover {
+        background-color: var(--kbar-8dp-color);
+    }
 }
 
 .clause-selected {
     background-color: var(--kbar-selected-color);
-}
 
-.clause-selected:hover {
-    background-color: var(--kbar-selected-color);
+    &:hover {
+        background-color: var(--kbar-selected-color);
+    }
 }

@@ -7,12 +7,12 @@
     border-radius: 5px;
     padding: 4px 8px;
     transition: opacity 0.2s ease-in;
-}
 
-.btn:hover {
-    opacity: 0.8;
-}
+    &:hover {
+        opacity: 0.8;
+    }
 
-.btn[disabled] {
-    opacity: 0.6;
+    &[disabled] {
+        opacity: 0.6;
+    }
 }
