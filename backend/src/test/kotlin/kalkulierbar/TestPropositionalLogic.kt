@@ -9,9 +9,9 @@ import kalkulierbar.logic.Impl
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
+import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
-import kotlin.test.BeforeTest
 
 class TestPropositionalLogic {
 
@@ -183,5 +183,4 @@ class TestPropositionalLogic {
                 "{or0}, {!vara, or0}, {!var!a, or0}, {vara, var!a, !or0}",
                 o1.tseytinCNF().toString())
     }
-
 }

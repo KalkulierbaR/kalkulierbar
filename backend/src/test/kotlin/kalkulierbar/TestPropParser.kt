@@ -5,7 +5,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-
 class TestPropParser {
     private val parser = PropositionalParser()
 
@@ -25,7 +24,7 @@ class TestPropParser {
             "a" to "a",
             "!a" to "!a",
             "a -> b" to "(a --> b)",
-            //"a --> b" to "(a --> b),"
+            // "a --> b" to "(a --> b),"
             "a-> b" to "(a --> b)",
             "a    ->b" to "(a --> b)",
             "a->b" to "(a --> b)",
