@@ -33,10 +33,11 @@ export interface TableauxUndoMove {
     type: "UNDO";
 }
 
-export type TableauxMove =
-    | TableauxExpandMove
-    | TableauxCloseMove
-    | TableauxUndoMove;
+export interface TableauxMove {
+    type: "EXPAND" | "CLOSE" | "UNDO";
+    id1: number;
+    id2: number;
+}
 
 export enum TableauxType {
     unconnected = "UNCONNECTED",
