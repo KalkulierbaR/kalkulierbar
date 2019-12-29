@@ -27,7 +27,11 @@ class PropositionalParser {
      */
     fun parse(formula: String): PropositionalLogicNode {
         tokens = tokenize(formula)
-        return parseEquiv()
+        val res = parseEquiv()
+        if (tokens.isNotEmpty()) {
+            throw InvalidFormulaFormat("Expected formula to be over, but got ${tokens[0]}")
+        }
+        return res
     }
 
     /**
@@ -158,7 +162,7 @@ class PropositionalParser {
      */
     private fun nextTokenIsVariable(): Boolean {
         if (tokens.size > 0)
-            // Every token that id not a reserved token has to be a variable
+        // Every token that id not a reserved token has to be a variable
             return !reservedTokens.contains(tokens.first())
         else
             return false
