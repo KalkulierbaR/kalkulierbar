@@ -48,6 +48,7 @@ export enum TableauxType {
 export interface TableauxParams {
     type: TableauxType;
     regular: boolean;
+    backtracking: boolean;
 }
 
 export interface TableauxTreeGoToEvent extends CustomEvent {
