@@ -6,7 +6,7 @@ export interface ResolutionState {
 }
 
 export interface ResolutionMove {
-    id1: number;
-    id2: number;
+    c1: number;
+    c2: number;
     spelling: string;
 }

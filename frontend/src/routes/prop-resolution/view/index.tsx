@@ -90,7 +90,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 server,
                 "prop-resolution",
                 state!,
-                { id1: selectedClauseId, id2: newClauseId, spelling: resolventLiteral },
+                { c1: selectedClauseId, c2: newClauseId, spelling: resolventLiteral },
                 onChange,
                 onError
             );
