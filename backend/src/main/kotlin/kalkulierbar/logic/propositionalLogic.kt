@@ -38,6 +38,10 @@ class Var(var spelling: String) : PropositionalLogicNode() {
     }
 
     override fun toString() = spelling
+
+    override fun equals(other: Any?): Boolean {
+        return other is Var && other.spelling == spelling
+    }
 }
 
 class Not(child: PropositionalLogicNode) : UnaryOp(child) {

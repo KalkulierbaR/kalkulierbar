@@ -59,6 +59,14 @@ abstract class BinaryOp(var leftChild: PropositionalLogicNode, var rightChild: P
     override fun toString(): String {
         return "( $leftChild bop $rightChild)"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is BinaryOp)
+            return false
+        return other::class == this::class
+                && leftChild == other.leftChild
+                && rightChild == other.rightChild
+    }
 }
 
 abstract class UnaryOp(var child: PropositionalLogicNode) : PropositionalLogicNode() {
@@ -77,5 +85,12 @@ abstract class UnaryOp(var child: PropositionalLogicNode) : PropositionalLogicNo
 
     override fun toString(): String {
         return "(uop $child)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is UnaryOp)
+            return false
+        return other::class == this::class
+                && child == other.child
     }
 }
