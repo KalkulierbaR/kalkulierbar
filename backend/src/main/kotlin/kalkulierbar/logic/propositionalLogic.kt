@@ -38,10 +38,6 @@ class Var(var spelling: String) : PropositionalLogicNode() {
     }
 
     override fun toString() = spelling
-
-    override fun equals(other: Any?): Boolean {
-        return other is Var && other.spelling == spelling
-    }
 }
 
 class Not(child: PropositionalLogicNode) : UnaryOp(child) {
@@ -202,6 +198,7 @@ class Or(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) 
      * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
      * @return ClauseSet equivalent to this logic node
      */
+    @Suppress("MagicNumber")
     override fun naiveCNF(): ClauseSet {
         val leftClauses = leftChild.naiveCNF().clauses
         val rightClauses = rightChild.naiveCNF().clauses

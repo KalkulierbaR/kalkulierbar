@@ -20,14 +20,4 @@ class ClauseSet(var clauses: MutableList<Clause> = mutableListOf()) {
     override fun toString(): String {
         return clauses.joinToString(", ")
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (other !is ClauseSet || other.clauses.size != clauses.size)
-            return false
-        for ((c1, c2) in clauses.zip(other.clauses)) {
-            if (c1 != c2)
-                return false
-        }
-        return true
-    }
 }
