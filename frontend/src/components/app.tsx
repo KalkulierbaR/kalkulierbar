@@ -1,12 +1,10 @@
 import { h } from "preact";
+import AsyncRoute from "preact-async-route";
 import { Router } from "preact-router";
 import { useEffect } from "preact/hooks";
 
 import { AppStateProvider, useAppState } from "../helpers/app-state";
 import Confetti from "../helpers/confetti";
-import Home from "../routes/home";
-import Tableaux from "../routes/prop-tableaux";
-import TableauxView from "../routes/prop-tableaux/view";
 import { AppStateActionType } from "../types/app";
 import Header from "./header";
 import Snackbar from "./snackbar";
@@ -79,17 +77,36 @@ const App: preact.FunctionalComponent = () => {
             <Header />
             <main class={style.main}>
                 <Router>
-                    <Home path="/" />
+                    <AsyncRoute
+                        path="/"
+                        getComponent={() =>
+                            import("../routes/home").then(m => m.default)
+                        }
+                    />
+                    <AsyncRoute
+                        path="/prop-tableaux"
+                        getComponent={() =>
+                            import("../routes/prop-tableaux").then(
+                                m => m.default
+                            )
+                        }
+                    />
 
-                    <Tableaux path="/prop-tableaux" />
-                    <TableauxView path="/prop-tableaux/view" />
+                    <AsyncRoute
+                        path="/prop-tableaux/view"
+                        getComponent={() =>
+                            import("../routes/prop-tableaux/view").then(
+                                m => m.default
+                            )
+                        }
+                    />
                 </Router>
             </main>
             <div class={style.notifications}>
                 {notification && (
                     <Snackbar
                         notification={notification}
-                        onDelete={removeNotification}
+                        onDelete={() => removeNotification()}
                     />
                 )}
             </div>

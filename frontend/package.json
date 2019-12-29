@@ -58,6 +58,7 @@
     "@material/switch": "^4.0.0",
     "d3": "^5.14.2",
     "preact": "^10.0.0",
+    "preact-async-route": "^2.2.1",
     "preact-jsx-chai": "^3.0.0",
     "preact-markup": "^2.0.0",
     "preact-render-to-string": "^5.0.6",
