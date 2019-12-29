@@ -4,12 +4,10 @@ import * as style from "./style.css";
 
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
-import {sendMove} from "../../../helpers/api";
-import {useAppState} from "../../../helpers/app-state";
+import { sendMove } from "../../../helpers/api";
+import { useAppState } from "../../../helpers/app-state";
 import { CandidateClauseSet } from "../../../types/clause";
 import exampleState from "./example";
-
-interface Props {}
 
 // Properties Interface for the ResolutionView component
 interface Props {}
@@ -37,12 +35,12 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
      * @returns {void}
      */
     const selectClauseCallback = (newClauseId: number) => {
-        if(selectedClauseId === undefined){
+        if (selectedClauseId === undefined) {
             // Get newly selected clause
             const selectedClause = state!.clauseSet.clauses[newClauseId];
             const newCandidateClauseSet = new CandidateClauseSet([]);
             newCandidateClauseSet.clauses[newClauseId] = {
-                atoms: selectedClause.atoms, 
+                atoms: selectedClause.atoms,
                 candidateLiterals: []
             };
 
@@ -51,7 +49,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 const literals: string[] = [];
                 selectedClause.atoms.forEach(atom1 => {
                     clause.atoms.forEach(atom2 => {
-                        if(atom1.lit === atom2.lit && atom1.negated !== atom2.negated){
+                        if (
+                            atom1.lit === atom2.lit &&
+                            atom1.negated !== atom2.negated
+                        ) {
                             literals.push(atom1.lit);
                         }
                     });
@@ -68,21 +69,18 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             // Set the new candidate clause set
             setCandidateClauseSet(newCandidateClauseSet);
             setSelectedClauseId(newClauseId);
-        }
-        else if (newClauseId === selectedClauseId) {
+        } else if (newClauseId === selectedClauseId) {
             // The same clause was selected again => reset selection
             setSelectedClauseId(undefined);
             setCandidateClauseSet(undefined);
-        } 
-        else {
+        } else {
             const clause2 = candidateClauseSet!.clauses[newClauseId];
             let resolventLiteral: string;
-            if(clause2.candidateLiterals.length > 1){
+            if (clause2.candidateLiterals.length > 1) {
                 // Show dialog for literal selection
                 // @todo implement dialog
-                 resolventLiteral = clause2.candidateLiterals[0];
-            }
-            else{
+                resolventLiteral = clause2.candidateLiterals[0];
+            } else {
                 resolventLiteral = clause2.candidateLiterals[0];
             }
             // Send resolve move to backend
@@ -90,7 +88,11 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 server,
                 "prop-resolution",
                 state!,
-                { c1: selectedClauseId, c2: newClauseId, spelling: resolventLiteral },
+                {
+                    c1: selectedClauseId,
+                    c2: newClauseId,
+                    spelling: resolventLiteral
+                },
                 onChange,
                 onError
             );
@@ -112,13 +114,15 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             <div class={style.view}>
                 <div>
                     <ClauseList
-                        clauseSet={candidateClauseSet !== undefined ? candidateClauseSet : state!.clauseSet}
+                        clauseSet={
+                            candidateClauseSet !== undefined
+                                ? candidateClauseSet
+                                : state!.clauseSet
+                        }
                         selectedClauseId={selectedClauseId}
                         selectClauseCallback={selectClauseCallback}
                     />
-                    <CheckCloseBtn
-                        calculus="prop-resolution"
-                    />
+                    <CheckCloseBtn calculus="prop-resolution" />
                 </div>
             </div>
         </Fragment>
