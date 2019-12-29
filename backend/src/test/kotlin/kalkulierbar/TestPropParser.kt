@@ -18,7 +18,9 @@ class TestPropParser {
             "a-->",
             "b<=>",
             "<->a",
-            "<->")
+            "<->",
+            "(a&b v2",
+            "(a|b")
 
     private val valid = mapOf(
             "a" to "a",
