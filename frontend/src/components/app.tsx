@@ -8,7 +8,7 @@ import Confetti from "../helpers/confetti";
 import { AppStateActionType } from "../types/app";
 import Header from "./header";
 import Snackbar from "./snackbar";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 const SMALL_SCREEN_THRESHOLD = 700;
 

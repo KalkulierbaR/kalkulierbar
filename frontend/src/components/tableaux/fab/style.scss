@@ -15,20 +15,20 @@
     right: -200px;
     pointer-events: none;
     padding: 0;
-}
 
-.menu.show {
-    pointer-events: unset;
-}
+    &.show {
+        pointer-events: unset;
 
-.menu > * {
-    margin-top: 8px;
-    transform: none;
-    transition: transform 0.4s ease-in-out;
-}
+        > * {
+            transform: translateX(-200px);
+        }
+    }
 
-.menu.show > * {
-    transform: translateX(-200px);
+    > * {
+        margin-top: 8px;
+        transform: none;
+        transition: transform 0.4s ease-in-out;
+    }
 }
 
 .delay-1 {

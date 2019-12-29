@@ -9,8 +9,8 @@ import {
 } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
-import * as nodeStyle from "../node/style.css";
-import * as style from "./style.css";
+import * as nodeStyle from "../node/style.scss";
+import * as style from "./style.scss";
 
 // Properties Interface for the TableauxTreeView component
 interface Props {
