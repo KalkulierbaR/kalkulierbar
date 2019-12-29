@@ -29,7 +29,8 @@ class PropositionalParser {
         tokens = tokenize(formula)
         val res = parseEquiv()
         if (tokens.isNotEmpty()) {
-            throw InvalidFormulaFormat("Expected formula to be over, but got ${tokens[0]}")
+            val context = tokens.joinToString(" ")
+            throw InvalidFormulaFormat("Expected end of formula but got '$context'")
         }
         return res
     }
