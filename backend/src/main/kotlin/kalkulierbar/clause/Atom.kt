@@ -9,10 +9,4 @@ data class Atom(val lit: String, val negated: Boolean = false) {
     override fun toString(): String {
         return if (negated) "!$lit" else lit
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (other !is Atom)
-            return false
-        return other.lit == lit && other.negated == negated
-    }
 }
