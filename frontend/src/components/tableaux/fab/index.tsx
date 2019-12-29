@@ -3,9 +3,10 @@ import { useState } from "preact/hooks";
 import FAB from "../../fab";
 import CloseIcon from "../../icons/close";
 
-import { checkClose } from "../../../helpers/api";
+import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
+import { AppStateUpdater } from "../../../types/app";
 import { TableauxState } from "../../../types/tableaux";
 import ClauseList from "../../clause-list";
 import AddIcon from "../../icons/add";
@@ -13,8 +14,34 @@ import CenterIcon from "../../icons/center";
 import CheckCircleIcon from "../../icons/check-circle";
 import ExploreIcon from "../../icons/explore";
 import MoreIcon from "../../icons/more";
+import UndoIcon from "../../icons/undo";
 import Dialog from "./dialog";
 import * as style from "./style.css";
+
+/**
+ * Wrapper to send move request
+ * @param {string} server - URL of the server
+ * @param {TableauxState} state - The current State
+ * @param {AppStateUpdater} stateChanger - The state update function
+ * @param {Function} onError - Error handler
+ * @param {number} leaf - The selected leaf
+ * @param {number} clause - The selected clause
+ * @returns {Promise<void>} - Promise that resolves after the request has been handled
+ */
+const sendBacktrack = (
+    server: string,
+    state: TableauxState,
+    stateChanger: AppStateUpdater,
+    onError: (msg: string) => void
+) =>
+    sendMove(
+        server,
+        "prop-tableaux",
+        state,
+        { type: "UNDO", id1: -1, id2: -1 },
+        stateChanger,
+        onError
+    );
 
 interface Props {
     /**
@@ -56,13 +83,24 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
     setShow,
     state
 }) => {
-    const { server, onError, onSuccess } = useAppState();
+    const { server, onError, onSuccess, onChange } = useAppState();
 
     return (
         <menu
             class={style.menu + (show ? " " + style.show : "")}
             onClick={() => setShow(false)}
         >
+            <FAB
+                class={style.delay3}
+                icon={<UndoIcon />}
+                label="Backtrack"
+                mini={true}
+                extended={true}
+                showIconAtEnd={true}
+                onClick={() => {
+                    sendBacktrack(server, state, onChange, onError);
+                }}
+            />
             <FAB
                 class={style.delay2}
                 icon={<ExploreIcon />}
@@ -93,6 +131,7 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
                     dispatchEvent(new CustomEvent("kbar-center-tree"));
                 }}
             />
+
             <FAB
                 icon={<CheckCircleIcon />}
                 label="Check"

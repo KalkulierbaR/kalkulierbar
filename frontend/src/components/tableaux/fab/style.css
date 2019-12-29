@@ -39,6 +39,10 @@
     transition-delay: 0.08s;
 }
 
+.delay-3 {
+    transition-delay: 0.12s;
+}
+
 @media (min-width: 700px) {
     .control {
         bottom: 32px;
