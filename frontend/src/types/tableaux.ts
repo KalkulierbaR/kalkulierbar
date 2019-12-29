@@ -17,11 +17,26 @@ export interface TableauxState {
     regular: boolean;
 }
 
-export interface TableauxMove {
-    type: "c" | "e";
+export interface TableauxExpandMove {
+    type: "EXPAND";
     id1: number;
     id2: number;
 }
+
+export interface TableauxCloseMove {
+    type: "CLOSE";
+    id1: number;
+    id2: number;
+}
+
+export interface TableauxUndoMove {
+    type: "UNDO";
+}
+
+export type TableauxMove =
+    | TableauxExpandMove
+    | TableauxCloseMove
+    | TableauxUndoMove;
 
 export enum TableauxType {
     unconnected = "UNCONNECTED",

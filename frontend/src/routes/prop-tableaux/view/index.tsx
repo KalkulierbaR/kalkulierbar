@@ -37,7 +37,7 @@ const sendClose = (
         server,
         "prop-tableaux",
         state,
-        { type: "c", id1: leaf, id2: pred },
+        { type: "CLOSE", id1: leaf, id2: pred },
         stateChanger,
         onError
     );
@@ -64,7 +64,7 @@ const sendExtend = (
         server,
         "prop-tableaux",
         state,
-        { type: "e", id1: leaf, id2: clause },
+        { type: "EXPAND", id1: leaf, id2: clause },
         stateChanger,
         onError
     );

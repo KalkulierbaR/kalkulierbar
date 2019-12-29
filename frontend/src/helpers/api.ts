@@ -2,7 +2,8 @@ import {
     AppState,
     AppStateUpdater,
     Calculus,
-    CheckCloseResponse
+    CheckCloseResponse,
+    Move
 } from "../types/app";
 
 export type checkCloseFn<C extends Calculus = Calculus> = (
@@ -71,7 +72,7 @@ export const sendMove = async <C extends Calculus = Calculus>(
     server: string,
     calculus: C,
     state: AppState[C],
-    move: any,
+    move: Move[C],
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void
 ) => {
