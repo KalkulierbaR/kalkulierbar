@@ -4,6 +4,7 @@ import * as style from "./style.css";
 
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
+import ResolutionCircle from "../../../components/resolution/circle";
 import { sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { CandidateClauseSet } from "../../../types/clause";
@@ -124,6 +125,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                     />
                     <CheckCloseBtn calculus="prop-resolution" />
                 </div>
+                <ResolutionCircle clauses={state.clauseSet.clauses} />
             </div>
         </Fragment>
     );
