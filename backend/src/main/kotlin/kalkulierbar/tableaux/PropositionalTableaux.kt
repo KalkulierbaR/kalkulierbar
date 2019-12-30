@@ -171,27 +171,23 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      *  @return New state after undoing last move
      */
     private fun applyMoveUndo(state: TableauxState): TableauxState {
+        if (!state.undoEnable)
+            throw IllegalMove("Undo is not enabled for your current calculus settings")
+
         // Throw error if no moves were made already
         val history = state.moveHistory
         if (history.isEmpty())
             throw IllegalMove("Can't undo in initial state")
 
-        val top = history[state.moveHistory.size - 1]
-
-        // Remove this undo from list
-        state.moveHistory.remove(top)
+        // Retrieve and remove this undo from list
+        val top = history.removeAt(state.moveHistory.size - 1)
 
         // Pass undo move to relevant expand and close subfunction
         when (top.type) {
             MoveType.CLOSE -> return undoClose(state, top)
             MoveType.EXPAND -> return undoExpand(state, top)
 
-            else -> {
-                // add removed element to list before throwing error
-                // -> state remains the same
-                state.moveHistory.add(top)
-                throw IllegalMove("Something went wrong: ???")
-            } // ?
+            else -> throw IllegalMove("Something went wrong. Move not implemented!")
         }
     }
 
