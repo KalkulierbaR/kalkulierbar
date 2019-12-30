@@ -110,7 +110,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         }
 
         // Add move to state history
-        state.moveHistory.add(TableauxMove(MoveType.CLOSE, leafID, closeNodeID))
+        if (state.undoEnable) {
+            state.moveHistory.add(TableauxMove(MoveType.CLOSE, leafID, closeNodeID))
+        }
 
         return state
     }
@@ -160,7 +162,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         verifyExpandConnectedness(state, leafID)
 
         // Add move to state history
-        state.moveHistory.add(TableauxMove(MoveType.EXPAND, leafID, clauseID))
+        if (state.undoEnable) {
+            state.moveHistory.add(TableauxMove(MoveType.EXPAND, leafID, clauseID))
+        }
 
         return state
     }
