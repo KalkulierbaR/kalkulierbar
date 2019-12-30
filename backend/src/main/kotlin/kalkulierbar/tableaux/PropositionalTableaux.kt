@@ -186,6 +186,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         // Retrieve and remove this undo from list
         val top = history.removeAt(state.moveHistory.size - 1)
 
+        // Set usedUndo to true
+        state.usedUndo = true
+
         // Pass undo move to relevant expand and close subfunction
         when (top.type) {
             MoveType.CLOSE -> return undoClose(state, top)

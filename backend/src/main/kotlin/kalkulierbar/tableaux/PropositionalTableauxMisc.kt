@@ -18,6 +18,7 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
         get() = nodes.filter { it.isLeaf }
     override var seal = ""
     val moveHistory = mutableListOf<TableauxMove>()
+    var usedUndo = false
 
     /**
      * Check whether a node is a (transitive) parent of another node
