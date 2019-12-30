@@ -15,7 +15,7 @@ import kotlin.test.assertFailsWith
 class TestCloseLeaf {
 
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, false)
+    val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
 
     @Test
     fun testApplyCloseValidA() {

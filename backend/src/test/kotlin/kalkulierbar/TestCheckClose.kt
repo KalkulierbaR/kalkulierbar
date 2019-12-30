@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 class TestCheckClose {
 
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, false)
+    val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
 
     @Test
     fun testCheckCloseSimple() {

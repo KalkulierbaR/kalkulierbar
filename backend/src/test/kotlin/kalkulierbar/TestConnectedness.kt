@@ -16,8 +16,8 @@ import kotlin.test.assertTrue
 class TestConnectedness {
 
     val instance = PropositionalTableaux()
-    val optsWeak = TableauxParam(TableauxType.WEAKLYCONNECTED, false)
-    val optsStrong = TableauxParam(TableauxType.STRONGLYCONNECTED, false)
+    val optsWeak = TableauxParam(TableauxType.WEAKLYCONNECTED, false, false)
+    val optsStrong = TableauxParam(TableauxType.STRONGLYCONNECTED, false, false)
 
     @Test
     fun testConnectednessValidA() {

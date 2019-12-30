@@ -15,7 +15,7 @@ import kotlin.test.assertFailsWith
 
 class TestRegularity {
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, true)
+    val opts = TableauxParam(TableauxType.UNCONNECTED, true, false)
 
     // State creation helper function
     private fun createState(nodes: List<TableauxNode>, state: TableauxState): TableauxState {

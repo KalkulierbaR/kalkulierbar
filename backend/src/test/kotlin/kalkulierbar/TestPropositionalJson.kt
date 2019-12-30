@@ -112,15 +112,15 @@ class TestPropositionalJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonParamValid() {
-        val json = "{\"type\": \"UNCONNECTED\", \"regular\": false}"
+        val json = "{\"type\": \"UNCONNECTED\", \"regular\": false, \"backtracking\": false}"
         val param = instance.jsonToParam(json)
-        assertEquals(TableauxParam(TableauxType.UNCONNECTED, false), param)
+        assertEquals(TableauxParam(TableauxType.UNCONNECTED, false, false), param)
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonParamNull() {
-        val json = "{\"type\": \"WEAKLYCONNECTED\", \"regular\": null}"
+        val json = "{\"type\": \"WEAKLYCONNECTED\", \"regular\": null, \"backtracking\": false}"
         assertFailsWith<JsonParseException> {
             instance.jsonToParam(json)
         }
@@ -138,7 +138,7 @@ class TestPropositionalJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonParamTypeMismatch() {
-        val json = "{\"type\": \"42\", \"regular\": false}"
+        val json = "{\"type\": \"42\", \"regular\": false, \"backtracking\": false}"
         assertFailsWith<JsonParseException> {
             instance.jsonToParam(json)
         }

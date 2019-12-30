@@ -29,7 +29,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         if (params == null)
             return TableauxState(clauses)
         else
-            return TableauxState(clauses, params.type, params.regular)
+            return TableauxState(clauses, params.type, params.regular, params.backtracking)
     }
 
     /**
@@ -221,10 +221,12 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         val leafID = top.id1
         val leaf = state.nodes[leafID]
         val children = leaf.children
+        val nodes = state.nodes
 
         // remove child nodes from nodes list
         for (id in children) {
-            state.nodes.removeAt(id)
+            // nodes removed are always at the top of nodes list when undoing the last expand move
+            nodes.removeAt(nodes.size - 1)
         }
 
         // Remove all leaf-children

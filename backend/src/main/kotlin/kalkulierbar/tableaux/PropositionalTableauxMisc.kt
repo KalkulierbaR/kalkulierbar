@@ -144,7 +144,7 @@ data class TableauxMove(val type: MoveType, val id1: Int, val id2: Int)
  * @param regular set to true to enforce regularity
  */
 @Serializable
-data class TableauxParam(val type: TableauxType, val regular: Boolean)
+data class TableauxParam(val type: TableauxType, val regular: Boolean, val backtracking: Boolean)
 
 enum class TableauxType {
     UNCONNECTED, WEAKLYCONNECTED, STRONGLYCONNECTED
