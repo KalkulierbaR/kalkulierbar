@@ -39,6 +39,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      * @param move move to apply in the given state
      * @return state after the move was applied
      */
+    @Suppress("ReturnCount")
     override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
         // Pass expand, close, undo moves to relevant subfunction
         when (move.type) {
@@ -174,6 +175,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      *  @param state Current prove State
      *  @return New state after undoing last move
      */
+    @Suppress("ThrowsCount")
     private fun applyMoveUndo(state: TableauxState): TableauxState {
         if (!state.undoEnable)
             throw IllegalMove("Backtracking is not enabled for this proof")
