@@ -10,9 +10,9 @@ The state representation returned by most endpoints is a JSON object. Some of th
 
 The `node` lists contains all nodes of the current proof tree. A node is identified by its position in the list starting at zero. Each node has the properties `parent` and `children`, containing the IDs of the respective parent and child nodes. The parent of the root node is `null`. Additionally, nodes have a `spelling` and a `negated` flag. A set `negated` flag indicates that the node represents a negated variable, the `spelling` is the name of said variable. Nodes in a subtree that is completely closed will have the `isClosed` flag set, closed leaves have the ID of the node they were closed with set as `closeRef`. For all other nodes, `closeRef` is `null`.
 
-The `clauses` list holds the user-supplied clauses, each clause having a list of atoms (`atoms`). Each atom has a `lit` property holding the variable name as well as a `negated` flag to indicate a negated variable. 
+The `clauses` list holds the user-supplied clauses, each clause having a list of atoms (`atoms`). Each atom has a `lit` property holding the variable name as well as a `negated` flag to indicate a negated variable.
 
-The `moveHistory` list contains the historically executed `Tableauxmove` if the parameter `undoEnable` is set true. When the `undo` move has been used once, `usedUndo` is set to true. 
+The `moveHistory` list contains the historically executed `Tableauxmove` if the parameter `undoEnable` is set true. When the `undo` move has been used once, `usedUndo` is set to true.
 
 ## Rule Specification
 
@@ -22,16 +22,16 @@ The initialize rule can only be applied to an empty proof tree and creates a sin
 
 ### Expand
 
-The expand rule can be applied to any non-closed leaf in the proof tree using any of the clauses available in the provided clause set. When the rule is applied, the atoms of the selected clause are appended as children to the selected leaf node, thereby turning it into a non-leaf node.  
+The expand rule can be applied to any non-closed leaf in the proof tree using any of the clauses available in the provided clause set. When the rule is applied, the atoms of the selected clause are appended as children to the selected leaf node, thereby turning it into a non-leaf node.
 The rule cannot be applied to non-leaf nodes or closed leaf nodes.
 
-Expand moves are encoded as `{"type":EXPAND,"id1":<ID of leaf to expand on>,"id2":<ID of clause to expand>}`. A node's or clause's ID is defined as its respective position in the `nodes` or `clauses` list in the state JSON object.
+Expand moves are encoded as `{"type":"EXPAND","id1":<ID of leaf to expand on>,"id2":<ID of clause to expand>}`. A node's or clause's ID is defined as its respective position in the `nodes` or `clauses` list in the state JSON object.
 
 ### Close
 
 The close rule can be applied to a leaf node in the proof tree if and only if a node with the same variable name (`spelling`) and opposite `negated` value exists on the path from the leaf node to the tree root. This is usually visualized by connecting the root node to the corresponding node used for closure.
 
-Close moves are encoded as `{"type":CLOSE,"id1":<ID of leaf to close>,"id2":<ID of node to close with>}`.
+Close moves are encoded as `{"type":"CLOSE","id1":<ID of leaf to close>,"id2":<ID of node to close with>}`.
 
 ## Closing a Proof
 
@@ -39,9 +39,9 @@ A proof can be closed if and only if every leaf of the proof tree has been close
 
 ## Undo
 
-The undo move reverts the latest expand or close move and reverts the state to the point before executing given move. It can be used if the backtracking function is enabled for a certain calculus or if the backtracking button is set on enabled in the settings before building the calculus tree. 
+The undo move reverts the latest expand or close move and reverts the state to the point before executing given move. It can be used if the backtracking function is enabled for a certain calculus or if the backtracking button is set on enabled in the settings before building the calculus tree.
 
-Close moves are encoded as `{"type":UNDO}` 
+Close moves are encoded as `{"type":"UNDO","id1":<Any integer>,"id2":<Any integer>}`.
 
 # Variants
 
