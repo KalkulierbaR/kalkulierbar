@@ -125,7 +125,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                     />
                     <CheckCloseBtn calculus="prop-resolution" />
                 </div>
-                <ResolutionCircle clauses={state.clauseSet.clauses} />
+                <ResolutionCircle
+                    clauses={state.clauseSet.clauses}
+                    candidates={
+                        candidateClauseSet && candidateClauseSet.clauses
+                    }
+                    selectClause={selectClauseCallback}
+                />
             </div>
         </Fragment>
     );
