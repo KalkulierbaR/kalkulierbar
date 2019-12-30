@@ -12,13 +12,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxType.UNCONNECTED, val regular: Boolean = false, val undoEnable: Boolean = false) : ProtectedState() {
     val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
+    val moveHistory = mutableListOf<TableauxMove>()
+    var usedUndo = false
     val root
         get() = nodes.get(0)
     val leaves
         get() = nodes.filter { it.isLeaf }
     override var seal = ""
-    val moveHistory = mutableListOf<TableauxMove>()
-    var usedUndo = false
 
     /**
      * Check whether a node is a (transitive) parent of another node
@@ -89,7 +89,9 @@ class TableauxState(val clauseSet: ClauseSet, val type: TableauxType = TableauxT
     override fun getHash(): String {
         val nodesHash = nodes.map { it.getHash() }.joinToString("|")
         val clauseSetHash = clauseSet.toString()
-        return "tableauxstate|$type|$regular|$clauseSetHash|[$nodesHash]"
+        val optsHash = "$type|$regular|$undoEnable|$usedUndo"
+        val historyHash = moveHistory.map { "(${it.type},${it.id1},${it.id2})" }.joinToString(",")
+        return "tableauxstate|$optsHash|$clauseSetHash|[$nodesHash]|[$historyHash]"
     }
 }
 

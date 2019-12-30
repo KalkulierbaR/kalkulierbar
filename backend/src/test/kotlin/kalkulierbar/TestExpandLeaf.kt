@@ -17,20 +17,6 @@ class TestExpandLeaf {
     val instance = PropositionalTableaux()
     val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
 
-    /*
-    @Test
-    fun testUnknownMove() {
-        val state = instance.parseFormulaToState("a,b,c;d", opts)
-        val hash = state.getHash()
-
-        assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("d", 1, 0))
-        }
-
-        assertEquals(hash, state.getHash()) // Verify that state has not been modified
-    }
-    */
-
     @Test
     fun testApplyMoveNullValues() {
         val state = instance.parseFormula("a,b;c", "{\"type\":\"UNCONNECTED\",\"regular\":false,\"backtracking\":false}")
@@ -57,7 +43,7 @@ class TestExpandLeaf {
         assertEquals(4, state.nodes.size)
         assertEquals(3, state.nodes.get(0).children.size)
 
-        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]|[]", state.getHash())
     }
 
     @Test
@@ -69,7 +55,7 @@ class TestExpandLeaf {
         assertEquals(2, state.nodes.size)
         assertEquals(1, state.nodes.get(0).children.size)
 
-        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1)|d;p;0;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1)|d;p;0;-;l;o;()]|[]", state.getHash())
     }
 
     @Test
@@ -83,7 +69,7 @@ class TestExpandLeaf {
         assertEquals(3, state.nodes.get(0).children.size)
         assertEquals(1, state.nodes.get(3).children.size)
 
-        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;i;o;(4)|d;p;3;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;i;o;(4)|d;p;3;-;l;o;()]|[]", state.getHash())
     }
 
     @Test

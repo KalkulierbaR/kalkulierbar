@@ -176,7 +176,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      */
     private fun applyMoveUndo(state: TableauxState): TableauxState {
         if (!state.undoEnable)
-            throw IllegalMove("Undo is not enabled for your current calculus settings")
+            throw IllegalMove("Backtracking is not enabled for this proof")
 
         // Throw error if no moves were made already
         val history = state.moveHistory
@@ -232,7 +232,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
 
         // remove child nodes from nodes list
         for (id in children) {
-            // nodes removed are always at the top of nodes list when undoing the last expand move
+            // nodes removed are always at the top of nodes list
+            // when undoing the last expand move
             nodes.removeAt(nodes.size - 1)
         }
 
@@ -258,8 +259,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
                 connectedness = "weakly connected"
 
             val regularity = if (checkRegularity(state)) "regular " else ""
+            val withWithoutBT = if (state.usedUndo) "with" else "without"
 
-            msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux"
+            msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux $withWithoutBT backtracking"
         }
 
         return CloseMessage(state.root.isClosed, msg)

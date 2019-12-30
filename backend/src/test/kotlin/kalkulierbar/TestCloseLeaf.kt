@@ -31,7 +31,7 @@ class TestCloseLeaf {
 
         assertEquals(true, state.nodes[3].isClosed)
         assertEquals(2, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|UNCONNECTED|false|{a, b}, {!b}|[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!b}|[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]|[]", state.getHash())
     }
 
     @Test
@@ -53,7 +53,7 @@ class TestCloseLeaf {
         assertEquals(false, state.nodes[4].isClosed)
 
         assertEquals(1, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]|[]", state.getHash())
     }
 
     @Test
@@ -79,7 +79,7 @@ class TestCloseLeaf {
 
         assertEquals(1, state.nodes[4].closeRef)
         assertEquals(2, state.nodes[5].closeRef)
-        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]|[]", state.getHash())
     }
 
     @Test
