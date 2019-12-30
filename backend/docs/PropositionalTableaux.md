@@ -12,8 +12,6 @@ The `node` lists contains all nodes of the current proof tree. A node is identif
 
 The `clauses` list holds the user-supplied clauses, each clause having a list of atoms (`atoms`). Each atom has a `lit` property holding the variable name as well as a `negated` flag to indicate a negated variable.
 
-The `moveHistory` list contains the historically executed `Tableauxmove` if the parameter `undoEnable` is set true. When the `undo` move has been used once, `usedUndo` is set to true.
-
 ## Rule Specification
 
 ### Initialize
@@ -39,7 +37,7 @@ A proof can be closed if and only if every leaf of the proof tree has been close
 
 ## Undo
 
-The undo move reverts the latest expand or close move and reverts the state to the point before executing given move. It can be used if the backtracking function is enabled for a certain calculus or if the backtracking button is set on enabled in the settings before building the calculus tree.
+The undo move reverts the latest expand or close move and reverts the state to the point before executing the given move. It can be used only if the backtracking option is enabled.
 
 Close moves are encoded as `{"type":"UNDO","id1":<Any integer>,"id2":<Any integer>}`.
 
