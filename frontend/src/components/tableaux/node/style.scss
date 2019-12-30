@@ -3,31 +3,29 @@
     cursor: pointer;
 }
 
-.rectSelected {
-    stroke: hsla(0, 0%, 26%, 1);
-    stroke-width: 2;
+.f-closed {
+    fill: rgb(218, 218, 218);
 }
 
-.nodeClosed {
+.f-default {
+    fill: #d4bcff;
+}
+
+.rect--selected {
+    /* stroke: hsla(0, 0%, 26%, 1);
+    stroke-width: 2; */
+    fill: var(--kbar-accent-color);
+}
+
+.text--selected {
+    fill: #fff;
+}
+
+.node--closed {
     transform: none;
     cursor: default;
 }
 
-.textClosed {
+.text--closed {
     fill: #555555;
-}
-
-.fClosed {
-    fill: rgb(218, 218, 218);
-}
-
-.fDefault {
-    fill: #d4bcff;
-}
-
-@media (prefers-color-scheme: dark) {
-    .rectSelected {
-        stroke: #fff;
-        stroke-width: 2;
-    }
 }

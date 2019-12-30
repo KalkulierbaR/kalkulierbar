@@ -3,6 +3,7 @@ import { createRef, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { D3Data } from "../tree";
 
+import { classMap } from "../../../helpers/class-map";
 import * as style from "./style.scss";
 
 // Properties Interface for the TableauxTreeNode component
@@ -64,6 +65,12 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
 
     const { width, height, x: bgX, y: bgY } = dims;
 
+    const nodeStyle = classMap({
+        [style.node]: true,
+        [style.textSelected]: selected,
+        [style.textClosed]: node.data.isClosed
+    });
+
     return (
         <g
             onClick={handleClick}
@@ -80,7 +87,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             <text
                 ref={ref}
                 text-anchor="middle"
-                class={node.data.isClosed ? style.textClosed : ""}
+                class={nodeStyle}
                 x={(node as any).x}
                 y={(node as any).y}
             >
