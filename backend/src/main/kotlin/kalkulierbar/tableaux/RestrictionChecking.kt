@@ -14,7 +14,7 @@ import kalkulierbar.clause.Clause
 fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
     // Create list of predecessor
     val leaf = state.nodes[leafID]
-    var lst = mutableListOf<String>(leaf.toAtom().toString())
+    val lst = mutableListOf(leaf.toAtom().toString())
 
     // Check Leaf for having parent
     var predecessor: TableauxNode? = null
@@ -22,7 +22,7 @@ fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
         predecessor = state.nodes[leaf.parent]
 
     // Fill list of predecessor
-    while (predecessor != null && predecessor.parent != null) {
+    while (predecessor?.parent != null) {
         lst.add(predecessor.toAtom().toString())
         predecessor = state.nodes[predecessor.parent!!]
     }
@@ -44,7 +44,7 @@ fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
  * @param leafID ID of the expanded leaf
  */
 fun verifyExpandConnectedness(state: TableauxState, leafID: Int) {
-    val leaf = state.nodes.get(leafID)
+    val leaf = state.nodes[leafID]
     val children = leaf.children
 
     // Expansion on root does not need to fulfill connectedness
@@ -109,7 +109,7 @@ private fun checkConnectedSubtree(state: TableauxState, root: Int, strong: Boole
     var allChildrenConnected = true
 
     for (id in node.children) {
-        val child = state.nodes.get(id)
+        val child = state.nodes[id]
 
         val closedCondition = child.isClosed && (!strong || child.closeRef == root)
 
@@ -135,7 +135,7 @@ private fun checkConnectedSubtree(state: TableauxState, root: Int, strong: Boole
 fun checkRegularity(state: TableauxState): Boolean {
     val startNodes = state.root.children // root is excluded from connectedness criteria
 
-    return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, mutableListOf<Atom>()) }
+    return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, mutableListOf()) }
 }
 
 /**
@@ -159,12 +159,5 @@ private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: Mutable
     var subtreeRegular = true
 
     // Check children for double vars in path and their children respectively
-    for (id in node.children) {
-        if (!checkRegularitySubtree(state, id, lst)) {
-            subtreeRegular = false
-            break
-        }
-    }
-
-    return subtreeRegular
+    return node.children.none { !checkRegularitySubtree(state, it, lst) }
 }

@@ -1,4 +1,4 @@
-package kalkulierbar
+package kalkulierbar.tamperprotect
 
 import org.komputing.khash.keccak.KeccakParameter
 import org.komputing.khash.keccak.extensions.digestKeccak
