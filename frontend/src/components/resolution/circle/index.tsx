@@ -1,22 +1,31 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 
 import { arc, pie, PieArcDatum } from "d3";
 import { classMap } from "../../../helpers/class-map";
 import { clauseToString } from "../../../helpers/clause";
-import { Clause } from "../../../types/clause";
+import { CandidateClause, Clause } from "../../../types/clause";
 
-import * as styles from "./style.css";
+import * as style from "./style.css";
 
 interface Props {
-    clauses: Clause[];
-    candidates?: Clause[];
-    selectClause: (idx: number) => void;
+    /**
+     * The clauses
+     */
+    clauses: CandidateClause[];
+    /**
+     * The function to call if a clause is selected
+     */
+    selectClauseCallback: (idx: number) => void;
+    /**
+     * The id of the clause if one is selected
+     */
+    selectedClauseId: number | undefined;
 }
 
 const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
-    selectClause,
-    candidates
+    selectClauseCallback,
+    selectedClauseId
 }) => {
     // This gives us an array of clauses and their "slice" in the pie chart
     const arcs = pie<Clause>().value(() => 1)(clauses);
@@ -34,8 +43,6 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     // We calculate coordinates for our pie slices
     const coords = arcs.map(a => gen.centroid(a));
 
-    const candidateClauses = candidates === undefined ? clauses : candidates;
-
     return (
         <div class="card">
             <svg
@@ -44,22 +51,49 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 style="min-height: 60vh"
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
             >
-                {coords.map((c, i) => {
-                    const disabled = candidateClauses[i] === undefined;
-                    return (
-                        <text
-                            x={c[0]}
-                            y={c[1]}
-                            key={i}
-                            class={classMap({
-                                [styles.disabled]: disabled
+                <g>
+                    {
+                        <Fragment>
+                            {coords.map((coordinates, index) => {
+                                const disabled = 
+                                    selectedClauseId !== undefined 
+                                    && selectedClauseId !== index 
+                                    && clauses[index].candidateLiterals.length === 0;
+                                const selected = selectedClauseId === index;
+                                return (
+                                        <g
+                                            key={index}
+                                            onClick={() => !disabled && selectClauseCallback(index)}
+                                            class={style.node}
+                                            style="cursor: pointer;"
+                                        >
+                                            <rect
+                                                class={classMap({
+                                                    [style.active]: !disabled,
+                                                    [style.disabled]: disabled,
+                                                    [style.rectSelected]: selected,
+                                                })}
+                                                x={coordinates[0] - 16}
+                                                y={coordinates[1] - 20}
+                                                width={50}
+                                                height={30}
+                                                rx="4"
+                                            />
+                                            <text
+                                                x={coordinates[0]}
+                                                y={coordinates[1]}
+                                                class={classMap({
+                                                    [style.textClosed]: disabled,
+                                                })}
+                                            >
+                                                {clauseToString(clauses[index])}
+                                            </text>
+                                        </g>
+                                );
+
                             })}
-                            onClick={() => !disabled && selectClause(i)}
-                        >
-                            {clauseToString(clauses[i])}
-                        </text>
-                    );
-                })}
+                        </Fragment>}
+                </g>
             </svg>
         </div>
     );

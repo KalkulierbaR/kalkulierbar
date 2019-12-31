@@ -3,11 +3,10 @@ import { useState } from "preact/hooks";
 import * as style from "./style.css";
 
 import CheckCloseBtn from "../../../components/check-close";
-import ClauseList from "../../../components/clause-list";
 import ResolutionCircle from "../../../components/resolution/circle";
 import { sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
-import { CandidateClauseSet } from "../../../types/clause";
+import { CandidateClause } from "../../../types/clause";
 import exampleState from "./example";
 
 // Properties Interface for the ResolutionView component
@@ -26,24 +25,23 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
     >(undefined);
-    const [candidateClauseSet, setCandidateClauseSet] = useState<
-        CandidateClauseSet | undefined
-    >(undefined);
 
-    /**
-     * The function to call, when the user selects a clause
-     * @param {number} newClauseId - The id of the clause, which was clicked on
-     * @returns {void}
-     */
-    const selectClauseCallback = (newClauseId: number) => {
+    const getCandidateClauses = () => {
+        const newCandidateClauses: CandidateClause[] = [];
+
         if (selectedClauseId === undefined) {
-            // Get newly selected clause
-            const selectedClause = state!.clauseSet.clauses[newClauseId];
-            const newCandidateClauseSet = new CandidateClauseSet([]);
-            newCandidateClauseSet.clauses[newClauseId] = {
-                atoms: selectedClause.atoms,
-                candidateLiterals: []
-            };
+            // Create default candidates
+            state!.clauseSet.clauses.forEach((clause, index) => {
+                newCandidateClauses[index] = {
+                    id: index,
+                    atoms: clause.atoms,
+                    candidateLiterals: []
+                };
+            });
+        }
+        else{
+            // Get selected clause
+            const selectedClause = state!.clauseSet.clauses[selectedClauseId];
 
             // Filter for possible resolve candidates
             state!.clauseSet.clauses.forEach((clause, index) => {
@@ -58,31 +56,36 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                         }
                     });
                 });
-                if (!literals.length) {
-                    return;
-                }
-                newCandidateClauseSet.clauses[index] = {
+                newCandidateClauses[index] = {
+                    id: index,
                     atoms: clause.atoms,
                     candidateLiterals: literals
                 };
             });
+        }
+       return newCandidateClauses;
+    }
 
-            // Set the new candidate clause set
-            setCandidateClauseSet(newCandidateClauseSet);
+    /**
+     * The function to call, when the user selects a clause
+     * @param {number} newClauseId - The id of the clause, which was clicked on
+     * @returns {void}
+     */
+    const selectClauseCallback = (newClauseId: number) => {
+        if (selectedClauseId === undefined) {
             setSelectedClauseId(newClauseId);
         } else if (newClauseId === selectedClauseId) {
             // The same clause was selected again => reset selection
             setSelectedClauseId(undefined);
-            setCandidateClauseSet(undefined);
         } else {
-            const clause2 = candidateClauseSet!.clauses[newClauseId];
+            const candidateClause = getCandidateClauses()[newClauseId];
             let resolventLiteral: string;
-            if (clause2.candidateLiterals.length > 1) {
+            if (candidateClause.candidateLiterals.length > 1) {
                 // Show dialog for literal selection
                 // @todo implement dialog
-                resolventLiteral = clause2.candidateLiterals[0];
+                resolventLiteral = candidateClause.candidateLiterals[0];
             } else {
-                resolventLiteral = clause2.candidateLiterals[0];
+                resolventLiteral = candidateClause.candidateLiterals[0];
             }
             // Send resolve move to backend
             sendMove(
@@ -99,7 +102,6 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             );
             // Reset selection
             setSelectedClauseId(undefined);
-            setCandidateClauseSet(undefined);
         }
     };
 
@@ -114,23 +116,12 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             <h2>Resolution View</h2>
             <div class={style.view}>
                 <div>
-                    <ClauseList
-                        clauseSet={
-                            candidateClauseSet !== undefined
-                                ? candidateClauseSet
-                                : state!.clauseSet
-                        }
-                        selectedClauseId={selectedClauseId}
-                        selectClauseCallback={selectClauseCallback}
-                    />
                     <CheckCloseBtn calculus="prop-resolution" />
                 </div>
                 <ResolutionCircle
-                    clauses={state.clauseSet.clauses}
-                    candidates={
-                        candidateClauseSet && candidateClauseSet.clauses
-                    }
-                    selectClause={selectClauseCallback}
+                    clauses={getCandidateClauses()}
+                    selectClauseCallback={selectClauseCallback}
+                    selectedClauseId={selectedClauseId}
                 />
             </div>
         </Fragment>
