@@ -212,10 +212,14 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         val closeReference = state.nodes[leaf.closeRef!!]
 
         // revert close reference to null
-        closeReference.closeRef = null
-        closeReference.isClosed = false
         leaf.closeRef = null
-        leaf.isClosed = false
+
+        var node: TableauxNode? = leaf
+
+        while (node != null && node.isClosed) {
+            node.isClosed = false
+            node = if (node.parent == null) null else state.nodes[node.parent!!]
+        }
 
         return state
     }
@@ -287,11 +291,13 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON state")
         } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state - missing field")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON state - missing field")
         } catch (e: SerializationException) {
             throw JsonParseException(e.message ?: "Could not parse JSON state")
         } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state - invalid number format")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON state - invalid number format")
         }
     }
 
@@ -318,11 +324,13 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move - missing field")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON move - missing field")
         } catch (e: SerializationException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move - invalid number format")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON move - invalid number format")
         }
     }
 
@@ -338,11 +346,13 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON params")
         } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params - missing field")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON params - missing field")
         } catch (e: SerializationException) {
             throw JsonParseException(e.message ?: "Could not parse JSON params")
         } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params - invalid number format")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON params - invalid number format")
         }
     }
 
