@@ -88,7 +88,7 @@ class TestUndo {
         val s2 = state.getHash()
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
         val s3 = state.getHash()
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 2, 1))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 1))
         val s4 = state.getHash()
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 3, 0))
         val s5 = state.getHash()
