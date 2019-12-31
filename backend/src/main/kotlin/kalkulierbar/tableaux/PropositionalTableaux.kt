@@ -209,7 +209,6 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
     private fun undoClose(state: TableauxState, top: TableauxMove): TableauxState {
         val leafID = top.id1
         val leaf = state.nodes[leafID]
-        val closeReference = state.nodes[leaf.closeRef!!]
 
         // revert close reference to null
         leaf.closeRef = null
