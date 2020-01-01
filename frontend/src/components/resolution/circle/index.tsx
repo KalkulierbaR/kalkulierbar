@@ -1,10 +1,11 @@
-import { Fragment, h } from "preact";
+import {createRef, Fragment, h} from "preact";
 
 import { arc, pie, PieArcDatum } from "d3";
 import { classMap } from "../../../helpers/class-map";
 import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause, Clause } from "../../../types/clause";
 
+import Rectangle from "./rectangle";
 import * as style from "./style.css";
 
 interface Props {
@@ -57,31 +58,25 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                             {coords.map((coordinates, index) => {
                                 const disabled = 
                                     selectedClauseId !== undefined 
-                                    && selectedClauseId !== index 
+                                    && selectedClauseId !== index
                                     && clauses[index].candidateLiterals.length === 0;
                                 const selected = selectedClauseId === index;
+                                const textRef = createRef<SVGTextElement>();
                                 return (
                                         <g
                                             key={index}
                                             onClick={() => !disabled && selectClauseCallback(index)}
-                                            class={style.node}
-                                            style="cursor: pointer;"
+                                            class={disabled ? style.nodeDisabled : style.node}
                                         >
-                                            <rect
-                                                class={classMap({
-                                                    [style.active]: !disabled,
-                                                    [style.disabled]: disabled,
-                                                    [style.rectSelected]: selected,
-                                                })}
-                                                x={coordinates[0] - 16}
-                                                y={coordinates[1] - 20}
-                                                width={50}
-                                                height={30}
-                                                rx="4"
+                                            <Rectangle
+                                                textRef={textRef}
+                                                disabled={disabled}
+                                                selected={selected}
                                             />
                                             <text
                                                 x={coordinates[0]}
                                                 y={coordinates[1]}
+                                                ref={textRef}
                                                 class={classMap({
                                                     [style.textClosed]: disabled,
                                                 })}

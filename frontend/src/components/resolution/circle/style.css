@@ -3,6 +3,11 @@
     font-size: 20px;
 }
 
+.nodeDisabled {
+    cursor: default;
+    font-size: 20px;
+}
+
 .disabled {
     fill: rgb(209, 209, 209);
 }
@@ -14,11 +19,6 @@
 .rectSelected {
     stroke: rgb(66, 66, 66);
     stroke-width: 2;
-}
-
-.closed {
-    transform: none;
-    cursor: default;
 }
 
 .textClosed {
