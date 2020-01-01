@@ -5,7 +5,7 @@ import { classMap } from "../../../helpers/class-map";
 import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause, Clause } from "../../../types/clause";
 
-import Rectangle from "./rectangle";
+import Rectangle from "../../rectangle";
 import * as style from "./style.css";
 
 interface Props {
@@ -69,7 +69,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                                             class={disabled ? style.nodeDisabled : style.node}
                                         >
                                             <Rectangle
-                                                textRef={textRef}
+                                                elementRef={textRef}
                                                 disabled={disabled}
                                                 selected={selected}
                                             />

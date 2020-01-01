@@ -1,13 +1,13 @@
 import {h, RefObject} from "preact";
 import {useEffect, useState} from "preact/hooks";
-import {classMap} from "../../../../helpers/class-map";
-import * as style from "../style.css";
+import {classMap} from "../../helpers/class-map";
+import * as style from "./style.css";
 
 interface Props {
     /**
-     * The text element reference
+     * A reference to the element which is supposed to have a rectangle background
      */
-    textRef: RefObject<SVGTextElement>;
+    elementRef: RefObject<SVGGraphicsElement>;
     /**
      * Whether the rectangle has a disabled-style
      */
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const Rectangle: preact.FunctionalComponent<Props> = ({
-    textRef,
+    elementRef,
     disabled,
     selected
 }) => {
@@ -27,11 +27,11 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
     useEffect(() => {
-        if (!textRef.current) {
+        if (!elementRef.current) {
             return;
         }
 
-        const box = textRef.current.getBBox();
+        const box = elementRef.current.getBBox();
         box.width += 16;
         box.x -= 8;
         box.height += 8;
@@ -44,7 +44,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
             className={classMap({
                 [style.active]: !disabled,
                 [style.disabled]: disabled,
-                [style.rectSelected]: selected,
+                [style.selected]: selected,
             })}
             x={dims.x}
             y={dims.y}

@@ -9,7 +9,6 @@ import {
 } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
-import * as nodeStyle from "../node/style.css";
 import * as style from "./style.css";
 
 // Properties Interface for the TableauxTreeView component
@@ -307,11 +306,6 @@ class TableauxTreeView extends Component<Props, State> {
                                             node={n}
                                             selected={
                                                 n.data.id === selectedNodeId
-                                            }
-                                            filling={
-                                                n.data.isClosed
-                                                    ? nodeStyle.fClosed
-                                                    : nodeStyle.fDefault
                                             }
                                         />
                                     ))}
