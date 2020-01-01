@@ -3,14 +3,14 @@ import {createRef, Fragment, h} from "preact";
 import { arc, pie, PieArcDatum } from "d3";
 import { classMap } from "../../../helpers/class-map";
 import { clauseToString } from "../../../helpers/clause";
-import { CandidateClause, Clause } from "../../../types/clause";
+import { CandidateClause } from "../../../types/clause";
 
 import Rectangle from "../../rectangle";
 import * as style from "./style.css";
 
 interface Props {
     /**
-     * The clauses
+     * The clauses to display in a circle
      */
     clauses: CandidateClause[];
     /**
@@ -29,7 +29,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     selectedClauseId
 }) => {
     // This gives us an array of clauses and their "slice" in the pie chart
-    const arcs = pie<Clause>().value(() => 1)(clauses);
+    const arcs = pie<CandidateClause>().value(() => 1)(clauses);
 
     const width = 723;
     const height = 590;
@@ -37,7 +37,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     const radius = Math.min(width, height) / 2;
 
     // This function generates an arc for us
-    const gen = arc<PieArcDatum<Clause>>()
+    const gen = arc<PieArcDatum<CandidateClause>>()
         .innerRadius(0.6 * radius)
         .outerRadius(0.8 * radius);
 

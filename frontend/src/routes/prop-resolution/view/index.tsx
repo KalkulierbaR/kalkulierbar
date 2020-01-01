@@ -9,10 +9,9 @@ import { useAppState } from "../../../helpers/app-state";
 import { CandidateClause } from "../../../types/clause";
 import exampleState from "./example";
 
-// Properties Interface for the ResolutionView component
 interface Props {}
 
-// Component displaying the content of the prop-tableaux route
+// Component displaying the content of the prop-resolution route
 const ResolutionView: preact.FunctionalComponent<Props> = () => {
     const {
         server,
@@ -26,6 +25,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
         number | undefined
     >(undefined);
 
+    /**
+     * Creates an array of candidate clauses based on if a clause is selected
+     * @returns {CandidateClause[]} - The new candidate clauses
+     */
     const getCandidateClauses = () => {
         const newCandidateClauses: CandidateClause[] = [];
 
@@ -33,7 +36,6 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             // Create default candidates
             state!.clauseSet.clauses.forEach((clause, index) => {
                 newCandidateClauses[index] = {
-                    id: index,
                     atoms: clause.atoms,
                     candidateLiterals: []
                 };
@@ -57,14 +59,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                     });
                 });
                 newCandidateClauses[index] = {
-                    id: index,
                     atoms: clause.atoms,
                     candidateLiterals: literals
                 };
             });
         }
        return newCandidateClauses;
-    }
+    };
 
     /**
      * The function to call, when the user selects a clause

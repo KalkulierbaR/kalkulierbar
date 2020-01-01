@@ -24,7 +24,6 @@ export interface ClauseSet {
  * CandidateClause is a clause that is a candidate for a proof operation
  */
 export interface CandidateClause extends Clause {
-    id: number;
     atoms: Atom[];
     candidateLiterals: string[];
 }
