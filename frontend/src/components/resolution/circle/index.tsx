@@ -6,7 +6,7 @@ import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
 
 import Rectangle from "../../rectangle";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 interface Props {
     /**
