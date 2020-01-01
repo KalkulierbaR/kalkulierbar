@@ -1,5 +1,5 @@
 import { h } from "preact";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 /**
  * Properties Interface for the Home component

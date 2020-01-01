@@ -1,4 +1,4 @@
-package main.kotlin.kalkulierbar.resolution
+package kalkulierbar.resolution
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
@@ -32,7 +32,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
 
         // Verify that the clause ids are valid
         if (cId1 == cId2)
-            throw IllegalMove("Both ids refer to the same clause.")
+            throw IllegalMove("Both ids refer to the same clause")
         if (cId1 < 0 || cId1 >= clauses.size)
             throw IllegalMove("There is no clause with id $cId1")
         if (cId2 < 0 || cId2 >= clauses.size)
@@ -45,11 +45,13 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
         val atomsInC1 = c1.atoms.filter { it.lit == spelling }
         val atomsInC2 = c2.atoms.filter { it.lit == spelling }
         if (atomsInC1.isEmpty())
-            throw IllegalMove("Clause $cId1 does not contain atoms with spelling $spelling.")
+            throw IllegalMove("Clause ${clauses[cId1]} does not contain atoms with spelling $spelling")
         if (atomsInC2.isEmpty())
-            throw IllegalMove("Clause $cId2 does not contain atoms with spelling $spelling.")
+            throw IllegalMove("Clause ${clauses[cId2]} does not contain atoms with spelling $spelling")
 
-        val (a1, a2) = findResCandidates(atomsInC1, atomsInC2) ?: throw IllegalMove("No Candidates found")
+        val msg = """Clauses ${clauses[cId1]} and ${clauses[cId2]} do not contain
+                    |atom $spelling in both positive and negated form"""
+        val (a1, a2) = findResCandidates(atomsInC1, atomsInC2) ?: throw IllegalMove(msg)
 
         clauses.add(buildClause(c1, a1, c2, a2))
 
@@ -86,14 +88,14 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
      * @return A new clause that contains all elements of c1 and c2 except for a1 and a2
      */
     private fun buildClause(c1: Clause, a1: Atom, c2: Clause, a2: Atom): Clause {
-        val atoms = c1.atoms.filter { it.lit != a1.lit || it.negated != a1.negated }.toMutableList() +
-                c2.atoms.filter { it.lit != a2.lit || it.negated != a2.negated }.toMutableList()
+        val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
+                c2.atoms.filter { it != a2 }.toMutableList()
         return Clause(atoms.distinct().toMutableList())
     }
 
     override fun checkCloseOnState(state: ResolutionState): CloseMessage {
         val hasEmptyClause = state.clauseSet.clauses.any { it.atoms.isEmpty() }
-        val msg = if (hasEmptyClause) "The proof is closed." else "The proof is not closed."
+        val msg = if (hasEmptyClause) "The proof is closed" else "The proof is not closed"
         return CloseMessage(hasEmptyClause, msg)
     }
 

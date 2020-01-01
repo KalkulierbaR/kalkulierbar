@@ -1,3 +1,7 @@
+:global {
+    @import "@material/radio/mdc-radio";
+}
+
 .container {
     display: inline-flex;
     align-items: center;

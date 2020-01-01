@@ -4,8 +4,8 @@ import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.KalkulierbarException
+import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.tableaux.PropositionalTableaux
-import main.kotlin.kalkulierbar.resolution.PropositionalResolution
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 

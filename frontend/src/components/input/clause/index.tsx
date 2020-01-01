@@ -5,7 +5,7 @@ import { useAppState } from "../../../helpers/app-state";
 import { Calculus } from "../../../types/app";
 import { TableauxParams } from "../../../types/tableaux";
 import Btn from "../../btn";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 declare module "preact" {
     namespace JSX {
