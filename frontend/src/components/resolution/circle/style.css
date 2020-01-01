@@ -1,24 +1,11 @@
 .node {
     cursor: pointer;
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .nodeDisabled {
     cursor: default;
-    font-size: 20px;
-}
-
-.disabled {
-    fill: rgb(209, 209, 209);
-}
-
-.active {
-    fill: #d4bcff;
-}
-
-.rectSelected {
-    stroke: rgb(66, 66, 66);
-    stroke-width: 2;
+    font-size: 24px;
 }
 
 .textClosed {

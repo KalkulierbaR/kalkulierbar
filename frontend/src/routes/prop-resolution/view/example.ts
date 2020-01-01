@@ -1,34 +1,29 @@
-import { ResolutionState } from "../../../types/resolution";
+import {ResolutionState} from "../../../types/resolution";
 
 const example: ResolutionState = {
     clauseSet: {
-        clauses: [
-            {
-                atoms: [
-                    { lit: "a", negated: true },
-                    { lit: "b", negated: false },
-                    { lit: "c", negated: false },
-                ]
-            },
-            {
-                atoms: [
-                    { lit: "a", negated: false },
-                    { lit: "b", negated: false },
-                ]
-            },
-            {
-                atoms: [
-                    { lit: "c", negated: true },
-                ]
-            },
-            {
-                atoms: [
-                    { lit: "b", negated: true },
-                ]
-            },
-        ]
-    },
-    seal: "D4D554F14F29134FF70CBE70F1752AEF7A66AC0CA8382839736E14A5E47152A5"
+        "clauses": [{
+            "atoms": [{"lit": "a", "negated": false}, {"lit": "b", "negated": true}, {
+                "lit": "c",
+                "negated": false
+            }]
+        }, {
+            "atoms": [{"lit": "c", "negated": true}, {"lit": "a", "negated": true}, {
+                "lit": "d",
+                "negated": false
+            }]
+        }, {"atoms": [{"lit": "d", "negated": false}, {"lit": "c", "negated": false}]}, {
+            "atoms": [{
+                "lit": "b",
+                "negated": true
+            }, {"lit": "a", "negated": false}]
+        }, {"atoms": [{"lit": "a", "negated": true}]}, {
+            "atoms": [{"lit": "b", "negated": false}, {
+                "lit": "c",
+                "negated": false
+            }]
+        }, {"atoms": [{"lit": "c", "negated": true}]}]
+    }, "seal": "E1018A62BF9682AEC7ACCCC21D00CF0D646D20DDBCEE446E3688A829FD0162CF"
 };
 
 export default example;
