@@ -29,7 +29,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         return if (params == null)
             TableauxState(clauses)
         else
-            TableauxState(clauses, params.type, params.regular)
+            return TableauxState(clauses, params.type, params.regular, params.backtracking)
     }
 
     /**
@@ -39,14 +39,16 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      * @param move move to apply in the given state
      * @return state after the move was applied
      */
+    @Suppress("ReturnCount")
     override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
-        // Pass expand or close moves to relevant subfunction
-        return if (move.type == "c")
-            applyMoveCloseBranch(state, move.id1, move.id2)
-        else if (move.type == "e")
-            applyMoveExpandLeaf(state, move.id1, move.id2)
-        else
-            throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close)")
+        // Pass expand, close, undo moves to relevant subfunction
+        when (move.type) {
+            MoveType.CLOSE -> return applyMoveCloseBranch(state, move.id1, move.id2)
+            MoveType.EXPAND -> return applyMoveExpandLeaf(state, move.id1, move.id2)
+            MoveType.UNDO -> return applyMoveUndo(state)
+
+            else -> throw IllegalMove("Unknown move. Valid moves are EXPAND (expand), CLOSE (close) or UNDO (undo).")
+        }
     }
 
     /**
@@ -108,6 +110,11 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
             node = state.nodes[node.parent!!]
         }
 
+        // Add move to state history
+        if (state.undoEnable) {
+            state.moveHistory.add(TableauxMove(MoveType.CLOSE, leafID, closeNodeID))
+        }
+
         return state
     }
 
@@ -156,6 +163,89 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         // Verify compliance with connectedness criteria
         verifyExpandConnectedness(state, leafID)
 
+        // Add move to state history
+        if (state.undoEnable) {
+            state.moveHistory.add(TableauxMove(MoveType.EXPAND, leafID, clauseID))
+        }
+
+        return state
+    }
+
+    /**
+     *  Undo the last executed move
+     *  @param state Current prove State
+     *  @return New state after undoing last move
+     */
+    @Suppress("ThrowsCount")
+    private fun applyMoveUndo(state: TableauxState): TableauxState {
+        if (!state.undoEnable)
+            throw IllegalMove("Backtracking is not enabled for this proof")
+
+        // Throw error if no moves were made already
+        val history = state.moveHistory
+        if (history.isEmpty())
+            throw IllegalMove("Can't undo in initial state")
+
+        // Retrieve and remove this undo from list
+        val top = history.removeAt(state.moveHistory.size - 1)
+
+        // Set usedUndo to true
+        state.usedUndo = true
+
+        // Pass undo move to relevant expand and close subfunction
+        when (top.type) {
+            MoveType.CLOSE -> return undoClose(state, top)
+            MoveType.EXPAND -> return undoExpand(state, top)
+
+            else -> throw IllegalMove("Something went wrong. Move not implemented!")
+        }
+    }
+
+    /**
+     *  Undo close move
+     *  @param state Current prove State
+     *  @param top The last move executed
+     *  @return New state after undoing latest close move
+     */
+    private fun undoClose(state: TableauxState, top: TableauxMove): TableauxState {
+        val leafID = top.id1
+        val leaf = state.nodes[leafID]
+
+        // revert close reference to null
+        leaf.closeRef = null
+
+        var node: TableauxNode? = leaf
+
+        while (node != null && node.isClosed) {
+            node.isClosed = false
+            node = if (node.parent == null) null else state.nodes[node.parent!!]
+        }
+
+        return state
+    }
+
+    /**
+     *  Undo expand move
+     *  @param state Current prove State
+     *  @parm top The last move executed
+     *  @return New state after undoing latest expand move
+     */
+    private fun undoExpand(state: TableauxState, top: TableauxMove): TableauxState {
+        val leafID = top.id1
+        val leaf = state.nodes[leafID]
+        val children = leaf.children
+        val nodes = state.nodes
+
+        // remove child nodes from nodes list
+        for (id in children) {
+            // nodes removed are always at the top of nodes list
+            // when undoing the last expand move
+            nodes.removeAt(nodes.size - 1)
+        }
+
+        // Remove all leaf-children
+        leaf.children.clear()
+
         return state
     }
 
@@ -175,8 +265,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
                 connectedness = "weakly connected"
 
             val regularity = if (checkRegularity(state)) "regular " else ""
+            val withWithoutBT = if (state.usedUndo) "with" else "without"
 
-            msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux"
+            msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux $withWithoutBT backtracking"
         }
 
         return CloseMessage(state.root.isClosed, msg)

@@ -121,25 +121,33 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     //      xC,yC of the control point
     //      x2,y2 of the target
     // should look like d="M x1 x2 Q xC yC x2 y2"
-    // Todo: use Stringtemplates
-    let controlpoint = x1 - (y1 - y2) / 2;
-    if (x1 > x2) {
-        controlpoint = x1 + (y1 - y2) / 2;
+    const xVektor = x1 - x2;
+    const yVektor = y1 - y2;
+    let xControlpoint = x1 - xVektor/2;
+    let yControlpoint = y1 - yVektor/2;
+    const divisor = 2;
+    if(x1 > x2){ // child is to the right of the parent
+        xControlpoint = xControlpoint - (- yVektor / divisor);
+        yControlpoint = yControlpoint - (xVektor / divisor);
+    }else { // child is to the left of the parent
+        xControlpoint = xControlpoint - (yVektor / divisor);
+        yControlpoint = yControlpoint - (- xVektor / divisor);
     }
+
     const d =
         "M " +
         x1 +
         " " +
         y1 +
         " Q " +
-        controlpoint +
+        xControlpoint +
         " " +
-        (y1 + y2) / 2 +
+        yControlpoint +
         " " +
         x2 +
         " " +
         y2;
-    //   console.log('M ${x1} ${y1} Q ${controlpoint} ${(y1 + y2) / 2} ${x2} ${y2}')
+    //   console.log('M ${x1} ${y1} Q ${xControlpoint} ${yControlpoint} ${x2} ${y2}')
     return <path d={d} class={style.link} />;
 };
 

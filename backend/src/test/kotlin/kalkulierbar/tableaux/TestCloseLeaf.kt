@@ -1,6 +1,7 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.IllegalMove
+import kalkulierbar.tableaux.MoveType
 import kalkulierbar.tableaux.PropositionalTableaux
 import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxNode
@@ -13,7 +14,7 @@ import kotlin.test.assertFailsWith
 class TestCloseLeaf {
 
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, false)
+    val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
 
     @Test
     fun testApplyCloseValidA() {
@@ -25,11 +26,11 @@ class TestCloseLeaf {
                 TableauxNode(2, "b", true)
         )
         state = createArtificialExpandState(nodes, state)
-        state = instance.applyMoveOnState(state, TableauxMove("c", 3, 2))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 3, 2))
 
         assertEquals(true, state.nodes[3].isClosed)
         assertEquals(2, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|UNCONNECTED|false|{a, b}, {!b}|[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!b}|[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]|[]", state.getHash())
     }
 
     @Test
@@ -43,7 +44,7 @@ class TestCloseLeaf {
                 TableauxNode(1, "c", false)
         )
         state = createArtificialExpandState(nodes, state)
-        state = instance.applyMoveOnState(state, TableauxMove("c", 3, 1))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 3, 1))
 
         assertEquals(true, state.nodes[3].isClosed)
 
@@ -51,7 +52,7 @@ class TestCloseLeaf {
         assertEquals(false, state.nodes[4].isClosed)
 
         assertEquals(1, state.nodes[3].closeRef)
-        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;1;l;c;()|c;p;1;-;l;o;()]|[]", state.getHash())
     }
 
     @Test
@@ -67,8 +68,8 @@ class TestCloseLeaf {
         )
         state = createArtificialExpandState(nodes, state)
 
-        state = instance.applyMoveOnState(state, TableauxMove("c", 4, 1))
-        state = instance.applyMoveOnState(state, TableauxMove("c", 5, 2))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 1))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 5, 2))
 
         assertEquals(true, state.nodes[4].isClosed)
         assertEquals(true, state.nodes[5].isClosed)
@@ -77,7 +78,7 @@ class TestCloseLeaf {
 
         assertEquals(1, state.nodes[4].closeRef)
         assertEquals(2, state.nodes[5].closeRef)
-        assertEquals("tableauxstate|UNCONNECTED|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]", state.getHash())
+        assertEquals("tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|b;n;2;2;l;c;()]|[]", state.getHash())
     }
 
     @Test
@@ -87,11 +88,11 @@ class TestCloseLeaf {
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 42, 1))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 42, 1))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", -15, 1))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, -15, 1))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
@@ -112,11 +113,11 @@ class TestCloseLeaf {
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 3, 403))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 3, 403))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 4, -3))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, -3))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
@@ -135,11 +136,11 @@ class TestCloseLeaf {
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 1, 2))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 1, 2))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 2, 1))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
@@ -163,11 +164,11 @@ class TestCloseLeaf {
         val hash = state.getHash()
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 4, 5))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 5))
         }
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 5, 4))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 5, 4))
         }
 
         assertEquals(hash, state.getHash()) // Verify that state has not been modified
@@ -182,10 +183,10 @@ class TestCloseLeaf {
                 TableauxNode(1, "c", true)
         )
         state = createArtificialExpandState(nodes, state)
-        state = instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 2, 1))
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 2, 1))
         }
     }
 
@@ -200,7 +201,7 @@ class TestCloseLeaf {
         state = createArtificialExpandState(nodes, state)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 2, 1))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 2, 1))
         }
     }
 
@@ -214,7 +215,7 @@ class TestCloseLeaf {
         state = createArtificialExpandState(nodes, state)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove("c", 1, 0))
+            instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 1, 0))
         }
     }
 
@@ -233,12 +234,12 @@ class TestCloseLeaf {
         )
         state = createArtificialExpandState(nodes, state)
 
-        state = instance.applyMoveOnState(state, TableauxMove("c", 7, 5))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 7, 5))
 
         assertEquals(true, state.nodes.get(7).isClosed)
         assertEquals(false, state.nodes.get(5).isClosed)
 
-        state = instance.applyMoveOnState(state, TableauxMove("c", 6, 2))
+        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 2))
 
         println(state.getHash())
 

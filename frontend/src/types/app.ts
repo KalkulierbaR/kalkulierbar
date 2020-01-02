@@ -1,7 +1,12 @@
-import { ResolutionState } from "./resolution";
-import { TableauxState } from "./tableaux";
+import { ResolutionState, ResolutionMove } from "./resolution";
+import { TableauxMove, TableauxState } from "./tableaux";
 
 export type Calculus = "prop-tableaux" | "prop-resolution";
+
+export interface Move {
+    "prop-tableaux": TableauxMove;
+    "prop-resolution": ResolutionMove;
+}
 
 /**
  * State of all calculi
