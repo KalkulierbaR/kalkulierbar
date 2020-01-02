@@ -16,7 +16,6 @@ import CheckCircleIcon from "../../icons/check-circle";
 import ExploreIcon from "../../icons/explore";
 import MoreIcon from "../../icons/more";
 import UndoIcon from "../../icons/undo";
-import Dialog from "./dialog";
 import * as style from "./style.scss";
 
 /**
