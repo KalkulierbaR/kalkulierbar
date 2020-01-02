@@ -15,6 +15,9 @@ export interface TableauxState {
     nodes: TableauxNode[];
     type: TableauxType;
     regular: boolean;
+    undoEnable: boolean;
+    moveHistory: TableauxMove[];
+    usedUndo: boolean;
 }
 
 export interface TableauxExpandMove {
