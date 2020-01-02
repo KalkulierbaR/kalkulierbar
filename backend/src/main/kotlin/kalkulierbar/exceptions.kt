@@ -9,3 +9,5 @@ class IllegalMove(msg: String) : KalkulierbarException(msg)
 class ApiMisuseException(msg: String) : KalkulierbarException(msg)
 
 class JsonParseException(msg: String) : KalkulierbarException(msg)
+
+class FormulaConversionException(msg: String) : KalkulierbarException(msg)

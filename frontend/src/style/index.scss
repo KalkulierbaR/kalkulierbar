@@ -31,6 +31,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+p {
+    margin-top: 0;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -47,7 +51,8 @@ body {
     margin-bottom: 16px;
 }
 
-h3 {
+h3,
+h4 {
     margin: 0 0 1em 0;
 }
 
