@@ -9,6 +9,7 @@ import {
 } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
+import { Transform } from "../../../types/ui";
 import * as style from "./style.scss";
 
 // Properties Interface for the TableauxTreeView component
@@ -141,15 +142,6 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     //   console.log('M ${x1} ${y1} Q ${controlpoint} ${(y1 + y2) / 2} ${x2} ${y2}')
     return <path d={d} class={style.link} />;
 };
-
-interface Transform {
-    x: number;
-    y: number;
-    /**
-     * Scale factor.
-     */
-    k: number;
-}
 
 const INIT_TRANSFORM: Transform = { x: 0, y: 0, k: 1 };
 

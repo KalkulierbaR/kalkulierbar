@@ -1,11 +1,14 @@
 import { createRef, Fragment, h } from "preact";
 
-import { arc, pie, PieArcDatum } from "d3";
+import { arc, event, pie, PieArcDatum, select, zoom } from "d3";
 import { classMap } from "../../../helpers/class-map";
 import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
 
 import { useEffect, useRef, useState } from "preact/hooks";
+import { Transform } from "../../../types/ui";
+import FAB from "../../fab";
+import CenterIcon from "../../icons/center";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 
@@ -34,6 +37,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
 }) => {
     const svg = useRef<SVGSVGElement>();
     const [dims, setDims] = useState<[number, number]>([0, 0]);
+    const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
 
     // This gives us an array of clauses and their "slice" in the pie chart
     const arcs = pie<CandidateClause>().value(() => 1)(clauses);
@@ -59,6 +63,24 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         setDims([svgDims.width * f, svgDims.height * f]);
     }, [clauses]);
 
+    useEffect(() => {
+        const d3SVG = select(`.${style.svg}`);
+        d3SVG.call(
+            zoom().on("zoom", () => {
+                const { x, y, k } = event.transform as Transform;
+                setTransform({ x, y, k });
+            }) as any
+        );
+    });
+
+    if (svg.current) {
+        const e = svg.current as any;
+        const t = e.__zoom;
+        t.x = transform.x;
+        t.y = transform.y;
+        t.k = transform.k;
+    }
+
     const [width, height] = dims;
 
     const radius = Math.min(width, height) / 2;
@@ -74,13 +96,16 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     return (
         <div class="card">
             <svg
+                class={style.svg}
                 ref={svg}
                 width="100%"
                 height="100"
                 style="min-height: 60vh"
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
             >
-                <g>
+                <g
+                    transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
+                >
                     {
                         <Fragment>
                             {coords.map((coordinates, index) => {
@@ -127,6 +152,14 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     }
                 </g>
             </svg>
+            {(transform.x !== 0 || (transform.y && 0) || transform.k !== 1) && (
+                <FAB
+                    class={style.fab}
+                    label="center"
+                    icon={<CenterIcon />}
+                    onClick={() => setTransform({ x: 0, y: 0, k: 1 })}
+                />
+            )}
         </div>
     );
 };
