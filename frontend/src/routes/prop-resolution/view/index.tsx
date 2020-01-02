@@ -3,6 +3,7 @@ import { useState } from "preact/hooks";
 import * as style from "./style.css";
 
 import CheckCloseBtn from "../../../components/check-close";
+import Dialog from "../../../components/dialog";
 import ResolutionCircle from "../../../components/resolution/circle";
 import { sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
@@ -10,6 +11,8 @@ import { CandidateClause } from "../../../types/clause";
 import exampleState from "./example";
 
 interface Props {}
+
+type SelectedClauses = undefined | [number] | [number, number];
 
 // Component displaying the content of the prop-resolution route
 const ResolutionView: preact.FunctionalComponent<Props> = () => {
@@ -21,9 +24,21 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
     } = useAppState();
     let state = cState;
 
-    const [selectedClauseId, setSelectedClauseId] = useState<
-        number | undefined
-    >(undefined);
+    if (!state) {
+        // return <p>Keine Daten vorhanden</p>;
+        // Default state for easy testing
+        onChange("prop-resolution", exampleState);
+        state = exampleState;
+    }
+
+    const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
+        undefined
+    );
+
+    const selectedClauseId =
+        selectedClauses === undefined ? undefined : selectedClauses[0];
+
+    const showDialog = selectedClauses && selectedClauses.length === 2;
 
     /**
      * Creates an array of candidate clauses based on if a clause is selected
@@ -40,8 +55,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                     candidateLiterals: []
                 };
             });
-        }
-        else{
+        } else {
             // Get selected clause
             const selectedClause = state!.clauseSet.clauses[selectedClauseId];
 
@@ -64,8 +78,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 };
             });
         }
-       return newCandidateClauses;
+        return newCandidateClauses;
     };
+
+    const candidateClauses = getCandidateClauses();
 
     /**
      * The function to call, when the user selects a clause
@@ -74,20 +90,21 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
      */
     const selectClauseCallback = (newClauseId: number) => {
         if (selectedClauseId === undefined) {
-            setSelectedClauseId(newClauseId);
+            setSelectedClauses([newClauseId]);
         } else if (newClauseId === selectedClauseId) {
             // The same clause was selected again => reset selection
-            setSelectedClauseId(undefined);
+            setSelectedClauses(undefined);
         } else {
-            const candidateClause = getCandidateClauses()[newClauseId];
+            const candidateClause = candidateClauses[newClauseId];
             let resolventLiteral: string;
             if (candidateClause.candidateLiterals.length > 1) {
                 // Show dialog for literal selection
-                // @todo implement dialog
-                resolventLiteral = candidateClause.candidateLiterals[0];
-            } else {
-                resolventLiteral = candidateClause.candidateLiterals[0];
+                setSelectedClauses([selectedClauses![0], newClauseId]);
+                return;
             }
+
+            resolventLiteral = candidateClause.candidateLiterals[0];
+
             // Send resolve move to backend
             sendMove(
                 server,
@@ -102,15 +119,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 onError
             );
             // Reset selection
-            setSelectedClauseId(undefined);
+            setSelectedClauses(undefined);
         }
     };
-
-    if (!state) {
-        // return <p>Keine Daten vorhanden</p>;
-        // Default state for easy testing
-        state = exampleState;
-    }
 
     return (
         <Fragment>
@@ -120,11 +131,42 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                     <CheckCloseBtn calculus="prop-resolution" />
                 </div>
                 <ResolutionCircle
-                    clauses={getCandidateClauses()}
+                    clauses={candidateClauses}
                     selectClauseCallback={selectClauseCallback}
                     selectedClauseId={selectedClauseId}
                 />
             </div>
+            <Dialog
+                open={showDialog}
+                label="Choose Literal"
+                onClose={() => setSelectedClauses([selectedClauses![0]])}
+            >
+                {selectedClauses &&
+                    selectedClauses.length === 2 &&
+                    candidateClauses[selectedClauses[1]].candidateLiterals.map(
+                        l => (
+                            <p
+                                onClick={() => {
+                                    sendMove(
+                                        server,
+                                        "prop-resolution",
+                                        state!,
+                                        {
+                                            c1: selectedClauseId,
+                                            c2: selectedClauses[1],
+                                            spelling: l
+                                        },
+                                        onChange,
+                                        onError
+                                    );
+                                    setSelectedClauses(undefined);
+                                }}
+                            >
+                                {l}
+                            </p>
+                        )
+                    )}
+            </Dialog>
         </Fragment>
     );
 };
