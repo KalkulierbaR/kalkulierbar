@@ -176,12 +176,16 @@ class TableauxTreeView extends Component<Props, State> {
         };
     }
 
+    public handleCenterTree = this.centerTree.bind(this);
+
     public state = {
         transform: INIT_TRANSFORM,
         root: undefined as HierarchyNode<D3Data> | undefined,
         treeHeight: 0,
         treeWidth: 0
     };
+    public handleGoTo = (e: Event) =>
+        this.goToNode((e as TableauxTreeGoToEvent).detail.node);
 
     public setTransform(transform: Transform) {
         this.setState(s => ({ ...s, transform }));
@@ -204,16 +208,21 @@ class TableauxTreeView extends Component<Props, State> {
         );
     }
 
+    public centerTree() {
+        this.setTransform(INIT_TRANSFORM);
+    }
+
     public componentDidMount() {
         this.bindZoom();
 
-        window.addEventListener("kbar-center-tree", () => {
-            this.setTransform(INIT_TRANSFORM);
-        });
+        window.addEventListener("kbar-center-tree", this.handleCenterTree);
 
-        window.addEventListener("kbar-go-to-node", e => {
-            this.goToNode((e as TableauxTreeGoToEvent).detail.node);
-        });
+        window.addEventListener("kbar-go-to-node", this.handleGoTo);
+    }
+
+    public componentWillUnmount() {
+        window.removeEventListener("kbar-center-tree", this.handleCenterTree);
+        window.removeEventListener("kbar-go-to-node", this.handleGoTo);
     }
 
     public componentDidUpdate() {
