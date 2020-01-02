@@ -60,7 +60,10 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
             CLAUSE_NUMBER_FACTOR *
             clauses.length;
 
-        setDims([svgDims.width * f, svgDims.height * f]);
+        setDims([
+            Math.max(svgDims.width * f, 200),
+            Math.max(svgDims.height * f, 200)
+        ]);
     }, [clauses]);
 
     useEffect(() => {
