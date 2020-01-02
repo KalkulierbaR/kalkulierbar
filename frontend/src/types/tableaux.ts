@@ -29,9 +29,16 @@ export enum TableauxType {
     strong = "STRONGLYCONNECTED"
 }
 
+export enum CnfStrategy {
+    optimal = "OPTIMAL",
+    naive = "NAIVE",
+    tseytin = "TSEYTIN"
+}
+
 export interface TableauxParams {
     type: TableauxType;
     regular: boolean;
+    cnfStrategy: CnfStrategy;
 }
 
 export interface TableauxTreeGoToEvent extends CustomEvent {
