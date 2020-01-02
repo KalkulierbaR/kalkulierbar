@@ -8,12 +8,12 @@ import { useAppState } from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
 import { TableauxState } from "../../../types/tableaux";
 import ClauseList from "../../clause-list";
+import Dialog from "../../dialog";
 import AddIcon from "../../icons/add";
 import CenterIcon from "../../icons/center";
 import CheckCircleIcon from "../../icons/check-circle";
 import ExploreIcon from "../../icons/explore";
 import MoreIcon from "../../icons/more";
-import Dialog from "./dialog";
 import * as style from "./style.scss";
 
 interface Props {

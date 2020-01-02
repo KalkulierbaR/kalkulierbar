@@ -1,5 +1,5 @@
 import { h } from "preact";
-import Btn from "../../../btn";
+import Btn from "../btn";
 import * as style from "./style.scss";
 
 interface Props {
