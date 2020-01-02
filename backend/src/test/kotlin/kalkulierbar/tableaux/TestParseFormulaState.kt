@@ -11,7 +11,7 @@ import kotlin.test.assertFailsWith
 class TestParseFormulaState {
 
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, false)
+    val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
 
     val invalidString1 = "a,b;c,!d;e,&;g,h,i,!j"
     val invalidString2 = "richtig; oder,!falsch"

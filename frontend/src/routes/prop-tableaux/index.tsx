@@ -13,6 +13,7 @@ interface Props {}
 const Tableaux: preact.FunctionalComponent<Props> = () => {
     const [tabType, setTabType] = useState(TableauxType.unconnected);
     const [regular, setRegular] = useState(false);
+    const [backtracking, setBacktracking] = useState(false);
     const [cnfStrategy, setStrategy] = useState(CnfStrategy.optimal);
 
     /**
@@ -35,7 +36,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
         setStrategy(forceNaive ? CnfStrategy.naive : CnfStrategy.optimal);
     };
 
-    const params: TableauxParams = { type: tabType, regular, cnfStrategy };
+    const params: TableauxParams = { type: tabType, regular, backtracking, cnfStrategy };
 
     return (
         <Fragment>
@@ -44,6 +45,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                 <h3>Parameters</h3>
                 <div class={style.form}>
                     <Switch label="Regular" onChange={setRegular} />
+                    <Switch label="Backtracking" onChange={setBacktracking} />
                     <div class={style.radioGroup}>
                         <Radio
                             id={TableauxType.unconnected}

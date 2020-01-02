@@ -229,7 +229,7 @@ def tryCloseUncloseable(trq, iterations = 10, verbose = false)
 end
 
 def tryCloseTrivial(trq, iterations = 7, verbose = false)
-	logMsg "Trying to close a trivial proof"
+	logMsg "Trying to close a trivial tableaux proof"
 	
 	if bogoATP(trq, "a,b;!a;!b", "WEAKLYCONNECTED", false, iterations, verbose)
 		logSuccess "Test successful"
@@ -240,7 +240,7 @@ end
 
 def tryCloseTrivialResolution(trq, iterations = 10, verbose = false)
 	logMsg "Trying to close a trivial resolution proof"
-	
+
 	if resolutionBogoATP(trq, "a,b;!a;!b", iterations, verbose)
 		logSuccess "Test successful"
 	else
@@ -278,7 +278,7 @@ def tryCloseRegular(trq, iterations = 15, verbose = false)
 	end
 end
 
-def testRegularityRestriction(trq, iterations = 5, verbose = false)
+def testRegularityRestriction(trq, iterations = 3, verbose = false)
 	logMsg "Testing regularity restriction with random clause sets"
 	cg = ClauseGenerator.new
 	success = true
@@ -315,6 +315,45 @@ def checkRegularity(tree)
 	return true
 end
 
+def testUndo(trq, depth = 20, verbose = false)
+	logMsg "Testing backtracking"
+	formula = "a,b,c;!a;!b;!c,b,d;!d"
+	history = []
+	success = true
+
+	state = trq.getPostResponse('/prop-tableaux/parse', "formula=#{formula}&params={\"type\":\"WEAKLYCONNECTED\",\"regular\":false,\"backtracking\":true}")
+
+	# Set used flag to true so states are comparable
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={\"type\":\"EXPAND\",\"id1\":0,\"id2\":0}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0}")
+
+	history.push(state)
+
+	depth.times() {
+		nstate = bogoATPapplyRandomMove(state, trq)
+		break if nstate == false
+		state = nstate
+		history.push(state)
+		logMsg state if verbose
+	}
+
+	(history.length - 1).times() {
+		if state != history[-1]
+			success = false
+			logError "Expected: #{history[-1]}\nGot     : #{state}"
+		end
+		state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0}")
+		history.pop
+		logMsg state if verbose
+	}
+
+	if success
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
 trq = TestRequest.new
 
 logMsg("Testing PropositionalTableaux")
@@ -329,6 +368,6 @@ tryCloseConnected(trq)
 tryCloseRegular(trq)
 tryCloseUncloseable(trq)
 testRegularityRestriction(trq)
-
+testUndo(trq)
 testResolutionInitialState(trq)
 tryCloseTrivialResolution(trq)

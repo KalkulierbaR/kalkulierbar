@@ -1,5 +1,6 @@
 package kalkulierbar.tests.tableaux
 
+import kalkulierbar.tableaux.MoveType
 import kalkulierbar.tableaux.PropositionalTableaux
 import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxNode
@@ -11,7 +12,7 @@ import kotlin.test.assertEquals
 class TestCheckClose {
 
     val propTableaux = PropositionalTableaux()
-    val tableauxOpts = TableauxParam(TableauxType.UNCONNECTED, false)
+    val tableauxOpts = TableauxParam(TableauxType.UNCONNECTED, false, false)
 
     @Test
     fun testCheckCloseSimple() {
@@ -30,7 +31,7 @@ class TestCheckClose {
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
         // Now close the proof
-        state = propTableaux.applyMoveOnState(state, TableauxMove("c", 2, 1))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 2, 1))
         assertEquals(true, propTableaux.checkCloseOnState(state).closed)
     }
 
@@ -56,8 +57,8 @@ class TestCheckClose {
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
         // Now close the proof
-        state = propTableaux.applyMoveOnState(state, TableauxMove("c", 3, 1))
-        state = propTableaux.applyMoveOnState(state, TableauxMove("c", 4, 2))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 3, 1))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 2))
 
         assertEquals(true, propTableaux.checkCloseOnState(state).closed)
     }
@@ -66,23 +67,23 @@ class TestCheckClose {
     fun testCheckCloseComplex() {
         var state = propTableaux.parseFormulaToState("a,b;!b;!a", tableauxOpts)
 
-        state = propTableaux.applyMoveOnState(state, TableauxMove("e", 0, 0))
-        state = propTableaux.applyMoveOnState(state, TableauxMove("e", 2, 1))
-        state = propTableaux.applyMoveOnState(state, TableauxMove("e", 1, 0))
-        state = propTableaux.applyMoveOnState(state, TableauxMove("e", 4, 2))
-        state = propTableaux.applyMoveOnState(state, TableauxMove("e", 5, 1))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 2, 1))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 0))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 4, 2))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 5, 1))
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
-        state = propTableaux.applyMoveOnState(state, TableauxMove("c", 3, 2))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 3, 2))
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
-        state = propTableaux.applyMoveOnState(state, TableauxMove("c", 7, 5))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 7, 5))
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
-        state = propTableaux.applyMoveOnState(state, TableauxMove("c", 6, 4))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 4))
 
         assertEquals(true, propTableaux.checkCloseOnState(state).closed)
     }
@@ -107,8 +108,8 @@ class TestCheckClose {
         state.nodes.get(3).children.add(6)
 
         // Don't close proof completely
-        state = propTableaux.applyMoveOnState(state, TableauxMove("c", 6, 3))
-        state = propTableaux.applyMoveOnState(state, TableauxMove("c", 4, 1))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 3))
+        state = propTableaux.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 1))
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
     }

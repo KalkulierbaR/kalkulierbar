@@ -1,6 +1,10 @@
-import { TableauxState } from "./tableaux";
+import { TableauxMove, TableauxState } from "./tableaux";
 
 export type Calculus = "prop-tableaux";
+
+export interface Move {
+    "prop-tableaux": TableauxMove;
+}
 
 /**
  * State of all calculi
