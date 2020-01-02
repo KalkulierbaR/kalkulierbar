@@ -2,6 +2,7 @@ package kalkulierbar.tableaux
 
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
+import kalkulierbar.parsers.CnfStrategy
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
@@ -146,7 +147,12 @@ data class TableauxMove(val type: MoveType, val id1: Int, val id2: Int)
  * @param regular set to true to enforce regularity
  */
 @Serializable
-data class TableauxParam(val type: TableauxType, val regular: Boolean, val backtracking: Boolean)
+data class TableauxParam(
+    val type: TableauxType,
+    val regular: Boolean,
+    val backtracking: Boolean,
+    val cnfStrategy: CnfStrategy = CnfStrategy.OPTIMAL
+)
 
 enum class TableauxType {
     UNCONNECTED, WEAKLYCONNECTED, STRONGLYCONNECTED

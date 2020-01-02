@@ -32,7 +32,8 @@ fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
         val isPathRegular = !lst.contains(atom.toString())
 
         if (!isPathRegular)
-            throw IllegalMove("Expanding this clause would introduce a duplicate node '$atom' on the branch, making the tree irregular")
+            throw IllegalMove("""Expanding this clause would introduce a duplicate
+                node '$atom' on the branch, making the tree irregular""")
     }
 }
 
@@ -55,7 +56,8 @@ fun verifyExpandConnectedness(state: TableauxState, leafID: Int) {
             throw IllegalMove("No literal in this clause would be closeable, making the tree unconnected")
     } else if (state.type == TableauxType.STRONGLYCONNECTED) {
         if (!children.fold(false) { acc, id -> acc || state.nodeIsDirectlyCloseable(id) })
-            throw IllegalMove("No literal in this clause would be closeable with '$leaf', making the tree not strongly connected")
+            throw IllegalMove("""No literal in this clause would be closeable with '$leaf',
+                making the tree not strongly connected""")
     }
 }
 
@@ -153,6 +155,8 @@ private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: Mutable
 
     // Add node spelling to list of predecessors
     lst.add(node.toAtom())
+
+    var subtreeRegular = true
 
     // Check children for double vars in path and their children respectively
     return node.children.none { !checkRegularitySubtree(state, it, lst) }

@@ -110,7 +110,7 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
 
     return (
         <div class="card">
-            <h3>Please enter a set of clauses:</h3>
+            <h3>Please enter a formula:</h3>
             <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
                 <textarea
                     name="formula"

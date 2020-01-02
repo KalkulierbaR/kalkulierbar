@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
  * Framework for Calculus implementations using JSON for serialization
  * Handles serialization and deserialization, letting implementing classes work directly on state
  */
+@Suppress("TooManyFunctions")
 abstract class JSONCalculus<State, Move, Param> : Calculus {
 
     /**

@@ -1,8 +1,10 @@
 require 'net/http'
 require 'json'
 require 'date'
+require 'cgi'
 
 require_relative 'clausegenerator.class'
+require_relative 'formulagenerator.class'
 require_relative 'testrequest.class'
 require_relative 'bogoatp.class'
 require_relative 'resolutionBogoATP.class'
@@ -42,7 +44,7 @@ end
 =end
 
 def fuzzClauseParsing(trq, count = 100)
-	logMsg "Fuzzing valid formulas"
+	logMsg "Fuzzing valid clause sets"
 	success = true
 	cg = ClauseGenerator.new
 
@@ -91,6 +93,26 @@ def checkEquiv(got, expect)
 	true
 end
 
+def fuzzFormulaParsing(trq, count = 100)
+	logMsg "Fuzzing valid formulas"
+	success = true
+	fg = FormulaGenerator.new
+
+	count.times() {
+		raw = fg.generate
+		string = CGI.escape(raw)
+		# For simplicity, check only that parsing is successful
+		#puts raw
+		success &= trq.post('/prop-tableaux/parse', "formula=#{string}", /.*/, 200)
+	}
+
+	if success
+		logSuccess "Test successful - sent #{count.to_s} requests"
+	else
+		logError "Test failed!"
+	end
+end
+
 def testInvalidParam(trq)
 	cg = ClauseGenerator.new
 	logMsg "Testing invalid formulas"
@@ -100,7 +122,7 @@ def testInvalidParam(trq)
 	success &= trq.post('/prop-tableaux/parse', "formul=#{cg.genClauseSet()}", /parameter.*needs to be present/i, 400)
 
 	formulas.each { |f|
-		success &= trq.post('/prop-tableaux/parse', "formula=#{f}", /invalid input formula format/i, 400)
+		success &= trq.post('/prop-tableaux/parse', "formula=#{f}", /^parsing as .* failed:/i, 400)
 	}
 	
 	if success
@@ -337,6 +359,7 @@ trq = TestRequest.new
 logMsg("Testing PropositionalTableaux")
 testInvalidParam(trq)
 fuzzClauseParsing(trq)
+fuzzFormulaParsing(trq)
 testRootNodeCreation(trq)
 testStateModification(trq)
 tryCloseTrivial(trq)
