@@ -28,12 +28,12 @@
     padding: 0 20px;
     font-weight: 500;
     font-size: 0.95em;
-}
 
-.extended.mini {
-    height: 40px;
-    border-radius: 20px;
-    padding: 0 16px;
+    &.mini {
+        height: 40px;
+        border-radius: 20px;
+        padding: 0 16px;
+    }
 }
 
 .label {

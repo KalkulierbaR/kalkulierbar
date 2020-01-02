@@ -1,6 +1,6 @@
 import { h } from "preact";
 import Btn from "../../../btn";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 interface Props {
     /**
@@ -31,10 +31,9 @@ const Dialog: preact.FunctionalComponent<Props> = ({
     onClose,
     onConfirm
 }) => {
-
     /**
      * Handle the click event
-     * @param {MouseEvent} e - The event to handle 
+     * @param {MouseEvent} e - The event to handle
      * @returns {void}
      */
     const handleClick = (e: MouseEvent) => {

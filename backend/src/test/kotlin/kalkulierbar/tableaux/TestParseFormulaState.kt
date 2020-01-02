@@ -1,5 +1,4 @@
-
-package kalkulierbar.tests
+package kalkulierbar.tests.tableaux
 
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.tableaux.PropositionalTableaux

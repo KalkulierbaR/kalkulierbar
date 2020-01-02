@@ -26,8 +26,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      */
     override fun parseFormulaToState(formula: String, params: TableauxParam?): TableauxState {
         val clauses = ClauseSetParser.parse(formula)
-        if (params == null)
-            return TableauxState(clauses)
+        return if (params == null)
+            TableauxState(clauses)
         else
             return TableauxState(clauses, params.type, params.regular, params.backtracking)
     }
@@ -68,8 +68,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         if (closeNodeID >= state.nodes.size || closeNodeID < 0)
             throw IllegalMove("Node with ID $closeNodeID does not exist")
 
-        val leaf = state.nodes.get(leafID)
-        val closeNode = state.nodes.get(closeNodeID)
+        val leaf = state.nodes[leafID]
+        val closeNode = state.nodes[closeNodeID]
 
         // Verify that leaf is actually a leaf
         if (!leaf.isLeaf)
@@ -80,7 +80,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
             throw IllegalMove("Leaf '$leaf' is already closed, no need to close again")
 
         // Verify that leaf and closeNode reference the same variable
-        if (!(leaf.spelling == closeNode.spelling))
+        if (leaf.spelling != closeNode.spelling)
             throw IllegalMove("Leaf '$leaf' and node '$closeNode' do not reference the same variable")
 
         // Verify that negation checks out
@@ -103,11 +103,11 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         var node = leaf
 
         // Set isClosed to true for all nodes dominated by leaf in reverse tree
-        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && state.nodes.get(e).isClosed }) {
+        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && state.nodes[e].isClosed }) {
             node.isClosed = true
             if (node.parent == null)
                 break
-            node = state.nodes.get(node.parent!!)
+            node = state.nodes[node.parent!!]
         }
 
         // Add move to state history
@@ -130,7 +130,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
     private fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int): TableauxState {
         // Don't allow further expand moves if connectedness requires close moves to be applied first
         if (!checkConnectedness(state, state.type))
-            throw IllegalMove("The proof tree is currently not sufficiently connected, please close branches first to restore connectedness before expanding more leaves")
+            throw IllegalMove("The proof tree is currently not sufficiently connected, " +
+                    "please close branches first to restore connectedness before expanding more leaves")
 
         // Verify that both leaf and clause are valid
         if (leafID >= state.nodes.size || leafID < 0)

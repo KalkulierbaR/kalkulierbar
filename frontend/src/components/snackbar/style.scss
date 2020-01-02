@@ -10,10 +10,10 @@
     border-right: 5px solid transparent;
     color: hsla(0, 0%, 100%, 0.87);
     max-width: calc(100vw - 96px);
-}
 
-.snack:last-child {
-    margin-bottom: 0;
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .error {

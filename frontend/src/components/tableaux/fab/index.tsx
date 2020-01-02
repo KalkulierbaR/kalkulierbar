@@ -16,7 +16,7 @@ import ExploreIcon from "../../icons/explore";
 import MoreIcon from "../../icons/more";
 import UndoIcon from "../../icons/undo";
 import Dialog from "./dialog";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 /**
  * Wrapper to send move request

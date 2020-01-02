@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 import Switch from "../../components/switch";
 
