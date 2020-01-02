@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 import CheckCloseBtn from "../../../components/check-close";
 import Dialog from "../../../components/dialog";
@@ -146,6 +146,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                     candidateClauses[selectedClauses[1]].candidateLiterals.map(
                         l => (
                             <p
+                                class={style.listItem}
                                 onClick={() => {
                                     sendMove(
                                         server,
