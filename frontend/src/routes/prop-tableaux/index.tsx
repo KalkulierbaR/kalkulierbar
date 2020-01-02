@@ -13,6 +13,7 @@ interface Props {}
 const Tableaux: preact.FunctionalComponent<Props> = () => {
     const [tabType, setTabType] = useState(TableauxType.unconnected);
     const [regular, setRegular] = useState(false);
+    const [backtracking, setBacktracking] = useState(false);
 
     /**
      * Handle the selection of a TableauxType
@@ -25,7 +26,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
         setTabType(target.id as TableauxType);
     };
 
-    const params: TableauxParams = { type: tabType, regular };
+    const params: TableauxParams = { type: tabType, regular, backtracking };
 
     return (
         <Fragment>
@@ -34,6 +35,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                 <h3>Parameters</h3>
                 <div class={style.form}>
                     <Switch label="Regular" onChange={setRegular} />
+                    <Switch label="Backtracking" onChange={setBacktracking} />
                     <div class={style.radioGroup}>
                         <Radio
                             id={TableauxType.unconnected}

@@ -58,7 +58,7 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
      */
     const onSubmit = async (event: Event) => {
         event.preventDefault();
-        console.log(params);
+
         try {
             const response = await fetch(url, {
                 headers: {
