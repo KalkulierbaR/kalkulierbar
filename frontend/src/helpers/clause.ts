@@ -13,5 +13,9 @@ export const atomToString = (atom: Atom) =>
  * @param {Clause} clause - clause to format
  * @returns {string} - formatted clause
  */
-export const clauseToString = (clause: Clause) =>
-    clause.atoms.map(atomToString).join(", ");
+export const clauseToString = (clause: Clause) => {
+    if(clause.atoms.length === 0){
+        return "∅";
+    }
+    return clause.atoms.map(atomToString).join(", ");
+};
