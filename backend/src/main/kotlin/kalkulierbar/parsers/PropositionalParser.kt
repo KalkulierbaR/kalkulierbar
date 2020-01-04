@@ -18,7 +18,7 @@ import kalkulierbar.logic.Var
 @Suppress("TooManyFunctions")
 class PropositionalParser {
 
-    private var tokens = mutableListOf<String>()
+    private var tokens = mutableListOf<Token>()
 
     /**
      * Parses a propositional formula
@@ -30,7 +30,7 @@ class PropositionalParser {
         val res = parseEquiv()
         if (tokens.isNotEmpty()) {
             val context = tokens.joinToString(" ")
-            throw InvalidFormulaFormat("Expected end of formula but got '$context'")
+            throw InvalidFormulaFormat("Expected end of formula but got '$context' (Position ${tokens.first().srcPosition})")
         }
         return res
     }
@@ -42,7 +42,7 @@ class PropositionalParser {
     private fun parseEquiv(): PropositionalLogicNode {
         var stub = parseImpl()
 
-        while (nextTokenIs("<=>")) {
+        while (nextTokenIs(TokenType.EQUIVALENCE)) {
             consume()
             val rightOp = parseImpl()
             stub = Equiv(stub, rightOp)
@@ -58,7 +58,7 @@ class PropositionalParser {
     private fun parseImpl(): PropositionalLogicNode {
         var stub = parseOr()
 
-        while (nextTokenIs("-->")) {
+        while (nextTokenIs(TokenType.IMPLICATION)) {
             consume()
             val rightOp = parseOr()
             stub = Impl(stub, rightOp)
@@ -74,7 +74,7 @@ class PropositionalParser {
     private fun parseOr(): PropositionalLogicNode {
         var stub = parseAnd()
 
-        while (nextTokenIs("|")) {
+        while (nextTokenIs(TokenType.OR)) {
             consume()
             val rightOp = parseAnd()
             stub = Or(stub, rightOp)
@@ -90,7 +90,7 @@ class PropositionalParser {
     private fun parseAnd(): PropositionalLogicNode {
         var stub = parseNot()
 
-        while (nextTokenIs("&")) {
+        while (nextTokenIs(TokenType.AND)) {
             consume()
             val rightOp = parseNot()
             stub = And(stub, rightOp)
@@ -104,7 +104,7 @@ class PropositionalParser {
      * @return PropositionalLogicNode representing the negated formula
      */
     private fun parseNot(): PropositionalLogicNode {
-        if (nextTokenIs("!")) {
+        if (nextTokenIs(TokenType.NOT)) {
             consume()
             return Not(parseParen())
         } else {
@@ -117,10 +117,10 @@ class PropositionalParser {
      * @return PropositionalLogicNode representing the contents of the parenthesis
      */
     private fun parseParen(): PropositionalLogicNode {
-        if (nextTokenIs("(")) {
+        if (nextTokenIs(TokenType.LPAREN)) {
             consume()
             val exp = parseEquiv()
-            consume(")")
+            consume(TokenType.RPAREN)
             return exp
         } else {
             return parseVar()
@@ -135,38 +135,31 @@ class PropositionalParser {
         if (tokens.size == 0)
             throw InvalidFormulaFormat("Expected variable identifier but got end of input")
 
-        if (!nextTokenIsVariable()) {
+        if (!nextTokenIsIdentifier()) {
             val context = tokens.joinToString(" ")
             val got = tokens.first()
-            throw InvalidFormulaFormat("Expected variable identifier but got reserved token '$got' at '$context'")
+            throw InvalidFormulaFormat("Expected identifier but got reserved token '$got' at '$context'")
         }
-        val exp = Var(tokens.first())
+        val exp = Var(tokens.first().spelling)
         consume()
         return exp
     }
 
     /**
-     * Check if the next token matches a given token
-     * @param expected expected token
-     * @return true iff the next token is the expected token
+     * Check if the next token matches a given token type
+     * @param expected expected token type
+     * @return true iff the next token is of the expected type
      */
-    private fun nextTokenIs(expected: String): Boolean {
-        if (tokens.size > 0)
-            return expected == tokens.first()
-        else
-            return false
+    private fun nextTokenIs(expected: TokenType): Boolean {
+        return tokens.size > 0 && tokens.first().type == expected
     }
 
     /**
      * Check if the next token is a variable
      * @return true iff the next token is a variable
      */
-    private fun nextTokenIsVariable(): Boolean {
-        if (tokens.size > 0)
-        // Every token that id not a reserved token has to be a variable
-            return !reservedTokens.contains(tokens.first())
-        else
-            return false
+    private fun nextTokenIsIdentifier(): Boolean {
+        return nextTokenIs(TokenType.LOWERID) || nextTokenIs(TokenType.CAPID)
     }
 
     /**
@@ -183,15 +176,15 @@ class PropositionalParser {
      * If the token does not match the expected token, throw an exception
      * @param expected expected token
      */
-    private fun consume(expected: String) {
+    private fun consume(expectedType: TokenType) {
         if (tokens.size == 0)
-            throw InvalidFormulaFormat("Expected token '$expected' but got end of input")
-        else if (tokens.first() == expected)
+            throw InvalidFormulaFormat("Expected token '$expectedType' but got end of input")
+        else if (tokens.first().type == expectedType)
             consume()
         else {
             val got = tokens.first()
             val context = tokens.joinToString(" ")
-            throw InvalidFormulaFormat("Unexpected token: '$got', expected '$expected' at '$context'")
+            throw InvalidFormulaFormat("Unexpected token: '$got', expected '$expectedType' at '$context' (Position ${got.srcPosition})")
         }
     }
 
@@ -216,8 +209,8 @@ class PropositionalParser {
          * @param formula Input formula to tokenize
          * @return list of extracted tokens
          */
-        fun tokenize(formula: String): MutableList<String> {
-            val tokens = mutableListOf<String>()
+        fun tokenize(formula: String): MutableList<Token> {
+            val tokens = mutableListOf<Token>()
             var i = 0
 
             // Extract single token until end of input reached
@@ -236,37 +229,60 @@ class PropositionalParser {
          * @return start offset of the next token
          */
         @Suppress("ComplexMethod", "MagicNumber")
-        private fun extractToken(formula: String, index: Int, tokens: MutableList<String>): Int {
+        private fun extractToken(formula: String, index: Int, tokens: MutableList<Token>): Int {
             var i = index
             val len = formula.length
 
             // If the next token is one char only, we can add it to the list directly
             if (oneCharToken matches formula[i].toString()) {
-                tokens.add(formula[i].toString())
+                val ttype: TokenType
+
+                when (formula[i]) {
+                    '&' -> ttype = TokenType.AND
+                    '|' -> ttype = TokenType.OR
+                    '!' -> ttype = TokenType.NOT
+                    '(' -> ttype = TokenType.LPAREN
+                    ')' -> ttype = TokenType.RPAREN
+                    ',' -> ttype = TokenType.COMMA
+                    else -> ttype = TokenType.UNKNOWN
+                }
+
+                tokens.add(Token(ttype, formula[i].toString(), i))
                 i += 1
             } else if (i + 1 < len && formula.substring(i, i + 2) == "->") {
-                tokens.add("-->")
+                tokens.add(Token(TokenType.IMPLICATION, "->", i))
                 i += 2
             } else if (i + 2 < len && formula.substring(i, i + 3) == "<=>") {
-                tokens.add("<=>")
+                tokens.add(Token(TokenType.EQUIVALENCE, "<=>", i))
                 i += 3
             } else if (i + 2 < len && formula.substring(i, i + 3) == "<->") {
-                tokens.add("<=>")
+                tokens.add(Token(TokenType.EQUIVALENCE, "<->", i))
                 i += 3
             } else if (whitespace matches formula[i].toString()) {
                 i += 1 // Skip whitespace
             } else if (permittedVarStartChars matches formula[i].toString()) {
                 var identifier = ""
+                val ttype = if(formula[i].isUpperCase()) TokenType.CAPID else TokenType.LOWERID
+                val startIndex = i
+
                 // Extract identifier
                 while (i < formula.length && permittedVarChars matches formula[i].toString()) {
                     identifier += formula[i]
                     i += 1
                 }
-                tokens.add(identifier)
+                tokens.add(Token(ttype, identifier, startIndex))
             } else {
                 throw InvalidFormulaFormat("Incorrect formula syntax at char $i")
             }
             return i
         }
     }
+}
+
+data class Token(val type: TokenType, val spelling: String, val srcPosition: Int) {
+    override fun toString() = spelling
+}
+
+enum class TokenType {
+    AND, OR, NOT, IMPLICATION, EQUIVALENCE, LPAREN, RPAREN, COMMA, CAPID, LOWERID, UNKNOWN
 }
