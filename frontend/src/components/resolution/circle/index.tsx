@@ -25,6 +25,7 @@ interface Props {
      * The id of the clause if one is selected
      */
     selectedClauseId: number | undefined;
+    highlightSelectable: boolean;
 }
 
 const CLAUSE_LENGTH_FACTOR = 0.1;
@@ -33,7 +34,8 @@ const CLAUSE_NUMBER_FACTOR = 0.1;
 const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
     selectClauseCallback,
-    selectedClauseId
+    selectedClauseId,
+    highlightSelectable
 }) => {
     const svg = useRef<SVGSVGElement>();
     const [dims, setDims] = useState<[number, number]>([0, 0]);
@@ -112,11 +114,12 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     {
                         <Fragment>
                             {coords.map((coordinates, index) => {
-                                const disabled =
-                                    selectedClauseId !== undefined &&
-                                    selectedClauseId !== index &&
-                                    clauses[index].candidateLiterals.length ===
-                                        0;
+                                const disabled = highlightSelectable
+                                    ? selectedClauseId !== undefined &&
+                                      selectedClauseId !== index &&
+                                      clauses[index].candidateLiterals
+                                          .length === 0
+                                    : false;
                                 const selected = selectedClauseId === index;
                                 const textRef = createRef<SVGTextElement>();
                                 return (
