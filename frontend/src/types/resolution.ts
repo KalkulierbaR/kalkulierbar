@@ -14,4 +14,5 @@ export interface ResolutionMove {
 
 export interface ResolutionParams {
     cnfStrategy: CnfStrategy;
+    highlightSelectable: boolean;
 }

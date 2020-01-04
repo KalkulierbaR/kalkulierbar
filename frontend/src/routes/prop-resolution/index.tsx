@@ -12,9 +12,11 @@ interface Props {}
 
 const Resolution: preact.FunctionalComponent<Props> = () => {
     const [cnfStrategy, setStrategy] = useState(CnfStrategy.optimal);
+    const [highlightSelectable, setHighlightSelectable] = useState(false);
 
     const params = {
-        cnfStrategy
+        cnfStrategy,
+        highlightSelectable
     };
 
     /**
@@ -35,6 +37,10 @@ const Resolution: preact.FunctionalComponent<Props> = () => {
                     <Switch
                         label="Force naive CNF transformation"
                         onChange={strategySelect}
+                    />
+                    <Switch
+                        label="Highlight selectable clauses"
+                        onChange={setHighlightSelectable}
                     />
                 </div>
             </div>
