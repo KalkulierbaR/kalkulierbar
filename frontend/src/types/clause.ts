@@ -19,3 +19,11 @@ export interface Clause {
 export interface ClauseSet {
     clauses: Clause[];
 }
+
+/**
+ * CandidateClause is a clause that is a candidate for a proof operation
+ */
+export interface CandidateClause extends Clause {
+    atoms: Atom[];
+    candidateLiterals: string[];
+}

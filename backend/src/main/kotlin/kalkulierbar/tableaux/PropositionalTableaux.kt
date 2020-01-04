@@ -4,7 +4,7 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
-import kalkulierbar.parsers.ClauseSetParser
+import kalkulierbar.parsers.FlexibleClauseSetParser
 import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -25,11 +25,13 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      * @return parsed state object
      */
     override fun parseFormulaToState(formula: String, params: TableauxParam?): TableauxState {
-        val clauses = ClauseSetParser.parse(formula)
-        if (params == null)
+        if (params == null) {
+            val clauses = FlexibleClauseSetParser.parse(formula)
             return TableauxState(clauses)
-        else
-            return TableauxState(clauses, params.type, params.regular)
+        } else {
+            val clauses = FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
+            return TableauxState(clauses, params.type, params.regular, params.backtracking)
+        }
     }
 
     /**
@@ -39,14 +41,16 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      * @param move move to apply in the given state
      * @return state after the move was applied
      */
+    @Suppress("ReturnCount")
     override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
-        // Pass expand or close moves to relevant subfunction
-        if (move.type == "c")
-            return applyMoveCloseBranch(state, move.id1, move.id2)
-        else if (move.type == "e")
-            return applyMoveExpandLeaf(state, move.id1, move.id2)
-        else
-            throw IllegalMove("Unknown move. Valid moves are e (expand) or c (close).")
+        // Pass expand, close, undo moves to relevant subfunction
+        when (move.type) {
+            MoveType.CLOSE -> return applyMoveCloseBranch(state, move.id1, move.id2)
+            MoveType.EXPAND -> return applyMoveExpandLeaf(state, move.id1, move.id2)
+            MoveType.UNDO -> return applyMoveUndo(state)
+
+            else -> throw IllegalMove("Unknown move. Valid moves are EXPAND (expand), CLOSE (close) or UNDO (undo).")
+        }
     }
 
     /**
@@ -66,8 +70,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         if (closeNodeID >= state.nodes.size || closeNodeID < 0)
             throw IllegalMove("Node with ID $closeNodeID does not exist")
 
-        val leaf = state.nodes.get(leafID)
-        val closeNode = state.nodes.get(closeNodeID)
+        val leaf = state.nodes[leafID]
+        val closeNode = state.nodes[closeNodeID]
 
         // Verify that leaf is actually a leaf
         if (!leaf.isLeaf)
@@ -78,7 +82,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
             throw IllegalMove("Leaf '$leaf' is already closed, no need to close again")
 
         // Verify that leaf and closeNode reference the same variable
-        if (!(leaf.spelling == closeNode.spelling))
+        if (leaf.spelling != closeNode.spelling)
             throw IllegalMove("Leaf '$leaf' and node '$closeNode' do not reference the same variable")
 
         // Verify that negation checks out
@@ -101,11 +105,16 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         var node = leaf
 
         // Set isClosed to true for all nodes dominated by leaf in reverse tree
-        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && state.nodes.get(e).isClosed }) {
+        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && state.nodes[e].isClosed }) {
             node.isClosed = true
             if (node.parent == null)
                 break
-            node = state.nodes.get(node.parent!!)
+            node = state.nodes[node.parent!!]
+        }
+
+        // Add move to state history
+        if (state.undoEnable) {
+            state.moveHistory.add(TableauxMove(MoveType.CLOSE, leafID, closeNodeID))
         }
 
         return state
@@ -123,7 +132,8 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
     private fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int): TableauxState {
         // Don't allow further expand moves if connectedness requires close moves to be applied first
         if (!checkConnectedness(state, state.type))
-            throw IllegalMove("The proof tree is currently not sufficiently connected, please close branches first to restore connectedness before expanding more leaves")
+            throw IllegalMove("The proof tree is currently not sufficiently connected, " +
+                    "please close branches first to restore connectedness before expanding more leaves")
 
         // Verify that both leaf and clause are valid
         if (leafID >= state.nodes.size || leafID < 0)
@@ -155,6 +165,89 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         // Verify compliance with connectedness criteria
         verifyExpandConnectedness(state, leafID)
 
+        // Add move to state history
+        if (state.undoEnable) {
+            state.moveHistory.add(TableauxMove(MoveType.EXPAND, leafID, clauseID))
+        }
+
+        return state
+    }
+
+    /**
+     *  Undo the last executed move
+     *  @param state Current prove State
+     *  @return New state after undoing last move
+     */
+    @Suppress("ThrowsCount")
+    private fun applyMoveUndo(state: TableauxState): TableauxState {
+        if (!state.undoEnable)
+            throw IllegalMove("Backtracking is not enabled for this proof")
+
+        // Throw error if no moves were made already
+        val history = state.moveHistory
+        if (history.isEmpty())
+            throw IllegalMove("Can't undo in initial state")
+
+        // Retrieve and remove this undo from list
+        val top = history.removeAt(state.moveHistory.size - 1)
+
+        // Set usedUndo to true
+        state.usedUndo = true
+
+        // Pass undo move to relevant expand and close subfunction
+        when (top.type) {
+            MoveType.CLOSE -> return undoClose(state, top)
+            MoveType.EXPAND -> return undoExpand(state, top)
+
+            else -> throw IllegalMove("Something went wrong. Move not implemented!")
+        }
+    }
+
+    /**
+     *  Undo close move
+     *  @param state Current prove State
+     *  @param top The last move executed
+     *  @return New state after undoing latest close move
+     */
+    private fun undoClose(state: TableauxState, top: TableauxMove): TableauxState {
+        val leafID = top.id1
+        val leaf = state.nodes[leafID]
+
+        // revert close reference to null
+        leaf.closeRef = null
+
+        var node: TableauxNode? = leaf
+
+        while (node != null && node.isClosed) {
+            node.isClosed = false
+            node = if (node.parent == null) null else state.nodes[node.parent!!]
+        }
+
+        return state
+    }
+
+    /**
+     *  Undo expand move
+     *  @param state Current prove State
+     *  @parm top The last move executed
+     *  @return New state after undoing latest expand move
+     */
+    private fun undoExpand(state: TableauxState, top: TableauxMove): TableauxState {
+        val leafID = top.id1
+        val leaf = state.nodes[leafID]
+        val children = leaf.children
+        val nodes = state.nodes
+
+        // remove child nodes from nodes list
+        for (id in children) {
+            // nodes removed are always at the top of nodes list
+            // when undoing the last expand move
+            nodes.removeAt(nodes.size - 1)
+        }
+
+        // Remove all leaf-children
+        leaf.children.clear()
+
         return state
     }
 
@@ -174,8 +267,9 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
                 connectedness = "weakly connected"
 
             val regularity = if (checkRegularity(state)) "regular " else ""
+            val withWithoutBT = if (state.usedUndo) "with" else "without"
 
-            msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux"
+            msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux $withWithoutBT backtracking"
         }
 
         return CloseMessage(state.root.isClosed, msg)
@@ -199,11 +293,13 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON state")
         } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state - missing field")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON state - missing field")
         } catch (e: SerializationException) {
             throw JsonParseException(e.message ?: "Could not parse JSON state")
         } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state - invalid number format")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON state - invalid number format")
         }
     }
 
@@ -230,11 +326,13 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move - missing field")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON move - missing field")
         } catch (e: SerializationException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move - invalid number format")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON move - invalid number format")
         }
     }
 
@@ -250,11 +348,13 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON params")
         } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params - missing field")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON params - missing field")
         } catch (e: SerializationException) {
             throw JsonParseException(e.message ?: "Could not parse JSON params")
         } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params - invalid number format")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON params - invalid number format")
         }
     }
 

@@ -9,8 +9,8 @@ import {
 } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
-import * as nodeStyle from "../node/style.css";
-import * as style from "./style.css";
+import { Transform } from "../../../types/ui";
+import * as style from "./style.scss";
 
 // Properties Interface for the TableauxTreeView component
 interface Props {
@@ -121,36 +121,35 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     //      xC,yC of the control point
     //      x2,y2 of the target
     // should look like d="M x1 x2 Q xC yC x2 y2"
-    // Todo: use Stringtemplates
-    let controlpoint = x1 - (y1 - y2) / 2;
-    if (x1 > x2) {
-        controlpoint = x1 + (y1 - y2) / 2;
+    const xVektor = x1 - x2;
+    const yVektor = y1 - y2;
+    let xControlpoint = x1 - xVektor/2;
+    let yControlpoint = y1 - yVektor/2;
+    const divisor = 2;
+    if(x1 > x2){ // child is to the right of the parent
+        xControlpoint = xControlpoint - (- yVektor / divisor);
+        yControlpoint = yControlpoint - (xVektor / divisor);
+    }else { // child is to the left of the parent
+        xControlpoint = xControlpoint - (yVektor / divisor);
+        yControlpoint = yControlpoint - (- xVektor / divisor);
     }
+
     const d =
         "M " +
         x1 +
         " " +
         y1 +
         " Q " +
-        controlpoint +
+        xControlpoint +
         " " +
-        (y1 + y2) / 2 +
+        yControlpoint +
         " " +
         x2 +
         " " +
         y2;
-    //   console.log('M ${x1} ${y1} Q ${controlpoint} ${(y1 + y2) / 2} ${x2} ${y2}')
+    //   console.log('M ${x1} ${y1} Q ${xControlpoint} ${yControlpoint} ${x2} ${y2}')
     return <path d={d} class={style.link} />;
 };
-
-interface Transform {
-    x: number;
-    y: number;
-    /**
-     * Scale factor.
-     */
-    k: number;
-}
 
 const INIT_TRANSFORM: Transform = { x: 0, y: 0, k: 1 };
 
@@ -177,12 +176,16 @@ class TableauxTreeView extends Component<Props, State> {
         };
     }
 
+    public handleCenterTree = this.centerTree.bind(this);
+
     public state = {
         transform: INIT_TRANSFORM,
         root: undefined as HierarchyNode<D3Data> | undefined,
         treeHeight: 0,
         treeWidth: 0
     };
+    public handleGoTo = (e: Event) =>
+        this.goToNode((e as TableauxTreeGoToEvent).detail.node);
 
     public setTransform(transform: Transform) {
         this.setState(s => ({ ...s, transform }));
@@ -205,16 +208,21 @@ class TableauxTreeView extends Component<Props, State> {
         );
     }
 
+    public centerTree() {
+        this.setTransform(INIT_TRANSFORM);
+    }
+
     public componentDidMount() {
         this.bindZoom();
 
-        window.addEventListener("kbar-center-tree", () => {
-            this.setTransform(INIT_TRANSFORM);
-        });
+        window.addEventListener("kbar-center-tree", this.handleCenterTree);
 
-        window.addEventListener("kbar-go-to-node", e => {
-            this.goToNode((e as TableauxTreeGoToEvent).detail.node);
-        });
+        window.addEventListener("kbar-go-to-node", this.handleGoTo);
+    }
+
+    public componentWillUnmount() {
+        window.removeEventListener("kbar-center-tree", this.handleCenterTree);
+        window.removeEventListener("kbar-go-to-node", this.handleGoTo);
     }
 
     public componentDidUpdate() {
@@ -307,11 +315,6 @@ class TableauxTreeView extends Component<Props, State> {
                                             node={n}
                                             selected={
                                                 n.data.id === selectedNodeId
-                                            }
-                                            filling={
-                                                n.data.isClosed
-                                                    ? nodeStyle.fClosed
-                                                    : nodeStyle.fDefault
                                             }
                                         />
                                     ))}

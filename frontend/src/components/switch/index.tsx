@@ -1,9 +1,7 @@
 import { Component, createRef, h } from "preact";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 import { MDCSwitch } from "@material/switch";
-
-import "@material/switch/dist/mdc.switch.css";
 
 interface Props {
     /**

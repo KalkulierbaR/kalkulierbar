@@ -1,6 +1,6 @@
 # Clause Set
 
-Propositional clause sets shared between different calculi as a common input format and are thus specified on their own here.
+Propositional clause sets are shared between different calculi as a common input format and are thus specified on their own here.
 
 ## Format Specification
 

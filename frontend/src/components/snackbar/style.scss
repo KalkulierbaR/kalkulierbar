@@ -1,0 +1,45 @@
+.snack {
+    margin: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    border-radius: 4px;
+    border-left: 5px solid var(--type-color);
+    border-right: 5px solid transparent;
+    color: hsla(0, 0%, 100%, 0.87);
+    max-width: calc(100vw - 96px);
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.error {
+    --type-color: #d32f2f;
+}
+
+.success {
+    --type-color: #00c853;
+}
+
+.none {
+    --type-color: transparent;
+}
+
+.btn {
+    border: none;
+    box-shadow: none;
+    margin-left: 8px;
+    padding: 0;
+    background-color: transparent;
+    color: #fff;
+    cursor: pointer;
+}
+
+@media (min-width: 700px) {
+    .snack {
+        max-width: 500px;
+    }
+}

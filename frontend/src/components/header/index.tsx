@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { Link } from "preact-router/match";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 // Component used to display the navigation, projects logo and name
 const Header: preact.FunctionalComponent = () => {
@@ -18,6 +18,9 @@ const Header: preact.FunctionalComponent = () => {
             <nav>
                 <Link activeClassName={style.active} href="/prop-tableaux">
                     Tableaux
+                </Link>
+                <Link activeClassName={style.active} href="/prop-resolution">
+                    Resolution
                 </Link>
             </nav>
         </header>

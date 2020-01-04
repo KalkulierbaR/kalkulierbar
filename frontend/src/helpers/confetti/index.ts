@@ -3,12 +3,16 @@ import { ConfettiOptions } from "./types";
 
 /* tslint:disable:no-bitwise */
 
-const supportsAnimationFrame =
-    window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    (window as any).mozRequestAnimationFrame ||
-    (window as any).oRequestAnimationFrame ||
-    (window as any).msRequestAnimationFrame;
+let supportsAnimationFrame = false;
+
+if (typeof window !== "undefined") {
+    supportsAnimationFrame =
+        (window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            (window as any).mozRequestAnimationFrame ||
+            (window as any).oRequestAnimationFrame ||
+            (window as any).msRequestAnimationFrame) !== undefined;
+}
 
 /**
  * Creates a confetti effect

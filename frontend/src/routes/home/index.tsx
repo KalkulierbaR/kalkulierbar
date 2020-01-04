@@ -1,5 +1,5 @@
 import { h } from "preact";
-import * as style from "./style.css";
+import * as style from "./style.scss";
 
 /**
  * Properties Interface for the Home component
@@ -17,6 +17,9 @@ const Home: preact.FunctionalComponent<Props> = () => {
                 <ul>
                     <li>
                         <a href="/prop-tableaux">Tableaux</a>
+                    </li>
+                    <li>
+                        <a href="/prop-resolution">Resolution</a>
                     </li>
                 </ul>
             </div>
