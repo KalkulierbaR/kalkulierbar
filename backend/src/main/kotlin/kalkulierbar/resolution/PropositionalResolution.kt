@@ -144,14 +144,6 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, An
     override fun jsonToParam(json: String): Any {
         return 0
     }
-
-    override fun getDocumentation(): String {
-        return """Takes a clause set as an input, format a,!b;b,!c;d with variables in [a-zA-Z]+
-            |There is only one move, the resolution move of the following JSON format:
-            |{ c1: <ID of first clause>, c2: <ID of second clause>, spelling: <The literal on which the resolution is done> }
-            |where IDs are the position of the clause in the clause list.
-        """.trimMargin()
-    }
 }
 
 @Serializable
