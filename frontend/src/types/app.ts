@@ -1,4 +1,4 @@
-import { ResolutionState, ResolutionMove } from "./resolution";
+import { ResolutionMove, ResolutionState } from "./resolution";
 import { TableauxMove, TableauxState } from "./tableaux";
 
 export type Calculus = "prop-tableaux" | "prop-resolution";
