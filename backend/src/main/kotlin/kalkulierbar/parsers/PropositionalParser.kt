@@ -4,9 +4,9 @@ import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.And
 import kalkulierbar.logic.Equiv
 import kalkulierbar.logic.Impl
+import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
-import kalkulierbar.logic.PropositionalLogicNode
 import kalkulierbar.logic.Var
 
 /**
@@ -16,16 +16,16 @@ import kalkulierbar.logic.Var
  * For format specification, see docs/PropositionalFormula.md
  */
 @Suppress("TooManyFunctions")
-class PropositionalParser {
+open class PropositionalParser {
 
-    private var tokens = mutableListOf<Token>()
+    protected var tokens = mutableListOf<Token>()
 
     /**
      * Parses a propositional formula
      * @param formula input formula
-     * @return PropositionalLogicNode representing the formula
+     * @return LogicNode representing the formula
      */
-    fun parse(formula: String): PropositionalLogicNode {
+    fun parse(formula: String): LogicNode {
         tokens = tokenize(formula)
         val res = parseEquiv()
         if (tokens.isNotEmpty()) {
@@ -37,9 +37,9 @@ class PropositionalParser {
 
     /**
      * Parses a series of 0 or more equivalences
-     * @return PropositionalLogicNode representing the series of equivalences
+     * @return LogicNode representing the series of equivalences
      */
-    private fun parseEquiv(): PropositionalLogicNode {
+    protected fun parseEquiv(): LogicNode {
         var stub = parseImpl()
 
         while (nextTokenIs(TokenType.EQUIVALENCE)) {
@@ -53,9 +53,9 @@ class PropositionalParser {
 
     /**
      * Parses a series of 0 or more implications
-     * @return PropositionalLogicNode representing the series of implications
+     * @return LogicNode representing the series of implications
      */
-    private fun parseImpl(): PropositionalLogicNode {
+    protected fun parseImpl(): LogicNode {
         var stub = parseOr()
 
         while (nextTokenIs(TokenType.IMPLICATION)) {
@@ -69,9 +69,9 @@ class PropositionalParser {
 
     /**
      * Parses a series of 0 or more or-operations
-     * @return PropositionalLogicNode representing the series of or-operations
+     * @return LogicNode representing the series of or-operations
      */
-    private fun parseOr(): PropositionalLogicNode {
+    protected fun parseOr(): LogicNode {
         var stub = parseAnd()
 
         while (nextTokenIs(TokenType.OR)) {
@@ -85,9 +85,9 @@ class PropositionalParser {
 
     /**
      * Parses a series of 0 or more and-operations
-     * @return PropositionalLogicNode representing the series of and-operations
+     * @return LogicNode representing the series of and-operations
      */
-    private fun parseAnd(): PropositionalLogicNode {
+    protected fun parseAnd(): LogicNode {
         var stub = parseNot()
 
         while (nextTokenIs(TokenType.AND)) {
@@ -101,9 +101,9 @@ class PropositionalParser {
 
     /**
      * Parses a unary not
-     * @return PropositionalLogicNode representing the negated formula
+     * @return LogicNode representing the negated formula
      */
-    private fun parseNot(): PropositionalLogicNode {
+    protected fun parseNot(): LogicNode {
         if (nextTokenIs(TokenType.NOT)) {
             consume()
             return Not(parseParen())
@@ -114,9 +114,9 @@ class PropositionalParser {
 
     /**
      * Parses a parenthesis in a formula
-     * @return PropositionalLogicNode representing the contents of the parenthesis
+     * @return LogicNode representing the contents of the parenthesis
      */
-    private fun parseParen(): PropositionalLogicNode {
+    protected open fun parseParen(): LogicNode {
         if (nextTokenIs(TokenType.LPAREN)) {
             consume()
             val exp = parseEquiv()
@@ -129,9 +129,9 @@ class PropositionalParser {
 
     /**
      * Parses a variable in a formula
-     * @return PropositionalLogicNode representing the variable
+     * @return LogicNode representing the variable
      */
-    private fun parseVar(): PropositionalLogicNode {
+    protected fun parseVar(): LogicNode {
         if (tokens.size == 0)
             throw InvalidFormulaFormat("Expected variable identifier but got end of input")
 
@@ -150,7 +150,7 @@ class PropositionalParser {
      * @param expected expected token type
      * @return true iff the next token is of the expected type
      */
-    private fun nextTokenIs(expected: TokenType): Boolean {
+    protected fun nextTokenIs(expected: TokenType): Boolean {
         return tokens.size > 0 && tokens.first().type == expected
     }
 
@@ -158,14 +158,14 @@ class PropositionalParser {
      * Check if the next token is a variable
      * @return true iff the next token is a variable
      */
-    private fun nextTokenIsIdentifier(): Boolean {
+    protected fun nextTokenIsIdentifier(): Boolean {
         return nextTokenIs(TokenType.LOWERID) || nextTokenIs(TokenType.CAPID)
     }
 
     /**
      * Consume the next token from the token list
      */
-    private fun consume() {
+    protected fun consume() {
         if (tokens.size == 0)
             throw InvalidFormulaFormat("Expected token but got end of input")
         tokens.removeAt(0)
@@ -176,7 +176,7 @@ class PropositionalParser {
      * If the token does not match the expected token, throw an exception
      * @param expected expected token
      */
-    private fun consume(expectedType: TokenType) {
+    protected fun consume(expectedType: TokenType) {
         if (tokens.size == 0)
             throw InvalidFormulaFormat("Expected token '$expectedType' but got end of input")
         else if (tokens.first().type == expectedType)
@@ -191,18 +191,18 @@ class PropositionalParser {
     companion object Companion {
 
         // Tokens not permitted as variable names
-        val reservedTokens = listOf("&", "|", "!", "(", ")", "-->", "<=>")
+        val reservedTokens = listOf("&", "|", "!", "(", ")", ",", "->", "<=>", "<->")
 
         // Single-character tokens can be handled in one step
-        private val oneCharToken = Regex("[\\(\\)!&\\|]")
-        private val whitespace = Regex("\\s")
+        protected val oneCharToken = Regex("[\\(\\)!&\\|,]")
+        protected val whitespace = Regex("\\s")
 
         // Might be reasonable to treat the first character of a varname
         // differently from the rest of the variable in the future
         // Note that the current implementation implies/requires that
         // VarStartChars is a subset of VarChars
-        private val permittedVarStartChars = Regex("[a-zA-Z0-9]")
-        private val permittedVarChars = permittedVarStartChars
+        protected val permittedVarStartChars = Regex("[a-zA-Z0-9]")
+        protected val permittedVarChars = permittedVarStartChars
 
         /**
          * Splits a raw formula into its tokens, removes whitespace etc
@@ -229,7 +229,7 @@ class PropositionalParser {
          * @return start offset of the next token
          */
         @Suppress("ComplexMethod", "MagicNumber")
-        private fun extractToken(formula: String, index: Int, tokens: MutableList<Token>): Int {
+        protected fun extractToken(formula: String, index: Int, tokens: MutableList<Token>): Int {
             var i = index
             val len = formula.length
 
@@ -262,7 +262,7 @@ class PropositionalParser {
                 i += 1 // Skip whitespace
             } else if (permittedVarStartChars matches formula[i].toString()) {
                 var identifier = ""
-                val ttype = if(formula[i].isUpperCase()) TokenType.CAPID else TokenType.LOWERID
+                val ttype = if (formula[i].isUpperCase()) TokenType.CAPID else TokenType.LOWERID
                 val startIndex = i
 
                 // Extract identifier

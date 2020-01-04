@@ -4,14 +4,14 @@ import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 
-abstract class PropositionalLogicNode {
+abstract class LogicNode {
 
     /**
      * Translates arbitrary formulae into equivalent representations
      * using only basic operations (var, not, and, or)
      * @return representation of this LogicNode using only basic logic operations
      */
-    abstract fun toBasicOps(): PropositionalLogicNode
+    abstract fun toBasicOps(): LogicNode
 
     /**
      * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
@@ -42,16 +42,16 @@ abstract class PropositionalLogicNode {
 }
 
 abstract class BinaryOp(
-    var leftChild: PropositionalLogicNode,
-    var rightChild: PropositionalLogicNode
-) : PropositionalLogicNode() {
+    var leftChild: LogicNode,
+    var rightChild: LogicNode
+) : LogicNode() {
 
     /**
      * Translates arbitrary formulae into equivalent representations
      * using only basic operations (var, not, and, or)
      * @return representation of this LogicNode using only basic logic operations
      */
-    override fun toBasicOps(): PropositionalLogicNode {
+    override fun toBasicOps(): LogicNode {
         // Default behaviour: Assume this is a basic operation, do nothing
         // Make sure child subtrees are also basic operations
         leftChild = leftChild.toBasicOps()
@@ -64,14 +64,14 @@ abstract class BinaryOp(
     }
 }
 
-abstract class UnaryOp(var child: PropositionalLogicNode) : PropositionalLogicNode() {
+abstract class UnaryOp(var child: LogicNode) : LogicNode() {
 
     /**
      * Translates arbitrary formulae into equivalent representations
      * using only basic operations (var, not, and, or)
      * @return representation of this LogicNode using only basic logic operations
      */
-    override fun toBasicOps(): PropositionalLogicNode {
+    override fun toBasicOps(): LogicNode {
         // Default behaviour: Assume this is a basic operation, do nothing
         // Make sure child subtrees are also basic operations
         child = child.toBasicOps()
