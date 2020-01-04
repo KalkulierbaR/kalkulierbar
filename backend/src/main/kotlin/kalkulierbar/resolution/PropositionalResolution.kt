@@ -21,12 +21,13 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
     override val identifier = "prop-resolution"
 
     override fun parseFormulaToState(formula: String, params: ResolutionParam?): ResolutionState {
-        val parsed: ClauseSet
-        if (params == null)
-            parsed = FlexibleClauseSetParser.parse(formula)
+        val parsed = if (params == null)
+            FlexibleClauseSetParser.parse(formula)
         else
-            parsed = FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
-        return ResolutionState(parsed)
+            FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
+
+
+        return ResolutionState(parsed, params?.highlightSelectable ?: false)
     }
 
     override fun applyMoveOnState(state: ResolutionState, move: ResolutionMove): ResolutionState {
@@ -56,7 +57,8 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
 
         val msg = """Clauses ${clauses[cId1]} and ${clauses[cId2]} do not contain
                     |atom $spelling in both positive and negated form"""
-        val (a1, a2) = findResCandidates(atomsInC1, atomsInC2) ?: throw IllegalMove(msg)
+        val (a1, a2) = findResCandidates(atomsInC1, atomsInC2)
+                ?: throw IllegalMove(msg)
 
         clauses.add(buildClause(c1, a1, c2, a2))
 
@@ -117,11 +119,13 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON state")
         } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state - missing field")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON state - missing field")
         } catch (e: SerializationException) {
             throw JsonParseException(e.message ?: "Could not parse JSON state")
         } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state - invalid number format")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON state - invalid number format")
         }
     }
 
@@ -138,11 +142,13 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         } catch (e: JsonDecodingException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move - missing field")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON move - missing field")
         } catch (e: SerializationException) {
             throw JsonParseException(e.message ?: "Could not parse JSON move")
         } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move - invalid number format")
+            throw JsonParseException(e.message
+                    ?: "Could not parse JSON move - invalid number format")
         }
     }
 
@@ -178,12 +184,12 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
 }
 
 @Serializable
-class ResolutionState(val clauseSet: ClauseSet) : ProtectedState() {
+class ResolutionState(val clauseSet: ClauseSet, val highlightSelectable: Boolean) : ProtectedState() {
     override var seal = ""
 
     override fun getHash(): String {
         val clauseSetHash = clauseSet.toString()
-        return "resolutionstate|$clauseSetHash"
+        return "resolutionstate|$clauseSetHash|$highlightSelectable"
     }
 }
 
@@ -191,4 +197,4 @@ class ResolutionState(val clauseSet: ClauseSet) : ProtectedState() {
 data class ResolutionMove(val c1: Int, val c2: Int, val spelling: String)
 
 @Serializable
-data class ResolutionParam(val cnfStrategy: CnfStrategy)
+data class ResolutionParam(val cnfStrategy: CnfStrategy, val highlightSelectable: Boolean)
