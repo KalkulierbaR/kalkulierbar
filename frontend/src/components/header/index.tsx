@@ -19,6 +19,9 @@ const Header: preact.FunctionalComponent = () => {
                 <Link activeClassName={style.active} href="/prop-tableaux">
                     Tableaux
                 </Link>
+                <Link activeClassName={style.active} href="/prop-resolution">
+                    Resolution
+                </Link>
             </nav>
         </header>
     );

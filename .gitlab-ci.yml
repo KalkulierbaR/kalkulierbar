@@ -8,10 +8,6 @@ stages:
 yarn:
   stage: frontend
   image: node
-  cache:
-    paths:
-      - frontend/node_modules/
-      - .yarn
   before_script:
     - cd frontend
   script:
@@ -24,10 +20,6 @@ yarn:
 gradle:
   stage: backend
   image: gradle:jdk11
-  cache:
-    paths:
-      - .gradle/wrapper
-      - .gradle/caches
   before_script:
     - cd backend
   script:

@@ -1,9 +1,8 @@
 import { HierarchyNode } from "d3";
 import { createRef, h } from "preact";
-import { useEffect, useState } from "preact/hooks";
 import { D3Data } from "../tree";
 
-import { classMap } from "../../../helpers/class-map";
+import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 
 // Properties Interface for the TableauxTreeNode component
@@ -17,10 +16,6 @@ interface Props {
      */
     selected: boolean;
     /**
-     * Style for the rectangle's filling of this node
-     */
-    filling: string;
-    /**
      * The function to call, when the user selects this node
      */
     selectNodeCallback: (node: D3Data) => void;
@@ -30,28 +25,12 @@ interface Props {
 const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     node,
     selected,
-    filling,
     selectNodeCallback
 }) => {
-    const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
-
-    const ref = createRef<SVGTextElement>();
+    const textRef = createRef<SVGTextElement>();
 
     // The nodes name which is displayed
     const name = `${node.data.negated ? "¬" : ""}${node.data.name}`;
-
-    useEffect(() => {
-        if (!ref.current) {
-            return;
-        }
-
-        const box = ref.current.getBBox();
-        box.width += 16;
-        box.x -= 8;
-        box.height += 8;
-        box.y -= 4;
-        setDims(box);
-    });
 
     /**
      * Handle the onClick event of the node
@@ -63,29 +42,18 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
         }
     };
 
-    const { width, height, x: bgX, y: bgY } = dims;
-
-    const nodeStyle = classMap({
-        [style.node]: true,
-        [style.textSelected]: selected,
-        [style.textClosed]: node.data.isClosed
-    });
-
     return (
         <g
             onClick={handleClick}
             class={node.data.isClosed ? style.nodeClosed : style.node}
         >
-            <rect
-                class={filling + " " + (selected ? style.rectSelected : "")}
-                x={bgX}
-                y={bgY}
-                width={width}
-                height={height}
-                rx="4"
+            <Rectangle
+                elementRef={textRef}
+                disabled={node.data.isClosed}
+                selected={selected}
             />
             <text
-                ref={ref}
+                ref={textRef}
                 text-anchor="middle"
                 class={nodeStyle}
                 x={(node as any).x}

@@ -1,9 +1,11 @@
+import { ResolutionMove, ResolutionState } from "./resolution";
 import { TableauxMove, TableauxState } from "./tableaux";
 
-export type Calculus = "prop-tableaux";
+export type Calculus = "prop-tableaux" | "prop-resolution";
 
 export interface Move {
     "prop-tableaux": TableauxMove;
+    "prop-resolution": ResolutionMove;
 }
 
 /**
@@ -14,6 +16,7 @@ export interface AppState {
     notification?: Notification;
     smallScreen: boolean;
     "prop-tableaux"?: TableauxState;
+    "prop-resolution"?: ResolutionState;
 }
 
 export interface DerivedAppState extends AppState {
