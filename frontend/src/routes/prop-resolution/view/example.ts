@@ -13,14 +13,13 @@ const example: ResolutionState = {
             {
                 atoms: [
                     { lit: "c", negated: true },
-                    { lit: "a", negated: true },
-                    { lit: "d", negated: false }
+                    { lit: "ad", negated: true }
                 ]
             },
             {
                 atoms: [
                     { lit: "d", negated: false },
-                    { lit: "c", negated: false }
+                    { lit: "d", negated: false }
                 ]
             },
             {
@@ -40,7 +39,8 @@ const example: ResolutionState = {
         ]
     },
     highlightSelectable: true,
-    seal: "1B1EA116706E73E55AE0B2CADA263D48086737C38D33E05CD760ED5852A0085C"
+    newestNode: -1,
+    seal: "CE5D43AB2B2794CF8B842BF036E07231576A205B5E7B2E373F7723C209F0C107"
 };
 
 export default example;

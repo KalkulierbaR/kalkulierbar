@@ -16,12 +16,14 @@ interface Props {
      * Whether the rectangle has a selected-style
      */
     selected: boolean;
+    class?: string;
 }
 
 const Rectangle: preact.FunctionalComponent<Props> = ({
     elementRef,
     disabled,
-    selected
+    selected,
+    class: className = ""
 }) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
@@ -43,7 +45,8 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
             className={classMap({
                 [style.active]: !disabled,
                 [style.disabled]: disabled,
-                [style.selected]: selected
+                [style.selected]: selected,
+                [className]: className
             })}
             x={dims.x}
             y={dims.y}

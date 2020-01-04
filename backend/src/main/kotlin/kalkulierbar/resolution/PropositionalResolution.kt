@@ -60,6 +60,8 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         val (a1, a2) = findResCandidates(atomsInC1, atomsInC2)
                 ?: throw IllegalMove(msg)
 
+        state.newestNode = clauses.size
+
         clauses.add(buildClause(c1, a1, c2, a2))
 
         return state
@@ -185,11 +187,13 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
 
 @Serializable
 class ResolutionState(val clauseSet: ClauseSet, val highlightSelectable: Boolean) : ProtectedState() {
+    var newestNode = -1
+
     override var seal = ""
 
     override fun getHash(): String {
         val clauseSetHash = clauseSet.toString()
-        return "resolutionstate|$clauseSetHash|$highlightSelectable"
+        return "resolutionstate|$clauseSetHash|$highlightSelectable|$newestNode"
     }
 }
 

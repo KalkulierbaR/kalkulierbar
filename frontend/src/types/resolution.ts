@@ -5,6 +5,7 @@ export interface ResolutionState {
     seal: string;
     clauseSet: ClauseSet;
     highlightSelectable: boolean;
+    newestNode: number;
 }
 
 export interface ResolutionMove {

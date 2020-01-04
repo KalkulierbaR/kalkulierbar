@@ -1,7 +1,6 @@
-import { createRef, Fragment, h } from "preact";
+import { Fragment, h } from "preact";
 
 import { arc, event, pie, PieArcDatum, select, zoom } from "d3";
-import { classMap } from "../../../helpers/class-map";
 import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
 
@@ -9,7 +8,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { Transform } from "../../../types/ui";
 import FAB from "../../fab";
 import CenterIcon from "../../icons/center";
-import Rectangle from "../../rectangle";
+import ResolutionNode from "../node";
 import * as style from "./style.scss";
 
 interface Props {
@@ -26,6 +25,7 @@ interface Props {
      */
     selectedClauseId: number | undefined;
     highlightSelectable: boolean;
+    newestNode: number;
 }
 
 const CLAUSE_LENGTH_FACTOR = 0.1;
@@ -35,7 +35,8 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
     selectClauseCallback,
     selectedClauseId,
-    highlightSelectable
+    highlightSelectable,
+    newestNode
 }) => {
     const svg = useRef<SVGSVGElement>();
     const [dims, setDims] = useState<[number, number]>([0, 0]);
@@ -114,45 +115,23 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     {
                         <Fragment>
                             {coords.map((coordinates, index) => {
-                                const disabled = highlightSelectable
-                                    ? selectedClauseId !== undefined &&
-                                      selectedClauseId !== index &&
-                                      clauses[index].candidateLiterals
-                                          .length === 0
-                                    : false;
-                                const selected = selectedClauseId === index;
-                                const textRef = createRef<SVGTextElement>();
+                                const disabled =
+                                    highlightSelectable &&
+                                    selectedClauseId !== undefined &&
+                                    selectedClauseId !== index &&
+                                    clauses[index].candidateLiterals.length ===
+                                        0;
                                 return (
-                                    <g
+                                    <ResolutionNode
                                         key={index}
-                                        onClick={() =>
-                                            !disabled &&
-                                            selectClauseCallback(index)
-                                        }
-                                        class={
-                                            disabled
-                                                ? style.nodeDisabled
-                                                : style.node
-                                        }
-                                    >
-                                        <Rectangle
-                                            elementRef={textRef}
-                                            disabled={disabled}
-                                            selected={selected}
-                                        />
-                                        <text
-                                            x={coordinates[0]}
-                                            y={coordinates[1]}
-                                            text-anchor="middle"
-                                            ref={textRef}
-                                            class={classMap({
-                                                [style.textClosed]: disabled,
-                                                [style.textSelected]: selected
-                                            })}
-                                        >
-                                            {clauseToString(clauses[index])}
-                                        </text>
-                                    </g>
+                                        disabled={disabled}
+                                        selected={selectedClauseId === index}
+                                        coordinates={coordinates}
+                                        index={index}
+                                        clause={clauses[index]}
+                                        selectCallback={selectClauseCallback}
+                                        isNew={index === newestNode}
+                                    />
                                 );
                             })}
                         </Fragment>

@@ -1,0 +1,21 @@
+.node {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.node--new {
+    fill: #e9be4b;
+}
+
+.node--disabled {
+    cursor: default;
+    font-size: 24px;
+}
+
+.text--selected {
+    fill: #fff;
+}
+
+.text--closed {
+    fill: #555555;
+}

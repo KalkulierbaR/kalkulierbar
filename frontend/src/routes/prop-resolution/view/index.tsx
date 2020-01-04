@@ -135,6 +135,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                     selectClauseCallback={selectClauseCallback}
                     selectedClauseId={selectedClauseId}
                     highlightSelectable={state.highlightSelectable}
+                    newestNode={state.newestNode}
                 />
             </div>
             <Dialog
