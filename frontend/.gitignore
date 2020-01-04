@@ -4,5 +4,4 @@ node_modules
 *.lock
 package-lock.json
 *.css.d.ts
-#*.scss.d.ts
 .vscode
