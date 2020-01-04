@@ -26,7 +26,6 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         else
             FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
 
-
         return ResolutionState(parsed, params?.highlightSelectable ?: false)
     }
 
