@@ -6,6 +6,8 @@ plugins {
     id("org.jmailen.kotlinter") version "2.1.2"
     id("io.gitlab.arturbosch.detekt") version "1.1.1"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.3.50"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("java")
 }
 
 repositories {
