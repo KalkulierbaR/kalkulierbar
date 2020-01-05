@@ -1,12 +1,13 @@
-import { Fragment, h } from "preact";
+import { Fragment, h} from "preact";
 import { Link } from "preact-router";
-import { useCallback, useState } from "preact/hooks";
+import {useCallback, useState} from "preact/hooks";
 import { useAppState } from "../../helpers/app-state";
 import { classMap } from "../../helpers/class-map";
 import { AppStateActionType, Theme } from "../../types/app";
 import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";
+import RouterIcon from "../icons/router";
 import SaveIcon from "../icons/save";
 import TextInput from "../input/text";
 import * as style from "./style.scss";
@@ -16,13 +17,14 @@ const Header: preact.FunctionalComponent = () => {
     const { smallScreen } = useAppState();
     const [open, setOpen] = useState(false);
     const toggle = useCallback(() => setOpen(!open), [open]);
+    const setDrawerClosed = () => setOpen(false);
 
     const right = smallScreen ? (
-        <Hamburgler open={open} onClick={toggle} />
+        <Hamburger open={open} onClick={toggle} />
     ) : (
         <Fragment>
             <Settings smallScreen={false} />
-            <Nav />
+            <Nav smallScreen={false} onLinkClick={setDrawerClosed}/>
         </Fragment>
     );
 
@@ -38,17 +40,20 @@ const Header: preact.FunctionalComponent = () => {
             </a>
             <div class={style.spacer} />
             {right}
-            <Drawer open={open} />
+            <Drawer
+                open={open}
+                onLinkClick={setDrawerClosed}
+            />
         </header>
     );
 };
 
-interface HamburglerProps {
+interface HamburgerProps {
     open: boolean;
     onClick?: () => void;
 }
 
-const Hamburgler: preact.FunctionalComponent<HamburglerProps> = ({
+const Hamburger: preact.FunctionalComponent<HamburgerProps> = ({
     open,
     onClick
 }) => (
@@ -62,12 +67,26 @@ const Hamburgler: preact.FunctionalComponent<HamburglerProps> = ({
     </div>
 );
 
-const Nav: preact.FunctionalComponent = () => (
-    <nav class={style.nav}>
-        <Link activeClassName={style.active} href="/prop-tableaux">
+
+interface NavProps {
+    smallScreen: boolean;
+    onLinkClick: CallableFunction;
+}
+
+const Nav: preact.FunctionalComponent<NavProps> = ({
+    smallScreen,
+    onLinkClick
+}) => (
+    <nav
+        class={classMap({
+            [style.nav]: true,
+            [style.hamburgerLink]: smallScreen,
+        })}
+    >
+        <Link onClick={() => onLinkClick()} activeClassName={style.active} href="/prop-tableaux">
             Tableaux
         </Link>
-        <Link activeClassName={style.active} href="/prop-resolution">
+        <Link onClick={() => onLinkClick()} activeClassName={style.active} href="/prop-resolution">
             Resolution
         </Link>
     </nav>
@@ -83,8 +102,11 @@ const Settings: preact.FunctionalComponent<{ smallScreen: boolean }> = ({
             <ThemeSwitcher />
             {smallScreen && <ServerInput />}
             {!smallScreen && (
-                <Btn onClick={() => setShow(!show)}>
-                    <SaveIcon />
+                <Btn
+                    onClick={() => setShow(!show)}
+                    title="Change backend server"
+                >
+                    <RouterIcon />
                     <Dialog
                         onClose={() => setShow(false)}
                         open={show}
@@ -151,9 +173,8 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
     };
 
     return (
-        <div class={style.themeContainer}>
+        <div onClick={onClick} class={style.themeContainer}>
             <button
-                onClick={onClick}
                 class={style.themeSwitcher}
                 title="Change color scheme"
                 id="theme-switcher"
@@ -166,14 +187,15 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
 };
 
 interface DrawerProps {
-    open: boolean;
+    open: boolean,
+    onLinkClick: CallableFunction;
 }
 
-const Drawer: preact.FunctionalComponent<DrawerProps> = ({ open }) => (
+const Drawer: preact.FunctionalComponent<DrawerProps> = ({ open, onLinkClick }) => (
     <div class={classMap({ [style.drawer]: true, [style.open]: open })}>
         <div class={style.inner}>
             <h3>Calculi</h3>
-            <Nav />
+            <Nav smallScreen={true} onLinkClick={onLinkClick} />
             <h3>Settings</h3>
             <Settings smallScreen={true} />
         </div>

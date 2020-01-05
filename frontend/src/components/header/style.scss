@@ -74,6 +74,13 @@
     }
 }
 
+.hamburger-link {
+    a {
+        width: 100%;
+        text-align: left;
+    }
+}
+
 .hamburgler {
     display: none;
     //position: absolute;
@@ -136,6 +143,19 @@
     @media (min-width: 700px) {
         display: flex;
     }
+
+    button {
+        cursor: pointer;
+        padding: 4px 15px;
+        min-width: 50px;
+        text-align: center;
+
+        &:hover,
+        &:active,
+        &:focus {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    }
 }
 
 .drawer {
@@ -180,18 +200,10 @@
         display: inline;
         border: none;
         background: none;
-        cursor: pointer;
         padding: 0 0.25rem;
-        margin-right: 16px;
         transition: all 0.3s;
-        height: 100%;
         outline: none;
-
-        &:hover,
-        &:active,
-        &:focus {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
+        height: 100%;
 
         img {
             width: 1.6rem;
@@ -206,7 +218,9 @@
 .theme-container {
     display: flex;
     align-items: center;
-    margin-bottom: 16px;
+    padding: 10px 0 10px 0;
+    margin-bottom: 15px;
+    cursor: pointer;
 
     @media (min-width: 700px) {
         margin-bottom: 0;
@@ -215,9 +229,16 @@
             display: none;
         }
     }
+
+    //&:hover,
+    //&:active,
+    //&:focus {
+    //    background: rgba(0, 0, 0, 0.2);
+    //}
 }
 
 .server-input {
+    overflow-scrolling: unset;
     @media (min-width: 700px) {
         max-width: 450px;
         margin: 0 auto 16px;
