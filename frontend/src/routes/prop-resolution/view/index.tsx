@@ -10,21 +10,27 @@ import { useAppState } from "../../../helpers/app-state";
 import { CandidateClause } from "../../../types/clause";
 import exampleState from "./example";
 
+/**
+ * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
+ * @param {Array<CandidateClause>} clauses - the clauses to group
+ * @param {number} selectedClauseId - the currently selected group. We will group based on this
+ * @returns {void} - nothing
+ */
 const groupCandidates = (
-    newCandidateClauses: CandidateClause[],
+    clauses: CandidateClause[],
     selectedClauseId: number
 ) => {
-    const notCandidates = newCandidateClauses.filter(
+    const notCandidates = clauses.filter(
         c => c.candidateLiterals.length === 0 && c.index !== selectedClauseId
     );
-    const candidates = newCandidateClauses.filter(
+    const candidates = clauses.filter(
         c => c.candidateLiterals.length !== 0 && c.index !== selectedClauseId
     );
 
     const cs = candidates.length;
     const left = selectedClauseId - Math.floor(cs / 2);
     const right = left + cs;
-    const length = newCandidateClauses.length;
+    const length = clauses.length;
     let nci = 0;
     let ci = 0;
     for (let i = 0; i < length; i++) {
@@ -37,23 +43,26 @@ const groupCandidates = (
 
         if (left >= 0 && right < length) {
             if (i >= left && i <= right) {
-                newCandidateClauses[i] = candidates[ci++];
+                clauses[i] = candidates[ci++];
             } else {
-                newCandidateClauses[i] = notCandidates[nci++];
+                clauses[i] = notCandidates[nci++];
             }
-        } else if (left >= 0) {
+        }
+        // Handle wrap-around
+        else if (left >= 0) {
             if ((i >= left && i < length) || i <= mr) {
-                newCandidateClauses[i] = candidates[ci++];
+                clauses[i] = candidates[ci++];
             } else {
-                newCandidateClauses[i] = notCandidates[nci++];
+                clauses[i] = notCandidates[nci++];
             }
         } else if (right < length) {
             if ((i >= 0 && i <= right) || i >= ml) {
-                newCandidateClauses[i] = candidates[ci++];
+                clauses[i] = candidates[ci++];
             } else {
-                newCandidateClauses[i] = notCandidates[nci++];
+                clauses[i] = notCandidates[nci++];
             }
         } else {
+            // Im 99.9% sure this can't happen. Just in case I am wrong let's log a helpful message
             throw new Error("Daniel made a horrible mistake!");
         }
     }
