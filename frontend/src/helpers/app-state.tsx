@@ -33,6 +33,8 @@ const reducer: Reducer<AppState, AppStateAction> = (
             return { ...state, [action.calculus]: action.value };
         case AppStateActionType.SET_THEME:
             return { ...state, theme: action.value };
+        case AppStateActionType.SET_SERVER:
+            return { ...state, server: action.value };
     }
 };
 

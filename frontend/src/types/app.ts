@@ -53,7 +53,8 @@ export enum AppStateActionType {
     ADD_NOTIFICATION,
     REMOVE_NOTIFICATION,
     UPDATE_CALCULUS_STATE,
-    SET_THEME
+    SET_THEME,
+    SET_SERVER
 }
 
 export interface SetSmallScreen extends AppStateActionBase {
@@ -82,12 +83,18 @@ export interface SetTheme extends AppStateActionBase {
     value: Theme;
 }
 
+export interface SetServer extends AppStateActionBase {
+    type: AppStateActionType.SET_SERVER;
+    value: string;
+}
+
 export type AppStateAction =
     | SetSmallScreen
     | AddNotification
     | RemoveNotification
     | UpdateCalculusState
-    | SetTheme;
+    | SetTheme
+    | SetServer;
 
 export type AppStateUpdater = <C extends Calculus = Calculus>(
     id: C,

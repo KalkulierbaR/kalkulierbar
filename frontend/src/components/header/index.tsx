@@ -4,6 +4,11 @@ import { useCallback, useState } from "preact/hooks";
 import { useAppState } from "../../helpers/app-state";
 import { classMap } from "../../helpers/class-map";
 import { AppStateActionType, Theme } from "../../types/app";
+import Btn from "../btn";
+import Dialog from "../dialog";
+import FAB from "../fab";
+import SaveIcon from "../icons/save";
+import TextInput from "../input/text";
 import * as style from "./style.scss";
 
 // Component used to display the navigation, projects logo and name
@@ -16,7 +21,7 @@ const Header: preact.FunctionalComponent = () => {
         <Hamburgler open={open} onClick={toggle} />
     ) : (
         <Fragment>
-            <Settings />
+            <Settings smallScreen={false} />
             <Nav />
         </Fragment>
     );
@@ -68,11 +73,61 @@ const Nav: preact.FunctionalComponent = () => (
     </nav>
 );
 
-const Settings: preact.FunctionalComponent = () => {
+const Settings: preact.FunctionalComponent<{ smallScreen: boolean }> = ({
+    smallScreen
+}) => {
+    const [show, setShow] = useState(false);
+
     return (
         <div class={style.settings}>
             <ThemeSwitcher />
+            {smallScreen && <ServerInput />}
+            {!smallScreen && (
+                <Btn onClick={() => setShow(!show)}>
+                    <SaveIcon />
+                    <Dialog
+                        onClose={() => setShow(false)}
+                        open={show}
+                        label="Server"
+                    >
+                        <ServerInput showLabel={false} />
+                    </Dialog>
+                </Btn>
+            )}
         </div>
+    );
+};
+
+interface ServerInputProps {
+    showLabel?: boolean;
+}
+
+const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
+    showLabel = true
+}) => {
+    const { dispatch, server } = useAppState();
+    const [newServer, setServer] = useState(server);
+
+    return (
+        <TextInput
+            class={style.serverInput}
+            label={showLabel ? "Server" : undefined}
+            onChange={setServer}
+            value={server}
+            submitButton={
+                <FAB
+                    icon={<SaveIcon />}
+                    label="Save Server URL"
+                    mini={true}
+                    onClick={() =>
+                        dispatch({
+                            type: AppStateActionType.SET_SERVER,
+                            value: newServer
+                        })
+                    }
+                />
+            }
+        />
     );
 };
 
@@ -120,7 +175,7 @@ const Drawer: preact.FunctionalComponent<DrawerProps> = ({ open }) => (
             <h3>Calculi</h3>
             <Nav />
             <h3>Settings</h3>
-            <Settings />
+            <Settings smallScreen={true} />
         </div>
     </div>
 );

@@ -1,0 +1,17 @@
+.label {
+    display: block;
+}
+
+.input {
+    flex-grow: 1;
+    margin-right: 8px;
+    border: 2px solid var(--kbar-accent-color);
+    border-radius: var(--kbar-border-radius);
+    background-color: var(--kbar-3dp-color);
+    color: var(--kbar-primary-text-color);
+    font-size: 1.2em;
+}
+
+.row {
+    display: flex;
+}
