@@ -55,6 +55,6 @@ deploy-api:
     - cd backend
   script:
     - gradle build
-    - dpl --provider=heroku --app=$HEROKU_APP_BACKEND --api-key=$HEROKU_API_KEY
+    - dpl --provider=heroku --app=$HEROKU_APP_BACKEND --api-key=$HEROKU_API_KEY --skip-cleanup
   after_script:
     - cd ..
