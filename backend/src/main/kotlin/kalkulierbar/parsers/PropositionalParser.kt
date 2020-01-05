@@ -28,10 +28,9 @@ open class PropositionalParser {
     fun parse(formula: String): LogicNode {
         tokens = tokenize(formula)
         val res = parseEquiv()
-        if (tokens.isNotEmpty()) {
-            val context = tokens.joinToString(" ")
-            throw InvalidFormulaFormat("Expected end of formula but got '$context' (Position ${tokens.first().srcPosition})")
-        }
+        if (tokens.isNotEmpty())
+            throw InvalidFormulaFormat("Expected end of formula but got ${gotMsg()}")
+
         return res
     }
 
@@ -87,7 +86,7 @@ open class PropositionalParser {
      * Parses a series of 0 or more and-operations
      * @return LogicNode representing the series of and-operations
      */
-    protected fun parseAnd(): LogicNode {
+    protected open fun parseAnd(): LogicNode {
         var stub = parseNot()
 
         while (nextTokenIs(TokenType.AND)) {
@@ -132,14 +131,9 @@ open class PropositionalParser {
      * @return LogicNode representing the variable
      */
     protected fun parseVar(): LogicNode {
-        if (tokens.size == 0)
-            throw InvalidFormulaFormat("Expected variable identifier but got end of input")
+        if (!nextTokenIsIdentifier())
+            throw InvalidFormulaFormat("Expected identifier but got ${gotMsg()}")
 
-        if (!nextTokenIsIdentifier()) {
-            val context = tokens.joinToString(" ")
-            val got = tokens.first()
-            throw InvalidFormulaFormat("Expected identifier but got reserved token '$got' at '$context'")
-        }
         val exp = Var(tokens.first().spelling)
         consume()
         return exp
@@ -177,24 +171,21 @@ open class PropositionalParser {
      * @param expected expected token
      */
     protected fun consume(expectedType: TokenType) {
-        if (tokens.size == 0)
-            throw InvalidFormulaFormat("Expected token '$expectedType' but got end of input")
-        else if (tokens.first().type == expectedType)
-            consume()
-        else {
-            val got = tokens.first()
-            val context = tokens.joinToString(" ")
-            throw InvalidFormulaFormat("Unexpected token: '$got', expected '$expectedType' at '$context' (Position ${got.srcPosition})")
-        }
+        if (!nextTokenIs(expectedType))
+            throw InvalidFormulaFormat("Expected '$expectedType' but got ${gotMsg()}")
+        consume()
+    }
+
+    protected fun gotMsg(): String {
+        if (tokens.size > 0)
+            return "'${tokens.first()}' at position ${tokens.first().srcPosition}"
+        return "end of input"
     }
 
     companion object Companion {
 
-        // Tokens not permitted as variable names
-        val reservedTokens = listOf("&", "|", "!", "(", ")", ",", "->", "<=>", "<->")
-
         // Single-character tokens can be handled in one step
-        protected val oneCharToken = Regex("[\\(\\)!&\\|,]")
+        protected val oneCharToken = Regex("[\\(\\)!&\\|,\\:]")
         protected val whitespace = Regex("\\s")
 
         // Might be reasonable to treat the first character of a varname
@@ -244,6 +235,7 @@ open class PropositionalParser {
                     '(' -> ttype = TokenType.LPAREN
                     ')' -> ttype = TokenType.RPAREN
                     ',' -> ttype = TokenType.COMMA
+                    ':' -> ttype = TokenType.COLON
                     else -> ttype = TokenType.UNKNOWN
                 }
 
@@ -258,6 +250,12 @@ open class PropositionalParser {
             } else if (i + 2 < len && formula.substring(i, i + 3) == "<->") {
                 tokens.add(Token(TokenType.EQUIVALENCE, "<->", i))
                 i += 3
+            } else if (i + 2 < len && formula.substring(i, i + 3) == "\\ex") {
+                tokens.add(Token(TokenType.EXISTENTIALQUANT, "\\ex", i))
+                i += 3
+            } else if (i + 3 < len && formula.substring(i, i + 4) == "\\all") {
+                tokens.add(Token(TokenType.UNIVERSALQUANT, "\\all", i))
+                i += 4
             } else if (whitespace matches formula[i].toString()) {
                 i += 1 // Skip whitespace
             } else if (permittedVarStartChars matches formula[i].toString()) {
@@ -284,5 +282,6 @@ data class Token(val type: TokenType, val spelling: String, val srcPosition: Int
 }
 
 enum class TokenType {
-    AND, OR, NOT, IMPLICATION, EQUIVALENCE, LPAREN, RPAREN, COMMA, CAPID, LOWERID, UNKNOWN
+    AND, OR, NOT, IMPLICATION, EQUIVALENCE, LPAREN, RPAREN, COMMA, COLON,
+    CAPID, LOWERID, UNIVERSALQUANT, EXISTENTIALQUANT, UNKNOWN
 }
