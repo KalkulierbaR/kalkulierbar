@@ -1,4 +1,11 @@
-build
+build/classes
+build/distributions
+build/jacoco
+build/kotlin
+build/reports
+build/scripts*
+build/test-results
+build/tmp
 .gradle
 .classpath
 .settings
