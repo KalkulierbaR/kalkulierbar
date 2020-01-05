@@ -36,7 +36,7 @@ deploy:
   image: node
   before_script:
     - apt-get update -y
-    - apt-get install ruby-dev
+    - apt-get install ruby-dev -y
     - gem install dpl
     - cd frontend
   script:
@@ -52,7 +52,7 @@ deploy-api:
   image: gradle:jdk11
   before_script:
     - apt-get update -y
-    - apt-get install ruby-dev
+    - apt-get install ruby-dev -y
     - gem install dpl
     - cd backend
   script:
