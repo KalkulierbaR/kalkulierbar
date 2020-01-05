@@ -1,5 +1,15 @@
 /* General styles applying to all components. They can be overwritten */
 
+@mixin dark {
+    --kbar-bg-color: #121212;
+    --kbar-card-color: #212121;
+    --kbar-primary-text-color: #fff;
+    --kbar-link-color: #c2a1fd;
+    --kbar-3dp-color: #242424;
+    --kbar-8dp-color: #2d2d2d;
+    --kbar-selected-color: var(--kbar-accent-color);
+}
+
 :root {
     --kbar-accent-color: #673ab7;
     --kbar-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
@@ -15,6 +25,11 @@
     --kbar-primary-text-color: #444;
     --kbar-link-color: var(--kbar-accent-color);
     --mdc-theme-secondary: var(--kbar-accent-color);
+}
+
+html[data-theme="dark"],
+.dark {
+    @include dark;
 }
 
 html,
@@ -57,14 +72,8 @@ h4 {
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --kbar-bg-color: #121212;
-        --kbar-card-color: #212121;
-        --kbar-primary-text-color: #fff;
-        --kbar-link-color: #c2a1fd;
-        --kbar-3dp-color: #242424;
-        --kbar-8dp-color: #2d2d2d;
-        --kbar-selected-color: var(--kbar-accent-color);
+    html[data-theme="auto"] {
+        @include dark;
     }
 
     .mdc-switch:not(.mdc-switch--checked) .mdc-switch__thumb {

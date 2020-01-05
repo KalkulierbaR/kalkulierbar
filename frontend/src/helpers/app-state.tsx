@@ -1,5 +1,5 @@
 import { createContext, h } from "preact";
-import { Reducer, useContext, useReducer } from "preact/hooks";
+import { Reducer, useContext, useEffect, useReducer } from "preact/hooks";
 import {
     AddNotification,
     AppState,
@@ -8,15 +8,20 @@ import {
     Calculus,
     DerivedAppState,
     NotificationType,
-    RemoveNotification
+    RemoveNotification,
+    Theme
 } from "../types/app";
 
 export const INIT_APP_STATE: AppState = {
     smallScreen: false,
-    server: `http://${location.hostname}:7000`
+    server: `http://${location.hostname}:7000`,
+    theme: Theme.auto
 };
 
-const reducer: Reducer<AppState, AppStateAction> = (state, action) => {
+const reducer: Reducer<AppState, AppStateAction> = (
+    state,
+    action
+): AppState => {
     switch (action.type) {
         case AppStateActionType.SET_SMALL_SCREEN:
             return { ...state, smallScreen: action.value };
@@ -26,6 +31,8 @@ const reducer: Reducer<AppState, AppStateAction> = (state, action) => {
             return { ...state, notification: undefined };
         case AppStateActionType.UPDATE_CALCULUS_STATE:
             return { ...state, [action.calculus]: action.value };
+        case AppStateActionType.SET_THEME:
+            return { ...state, theme: action.value };
     }
 };
 
@@ -85,6 +92,10 @@ export const AppStateProvider = (
         INIT_APP_STATE
     );
     const derived = derive(state, dispatch);
+
+    useEffect(() => {
+        document.documentElement.setAttribute("data-theme", derived.theme);
+    }, [derived.theme]);
 
     return (
         <AppStateCtx.Provider value={derived}>

@@ -1,5 +1,7 @@
 /* Styles for the header component */
 
+@import "../../style/index.scss";
+
 .header {
     position: fixed;
     left: 0;
@@ -39,7 +41,8 @@
     flex-grow: 1;
 }
 
-.header nav {
+.nav {
+    display: none;
     font-size: 100%;
     justify-self: flex-end;
     padding: 0 16px;
@@ -63,6 +66,150 @@
 
         &.active {
             border-bottom: 3px #fff solid;
+        }
+    }
+
+    @media (min-width: 700px) {
+        display: block;
+    }
+}
+
+.hamburgler {
+    display: none;
+    //position: absolute;
+    box-sizing: initial;
+    right: 0;
+    top: 0;
+    margin: 3px;
+    width: 20px;
+    height: 20px;
+    padding: 18px 23px 12px;
+    line-height: 56px;
+    text-align: center;
+    z-index: 100;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: opacity 250ms ease;
+
+    @media (max-width: 700px) {
+        display: block;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+
+    .hb1,
+    .hb2,
+    .hb3 {
+        position: relative;
+        width: 20px;
+        height: 3px;
+        border-width: 1px 0;
+        margin: 0 auto 3px;
+        padding: 0;
+        background: #fff;
+        border-radius: 1px;
+        font-size: 1px;
+        transition: all 200ms ease;
+        transform-origin: 0 0;
+    }
+
+    &.open {
+        .hb1 {
+            transform: translate(4px, -1px) rotate(45deg);
+        }
+
+        .hb2 {
+            opacity: 0;
+        }
+
+        .hb3 {
+            transform: translate(2px, 1px) rotate(-45deg);
+        }
+    }
+}
+
+.settings {
+    display: none;
+
+    @media (min-width: 700px) {
+        display: block;
+    }
+}
+
+.drawer {
+    position: absolute;
+
+    top: 56px;
+    left: 0;
+    right: 0;
+    background-color: #222;
+    height: calc(100vh - 56px);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 250ms ease;
+    @include dark;
+    color: var(--kbar-primary-text-color);
+
+    &.open {
+        max-height: calc(100vh - 56px);
+    }
+
+    .inner {
+        padding: 16px;
+    }
+
+    .nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 0 16px 0;
+    }
+
+    .settings {
+        display: block;
+    }
+}
+
+.theme-switcher {
+    display: none;
+    color: inherit;
+
+    @supports (--foo: green) {
+        display: inline;
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding: 0 0.25rem;
+        margin-right: 16px;
+        transition: all 0.3s;
+        height: 100%;
+        outline: none;
+
+        &:hover,
+        &:active,
+        &:focus {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        img {
+            width: 1.6rem;
+        }
+    }
+
+    @media (min-width: 700px) {
+        margin-right: 0;
+    }
+}
+
+.theme-container {
+    display: flex;
+    align-items: center;
+
+    @media (min-width: 700px) {
+        label {
+            display: none;
         }
     }
 }
