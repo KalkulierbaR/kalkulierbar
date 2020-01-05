@@ -1,6 +1,5 @@
 #defines stages
 stages:
-  - test
   - deploy
 
 #Frontend: yarn build
@@ -31,6 +30,7 @@ deploy:
   stage: deploy
   image: node
   before_script:
+    - gem install dpl
     - cd frontend
   script:
     - yarn
@@ -44,6 +44,7 @@ deploy-api:
   stage: deploy
   image: gradle:jdk11
   before_script:
+    - gem install dpl
     - cd backend
   script:
     - gradle build
