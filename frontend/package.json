@@ -8,7 +8,7 @@
         "start:production": "npm run -s serve",
         "start:development": "npm run -s dev",
         "build": "preact build --prerender=false",
-        "serve": "preact build --prerender=false && serve build/ --single",
+        "serve": "preact build --prerender=false && serve build/ -s -l ${PORT:-8080}",
         "dev": "preact watch",
         "lint": "tslint --project .",
         "test": "jest ./tests",
