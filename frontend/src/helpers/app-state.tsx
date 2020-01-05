@@ -11,8 +11,9 @@ import {
     RemoveNotification,
     Theme
 } from "../types/app";
+import { localStorageGet, localStorageSet } from "./local-storage";
 
-export const INIT_APP_STATE: AppState = {
+const INIT_APP_STATE: AppState = {
     smallScreen: false,
     server: `http://${location.hostname}:7000`,
     theme: Theme.auto
@@ -89,6 +90,8 @@ export const useAppState = () => useContext(AppStateCtx);
 export const AppStateProvider = (
     App: preact.FunctionalComponent
 ): preact.FunctionalComponent => () => {
+    const storedTheme = localStorageGet<Theme>("theme");
+    INIT_APP_STATE.theme = storedTheme || INIT_APP_STATE.theme;
     const [state, dispatch] = useReducer<AppState, AppStateAction>(
         reducer,
         INIT_APP_STATE
@@ -97,6 +100,7 @@ export const AppStateProvider = (
 
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", derived.theme);
+        localStorageSet("theme", derived.theme);
     }, [derived.theme]);
 
     return (
