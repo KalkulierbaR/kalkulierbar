@@ -8,7 +8,6 @@ import * as style from "./style.scss";
 
 interface Props {
     selected: boolean;
-    index: number;
     disabled: boolean;
     selectCallback: (index: number) => void;
     coordinates: [number, number];
@@ -17,7 +16,6 @@ interface Props {
 }
 
 const ResolutionNode: preact.FunctionalComponent<Props> = ({
-    index,
     selected,
     disabled,
     selectCallback,
@@ -28,7 +26,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
     const textRef = createRef<SVGTextElement>();
     return (
         <g
-            onClick={() => !disabled && selectCallback(index)}
+            onClick={() => !disabled && selectCallback(clause.index)}
             class={disabled ? style.nodeDisabled : style.node}
         >
             <Rectangle

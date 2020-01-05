@@ -97,7 +97,10 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         .outerRadius(0.9 * radius);
 
     // We calculate coordinates for our pie slices
-    const coords = arcs.map(a => gen.centroid(a));
+    const coords = arcs.map(a => ({
+        data: a.data,
+        coords: gen.centroid(a)
+    }));
 
     return (
         <div class="card">
@@ -114,23 +117,24 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 >
                     {
                         <Fragment>
-                            {coords.map((coordinates, index) => {
+                            {coords.map(node => {
                                 const disabled =
                                     highlightSelectable &&
                                     selectedClauseId !== undefined &&
-                                    selectedClauseId !== index &&
-                                    clauses[index].candidateLiterals.length ===
-                                        0;
+                                    selectedClauseId !== node.data.index &&
+                                    node.data.candidateLiterals.length === 0;
+
                                 return (
                                     <ResolutionNode
-                                        key={index}
+                                        key={node.data.index}
                                         disabled={disabled}
-                                        selected={selectedClauseId === index}
-                                        coordinates={coordinates}
-                                        index={index}
-                                        clause={clauses[index]}
+                                        selected={
+                                            selectedClauseId === node.data.index
+                                        }
+                                        coordinates={node.coords}
+                                        clause={node.data}
                                         selectCallback={selectClauseCallback}
-                                        isNew={index === newestNode}
+                                        isNew={node.data.index === newestNode}
                                     />
                                 );
                             })}
