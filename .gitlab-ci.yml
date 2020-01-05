@@ -1,5 +1,6 @@
 #defines stages
 stages:
+  - test
   - deploy
 
 #Frontend: yarn build
@@ -13,6 +14,8 @@ yarn:
     - yarn build
   after_script:
     - cd ..
+  only:
+    - master
 
 #Backend: gradle build
 gradle:
@@ -24,6 +27,8 @@ gradle:
     - gradle build
   after_script:
     - cd ..
+  only:
+    - master
 
 deploy:
   type: deploy
