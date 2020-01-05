@@ -54,6 +54,7 @@ deploy-api:
     - gem install dpl
     - cd backend
   script:
+    - gradle build
     - dpl --provider=heroku --app=$HEROKU_APP_BACKEND --api-key=$HEROKU_API_KEY
   after_script:
     - cd ..
