@@ -16,7 +16,7 @@ const isDeployed = location.port !== "8080";
 export const INIT_APP_STATE: AppState = {
     smallScreen: false,
     server: isDeployed
-        ? "https://kalkulierbar-api.herokuapp.com/"
+        ? "https://kalkulierbar-api.herokuapp.com"
         : `http://${location.hostname}:7000`
 };
 
