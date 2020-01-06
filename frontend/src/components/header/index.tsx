@@ -118,7 +118,10 @@ const Settings: preact.FunctionalComponent<{ smallScreen: boolean }> = ({
                         open={show}
                         label="Server"
                     >
-                        <ServerInput showLabel={false} />
+                        <ServerInput
+                            showLabel={false}
+                            close={() => setShow(false)}
+                        />
                     </Dialog>
                 </Fragment>
             )}
@@ -128,10 +131,12 @@ const Settings: preact.FunctionalComponent<{ smallScreen: boolean }> = ({
 
 interface ServerInputProps {
     showLabel?: boolean;
+    close?: () => void;
 }
 
 const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
-    showLabel = true
+    showLabel = true,
+    close
 }) => {
     const { dispatch, server } = useAppState();
     const [newServer, setServer] = useState(server);
@@ -147,12 +152,15 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                     icon={<SaveIcon />}
                     label="Save Server URL"
                     mini={true}
-                    onClick={() =>
+                    onClick={() => {
                         dispatch({
                             type: AppStateActionType.SET_SERVER,
                             value: newServer
-                        })
-                    }
+                        });
+                        if (close) {
+                            close();
+                        }
+                    }}
                 />
             }
         />

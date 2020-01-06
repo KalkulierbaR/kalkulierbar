@@ -1,5 +1,5 @@
 import { ComponentChild, h } from "preact";
-import { useRef } from "preact/hooks";
+import { useRef, useState } from "preact/hooks";
 
 import * as style from "./style.scss";
 
@@ -20,6 +20,8 @@ const TextInput: preact.FunctionalComponent<Props> = ({
 }) => {
     const input = useRef<HTMLInputElement>();
 
+    const [text, setText] = useState(value);
+
     return (
         <div {...props}>
             <label>{label}</label>
@@ -27,11 +29,14 @@ const TextInput: preact.FunctionalComponent<Props> = ({
                 <input
                     class={style.input}
                     ref={input}
-                    value={value}
-                    onInput={e =>
-                        onChange &&
-                        onChange((e.target as HTMLInputElement).value)
-                    }
+                    value={text}
+                    onInput={e => {
+                        const res = (e.target as HTMLInputElement).value;
+                        setText(res);
+                        if (onChange) {
+                            onChange(res);
+                        }
+                    }}
                 />
                 {submitButton}
             </div>
