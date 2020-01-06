@@ -9,6 +9,9 @@ import Dialog from "../dialog";
 import FAB from "../fab";
 import RouterIcon from "../icons/router";
 import SaveIcon from "../icons/save";
+import ThemeAuto from "../icons/theme-auto";
+import ThemeDark from "../icons/theme-dark";
+import ThemeLight from "../icons/theme-light";
 import TextInput from "../input/text";
 import * as style from "./style.scss";
 
@@ -103,7 +106,7 @@ const Settings: preact.FunctionalComponent<{ smallScreen: boolean }> = ({
 
     return (
         <div class={style.settings}>
-            <ThemeSwitcher />
+            <ThemeSwitcher smallScreen={smallScreen}/>
             {smallScreen && <ServerInput />}
             {!smallScreen && (
                 <Fragment>
@@ -167,7 +170,11 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     );
 };
 
-const ThemeSwitcher: preact.FunctionalComponent = () => {
+interface ThemeSwitcherProps {
+    smallScreen: boolean;
+}
+
+const ThemeSwitcher: preact.FunctionalComponent<ThemeSwitcherProps> = ({smallScreen}) => {
     const { theme, dispatch } = useAppState();
 
     const onClick = () => {
@@ -186,16 +193,27 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
         dispatch({ type: AppStateActionType.SET_THEME, value: newTheme });
     };
 
+    const themeSwitcherIcon = () => {
+        switch (theme) {
+            case Theme.light:
+                return <ThemeLight />;
+            case Theme.dark:
+                return <ThemeDark />;
+            case Theme.auto:
+                return <ThemeAuto />;
+        }
+    };
+
     return (
         <div onClick={onClick} class={style.themeContainer}>
-            <button
+            <Btn
                 class={style.themeSwitcher}
                 title="Change color scheme"
                 id="theme-switcher"
             >
-                <img src={`/assets/theme-${theme}.svg`} alt="Theme" />
-            </button>
-            <label for="theme-switcher">Theme</label>
+                {themeSwitcherIcon()}
+            </Btn>
+            {smallScreen ? <label style="cursor:pointer" for='theme-switcher'>&nbsp;Color theme</label> : ""}
         </div>
     );
 };

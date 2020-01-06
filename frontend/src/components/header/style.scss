@@ -152,13 +152,13 @@
     top: 56px;
     left: 0;
     right: 0;
-    background-color: #222;
     height: calc(100vh - 56px);
     overflow: hidden;
     max-height: 0;
     transition: max-height 250ms ease;
-    @include dark;
+    //@include dark;
     color: var(--kbar-primary-text-color);
+    background-color: var(--kbar-card-color);
 
     &.open {
         max-height: calc(100vh - 56px);
@@ -173,6 +173,10 @@
         flex-direction: column;
         align-items: flex-start;
         padding: 0 0 16px 0;
+
+        a {
+            color: var(--kbar-primary-text-color);
+        }
     }
 
     .settings {
@@ -188,7 +192,6 @@
     @supports (--foo: green) {
         display: inline;
         border: none;
-        background: none;
         padding: 0 0.25rem;
         transition: all 0.3s;
         outline: none;
@@ -219,11 +222,13 @@
         }
     }
 
-    //&:hover,
-    //&:active,
-    //&:focus {
-    //    background: rgba(0, 0, 0, 0.2);
-    //}
+    @media (max-width: 700px) {
+        &:hover,
+        &:active,
+        &:focus {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    }
 }
 
 .server-input {
