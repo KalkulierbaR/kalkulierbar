@@ -142,6 +142,7 @@
 
     @media (min-width: 700px) {
         display: flex;
+        margin-right: 16px;
     }
 }
 
@@ -182,6 +183,7 @@
 .theme-switcher {
     display: none;
     color: inherit;
+    cursor: pointer;
 
     @supports (--foo: green) {
         display: inline;
