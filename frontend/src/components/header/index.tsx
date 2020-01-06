@@ -23,8 +23,8 @@ const Header: preact.FunctionalComponent = () => {
         <Hamburger open={open} onClick={toggle} />
     ) : (
         <Fragment>
-            <Settings smallScreen={false} />
             <Nav smallScreen={false} onLinkClick={setDrawerClosed} />
+            <Settings smallScreen={false} />
         </Fragment>
     );
 
