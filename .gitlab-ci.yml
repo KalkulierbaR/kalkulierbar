@@ -39,8 +39,6 @@ deploy:
     - dpl --provider=heroku --app=$HEROKU_APP_FRONTEND --api-key=$HEROKU_API_KEY
   after_script:
     - cd ..
-  only:
-    - dev
 
 deploy-api:
   type: deploy
@@ -53,9 +51,6 @@ deploy-api:
     - cd backend
   script:
     - gradle build
-    - ls
     - dpl --provider=heroku --app=$HEROKU_APP_BACKEND --api-key=$HEROKU_API_KEY --skip-cleanup
   after_script:
     - cd ..
-  only:
-    - dev
