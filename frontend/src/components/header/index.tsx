@@ -213,7 +213,7 @@ const ThemeSwitcher: preact.FunctionalComponent<ThemeSwitcherProps> = ({smallScr
             >
                 {themeSwitcherIcon()}
             </Btn>
-            {smallScreen ? <label style="cursor:pointer" for='theme-switcher'>&nbsp;Color theme</label> : ""}
+            {smallScreen ? <label style="cursor:pointer" for='theme-switcher'>&nbsp;&nbsp;Color theme</label> : ""}
         </div>
     );
 };
