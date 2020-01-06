@@ -341,12 +341,7 @@ class Relation(val spelling: String, val arguments: List<FirstOrderTerm>) : Logi
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
 }
 
-class UniversalQuantifier(val varName: String, val child: LogicNode, val boundVariables: List<QuantifiedVariable>) : LogicNode() {
-    override fun toBasicOps(): LogicNode {
-        child.toBasicOps()
-        return this
-    }
-
+class UniversalQuantifier(val varName: String, val child: LogicNode, val boundVariables: List<QuantifiedVariable>) : UnaryOp() {
     override fun naiveCNF() = throw FormulaConversionException("CNF conversion applied on universal quantifier")
     override fun tseytin(cs: ClauseSet, index: Int) = throw FormulaConversionException("CNF conversion applied on universal quantifier")
     override fun getTseytinName(index: Int) = "forall$index"
@@ -354,12 +349,7 @@ class UniversalQuantifier(val varName: String, val child: LogicNode, val boundVa
     override fun toString() = "(∀$varName(${boundVariables.size}): $child)"
 }
 
-class ExistentialQuantifier(val varName: String, val child: LogicNode, val boundVariables: List<QuantifiedVariable>) : LogicNode() {
-    override fun toBasicOps(): LogicNode {
-        child.toBasicOps()
-        return this
-    }
-
+class ExistentialQuantifier(val varName: String, val child: LogicNode, val boundVariables: List<QuantifiedVariable>) : UnaryOp() {
     override fun naiveCNF() = throw FormulaConversionException("CNF conversion applied on existential quantifier")
     override fun tseytin(cs: ClauseSet, index: Int) = throw FormulaConversionException("CNF conversion applied on existential quantifier")
     override fun getTseytinName(index: Int) = "exists$index"
