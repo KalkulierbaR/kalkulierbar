@@ -59,9 +59,10 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         val (a1, a2) = findResCandidates(atomsInC1, atomsInC2)
                 ?: throw IllegalMove(msg)
 
-        state.newestNode = clauses.size
+        // Add the new node where the second one was. This should be pretty nice for the user
+        state.newestNode = cId2
 
-        clauses.add(buildClause(c1, a1, c2, a2))
+        clauses.add(state.newestNode, buildClause(c1, a1, c2, a2))
 
         return state
     }
