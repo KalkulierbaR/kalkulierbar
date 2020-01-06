@@ -1,6 +1,6 @@
-import { Fragment, h} from "preact";
+import { Fragment, h } from "preact";
 import { Link } from "preact-router";
-import {useCallback, useState} from "preact/hooks";
+import { useCallback, useState } from "preact/hooks";
 import { useAppState } from "../../helpers/app-state";
 import { classMap } from "../../helpers/class-map";
 import { AppStateActionType, Theme } from "../../types/app";
@@ -24,7 +24,7 @@ const Header: preact.FunctionalComponent = () => {
     ) : (
         <Fragment>
             <Settings smallScreen={false} />
-            <Nav smallScreen={false} onLinkClick={setDrawerClosed}/>
+            <Nav smallScreen={false} onLinkClick={setDrawerClosed} />
         </Fragment>
     );
 
@@ -40,10 +40,7 @@ const Header: preact.FunctionalComponent = () => {
             </a>
             <div class={style.spacer} />
             {right}
-            <Drawer
-                open={open}
-                onLinkClick={setDrawerClosed}
-            />
+            <Drawer open={open} onLinkClick={setDrawerClosed} />
         </header>
     );
 };
@@ -67,7 +64,6 @@ const Hamburger: preact.FunctionalComponent<HamburgerProps> = ({
     </div>
 );
 
-
 interface NavProps {
     smallScreen: boolean;
     onLinkClick: CallableFunction;
@@ -80,13 +76,21 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
     <nav
         class={classMap({
             [style.nav]: true,
-            [style.hamburgerLink]: smallScreen,
+            [style.hamburgerLink]: smallScreen
         })}
     >
-        <Link onClick={() => onLinkClick()} activeClassName={style.active} href="/prop-tableaux">
+        <Link
+            onClick={() => onLinkClick()}
+            activeClassName={style.active}
+            href="/prop-tableaux"
+        >
             Tableaux
         </Link>
-        <Link onClick={() => onLinkClick()} activeClassName={style.active} href="/prop-resolution">
+        <Link
+            onClick={() => onLinkClick()}
+            activeClassName={style.active}
+            href="/prop-resolution"
+        >
             Resolution
         </Link>
     </nav>
@@ -102,11 +106,13 @@ const Settings: preact.FunctionalComponent<{ smallScreen: boolean }> = ({
             <ThemeSwitcher />
             {smallScreen && <ServerInput />}
             {!smallScreen && (
-                <Btn
-                    onClick={() => setShow(!show)}
-                    title="Change backend server"
-                >
-                    <RouterIcon />
+                <Fragment>
+                    <Btn
+                        onClick={() => setShow(!show)}
+                        title="Change backend server"
+                    >
+                        <RouterIcon />
+                    </Btn>
                     <Dialog
                         onClose={() => setShow(false)}
                         open={show}
@@ -114,7 +120,7 @@ const Settings: preact.FunctionalComponent<{ smallScreen: boolean }> = ({
                     >
                         <ServerInput showLabel={false} />
                     </Dialog>
-                </Btn>
+                </Fragment>
             )}
         </div>
     );
@@ -187,11 +193,14 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
 };
 
 interface DrawerProps {
-    open: boolean,
+    open: boolean;
     onLinkClick: CallableFunction;
 }
 
-const Drawer: preact.FunctionalComponent<DrawerProps> = ({ open, onLinkClick }) => (
+const Drawer: preact.FunctionalComponent<DrawerProps> = ({
+    open,
+    onLinkClick
+}) => (
     <div class={classMap({ [style.drawer]: true, [style.open]: open })}>
         <div class={style.inner}>
             <h3>Calculi</h3>

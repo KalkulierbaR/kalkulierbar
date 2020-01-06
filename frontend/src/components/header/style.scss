@@ -143,19 +143,6 @@
     @media (min-width: 700px) {
         display: flex;
     }
-
-    button {
-        cursor: pointer;
-        padding: 4px 15px;
-        min-width: 50px;
-        text-align: center;
-
-        &:hover,
-        &:active,
-        &:focus {
-            background: rgba(0, 0, 0, 0.2);
-        }
-    }
 }
 
 .drawer {
@@ -239,6 +226,7 @@
 
 .server-input {
     overflow-scrolling: unset;
+
     @media (min-width: 700px) {
         max-width: 450px;
         margin: 0 auto 16px;

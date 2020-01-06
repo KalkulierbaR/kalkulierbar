@@ -19,6 +19,8 @@
     min-width: 60vw;
     max-height: 60vh;
     overflow-y: scroll;
+    opacity: 1;
+    z-index: 11;
 }
 
 .content > * {
