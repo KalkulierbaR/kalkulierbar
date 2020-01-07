@@ -3,12 +3,16 @@
     font-size: 24px;
 }
 
-.nodeDisabled {
+.node--disabled {
     cursor: default;
     font-size: 24px;
 }
 
-.textClosed {
+.text--selected {
+    fill: #fff;
+}
+
+.text--closed {
     fill: #555555;
 }
 

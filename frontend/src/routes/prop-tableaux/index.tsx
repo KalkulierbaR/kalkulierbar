@@ -5,8 +5,13 @@ import Switch from "../../components/switch";
 
 import { useState } from "preact/hooks";
 import ClauseInput from "../../components/input/clause";
+import Format from "../../components/input/clause/format";
 import Radio from "../../components/radio";
-import { CnfStrategy, TableauxParams, TableauxType } from "../../types/tableaux";
+import {
+    CnfStrategy,
+    TableauxParams,
+    TableauxType
+} from "../../types/tableaux";
 
 interface Props {}
 
@@ -28,7 +33,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
     };
 
     /**
-     * Handle force naive stragety switch setting
+     * Handle force naive strategy switch setting
      * @param {boolean} forceNaive - Switch setting (false: optimal, true: naive)
      * @returns {void}
      */
@@ -36,60 +41,52 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
         setStrategy(forceNaive ? CnfStrategy.naive : CnfStrategy.optimal);
     };
 
-    const params: TableauxParams = { type: tabType, regular, backtracking, cnfStrategy };
+    const params: TableauxParams = {
+        type: tabType,
+        regular,
+        backtracking,
+        cnfStrategy
+    };
 
     return (
         <Fragment>
             <ClauseInput calculus="prop-tableaux" params={params} />
             <div class="card">
                 <h3>Parameters</h3>
-                <div class={style.form}>
-                    <Switch label="Regular" onChange={setRegular} />
-                    <Switch label="Backtracking" onChange={setBacktracking} />
-                    <div class={style.radioGroup}>
-                        <Radio
-                            id={TableauxType.unconnected}
-                            group="connected"
-                            label="Unconnected"
-                            checked={tabType === TableauxType.unconnected}
-                            onSelect={handleTabTypeSelect}
-                        />
-                        <Radio
-                            id={TableauxType.strong}
-                            group="connected"
-                            label="Strongly Connected"
-                            checked={tabType === TableauxType.strong}
-                            onSelect={handleTabTypeSelect}
-                        />
-                        <Radio
-                            id={TableauxType.weak}
-                            group="connected"
-                            label="Weakly Connected"
-                            checked={tabType === TableauxType.weak}
-                            onSelect={handleTabTypeSelect}
-                        />
-                    </div>
-                    <Switch label="Force naive CNF transformation" onChange={strategySelect} />
+                <div class={style.radioGroup}>
+                    <Radio
+                        id={TableauxType.unconnected}
+                        group="connected"
+                        label="Unconnected"
+                        checked={tabType === TableauxType.unconnected}
+                        onSelect={handleTabTypeSelect}
+                    />
+                    <Radio
+                        id={TableauxType.strong}
+                        group="connected"
+                        label="Strongly Connected"
+                        checked={tabType === TableauxType.strong}
+                        onSelect={handleTabTypeSelect}
+                    />
+                    <Radio
+                        id={TableauxType.weak}
+                        group="connected"
+                        label="Weakly Connected"
+                        checked={tabType === TableauxType.weak}
+                        onSelect={handleTabTypeSelect}
+                    />
                 </div>
+                <br/>
+                <Switch label="Regular" onChange={setRegular} />
+                <br/>
+                <Switch label="Backtracking" onChange={setBacktracking} />
+                <br/>
+                <Switch
+                    label="Force naive CNF transformation"
+                    onChange={strategySelect}
+                />
             </div>
-            <div class="card">
-                <h3>Format</h3>
-                <p>Formulas can be entered in one two different formats:</p>
-                <h4>Clause Sets</h4>
-                <p>
-                    <code>a,!c;b</code>
-                </p>
-                <p>
-                    This formula represents the clause set{" "}
-                    <code>{"{{a, ¬c}, {b}}"}</code>
-                </p>
-                <p>Instead of semicolons, line breaks can be used.</p>
-                <h4>Propositional Formulas</h4>
-                <p>
-                    <code>{"a -> ( b & !c <=> a)"}</code>
-                </p>
-                <p>{"<=> and <->"} are synonymous.</p>
-            </div>
+            <Format />
         </Fragment>
     );
 };
