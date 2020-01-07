@@ -138,12 +138,10 @@
 }
 
 .settings {
-    display: none;
     padding: 0 16px;
 
     @media (min-width: 700px) {
-        display: flex;
-        margin-right: 16px;
+        padding: 0;
     }
 }
 
@@ -160,6 +158,10 @@
     //@include dark;
     color: var(--kbar-primary-text-color);
     background-color: var(--kbar-card-color);
+
+    @media (min-width: 700px) {
+        display: none;
+    }
 
     &.open {
         max-height: calc(100vh - 56px);
@@ -178,10 +180,6 @@
         a {
             color: var(--kbar-link-color);
         }
-    }
-
-    .settings {
-        display: block;
     }
 }
 
@@ -202,10 +200,6 @@
             width: 1.6rem;
         }
     }
-
-    @media (min-width: 700px) {
-        margin-right: 0;
-    }
 }
 
 .theme-container {
@@ -214,14 +208,6 @@
     padding: 10px 0 10px 0;
     margin-bottom: 15px;
     cursor: pointer;
-
-    @media (min-width: 700px) {
-        margin-bottom: 0;
-
-        label {
-            display: none;
-        }
-    }
 
     @media (max-width: 700px) {
         &:hover,
@@ -234,9 +220,22 @@
 
 .server-input {
     overflow-scrolling: unset;
+}
+
+.dialog {
+    display: none;
 
     @media (min-width: 700px) {
-        max-width: 450px;
-        margin: 0 auto 16px;
+        display: block;
+        max-width: 720px;
     }
+}
+
+.more-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    height: 48px;
+    width: 48px;
 }
