@@ -7,8 +7,8 @@ import { AppStateActionType, Theme } from "../../types/app";
 import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";
-import MoreIcon from "../icons/more";
 import SaveIcon from "../icons/save";
+import SettingsIcon from "../icons/settings";
 import ThemeAuto from "../icons/theme-auto";
 import ThemeDark from "../icons/theme-dark";
 import ThemeLight from "../icons/theme-light";
@@ -27,33 +27,35 @@ const Header: preact.FunctionalComponent = () => {
     ) : (
         <Fragment>
             <Nav smallScreen={false} onLinkClick={setClosed} />
-            <Btn class={style.moreBtn} onClick={toggle}>
-                <MoreIcon />
+            <Btn class={style.settingsBtn} onClick={toggle}>
+                <SettingsIcon />
             </Btn>
         </Fragment>
     );
 
     return (
         <header class={classMap({ [style.header]: true, [style.open]: open })}>
-            <a href="/" class={style.mainLink}>
-                <img
-                    class={style.logo}
-                    src="/assets/icons/logo-plain.svg"
-                    alt="KalkulierbaR logo"
-                />
-                <h1>KalkulierbaR</h1>
-            </a>
-            <div class={style.spacer} />
-            {right}
-            <Drawer open={open} onLinkClick={setClosed} />
-            <Dialog
-                class={style.dialog}
-                open={!smallScreen && open}
-                label="Settings"
-                onClose={setClosed}
-            >
-                <Settings />
-            </Dialog>
+            <div class={style.navContainer}>
+                <a href="/" class={style.mainLink}>
+                    <img
+                        class={style.logo}
+                        src="/assets/icons/logo-plain.svg"
+                        alt="KalkulierbaR logo"
+                    />
+                    <h1>KalkulierbaR</h1>
+                </a>
+                <div class={style.spacer} />
+                {right}
+                <Drawer open={open} onLinkClick={setClosed} />
+                <Dialog
+                    class={style.dialog}
+                    open={!smallScreen && open}
+                    label="Settings"
+                    onClose={setClosed}
+                >
+                    <Settings />
+                </Dialog>
+            </div>
         </header>
     );
 };

@@ -16,6 +16,18 @@
     align-items: center;
 }
 
+.nav-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    @media (min-width: 700px) {
+        float: none;
+        position: absolute;
+        left: 10%;
+    }
+}
+
 .logo {
     width: 48px;
     height: 48px;
@@ -71,6 +83,9 @@
 
     @media (min-width: 700px) {
         display: block;
+        position: absolute;
+        left: 210px;
+        justify-content: normal;
     }
 }
 
@@ -231,11 +246,16 @@
     }
 }
 
-.more-btn {
+.settings-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     margin-right: 16px;
     height: 48px;
     width: 48px;
+
+    @media (min-width: 700px) {
+        position: absolute;
+        left: 430px;
+    }
 }
