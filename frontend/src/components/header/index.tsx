@@ -7,8 +7,8 @@ import { AppStateActionType, Theme } from "../../types/app";
 import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";
-import RouterIcon from "../icons/router";
 import SaveIcon from "../icons/save";
+import SettingsIcon from "../icons/settings";
 import ThemeAuto from "../icons/theme-auto";
 import ThemeDark from "../icons/theme-dark";
 import ThemeLight from "../icons/theme-light";
@@ -20,14 +20,16 @@ const Header: preact.FunctionalComponent = () => {
     const { smallScreen } = useAppState();
     const [open, setOpen] = useState(false);
     const toggle = useCallback(() => setOpen(!open), [open]);
-    const setDrawerClosed = () => setOpen(false);
+    const setClosed = useCallback(() => setOpen(false), [open]);
 
     const right = smallScreen ? (
         <Hamburger open={open} onClick={toggle} />
     ) : (
         <Fragment>
-            <Nav smallScreen={false} onLinkClick={setDrawerClosed} />
-            <Settings smallScreen={false} />
+            <Nav smallScreen={false} onLinkClick={setClosed} />
+            <Btn class={style.settingsBtn} onClick={toggle}>
+                <SettingsIcon />
+            </Btn>
         </Fragment>
     );
 
@@ -43,7 +45,15 @@ const Header: preact.FunctionalComponent = () => {
             </a>
             <div class={style.spacer} />
             {right}
-            <Drawer open={open} onLinkClick={setDrawerClosed} />
+            <Drawer open={open} onLinkClick={setClosed} />
+            <Dialog
+                class={style.dialog}
+                open={!smallScreen && open}
+                label="Settings"
+                onClose={setClosed}
+            >
+                <Settings />
+            </Dialog>
         </header>
     );
 };
@@ -99,35 +109,11 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
     </nav>
 );
 
-const Settings: preact.FunctionalComponent<{ smallScreen: boolean }> = ({
-    smallScreen
-}) => {
-    const [show, setShow] = useState(false);
-
+const Settings: preact.FunctionalComponent = () => {
     return (
         <div class={style.settings}>
-            <ThemeSwitcher smallScreen={smallScreen}/>
-            {smallScreen && <ServerInput />}
-            {!smallScreen && (
-                <Fragment>
-                    <Btn
-                        onClick={() => setShow(!show)}
-                        title="Change backend server"
-                    >
-                        <RouterIcon />
-                    </Btn>
-                    <Dialog
-                        onClose={() => setShow(false)}
-                        open={show}
-                        label="Server"
-                    >
-                        <ServerInput
-                            showLabel={false}
-                            close={() => setShow(false)}
-                        />
-                    </Dialog>
-                </Fragment>
-            )}
+            <ThemeSwitcher />
+            <ServerInput />
         </div>
     );
 };
@@ -170,11 +156,7 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     );
 };
 
-interface ThemeSwitcherProps {
-    smallScreen: boolean;
-}
-
-const ThemeSwitcher: preact.FunctionalComponent<ThemeSwitcherProps> = ({smallScreen}) => {
+const ThemeSwitcher: preact.FunctionalComponent = () => {
     const { theme, dispatch } = useAppState();
 
     const onClick = () => {
@@ -213,7 +195,7 @@ const ThemeSwitcher: preact.FunctionalComponent<ThemeSwitcherProps> = ({smallScr
             >
                 {themeSwitcherIcon()}
             </Btn>
-            {smallScreen ? <label style="cursor:pointer" for='theme-switcher'>&nbsp;&nbsp;Color theme</label> : ""}
+            <label for="theme-switcher">Color theme</label>
         </div>
     );
 };
@@ -232,7 +214,7 @@ const Drawer: preact.FunctionalComponent<DrawerProps> = ({
             <h3>Calculi</h3>
             <Nav smallScreen={true} onLinkClick={onLinkClick} />
             <h3>Settings</h3>
-            <Settings smallScreen={true} />
+            <Settings />
         </div>
     </div>
 );

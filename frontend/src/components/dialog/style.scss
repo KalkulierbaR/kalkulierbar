@@ -16,11 +16,40 @@
 }
 
 .container {
+    position: relative;
     min-width: 60vw;
     max-height: 60vh;
     overflow-y: scroll;
     opacity: 1;
     z-index: 11;
+
+    @media (min-width: 700px) {
+        min-width: 700px;
+    }
+
+    h2 {
+        margin-top: 0;
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    color: var(--kbar-primary-text-color);
+    cursor: pointer;
+    height: 48px;
+    width: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    path:first-of-type {
+        fill: var(--kbar-primary-text-color);
+    }
 }
 
 .content > * {

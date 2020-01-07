@@ -9,7 +9,7 @@ import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
-// List of all active calculi (calculuus?)
+// List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution())
 
 @Suppress("MagicNumber")
@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
     val port = 7000
 
     // Only listen globally if cli argument is present
-    val listenGlobally = args.size > 0 && (args[0] == "--global" || args[0] == "-g")
+    val listenGlobally = args.isNotEmpty() && (args[0] == "--global" || args[0] == "-g")
 
     httpApi(port, endpoints, listenGlobally)
 }
@@ -41,19 +41,20 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         // Enable CORS headers
         config.enableCorsForAllOrigins()
 
-        // Set a Jetty server manually for more config options
-        config.server {
-            // Create and configure Jetty server
-            Server().apply {
-                connectors = arrayOf(ServerConnector(this).apply {
-                    this.host = host
-                    this.port = port
-                })
+        if (listenGlobally) {
+            // Set a Jetty server manually for more config options
+            config.server {
+                // Create and configure Jetty server
+                Server().apply {
+                    connectors = arrayOf(ServerConnector(this).apply {
+                        this.host = host
+                    })
+                }
             }
         }
     }
 
-    app.start()
+    app.start(port)
 
     // Catch explicitly thrown exceptions
     app.exception(KalkulierbarException::class.java) { e, ctx ->
@@ -77,10 +78,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         // Small documentation at the main calculus endpoint
         app.get("/$name") { ctx ->
             ctx.result("""Calculus "$name" loaded.
-                |Interact via the /parse /move and /close endpoints
-                |
-                |Calculus Documentation:
-                |${endpoint.getDocumentation()}""".trimMargin())
+                |Interact via the /parse /move and /close endpoints""".trimMargin())
         }
 
         // Parse endpoint takes formula parameter and passes it to calculus implementation

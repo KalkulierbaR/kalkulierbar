@@ -1,7 +1,3 @@
-/* Styles for the header component */
-
-@import "../../style/index.scss";
-
 .header {
     position: fixed;
     left: 0;
@@ -14,17 +10,25 @@
     z-index: 50;
     display: flex;
     align-items: center;
+
+    @media (min-width: 700px) {
+        padding: 0 10vw;
+    }
 }
 
 .logo {
     width: 48px;
     height: 48px;
     margin: 0 0 0 8px;
+
+    @media (min-width: 700px) {
+        margin: 0;
+    }
 }
 
 .header h1 {
     margin: 0;
-    padding: 0 15px;
+    padding: 0 16px;
     font-size: 24px;
     line-height: 56px;
     font-weight: 400;
@@ -51,7 +55,7 @@
         display: inline-block;
         height: 56px;
         line-height: 56px;
-        padding: 0 15px;
+        padding: 0 16px;
         min-width: 50px;
         text-align: center;
         background: rgba(255, 255, 255, 0);
@@ -83,7 +87,6 @@
 
 .hamburgler {
     display: none;
-    //position: absolute;
     box-sizing: initial;
     right: 0;
     top: 0;
@@ -138,11 +141,10 @@
 }
 
 .settings {
-    display: none;
+    padding: 0 16px;
 
     @media (min-width: 700px) {
-        display: flex;
-        margin-right: 16px;
+        padding: 0;
     }
 }
 
@@ -156,9 +158,12 @@
     overflow: hidden;
     max-height: 0;
     transition: max-height 250ms ease;
-    //@include dark;
     color: var(--kbar-primary-text-color);
     background-color: var(--kbar-card-color);
+
+    @media (min-width: 700px) {
+        display: none;
+    }
 
     &.open {
         max-height: calc(100vh - 56px);
@@ -175,12 +180,8 @@
         padding: 0 0 16px 0;
 
         a {
-            color: var(--kbar-primary-text-color);
+            color: var(--kbar-link-color);
         }
-    }
-
-    .settings {
-        display: block;
     }
 }
 
@@ -192,18 +193,14 @@
     @supports (--foo: green) {
         display: inline;
         border: none;
-        padding: 0 0.25rem;
         transition: all 0.3s;
         outline: none;
         height: 100%;
+        margin-right: 16px;
 
         img {
             width: 1.6rem;
         }
-    }
-
-    @media (min-width: 700px) {
-        margin-right: 0;
     }
 }
 
@@ -213,14 +210,6 @@
     padding: 10px 0 10px 0;
     margin-bottom: 15px;
     cursor: pointer;
-
-    @media (min-width: 700px) {
-        margin-bottom: 0;
-
-        label {
-            display: none;
-        }
-    }
 
     @media (max-width: 700px) {
         &:hover,
@@ -233,9 +222,26 @@
 
 .server-input {
     overflow-scrolling: unset;
+}
+
+.dialog {
+    display: none;
 
     @media (min-width: 700px) {
-        max-width: 450px;
-        margin: 0 auto 16px;
+        display: block;
+        max-width: 720px;
+    }
+}
+
+.settings-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    height: 48px;
+    width: 48px;
+
+    @media (min-width: 700px) {
+        margin: 0;
     }
 }
