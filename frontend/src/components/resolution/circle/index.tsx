@@ -5,9 +5,13 @@ import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
 
 import { useEffect, useRef, useState } from "preact/hooks";
+import { checkClose } from "../../../helpers/api";
+import { useAppState } from "../../../helpers/app-state";
 import { Transform } from "../../../types/ui";
+import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
 import CenterIcon from "../../icons/center";
+import CheckCircleIcon from "../../icons/check-circle";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
 
@@ -38,6 +42,12 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     highlightSelectable,
     newestNode
 }) => {
+    const {
+        server,
+        onError,
+        onSuccess,
+        ["prop-resolution"]: state
+    } = useAppState();
     const svg = useRef<SVGSVGElement>();
     const [dims, setDims] = useState<[number, number]>([0, 0]);
     const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
@@ -142,14 +152,32 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     }
                 </g>
             </svg>
-            {(transform.x !== 0 || (transform.y && 0) || transform.k !== 1) && (
+            <ControlFAB>
                 <FAB
-                    class={style.fab}
-                    label="center"
+                    mini={true}
+                    extended={true}
+                    label="Center"
+                    showIconAtEnd={true}
                     icon={<CenterIcon />}
                     onClick={() => setTransform({ x: 0, y: 0, k: 1 })}
                 />
-            )}
+                <FAB
+                    icon={<CheckCircleIcon />}
+                    label="Check"
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() =>
+                        checkClose(
+                            server,
+                            onError,
+                            onSuccess,
+                            "prop-resolution",
+                            state
+                        )
+                    }
+                />
+            </ControlFAB>
         </div>
     );
 };

@@ -1,16 +1,3 @@
 .svg {
     display: block;
 }
-
-.fab {
-    position: fixed;
-    right: 16px;
-    bottom: 16px;
-}
-
-@media (min-width: 700px) {
-    .fab {
-        bottom: 32px;
-        right: 32px;
-    }
-}

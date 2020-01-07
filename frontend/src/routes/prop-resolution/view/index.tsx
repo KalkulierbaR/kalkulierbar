@@ -192,18 +192,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
     return (
         <Fragment>
             <h2>Resolution View</h2>
-            <div class={style.view}>
-                <div>
-                    <CheckCloseBtn calculus="prop-resolution" />
-                </div>
-                <ResolutionCircle
-                    clauses={candidateClauses}
-                    selectClauseCallback={selectClauseCallback}
-                    selectedClauseId={selectedClauseId}
-                    highlightSelectable={state.highlightSelectable}
-                    newestNode={state.newestNode}
-                />
-            </div>
+            <ResolutionCircle
+                clauses={candidateClauses}
+                selectClauseCallback={selectClauseCallback}
+                selectedClauseId={selectedClauseId}
+                highlightSelectable={state.highlightSelectable}
+                newestNode={state.newestNode}
+            />
             <Dialog
                 open={showDialog}
                 label="Choose Literal"
