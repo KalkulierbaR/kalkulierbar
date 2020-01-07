@@ -79,10 +79,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         // Small documentation at the main calculus endpoint
         app.get("/$name") { ctx ->
             ctx.result("""Calculus "$name" loaded.
-                |Interact via the /parse /move and /close endpoints
-                |
-                |Calculus Documentation:
-                |${endpoint.getDocumentation()}""".trimMargin())
+                |Interact via the /parse /move and /close endpoints""".trimMargin())
         }
 
         // Parse endpoint takes formula parameter and passes it to calculus implementation

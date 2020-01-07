@@ -17,13 +17,17 @@ export interface Params {
     "prop-resolution": ResolutionParams;
 }
 
-/**
- * State of all calculi
- */
+export enum Theme {
+    dark = "dark",
+    light = "light",
+    auto = "auto"
+}
+
 export interface AppState {
     server: string;
     notification?: Notification;
     smallScreen: boolean;
+    theme: Theme;
     "prop-tableaux"?: TableauxState;
     "prop-resolution"?: ResolutionState;
 }
@@ -48,7 +52,9 @@ export enum AppStateActionType {
     SET_SMALL_SCREEN,
     ADD_NOTIFICATION,
     REMOVE_NOTIFICATION,
-    UPDATE_CALCULUS_STATE
+    UPDATE_CALCULUS_STATE,
+    SET_THEME,
+    SET_SERVER
 }
 
 export interface SetSmallScreen extends AppStateActionBase {
@@ -72,11 +78,23 @@ export interface UpdateCalculusState<C extends Calculus = Calculus>
     value: AppState[C];
 }
 
+export interface SetTheme extends AppStateActionBase {
+    type: AppStateActionType.SET_THEME;
+    value: Theme;
+}
+
+export interface SetServer extends AppStateActionBase {
+    type: AppStateActionType.SET_SERVER;
+    value: string;
+}
+
 export type AppStateAction =
     | SetSmallScreen
     | AddNotification
     | RemoveNotification
-    | UpdateCalculusState;
+    | UpdateCalculusState
+    | SetTheme
+    | SetServer;
 
 export type AppStateUpdater = <C extends Calculus = Calculus>(
     id: C,
