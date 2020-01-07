@@ -2,7 +2,6 @@ import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import * as style from "./style.scss";
 
-import CheckCloseBtn from "../../../components/check-close";
 import Dialog from "../../../components/dialog";
 import ResolutionCircle from "../../../components/resolution/circle";
 import { sendMove } from "../../../helpers/api";
