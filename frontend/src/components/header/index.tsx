@@ -35,27 +35,25 @@ const Header: preact.FunctionalComponent = () => {
 
     return (
         <header class={classMap({ [style.header]: true, [style.open]: open })}>
-            <div class={style.navContainer}>
-                <a href="/" class={style.mainLink}>
-                    <img
-                        class={style.logo}
-                        src="/assets/icons/logo-plain.svg"
-                        alt="KalkulierbaR logo"
-                    />
-                    <h1>KalkulierbaR</h1>
-                </a>
-                <div class={style.spacer} />
-                {right}
-                <Drawer open={open} onLinkClick={setClosed} />
-                <Dialog
-                    class={style.dialog}
-                    open={!smallScreen && open}
-                    label="Settings"
-                    onClose={setClosed}
-                >
-                    <Settings />
-                </Dialog>
-            </div>
+            <a href="/" class={style.mainLink}>
+                <img
+                    class={style.logo}
+                    src="/assets/icons/logo-plain.svg"
+                    alt="KalkulierbaR logo"
+                />
+                <h1>KalkulierbaR</h1>
+            </a>
+            <div class={style.spacer} />
+            {right}
+            <Drawer open={open} onLinkClick={setClosed} />
+            <Dialog
+                class={style.dialog}
+                open={!smallScreen && open}
+                label="Settings"
+                onClose={setClosed}
+            >
+                <Settings />
+            </Dialog>
         </header>
     );
 };
