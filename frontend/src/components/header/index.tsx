@@ -106,7 +106,7 @@ const Settings: preact.FunctionalComponent<{ smallScreen: boolean }> = ({
 
     return (
         <div class={style.settings}>
-            <ThemeSwitcher smallScreen={smallScreen}/>
+            <ThemeSwitcher smallScreen={smallScreen} />
             {smallScreen && <ServerInput />}
             {!smallScreen && (
                 <Fragment>
@@ -174,7 +174,9 @@ interface ThemeSwitcherProps {
     smallScreen: boolean;
 }
 
-const ThemeSwitcher: preact.FunctionalComponent<ThemeSwitcherProps> = ({smallScreen}) => {
+const ThemeSwitcher: preact.FunctionalComponent<ThemeSwitcherProps> = ({
+    smallScreen
+}) => {
     const { theme, dispatch } = useAppState();
 
     const onClick = () => {
@@ -213,7 +215,7 @@ const ThemeSwitcher: preact.FunctionalComponent<ThemeSwitcherProps> = ({smallScr
             >
                 {themeSwitcherIcon()}
             </Btn>
-            {smallScreen ? <label style="cursor:pointer" for='theme-switcher'>&nbsp;&nbsp;Color theme</label> : ""}
+            {smallScreen ? <label for="theme-switcher">Color theme</label> : ""}
         </div>
     );
 };

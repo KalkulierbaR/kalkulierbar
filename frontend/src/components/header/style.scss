@@ -24,7 +24,7 @@
 
 .header h1 {
     margin: 0;
-    padding: 0 15px;
+    padding: 0 16px;
     font-size: 24px;
     line-height: 56px;
     font-weight: 400;
@@ -51,7 +51,7 @@
         display: inline-block;
         height: 56px;
         line-height: 56px;
-        padding: 0 15px;
+        padding: 0 16px;
         min-width: 50px;
         text-align: center;
         background: rgba(255, 255, 255, 0);
@@ -139,6 +139,7 @@
 
 .settings {
     display: none;
+    padding: 0 16px;
 
     @media (min-width: 700px) {
         display: flex;
@@ -175,7 +176,7 @@
         padding: 0 0 16px 0;
 
         a {
-            color: var(--kbar-primary-text-color);
+            color: var(--kbar-link-color);
         }
     }
 
@@ -192,10 +193,10 @@
     @supports (--foo: green) {
         display: inline;
         border: none;
-        padding: 0 0.25rem;
         transition: all 0.3s;
         outline: none;
         height: 100%;
+        margin-right: 16px;
 
         img {
             width: 1.6rem;
