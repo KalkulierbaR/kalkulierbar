@@ -7,11 +7,29 @@ import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * Boolean to change the style of the node if it is selected
+     */
     selected: boolean;
+    /**
+     * Boolean representing if the node is currently disabled
+     */
     disabled: boolean;
+    /**
+     * The function to call, when the user selects this node
+     */
     selectCallback: (index: number) => void;
+    /**
+     * Where to place the node
+     */
     coordinates: [number, number];
+    /**
+     * Which clause should be the text of the node
+     */
     clause: CandidateClause;
+    /**
+     * Boolean representing if the node is the newest resolvent
+     */
     isNew: boolean;
 }
 
