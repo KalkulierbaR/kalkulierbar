@@ -1,0 +1,12 @@
+.active {
+    fill: #d4bcff;
+}
+
+.disabled {
+    fill: rgb(209, 209, 209);
+}
+
+.selected {
+    stroke: rgb(66, 66, 66);
+    stroke-width: 2;
+}

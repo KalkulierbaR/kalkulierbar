@@ -2,7 +2,7 @@
 
 ## Requirements
 
--   Install [Node.JS](https://nodejs.org/en/download/)
+-   [Download Node.JS](https://nodejs.org/en/download/) and install.
 -   Install [yarn](https://yarnpkg.com/en/docs/install#debian-stable)
 -   Go into `frontend` and use command `yarn`
 -   Done

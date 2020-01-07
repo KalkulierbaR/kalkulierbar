@@ -1,5 +1,5 @@
 import { createContext, h } from "preact";
-import { Reducer, useContext, useEffect, useReducer } from "preact/hooks";
+import { Reducer, useContext, useReducer } from "preact/hooks";
 import {
     AddNotification,
     AppState,
@@ -8,21 +8,15 @@ import {
     Calculus,
     DerivedAppState,
     NotificationType,
-    RemoveNotification,
-    Theme
+    RemoveNotification
 } from "../types/app";
-import { localStorageGet, localStorageSet } from "./local-storage";
 
-const INIT_APP_STATE: AppState = {
+export const INIT_APP_STATE: AppState = {
     smallScreen: false,
-    server: `http://${location.hostname}:7000`,
-    theme: Theme.auto
+    server: `http://${location.hostname}:7000`
 };
 
-const reducer: Reducer<AppState, AppStateAction> = (
-    state,
-    action
-): AppState => {
+const reducer: Reducer<AppState, AppStateAction> = (state, action) => {
     switch (action.type) {
         case AppStateActionType.SET_SMALL_SCREEN:
             return { ...state, smallScreen: action.value };
@@ -32,10 +26,6 @@ const reducer: Reducer<AppState, AppStateAction> = (
             return { ...state, notification: undefined };
         case AppStateActionType.UPDATE_CALCULUS_STATE:
             return { ...state, [action.calculus]: action.value };
-        case AppStateActionType.SET_THEME:
-            return { ...state, theme: action.value };
-        case AppStateActionType.SET_SERVER:
-            return { ...state, server: action.value };
     }
 };
 
@@ -90,18 +80,11 @@ export const useAppState = () => useContext(AppStateCtx);
 export const AppStateProvider = (
     App: preact.FunctionalComponent
 ): preact.FunctionalComponent => () => {
-    const storedTheme = localStorageGet<Theme>("theme");
-    INIT_APP_STATE.theme = storedTheme || INIT_APP_STATE.theme;
     const [state, dispatch] = useReducer<AppState, AppStateAction>(
         reducer,
         INIT_APP_STATE
     );
     const derived = derive(state, dispatch);
-
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", derived.theme);
-        localStorageSet("theme", derived.theme);
-    }, [derived.theme]);
 
     return (
         <AppStateCtx.Provider value={derived}>

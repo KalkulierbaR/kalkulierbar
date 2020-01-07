@@ -2,7 +2,6 @@ import { HierarchyNode } from "d3";
 import { createRef, h } from "preact";
 import { D3Data } from "../tree";
 
-import { classMap } from "../../../helpers/class-map";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 
@@ -56,10 +55,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             <text
                 ref={textRef}
                 text-anchor="middle"
-                class={classMap({
-                    [style.textSelected]: selected,
-                    [style.textClosed]: node.data.isClosed
-                })}
+                class={node.data.isClosed ? style.textClosed : ""}
                 x={(node as any).x}
                 y={(node as any).y}
             >

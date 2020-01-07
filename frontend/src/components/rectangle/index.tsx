@@ -1,7 +1,7 @@
-import { h, RefObject } from "preact";
-import { useEffect, useState } from "preact/hooks";
-import { classMap } from "../../helpers/class-map";
-import * as style from "./style.scss";
+import {h, RefObject} from "preact";
+import {useEffect, useState} from "preact/hooks";
+import {classMap} from "../../helpers/class-map";
+import * as style from "./style.css";
 
 interface Props {
     /**
@@ -23,6 +23,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
     disabled,
     selected
 }) => {
+
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
     useEffect(() => {
@@ -43,7 +44,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
             className={classMap({
                 [style.active]: !disabled,
                 [style.disabled]: disabled,
-                [style.selected]: selected
+                [style.selected]: selected,
             })}
             x={dims.x}
             y={dims.y}

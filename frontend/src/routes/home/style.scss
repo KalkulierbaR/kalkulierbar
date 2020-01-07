@@ -1,21 +1,8 @@
 /* Styles for the home component */
 
-.calculus-list {
-    list-style: none;
-}
-
-.calculus-list-item::before {
-    content: "\2022";
-    color: var(--kbar-accent-color);
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
-}
-
 .home a {
     text-decoration: none;
-    color: var(--kbar-link-color);
+    color: #673ab7;
 
     &:hover,
     &:focus {

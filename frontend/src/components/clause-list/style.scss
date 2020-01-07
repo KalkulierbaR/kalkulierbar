@@ -6,14 +6,14 @@
     margin: 0;
 
     &:hover {
-        background-color: var(--kbar-8dp-color);
+        background-color: rgb(218, 218, 218);
     }
 }
 
 .clause-selected {
-    background-color: var(--kbar-selected-color);
+    background-color: #d4bcff;
 
     &:hover {
-        background-color: var(--kbar-selected-color);
+        background-color: #d4bcff;
     }
 }

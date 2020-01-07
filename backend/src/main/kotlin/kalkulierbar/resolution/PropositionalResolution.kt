@@ -7,8 +7,7 @@ import kalkulierbar.JsonParseException
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
-import kalkulierbar.parsers.CnfStrategy
-import kalkulierbar.parsers.FlexibleClauseSetParser
+import kalkulierbar.parsers.ClauseSetParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.Serializable
@@ -17,15 +16,11 @@ import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecodingException
 
-class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
+class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Any>() {
     override val identifier = "prop-resolution"
 
-    override fun parseFormulaToState(formula: String, params: ResolutionParam?): ResolutionState {
-        val parsed: ClauseSet
-        if (params == null)
-            parsed = FlexibleClauseSetParser.parse(formula)
-        else
-            parsed = FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
+    override fun parseFormulaToState(formula: String, params: Any?): ResolutionState {
+        val parsed = ClauseSetParser.parse(formula)
         return ResolutionState(parsed)
     }
 
@@ -146,26 +141,8 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         }
     }
 
-    /*
-     * Parses a JSON parameter representation into a ResolutionParam object
-     * @param json JSON parameter representation
-     * @return parsed param object
-     */
-    @UnstableDefault
-    override fun jsonToParam(json: String): ResolutionParam {
-        try {
-            return Json.parse(ResolutionParam.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - invalid number format")
-        }
+    override fun jsonToParam(json: String): Any {
+        return 0
     }
 
     override fun getDocumentation(): String {
@@ -189,6 +166,3 @@ class ResolutionState(val clauseSet: ClauseSet) : ProtectedState() {
 
 @Serializable
 data class ResolutionMove(val c1: Int, val c2: Int, val spelling: String)
-
-@Serializable
-data class ResolutionParam(val cnfStrategy: CnfStrategy)

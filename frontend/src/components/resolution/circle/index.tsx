@@ -143,8 +143,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                                             text-anchor="middle"
                                             ref={textRef}
                                             class={classMap({
-                                                [style.textClosed]: disabled,
-                                                [style.textSelected]: selected
+                                                [style.textClosed]: disabled
                                             })}
                                         >
                                             {clauseToString(clauses[index])}
