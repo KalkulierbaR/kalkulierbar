@@ -91,7 +91,6 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
             onClick={() => setShow(false)}
         >
             <FAB
-                class={style.delay3}
                 icon={<UndoIcon />}
                 label="Backtrack"
                 mini={true}
@@ -102,7 +101,6 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
                 }}
             />
             <FAB
-                class={style.delay2}
                 icon={<ExploreIcon />}
                 label="Next Leaf"
                 mini={true}
@@ -121,7 +119,6 @@ const MenuNonSelected: preact.FunctionalComponent<MenuProps> = ({
                 }}
             />
             <FAB
-                class={style.delay1}
                 icon={<CenterIcon />}
                 label="Center"
                 mini={true}
