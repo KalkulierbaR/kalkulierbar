@@ -1,11 +1,12 @@
+
 #defines stages
 stages:
-  - test
-  - deploy
+  - frontend
+  - backend
 
 #Frontend: yarn build
 yarn:
-  stage: test
+  stage: frontend
   image: node
   before_script:
     - cd frontend
@@ -17,7 +18,7 @@ yarn:
 
 #Backend: gradle build
 gradle:
-  stage: test
+  stage: backend
   image: gradle:jdk11
   before_script:
     - cd backend
@@ -25,36 +26,3 @@ gradle:
     - gradle build
   after_script:
     - cd ..
-
-deploy:
-  type: deploy
-  stage: deploy
-  image: node
-  before_script:
-    - apt-get update -y
-    - apt-get install ruby-dev -y
-    - gem install dpl
-    - cd frontend
-  script:
-    - dpl --provider=heroku --app=$HEROKU_APP_FRONTEND --api-key=$HEROKU_API_KEY
-  after_script:
-    - cd ..
-  only:
-    - dev
-
-deploy-api:
-  type: deploy
-  stage: deploy
-  image: gradle:jdk11
-  before_script:
-    - apt-get update -y
-    - apt-get install ruby-dev -y
-    - gem install dpl
-    - cd backend
-  script:
-    - gradle build
-    - dpl --provider=heroku --app=$HEROKU_APP_BACKEND --api-key=$HEROKU_API_KEY --skip-cleanup
-  after_script:
-    - cd ..
-  only:
-    - dev

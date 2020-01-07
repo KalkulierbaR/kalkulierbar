@@ -1,1 +1,0 @@
-web: java -jar build/libs/kalkulierbar-backend-all.jar

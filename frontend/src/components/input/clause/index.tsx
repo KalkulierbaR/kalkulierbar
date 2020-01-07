@@ -2,7 +2,8 @@ import { h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 import { useAppState } from "../../../helpers/app-state";
-import { Calculus, Params } from "../../../types/app";
+import { Calculus } from "../../../types/app";
+import { TableauxParams } from "../../../types/tableaux";
 import Btn from "../../btn";
 import * as style from "./style.scss";
 
@@ -23,7 +24,7 @@ interface Props {
     /**
      * Additional params for the calculus
      */
-    params?: Params[Calculus];
+    params?: TableauxParams;
 }
 
 /**

@@ -153,7 +153,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                                         "prop-resolution",
                                         state!,
                                         {
-                                            c1: selectedClauseId!,
+                                            c1: selectedClauseId,
                                             c2: selectedClauses[1],
                                             spelling: l
                                         },

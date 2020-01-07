@@ -14,11 +14,11 @@ const Home: preact.FunctionalComponent<Props> = () => {
         <div class={style.home}>
             <div className="card">
                 <h3>Choose a calculus</h3>
-                <ul class={style.calculusList}>
-                    <li class={style.calculusListItem}>
+                <ul>
+                    <li>
                         <a href="/prop-tableaux">Tableaux</a>
                     </li>
-                    <li class={style.calculusListItem}>
+                    <li>
                         <a href="/prop-resolution">Resolution</a>
                     </li>
                 </ul>

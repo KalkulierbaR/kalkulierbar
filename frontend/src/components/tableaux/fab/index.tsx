@@ -167,17 +167,6 @@ const MenuNodeSelected: preact.FunctionalComponent<MenuProps> = ({
                 onClick={() => setShow(false)}
             >
                 <FAB
-                    class={style.delay1}
-                    icon={<CenterIcon />}
-                    label="Center"
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() => {
-                        dispatchEvent(new CustomEvent("kbar-center-tree"));
-                    }}
-                />
-                <FAB
                     icon={<AddIcon />}
                     label="Expand"
                     mini={true}

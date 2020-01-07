@@ -1,6 +1,5 @@
 import { h } from "preact";
 import Btn from "../btn";
-import CloseIcon from "../icons/close";
 import * as style from "./style.scss";
 
 interface Props {
@@ -23,7 +22,6 @@ interface Props {
      * Defaults to `false`.
      */
     onConfirm?: () => void;
-    class?: string;
 }
 
 const Dialog: preact.FunctionalComponent<Props> = ({
@@ -31,8 +29,7 @@ const Dialog: preact.FunctionalComponent<Props> = ({
     children,
     label,
     onClose,
-    onConfirm,
-    class: className
+    onConfirm
 }) => {
     /**
      * Handle the click event
@@ -55,13 +52,11 @@ const Dialog: preact.FunctionalComponent<Props> = ({
 
     return (
         <div class={c} onClick={handleClick}>
-            <div class={`card  ${style.container} ${className}`}>
+            <div class={"card " + style.container}>
                 <h2>{label}</h2>
-                <button class={style.closeBtn} onClick={onClose}>
-                    <CloseIcon />
-                </button>
                 <div class={style.content}>{children}</div>
                 <div class={style.actions}>
+                    <Btn onClick={onClose}>Cancel</Btn>
                     {onConfirm && <Btn onClick={onConfirm}>OK</Btn>}
                 </div>
             </div>

@@ -1,50 +1,11 @@
 /* General styles applying to all components. They can be overwritten */
 
-@mixin dark {
-    --kbar-bg-color: #121212;
-    --kbar-card-color: #212121;
-    --kbar-primary-text-color: #fff;
-    --kbar-link-color: #c2a1fd;
-    --kbar-3dp-color: #242424;
-    --kbar-8dp-color: #2d2d2d;
-    --kbar-selected-color: var(--kbar-accent-color);
-    scrollbar-color: dark;
-
-    :global {
-        ::-webkit-scrollbar {
-            background: lighten($color: #212121, $amount: 10);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: lighten($color: #212121, $amount: 20);
-            -webkit-border-radius: 1ex;
-            -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
-        }
-        ::-webkit-scrollbar-corner {
-            background: #000;
-        }
-    }
-}
-
 :root {
     --kbar-accent-color: #673ab7;
     --kbar-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
         0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-    --kbar-shadow-3dp: 0 3px 6px rgba(0, 0, 0, 0.16),
-        0 3px 6px rgba(0, 0, 0, 0.23);
     --kbar-border-radius: 4px;
-    --kbar-bg-color: #fafafa;
-    --kbar-card-color: #fff;
-    --kbar-3dp-color: #fff;
-    --kbar-8dp-color: rgb(218, 218, 218);
-    --kbar-selected-color: #d4bcff;
-    --kbar-primary-text-color: #444;
-    --kbar-link-color: var(--kbar-accent-color);
     --mdc-theme-secondary: var(--kbar-accent-color);
-}
-
-html[data-theme="dark"],
-.dark {
-    @include dark;
 }
 
 html,
@@ -53,10 +14,10 @@ body {
     width: 100%;
     padding: 0;
     margin: 0;
-    background: var(--kbar-bg-color);
+    background: #fafafa;
     font-family: "Helvetica Neue", arial, sans-serif;
     font-weight: 400;
-    color: var(--kbar-primary-text-color);
+    color: #444;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -74,7 +35,7 @@ p {
 }
 
 .card {
-    background-color: var(--kbar-card-color);
+    background-color: #fff;
     border-radius: var(--kbar-border-radius);
     padding: 16px;
     box-shadow: var(--kbar-shadow);
@@ -84,14 +45,4 @@ p {
 h3,
 h4 {
     margin: 0 0 1em 0;
-}
-
-@media (prefers-color-scheme: dark) {
-    html[data-theme="auto"] {
-        @include dark;
-    }
-
-    .mdc-switch:not(.mdc-switch--checked) .mdc-switch__thumb {
-        background-color: #212121 !important;
-    }
 }
