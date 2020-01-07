@@ -1,14 +1,18 @@
-/* Styles for the Clause input component */
+.label {
+    display: block;
+}
 
 .input {
     padding: 8px;
+    flex-grow: 1;
+    margin-right: 8px;
     border: 2px solid var(--kbar-accent-color);
     border-radius: var(--kbar-border-radius);
-    resize: none;
-    width: 100%;
-    min-height: 92px;
-    font-size: 1.3em;
-    margin-block-end: 8px;
     background-color: var(--kbar-3dp-color);
     color: var(--kbar-primary-text-color);
+    font-size: 1.2em;
+}
+
+.row {
+    display: flex;
 }
