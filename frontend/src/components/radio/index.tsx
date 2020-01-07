@@ -1,4 +1,5 @@
 import { h } from "preact";
+
 import * as style from "./style.scss";
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
     label?: string;
     checked?: boolean;
     onSelect?: (e: Event) => void;
+    hint?: string;
 }
 
 const Radio: preact.FunctionalComponent<Props> = ({
@@ -14,10 +16,11 @@ const Radio: preact.FunctionalComponent<Props> = ({
     label,
     checked = false,
     onSelect,
-    id
+    id,
+    hint
 }) => {
     return (
-        <div class={style.container}>
+        <div class={style.container}  data-rh={hint} >
             <div class="mdc-radio">
                 <input
                     class="mdc-radio__native-control"
@@ -33,7 +36,7 @@ const Radio: preact.FunctionalComponent<Props> = ({
                 </div>
                 <div class="mdc-radio__ripple" />
             </div>
-            <label for={id} class={style.label}>
+            <label for={id} class={style.label} >
                 {label}
             </label>
         </div>

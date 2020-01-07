@@ -12,6 +12,10 @@ interface Props {
      * The switch's label
      */
     label?: string;
+    /**
+     * The switch's tooltip
+     */
+    hint?: string;
 }
 
 export default class Switch extends Component<Props, {}> {
@@ -39,7 +43,7 @@ export default class Switch extends Component<Props, {}> {
 
     public render({ label }: Props) {
         return (
-            <div class={style.container}>
+            <div class={style.container} data-rh={this.props.hint} >
                 <div class="mdc-switch" ref={this.switch}>
                     <div class="mdc-switch__track" />
                     <div class={`mdc-switch__thumb-underlay ${style.noRipple}`}>
