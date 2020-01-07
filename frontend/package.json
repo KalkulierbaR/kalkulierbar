@@ -65,7 +65,8 @@
         "preact-jsx-chai": "^3.0.0",
         "preact-markup": "^2.0.0",
         "preact-render-to-string": "^5.0.6",
-        "preact-router": "^3.0.1"
+        "preact-router": "^3.0.1",
+        "react-hint": "^3.2.0"
     },
     "peerDependencies": {
         "prettier": ">1.0.0",
