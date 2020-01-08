@@ -1,5 +1,4 @@
-import { Component, Fragment, h } from "preact";
-import * as style from "./style.scss";
+import {Component, Fragment, h} from "preact";
 
 import ReactHintFactory from 'react-hint';
 import 'react-hint/css/index.css';
@@ -7,7 +6,7 @@ const ReactHint = ReactHintFactory({createElement: h, Component});
 
 import Switch from "../../components/switch";
 
-import { useState } from "preact/hooks";
+import {useState} from "preact/hooks";
 import ClauseInput from "../../components/input/clause";
 import Format from "../../components/input/clause/format";
 import Radio from "../../components/radio";
@@ -17,7 +16,8 @@ import {
     TableauxType
 } from "../../types/tableaux";
 
-interface Props {}
+interface Props {
+}
 
 const Tableaux: preact.FunctionalComponent<Props> = () => {
     const [tabType, setTabType] = useState(TableauxType.unconnected);
@@ -54,52 +54,61 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
 
     return (
         <Fragment>
-            <ClauseInput calculus="prop-tableaux" params={params} />
+            <ClauseInput calculus="prop-tableaux" params={params}/>
             <div class="card">
-                <ReactHint autoPosition={false} events={true} position="right" />
-                <div class={style.form}>
-                    <Radio
-                        id={TableauxType.unconnected}
-                        group="connected"
-                        label="Unconnected"
-                        checked={tabType === TableauxType.unconnected}
-                        onSelect={handleTabTypeSelect}
-                        hint="Every leaf of each path has to be closed"
-                    />
-                    <Radio
-                        id={TableauxType.weak}
-                        group="connected"
-                        label="Weakly Connected"
-                        checked={tabType === TableauxType.weak}
-                        onSelect={handleTabTypeSelect}
-                        hint="Every non-leaf and non-root node has to have at least one child that is a closed leaf"
-                    />
-                    <Radio
-                        id={TableauxType.strong}
-                        group="connected"
-                        label="Strongly Connected"
-                        checked={tabType === TableauxType.strong}
-                        onSelect={handleTabTypeSelect}
-                        hint="Analogous to weak connectedness but at least one new leaf has to be closed with its direct parent node"
-                    />
-                    <Switch
-                        label="Regular"
-                        onChange={setRegular}
-                        hint="Does not permit duplicate atoms (same variable name and negation state) on any path of the tree"
-                    />
-                    <Switch
-                        label="Backtracking"
-                        onChange={setBacktracking}
-                        hint="Enables ability to undo last move"
-                    />
-                    <Switch
-                        label="Force naive transformation"
-                        onChange={strategySelect}
-                        hint="Transform formulas naive with the conjunctive normal form"
-                    />
+                <ReactHint autoPosition={false} events={true} position="right"/>
+                <h3>Parameters</h3>
+                <div class="flex-container" >
+                    <div class="radios" >
+                        <Radio
+                            id={TableauxType.unconnected}
+                            group="connected"
+                            label="Unconnected"
+                            checked={tabType === TableauxType.unconnected}
+                            onSelect={handleTabTypeSelect}
+                            hint="Every leaf of each path has to be closed"
+                        />
+                        <br/>
+                        <Radio
+                            id={TableauxType.weak}
+                            group="connected"
+                            label="Weakly Connected"
+                            checked={tabType === TableauxType.weak}
+                            onSelect={handleTabTypeSelect}
+                            hint="Every non-leaf and non-root node has to have at least one child that is a closed leaf"
+                        />
+                        <br/>
+                        <Radio
+                            id={TableauxType.strong}
+                            group="connected"
+                            label="Strongly Connected"
+                            checked={tabType === TableauxType.strong}
+                            onSelect={handleTabTypeSelect}
+                            hint="Analogous to weak connectedness but at least one new leaf has to be closed with its direct parent node"
+                        />
+                    </div>
+                    <div class="switches" >
+                        <Switch
+                            label="Regular"
+                            onChange={setRegular}
+                            hint="Does not permit duplicate atoms (same variable name and negation state) on any path of the tree"
+                        />
+                        <br/>
+                        <Switch
+                            label="Backtracking"
+                            onChange={setBacktracking}
+                            hint="Enables ability to undo last move"
+                        />
+                        <br/>
+                        <Switch
+                            label="Naive transformation"
+                            onChange={strategySelect}
+                            hint="Transform formulas naive with the conjunctive normal form"
+                        />
+                    </div>
                 </div>
             </div>
-            <Format />
+            <Format/>
         </Fragment>
     );
 };

@@ -4,11 +4,29 @@ import InfoIcon from "../icons/info";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * The group which the radio belongs to
+     */
     group: string;
+    /**
+     * The radio's id
+     */
     id: string;
+    /**
+     * The radio's label
+     */
     label?: string;
+    /**
+     * Whether the radio is selected or not
+     */
     checked?: boolean;
+    /**
+     * The function to call, when the switch is selected
+     */
     onSelect?: (e: Event) => void;
+    /**
+     * The radio's tooltip
+     */
     hint?: string;
 }
 

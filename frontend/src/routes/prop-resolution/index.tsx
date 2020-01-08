@@ -1,12 +1,15 @@
-import { Fragment, h } from "preact";
+import { Component, Fragment, h } from "preact";
 
 import ClauseInput from "../../components/input/clause";
+
+import ReactHintFactory from 'react-hint';
+import 'react-hint/css/index.css';
+const ReactHint = ReactHintFactory({createElement: h, Component});
 
 import { useState } from "preact/hooks";
 import Format from "../../components/input/clause/format";
 import Switch from "../../components/switch";
 import { CnfStrategy } from "../../types/tableaux";
-import * as style from "./style.scss";
 
 interface Props {}
 
@@ -30,11 +33,13 @@ const Resolution: preact.FunctionalComponent<Props> = () => {
         <Fragment>
             <ClauseInput calculus="prop-resolution" params={params} />
             <div class="card">
+                <ReactHint autoPosition={false} events={true} position="right"/>
                 <h3>Parameters</h3>
-                <div class={style.form}>
+                <div class="flex-container">
                     <Switch
-                        label="Force naive CNF transformation"
+                        label="Naive transformation"
                         onChange={strategySelect}
+                        hint="Transform formulas naive with the conjunctive normal form"
                     />
                 </div>
             </div>
