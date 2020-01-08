@@ -1,6 +1,5 @@
 import { h } from "preact";
 
-import InfoIcon from "../icons/info";
 import * as style from "./style.scss";
 
 interface Props {
@@ -24,10 +23,6 @@ interface Props {
      * The function to call, when the switch is selected
      */
     onSelect?: (e: Event) => void;
-    /**
-     * The radio's tooltip
-     */
-    hint?: string;
 }
 
 const Radio: preact.FunctionalComponent<Props> = ({
@@ -35,11 +30,10 @@ const Radio: preact.FunctionalComponent<Props> = ({
     label,
     checked = false,
     onSelect,
-    id,
-    hint
+    id
 }) => {
     return (
-        <div class={style.container}  data-rh={hint} >
+        <div class={style.container}>
             <div class="mdc-radio">
                 <input
                     class="mdc-radio__native-control"
@@ -55,10 +49,9 @@ const Radio: preact.FunctionalComponent<Props> = ({
                 </div>
                 <div class="mdc-radio__ripple" />
             </div>
-            <label for={id} class={style.label} >
+            <label for={id} class={style.label}>
                 {label}
             </label>
-            {hint ? <InfoIcon/> : ""}
         </div>
     );
 };

@@ -2,7 +2,6 @@ import { Component, createRef, h } from "preact";
 import * as style from "./style.scss";
 
 import { MDCSwitch } from "@material/switch";
-import InfoIcon from "../icons/info";
 
 interface Props {
     /**
@@ -13,10 +12,6 @@ interface Props {
      * The switch's label
      */
     label?: string;
-    /**
-     * The switch's tooltip
-     */
-    hint?: string;
 }
 
 export default class Switch extends Component<Props, {}> {
@@ -44,7 +39,7 @@ export default class Switch extends Component<Props, {}> {
 
     public render({ label }: Props) {
         return (
-            <div class={style.container} data-rh={this.props.hint} >
+            <div class={style.container}>
                 <div class="mdc-switch" ref={this.switch}>
                     <div class="mdc-switch__track" />
                     <div class={`mdc-switch__thumb-underlay ${style.noRipple}`}>
@@ -63,7 +58,6 @@ export default class Switch extends Component<Props, {}> {
                 <label class={style.label} onClick={this.clickLabel}>
                     {label}
                 </label>
-                {this.props.hint ? <InfoIcon/> : ""}
             </div>
         );
     }
