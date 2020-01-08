@@ -12,20 +12,21 @@ import org.eclipse.jetty.server.ServerConnector
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution())
 
-@Suppress("MagicNumber")
 fun main(args: Array<String>) {
-
     // Verify that all calculus implementations have unique names
     if (endpoints.size != endpoints.map { it.identifier }.distinct().size)
         throw KalkulierbarException("Set of active calculus implementations contains duplicate identifiers")
 
-    val port = 7000
+    val port = getHerokuPort()
 
     // Only listen globally if cli argument is present
     val listenGlobally = args.isNotEmpty() && (args[0] == "--global" || args[0] == "-g")
 
     httpApi(port, endpoints, listenGlobally)
 }
+
+@Suppress("MagicNumber")
+fun getHerokuPort() = System.getenv("PORT")?.toInt() ?: 7000
 
 /**
  * Starts a Javalin Server and creates API methods for active calculus objects

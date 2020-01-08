@@ -13,9 +13,13 @@ import {
 } from "../types/app";
 import { localStorageGet, localStorageSet } from "./local-storage";
 
+const isDeployed = location.port !== "8080";
+
 const INIT_APP_STATE: AppState = {
     smallScreen: false,
-    server: `http://${location.hostname}:7000`,
+    server: isDeployed
+        ? "https://kalkulierbar-api.herokuapp.com"
+        : `http://${location.hostname}:7000`,
     theme: Theme.auto
 };
 
