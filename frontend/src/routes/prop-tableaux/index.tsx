@@ -56,8 +56,8 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
         <Fragment>
             <ClauseInput calculus="prop-tableaux" params={params} />
             <div class="card">
-                <ReactHint autoPosition={true} events={true} persist={false} />
-                <div class={style.radioGroup}>
+                <ReactHint autoPosition={false} events={true} position="right" />
+                <div class={style.form}>
                     <Radio
                         id={TableauxType.unconnected}
                         group="connected"
@@ -66,7 +66,6 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                         onSelect={handleTabTypeSelect}
                         hint="Every leaf of each path has to be closed"
                     />
-
                     <Radio
                         id={TableauxType.weak}
                         group="connected"
@@ -83,25 +82,22 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                         onSelect={handleTabTypeSelect}
                         hint="Analogous to weak connectedness but at least one new leaf has to be closed with its direct parent node"
                     />
+                    <Switch
+                        label="Regular"
+                        onChange={setRegular}
+                        hint="Does not permit duplicate atoms (same variable name and negation state) on any path of the tree"
+                    />
+                    <Switch
+                        label="Backtracking"
+                        onChange={setBacktracking}
+                        hint="Enables ability to undo last move"
+                    />
+                    <Switch
+                        label="Force naive transformation"
+                        onChange={strategySelect}
+                        hint="Transform formulas naive with the conjunctive normal form"
+                    />
                 </div>
-                <br/>
-                <Switch
-                    label="Regular"
-                    onChange={setRegular}
-                    hint="Does not permit duplicate atoms (same variable name and negation state) on any path of the tree"
-                />
-                <br/>
-                <Switch
-                    label="Backtracking"
-                    onChange={setBacktracking}
-                    hint="Enables ability to undo last move"
-                />
-                <br/>
-                <Switch
-                    label="Force naive CNF transformation"
-                    onChange={strategySelect}
-                    hint="Transform formulas naive with the conjunctive normal form"
-                />
             </div>
             <Format />
         </Fragment>

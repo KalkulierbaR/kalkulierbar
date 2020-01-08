@@ -1,5 +1,6 @@
 import { h } from "preact";
 
+import InfoIcon from "../icons/info";
 import * as style from "./style.scss";
 
 interface Props {
@@ -39,6 +40,7 @@ const Radio: preact.FunctionalComponent<Props> = ({
             <label for={id} class={style.label} >
                 {label}
             </label>
+            {hint ? <InfoIcon/> : ""}
         </div>
     );
 };

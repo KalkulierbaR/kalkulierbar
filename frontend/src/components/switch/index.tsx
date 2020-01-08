@@ -2,6 +2,7 @@ import { Component, createRef, h } from "preact";
 import * as style from "./style.scss";
 
 import { MDCSwitch } from "@material/switch";
+import InfoIcon from "../icons/info";
 
 interface Props {
     /**
@@ -62,6 +63,7 @@ export default class Switch extends Component<Props, {}> {
                 <label class={style.label} onClick={this.clickLabel}>
                     {label}
                 </label>
+                {this.props.hint ? <InfoIcon/> : ""}
             </div>
         );
     }
