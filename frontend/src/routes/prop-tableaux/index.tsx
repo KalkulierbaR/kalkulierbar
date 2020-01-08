@@ -7,6 +7,7 @@ import HintIcon, { Hint } from "../../components/hint";
 import ClauseInput from "../../components/input/clause";
 import Format from "../../components/input/clause/format";
 import Radio from "../../components/radio";
+import { useAppState } from "../../helpers/app-state";
 import {
     CnfStrategy,
     TableauxParams,
@@ -16,6 +17,8 @@ import {
 interface Props {}
 
 const Tableaux: preact.FunctionalComponent<Props> = () => {
+    const { smallScreen } = useAppState();
+
     const [tabType, setTabType] = useState(TableauxType.unconnected);
     const [regular, setRegular] = useState(false);
     const [backtracking, setBacktracking] = useState(false);
@@ -53,7 +56,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
             <ClauseInput calculus="prop-tableaux" params={params} />
             <div class="card">
                 <h3>Parameters</h3>
-                <Hint />
+                <Hint top={smallScreen} />
                 <div class="flex-container">
                     <div class="radios">
                         <Radio

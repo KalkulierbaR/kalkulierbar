@@ -6,11 +6,13 @@ import { useState } from "preact/hooks";
 import HintIcon, { Hint } from "../../components/hint";
 import Format from "../../components/input/clause/format";
 import Switch from "../../components/switch";
+import { useAppState } from "../../helpers/app-state";
 import { CnfStrategy } from "../../types/tableaux";
 
 interface Props {}
 
 const Resolution: preact.FunctionalComponent<Props> = () => {
+    const { smallScreen } = useAppState();
     const [cnfStrategy, setStrategy] = useState(CnfStrategy.optimal);
 
     const params = {
@@ -30,7 +32,7 @@ const Resolution: preact.FunctionalComponent<Props> = () => {
         <Fragment>
             <ClauseInput calculus="prop-resolution" params={params} />
             <div class="card">
-                <Hint />
+                <Hint top={smallScreen} />
                 <h3>Parameters</h3>
                 <div class="flex-container">
                     <Switch
