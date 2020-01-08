@@ -85,7 +85,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                     </div>
                     <div class="switches">
                         <Switch label="Regular" onChange={setRegular} />
-                        <HintIcon hint="Does not permit duplicate atoms (same variable name and negation state) on any path of the tree" />
+                        <HintIcon hint="A regular tableaux does not allow duplicate literals on any branch in the proof tree" />
                         <br />
 
                         <Switch
@@ -95,10 +95,10 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                         <HintIcon hint="Enables ability to undo last move" />
                         <br />
                         <Switch
-                            label="Naive transformation"
+                            label="Naive CNF transformation"
                             onChange={strategySelect}
                         />
-                        <HintIcon hint="Transform formulas naive with the conjunctive normal form" />
+                        <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
                     </div>
                 </div>
             </div>
