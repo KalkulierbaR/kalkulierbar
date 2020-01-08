@@ -75,7 +75,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                             checked={tabType === TableauxType.weak}
                             onSelect={handleTabTypeSelect}
                         />
-                        <HintIcon hint="Every non-leaf and non-root node has to have at least one child that is a closed leaf" />
+                        <HintIcon hint="Every inner node has to have at least one child that is a closed leaf" />
                         <br />
                         <Radio
                             id={TableauxType.strong}
