@@ -1,8 +1,8 @@
 import { Component, Fragment, h } from "preact";
 import * as style from "./style.scss";
 
-import ReactHintFactory from 'react-hint'
-import 'react-hint/css/index.css'
+import ReactHintFactory from 'react-hint';
+import 'react-hint/css/index.css';
 const ReactHint = ReactHintFactory({createElement: h, Component});
 
 import Switch from "../../components/switch";
@@ -56,8 +56,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
         <Fragment>
             <ClauseInput calculus="prop-tableaux" params={params} />
             <div class="card">
-                <ReactHint autoPosition={true} events={true} />
-                <h3>Parameters</h3>
+                <ReactHint autoPosition={true} events={true} persist={false} />
                 <div class={style.radioGroup}>
                     <Radio
                         id={TableauxType.unconnected}
@@ -65,7 +64,16 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                         label="Unconnected"
                         checked={tabType === TableauxType.unconnected}
                         onSelect={handleTabTypeSelect}
-                        hint="Tip 1"
+                        hint="Every leaf of each path has to be closed"
+                    />
+
+                    <Radio
+                        id={TableauxType.weak}
+                        group="connected"
+                        label="Weakly Connected"
+                        checked={tabType === TableauxType.weak}
+                        onSelect={handleTabTypeSelect}
+                        hint="Every non-leaf and non-root node has to have at least one child that is a closed leaf"
                     />
                     <Radio
                         id={TableauxType.strong}
@@ -73,34 +81,32 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                         label="Strongly Connected"
                         checked={tabType === TableauxType.strong}
                         onSelect={handleTabTypeSelect}
-                        hint="Tip 2"
-                    />
-                    <Radio
-                        id={TableauxType.weak}
-                        group="connected"
-                        label="Weakly Connected"
-                        checked={tabType === TableauxType.weak}
-                        onSelect={handleTabTypeSelect}
-                        hint="Tip 3"
+                        hint="Analogous to weak connectedness but at least one new leaf has to be closed with its direct parent node"
                     />
                 </div>
                 <br/>
                 <Switch
                     label="Regular"
                     onChange={setRegular}
-                    hint="Tip 4"
+                    hint="Does not permit duplicate atoms (same variable name and negation state) on any path of the tree"
                 />
                 <br/>
                 <Switch
                     label="Backtracking"
                     onChange={setBacktracking}
-                    hint="Tip 5"
+                    hint="Enables ability to undo last move"
+                />
+                <br/>
+                <Switch
+                    label="Regular"
+                    onChange={setRegular}
+                    hint="Does not permit duplicate atoms (same variable name and negation state) on any path of the tree"
                 />
                 <br/>
                 <Switch
                     label="Force naive CNF transformation"
                     onChange={strategySelect}
-                    hint="Tip 6"
+                    hint="Transform formulas naive with the conjunctive normal form"
                 />
             </div>
             <Format />
