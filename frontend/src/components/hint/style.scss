@@ -4,3 +4,13 @@
     justify-content: center;
     align-items: center;
 }
+
+:global {
+    .react-hint {
+        max-width: 290px;
+
+        @media (min-width: 700px) {
+            max-width: unset;
+        }
+    }
+}
