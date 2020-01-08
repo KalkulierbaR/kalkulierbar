@@ -8,8 +8,22 @@ import * as style from "./style.scss";
 
 const ReactHint = ReactHintFactory({ createElement: h, Component });
 
-export const Hint: preact.FunctionalComponent = () => (
-    <ReactHint autoPosition={false} events={true} position="right" />
+interface HintProps {
+    /**
+     * Whether or not the Hint should be above the element.
+     * Default `false`
+     */
+    top?: boolean;
+}
+
+export const Hint: preact.FunctionalComponent<HintProps> = ({
+    top = false
+}) => (
+    <ReactHint
+        autoPosition={false}
+        events={true}
+        position={top ? "top" : "right"}
+    />
 );
 
 interface Props {
