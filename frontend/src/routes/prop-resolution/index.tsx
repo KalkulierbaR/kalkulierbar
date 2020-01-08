@@ -34,13 +34,11 @@ const Resolution: preact.FunctionalComponent<Props> = () => {
             <div class="card">
                 <Hint top={smallScreen} />
                 <h3>Parameters</h3>
-                <div class="flex-container">
-                    <Switch
-                        label="Naive transformation"
-                        onChange={strategySelect}
-                    />
-                    <HintIcon hint="Transform formulas naive with the conjunctive normal form" />
-                </div>
+                <Switch
+                    label="Naive transformation"
+                    onChange={strategySelect}
+                />
+                <HintIcon hint="Transform formulas naive with the conjunctive normal form" />
             </div>
             <Format />
         </Fragment>
