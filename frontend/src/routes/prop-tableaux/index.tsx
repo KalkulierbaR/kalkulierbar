@@ -98,12 +98,6 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                 />
                 <br/>
                 <Switch
-                    label="Regular"
-                    onChange={setRegular}
-                    hint="Does not permit duplicate atoms (same variable name and negation state) on any path of the tree"
-                />
-                <br/>
-                <Switch
                     label="Force naive CNF transformation"
                     onChange={strategySelect}
                     hint="Transform formulas naive with the conjunctive normal form"
