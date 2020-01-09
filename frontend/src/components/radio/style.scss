@@ -1,5 +1,19 @@
 :global {
     @import "@material/radio/mdc-radio";
+
+    .mdc-radio {
+        @include mdc-radio-unchecked-stroke-color(
+            var(--kbar-primary-text-color)
+        );
+    }
+
+    .mdc-radio__background {
+        opacity: 0.6;
+    }
+
+    .mdc-radio__native-control:checked + .mdc-radio__background {
+        opacity: 1;
+    }
 }
 
 .container {
