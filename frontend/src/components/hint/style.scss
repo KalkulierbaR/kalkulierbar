@@ -13,4 +13,14 @@
             max-width: unset;
         }
     }
+
+    .rh-push-to-left {
+        &.react-hint {
+            transform: translateX(-48px);
+
+            &:after {
+                transform: translateX(50px);
+            }
+        }
+    }
 }

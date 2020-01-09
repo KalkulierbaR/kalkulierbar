@@ -57,6 +57,11 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
+                <Hint
+                    top={smallScreen}
+                    pushToLeft={true}
+                    attribute="data-rh-special"
+                />
                 <div class="flex-container">
                     <div class="radios">
                         <Radio
@@ -101,7 +106,10 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                             label="Naive CNF transformation"
                             onChange={strategySelect}
                         />
-                        <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
+                        <HintIcon
+                            attribute="data-rh-special"
+                            hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables."
+                        />
                     </div>
                 </div>
             </div>
