@@ -1,11 +1,12 @@
 import { createRef, Fragment, h } from "preact";
 
-import { arc, event, pie, PieArcDatum, select, zoom } from "d3";
+import { event, select, zoom } from "d3";
 import { classMap } from "../../../helpers/class-map";
 import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
 
 import { useEffect, useRef, useState } from "preact/hooks";
+import { circleLayout } from "../../../helpers/layout/resolution";
 import { Transform } from "../../../types/ui";
 import FAB from "../../fab";
 import CenterIcon from "../../icons/center";
@@ -27,44 +28,15 @@ interface Props {
     selectedClauseId: number | undefined;
 }
 
-const CLAUSE_LENGTH_FACTOR = 0.1;
-const CLAUSE_NUMBER_FACTOR = 0.1;
-
 const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
     selectClauseCallback,
     selectedClauseId
 }) => {
     const svg = useRef<SVGSVGElement>();
-    const [dims, setDims] = useState<[number, number]>([0, 0]);
     const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
 
-    // This gives us an array of clauses and their "slice" in the pie chart
-    const arcs = pie<CandidateClause>().value(() => 1)(clauses);
-
-    useEffect(() => {
-        if (!svg.current) {
-            return;
-        }
-
-        const svgDims = svg.current.getBoundingClientRect();
-
-        const maxClauseLength = clauses.reduce((max, c) => {
-            const s = clauseToString(c).length;
-            return Math.max(s, max);
-        }, 0);
-
-        const f =
-            CLAUSE_LENGTH_FACTOR *
-            maxClauseLength *
-            CLAUSE_NUMBER_FACTOR *
-            clauses.length;
-
-        setDims([
-            Math.max(svgDims.width * f, 200),
-            Math.max(svgDims.height * f, 200)
-        ]);
-    }, [clauses]);
+    const [width, height, data] = circleLayout(clauses);
 
     useEffect(() => {
         const d3SVG = select(`.${style.svg}`);
@@ -84,18 +56,6 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         t.k = transform.k;
     }
 
-    const [width, height] = dims;
-
-    const radius = Math.min(width, height) / 2;
-
-    // This function generates an arc for us
-    const gen = arc<PieArcDatum<CandidateClause>>()
-        .innerRadius(0.7 * radius)
-        .outerRadius(0.9 * radius);
-
-    // We calculate coordinates for our pie slices
-    const coords = arcs.map(a => gen.centroid(a));
-
     return (
         <div class="card">
             <svg
@@ -111,7 +71,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 >
                     {
                         <Fragment>
-                            {coords.map((coordinates, index) => {
+                            {data.map(({ x, y }, index) => {
                                 const disabled =
                                     selectedClauseId !== undefined &&
                                     selectedClauseId !== index &&
@@ -138,8 +98,8 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                                             selected={selected}
                                         />
                                         <text
-                                            x={coordinates[0]}
-                                            y={coordinates[1]}
+                                            x={x}
+                                            y={y}
                                             text-anchor="middle"
                                             ref={textRef}
                                             class={classMap({
