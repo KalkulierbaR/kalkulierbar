@@ -36,7 +36,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     const svg = useRef<SVGSVGElement>();
     const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
 
-    const [width, height, data] = circleLayout(clauses);
+    const { width, height, data } = circleLayout(clauses);
 
     useEffect(() => {
         const d3SVG = select(`.${style.svg}`);

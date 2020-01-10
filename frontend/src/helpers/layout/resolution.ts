@@ -8,18 +8,22 @@ const maxLengthClause = (clauses: readonly Clause[]) =>
         0
     );
 
-export const circleLayout = (
-    clauses: readonly Clause[]
-): [number, number, Array<LayoutData<Clause>>] => {
+export interface CircleLayoutData {
+    width: number;
+    height: number;
+    data: Array<LayoutData<Clause>>;
+}
+
+export const circleLayout = (clauses: readonly Clause[]): CircleLayoutData => {
     if (clauses.length === 0) {
-        return [0, 0, []];
+        return { width: 0, height: 0, data: [] };
     }
 
     const width = maxLengthClause(clauses) * 5;
 
     // Special case: 1 clause
     if (clauses.length === 1) {
-        return [width, 50, [{ data: clauses[0], x: 0, y: 0 }]];
+        return { width, height: 50, data: [{ data: clauses[0], x: 0, y: 0 }] };
     }
 
     const angle = (Math.PI * 2) / clauses.length;
@@ -31,13 +35,13 @@ export const circleLayout = (
         (width * Math.tan((Math.PI - angle) / 2)) / Math.sin(angle)
     );
 
-    return [
-        2 * r + width,
-        2.2 * r + height,
-        clauses.map((c, i) => ({
+    return {
+        width: 2 * r + width,
+        height: 2.2 * r + height,
+        data: clauses.map((c, i) => ({
             data: c,
             x: r * Math.sin(angle * i),
             y: r * Math.cos(angle * i)
         }))
-    ];
+    };
 };
