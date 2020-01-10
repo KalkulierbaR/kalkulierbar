@@ -66,7 +66,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                             checked={tabType === TableauxType.unconnected}
                             onSelect={handleTabTypeSelect}
                         />
-                        <HintIcon hint="Every leaf of each path has to be closed" />
+                        <HintIcon hint="An unconnected tableaux poses no restrictions as to when a clause can be expanded" />
                         <br />
                         <Radio
                             id={TableauxType.weak}
@@ -75,7 +75,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                             checked={tabType === TableauxType.weak}
                             onSelect={handleTabTypeSelect}
                         />
-                        <HintIcon hint="Every inner node has to have at least one child that is a closed leaf" />
+                        <HintIcon hint="A weakly connected tableaux enforces that every inner node in the proof tree has at least one closed leaf as a child" />
                         <br />
                         <Radio
                             id={TableauxType.strong}
@@ -84,7 +84,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                             checked={tabType === TableauxType.strong}
                             onSelect={handleTabTypeSelect}
                         />
-                        <HintIcon hint="Analogous to weak connectedness but at least one new leaf has to be closed with its direct parent node" />
+                        <HintIcon hint="A strongly connected tableaux enforces that every inner node in the proof tree has at least one child that is closed with its parent node" />
                     </div>
                     <div class="switches">
                         <Switch label="Regular" onChange={setRegular} />
@@ -95,7 +95,7 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                             label="Backtracking"
                             onChange={setBacktracking}
                         />
-                        <HintIcon hint="Enables ability to undo last move" />
+                        <HintIcon hint="Enables ability to undo moves" />
                         <br />
                         <Switch
                             label="Naive CNF transformation"

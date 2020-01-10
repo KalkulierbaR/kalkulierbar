@@ -35,10 +35,10 @@ const Resolution: preact.FunctionalComponent<Props> = () => {
                 <Hint top={smallScreen} />
                 <h3>Parameters</h3>
                 <Switch
-                    label="Naive transformation"
+                    label="Naive CNF transformation"
                     onChange={strategySelect}
                 />
-                <HintIcon hint="Transform formulas naive with the conjunctive normal form" />
+                <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
             </div>
             <Format />
         </Fragment>
