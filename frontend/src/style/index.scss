@@ -99,28 +99,21 @@ h4 {
 .flex-container {
     /* flexbox setup */
     display: flex;
-    display: -webkit-flex;
     flex-flow: row;
-    -webkit-flex-flow: row;
 }
 
 .flex-container > div.radios {
-    -webkit-flex: 3 1 50%;
     flex: 3 1 50%;
-    -webkit-order: 1;
     order: 1;
 }
 
 .flex-container > div.switches {
-    -webkit-flex: 3 1 50%;
     flex: 3 1 50%;
-    -webkit-order: 2;
     order: 2;
 }
 
 @media (max-width: 700px) {
     .flex-container {
-        -webkit-flex-flow: column;
         flex-direction: column;
     }
 
@@ -128,7 +121,6 @@ h4 {
     .flex-container > div.switches {
         /* Return them to document order */
         min-height: 50px;
-        -webkit-order: 0;
         order: 0;
     }
 }
