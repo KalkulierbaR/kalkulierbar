@@ -24,12 +24,13 @@ export const Hint: preact.FunctionalComponent<HintProps> = ({
         events={true}
         position={top ? "top" : "right"}
         onRenderContent={(target, content) => {
+            // Calculate a maxWidth that still fits the screen for either top, left, or right positioning
             const tbb = target.getBoundingClientRect();
-            const availLeft = tbb.left;
-            const availRight = document.documentElement.clientWidth - tbb.left - tbb.width;
-            const availTop = Math.min(availLeft, availRight) * 2;
-            const maxwidth = Math.min(Math.max(availRight, availLeft, availTop) * 0.9, 290);
-            const minwidth = content && content.length > 50 ? maxwidth : 0;
+            const availLeft = tbb.left; // Space available to the left of the hint icon
+            const availRight = document.documentElement.clientWidth - tbb.left - tbb.width; // Space available to the right of the hint icon
+            const availTop = Math.min(availLeft, availRight) * 2; // Space available if using top positioning
+            const maxwidth = Math.min(Math.max(availRight, availLeft, availTop) * 0.9, 290); // Cap maxwidth at 290px
+            const minwidth = content && content.length > 50 ? maxwidth : 0; // Only set minwidth if there's enough text to fill it
             return (
             <div className={"react-hint__content"} style={`min-width:${minwidth}px; max-width: ${maxwidth}px;`}>
                 {content}
