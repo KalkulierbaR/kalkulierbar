@@ -20,9 +20,22 @@ export const Hint: preact.FunctionalComponent<HintProps> = ({
     top = false
 }) => (
     <ReactHint
-        autoPosition={false}
+        autoPosition={true}
         events={true}
         position={top ? "top" : "right"}
+        onRenderContent={(target, content) => {
+            const tbb = target.getBoundingClientRect();
+            const availLeft = tbb.left;
+            const availRight = document.documentElement.clientWidth - tbb.left - tbb.width;
+            const availTop = Math.min(availLeft, availRight) * 2;
+            const maxwidth = Math.min(Math.max(availRight, availLeft, availTop) * 0.9, 290);
+            const minwidth = content && content.length > 50 ? maxwidth : 0;
+            return (
+            <div className={"react-hint__content"} style={`min-width:${minwidth}px; max-width: ${maxwidth}px;`}>
+                {content}
+            </div>
+            )}
+        }
     />
 );
 
