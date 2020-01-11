@@ -3,6 +3,7 @@ package kalkulierbar.logic
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
+import kalkulierbar.logic.transform.LogicNodeVisitor
 
 abstract class LogicNode {
 
@@ -12,13 +13,6 @@ abstract class LogicNode {
      * @return representation of this LogicNode using only basic logic operations
      */
     abstract fun toBasicOps(): LogicNode
-
-    /**
-     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
-     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
-     * @return ClauseSet equivalent to this logic node
-     */
-    abstract fun naiveCNF(): ClauseSet
 
     /**
      * Transforms an arbitrary formula into a ClauseSet that is equivalent with regards to satisfiability
@@ -39,6 +33,8 @@ abstract class LogicNode {
 
     abstract fun tseytin(cs: ClauseSet, index: Int): Int
     abstract fun getTseytinName(index: Int): String
+
+    abstract fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>): ReturnType
 }
 
 abstract class BinaryOp(

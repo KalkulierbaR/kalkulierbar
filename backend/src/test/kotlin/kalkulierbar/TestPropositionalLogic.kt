@@ -9,6 +9,7 @@ import kalkulierbar.logic.Impl
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
+import kalkulierbar.logic.transform.NaiveCNF
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
@@ -71,9 +72,9 @@ class TestPropositionalLogic {
         val expected3 = ClauseSet(mutableListOf(Clause(mutableListOf(Atom("MyT35tV4r"))))).toString()
 
         assertEquals(false, expected1 == expected2)
-        assertEquals(expected1, v1.naiveCNF().toString())
-        assertEquals(expected2, v2.naiveCNF().toString())
-        assertEquals(expected3, v3.naiveCNF().toString())
+        assertEquals(expected1, NaiveCNF.transform(v1).toString())
+        assertEquals(expected2, NaiveCNF.transform(v2).toString())
+        assertEquals(expected3, NaiveCNF.transform(v3).toString())
     }
 
     @Test
@@ -99,14 +100,14 @@ class TestPropositionalLogic {
     @Test
     fun testNotNaiveCNF() {
         val expected1 = ClauseSet(mutableListOf(Clause(mutableListOf(Atom("a", true)))))
-        assertEquals(expected1.toString(), n1.naiveCNF().toString())
+        assertEquals(expected1.toString(), NaiveCNF.transform(n1).toString())
 
         val expected2 = "{b, a}, {b, !b}, {!a, a}, {!a, !b}"
-        assertEquals(expected2.toString(), n2.naiveCNF().toString())
+        assertEquals(expected2.toString(), NaiveCNF.transform(n2).toString())
 
         val expected3 = ClauseSet(mutableListOf(Clause(mutableListOf(Atom("a", true), Atom("c"))),
                 Clause(mutableListOf(Atom("a"), Atom("c")))))
-        assertEquals(expected3.toString(), n3.naiveCNF().toString())
+        assertEquals(expected3.toString(), NaiveCNF.transform(n3).toString())
     }
 
     @Test
@@ -134,9 +135,9 @@ class TestPropositionalLogic {
 
     @Test
     fun testAndNaiveCNF() {
-        assertEquals("{!a}, {b}, {!b, a}", a1.naiveCNF().toString())
-        assertEquals("{a}, {!a}", a2.naiveCNF().toString())
-        assertEquals("{a, !a}, {b}", a3.naiveCNF().toString())
+        assertEquals("{!a}, {b}, {!b, a}", NaiveCNF.transform(a1).toString())
+        assertEquals("{a}, {!a}", NaiveCNF.transform(a2).toString())
+        assertEquals("{a, !a}, {b}", NaiveCNF.transform(a3).toString())
     }
 
     @Test
@@ -166,9 +167,9 @@ class TestPropositionalLogic {
 
     @Test
     fun testOrNaiveCNF() {
-        assertEquals("{a, !a}", o1.naiveCNF().toString())
-        assertEquals("{a, !b, a, !a}, {a, !b, a, !b}, {a, !b, b, !a}, {a, !b, b, !b}", o2.naiveCNF().toString())
-        assertEquals("{!a, !b, b}, {!a, !b, b}", o3.naiveCNF().toString())
+        assertEquals("{a, !a}", NaiveCNF.transform(o1).toString())
+        assertEquals("{a, !b, a, !a}, {a, !b, a, !b}, {a, !b, b, !a}, {a, !b, b, !b}", NaiveCNF.transform(o2).toString())
+        assertEquals("{!a, !b, b}, {!a, !b, b}", NaiveCNF.transform(o3).toString())
     }
 
     @Test

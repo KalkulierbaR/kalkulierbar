@@ -4,6 +4,7 @@ import kalkulierbar.FormulaConversionException
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
+import kalkulierbar.logic.transform.LogicNodeVisitor
 
 class Var(var spelling: String) : LogicNode() {
 
@@ -26,18 +27,9 @@ class Var(var spelling: String) : LogicNode() {
 
     override fun getTseytinName(index: Int) = "var$spelling"
 
-    /**
-     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
-     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
-     * @return ClauseSet equivalent to this logic node
-     */
-    override fun naiveCNF(): ClauseSet {
-        val atom = Atom(spelling, false)
-        val clause = Clause(mutableListOf(atom))
-        return ClauseSet(mutableListOf(clause))
-    }
-
     override fun toString() = spelling
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class Not(child: LogicNode) : UnaryOp(child) {
@@ -65,59 +57,9 @@ class Not(child: LogicNode) : UnaryOp(child) {
 
     override fun getTseytinName(index: Int) = "not$index"
 
-    /**
-     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
-     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
-     * @return ClauseSet equivalent to this logic node
-     */
-    override fun naiveCNF(): ClauseSet {
-        val res: ClauseSet
-
-        // Perform Negation-Pushdown
-        when (child) {
-            is Not -> {
-                val childNot = child as Not
-                // Eliminate double negation
-                res = childNot.child.naiveCNF()
-            }
-            is Or -> {
-                val childOr = child as Or
-                // De-Morgan Or
-                res = And(Not(childOr.leftChild), Not(childOr.rightChild)).naiveCNF()
-            }
-            is And -> {
-                val childAnd = child as And
-                // De-Morgan And
-                res = Or(Not(childAnd.leftChild), Not(childAnd.rightChild)).naiveCNF()
-            }
-            is Impl -> {
-                val childImpl = child as Impl
-                // !(a->b) = !(!a v b) = a^!b
-                res = And(childImpl.leftChild, Not(childImpl.rightChild)).naiveCNF()
-            }
-            is Equiv -> {
-                val childEquiv = child as Equiv
-                val implA = Impl(childEquiv.leftChild, childEquiv.rightChild)
-                val implB = Impl(childEquiv.rightChild, childEquiv.leftChild)
-                // Translate equivalence into implications
-                res = Not(And(implA, implB)).naiveCNF()
-            }
-            is Var -> {
-                val childVar = child as Var
-                val atom = Atom(childVar.spelling, true)
-                val clause = Clause(mutableListOf(atom))
-                return ClauseSet(mutableListOf(clause))
-            }
-            else -> {
-                val msg = "Unknown LogicNode encountered during naive CNF transformation"
-                throw FormulaConversionException(msg)
-            }
-        }
-
-        return res
-    }
-
     override fun toString() = "!$child"
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class And(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
@@ -149,19 +91,9 @@ class And(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rig
 
     override fun getTseytinName(index: Int) = "and$index"
 
-    /**
-     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
-     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
-     * @return ClauseSet equivalent to this logic node
-     */
-    override fun naiveCNF(): ClauseSet {
-        val leftCS = leftChild.naiveCNF()
-        val rightCS = rightChild.naiveCNF()
-        leftCS.unite(rightCS)
-        return leftCS
-    }
-
     override fun toString() = "($leftChild ∧ $rightChild)"
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class Or(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
@@ -193,36 +125,9 @@ class Or(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, righ
 
     override fun getTseytinName(index: Int) = "or$index"
 
-    /**
-     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
-     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
-     * @return ClauseSet equivalent to this logic node
-     */
-    @Suppress("MagicNumber")
-    override fun naiveCNF(): ClauseSet {
-        val leftClauses = leftChild.naiveCNF().clauses
-        val rightClauses = rightChild.naiveCNF().clauses
-        val cs = ClauseSet()
-
-        // Not limiting resulting clause amount causes server to run out of memory attempting conversion
-        // Don't mess with exponential growth
-        if (leftClauses.size * rightClauses.size > 100000)
-            throw FormulaConversionException("Naive CNF transformation resulted in too heavy blow-up")
-
-        for (lc in leftClauses) {
-            for (rc in rightClauses) {
-                val atoms = mutableListOf<Atom>()
-                atoms.addAll(lc.atoms)
-                atoms.addAll(rc.atoms)
-                val clause = Clause(atoms)
-                cs.add(clause)
-            }
-        }
-
-        return cs
-    }
-
     override fun toString() = "($leftChild ∨ $rightChild)"
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class Impl(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
@@ -265,14 +170,9 @@ class Impl(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, ri
 
     override fun getTseytinName(index: Int) = "impl$index"
 
-    /**
-     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
-     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
-     * @return ClauseSet equivalent to this logic node
-     */
-    override fun naiveCNF() = this.toBasicOps().naiveCNF()
-
     override fun toString() = "($leftChild --> $rightChild)"
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class Equiv(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
@@ -316,43 +216,36 @@ class Equiv(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, r
 
     override fun getTseytinName(index: Int) = "equiv$index"
 
-    /**
-     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
-     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
-     * @return ClauseSet equivalent to this logic node
-     */
-    override fun naiveCNF() = this.toBasicOps().naiveCNF()
-
     override fun toString() = "($leftChild <=> $rightChild)"
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class Relation(val spelling: String, val arguments: List<FirstOrderTerm>) : LogicNode() {
     override fun toBasicOps() = this
 
-    override fun naiveCNF(): ClauseSet {
-        val atom = Atom(toString(), false)
-        val clause = Clause(mutableListOf(atom))
-        return ClauseSet(mutableListOf(clause))
-    }
-
     override fun getTseytinName(index: Int) = "rel$this"
     override fun tseytin(cs: ClauseSet, index: Int) = index + 1
 
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class UniversalQuantifier(val varName: String, child: LogicNode, val boundVariables: List<QuantifiedVariable>) : UnaryOp(child) {
-    override fun naiveCNF() = throw FormulaConversionException("CNF conversion applied on universal quantifier")
     override fun tseytin(cs: ClauseSet, index: Int) = throw FormulaConversionException("CNF conversion applied on universal quantifier")
     override fun getTseytinName(index: Int) = "forall$index"
 
     override fun toString() = "(∀$varName: $child)"
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class ExistentialQuantifier(val varName: String, child: LogicNode, val boundVariables: List<QuantifiedVariable>) : UnaryOp(child) {
-    override fun naiveCNF() = throw FormulaConversionException("CNF conversion applied on existential quantifier")
     override fun tseytin(cs: ClauseSet, index: Int) = throw FormulaConversionException("CNF conversion applied on existential quantifier")
     override fun getTseytinName(index: Int) = "exists$index"
 
     override fun toString() = "(∃$varName: $child)"
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
