@@ -35,12 +35,4 @@ interface Calculus {
      * @return string representing proof state (closed/open) with an optional message
      */
     fun checkClose(state: String): String
-
-    /**
-     * Provides some API documentation regarding formats used for inputs and outputs, implementation specific
-     * @return plaintext API documentation
-     */
-    fun getDocumentation(): String {
-        return "[no documentation available for this calculus]"
-    }
 }
