@@ -2,6 +2,9 @@ package kalkulierbar.parsers
 
 import kalkulierbar.InvalidFormulaFormat
 
+/**
+ * Tokenizer for first-order and propositional logic formulae
+ */
 class Tokenizer {
     companion object Companion {
 
@@ -98,6 +101,9 @@ class Tokenizer {
     }
 }
 
+/**
+ * Class representing a single token
+ */
 data class Token(val type: TokenType, val spelling: String, val srcPosition: Int) {
     override fun toString() = spelling
 }
