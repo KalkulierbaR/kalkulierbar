@@ -95,3 +95,32 @@ h4 {
         background-color: #212121 !important;
     }
 }
+
+.flex-container {
+    /* flexbox setup */
+    display: flex;
+    flex-flow: row;
+}
+
+.flex-container > div.radios {
+    flex: 3 1 50%;
+    order: 1;
+}
+
+.flex-container > div.switches {
+    flex: 3 1 50%;
+    order: 2;
+}
+
+@media (max-width: 700px) {
+    .flex-container {
+        flex-direction: column;
+    }
+
+    .flex-container > div.radios,
+    .flex-container > div.switches {
+        /* Return them to document order */
+        min-height: 50px;
+        order: 0;
+    }
+}

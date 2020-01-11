@@ -1,15 +1,7 @@
 import { h } from "preact";
 import * as style from "./style.scss";
 
-/**
- * Properties Interface for the Home component
- */
-interface Props {}
-
-/*
- * The component displaying the content of the home route
- */
-const Home: preact.FunctionalComponent<Props> = () => {
+const Home: preact.FunctionalComponent = () => {
     return (
         <div class={style.home}>
             <div className="card">
