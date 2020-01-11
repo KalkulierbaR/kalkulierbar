@@ -40,8 +40,8 @@ export const circleLayout = (clauses: readonly Clause[]): CircleLayoutData => {
     );
 
     return {
-        // The width of the svg element must be at least the diameter
-        width: 2 * r + width,
+        // The width of the svg element must be at least the diameter + padding
+        width: 2.2 * r + width,
         // Give a little extra height to give padding
         height: 2.2 * r + height,
         // Transform polar coordinates to cartesian coordinates
