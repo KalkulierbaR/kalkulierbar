@@ -14,9 +14,7 @@ import {
     TableauxType
 } from "../../types/tableaux";
 
-interface Props {}
-
-const Tableaux: preact.FunctionalComponent<Props> = () => {
+const Tableaux: preact.FunctionalComponent = () => {
     const { smallScreen } = useAppState();
 
     const [tabType, setTabType] = useState(TableauxType.unconnected);
@@ -90,7 +88,6 @@ const Tableaux: preact.FunctionalComponent<Props> = () => {
                         <Switch label="Regular" onChange={setRegular} />
                         <HintIcon hint="A regular tableaux does not allow duplicate literals on any branch in the proof tree" />
                         <br />
-
                         <Switch
                             label="Backtracking"
                             onChange={setBacktracking}

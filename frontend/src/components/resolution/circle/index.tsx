@@ -1,15 +1,18 @@
-import { createRef, Fragment, h } from "preact";
+import { Fragment, h } from "preact";
 
 import { arc, event, pie, PieArcDatum, select, zoom } from "d3";
-import { classMap } from "../../../helpers/class-map";
 import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
 
 import { useEffect, useRef, useState } from "preact/hooks";
+import { checkClose } from "../../../helpers/api";
+import { useAppState } from "../../../helpers/app-state";
 import { Transform } from "../../../types/ui";
+import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
 import CenterIcon from "../../icons/center";
-import Rectangle from "../../rectangle";
+import CheckCircleIcon from "../../icons/check-circle";
+import ResolutionNode from "../node";
 import * as style from "./style.scss";
 
 interface Props {
@@ -25,6 +28,8 @@ interface Props {
      * The id of the clause if one is selected
      */
     selectedClauseId: number | undefined;
+    highlightSelectable: boolean;
+    newestNode: number;
 }
 
 const CLAUSE_LENGTH_FACTOR = 0.1;
@@ -33,8 +38,16 @@ const CLAUSE_NUMBER_FACTOR = 0.1;
 const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
     selectClauseCallback,
-    selectedClauseId
+    selectedClauseId,
+    highlightSelectable,
+    newestNode
 }) => {
+    const {
+        server,
+        onError,
+        onSuccess,
+        ["prop-resolution"]: state
+    } = useAppState();
     const svg = useRef<SVGSVGElement>();
     const [dims, setDims] = useState<[number, number]>([0, 0]);
     const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
@@ -94,7 +107,10 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         .outerRadius(0.9 * radius);
 
     // We calculate coordinates for our pie slices
-    const coords = arcs.map(a => gen.centroid(a));
+    const coords = arcs.map(a => ({
+        data: a.data,
+        coords: gen.centroid(a)
+    }));
 
     return (
         <div class="card">
@@ -111,59 +127,57 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 >
                     {
                         <Fragment>
-                            {coords.map((coordinates, index) => {
+                            {coords.map(node => {
                                 const disabled =
+                                    highlightSelectable &&
                                     selectedClauseId !== undefined &&
-                                    selectedClauseId !== index &&
-                                    clauses[index].candidateLiterals.length ===
-                                        0;
-                                const selected = selectedClauseId === index;
-                                const textRef = createRef<SVGTextElement>();
+                                    selectedClauseId !== node.data.index &&
+                                    node.data.candidateLiterals.length === 0;
+
                                 return (
-                                    <g
-                                        key={index}
-                                        onClick={() =>
-                                            !disabled &&
-                                            selectClauseCallback(index)
+                                    <ResolutionNode
+                                        key={node.data.index}
+                                        disabled={disabled}
+                                        selected={
+                                            selectedClauseId === node.data.index
                                         }
-                                        class={
-                                            disabled
-                                                ? style.nodeDisabled
-                                                : style.node
-                                        }
-                                    >
-                                        <Rectangle
-                                            elementRef={textRef}
-                                            disabled={disabled}
-                                            selected={selected}
-                                        />
-                                        <text
-                                            x={coordinates[0]}
-                                            y={coordinates[1]}
-                                            text-anchor="middle"
-                                            ref={textRef}
-                                            class={classMap({
-                                                [style.textClosed]: disabled,
-                                                [style.textSelected]: selected
-                                            })}
-                                        >
-                                            {clauseToString(clauses[index])}
-                                        </text>
-                                    </g>
+                                        coordinates={node.coords}
+                                        clause={node.data}
+                                        selectCallback={selectClauseCallback}
+                                        isNew={node.data.index === newestNode}
+                                    />
                                 );
                             })}
                         </Fragment>
                     }
                 </g>
             </svg>
-            {(transform.x !== 0 || (transform.y && 0) || transform.k !== 1) && (
+            <ControlFAB>
                 <FAB
-                    class={style.fab}
-                    label="center"
+                    mini={true}
+                    extended={true}
+                    label="Center"
+                    showIconAtEnd={true}
                     icon={<CenterIcon />}
                     onClick={() => setTransform({ x: 0, y: 0, k: 1 })}
                 />
-            )}
+                <FAB
+                    icon={<CheckCircleIcon />}
+                    label="Check"
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() =>
+                        checkClose(
+                            server,
+                            onError,
+                            onSuccess,
+                            "prop-resolution",
+                            state
+                        )
+                    }
+                />
+            </ControlFAB>
         </div>
     );
 };
