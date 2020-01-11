@@ -134,7 +134,7 @@ class FirstOrderParser : PropositionalParser() {
             throw InvalidFormulaFormat("Expected identifier but got ${gotMsg()}")
 
         val res: FirstOrderTerm
-    
+
         if (nextTokenIs(TokenType.CAPID)) {
             // Next token is quantified variable
             res = parseQuantifiedVariable()
@@ -159,7 +159,7 @@ class FirstOrderParser : PropositionalParser() {
      * @param identifier Name of the function invoked
      * @return FirstOrderTerm representing the function invocation
      */
-    private fun parseFunction(val identifier: String): FirstOrderTerm {
+    private fun parseFunction(identifier: String): FirstOrderTerm {
         consume(TokenType.LPAREN)
 
         val arguments = mutableListOf(parseTerm())
