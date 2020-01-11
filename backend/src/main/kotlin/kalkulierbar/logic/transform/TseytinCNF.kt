@@ -12,6 +12,10 @@ import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
 
+/**
+ * Recursively applies Tseytin transformation on a logic node
+ * CNF snippets based on http://gauss.ececs.uc.edu/Courses/c626/lectures/BDD/st.pdf
+ */
 class TseytinCNF : LogicNodeVisitor<Unit>() {
 
     companion object Companion {
@@ -20,16 +24,8 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
          * For more information, see https://en.wikipedia.org/wiki/Tseytin_transformation
          * NOTE: The resulting ClauseSet will contain additional variables, making the ClauseSet NOT equivalent
          *       to the input formula
-         * @return ClauseSet of equal satisfiability as this logic node
-         */
-
-        /**
-         * Recursively applies Tseytin transformation on a logic node
-         * Adds generated CNF snippets to a given ClauseSet
-         * CNF snippets based on http://gauss.ececs.uc.edu/Courses/c626/lectures/BDD/st.pdf
-         * @param cs ClauseSet to add generated clauses to
-         * @param index ID of the current node in the logic tree (pre-order numbering)
-         * @return ID of the next logic tree node (pre-order numbering)
+         * @param formula Formula to convert
+         * @return ClauseSet of equal satisfiability as the given logic node
          */
         fun transform(formula: LogicNode): ClauseSet {
             val instance = TseytinCNF()
@@ -48,6 +44,11 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
     private var index = 0
     private val cs = ClauseSet()
 
+    /**
+     * Compute the name of the tseytin variable representing a given sub-formula
+     * @param node LogicNode to get variable name of
+     * @return Tseytin variable name of the node
+     */
     private fun getName(node: LogicNode): String {
         return when (node) {
             is Not -> "not$index"

@@ -12,6 +12,9 @@ import kalkulierbar.logic.Relation
 import kalkulierbar.logic.UniversalQuantifier
 import kalkulierbar.logic.Var
 
+/**
+ * Skeleton Class for LogicNode visitor implementations
+ */
 abstract class LogicNodeVisitor<ReturnType> {
     open fun visit(node: LogicNode): ReturnType {
         throw FormulaConversionException("Visiting LogicNode not implemented")

@@ -15,6 +15,13 @@ import kalkulierbar.logic.Var
 class NaiveCNF : LogicNodeVisitor<ClauseSet>() {
 
     companion object Companion {
+        /**
+         * Transforms an arbitrary formula into an equivalent ClauseSet
+         * NOTE: The resulting ClauseSet may grow exponentially with the input formula size
+         *       Should the resulting ClauseSet exceed a certain size, an exception will be thrown
+         * @param formula Formula to convert
+         * @return ClauseSet equivalent to the input formula
+         */
         fun transform(formula: LogicNode): ClauseSet {
             val instance = NaiveCNF()
             return formula.accept(instance)
