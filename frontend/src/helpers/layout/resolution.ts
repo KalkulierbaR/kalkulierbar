@@ -71,7 +71,7 @@ export const circleLayout = (clauses: readonly Clause[]): CircleLayoutData => {
         // The width of the svg element must be at least the diameter + padding
         width: 2.2 * r + width,
         // Give a little extra height to give padding
-        height: 2.2 * r + height,
+        height: 2.4 * r + height,
         // Transform polar coordinates to cartesian coordinates
         data: clauses.map((c, i) => ({
             data: c,
