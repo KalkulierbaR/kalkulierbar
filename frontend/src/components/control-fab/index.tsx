@@ -6,7 +6,12 @@ import CloseIcon from "../icons/close";
 import MoreIcon from "../icons/more";
 import * as style from "./style.scss";
 
-interface Props {}
+interface Props {
+    /**
+     * The components DOM children
+     */
+    children: any
+}
 
 interface MenuProps {
     /**

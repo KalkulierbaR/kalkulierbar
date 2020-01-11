@@ -21,16 +21,12 @@ import { useAppState } from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
 import exampleState from "./example";
 
-interface Props {}
-
 /**
  * Wrapper to send move request
  * @param {string} server - URL of the server
  * @param {TableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
  * @param {Function} onError - Error handler
- * @param {number} leaf - The selected leaf
- * @param {number} clause - The selected clause
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 const sendBacktrack = (
@@ -47,92 +43,6 @@ const sendBacktrack = (
         stateChanger,
         onError
     );
-
-/*
-
-<FAB
-                icon={<UndoIcon />}
-                label="Backtrack"
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() => {
-                    sendBacktrack(server, state, onChange, onError);
-                }}
-            />
-            <FAB
-                icon={<ExploreIcon />}
-                label="Next Leaf"
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() => {
-                    const node = nextOpenLeaf(state.nodes);
-                    if (node === undefined) {
-                        return;
-                    }
-                    dispatchEvent(
-                        new CustomEvent("kbar-go-to-node", {
-                            detail: { node }
-                        })
-                    );
-                }}
-            />
-            <FAB
-                icon={<CenterIcon />}
-                label="Center"
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() => {
-                    dispatchEvent(new CustomEvent("kbar-center-tree"));
-                }}
-            />
-
-            <FAB
-                icon={<CheckCircleIcon />}
-                label="Check"
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() =>
-                    checkClose(
-                        server,
-                        onError,
-                        onSuccess,
-                        "prop-tableaux",
-                        state
-                    )
-                }
-            />
-
-
-            <FAB
-                    icon={<AddIcon />}
-                    label="Expand"
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() => {
-                        setShowDialog(!showDialog);
-                    }}
-                />
-
-        <Dialog
-                open={showDialog}
-                label="Choose Clause"
-                onClose={() => setShowDialog(false)}
-            >
-                <ClauseList
-                    clauseSet={state.clauseSet}
-                    selectedClauseId={undefined}
-                    selectClauseCallback={(id: number) => {
-                        setShowDialog(false);
-                        selectedClauseCallback(id);
-                    }}
-                />
-            </Dialog>
-*/
 
 /**
  * Wrapper to send close request
@@ -188,11 +98,8 @@ const sendExtend = (
         onError
     );
 
-// Properties Interface for the TableauxView component
-interface Props {}
-
 // Component displaying the content of the prop-tableaux route
-const TableauxView: preact.FunctionalComponent<Props> = () => {
+const TableauxView: preact.FunctionalComponent = () => {
     const {
         server,
         ["prop-tableaux"]: cState,
@@ -243,6 +150,7 @@ const TableauxView: preact.FunctionalComponent<Props> = () => {
     /**
      * The function to call, when the user selects a node
      * @param {D3Data} newNode - The id of the clause, which was clicked on
+     * @param {boolean} ignoreClause - Whether to not select a clause
      * @returns {void}
      */
     const selectNodeCallback = (
