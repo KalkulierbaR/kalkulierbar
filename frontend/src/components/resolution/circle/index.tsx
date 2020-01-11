@@ -58,7 +58,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     }
 
     return (
-        <div class="card">
+        <div class={`card ${style.noPad}`}>
             <svg
                 class={style.svg}
                 ref={svg}
@@ -66,6 +66,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 height="100"
                 style="min-height: 60vh"
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
+                preserveAspectRatio="xMidyMid meet"
             >
                 <g
                     transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}

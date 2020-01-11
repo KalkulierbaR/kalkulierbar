@@ -20,7 +20,7 @@ export const circleLayout = (clauses: readonly Clause[]): CircleLayoutData => {
     }
 
     // Guess clause width by the length of the longest string
-    const width = maxLengthClause(clauses) * 5;
+    const width = maxLengthClause(clauses) * 11;
 
     // Special case: 1 clause
     if (clauses.length === 1) {
@@ -31,13 +31,22 @@ export const circleLayout = (clauses: readonly Clause[]): CircleLayoutData => {
     const angle = (Math.PI * 2) / clauses.length;
 
     // The height is constant. The value here has no special meaning
-    const height = 20;
+    let height = 15;
 
-    // Calculate the radius the circle must have to ensure no overlaps in either height or width
-    const r = Math.max(
-        height / Math.sin(angle),
-        (width * Math.tan((Math.PI - angle) / 2)) / Math.sin(angle)
-    );
+    let r: number;
+
+    if (clauses.length === 2) {
+        height *= 4;
+        r = height;
+    } else {
+        // Calculate the radius the circle must have to ensure no overlaps in either height or width
+        r = Math.max(
+            height / Math.sin(angle),
+            (width * Math.tan((Math.PI - angle) / 2)) / Math.sin(angle)
+        );
+
+        console.log(r === height / Math.sin(angle) ? "height" : "width");
+    }
 
     return {
         // The width of the svg element must be at least the diameter + padding
