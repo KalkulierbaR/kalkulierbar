@@ -222,6 +222,13 @@
 
 .server-input {
     overflow-scrolling: unset;
+
+    button {
+        @media (max-width: 340px) {
+            position: absolute;
+            margin: 50px 0 0 0;
+        }
+    }
 }
 
 .dialog {
