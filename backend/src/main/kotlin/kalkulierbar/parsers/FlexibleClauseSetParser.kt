@@ -5,6 +5,7 @@ import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.transform.NaiveCNF
+import kalkulierbar.logic.transform.TseytinCNF
 
 class FlexibleClauseSetParser {
 
@@ -56,9 +57,9 @@ class FlexibleClauseSetParser {
 
             when (strategy) {
                 CnfStrategy.NAIVE -> res = NaiveCNF.transform(formula)
-                CnfStrategy.TSEYTIN -> res = formula.tseytinCNF()
+                CnfStrategy.TSEYTIN -> res = TseytinCNF.transform(formula)
                 CnfStrategy.OPTIMAL -> {
-                    val tseytin = formula.tseytinCNF()
+                    val tseytin = TseytinCNF.transform(formula)
                     // Naive transformation might fail for large a large formula
                     // Fall back to tseytin if so
                     try {

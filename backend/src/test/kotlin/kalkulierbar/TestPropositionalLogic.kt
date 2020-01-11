@@ -10,6 +10,7 @@ import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
 import kalkulierbar.logic.transform.NaiveCNF
+import kalkulierbar.logic.transform.TseytinCNF
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
@@ -46,7 +47,7 @@ class TestPropositionalLogic {
         a2 = And(Var("a"), Not(Var("a")))
         a3 = And(Or(Var("a"), Not(Var("a"))), Var("b"))
 
-        o1 = Or(Var("a"), Var("!a"))
+        o1 = Or(Var("a"), Var("b"))
         o2 = Or(Or(Var("a"), Not(Var("b"))), Equiv(Var("a"), Var("b")))
         o3 = Or(Not(And(Var("a"), Var("b"))), Not(Impl(Var("b"), Not(Var("b")))))
     }
@@ -56,13 +57,6 @@ class TestPropositionalLogic {
         assertEquals("a", v1.toBasicOps().toString())
         assertEquals("MyTestVar", v2.toBasicOps().toString())
         assertEquals("MyT35tV4r", v3.toBasicOps().toString())
-    }
-
-    @Test
-    fun testVarGetTseytinName() {
-        assertEquals("vara", v1.getTseytinName(0))
-        assertEquals("varMyTestVar", v2.getTseytinName(69))
-        assertEquals("varMyT35tV4r", v3.getTseytinName(1337))
     }
 
     @Test
@@ -79,9 +73,9 @@ class TestPropositionalLogic {
 
     @Test
     fun testVarTseytin() {
-        assertEquals("{vara}", v1.tseytinCNF().toString())
-        assertEquals("{varMyTestVar}", v2.tseytinCNF().toString())
-        assertEquals("{varMyT35tV4r}", v3.tseytinCNF().toString())
+        assertEquals("{vara}", TseytinCNF.transform(v1).toString())
+        assertEquals("{varMyTestVar}", TseytinCNF.transform(v2).toString())
+        assertEquals("{varMyT35tV4r}", TseytinCNF.transform(v3).toString())
     }
 
     @Test
@@ -89,12 +83,6 @@ class TestPropositionalLogic {
         assertEquals("!a", n1.toBasicOps().toString())
         assertEquals("!((!!b ∧ a) ∨ (!!!b ∧ !a))", n2.toBasicOps().toString())
         assertEquals("!((a ∨ !a) ∧ !c)", n3.toBasicOps().toString())
-    }
-
-    @Test
-    fun testNotGetTseytinName() {
-        assertEquals("not1", n1.getTseytinName(1))
-        assertEquals("not345", n2.getTseytinName(345))
     }
 
     @Test
@@ -112,13 +100,13 @@ class TestPropositionalLogic {
 
     @Test
     fun testNotTseytin() {
-        assertEquals("{not0}, {!vara, !not0}, {vara, not0}", n1.tseytinCNF().toString())
+        assertEquals("{not0}, {!vara, !not0}, {vara, not0}", TseytinCNF.transform(n1).toString())
         assertEquals(
                 "{not0}, {!varb, !not3}, {varb, not3}, {!not3, !not2}, {not3, not2}, {not2, !vara, !equiv1}, {!not2, vara, !equiv1}, {!not2, !vara, equiv1}, {not2, vara, equiv1}, {!equiv1, !not0}, {equiv1, not0}",
-                n2.tseytinCNF().toString())
+                TseytinCNF.transform(n2).toString())
         assertEquals(
                 "{not0}, {!vara, !not4}, {vara, not4}, {!vara, or2}, {!not4, or2}, {vara, not4, !or2}, {!varc, !not6}, {varc, not6}, {or2, !and1}, {not6, !and1}, {!or2, !not6, and1}, {!and1, !not0}, {and1, not0}",
-                n3.tseytinCNF().toString())
+                TseytinCNF.transform(n3).toString())
     }
 
     @Test
@@ -126,11 +114,6 @@ class TestPropositionalLogic {
         assertEquals("(!a ∧ (b ∧ (!b ∨ a)))", a1.toBasicOps().toString())
         assertEquals("(a ∧ !a)", a2.toBasicOps().toString())
         assertEquals("((a ∨ !a) ∧ b)", a3.toBasicOps().toString())
-    }
-
-    @Test
-    fun testAndGetGetTseytinName() {
-        assertEquals("and5", a1.getTseytinName(5))
     }
 
     @Test
@@ -144,30 +127,25 @@ class TestPropositionalLogic {
     fun testAndTseytin() {
         assertEquals(
                 "{and0}, {!vara, !not1}, {vara, not1}, {varb, impl5}, {!vara, impl5}, {!varb, vara, !impl5}, {varb, !and3}, {impl5, !and3}, {!varb, !impl5, and3}, {not1, !and0}, {and3, !and0}, {!not1, !and3, and0}",
-                a1.tseytinCNF().toString())
+                TseytinCNF.transform(a1).toString())
         assertEquals(
                 "{and0}, {!vara, !not2}, {vara, not2}, {vara, !and0}, {not2, !and0}, {!vara, !not2, and0}",
-                a2.tseytinCNF().toString())
+                TseytinCNF.transform(a2).toString())
         assertEquals(
                 "{and0}, {!vara, !not3}, {vara, not3}, {!vara, or1}, {!not3, or1}, {vara, not3, !or1}, {or1, !and0}, {varb, !and0}, {!or1, !varb, and0}",
-                a3.tseytinCNF().toString())
+                TseytinCNF.transform(a3).toString())
     }
 
     @Test
     fun testOrToBasicOps() {
-        assertEquals("(a ∨ !a)", o1.toBasicOps().toString())
+        assertEquals("(a ∨ b)", o1.toBasicOps().toString())
         assertEquals("((a ∨ !b) ∨ ((a ∧ b) ∨ (!a ∧ !b)))", o2.toBasicOps().toString())
         assertEquals("(!(a ∧ b) ∨ !(!b ∨ !b))", o3.toBasicOps().toString())
     }
 
     @Test
-    fun testOrGetGetTseytinName() {
-        assertEquals("or5", o1.getTseytinName(5))
-    }
-
-    @Test
     fun testOrNaiveCNF() {
-        assertEquals("{a, !a}", NaiveCNF.transform(o1).toString())
+        assertEquals("{a, b}", NaiveCNF.transform(o1).toString())
         assertEquals("{a, !b, a, !a}, {a, !b, a, !b}, {a, !b, b, !a}, {a, !b, b, !b}", NaiveCNF.transform(o2).toString())
         assertEquals("{!a, !b, b}, {!a, !b, b}", NaiveCNF.transform(o3).toString())
     }
@@ -175,13 +153,13 @@ class TestPropositionalLogic {
     @Test
     fun testOrTseytin() {
         assertEquals(
-                "{or0}, {!vara, or0}, {!var!a, or0}, {vara, var!a, !or0}",
-                o1.tseytinCNF().toString())
+                "{or0}, {!vara, or0}, {!varb, or0}, {vara, varb, !or0}",
+                TseytinCNF.transform(o1).toString())
         assertEquals(
-                "{or0}, {!vara, or0}, {!var!a, or0}, {vara, var!a, !or0}",
-                o1.tseytinCNF().toString())
+                "{or0}, {!varb, !not3}, {varb, not3}, {!vara, or1}, {!not3, or1}, {vara, not3, !or1}, {vara, !varb, !equiv5}, {!vara, varb, !equiv5}, {!vara, !varb, equiv5}, {vara, varb, equiv5}, {!or1, or0}, {!equiv5, or0}, {or1, equiv5, !or0}",
+                TseytinCNF.transform(o2).toString())
         assertEquals(
-                "{or0}, {!vara, or0}, {!var!a, or0}, {vara, var!a, !or0}",
-                o1.tseytinCNF().toString())
+                "{or0}, {vara, !and2}, {varb, !and2}, {!vara, !varb, and2}, {!and2, !not1}, {and2, not1}, {!varb, !not8}, {varb, not8}, {varb, impl6}, {!not8, impl6}, {!varb, not8, !impl6}, {!impl6, !not5}, {impl6, not5}, {!not1, or0}, {!not5, or0}, {not1, not5, !or0}",
+                TseytinCNF.transform(o3).toString())
     }
 }
