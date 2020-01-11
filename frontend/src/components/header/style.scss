@@ -222,6 +222,17 @@
 
 .server-input {
     overflow-scrolling: unset;
+    transition: all 0.2s ease;
+
+    @media (max-width: 700px) {
+        &:focus-within {
+            transform: translateY(-256px);
+            background-color: var(--kbar-8dp-color);
+            padding: 8px;
+            border-radius: var(--kbar-border-radius);
+            box-shadow: var(--kbar-shadow-3dp);
+        }
+    }
 }
 
 .dialog {
