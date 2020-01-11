@@ -1,6 +1,7 @@
 import { createRef, Fragment, h } from "preact";
 
-import { event, select, zoom } from "d3";
+import { event, select } from "d3-selection";
+import { zoom } from "d3-zoom";
 import { classMap } from "../../../helpers/class-map";
 import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
