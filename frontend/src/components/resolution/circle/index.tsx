@@ -29,7 +29,13 @@ interface Props {
      * The id of the clause if one is selected
      */
     selectedClauseId: number | undefined;
+    /**
+     * Whether to highlight valid resolution partners
+     */
     highlightSelectable: boolean;
+    /**
+     * Whether to highlight the newest node
+     */
     newestNode: number;
 }
 
