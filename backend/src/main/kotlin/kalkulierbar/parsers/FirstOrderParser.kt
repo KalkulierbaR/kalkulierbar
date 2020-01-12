@@ -1,12 +1,12 @@
 package kalkulierbar.parsers
 
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.And
 import kalkulierbar.logic.Constant
 import kalkulierbar.logic.ExistentialQuantifier
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
 import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.Not
 import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.UniversalQuantifier
@@ -22,19 +22,28 @@ class FirstOrderParser : PropositionalParser() {
     private val quantifierScope = mutableListOf<MutableList<QuantifiedVariable>>()
 
     /**
-     * Parses a series of 0 or more and-operations
-     * @return LogicNode representing the series of and-operations
+     * Parses a first order formula
+     * @param formula input formula
+     * @return LogicNode representing the formula
      */
-    protected override fun parseAnd(): LogicNode {
-        var stub = parseQuantifier()
+    override fun parse(formula: String): LogicNode {
+        // Clear quantifier scope to avoid problems on instance re-use
+        quantifierScope.clear()
+        return super.parse(formula)
+    }
 
-        while (nextTokenIs(TokenType.AND)) {
+    /**
+     * Parses a unary not
+     * @return LogicNode representing the negated formula
+     */
+    protected override fun parseNot(): LogicNode {
+
+        if (nextTokenIs(TokenType.NOT)) {
             consume()
-            val rightOp = parseQuantifier()
-            stub = And(stub, rightOp)
+            return Not(parseQuantifier())
+        } else {
+            return parseQuantifier()
         }
-
-        return stub
     }
 
     /**
@@ -44,7 +53,7 @@ class FirstOrderParser : PropositionalParser() {
     private fun parseQuantifier(): LogicNode {
 
         if (!nextTokenIs(TokenType.UNIVERSALQUANT) && !nextTokenIs(TokenType.EXISTENTIALQUANT))
-            return parseNot()
+            return parseParen()
 
         val quantType = tokens.first().type
         consume()
@@ -60,7 +69,7 @@ class FirstOrderParser : PropositionalParser() {
         // All QuantifiedVariables encountered in the subexpression will be added there
         quantifierScope.add(mutableListOf<QuantifiedVariable>())
 
-        val subexpression = parseQuantifier()
+        val subexpression = parseNot()
 
         // Bound variables are variables with the spelling specified in the quantifier
         // Variables encountered with other spellings may be bound by surrounding quantifiers

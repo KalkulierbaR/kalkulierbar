@@ -1,4 +1,4 @@
-package kalkulierbar
+package kalkulierbar.tests.logic
 
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
