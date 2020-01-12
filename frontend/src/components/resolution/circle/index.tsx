@@ -1,12 +1,13 @@
 import { Fragment, h } from "preact";
 
-import { arc, event, pie, PieArcDatum, select, zoom } from "d3";
-import { clauseToString } from "../../../helpers/clause";
+import { event, select } from "d3-selection";
+import { zoom } from "d3-zoom";
 import { CandidateClause } from "../../../types/clause";
 
 import { useEffect, useRef, useState } from "preact/hooks";
 import { checkClose } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
+import { circleLayout } from "../../../helpers/layout/resolution";
 import { Transform } from "../../../types/ui";
 import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
@@ -28,12 +29,15 @@ interface Props {
      * The id of the clause if one is selected
      */
     selectedClauseId: number | undefined;
+    /**
+     * Whether to highlight valid resolution partners
+     */
     highlightSelectable: boolean;
+    /**
+     * Whether to highlight the newest node
+     */
     newestNode: number;
 }
-
-const CLAUSE_LENGTH_FACTOR = 0.1;
-const CLAUSE_NUMBER_FACTOR = 0.1;
 
 const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
@@ -49,35 +53,9 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         ["prop-resolution"]: state
     } = useAppState();
     const svg = useRef<SVGSVGElement>();
-    const [dims, setDims] = useState<[number, number]>([0, 0]);
     const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
 
-    // This gives us an array of clauses and their "slice" in the pie chart
-    const arcs = pie<CandidateClause>().value(() => 1)(clauses);
-
-    useEffect(() => {
-        if (!svg.current) {
-            return;
-        }
-
-        const svgDims = svg.current.getBoundingClientRect();
-
-        const maxClauseLength = clauses.reduce((max, c) => {
-            const s = clauseToString(c).length;
-            return Math.max(s, max);
-        }, 0);
-
-        const f =
-            CLAUSE_LENGTH_FACTOR *
-            maxClauseLength *
-            CLAUSE_NUMBER_FACTOR *
-            clauses.length;
-
-        setDims([
-            Math.max(svgDims.width * f, 200),
-            Math.max(svgDims.height * f, 200)
-        ]);
-    }, [clauses]);
+    const { width, height, data } = circleLayout(clauses);
 
     useEffect(() => {
         const d3SVG = select(`.${style.svg}`);
@@ -97,23 +75,8 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         t.k = transform.k;
     }
 
-    const [width, height] = dims;
-
-    const radius = Math.min(width, height) / 2;
-
-    // This function generates an arc for us
-    const gen = arc<PieArcDatum<CandidateClause>>()
-        .innerRadius(0.7 * radius)
-        .outerRadius(0.9 * radius);
-
-    // We calculate coordinates for our pie slices
-    const coords = arcs.map(a => ({
-        data: a.data,
-        coords: gen.centroid(a)
-    }));
-
     return (
-        <div class="card">
+        <div class={`card ${style.noPad}`}>
             <svg
                 class={style.svg}
                 ref={svg}
@@ -121,30 +84,31 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 height="100"
                 style="min-height: 60vh"
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
+                preserveAspectRatio="xMidyMid meet"
             >
                 <g
                     transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                 >
                     {
                         <Fragment>
-                            {coords.map(node => {
+                            {data.map(({ x, y }, index) => {
                                 const disabled =
                                     highlightSelectable &&
                                     selectedClauseId !== undefined &&
-                                    selectedClauseId !== node.data.index &&
-                                    node.data.candidateLiterals.length === 0;
-
+                                    selectedClauseId !== index &&
+                                    clauses[index].candidateLiterals.length ===
+                                        0;
                                 return (
                                     <ResolutionNode
-                                        key={node.data.index}
+                                        key={index}
                                         disabled={disabled}
                                         selected={
-                                            selectedClauseId === node.data.index
+                                            selectedClauseId === index
                                         }
-                                        coordinates={node.coords}
-                                        clause={node.data}
+                                        coordinates={[x, y]}
+                                        clause={clauses[index]}
                                         selectCallback={selectClauseCallback}
-                                        isNew={node.data.index === newestNode}
+                                        isNew={index === newestNode}
                                     />
                                 );
                             })}

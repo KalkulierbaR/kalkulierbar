@@ -1,3 +1,25 @@
+.no-pad {
+    padding: 0;
+}
+
+.node {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.node--disabled {
+    cursor: default;
+    font-size: 24px;
+}
+
+.text--selected {
+    fill: #fff;
+}
+
+.text--closed {
+    fill: #555555;
+}
+
 .svg {
     display: block;
 }
