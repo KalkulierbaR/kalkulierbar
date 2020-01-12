@@ -220,6 +220,22 @@
     }
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: background-color 0.2s ease;
+
+    .server-input-wrapper:focus-within & {
+        opacity: 0.5;
+    }
+}
+
 .server-input {
     overflow-scrolling: unset;
     transition: all 0.2s ease;
@@ -228,6 +244,7 @@
         &:focus-within {
             transform: translateY(-256px);
             background-color: var(--kbar-8dp-color);
+            margin: 0 -16px;
             padding: 8px;
             border-radius: var(--kbar-border-radius);
             box-shadow: var(--kbar-shadow-3dp);

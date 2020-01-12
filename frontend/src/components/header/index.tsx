@@ -130,29 +130,39 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     const { dispatch, server } = useAppState();
     const [newServer, setServer] = useState(server);
 
+    const dispatchServer = useCallback(() => {
+        dispatch({
+            type: AppStateActionType.SET_SERVER,
+            value: newServer
+        });
+    }, [newServer]);
+
     return (
-        <TextInput
-            class={style.serverInput}
-            label={showLabel ? "Server" : undefined}
-            onChange={setServer}
-            value={server}
-            submitButton={
-                <FAB
-                    icon={<SaveIcon />}
-                    label="Save Server URL"
-                    mini={true}
-                    onClick={() => {
-                        dispatch({
-                            type: AppStateActionType.SET_SERVER,
-                            value: newServer
-                        });
-                        if (close) {
-                            close();
-                        }
-                    }}
-                />
-            }
-        />
+        <div class={style.serverInputWrapper}>
+            <div class={style.overlay} />
+            <TextInput
+                class={style.serverInput}
+                label={showLabel ? "Server" : undefined}
+                onChange={setServer}
+                value={server}
+                submitButton={
+                    <FAB
+                        icon={<SaveIcon />}
+                        label="Save Server URL"
+                        mini={true}
+                        onClick={() => {
+                            dispatchServer();
+                            if (document.activeElement) {
+                                (document.activeElement as HTMLElement).blur();
+                            }
+                            if (close) {
+                                close();
+                            }
+                        }}
+                    />
+                }
+            />
+        </div>
     );
 };
 
