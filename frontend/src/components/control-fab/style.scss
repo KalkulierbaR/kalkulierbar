@@ -29,18 +29,12 @@
         transform: none;
         transition: transform 0.4s ease-in-out;
     }
-}
 
-.delay-1 {
-    transition-delay: 0.04s;
-}
-
-.delay-2 {
-    transition-delay: 0.08s;
-}
-
-.delay-3 {
-    transition-delay: 0.12s;
+    @for $i from 2 to 10 {
+        :nth-last-child(#{$i}) {
+            transition-delay: 0.04s * ($i - 1);
+        }
+    }
 }
 
 @media (min-width: 700px) {

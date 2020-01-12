@@ -2,13 +2,70 @@ import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import * as style from "./style.scss";
 
-import CheckCloseBtn from "../../../components/check-close";
 import Dialog from "../../../components/dialog";
 import ResolutionCircle from "../../../components/resolution/circle";
 import { sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { CandidateClause } from "../../../types/clause";
 import exampleState from "./example";
+
+/**
+ * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
+ * @param {Array<CandidateClause>} clauses - the clauses to group
+ * @param {number} selectedClauseId - the currently selected group. We will group based on this
+ * @returns {void} - nothing
+ */
+const groupCandidates = (
+    clauses: CandidateClause[],
+    selectedClauseId: number
+) => {
+    const notCandidates = clauses.filter(
+        c => c.candidateLiterals.length === 0 && c.index !== selectedClauseId
+    );
+    const candidates = clauses.filter(
+        c => c.candidateLiterals.length !== 0 && c.index !== selectedClauseId
+    );
+
+    const cs = candidates.length;
+    const left = selectedClauseId - Math.floor(cs / 2);
+    const right = left + cs;
+    const length = clauses.length;
+    let nci = 0;
+    let ci = 0;
+    for (let i = 0; i < length; i++) {
+        if (selectedClauseId === i) {
+            continue;
+        }
+
+        const ml = left + length;
+        const mr = right % length;
+
+        if (left >= 0 && right < length) {
+            if (i >= left && i <= right) {
+                clauses[i] = candidates[ci++];
+            } else {
+                clauses[i] = notCandidates[nci++];
+            }
+        }
+        // Handle wrap-around
+        else if (left >= 0) {
+            if ((i >= left && i < length) || i <= mr) {
+                clauses[i] = candidates[ci++];
+            } else {
+                clauses[i] = notCandidates[nci++];
+            }
+        } else if (right < length) {
+            if ((i >= 0 && i <= right) || i >= ml) {
+                clauses[i] = candidates[ci++];
+            } else {
+                clauses[i] = notCandidates[nci++];
+            }
+        } else {
+            // Im 99.9% sure this can't happen. Just in case I am wrong let's log a helpful message
+            throw new Error("Daniel made a horrible mistake!");
+        }
+    }
+};
 
 interface Props {}
 
@@ -52,7 +109,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             state!.clauseSet.clauses.forEach((clause, index) => {
                 newCandidateClauses[index] = {
                     atoms: clause.atoms,
-                    candidateLiterals: []
+                    candidateLiterals: [],
+                    index
                 };
             });
         } else {
@@ -74,9 +132,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 });
                 newCandidateClauses[index] = {
                     atoms: clause.atoms,
-                    candidateLiterals: literals
+                    candidateLiterals: literals,
+                    index
                 };
             });
+
+            if (state!.highlightSelectable) {
+                groupCandidates(newCandidateClauses, selectedClauseId);
+            }
         }
         return newCandidateClauses;
     };
@@ -95,7 +158,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             // The same clause was selected again => reset selection
             setSelectedClauses(undefined);
         } else {
-            const candidateClause = candidateClauses[newClauseId];
+            const candidateClause = candidateClauses.find(
+                c => c.index === newClauseId
+            )!;
             let resolventLiteral: string;
             if (candidateClause.candidateLiterals.length > 1) {
                 // Show dialog for literal selection
@@ -126,16 +191,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
     return (
         <Fragment>
             <h2>Resolution View</h2>
-            <div class={style.view}>
-                <div>
-                    <CheckCloseBtn calculus="prop-resolution" />
-                </div>
-                <ResolutionCircle
-                    clauses={candidateClauses}
-                    selectClauseCallback={selectClauseCallback}
-                    selectedClauseId={selectedClauseId}
-                />
-            </div>
+            <ResolutionCircle
+                clauses={candidateClauses}
+                selectClauseCallback={selectClauseCallback}
+                selectedClauseId={selectedClauseId}
+                highlightSelectable={state.highlightSelectable}
+                newestNode={state.newestNode}
+            />
             <Dialog
                 open={showDialog}
                 label="Choose Literal"
