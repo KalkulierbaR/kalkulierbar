@@ -25,7 +25,7 @@ open class PropositionalParser {
      * @param formula input formula
      * @return LogicNode representing the formula
      */
-    fun parse(formula: String): LogicNode {
+    open fun parse(formula: String): LogicNode {
         tokens = Tokenizer.tokenize(formula)
         val res = parseEquiv()
         if (tokens.isNotEmpty())
@@ -86,7 +86,7 @@ open class PropositionalParser {
      * Parses a series of 0 or more and-operations
      * @return LogicNode representing the series of and-operations
      */
-    protected open fun parseAnd(): LogicNode {
+    protected fun parseAnd(): LogicNode {
         var stub = parseNot()
 
         while (nextTokenIs(TokenType.AND)) {
@@ -102,7 +102,7 @@ open class PropositionalParser {
      * Parses a unary not
      * @return LogicNode representing the negated formula
      */
-    protected fun parseNot(): LogicNode {
+    protected open fun parseNot(): LogicNode {
         if (nextTokenIs(TokenType.NOT)) {
             consume()
             return Not(parseParen())
