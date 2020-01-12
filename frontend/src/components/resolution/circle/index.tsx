@@ -1,9 +1,7 @@
-import { createRef, Fragment, h } from "preact";
+import { Fragment, h } from "preact";
 
 import { event, select } from "d3-selection";
 import { zoom } from "d3-zoom";
-import { classMap } from "../../../helpers/class-map";
-import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
 
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -94,39 +92,18 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                                     selectedClauseId !== index &&
                                     clauses[index].candidateLiterals.length ===
                                         0;
-                                const selected = selectedClauseId === index;
-                                const textRef = createRef<SVGTextElement>();
                                 return (
-                                    <g
+                                    <ResolutionNode
                                         key={index}
-                                        onClick={() =>
-                                            !disabled &&
-                                            selectClauseCallback(index)
+                                        disabled={disabled}
+                                        selected={
+                                            selectedClauseId === index
                                         }
-                                        class={
-                                            disabled
-                                                ? style.nodeDisabled
-                                                : style.node
-                                        }
-                                    >
-                                        <Rectangle
-                                            elementRef={textRef}
-                                            disabled={disabled}
-                                            selected={selected}
-                                        />
-                                        <text
-                                            x={x}
-                                            y={y}
-                                            text-anchor="middle"
-                                            ref={textRef}
-                                            class={classMap({
-                                                [style.textClosed]: disabled,
-                                                [style.textSelected]: selected
-                                            })}
-                                        >
-                                            {clauseToString(clauses[index])}
-                                        </text>
-                                    </g>
+                                        coordinates={[x, y]}
+                                        clause={clauses[index]}
+                                        selectCallback={selectClauseCallback}
+                                        isNew={index === newestNode}
+                                    />
                                 );
                             })}
                         </Fragment>
