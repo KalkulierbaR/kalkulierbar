@@ -137,6 +137,25 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
         });
     }, [newServer]);
 
+    const onSubmit = useCallback(() => {
+        dispatchServer();
+        if (document.activeElement) {
+            (document.activeElement as HTMLElement).blur();
+        }
+        if (close) {
+            close();
+        }
+    }, [dispatchServer]);
+
+    const handleEnter = useCallback(
+        (e: KeyboardEvent) => {
+            if (e.keyCode === 13) {
+                onSubmit();
+            }
+        },
+        [dispatchServer]
+    );
+
     return (
         <div class={style.serverInputWrapper}>
             <div class={style.overlay} />
@@ -145,20 +164,13 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                 label={showLabel ? "Server" : undefined}
                 onChange={setServer}
                 value={server}
+                onKeyDown={handleEnter}
                 submitButton={
                     <FAB
                         icon={<SaveIcon />}
                         label="Save Server URL"
                         mini={true}
-                        onClick={() => {
-                            dispatchServer();
-                            if (document.activeElement) {
-                                (document.activeElement as HTMLElement).blur();
-                            }
-                            if (close) {
-                                close();
-                            }
-                        }}
+                        onClick={onSubmit}
                     />
                 }
             />
