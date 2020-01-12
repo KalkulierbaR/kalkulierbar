@@ -1,4 +1,4 @@
-package kalkulierbar.tests
+package kalkulierbar.tests.parsers
 
 import kalkulierbar.FormulaConversionException
 import kalkulierbar.parsers.CnfStrategy
