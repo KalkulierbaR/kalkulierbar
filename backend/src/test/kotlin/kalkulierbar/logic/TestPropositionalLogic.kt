@@ -1,14 +1,8 @@
-package kalkulierbar
+package kalkulierbar.logic
 
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
-import kalkulierbar.logic.And
-import kalkulierbar.logic.Equiv
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.Var
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
