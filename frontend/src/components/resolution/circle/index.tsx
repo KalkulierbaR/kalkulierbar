@@ -1,17 +1,19 @@
-import { createRef, Fragment, h } from "preact";
+import { Fragment, h } from "preact";
 
 import { event, select } from "d3-selection";
 import { zoom } from "d3-zoom";
-import { classMap } from "../../../helpers/class-map";
-import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
 
 import { useEffect, useRef, useState } from "preact/hooks";
+import { checkClose } from "../../../helpers/api";
+import { useAppState } from "../../../helpers/app-state";
 import { circleLayout } from "../../../helpers/layout/resolution";
 import { Transform } from "../../../types/ui";
+import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
 import CenterIcon from "../../icons/center";
-import Rectangle from "../../rectangle";
+import CheckCircleIcon from "../../icons/check-circle";
+import ResolutionNode from "../node";
 import * as style from "./style.scss";
 
 interface Props {
@@ -27,13 +29,29 @@ interface Props {
      * The id of the clause if one is selected
      */
     selectedClauseId: number | undefined;
+    /**
+     * Whether to highlight valid resolution partners
+     */
+    highlightSelectable: boolean;
+    /**
+     * Whether to highlight the newest node
+     */
+    newestNode: number;
 }
 
 const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
     selectClauseCallback,
-    selectedClauseId
+    selectedClauseId,
+    highlightSelectable,
+    newestNode
 }) => {
+    const {
+        server,
+        onError,
+        onSuccess,
+        ["prop-resolution"]: state
+    } = useAppState();
     const svg = useRef<SVGSVGElement>();
     const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
 
@@ -75,57 +93,55 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                         <Fragment>
                             {data.map(({ x, y }, index) => {
                                 const disabled =
+                                    highlightSelectable &&
                                     selectedClauseId !== undefined &&
                                     selectedClauseId !== index &&
                                     clauses[index].candidateLiterals.length ===
                                         0;
-                                const selected = selectedClauseId === index;
-                                const textRef = createRef<SVGTextElement>();
                                 return (
-                                    <g
+                                    <ResolutionNode
                                         key={index}
-                                        onClick={() =>
-                                            !disabled &&
-                                            selectClauseCallback(index)
+                                        disabled={disabled}
+                                        selected={
+                                            selectedClauseId === index
                                         }
-                                        class={
-                                            disabled
-                                                ? style.nodeDisabled
-                                                : style.node
-                                        }
-                                    >
-                                        <Rectangle
-                                            elementRef={textRef}
-                                            disabled={disabled}
-                                            selected={selected}
-                                        />
-                                        <text
-                                            x={x}
-                                            y={y}
-                                            text-anchor="middle"
-                                            ref={textRef}
-                                            class={classMap({
-                                                [style.textClosed]: disabled,
-                                                [style.textSelected]: selected
-                                            })}
-                                        >
-                                            {clauseToString(clauses[index])}
-                                        </text>
-                                    </g>
+                                        coordinates={[x, y]}
+                                        clause={clauses[index]}
+                                        selectCallback={selectClauseCallback}
+                                        isNew={index === newestNode}
+                                    />
                                 );
                             })}
                         </Fragment>
                     }
                 </g>
             </svg>
-            {(transform.x !== 0 || (transform.y && 0) || transform.k !== 1) && (
+            <ControlFAB>
                 <FAB
-                    class={style.fab}
-                    label="center"
+                    mini={true}
+                    extended={true}
+                    label="Center"
+                    showIconAtEnd={true}
                     icon={<CenterIcon />}
                     onClick={() => setTransform({ x: 0, y: 0, k: 1 })}
                 />
-            )}
+                <FAB
+                    icon={<CheckCircleIcon />}
+                    label="Check"
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() =>
+                        checkClose(
+                            server,
+                            onError,
+                            onSuccess,
+                            "prop-resolution",
+                            state
+                        )
+                    }
+                />
+            </ControlFAB>
         </div>
     );
 };

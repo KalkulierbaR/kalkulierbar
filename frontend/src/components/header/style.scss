@@ -251,6 +251,13 @@
             box-shadow: var(--kbar-shadow-3dp);
         }
     }
+
+    button {
+        @media (max-width: 340px) {
+            position: absolute;
+            margin: 50px 0 0 0;
+        }
+    }
 }
 
 .dialog {
