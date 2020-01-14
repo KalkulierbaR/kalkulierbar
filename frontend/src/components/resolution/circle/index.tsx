@@ -4,7 +4,7 @@ import { event, select } from "d3-selection";
 import { zoom } from "d3-zoom";
 import { CandidateClause } from "../../../types/clause";
 
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { checkClose } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { circleLayout } from "../../../helpers/layout/resolution";
@@ -55,7 +55,9 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     const svg = useRef<SVGSVGElement>();
     const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, k: 1 });
 
-    const { width, height, data } = circleLayout(clauses);
+    const { width, height, data } = useMemo(() => circleLayout(clauses), [
+        clauses
+    ]);
 
     useEffect(() => {
         const d3SVG = select(`.${style.svg}`);
@@ -102,9 +104,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                                     <ResolutionNode
                                         key={index}
                                         disabled={disabled}
-                                        selected={
-                                            selectedClauseId === index
-                                        }
+                                        selected={selectedClauseId === index}
                                         coordinates={[x, y]}
                                         clause={clauses[index]}
                                         selectCallback={selectClauseCallback}
