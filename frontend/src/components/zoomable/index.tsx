@@ -1,4 +1,5 @@
 import { Component, ComponentChildren, createRef, h } from "preact";
+import { disableDrag, enableDrag } from "../../helpers/zoom/drag";
 import { extent } from "../../helpers/zoom/extent";
 import { Gesture } from "../../helpers/zoom/gesture";
 import { mousePos } from "../../helpers/zoom/mouse";
@@ -64,12 +65,7 @@ export default class Zoomable extends Component<Props, State> {
         }
         const ext = extent(this.ref.current);
         const p = mousePos(this.ref.current, e);
-        const g =
-            this.state.gesture ||
-            new Gesture([
-                [0, 0],
-                [0, 0]
-            ]);
+        const g = this.state.gesture || new Gesture(ext);
         let t = this.state.transform;
         const k = Math.max(
             scaleExtent[0],
@@ -101,8 +97,52 @@ export default class Zoomable extends Component<Props, State> {
 
         this.setState({ transform: t, gesture: g });
     };
-    public onMouseDown = (e: MouseEvent) => {
-        console.log(e);
+    public onMouseDown = (ev: MouseEvent) => {
+        if (!this.ref.current) {
+            return;
+        }
+        ev.stopImmediatePropagation();
+
+        disableDrag();
+
+        const svg = this.ref.current;
+
+        const ext = extent(this.ref.current);
+        const g = new Gesture(ext);
+        const p = mousePos(this.ref.current, ev);
+        const t = this.state.transform;
+        const { clientX: x0, clientY: y0 } = ev;
+
+        g.mouse = [p, invert(t, p)];
+
+        const mouseMoved = (e: MouseEvent) => {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            if (!g.moved) {
+                const dx = e.clientX - x0;
+                const dy = e.clientY - y0;
+                g.moved = dx * dx + dy * dy > 0;
+            }
+            g.mouse![0] = mousePos(svg, e);
+            const newT = constrain(
+                translate(t, g.mouse![0], g.mouse![1]),
+                ext,
+                translateExtent
+            );
+            g.zoom("mouse", newT);
+            this.setState({ transform: newT, gesture: g });
+        };
+
+        const mouseUpped = (e: MouseEvent) => {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            window.removeEventListener("mousemove", mouseMoved);
+            window.removeEventListener("mouseup", mouseUpped);
+            enableDrag(g.moved || false);
+        };
+
+        window.addEventListener("mousemove", mouseMoved);
+        window.addEventListener("mouseup", mouseUpped);
     };
     public onDblClick = (e: MouseEvent) => {
         console.log(e);

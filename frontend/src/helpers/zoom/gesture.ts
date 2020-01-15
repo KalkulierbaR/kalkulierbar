@@ -11,6 +11,7 @@ export class Gesture {
     public touch1?: [Point, Point];
 
     public wheel?: number;
+    public moved?: boolean;
 
     constructor(extent: [Point, Point]) {
         this.extent = extent;
