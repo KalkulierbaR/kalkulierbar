@@ -1,4 +1,4 @@
-import { hierarchy, HierarchyNode, tree } from "d3-hierarchy";
+import { HierarchyNode } from "d3-hierarchy";
 import { event, select } from "d3-selection";
 import { zoom } from "d3-zoom";
 import { Component, Fragment, h } from "preact";
@@ -11,6 +11,7 @@ import {
 } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
+import { TreeLayout } from "../../../helpers/layout/tree";
 import { Transform } from "../../../types/ui";
 import * as style from "./style.scss";
 
@@ -63,34 +64,6 @@ export interface D3Data {
     closeRef: number | null;
     children?: D3Data[];
 }
-
-// Creates a tree layout function
-const layout = tree();
-
-/**
- * Transforms the node data received by the server to data
- * accepted by d3
- * @param {number} id  - the node to transform
- * @param {TableauxNode[]} nodes  - list of all nodes
- * @returns {D3Data} - data as d3 parsable
- */
-const transformNodeToD3Data = (id: number, nodes: TableauxNode[]): D3Data => {
-    const node = nodes[id];
-    const isLeaf = !node.children.length;
-    const children = isLeaf
-        ? undefined
-        : node.children.map(c => transformNodeToD3Data(c, nodes));
-
-    return {
-        id,
-        name: node.spelling,
-        isLeaf,
-        children,
-        negated: node.negated,
-        isClosed: node.isClosed,
-        closeRef: node.closeRef
-    };
-};
 
 /**
  *
@@ -161,18 +134,11 @@ class TableauxTreeView extends Component<Props, State> {
     public static getDerivedStateFromProps(props: Props) {
         const { nodes, smallScreen } = props;
 
-        // Transform nodes to d3 hierarchy
-        const root = hierarchy(transformNodeToD3Data(0, nodes));
-        // Size of the nodes. [width, height]
-        const nodeSize: [number, number] = smallScreen ? [70, 70] : [140, 140];
-        // Calculate tree size
-        const treeHeight = root.height * nodeSize[1];
-        const leaves = root.copy().count().value || 1;
-        const treeWidth = leaves * nodeSize[0];
+        const { root, height: treeHeight, width: treeWidth } = TreeLayout(
+            nodes,
+            smallScreen
+        );
 
-        // Let d3 calculate our layout
-        layout.size([treeWidth, treeHeight]);
-        layout(root);
         return {
             root,
             treeHeight,
