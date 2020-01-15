@@ -1,18 +1,11 @@
 import { HierarchyNode } from "d3-hierarchy";
-import { event, select } from "d3-selection";
-import { zoom } from "d3-zoom";
 import { Component, Fragment, h } from "preact";
-import { useRef } from "preact/hooks";
 
-import {
-    SelectNodeOptions,
-    TableauxNode,
-    TableauxTreeGoToEvent
-} from "../../../types/tableaux";
+import { SelectNodeOptions, TableauxNode } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
 import { TreeLayout } from "../../../helpers/layout/tree";
-import { Transform } from "../../../types/ui";
+import Zoomable from "../../zoomable";
 import * as style from "./style.scss";
 
 // Properties Interface for the TableauxTreeView component
@@ -36,10 +29,6 @@ interface Props {
 }
 
 interface State {
-    /**
-     * Current transform applied to the tree.
-     */
-    transform: Transform;
     /**
      * Current root of the tree.
      */
@@ -128,8 +117,6 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     return <path d={d} class={style.link} />;
 };
 
-const INIT_TRANSFORM: Transform = { x: 0, y: 0, k: 1 };
-
 class TableauxTreeView extends Component<Props, State> {
     public static getDerivedStateFromProps(props: Props) {
         const { nodes, smallScreen } = props;
@@ -146,153 +133,69 @@ class TableauxTreeView extends Component<Props, State> {
         };
     }
 
-    public handleCenterTree = this.centerTree.bind(this);
-
-    public state = {
-        transform: INIT_TRANSFORM,
+    public state: State = {
         root: undefined as HierarchyNode<D3Data> | undefined,
         treeHeight: 0,
         treeWidth: 0
     };
-    public handleGoTo = (e: Event) =>
-        this.goToNode((e as TableauxTreeGoToEvent).detail.node);
-
-    public setTransform(transform: Transform) {
-        this.setState(s => ({ ...s, transform }));
-    }
-
-    /**
-     * Sets up our zoom listener on the svg element.
-     * Has to be run after every render (As far as I know)
-     * @returns {void} - nothing. JSDoc is dumb.
-     */
-    public bindZoom() {
-        // Get the elements to manipulate
-        const svg = select(`.${style.svg}`);
-        // Add zoom and drag behavior
-        svg.call(
-            zoom().on("zoom", () => {
-                const { x, y, k } = event.transform as Transform;
-                this.setTransform({ x, y, k });
-            }) as any
-        );
-    }
-
-    public centerTree() {
-        this.setTransform(INIT_TRANSFORM);
-    }
-
-    public componentDidMount() {
-        this.bindZoom();
-
-        window.addEventListener("kbar-center-tree", this.handleCenterTree);
-
-        window.addEventListener("kbar-go-to-node", this.handleGoTo);
-    }
-
-    public componentWillUnmount() {
-        window.removeEventListener("kbar-center-tree", this.handleCenterTree);
-        window.removeEventListener("kbar-go-to-node", this.handleGoTo);
-    }
-
-    public componentDidUpdate() {
-        this.bindZoom();
-    }
-
-    /**
-     * Centers the tree on node `n`.
-     * @param {number} n - the id of the node to which we should go.
-     * @returns {void} - nothing. JSDoc is dumb.
-     */
-    public goToNode(n: number) {
-        const node = getNodeById(this.state.root!.descendants(), n);
-        this.props.selectNodeCallback(node.data, { ignoreClause: true });
-
-        const { x, y } = node as any;
-        this.setTransform({
-            x: this.state.treeWidth / 2 - x,
-            y: this.state.treeHeight / 2 - y,
-            k: 1
-        });
-    }
 
     public render() {
         const { selectedNodeId, selectNodeCallback } = this.props;
-        const { root, treeHeight, treeWidth, transform } = this.state;
-
-        // This is the reference to our SVG element
-        const svgRef = useRef<any>();
-
-        // If we have a SVG, set its zoom to our transform
-        // Unfortunately, none of the methods that should work, do
-        // so this is pretty dirty
-        if (svgRef.current) {
-            const e = svgRef.current;
-            const t = e.__zoom;
-            t.x = transform.x;
-            t.y = transform.y;
-            t.k = transform.k;
-        }
+        const { root } = this.state;
 
         return (
             <div class="card">
-                <svg
-                    ref={svgRef}
-                    class={style.svg}
-                    width="100%"
-                    height={`${treeHeight + 16}px`}
-                    style="min-height: 60vh"
-                    viewBox={`0 -10 ${treeWidth} ${treeHeight + 64}`}
-                    preserveAspectRatio="xMidyMid meet"
-                >
-                    <g
-                        transform={`translate(${transform.x} ${transform.y +
-                            16}) scale(${transform.k})`}
-                    >
-                        <g>
-                            {
-                                <Fragment>
-                                    {/* First render ClosingEdges -> keep order to avoid overlapping */
-                                    root!
-                                        .descendants()
-                                        .map(n =>
-                                            n.data.closeRef !== null ? (
-                                                <ClosingEdge
-                                                    leaf={n}
-                                                    pred={getNodeById(
-                                                        n.ancestors(),
-                                                        n.data.closeRef
-                                                    )}
-                                                />
-                                            ) : null
-                                        )}
-                                    {/* Second render links between nodes */
-                                    root!.links().map(l => (
-                                        <line
-                                            class={style.link}
-                                            x1={(l.source as any).x}
-                                            y1={(l.source as any).y + 6}
-                                            x2={(l.target as any).x}
-                                            y2={(l.target as any).y - 18}
-                                        />
-                                    ))}
-                                    {/* Third render nodes -> renders above all previous elements */
-                                    root!.descendants().map(n => (
-                                        <TableauxTreeNode
-                                            selectNodeCallback={
-                                                selectNodeCallback
-                                            }
-                                            node={n}
-                                            selected={
-                                                n.data.id === selectedNodeId
-                                            }
-                                        />
-                                    ))}
-                                </Fragment>
-                            }
+                <Zoomable>
+                    {transform => (
+                        <g
+                            transform={`translate(${transform.x} ${transform.y +
+                                16}) scale(${transform.k})`}
+                        >
+                            <g>
+                                {
+                                    <Fragment>
+                                        {/* First render ClosingEdges -> keep order to avoid overlapping */
+                                        root!
+                                            .descendants()
+                                            .map(n =>
+                                                n.data.closeRef !== null ? (
+                                                    <ClosingEdge
+                                                        leaf={n}
+                                                        pred={getNodeById(
+                                                            n.ancestors(),
+                                                            n.data.closeRef
+                                                        )}
+                                                    />
+                                                ) : null
+                                            )}
+                                        {/* Second render links between nodes */
+                                        root!.links().map(l => (
+                                            <line
+                                                class={style.link}
+                                                x1={(l.source as any).x}
+                                                y1={(l.source as any).y + 6}
+                                                x2={(l.target as any).x}
+                                                y2={(l.target as any).y - 18}
+                                            />
+                                        ))}
+                                        {/* Third render nodes -> renders above all previous elements */
+                                        root!.descendants().map(n => (
+                                            <TableauxTreeNode
+                                                selectNodeCallback={
+                                                    selectNodeCallback
+                                                }
+                                                node={n}
+                                                selected={
+                                                    n.data.id === selectedNodeId
+                                                }
+                                            />
+                                        ))}
+                                    </Fragment>
+                                }
+                            </g>
                         </g>
-                    </g>
-                </svg>
+                    )}
+                </Zoomable>
             </div>
         );
     }
