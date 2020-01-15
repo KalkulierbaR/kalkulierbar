@@ -12,6 +12,8 @@ import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.UniversalQuantifier
 import kalkulierbar.logic.Var
+import kalkulierbar.logic.transform.NaiveCNF
+import kalkulierbar.logic.transform.TseytinCNF
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -97,20 +99,6 @@ class TestFOLogic {
     }
 
     @Test
-    fun testRelNaiveCNF() {
-        assertEquals("{R1(Abc)}", r1.naiveCNF().toString())
-        assertEquals("{NewRel(c, f(d, X))}", r2.naiveCNF().toString())
-        assertEquals("{Aefjwadg(g(f(c, k)))}", r3.naiveCNF().toString())
-    }
-
-    @Test
-    fun testRelTseytin() {
-        assertEquals("{relR1(Abc)}", r1.tseytinCNF().toString())
-        assertEquals("{relNewRel(c, f(d, X))}", r2.tseytinCNF().toString())
-        assertEquals("{relAefjwadg(g(f(c, k)))}", r3.tseytinCNF().toString())
-    }
-
-    @Test
     fun testAllBasicOps() {
         assertEquals("(∀X: (X ∨ !X))", u1.toBasicOps().toString())
         assertEquals("(∀X: (∃Y: (∀Z: (R(X, Y) ∧ R(Y, Z)))))", u2.toBasicOps().toString())
@@ -120,14 +108,14 @@ class TestFOLogic {
     @Test
     fun testAllNaiveCNF() {
         assertFailsWith<FormulaConversionException> {
-            u1.naiveCNF()
+            NaiveCNF.transform(u1)
         }
     }
 
     @Test
     fun testAllTseytin() {
         assertFailsWith<FormulaConversionException> {
-            u1.tseytinCNF()
+            TseytinCNF.transform(u1)
         }
     }
 
@@ -141,14 +129,14 @@ class TestFOLogic {
     @Test
     fun testExNaiveCNF() {
         assertFailsWith<FormulaConversionException> {
-            e1.naiveCNF()
+            NaiveCNF.transform(e1)
         }
     }
 
     @Test
     fun testExTseytin() {
         assertFailsWith<FormulaConversionException> {
-            e1.tseytinCNF()
+            TseytinCNF.transform(e1)
         }
     }
 }
