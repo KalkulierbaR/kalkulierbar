@@ -81,14 +81,22 @@ class Relation(val spelling: String, val arguments: List<FirstOrderTerm>) : Logi
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
-class UniversalQuantifier(var varName: String, child: LogicNode, val boundVariables: List<QuantifiedVariable>) : UnaryOp(child) {
+class UniversalQuantifier(
+    var varName: String,
+    child: LogicNode,
+    val boundVariables: List<QuantifiedVariable>
+) : UnaryOp(child) {
 
     override fun toString() = "(∀$varName: $child)"
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
-class ExistentialQuantifier(var varName: String, child: LogicNode, val boundVariables: List<QuantifiedVariable>) : UnaryOp(child) {
+class ExistentialQuantifier(
+    var varName: String,
+    child: LogicNode,
+    val boundVariables: List<QuantifiedVariable>
+) : UnaryOp(child) {
 
     override fun toString() = "(∃$varName: $child)"
 

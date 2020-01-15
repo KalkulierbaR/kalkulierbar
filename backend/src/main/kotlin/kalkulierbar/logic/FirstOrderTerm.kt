@@ -2,7 +2,7 @@ package kalkulierbar.logic
 
 import kalkulierbar.logic.transform.FirstOrderTermVisitor
 
-abstract class FirstOrderTerm() {
+abstract class FirstOrderTerm {
     abstract fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>): ReturnType
 }
 

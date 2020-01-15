@@ -21,6 +21,7 @@ class NegationNormalForm : DoNothingVisitor() {
         }
     }
 
+    @Suppress("ComplexMethod")
     override fun visit(node: Not): LogicNode {
         val res: LogicNode
         val child = node.child

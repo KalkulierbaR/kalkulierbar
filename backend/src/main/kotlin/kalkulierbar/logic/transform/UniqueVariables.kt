@@ -73,6 +73,7 @@ class VariableReplacer(val replacementMap: Map<QuantifiedVariable, String>) : Fi
             throw FormulaConversionException("Encountered QuantifiedVariable with no disambiguation replacement: $node")
     }
 
+    @Suppress("EmptyFunctionBlock")
     override fun visit(node: Constant) {}
 
     override fun visit(node: Function) {

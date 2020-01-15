@@ -31,7 +31,8 @@ class PrenexNormalForm : DoNothingVisitor() {
     override fun visit(node: UniversalQuantifier): LogicNode {
 
         if (encounteredVars.contains(node.varName))
-            throw FormulaConversionException("Prenex Normal Form conversion encountered double-binding of variable '${node.varName}'")
+            throw FormulaConversionException("Prenex Normal Form conversion encountered " +
+                "double-binding of variable '${node.varName}'")
 
         quantifiers.add(Triple(node.varName, true, node.boundVariables))
         encounteredVars.add(node.varName)
@@ -42,7 +43,8 @@ class PrenexNormalForm : DoNothingVisitor() {
     override fun visit(node: ExistentialQuantifier): LogicNode {
 
         if (encounteredVars.contains(node.varName))
-            throw FormulaConversionException("Prenex Normal Form conversion encountered double-binding of variable '${node.varName}'")
+            throw FormulaConversionException("Prenex Normal Form conversion encountered " +
+                " double-binding of variable '${node.varName}'")
 
         quantifiers.add(Triple(node.varName, false, node.boundVariables))
         encounteredVars.add(node.varName)
