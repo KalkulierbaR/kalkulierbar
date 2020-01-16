@@ -4,7 +4,6 @@ import { Fragment, h } from "preact";
 import { SelectNodeOptions, TableauxNode } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
-import { useCallback } from "preact/hooks/src";
 import { TreeLayout } from "../../../helpers/layout/tree";
 import Zoomable from "../../zoomable";
 import * as style from "./style.scss";
