@@ -8,13 +8,17 @@ import kotlin.test.assertFailsWith
 
 class TestClauseSetParser {
 
-    val invalidStrings = listOf("", ",a", "a;", ";a", "a,b,;c", "a,b,", "a,b;", "a;;b,c;d", "!!a", "a,!!b;c", "a,!")
+    val invalidStrings = listOf("", ",a", ";a", "a,b,;c", "a,b,", "a;;b,c;d", "!!a", "a,!!b;c", "a,!", "a\n;", "a\n\n", "a;;")
 
     val valid = listOf(
         Pair("a", "{a}"),
         Pair("!a", "{!a}"),
         Pair("a;b", "{a}, {b}"),
         Pair("a,b", "{a, b}"),
+        Pair("a, b ;    c", "{a, b}, {c}"),
+        Pair("a\nb", "{a}, {b}"),
+        Pair("a\nb\n", "{a}, {b}"),
+        Pair("a; ", "{a}"),
         Pair("fUnkYvAR;!McVariable,thefirst", "{fUnkYvAR}, {!McVariable, thefirst}")
         )
 

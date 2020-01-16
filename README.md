@@ -1,11 +1,20 @@
 # KalkulierbaR
 
-## Quick Execution
+KalkulierbaR helps you master your logic skills - learn to do proofs in various calculi with beautiful graphical representations, helpful feedback along the way, and the confidence of never building an incorrect proof.
 
-- `./build.sh`: build, test and analyze frontend and backend
+## Try it
 
-- `./build-g.sh`: Same as ./build.sh but website is accessible in local network
+Check out the latest version of Kalkulierbar right here in your browser at [kalkulierbar.herokuapp.com](https://kalkulierbar.herokuapp.com) and get started faster than you can say *weaklyconnectedregulartableauxcalculus*.
 
-- `./kill.sh`: Kills all running gradle processes. Is also executed before ./build.sh and ./build-g.sh
- 
+## Own it
 
+Host your own instance of KalkulierbaR, whereever you might need it. All you need is some way to serve a static website and some place to run a *jar*.  
+Find the frontend and backend builds for the latest release, then simply run the backend jar (with the `--global` flag if you want to use the app from different devices and not just localhost) and point the frontend to your backend server in the settings. Done!  
+Or take a look at the backend and frontend directories for more info on how to build KalkulierbaR yourself.
+
+## Hack it
+
+Ever wanted to play with your own calculus? We provide a set of different parsers, interfaces, and utilites to make building your own calculus as straightforward as possible - take a look at the code and dive in!  
+We always appreciate your bug reports, feature ideas or pull requests - so feel free to join us in building something cool!  
+
+Please note that this is a mirror of our private development repository. While stable features should eventually end up here, we unfortunately can't provide you with the most bleeding-edge code as of now.

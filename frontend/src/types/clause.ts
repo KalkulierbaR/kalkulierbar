@@ -25,5 +25,6 @@ export interface ClauseSet {
  */
 export interface CandidateClause extends Clause {
     atoms: Atom[];
+    index: number;
     candidateLiterals: string[];
 }

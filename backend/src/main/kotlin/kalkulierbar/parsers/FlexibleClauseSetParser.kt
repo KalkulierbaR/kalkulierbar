@@ -18,24 +18,21 @@ class FlexibleClauseSetParser {
          * @return ClauseSet representing the input formula
          */
         fun parse(formula: String, strategy: CnfStrategy = CnfStrategy.OPTIMAL): ClauseSet {
+            var errorMsg: String
 
-            // Detect a ClauseSet input from the presence of ; or ,
-            // which are forbidden in propositional formulae
-            // The only possible misclassification (a single atom) is also an equivalent propositional formula
-            if (Regex(".*(;|,).*") matches formula) {
-                try {
-                    return ClauseSetParser.parse(formula)
-                } catch (e: InvalidFormulaFormat) {
-                    val msg = "Parsing as clause set failed: ${e.message ?: "unknown error"}"
-                    throw InvalidFormulaFormat(msg)
-                }
-            } else {
-                try {
-                    return convertToCNF(PropositionalParser().parse(formula), strategy)
-                } catch (e: InvalidFormulaFormat) {
-                    val msg = "Parsing as propositional formula failed: ${e.message ?: "unknown error"}"
-                    throw InvalidFormulaFormat(msg)
-                }
+            // Try parsing as ClauseSet
+            try {
+                return ClauseSetParser.parse(formula)
+            } catch (e: InvalidFormulaFormat) {
+                errorMsg = "Parsing as clause set failed: ${e.message ?: "unknown error"}"
+            }
+
+            // Try parsing as PropositionalFormula
+            try {
+                return convertToCNF(PropositionalParser().parse(formula), strategy)
+            } catch (e: InvalidFormulaFormat) {
+                errorMsg += "\nParsing as propositional formula failed: ${e.message ?: "unknown error"}"
+                throw InvalidFormulaFormat(errorMsg)
             }
         }
 

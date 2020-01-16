@@ -1,9 +1,3 @@
----
-name: Code Review Template
-about: Template for a Code Review Checklist
-title: Code Review
----
-
 ### Backend
 
 * [ ] Gradle Build läuft

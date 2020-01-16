@@ -1,5 +1,10 @@
 class FormulaGenerator
-	
+
+	def initialize(fo = false)
+		@isFO = fo
+		@definedVars = []
+	end
+
 	def generate
 		generateEquiv
 	end
@@ -39,22 +44,67 @@ class FormulaGenerator
 
 	def generateNot
 		if chance(0.3)
-			return "! #{generateAtom}"
+			return "! #{generateQuantifier}"
 		else
-			return generateAtom
+			return generateQuantifier
 		end
+	end
+
+	def generateQuantifier
+		return generateAtom unless @isFO and chance(0.2)
+
+		vname = ["X", "Y", "Z", "W", "Qvar", "QUANT", "Person", "Thing", "T3", "X1"].sample
+		@definedVars.push(vname)
+
+		if chance(0.5)
+			res = "\\ex #{vname}: #{generateQuantifier}"
+		else
+			res = "\\all #{vname}: #{generateQuantifier}"
+		end
+
+		@definedVars.pop()
+
+		return res
 	end
 
 	def generateAtom
 		if chance(0.3)
 			return "( #{generateEquiv} )"
 		else
-			return generateVar
+			return @isFO ? generateRelation : generateVar
 		end
 	end
 
 	def generateVar
 		["a", "b", "c", "d", "e", "var", "Variable01", "42var"].sample
+	end
+
+	def generateRelation
+		name = ["R", "Q", "P", "S", "Relation", "R1", "REL"].sample
+		joinString = [",", ", ", " , "].sample
+		arity = rand(1..4)
+		args = (1..arity).map { |e| generateFunction }
+		"#{name}(#{args.join(joinString)})"
+	end
+
+	def generateFunction
+		return generateQuantifiedVariable if chance(0.7)
+
+		name = ["f", "g", "h", "fun", "functionCall", "1", "42"].sample
+		joinString = [",", ", ", " , "].sample
+		arity = rand(1..3)
+		args = (1..arity).map { |e| generateFunction }
+		"#{name}(#{args.join(joinString)})"
+	end
+
+	def generateQuantifiedVariable
+		return generateConstant if @definedVars.length == 0
+
+		chance(0.5) ? generateConstant : @definedVars.sample
+	end 
+
+	def generateConstant
+		["a", "b", "c", "d", "e", "var", "v01", "1", "42", "vARIABLE"].sample
 	end
 
 	def chance(prob)

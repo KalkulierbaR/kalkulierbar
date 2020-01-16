@@ -35,8 +35,6 @@ interface Props {
 const normalizeInput = (input: string) => {
     input = input.replace(/\n+$/, "");
     input = input.replace(/\n+/g, "\n");
-    input = input.replace(/\n/g, ";");
-    input = input.replace(/\s/g, "");
     return encodeURIComponent(input);
 };
 
