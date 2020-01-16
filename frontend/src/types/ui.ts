@@ -12,8 +12,5 @@ export type Point = [number, number];
 export type Extent = [Point, Point];
 
 export interface GoToEvent extends CustomEvent {
-    detail: {
-        x: number;
-        y: number;
-    };
+    detail: any;
 }

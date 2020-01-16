@@ -20,6 +20,7 @@ interface State {
 }
 
 interface Props {
+    transformGoTo?: (detail: any) => [number, number];
     class?: string;
     width?: string;
     height?: string;
@@ -314,30 +315,26 @@ export default class Zoomable extends Component<Props, State> {
         this.setState(s => ({ ...s, transform: t }));
 
     public handleGoTo = (e: Event) => {
-        const {
-            detail: { x, y }
-        } = e as GoToEvent;
+        const { detail } = e as GoToEvent;
+        if (!this.props.transformGoTo) {
+            return;
+        }
+        const [x, y] = this.props.transformGoTo(detail);
         this.setTransform({ x, y, k: 1 });
     };
 
-    public handleCenter = () => this.setTransform(IDENTITY);
+    public handleCenter = () => {
+        this.setTransform(IDENTITY);
+    };
 
     public componentDidMount() {
-        if (!this.ref.current) {
-            return;
-        }
-
-        this.ref.current.addEventListener("go-to", this.handleGoTo);
-        this.ref.current.addEventListener("center", this.handleCenter);
+        window.addEventListener("go-to", this.handleGoTo);
+        window.addEventListener("center", this.handleCenter);
     }
 
     public componentWillUnmount() {
-        if (!this.ref.current) {
-            return;
-        }
-
-        this.ref.current.removeEventListener("go-to", this.handleGoTo);
-        this.ref.current.removeEventListener("center", this.handleCenter);
+        window.removeEventListener("go-to", this.handleGoTo);
+        window.removeEventListener("center", this.handleCenter);
     }
 
     public render({ children, ...props }: Props, { transform }: State) {

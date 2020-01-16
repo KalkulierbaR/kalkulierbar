@@ -269,7 +269,7 @@ const TableauxView: preact.FunctionalComponent = () => {
                                     return;
                                 }
                                 dispatchEvent(
-                                    new CustomEvent("kbar-go-to-node", {
+                                    new CustomEvent("go-to", {
                                         detail: { node }
                                     })
                                 );
@@ -282,9 +282,7 @@ const TableauxView: preact.FunctionalComponent = () => {
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                dispatchEvent(
-                                    new CustomEvent("kbar-center-tree")
-                                );
+                                dispatchEvent(new CustomEvent("center"));
                             }}
                         />
                         <FAB
@@ -313,9 +311,7 @@ const TableauxView: preact.FunctionalComponent = () => {
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                dispatchEvent(
-                                    new CustomEvent("kbar-center-tree")
-                                );
+                                dispatchEvent(new CustomEvent("center"));
                             }}
                         />
                         <FAB

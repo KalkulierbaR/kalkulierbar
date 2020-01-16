@@ -4,6 +4,7 @@ import { Fragment, h } from "preact";
 import { SelectNodeOptions, TableauxNode } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
+import { useCallback } from "preact/hooks/src";
 import { TreeLayout } from "../../../helpers/layout/tree";
 import Zoomable from "../../zoomable";
 import * as style from "./style.scss";
@@ -113,6 +114,18 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         smallScreen
     );
 
+    const transformGoTo = (d: any): [number, number] => {
+        const n = d.node as number;
+
+        const node = getNodeById(root.descendants(), n);
+
+        selectNodeCallback(node.data, { ignoreClause: true });
+
+        const { x, y } = node as any;
+
+        return [treeWidth / 2 - x, treeHeight / 2 - y];
+    };
+
     return (
         <div class="card">
             <Zoomable
@@ -122,6 +135,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                 style="min-height: 60vh"
                 viewBox={`0 -10 ${treeWidth} ${treeHeight + 64}`}
                 preserveAspectRatio="xMidyMid meet"
+                transformGoTo={transformGoTo}
             >
                 {transform => (
                     <g
