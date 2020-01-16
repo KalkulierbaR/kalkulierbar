@@ -3,6 +3,8 @@ import { disableDrag, enableDrag } from "../../helpers/zoom/drag";
 import { extent } from "../../helpers/zoom/extent";
 import { Gesture } from "../../helpers/zoom/gesture";
 import { mousePos } from "../../helpers/zoom/mouse";
+import { dist } from "../../helpers/zoom/point";
+import { touchPos } from "../../helpers/zoom/touch";
 import { constrain, IDENTITY, invert } from "../../helpers/zoom/transform";
 import { Extent, Point, Transform } from "../../types/ui";
 
@@ -58,6 +60,8 @@ export default class Zoomable extends Component<Props, State> {
     };
 
     public ref = createRef<SVGSVGElement>();
+    public touchStarting?: number;
+    public touchEnding?: number;
 
     public onWheel = (e: WheelEvent) => {
         if (!this.ref.current) {
@@ -148,13 +152,159 @@ export default class Zoomable extends Component<Props, State> {
         console.log(e);
     };
     public onTouchStart = (e: TouchEvent) => {
-        console.log(e);
+        e.stopImmediatePropagation();
+        if (!this.ref.current) {
+            return;
+        }
+        const svg = this.ref.current;
+        const ext = extent(svg);
+        const touches = e.touches;
+        const n = touches.length;
+        const g =
+            e.changedTouches.length === n && this.state.gesture
+                ? this.state.gesture
+                : new Gesture(ext);
+        const t = this.state.transform;
+
+        let started = false;
+
+        for (let i = 0; i < n; i++) {
+            const touch = touches[i];
+            const p = touchPos(svg, touches, touch.identifier);
+            if (!p) {
+                continue;
+            }
+            const t0: [Point, Point, number] = [
+                p,
+                invert(t, p),
+                touch.identifier
+            ];
+            if (!g.touch0) {
+                g.touch0 = t0;
+                started = true;
+                g.taps = this.touchStarting ? 2 : 1;
+            } else if (!g.touch1 && g.touch0[2] !== t0[2]) {
+                g.touch1 = t0;
+                g.taps = 0;
+            }
+        }
+
+        if (this.touchStarting) {
+            clearTimeout(this.touchStarting);
+            this.touchStarting = undefined;
+        }
+
+        if (started && g.taps < 2) {
+            this.touchStarting = (setTimeout(
+                () => (this.touchStarting = undefined),
+                500
+            ) as unknown) as number;
+        }
+
+        this.setState({ transform: t, gesture: g });
     };
     public onTouchMove = (e: TouchEvent) => {
-        console.log(e);
+        let t = this.state.transform;
+        const svg = this.ref.current;
+        if (!svg) {
+            return;
+        }
+
+        const ext = extent(svg);
+        const g = this.state.gesture || new Gesture(ext);
+        const touches = e.touches;
+        const n = touches.length;
+
+        let p: Point | null;
+        let l: Point;
+
+        e.stopImmediatePropagation();
+        e.preventDefault();
+
+        if (this.touchStarting) {
+            clearTimeout(this.touchStarting);
+            this.touchStarting = undefined;
+        }
+
+        g.taps = 0;
+
+        for (let i = 0; i < n; i++) {
+            const touch = touches[i];
+            p = touchPos(svg, touches, touch.identifier);
+            if (!p) {
+                continue;
+            }
+            if (g.touch0 && g.touch0[2] === touch.identifier) {
+                g.touch0[0] = p;
+            } else if (g.touch1 && g.touch1[2] === touch.identifier) {
+                g.touch1[0] = p;
+            }
+        }
+
+        console.log(g);
+
+        if (g.touch0 && g.touch1) {
+            const p0 = g.touch0[0];
+            const l0 = g.touch0[1];
+            const p1 = g.touch1[0];
+            const l1 = g.touch1[1];
+            const dp = dist(p0, p1);
+            const dl = dist(l0, l1);
+
+            t = scale(t, Math.sqrt(dp / dl));
+            p = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2];
+            l = [(l0[0] + l1[0]) / 2, (l0[1] + l1[1]) / 2];
+        } else if (g.touch0) {
+            p = g.touch0[0];
+            l = g.touch0[1];
+        } else {
+            return;
+        }
+
+        this.setState({
+            gesture: g,
+            transform: constrain(translate(t, p, l), g.extent, translateExtent)
+        });
     };
     public onTouchEnd = (e: TouchEvent) => {
-        console.log(e);
+        const t = this.state.transform;
+        const svg = this.ref.current;
+        if (!svg) {
+            return;
+        }
+        const ext = extent(svg);
+        const g = this.state.gesture || new Gesture(ext);
+        const touches = e.touches;
+        const n = touches.length;
+
+        e.stopImmediatePropagation();
+
+        if (this.touchEnding) {
+            clearTimeout(this.touchEnding);
+            this.touchEnding = undefined;
+        }
+
+        this.touchEnding = (setTimeout(
+            () => (this.touchEnding = undefined),
+            500
+        ) as unknown) as number;
+
+        for (let i = 0; i < n; i++) {
+            const touch = touches[i];
+            if (g.touch0 && g.touch0[2] === touch.identifier) {
+                delete g.touch0;
+            } else if (g.touch1 && g.touch1[2] === touch.identifier) {
+                delete g.touch1;
+            }
+        }
+
+        if (g.touch1 && !g.touch0) {
+            g.touch0 = g.touch1;
+            delete g.touch1;
+        }
+        if (g.touch0) {
+            g.touch0[1] = invert(t, g.touch0[0]);
+        }
     };
 
     public render(

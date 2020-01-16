@@ -7,8 +7,8 @@ export class Gesture {
     public taps = 0;
 
     public mouse?: [Point, Point];
-    public touch0?: [Point, Point];
-    public touch1?: [Point, Point];
+    public touch0?: [Point, Point, number];
+    public touch1?: [Point, Point, number];
 
     public wheel?: number;
     public moved?: boolean;
