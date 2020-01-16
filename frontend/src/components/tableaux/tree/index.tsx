@@ -141,11 +141,18 @@ class TableauxTreeView extends Component<Props, State> {
 
     public render() {
         const { selectedNodeId, selectNodeCallback } = this.props;
-        const { root } = this.state;
+        const { root, treeWidth, treeHeight } = this.state;
 
         return (
             <div class="card">
-                <Zoomable>
+                <Zoomable
+                    class={style.svg}
+                    width="100%"
+                    height={`${treeHeight + 16}px`}
+                    style="min-height: 60vh"
+                    viewBox={`0 -10 ${treeWidth} ${treeHeight + 64}`}
+                    preserveAspectRatio="xMidyMid meet"
+                >
                     {transform => (
                         <g
                             transform={`translate(${transform.x} ${transform.y +

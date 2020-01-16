@@ -61,12 +61,6 @@ export interface TableauxParams {
     cnfStrategy: CnfStrategy;
 }
 
-export interface TableauxTreeGoToEvent extends CustomEvent {
-    detail: {
-        node: number;
-    };
-}
-
 export interface SelectNodeOptions {
     /**
      * Ignores any selected clause and deselects all clauses.

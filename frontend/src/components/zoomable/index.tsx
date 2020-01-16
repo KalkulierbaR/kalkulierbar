@@ -6,7 +6,7 @@ import { mousePos } from "../../helpers/zoom/mouse";
 import { dist } from "../../helpers/zoom/point";
 import { touchPos } from "../../helpers/zoom/touch";
 import { constrain, IDENTITY, invert } from "../../helpers/zoom/transform";
-import { Extent, Point, Transform } from "../../types/ui";
+import { Extent, GoToEvent, Point, Transform } from "../../types/ui";
 
 export const SUPPORTS_TOUCH =
     navigator.maxTouchPoints || "ontouchstart" in globalThis;
@@ -101,6 +101,7 @@ export default class Zoomable extends Component<Props, State> {
 
         this.setState({ transform: t, gesture: g });
     };
+
     public onMouseDown = (ev: MouseEvent) => {
         if (!this.ref.current) {
             return;
@@ -148,9 +149,11 @@ export default class Zoomable extends Component<Props, State> {
         window.addEventListener("mousemove", mouseMoved);
         window.addEventListener("mouseup", mouseUpped);
     };
+
     public onDblClick = (e: MouseEvent) => {
         console.log(e);
     };
+
     public onTouchStart = (e: TouchEvent) => {
         e.stopImmediatePropagation();
         if (!this.ref.current) {
@@ -203,6 +206,7 @@ export default class Zoomable extends Component<Props, State> {
 
         this.setState({ transform: t, gesture: g });
     };
+
     public onTouchMove = (e: TouchEvent) => {
         let t = this.state.transform;
         const svg = this.ref.current;
@@ -241,8 +245,6 @@ export default class Zoomable extends Component<Props, State> {
             }
         }
 
-        console.log(g);
-
         if (g.touch0 && g.touch1) {
             const p0 = g.touch0[0];
             const l0 = g.touch0[1];
@@ -266,6 +268,7 @@ export default class Zoomable extends Component<Props, State> {
             transform: constrain(translate(t, p, l), g.extent, translateExtent)
         });
     };
+
     public onTouchEnd = (e: TouchEvent) => {
         const t = this.state.transform;
         const svg = this.ref.current;
@@ -307,27 +310,41 @@ export default class Zoomable extends Component<Props, State> {
         }
     };
 
-    public render(
-        {
-            children,
-            class: className,
-            width,
-            height,
-            style,
-            viewBox,
-            preserveAspectRatio
-        }: Props,
-        { transform }: State
-    ) {
+    public setTransform = (t: Transform) =>
+        this.setState(s => ({ ...s, transform: t }));
+
+    public handleGoTo = (e: Event) => {
+        const {
+            detail: { x, y }
+        } = e as GoToEvent;
+        this.setTransform({ x, y, k: 1 });
+    };
+
+    public handleCenter = () => this.setTransform(IDENTITY);
+
+    public componentDidMount() {
+        if (!this.ref.current) {
+            return;
+        }
+
+        this.ref.current.addEventListener("go-to", this.handleGoTo);
+        this.ref.current.addEventListener("center", this.handleCenter);
+    }
+
+    public componentWillUnmount() {
+        if (!this.ref.current) {
+            return;
+        }
+
+        this.ref.current.removeEventListener("go-to", this.handleGoTo);
+        this.ref.current.removeEventListener("center", this.handleCenter);
+    }
+
+    public render({ children, ...props }: Props, { transform }: State) {
         return (
             <svg
                 ref={this.ref}
-                class={className}
-                width={width}
-                height={height}
-                style={style}
-                viewBox={viewBox}
-                preserveAspectRatio={preserveAspectRatio}
+                {...props}
                 onWheel={this.onWheel}
                 onMouseDown={this.onMouseDown}
                 onDblClick={this.onDblClick}
