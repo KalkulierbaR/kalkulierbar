@@ -25,7 +25,7 @@ class PrenexNormalForm : DoNothingVisitor() {
         }
     }
 
-    private var quantifiers: MutableList<Triple<String, Boolean, List<QuantifiedVariable>>> = mutableListOf()
+    private var quantifiers: MutableList<Triple<String, Boolean, MutableList<QuantifiedVariable>>> = mutableListOf()
     private var encounteredVars: MutableList<String> = mutableListOf()
 
     override fun visit(node: UniversalQuantifier): LogicNode {

@@ -73,7 +73,7 @@ class Equiv(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, r
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
-class Relation(val spelling: String, val arguments: List<FirstOrderTerm>) : LogicNode() {
+class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : LogicNode() {
     override fun toBasicOps() = this
 
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
@@ -84,7 +84,7 @@ class Relation(val spelling: String, val arguments: List<FirstOrderTerm>) : Logi
 class UniversalQuantifier(
     var varName: String,
     child: LogicNode,
-    val boundVariables: List<QuantifiedVariable>
+    val boundVariables: MutableList<QuantifiedVariable>
 ) : UnaryOp(child) {
 
     override fun toString() = "(∀$varName: $child)"
@@ -95,7 +95,7 @@ class UniversalQuantifier(
 class ExistentialQuantifier(
     var varName: String,
     child: LogicNode,
-    val boundVariables: List<QuantifiedVariable>
+    val boundVariables: MutableList<QuantifiedVariable>
 ) : UnaryOp(child) {
 
     override fun toString() = "(∃$varName: $child)"

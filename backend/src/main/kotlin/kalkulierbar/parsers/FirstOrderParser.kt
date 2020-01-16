@@ -73,7 +73,7 @@ class FirstOrderParser : PropositionalParser() {
 
         // Bound variables are variables with the spelling specified in the quantifier
         // Variables encountered with other spellings may be bound by surrounding quantifiers
-        val boundVariables = quantifierScope.last().filter { it.spelling == varName }
+        val boundVariables = quantifierScope.last().filter { it.spelling == varName }.toMutableList()
         val boundBefore = quantifierScope.last().filter { it.spelling != varName }
         quantifierScope.removeAt(quantifierScope.size - 1) // Close the scope
 
