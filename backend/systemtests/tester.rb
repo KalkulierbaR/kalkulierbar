@@ -113,10 +113,29 @@ def fuzzFormulaParsing(trq, count = 100)
 	end
 end
 
+def fuzzFirstOrderParsing(trq, count = 100)
+	logMsg "Fuzzing valid first-order formulas"
+	success = true
+	fg = FormulaGenerator.new(true)
+
+	count.times() {
+		raw = fg.generate
+		string = CGI.escape(raw)
+		# For simplicity, check only that parsing is successful
+		success &= trq.post('/fo-acceptor/parse', "formula=#{string}", /.*/, 200)
+	}
+
+	if success
+		logSuccess "Test successful - sent #{count.to_s} requests"
+	else
+		logError "Test failed!"
+	end
+end
+
 def testInvalidParam(trq)
 	cg = ClauseGenerator.new
 	logMsg "Testing invalid formulas"
-	formulas = ["", ",", "a,", "a,b;", "a,b;c,", "a,b;c,;e", ",b;c,;e", ";c,;e"]
+	formulas = ["", ",", "a,", "a,b;c,", "a,b;c,;e", ",b;c,;e", ";c,;e"]
 	success = true
 
 	success &= trq.post('/prop-tableaux/parse', "formul=#{cg.genClauseSet()}", /parameter.*needs to be present/i, 400)
@@ -360,6 +379,7 @@ logMsg("Testing PropositionalTableaux")
 testInvalidParam(trq)
 fuzzClauseParsing(trq)
 fuzzFormulaParsing(trq)
+fuzzFirstOrderParsing(trq)
 testRootNodeCreation(trq)
 testStateModification(trq)
 tryCloseTrivial(trq)
