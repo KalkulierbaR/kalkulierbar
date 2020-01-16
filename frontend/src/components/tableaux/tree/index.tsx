@@ -1,4 +1,6 @@
-import { event, hierarchy, HierarchyNode, select, tree, zoom } from "d3";
+import { hierarchy, HierarchyNode, tree } from "d3-hierarchy";
+import { event, select } from "d3-selection";
+import { zoom } from "d3-zoom";
 import { Component, Fragment, h } from "preact";
 import { useRef } from "preact/hooks";
 
@@ -123,15 +125,17 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     // should look like d="M x1 x2 Q xC yC x2 y2"
     const xVektor = x1 - x2;
     const yVektor = y1 - y2;
-    let xControlpoint = x1 - xVektor/2;
-    let yControlpoint = y1 - yVektor/2;
+    let xControlpoint = x1 - xVektor / 2;
+    let yControlpoint = y1 - yVektor / 2;
     const divisor = 2;
-    if(x1 > x2){ // child is to the right of the parent
-        xControlpoint = xControlpoint - (- yVektor / divisor);
-        yControlpoint = yControlpoint - (xVektor / divisor);
-    }else { // child is to the left of the parent
-        xControlpoint = xControlpoint - (yVektor / divisor);
-        yControlpoint = yControlpoint - (- xVektor / divisor);
+    if (x1 > x2) {
+        // child is to the right of the parent
+        xControlpoint = xControlpoint - -yVektor / divisor;
+        yControlpoint = yControlpoint - xVektor / divisor;
+    } else {
+        // child is to the left of the parent
+        xControlpoint = xControlpoint - yVektor / divisor;
+        yControlpoint = yControlpoint - -xVektor / divisor;
     }
 
     const d =

@@ -4,6 +4,8 @@ import { CnfStrategy } from "./tableaux";
 export interface ResolutionState {
     seal: string;
     clauseSet: ClauseSet;
+    highlightSelectable: boolean;
+    newestNode: number;
 }
 
 export interface ResolutionMove {
@@ -14,4 +16,5 @@ export interface ResolutionMove {
 
 export interface ResolutionParams {
     cnfStrategy: CnfStrategy;
+    highlightSelectable: boolean;
 }

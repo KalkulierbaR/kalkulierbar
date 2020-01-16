@@ -6,14 +6,43 @@ import * as style from "./style.scss";
 
 import CheckCloseBtn from "../../../components/check-close";
 import ClauseList from "../../../components/clause-list";
-import TreeControlFAB from "../../../components/tableaux/fab";
+import ControlFAB from "../../../components/control-fab";
+import Dialog from "../../../components/dialog";
+import FAB from "../../../components/fab";
+import AddIcon from "../../../components/icons/add";
+import CenterIcon from "../../../components/icons/center";
+import CheckCircleIcon from "../../../components/icons/check-circle";
+import ExploreIcon from "../../../components/icons/explore";
+import UndoIcon from "../../../components/icons/undo";
 import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
-import { sendMove } from "../../../helpers/api";
+import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
+import { nextOpenLeaf } from "../../../helpers/tableaux";
 import exampleState from "./example";
 
-interface Props {}
+/**
+ * Wrapper to send move request
+ * @param {string} server - URL of the server
+ * @param {TableauxState} state - The current State
+ * @param {AppStateUpdater} stateChanger - The state update function
+ * @param {Function} onError - Error handler
+ * @returns {Promise<void>} - Promise that resolves after the request has been handled
+ */
+const sendBacktrack = (
+    server: string,
+    state: TableauxState,
+    stateChanger: AppStateUpdater,
+    onError: (msg: string) => void
+) =>
+    sendMove(
+        server,
+        "prop-tableaux",
+        state,
+        { type: "UNDO", id1: -1, id2: -1 },
+        stateChanger,
+        onError
+    );
 
 /**
  * Wrapper to send close request
@@ -69,17 +98,15 @@ const sendExtend = (
         onError
     );
 
-// Properties Interface for the TableauxView component
-interface Props {}
-
 // Component displaying the content of the prop-tableaux route
-const TableauxView: preact.FunctionalComponent<Props> = () => {
+const TableauxView: preact.FunctionalComponent = () => {
     const {
         server,
         ["prop-tableaux"]: cState,
         smallScreen,
         onError,
-        onChange
+        onChange,
+        onSuccess
     } = useAppState();
     let state = cState;
     const [selectedClauseId, setSelectedClauseId] = useState<
@@ -88,6 +115,8 @@ const TableauxView: preact.FunctionalComponent<Props> = () => {
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
         undefined
     );
+
+    const [showDialog, setShowDialog] = useState(false);
 
     /**
      * The function to call, when the user selects a clause
@@ -121,6 +150,7 @@ const TableauxView: preact.FunctionalComponent<Props> = () => {
     /**
      * The function to call, when the user selects a node
      * @param {D3Data} newNode - The id of the clause, which was clicked on
+     * @param {boolean} ignoreClause - Whether to not select a clause
      * @returns {void}
      */
     const selectNodeCallback = (
@@ -194,11 +224,113 @@ const TableauxView: preact.FunctionalComponent<Props> = () => {
                 />
             </div>
 
-            <TreeControlFAB
-                state={state}
-                selectedNodeId={selectedNodeId}
-                selectedClauseCallback={selectClauseCallback}
-            />
+            <Dialog
+                open={showDialog}
+                label="Choose Clause"
+                onClose={() => setShowDialog(false)}
+            >
+                <ClauseList
+                    clauseSet={state.clauseSet}
+                    selectedClauseId={undefined}
+                    selectClauseCallback={(id: number) => {
+                        setShowDialog(false);
+                        selectClauseCallback(id);
+                    }}
+                />
+            </Dialog>
+
+            <ControlFAB>
+                {selectedNodeId === undefined ? (
+                    <Fragment>
+                        <FAB
+                            icon={<UndoIcon />}
+                            label="Backtrack"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                sendBacktrack(
+                                    server,
+                                    state!,
+                                    onChange,
+                                    onError
+                                );
+                            }}
+                        />
+                        <FAB
+                            icon={<ExploreIcon />}
+                            label="Next Leaf"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                const node = nextOpenLeaf(state!.nodes);
+                                if (node === undefined) {
+                                    return;
+                                }
+                                dispatchEvent(
+                                    new CustomEvent("kbar-go-to-node", {
+                                        detail: { node }
+                                    })
+                                );
+                            }}
+                        />
+                        <FAB
+                            icon={<CenterIcon />}
+                            label="Center"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                dispatchEvent(
+                                    new CustomEvent("kbar-center-tree")
+                                );
+                            }}
+                        />
+                        <FAB
+                            icon={<CheckCircleIcon />}
+                            label="Check"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() =>
+                                checkClose(
+                                    server,
+                                    onError,
+                                    onSuccess,
+                                    "prop-tableaux",
+                                    state
+                                )
+                            }
+                        />
+                    </Fragment>
+                ) : (
+                    <Fragment>
+                        <FAB
+                            icon={<CenterIcon />}
+                            label="Center"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                dispatchEvent(
+                                    new CustomEvent("kbar-center-tree")
+                                );
+                            }}
+                        />
+                        <FAB
+                            icon={<AddIcon />}
+                            label="Expand"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                setShowDialog(!showDialog);
+                            }}
+                        />
+                    </Fragment>
+                )}
+            </ControlFAB>
         </Fragment>
     );
 };

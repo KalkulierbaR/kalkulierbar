@@ -14,8 +14,8 @@ class TestParseFormulaState {
     val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
 
     val invalidString1 = "a,b;c,!d;e,&;g,h,i,!j"
-    val invalidString2 = "richtig; oder,!falsch"
-    val invalidString3 = "mal,am,Ende "
+    val invalidString2 = "richtig;\noder,!falsch"
+    val invalidString3 = "mal,am,Ende!"
 
     val validString1 = "!a,b;c,!d;e,f,g,!h;i,j,!k,l,!m;n;o;p"
     val validString2 = "hey,was,!geht;bin,!ich,richtig"
