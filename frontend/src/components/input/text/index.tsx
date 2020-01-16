@@ -7,6 +7,7 @@ interface Props {
     label?: string;
     submitButton?: ComponentChild;
     onChange?: (value: string) => void;
+    onKeyDown?: (event: KeyboardEvent) => void;
     class?: string;
     value?: string;
 }
@@ -16,6 +17,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
     onChange,
     submitButton,
     value,
+    onKeyDown,
     ...props
 }) => {
     const input = useRef<HTMLInputElement>();
@@ -37,6 +39,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
                             onChange(res);
                         }
                     }}
+                    onKeyDown={onKeyDown}
                 />
                 {submitButton}
             </div>

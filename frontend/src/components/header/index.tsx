@@ -130,29 +130,51 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     const { dispatch, server } = useAppState();
     const [newServer, setServer] = useState(server);
 
-    return (
-        <TextInput
-            class={style.serverInput}
-            label={showLabel ? "Server" : undefined}
-            onChange={setServer}
-            value={server}
-            submitButton={
-                <FAB
-                    icon={<SaveIcon />}
-                    label="Save Server URL"
-                    mini={true}
-                    onClick={() => {
-                        dispatch({
-                            type: AppStateActionType.SET_SERVER,
-                            value: newServer
-                        });
-                        if (close) {
-                            close();
-                        }
-                    }}
-                />
+    const dispatchServer = useCallback(() => {
+        dispatch({
+            type: AppStateActionType.SET_SERVER,
+            value: newServer
+        });
+    }, [newServer]);
+
+    const onSubmit = useCallback(() => {
+        dispatchServer();
+        if (document.activeElement) {
+            (document.activeElement as HTMLElement).blur();
+        }
+        if (close) {
+            close();
+        }
+    }, [dispatchServer]);
+
+    const handleEnter = useCallback(
+        (e: KeyboardEvent) => {
+            if (e.keyCode === 13) {
+                onSubmit();
             }
-        />
+        },
+        [dispatchServer]
+    );
+
+    return (
+        <div class={style.serverInputWrapper}>
+            <div class={style.overlay} />
+            <TextInput
+                class={style.serverInput}
+                label={showLabel ? "Server" : undefined}
+                onChange={setServer}
+                value={server}
+                onKeyDown={handleEnter}
+                submitButton={
+                    <FAB
+                        icon={<SaveIcon />}
+                        label="Save Server URL"
+                        mini={true}
+                        onClick={onSubmit}
+                    />
+                }
+            />
+        </div>
     );
 };
 

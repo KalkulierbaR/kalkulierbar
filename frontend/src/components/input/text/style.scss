@@ -3,6 +3,7 @@
 }
 
 .input {
+    width: 100%;
     padding: 8px;
     flex-grow: 1;
     margin-right: 8px;
@@ -10,9 +11,22 @@
     border-radius: var(--kbar-border-radius);
     background-color: var(--kbar-3dp-color);
     color: var(--kbar-primary-text-color);
-    font-size: 1.2em;
+    font-size: 1em;
+    min-width: 230px;
+
+    @media (max-width: 340px) {
+        margin-right: 0px;
+    }
 }
 
 .row {
     display: flex;
+
+    @media (max-width: 340px) {
+        flex-wrap: wrap;
+
+        button {
+            margin-top: 16px;
+        }
+    }
 }

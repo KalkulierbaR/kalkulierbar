@@ -1,10 +1,10 @@
-.no-pad {
-    padding: 0;
-}
-
 .node {
     cursor: pointer;
     font-size: 24px;
+}
+
+.node--new {
+    fill: #e9be4b;
 }
 
 .node--disabled {
@@ -18,8 +18,4 @@
 
 .text--closed {
     fill: #555555;
-}
-
-.svg {
-    display: block;
 }

@@ -9,11 +9,3 @@
         background-color: rgb(218, 218, 218);
     }
 }
-
-@media (min-width: 800px) {
-    .view {
-        display: grid;
-        grid-template-columns: 250px auto;
-        column-gap: 16px;
-    }
-}

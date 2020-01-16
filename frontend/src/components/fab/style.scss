@@ -6,7 +6,9 @@
     color: #fff;
     border: none;
     width: 56px;
+    min-width: 56px;
     height: 56px;
+    min-height: 56px;
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
@@ -15,7 +17,9 @@
 
 .mini {
     width: 40px;
+    min-width: 40px;
     height: 40px;
+    min-height: 40px;
 }
 
 .extended {

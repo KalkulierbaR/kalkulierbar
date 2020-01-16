@@ -57,10 +57,10 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonState() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"seal":"DA0B67B5A26E5B52D0F0CFEA1ECAD1402CB4B49ED59F4FBCF1C5B7157D1996E3"}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"seal":"7974AE7D1720B6B1D249E035F3AB73422527DD4307F85E8F3D65FB401A76BF3A"}"""
         val state = instance.jsonToState(json)
 
-        assertEquals("resolutionstate|{a, b, c}, {!b, d}, {!c}", state.getHash())
+        assertEquals("resolutionstate|{a, b, c}, {!b, d}, {!c}|false|-1", state.getHash())
     }
 
     @Test
