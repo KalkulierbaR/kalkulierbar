@@ -27,7 +27,7 @@ interface Props {
     style?: string;
     viewBox?: string;
     preserveAspectRatio?: string;
-    children: (transform: Transform) => ComponentChildren;
+    children: (transform: Transform, center: () => void) => ComponentChildren;
 }
 
 function translate(transform: Transform, p0: Point, p1: Point) {
@@ -350,7 +350,7 @@ export default class Zoomable extends Component<Props, State> {
                 onTouchEnd={this.onTouchEnd}
                 onTouchCancel={this.onTouchEnd}
             >
-                {children(transform)}
+                {children(transform, this.handleCenter)}
             </svg>
         );
     }
