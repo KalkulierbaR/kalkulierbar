@@ -217,7 +217,7 @@ export default class Zoomable extends Component<Props, State> {
 
         const ext = extent(svg);
         const g = this.state.gesture || new Gesture(ext);
-        const touches = e.touches;
+        const touches = e.changedTouches;
         const n = touches.length;
 
         let p: Point | null;
@@ -278,7 +278,7 @@ export default class Zoomable extends Component<Props, State> {
         }
         const ext = extent(svg);
         const g = this.state.gesture || new Gesture(ext);
-        const touches = e.touches;
+        const touches = e.changedTouches;
         const n = touches.length;
 
         e.stopImmediatePropagation();
