@@ -31,7 +31,7 @@ class UniqueVariables : DoNothingVisitor() {
     }
 
     override fun visit(node: Relation): LogicNode {
-        val replacer = VariableReplacer(replacementMap)
+        val replacer = VariableRenamer(replacementMap)
         node.arguments.forEach {
             it.accept(replacer)
         }
@@ -65,7 +65,7 @@ class UniqueVariables : DoNothingVisitor() {
     }
 }
 
-class VariableReplacer(val replacementMap: Map<QuantifiedVariable, String>) : FirstOrderTermVisitor<Unit>() {
+class VariableRenamer(val replacementMap: Map<QuantifiedVariable, String>) : FirstOrderTermVisitor<Unit>() {
     override fun visit(node: QuantifiedVariable) {
         if (replacementMap[node] != null)
             node.spelling = replacementMap[node]!!

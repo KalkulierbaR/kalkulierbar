@@ -15,9 +15,7 @@ class Skolemization : DoNothingVisitor() {
     companion object Companion {
         fun transform(formula: LogicNode): LogicNode {
             val instance = Skolemization()
-            var res = formula.accept(instance)
-
-            return res
+            return formula.accept(instance)
         }
     }
 
