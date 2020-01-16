@@ -1,5 +1,5 @@
 import { HierarchyNode } from "d3-hierarchy";
-import { Component, Fragment, h } from "preact";
+import { Fragment, h } from "preact";
 
 import { SelectNodeOptions, TableauxNode } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
@@ -26,21 +26,6 @@ interface Props {
      * Informs the element that the screen is small.
      */
     smallScreen: boolean;
-}
-
-interface State {
-    /**
-     * Current root of the tree.
-     */
-    root?: HierarchyNode<D3Data>;
-    /**
-     * Height of the tree.
-     */
-    treeHeight: number;
-    /**
-     * Width of the tree.
-     */
-    treeWidth: number;
 }
 
 // Interface for a node
@@ -117,95 +102,79 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     return <path d={d} class={style.link} />;
 };
 
-class TableauxTreeView extends Component<Props, State> {
-    public static getDerivedStateFromProps(props: Props) {
-        const { nodes, smallScreen } = props;
+const TableauxTreeView: preact.FunctionalComponent<Props> = ({
+    nodes,
+    smallScreen,
+    selectNodeCallback,
+    selectedNodeId
+}) => {
+    const { root, height: treeHeight, width: treeWidth } = TreeLayout(
+        nodes,
+        smallScreen
+    );
 
-        const { root, height: treeHeight, width: treeWidth } = TreeLayout(
-            nodes,
-            smallScreen
-        );
-
-        return {
-            root,
-            treeHeight,
-            treeWidth
-        };
-    }
-
-    public state: State = {
-        root: undefined as HierarchyNode<D3Data> | undefined,
-        treeHeight: 0,
-        treeWidth: 0
-    };
-
-    public render() {
-        const { selectedNodeId, selectNodeCallback } = this.props;
-        const { root, treeWidth, treeHeight } = this.state;
-
-        return (
-            <div class="card">
-                <Zoomable
-                    class={style.svg}
-                    width="100%"
-                    height={`${treeHeight + 16}px`}
-                    style="min-height: 60vh"
-                    viewBox={`0 -10 ${treeWidth} ${treeHeight + 64}`}
-                    preserveAspectRatio="xMidyMid meet"
-                >
-                    {transform => (
-                        <g
-                            transform={`translate(${transform.x} ${transform.y +
-                                16}) scale(${transform.k})`}
-                        >
-                            <g>
-                                {
-                                    <Fragment>
-                                        {/* First render ClosingEdges -> keep order to avoid overlapping */
-                                        root!
-                                            .descendants()
-                                            .map(n =>
-                                                n.data.closeRef !== null ? (
-                                                    <ClosingEdge
-                                                        leaf={n}
-                                                        pred={getNodeById(
-                                                            n.ancestors(),
-                                                            n.data.closeRef
-                                                        )}
-                                                    />
-                                                ) : null
-                                            )}
-                                        {/* Second render links between nodes */
-                                        root!.links().map(l => (
-                                            <line
-                                                class={style.link}
-                                                x1={(l.source as any).x}
-                                                y1={(l.source as any).y + 6}
-                                                x2={(l.target as any).x}
-                                                y2={(l.target as any).y - 18}
-                                            />
-                                        ))}
-                                        {/* Third render nodes -> renders above all previous elements */
-                                        root!.descendants().map(n => (
-                                            <TableauxTreeNode
-                                                selectNodeCallback={
-                                                    selectNodeCallback
-                                                }
-                                                node={n}
-                                                selected={
-                                                    n.data.id === selectedNodeId
-                                                }
-                                            />
-                                        ))}
-                                    </Fragment>
-                                }
-                            </g>
+    return (
+        <div class="card">
+            <Zoomable
+                class={style.svg}
+                width="100%"
+                height={`${treeHeight + 16}px`}
+                style="min-height: 60vh"
+                viewBox={`0 -10 ${treeWidth} ${treeHeight + 64}`}
+                preserveAspectRatio="xMidyMid meet"
+            >
+                {transform => (
+                    <g
+                        transform={`translate(${transform.x} ${transform.y +
+                            16}) scale(${transform.k})`}
+                    >
+                        <g>
+                            {
+                                <Fragment>
+                                    {/* First render ClosingEdges -> keep order to avoid overlapping */
+                                    root!
+                                        .descendants()
+                                        .map(n =>
+                                            n.data.closeRef !== null ? (
+                                                <ClosingEdge
+                                                    leaf={n}
+                                                    pred={getNodeById(
+                                                        n.ancestors(),
+                                                        n.data.closeRef
+                                                    )}
+                                                />
+                                            ) : null
+                                        )}
+                                    {/* Second render links between nodes */
+                                    root!.links().map(l => (
+                                        <line
+                                            class={style.link}
+                                            x1={(l.source as any).x}
+                                            y1={(l.source as any).y + 6}
+                                            x2={(l.target as any).x}
+                                            y2={(l.target as any).y - 18}
+                                        />
+                                    ))}
+                                    {/* Third render nodes -> renders above all previous elements */
+                                    root!.descendants().map(n => (
+                                        <TableauxTreeNode
+                                            selectNodeCallback={
+                                                selectNodeCallback
+                                            }
+                                            node={n}
+                                            selected={
+                                                n.data.id === selectedNodeId
+                                            }
+                                        />
+                                    ))}
+                                </Fragment>
+                            }
                         </g>
-                    )}
-                </Zoomable>
-            </div>
-        );
-    }
-}
+                    </g>
+                )}
+            </Zoomable>
+        </div>
+    );
+};
 
 export default TableauxTreeView;
