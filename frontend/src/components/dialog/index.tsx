@@ -57,7 +57,11 @@ const Dialog: preact.FunctionalComponent<Props> = ({
         <div class={c} onClick={handleClick}>
             <div class={`card  ${style.container} ${className}`}>
                 <h2>{label}</h2>
-                <button class={style.closeBtn} onClick={onClose}>
+                <button
+                    class={style.closeBtn}
+                    onClick={onClose}
+                    aria-label="Close"
+                >
                     <CloseIcon />
                 </button>
                 <div class={style.content}>{children}</div>

@@ -24,11 +24,14 @@ const TextInput: preact.FunctionalComponent<Props> = ({
 
     const [text, setText] = useState(value);
 
+    const id = `txt-input-${Math.random()}`;
+
     return (
         <div {...props}>
-            <label>{label}</label>
+            <label for={id}>{label}</label>
             <div class={style.row}>
                 <input
+                    id={id}
                     class={style.input}
                     ref={input}
                     value={text}
