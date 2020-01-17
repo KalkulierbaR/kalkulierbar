@@ -202,7 +202,8 @@ const TableauxView: preact.FunctionalComponent = () => {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (!e.ctrlKey || e.keyCode !== 90) {
+            // Only handle Crtl+z
+            if (!e.ctrlKey || e.shiftKey || e.metaKey || e.keyCode !== 90) {
                 return;
             }
             e.preventDefault();
