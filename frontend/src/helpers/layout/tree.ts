@@ -123,6 +123,13 @@ const setExtremes = <T>(t: Tree<T>) => {
     }
 };
 
+/**
+ * Shift child-trees so they no longer overlap
+ * @param {Tree<T>} t - Current tree
+ * @param {number} i - The id of the child to move
+ * @param {LeftSiblingList} ih - A linked list of the indexes of left siblings and their lowest vertical coordinate.
+ * @returns {void} - void
+ */
 const separate = <T>(t: Tree<T>, i: number, ih: LeftSiblingList) => {
     let sr: Tree<T> | undefined = t.children[i - 1];
     let mssr = sr.mod;
@@ -169,6 +176,8 @@ const moveSubTree = <T>(t: Tree<T>, i: number, si: number, dist: number) => {
     t.children[i].modsEr += dist;
     distributeExtra(t, i, si, dist);
 };
+
+// A contour are just the children you can see from the side
 
 const nextLeftContour = <T>(t: Tree<T>) =>
     t.children.length ? t.children[0] : t.tl;

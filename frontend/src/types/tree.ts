@@ -49,6 +49,9 @@ export interface Link {
     target: Point;
 }
 
+/**
+ * A linked list of the indexes of left siblings and their lowest vertical coordinate.
+ */
 export interface LeftSiblingList {
     lowY: number;
     idx: number;
