@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { AppStateUpdater } from "../../../types/app";
 import { SelectNodeOptions, TableauxState } from "../../../types/tableaux";
 import * as style from "./style.scss";
@@ -199,6 +199,23 @@ const TableauxView: preact.FunctionalComponent = () => {
         state = exampleState;
         onChange("prop-tableaux", state);
     }
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (!e.ctrlKey || e.keyCode !== 90) {
+                return;
+            }
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            sendBacktrack(server, state!, onChange, onError);
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [state, server, onChange, onError]);
 
     return (
         <Fragment>
