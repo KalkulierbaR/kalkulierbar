@@ -35,25 +35,16 @@ interface Props {
     smallScreen: boolean;
 }
 
-// Interface for a node
-export interface D3Data {
-    id: number;
-    name: string;
-    isLeaf: boolean;
-    negated: boolean;
-    isClosed: boolean;
-    closeRef: number | null;
-    children?: D3Data[];
-}
-
 /**
  *
  * @param {Array<HierarchyNode<D3Data>>} nodes - The nodes we iterate over
  * @param {number} id - Id of the ancestor
  * @returns {HierarchyNode<D3Data>} - The ancestor
  */
-const getNodeById = (nodes: Array<LayoutItem<TableauxTreeLayoutNode>>, id: number) =>
-    nodes.find(n => n.data.id === id)!;
+const getNodeById = (
+    nodes: Array<LayoutItem<TableauxTreeLayoutNode>>,
+    id: number
+) => nodes.find(n => n.data.id === id)!;
 
 interface ClosingEdgeProps {
     leaf: LayoutItem<TableauxTreeLayoutNode>;
