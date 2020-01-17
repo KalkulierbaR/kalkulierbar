@@ -18,22 +18,27 @@ class UniqueVariables : DoNothingVisitor() {
         }
     }
 
-    private var variableDisambCounter = mutableMapOf<String, Int>()
-    private var replacementMap = mutableMapOf<QuantifiedVariable, String>()
+    private val variableDisambCounter = mutableMapOf<String, Int>()
+    private val seenVarNames = mutableListOf<String>()
+    private val replacementMap = mutableMapOf<QuantifiedVariable, String>()
 
     private fun handleVarBinding(varName: String): String {
-        if (variableDisambCounter[varName] != null)
-            variableDisambCounter[varName] = variableDisambCounter[varName]!! + 1
-        else
-            variableDisambCounter[varName] = 1
+        var newName = varName
 
-        return "${varName}v${variableDisambCounter[varName]}"
+        while (seenVarNames.contains(newName)) {
+            variableDisambCounter[varName] = (variableDisambCounter[varName] ?: 0) + 1
+            newName = "${varName}v${variableDisambCounter[varName]}"
+        }
+
+        seenVarNames.add(newName)
+
+        return newName
     }
 
     override fun visit(node: Relation): LogicNode {
-        val replacer = VariableRenamer(replacementMap)
+        val renamer = VariableRenamer(replacementMap)
         node.arguments.forEach {
-            it.accept(replacer)
+            it.accept(renamer)
         }
         return node
     }
