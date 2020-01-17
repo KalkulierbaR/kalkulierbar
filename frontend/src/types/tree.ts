@@ -1,4 +1,4 @@
-export interface Tree {
+export interface Tree<T> {
     width: number;
     height: number;
     x: number;
@@ -11,20 +11,20 @@ export interface Tree {
     /**
      * Left thread.
      */
-    tl?: Tree;
+    tl?: Tree<T>;
     /**
      * Right thread.
      */
-    tr?: Tree;
+    tr?: Tree<T>;
 
     /**
      * Left extreme node.
      */
-    extremeLeft?: Tree;
+    extremeLeft?: Tree<T>;
     /**
      * Left extreme node.
      */
-    extremeRight?: Tree;
+    extremeRight?: Tree<T>;
 
     /**
      * Sum of modifiers at the left extreme node
@@ -35,15 +35,18 @@ export interface Tree {
      */
     modsEr: number;
 
-    children: Tree[];
+    children: Array<Tree<T>>;
+
+    data: T;
 }
 
-export const tree = (
+export const tree = <T>(
     width: number,
     height: number,
     y: number,
-    children: Tree[]
-): Tree => ({
+    data: T,
+    children: Array<Tree<T>>
+): Tree<T> => ({
     width,
     height,
     x: 0,
@@ -54,6 +57,7 @@ export const tree = (
     change: 0,
     modsEl: 0,
     modsEr: 0,
+    data,
     children
 });
 
