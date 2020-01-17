@@ -128,14 +128,13 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                 width="100%"
                 height={`${treeHeight}px`}
                 style="min-height: 60vh"
-                viewBox={`0 0 ${treeWidth} ${treeHeight}`}
+                viewBox={`0 -16 ${treeWidth} ${treeHeight}`}
                 preserveAspectRatio="xMidyMid meet"
                 transformGoTo={transformGoTo}
             >
                 {transform => (
                     <g
-                        transform={`translate(${transform.x} ${transform.y +
-                            16}) scale(${transform.k})`}
+                        transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
                         <g>
                             {/* First render ClosingEdges -> keep order to avoid overlapping */
