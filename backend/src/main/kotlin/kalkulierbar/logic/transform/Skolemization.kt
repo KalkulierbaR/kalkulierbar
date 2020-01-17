@@ -86,7 +86,7 @@ class SkolemTermReplacer(val replacementMap: Map<QuantifiedVariable, FirstOrderT
     }
 
     override fun visit(node: Constant): FirstOrderTerm {
-        if (node.spelling.substring(0, 2) != "sk")
+        if (node.spelling.length < 2 || node.spelling.substring(0, 2) != "sk")
             return node
 
         return Constant("u${node.spelling}")
@@ -95,7 +95,7 @@ class SkolemTermReplacer(val replacementMap: Map<QuantifiedVariable, FirstOrderT
     override fun visit(node: Function): FirstOrderTerm {
         node.arguments = node.arguments.map { it.accept(this) }
 
-        if (node.spelling.substring(0, 2) != "sk")
+        if (node.spelling.length < 2 || node.spelling.substring(0, 2) != "sk")
             return node
 
         return Function("u${node.spelling}", node.arguments)

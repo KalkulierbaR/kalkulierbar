@@ -17,7 +17,7 @@ class NegationNormalForm : DoNothingVisitor() {
     companion object Companion {
         fun transform(formula: LogicNode): LogicNode {
             val instance = NegationNormalForm()
-            return formula.accept(instance)
+            return formula.toBasicOps().accept(instance)
         }
     }
 
