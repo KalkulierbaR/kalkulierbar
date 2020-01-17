@@ -11,7 +11,7 @@ import { Extent, GoToEvent, Point, Transform } from "../../types/ui";
 export const SUPPORTS_TOUCH =
     navigator.maxTouchPoints || "ontouchstart" in globalThis;
 
-// const filterMouseEvent = (e: MouseEvent) => !e.button;
+const filterMouseEvent = (e: MouseEvent) => !e.button;
 // const filterTouchEvent = (e: TouchEvent) => !e.ctrlKey;
 
 interface State {
@@ -104,6 +104,9 @@ export default class Zoomable extends Component<Props, State> {
     };
 
     public onMouseDown = (ev: MouseEvent) => {
+        if (!filterMouseEvent(ev)) {
+            return;
+        }
         if (!this.ref.current) {
             return;
         }
