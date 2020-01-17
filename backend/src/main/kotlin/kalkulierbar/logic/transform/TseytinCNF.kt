@@ -15,12 +15,14 @@ import kalkulierbar.logic.Var
 /**
  * Recursively applies Tseytin transformation on a logic node
  * CNF snippets based on http://gauss.ececs.uc.edu/Courses/c626/lectures/BDD/st.pdf
+ *
+ * Does NOT support first order formulae
  */
 class TseytinCNF : LogicNodeVisitor<Unit>() {
 
     companion object Companion {
         /**
-         * Transforms an arbitrary formula into a ClauseSet that is equivalent with regards to satisfiability
+         * Transforms a propositional formula into a ClauseSet that is equivalent with regards to satisfiability
          * For more information, see https://en.wikipedia.org/wiki/Tseytin_transformation
          * NOTE: The resulting ClauseSet will contain additional variables, making the ClauseSet NOT equivalent
          *       to the input formula
@@ -64,10 +66,19 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
         }
     }
 
+    /**
+     * A single variable does not get its own snippet
+     * It is implicitly added by surrounding operators or the top level transformation function
+     * @param node Variable encountered
+     */
     override fun visit(node: Var) {
         index += 1
     }
 
+    /**
+     * Add the tseytin-snippet for a Negation to the clause set
+     * @param node Negation encountered
+     */
     override fun visit(node: Not) {
         val selfVar = getName(node)
         index += 1
@@ -79,6 +90,10 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
         cs.addAll(listOf(clauseA, clauseB))
     }
 
+    /**
+     * Add the tseytin-snippet for a Conjunction to the clause set
+     * @param node And-Operator encountered
+     */
     override fun visit(node: And) {
         val selfVar = getName(node)
         index += 1
@@ -93,6 +108,10 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
         cs.addAll(listOf(clauseA, clauseB, clauseC))
     }
 
+    /**
+     * Add the tseytin-snippet for a Disjunction to the clause set
+     * @param node Or-Operator encountered
+     */
     override fun visit(node: Or) {
         val selfVar = getName(node)
         index += 1
@@ -107,6 +126,10 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
         cs.addAll(listOf(clauseA, clauseB, clauseC))
     }
 
+    /**
+     * Add the tseytin-snippet for an Implication to the clause set
+     * @param node Implication encountered
+     */
     override fun visit(node: Impl) {
         val selfVar = getName(node)
         index += 1
@@ -121,6 +144,10 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
         cs.addAll(listOf(clauseA, clauseB, clauseC))
     }
 
+    /**
+     * Add the tseytin-snippet for an Equivalence to the clause set
+     * @param node Equivalence encountered
+     */
     override fun visit(node: Equiv) {
         val selfVar = getName(node)
         index += 1

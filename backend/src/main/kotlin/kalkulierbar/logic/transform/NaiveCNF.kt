@@ -12,11 +12,16 @@ import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
 
+/**
+ * Visitor-based implementation of the naive CNF transformation
+ *
+ * Does NOT support first order formulae
+ */
 class NaiveCNF : LogicNodeVisitor<ClauseSet>() {
 
     companion object Companion {
         /**
-         * Transforms an arbitrary formula into an equivalent ClauseSet
+         * Transforms a propositional formula into an equivalent ClauseSet
          * NOTE: The resulting ClauseSet may grow exponentially with the input formula size
          *       Should the resulting ClauseSet exceed a certain size, an exception will be thrown
          * @param formula Formula to convert
@@ -28,12 +33,22 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet>() {
         }
     }
 
+    /**
+     * Transform a Variable into an equivalent ClauseSet
+     * @param node Variable to transform
+     * @return ClauseSet representing the Variable
+     */
     override fun visit(node: Var): ClauseSet {
         val atom = Atom(node.spelling, false)
         val clause = Clause(mutableListOf(atom))
         return ClauseSet(mutableListOf(clause))
     }
 
+    /**
+     * Transform a Negation-Operation into an equivalent ClauseSet
+     * @param node Negation to transform
+     * @return ClauseSet representing the Negation
+     */
     override fun visit(node: Not): ClauseSet {
         val res: ClauseSet
         val child = node.child
@@ -76,6 +91,11 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet>() {
         return res
     }
 
+    /**
+     * Transform an And-Operator into an equivalent ClauseSet
+     * @param node And-Operator to transform
+     * @return ClauseSet representing the And-Operator
+     */
     override fun visit(node: And): ClauseSet {
         val leftCS = node.leftChild.accept(this)
         val rightCS = node.rightChild.accept(this)
@@ -83,6 +103,11 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet>() {
         return leftCS
     }
 
+    /**
+     * Transform a Or-Operator into an equivalent ClauseSet
+     * @param node Or-Operator to transform
+     * @return ClauseSet representing the Or-Operator
+     */
     @Suppress("MagicNumber")
     override fun visit(node: Or): ClauseSet {
         val leftClauses = node.leftChild.accept(this).clauses
@@ -107,10 +132,20 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet>() {
         return cs
     }
 
+    /**
+     * Transform an Implication into an equivalent ClauseSet
+     * @param node Implication to transform
+     * @return ClauseSet representing the Implication
+     */
     override fun visit(node: Impl): ClauseSet {
         return node.toBasicOps().accept(this)
     }
 
+    /**
+     * Transform an Equivalence into an equivalent ClauseSet
+     * @param node Equivalence to transform
+     * @return ClauseSet representing the Equivalence
+     */
     override fun visit(node: Equiv): ClauseSet {
         return node.toBasicOps().accept(this)
     }

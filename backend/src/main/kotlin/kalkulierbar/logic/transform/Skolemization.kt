@@ -10,6 +10,21 @@ import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.UniversalQuantifier
 
+/**
+ * Visitor-based Skolemization transformation
+ * Replaces existential quantifiers with fresh Skolem terms
+ * 
+ * Requires absence of variable-hiding in quantifier scopes, will
+ * throw an exception otherwise.
+ * 
+ * Introduced Skolem terms are of the form 'skN' where N is a number.
+ * User-defined functions or constants beginning with 'sk' will be
+ * renamed to 'usk' to avoid conflicts.
+ *
+ * Note: I'm unsure if this implementation produces correct results
+ *       if it is not applied as part of the Skolem Normal Form transformation,
+ *       especially if only a subformula is being skolemized
+ */
 class Skolemization : DoNothingVisitor() {
 
     companion object Companion {
@@ -28,17 +43,24 @@ class Skolemization : DoNothingVisitor() {
     private var replacementMap = mutableMapOf<QuantifiedVariable, FirstOrderTerm>()
     private var skolemCounter = 0
 
+    /**
+     * Skolemize a universally quantified subformula
+     * @param node UniversalQuantifier encountered
+     * @return Skolemized subformula
+     */
     override fun visit(node: UniversalQuantifier): LogicNode {
-
         quantifierScope.add(node)
-
         node.child = node.child.accept(this)
-
         quantifierScope.removeAt(quantifierScope.size - 1)
 
         return node
     }
 
+    /**
+     * Remove existential quantifiers and add necessary variable replacements to the replacement map
+     * @param node ExistentialQuantifier encountered
+     * @return Skolemized subformula without the existential quantifier
+     */ 
     override fun visit(node: ExistentialQuantifier): LogicNode {
 
         if (quantifierScope.size > quantifierScope.distinctBy { it.varName }.size)
@@ -54,6 +76,11 @@ class Skolemization : DoNothingVisitor() {
         return node.child.accept(this)
     }
 
+    /**
+     * Replace variables in FO Terms with the appropriate Skolem terms
+     * @param node Relation node encountered
+     * @return Relation with substituted variables
+     */
     override fun visit(node: Relation): LogicNode {
         val replacer = SkolemTermReplacer(replacementMap, quantifierScope)
         node.arguments = node.arguments.map { it.accept(replacer) }
@@ -61,6 +88,10 @@ class Skolemization : DoNothingVisitor() {
         return node
     }
 
+    /**
+     * Get a fresh skolem term for the current quantifier scope
+     * @return Skolem term
+     */
     private fun getSkolemTerm(): FirstOrderTerm {
         skolemCounter += 1
 
