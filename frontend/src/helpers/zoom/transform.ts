@@ -27,6 +27,7 @@ export const invertY = (t: Transform, y: number) => invert(t, [0, y])[0];
 
 export const IDENTITY: Transform = { k: 1, x: 0, y: 0 };
 
+// Ensures that we stay in the extent of our element
 export function constrain(
     transform: Transform,
     extent: Extent,

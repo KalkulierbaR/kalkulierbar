@@ -5,7 +5,7 @@ import { maxLengthClause } from "../clause";
 /**
  * Calculate the circle layout to avoid overlapping or cutting of clauses
  * @param {Clause[]} clauses - The clauses to display in a circle
- * @returns {CircleLayoutData} - The circle layout of the clauses
+ * @returns {Layout<Clause>} - The circle layout of the clauses
  */
 export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
     if (clauses.length === 0) {

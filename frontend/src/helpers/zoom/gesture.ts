@@ -1,16 +1,44 @@
 import { Point, Transform } from "../../types/ui";
 import { invert } from "./transform";
 
+// A class to store some gesture data
 export class Gesture {
-    public active = 0;
+    /**
+     * Extent of the base element
+     */
     public extent: [Point, Point];
+    /**
+     * Current taps
+     */
     public taps = 0;
 
+    /**
+     * Current mouse data.
+     * The first is the current pos, the second is the start pos
+     */
     public mouse?: [Point, Point];
+    /**
+     * Current touch data for the first touch.
+     * The first is the current pos,
+     * the second is the start pos,
+     * the third is the touch id
+     */
     public touch0?: [Point, Point, number];
+    /**
+     * Current touch data for the second.
+     * The first is the current pos,
+     * the second is the start pos,
+     * the third is the touch id
+     */
     public touch1?: [Point, Point, number];
 
+    /**
+     * Current wheel Timeout
+     */
     public wheel?: number;
+    /**
+     * Have we moved during a gesture?
+     */
     public moved?: boolean;
 
     constructor(extent: [Point, Point]) {
