@@ -1,12 +1,88 @@
-import { Layout } from "../../types/layout";
-import { TableauxNode } from "../../types/tableaux";
-import { LeftSiblingList, Tree } from "../../types/tree";
+import { Layout, LayoutItem } from "../../types/layout";
+import { TableauxNode, TableauxTreeLayoutNode } from "../../types/tableaux";
+import { LeftSiblingList, Link, Tree } from "../../types/tree";
+import { maxBy } from "../max-by";
 
-export const treeLayout = (nodes: TableauxNode[]): Layout<TableauxNode> => {
-    return { width: 0, height: 0, data: [] };
+export const tree = <T>(
+    width: number,
+    height: number,
+    y: number,
+    data: T,
+    children: Array<Tree<T>>
+): Tree<T> => ({
+    width,
+    height,
+    x: 0,
+    y,
+    prelim: 0,
+    mod: 0,
+    shift: 0,
+    change: 0,
+    modsEl: 0,
+    modsEr: 0,
+    data,
+    treeHeight: maxBy(children, c => c.treeHeight) + height,
+    children
+});
+
+export const treeLayout = (
+    nodes: TableauxNode[]
+): Layout<TableauxTreeLayoutNode> & { links: Link[] } => {
+    const root = tabNodeToTree(nodes);
+    layout(root);
+    console.log(root);
+    const data = treeToLayoutItem(root);
+    const width =
+        root.extremeLeft!.x -
+        root.extremeLeft!.width / 2 +
+        (root.extremeRight!.x + root.extremeRight!.width / 2);
+    const links = getLinks(root);
+    return { width, height: root.treeHeight, data, links };
 };
 
-const tabNodeToTree = () => {};
+const tabNodeToTree = (
+    nodes: TableauxNode[],
+    n: TableauxNode = nodes[0],
+    i: number = 0,
+    y: number = 16
+): Tree<TableauxTreeLayoutNode> => {
+    const width = (n.spelling.length + (n.isClosed ? 1 : 0)) * 70;
+    return tree(
+        width,
+        72,
+        y,
+        { ...n, id: i },
+        n.children.map(c => tabNodeToTree(nodes, nodes[c], c, y + 72))
+    );
+};
+
+const preOrderTraverseTree = <T>(t: Tree<T>, f: (t: Tree<T>) => void) => {
+    f(t);
+    for (const c of t.children) {
+        preOrderTraverseTree(c, f);
+    }
+};
+
+const treeToLayoutItem = (
+    t: Tree<TableauxTreeLayoutNode>
+): Array<LayoutItem<TableauxTreeLayoutNode>> => {
+    const items: Array<LayoutItem<TableauxTreeLayoutNode>> = [];
+
+    preOrderTraverseTree(t, ({ x, y, data }) => {
+        items[data.id] = { x, y, data };
+    });
+
+    return items;
+};
+
+const getLinks = <T>(t: Tree<T>): Link[] => {
+    const links: Link[] = t.children.map(c => ({
+        source: [t.x, t.y],
+        target: [c.x, c.y]
+    }));
+
+    return links.concat(...t.children.map(c => getLinks(c)));
+};
 
 const layout = <T>(t: Tree<T>) => {
     firstWalk(t);
@@ -34,7 +110,7 @@ const firstWalk = <T>(t: Tree<T>) => {
 };
 
 const setExtremes = <T>(t: Tree<T>) => {
-    if (!t.children.length) {
+    if (t.children.length) {
         t.extremeLeft = t.children[0].extremeLeft;
         t.modsEl = t.children[0].modsEl;
         t.extremeRight = t.children[t.children.length - 1].extremeRight;
@@ -145,7 +221,7 @@ const positionRoot = <T>(t: Tree<T>) => {
 
 const secondWalk = <T>(t: Tree<T>, modSum: number) => {
     modSum += t.mod;
-    t.x = t.prelim + modSum;
+    t.x = t.prelim + modSum + t.width / 2;
     addChildSpacing(t);
     for (const c of t.children) {
         secondWalk(c, modSum);

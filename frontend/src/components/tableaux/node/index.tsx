@@ -1,8 +1,8 @@
-import { HierarchyNode } from "d3";
 import { createRef, h } from "preact";
-import { D3Data } from "../tree";
 
 import { classMap } from "../../../helpers/class-map";
+import { LayoutItem } from "../../../types/layout";
+import { TableauxTreeLayoutNode } from "../../../types/tableaux";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 
@@ -11,7 +11,7 @@ interface Props {
     /**
      * The single tree node to represent
      */
-    node: HierarchyNode<D3Data>;
+    node: LayoutItem<TableauxTreeLayoutNode>;
     /**
      * Boolean to change the style of the node if it is selected
      */
@@ -19,7 +19,7 @@ interface Props {
     /**
      * The function to call, when the user selects this node
      */
-    selectNodeCallback: (node: D3Data) => void;
+    selectNodeCallback: (node: TableauxTreeLayoutNode) => void;
 }
 
 // Component representing a single Node of a TableauxTree
@@ -31,7 +31,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     const textRef = createRef<SVGTextElement>();
 
     // The nodes name which is displayed
-    const name = `${node.data.negated ? "¬" : ""}${node.data.name}`;
+    const name = `${node.data.negated ? "¬" : ""}${node.data.spelling}`;
 
     /**
      * Handle the onClick event of the node
@@ -60,8 +60,8 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                     [style.textSelected]: selected,
                     [style.textClosed]: node.data.isClosed
                 })}
-                x={(node as any).x}
-                y={(node as any).y}
+                x={node.x}
+                y={node.y}
             >
                 {name}
             </text>

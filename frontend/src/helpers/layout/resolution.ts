@@ -1,17 +1,6 @@
 import { Clause } from "../../types/clause";
 import { Layout } from "../../types/layout";
-import { clauseToString } from "../clause";
-
-/**
- * Determine the longest clause
- * @param {Clause[]} clauses - The clauses
- * @returns {Clause} - The longest clause
- */
-const maxLengthClause = (clauses: readonly Clause[]) =>
-    clauses.reduce(
-        (prev, clause) => Math.max(prev, clauseToString(clause).length),
-        0
-    );
+import { maxLengthClause } from "../clause";
 
 /**
  * Calculate the circle layout to avoid overlapping or cutting of clauses

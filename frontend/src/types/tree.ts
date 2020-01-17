@@ -1,3 +1,5 @@
+import { Point } from "./ui";
+
 export interface Tree<T> {
     width: number;
     height: number;
@@ -37,29 +39,15 @@ export interface Tree<T> {
 
     children: Array<Tree<T>>;
 
+    treeHeight: number;
+
     data: T;
 }
 
-export const tree = <T>(
-    width: number,
-    height: number,
-    y: number,
-    data: T,
-    children: Array<Tree<T>>
-): Tree<T> => ({
-    width,
-    height,
-    x: 0,
-    y,
-    prelim: 0,
-    mod: 0,
-    shift: 0,
-    change: 0,
-    modsEl: 0,
-    modsEr: 0,
-    data,
-    children
-});
+export interface Link {
+    source: Point;
+    target: Point;
+}
 
 export interface LeftSiblingList {
     lowY: number;

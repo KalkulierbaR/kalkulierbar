@@ -1,10 +1,14 @@
-import { HierarchyNode } from "d3-hierarchy";
-import { Fragment, h } from "preact";
+import { h } from "preact";
 
-import { SelectNodeOptions, TableauxNode } from "../../../types/tableaux";
+import {
+    SelectNodeOptions,
+    TableauxNode,
+    TableauxTreeLayoutNode
+} from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
-import { TreeLayout } from "../../../helpers/layout/d3-tree";
+import { treeLayout } from "../../../helpers/layout/tree";
+import { LayoutItem } from "../../../types/layout";
 import Zoomable from "../../zoomable";
 import * as style from "./style.scss";
 
@@ -21,7 +25,10 @@ interface Props {
     /**
      * The function to call, when the user selects a node
      */
-    selectNodeCallback: (node: D3Data, options?: SelectNodeOptions) => void;
+    selectNodeCallback: (
+        node: TableauxTreeLayoutNode,
+        options?: SelectNodeOptions
+    ) => void;
     /**
      * Informs the element that the screen is small.
      */
@@ -45,12 +52,12 @@ export interface D3Data {
  * @param {number} id - Id of the ancestor
  * @returns {HierarchyNode<D3Data>} - The ancestor
  */
-const getNodeById = (nodes: Array<HierarchyNode<D3Data>>, id: number) =>
+const getNodeById = (nodes: Array<LayoutItem<TableauxTreeLayoutNode>>, id: number) =>
     nodes.find(n => n.data.id === id)!;
 
 interface ClosingEdgeProps {
-    leaf: HierarchyNode<D3Data>;
-    pred: HierarchyNode<D3Data>;
+    leaf: LayoutItem<TableauxTreeLayoutNode>;
+    pred: LayoutItem<TableauxTreeLayoutNode>;
 }
 
 // Component to display an edge in a graph
@@ -59,10 +66,10 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     pred
 }) => {
     // Calculate coordinates
-    const x1 = (leaf as any).x;
-    const y1 = (leaf as any).y;
-    const x2 = (pred as any).x;
-    const y2 = (pred as any).y;
+    const x1 = leaf.x;
+    const y1 = leaf.y;
+    const x2 = pred.x;
+    const y2 = pred.y;
 
     // Calculate edge
     // M -> move to point x1,y1
@@ -104,19 +111,17 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
 
 const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
-    smallScreen,
     selectNodeCallback,
     selectedNodeId
 }) => {
-    const { root, height: treeHeight, width: treeWidth } = TreeLayout(
-        nodes,
-        smallScreen
+    const { data, height: treeHeight, width: treeWidth, links } = treeLayout(
+        nodes
     );
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
 
-        const node = getNodeById(root.descendants(), n);
+        const node = getNodeById(data, n);
 
         selectNodeCallback(node.data, { ignoreClause: true });
 
@@ -130,9 +135,9 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
             <Zoomable
                 class={style.svg}
                 width="100%"
-                height={`${treeHeight + 16}px`}
+                height={`${treeHeight}px`}
                 style="min-height: 60vh"
-                viewBox={`0 -10 ${treeWidth} ${treeHeight + 64}`}
+                viewBox={`0 0 ${treeWidth} ${treeHeight}`}
                 preserveAspectRatio="xMidyMid meet"
                 transformGoTo={transformGoTo}
             >
@@ -142,46 +147,33 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                             16}) scale(${transform.k})`}
                     >
                         <g>
-                            {
-                                <Fragment>
-                                    {/* First render ClosingEdges -> keep order to avoid overlapping */
-                                    root!
-                                        .descendants()
-                                        .map(n =>
-                                            n.data.closeRef !== null ? (
-                                                <ClosingEdge
-                                                    leaf={n}
-                                                    pred={getNodeById(
-                                                        n.ancestors(),
-                                                        n.data.closeRef
-                                                    )}
-                                                />
-                                            ) : null
-                                        )}
-                                    {/* Second render links between nodes */
-                                    root!.links().map(l => (
-                                        <line
-                                            class={style.link}
-                                            x1={(l.source as any).x}
-                                            y1={(l.source as any).y + 6}
-                                            x2={(l.target as any).x}
-                                            y2={(l.target as any).y - 18}
-                                        />
-                                    ))}
-                                    {/* Third render nodes -> renders above all previous elements */
-                                    root!.descendants().map(n => (
-                                        <TableauxTreeNode
-                                            selectNodeCallback={
-                                                selectNodeCallback
-                                            }
-                                            node={n}
-                                            selected={
-                                                n.data.id === selectedNodeId
-                                            }
-                                        />
-                                    ))}
-                                </Fragment>
-                            }
+                            {/* First render ClosingEdges -> keep order to avoid overlapping */
+                            data.map(n =>
+                                n.data.closeRef !== null ? (
+                                    <ClosingEdge
+                                        leaf={n}
+                                        pred={data[n.data.closeRef]}
+                                    />
+                                ) : null
+                            )}
+                            {/* Second render links between nodes */
+                            links.map(l => (
+                                <line
+                                    class={style.link}
+                                    x1={l.source[0]}
+                                    y1={l.source[1] + 6}
+                                    x2={l.target[0]}
+                                    y2={l.target[1] - 18}
+                                />
+                            ))}
+                            {/* Third render nodes -> renders above all previous elements */
+                            data.map(n => (
+                                <TableauxTreeNode
+                                    selectNodeCallback={selectNodeCallback}
+                                    node={n}
+                                    selected={n.data.id === selectedNodeId}
+                                />
+                            ))}
                         </g>
                     </g>
                 )}

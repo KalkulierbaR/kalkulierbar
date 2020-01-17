@@ -9,6 +9,8 @@ export interface TableauxNode {
     children: number[];
 }
 
+export type TableauxTreeLayoutNode = TableauxNode & { id: number };
+
 export interface TableauxState {
     seal: string;
     clauseSet: ClauseSet;
