@@ -3,7 +3,7 @@ package kalkulierbar.parsers
 import kalkulierbar.FormulaConversionException
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.clause.ClauseSet
-import kalkulierbar.logic.PropositionalLogicNode
+import kalkulierbar.logic.LogicNode
 
 class FlexibleClauseSetParser {
 
@@ -47,7 +47,7 @@ class FlexibleClauseSetParser {
          * @param strategy conversion strategy to apply
          * @return ClauseSet representation of the input formula
          */
-        fun convertToCNF(formula: PropositionalLogicNode, strategy: CnfStrategy): ClauseSet {
+        fun convertToCNF(formula: LogicNode, strategy: CnfStrategy): ClauseSet {
             var res: ClauseSet
 
             when (strategy) {

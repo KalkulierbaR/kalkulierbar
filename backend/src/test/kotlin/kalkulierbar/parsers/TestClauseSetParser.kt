@@ -1,4 +1,4 @@
-package kalkulierbar.tests
+package kalkulierbar.tests.parsers
 
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.parsers.ClauseSetParser
