@@ -72,7 +72,10 @@ class Skolemization : DoNothingVisitor() {
     }
 }
 
-class SkolemTermReplacer(val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>, val bindingQuantifiers: List<UniversalQuantifier>) : FirstOrderTermVisitor<FirstOrderTerm>() {
+class SkolemTermReplacer(
+    val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>,
+    val bindingQuantifiers: List<UniversalQuantifier>
+) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     override fun visit(node: QuantifiedVariable): FirstOrderTerm {
         if (replacementMap[node] != null) {
@@ -107,9 +110,11 @@ class SkolemQuantifierLinker(val quantifiers: List<UniversalQuantifier>) : First
         val matchingQuantifiers = quantifiers.filter { it.varName == node.spelling }
 
         if (matchingQuantifiers.size == 0)
-            throw FormulaConversionException("Error linking variables to quantifiers: Variable '${node.spelling}' is not bound by any universal quantifier")
+            throw FormulaConversionException("Error linking variables to quantifiers: " +
+                "Variable '${node.spelling}' is not bound by any universal quantifier")
         else if (matchingQuantifiers.size > 1)
-            throw FormulaConversionException("Error linking variables to quantifiers: Variable '${node.spelling}' is bound by more than one universal quantifier")
+            throw FormulaConversionException("Error linking variables to quantifiers: " +
+                "Variable '${node.spelling}' is bound by more than one universal quantifier")
 
         matchingQuantifiers[0].boundVariables.add(node)
     }
