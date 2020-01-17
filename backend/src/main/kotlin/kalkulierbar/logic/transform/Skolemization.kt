@@ -13,6 +13,11 @@ import kalkulierbar.logic.UniversalQuantifier
 class Skolemization : DoNothingVisitor() {
 
     companion object Companion {
+        /**
+         * Skolemize a formula
+         * @param forumula Formula to transform
+         * @return Skolemized formula
+         */
         fun transform(formula: LogicNode): LogicNode {
             val instance = Skolemization()
             return formula.accept(instance)
@@ -72,22 +77,44 @@ class Skolemization : DoNothingVisitor() {
     }
 }
 
+/**
+ * Replaces QuantifiedVariables with their respective Skolem terms
+ * User-defined constants or functions starting with 'sk' will be renamed
+ * to start in 'usk' to ensure that Skolem terms are fresh
+ * @param replacementMap Map of variable instances to replace alongside their Skolem term
+ * @param bindingQuantifiers List of quantifiers in effect for the term in question
+ */
 class SkolemTermReplacer(
     val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>,
     val bindingQuantifiers: List<UniversalQuantifier>
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
+    /**
+     * Instantiate variables with their Skolem terms as necessary
+     * @param node QuantifiedVariable encountered
+     * @return Skolem term of the variable if given, unchanged variable otherwise
+     */
     override fun visit(node: QuantifiedVariable): FirstOrderTerm {
         if (replacementMap[node] != null) {
             val linker = SkolemQuantifierLinker(bindingQuantifiers)
+
+            // Clone the term to avoid object-sharing related weirdness
             val skolemTerm = replacementMap[node]!!.clone()
+
+            // Register introduced variables with their binding quantifiers
             skolemTerm.accept(linker)
+
             return skolemTerm
         }
 
         return node
     }
 
+    /**
+     * Re-name constants starting in 'sk' to avoid conflicts
+     * @param node Constant encountered
+     * @return Disambiguated constant
+     */
     override fun visit(node: Constant): FirstOrderTerm {
         if (node.spelling.length < 2 || node.spelling.substring(0, 2) != "sk")
             return node
@@ -95,6 +122,11 @@ class SkolemTermReplacer(
         return Constant("u${node.spelling}")
     }
 
+    /**
+     * Re-name functions starting in 'sk' to avoid conflicts
+     * @param node Function encountered
+     * @return Disambiguated function
+     */
     override fun visit(node: Function): FirstOrderTerm {
         node.arguments = node.arguments.map { it.accept(this) }
 
@@ -105,7 +137,18 @@ class SkolemTermReplacer(
     }
 }
 
+/**
+ * Registers newly created variables in Skolem-terms with their respective quantifiers
+ * Requires absence of variable-hiding in the current quantifier scope,
+ * will throw an exception otherwise
+ * @param quantifers List of quantifiers in whose scope the term in question resides
+ */
 class SkolemQuantifierLinker(val quantifiers: List<UniversalQuantifier>) : FirstOrderTermVisitor<Unit>() {
+
+    /**
+     * Match a QuantifiedVariable to its binding quantifier
+     * @param node QuantifiedVariable encountered
+     */
     override fun visit(node: QuantifiedVariable) {
         val matchingQuantifiers = quantifiers.filter { it.varName == node.spelling }
 
