@@ -3,6 +3,9 @@ import { TableauxNode, TableauxTreeLayoutNode } from "../../types/tableaux";
 import { LeftSiblingList, Link, Tree } from "../../types/tree";
 import { maxBy } from "../max-by";
 
+// Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
+// https://doi.org/10.1002/spe.2213
+
 export const tree = <T>(
     width: number,
     height: number,

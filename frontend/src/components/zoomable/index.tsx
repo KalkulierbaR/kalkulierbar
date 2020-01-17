@@ -8,6 +8,8 @@ import { touchPos } from "../../helpers/zoom/touch";
 import { constrain, IDENTITY, invert } from "../../helpers/zoom/transform";
 import { Extent, GoToEvent, Point, Transform } from "../../types/ui";
 
+// Zoom algorithms taken from d3-zoom
+
 export const SUPPORTS_TOUCH =
     navigator.maxTouchPoints || "ontouchstart" in globalThis;
 
