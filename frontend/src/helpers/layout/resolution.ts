@@ -1,5 +1,5 @@
 import { Clause } from "../../types/clause";
-import { LayoutData } from "../../types/layout";
+import { Layout } from "../../types/layout";
 import { clauseToString } from "../clause";
 
 /**
@@ -13,27 +13,12 @@ const maxLengthClause = (clauses: readonly Clause[]) =>
         0
     );
 
-export interface CircleLayoutData {
-    /**
-     * The width of the circle
-     */
-    width: number;
-    /**
-     * The height of the circle
-     */
-    height: number;
-    /**
-     * The array of clauses with their coordinates
-     */
-    data: Array<LayoutData<Clause>>;
-}
-
 /**
  * Calculate the circle layout to avoid overlapping or cutting of clauses
  * @param {Clause[]} clauses - The clauses to display in a circle
  * @returns {CircleLayoutData} - The circle layout of the clauses
  */
-export const circleLayout = (clauses: readonly Clause[]): CircleLayoutData => {
+export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
     if (clauses.length === 0) {
         return { width: 0, height: 0, data: [] };
     }

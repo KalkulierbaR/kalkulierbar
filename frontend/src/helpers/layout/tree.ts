@@ -1,6 +1,8 @@
 import { LeftSiblingList, Tree } from "../../types/tree";
 
-export const layout = (t: Tree) => {
+export const treeLayout = () => {};
+
+const layout = (t: Tree) => {
     firstWalk(t);
     secondWalk(t, 0);
 };
