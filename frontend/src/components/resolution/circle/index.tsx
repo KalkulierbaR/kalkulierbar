@@ -57,7 +57,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
             <Zoomable
                 class={style.svg}
                 width="100%"
-                height="100"
+                height="calc(100vh - 172px)"
                 style="min-height: 60vh"
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
                 preserveAspectRatio="xMidyMid meet"

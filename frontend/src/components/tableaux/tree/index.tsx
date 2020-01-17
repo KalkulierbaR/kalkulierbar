@@ -126,7 +126,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
             <Zoomable
                 class={style.svg}
                 width="100%"
-                height={`${treeHeight}px`}
+                height="calc(100vh - 192px)"
                 style="min-height: 60vh"
                 viewBox={`0 -16 ${treeWidth} ${treeHeight}`}
                 preserveAspectRatio="xMidyMid meet"
