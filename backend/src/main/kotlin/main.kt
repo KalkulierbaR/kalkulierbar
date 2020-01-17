@@ -42,20 +42,19 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         // Enable CORS headers
         config.enableCorsForAllOrigins()
 
-        if (listenGlobally) {
-            // Set a Jetty server manually for more config options
-            config.server {
-                // Create and configure Jetty server
-                Server().apply {
-                    connectors = arrayOf(ServerConnector(this).apply {
-                        this.host = host
-                    })
-                }
+        // Set a Jetty server manually for more config options
+        config.server {
+            // Create and configure Jetty server
+            Server().apply {
+                connectors = arrayOf(ServerConnector(this).apply {
+                    this.host = host
+                    this.port = port
+                })
             }
         }
     }
 
-    app.start(port)
+    app.start()
 
     // Catch explicitly thrown exceptions
     app.exception(KalkulierbarException::class.java) { e, ctx ->
