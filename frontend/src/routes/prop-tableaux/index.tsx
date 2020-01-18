@@ -64,7 +64,7 @@ const Tableaux: preact.FunctionalComponent = () => {
                             checked={tabType === TableauxType.unconnected}
                             onSelect={handleTabTypeSelect}
                         />
-                        <HintIcon hint="An unconnected tableaux poses no restrictions as to when a clause can be expanded" />
+                        <HintIcon hint="An unconnected tableaux poses no restrictions as to when a clause can be expanded." />
                         <br />
                         <Radio
                             id={TableauxType.weak}
@@ -73,7 +73,7 @@ const Tableaux: preact.FunctionalComponent = () => {
                             checked={tabType === TableauxType.weak}
                             onSelect={handleTabTypeSelect}
                         />
-                        <HintIcon hint="A weakly connected tableaux enforces that every inner node in the proof tree has at least one closed leaf as a child" />
+                        <HintIcon hint="A weakly connected tableaux enforces that every inner node in the proof tree has at least one closed leaf as a child." />
                         <br />
                         <Radio
                             id={TableauxType.strong}
@@ -82,17 +82,17 @@ const Tableaux: preact.FunctionalComponent = () => {
                             checked={tabType === TableauxType.strong}
                             onSelect={handleTabTypeSelect}
                         />
-                        <HintIcon hint="A strongly connected tableaux enforces that every inner node in the proof tree has at least one child that is closed with its parent node" />
+                        <HintIcon hint="A strongly connected tableaux enforces that every inner node in the proof tree has at least one child that is closed with its parent node." />
                     </div>
                     <div class="switches">
                         <Switch label="Regular" onChange={setRegular} />
-                        <HintIcon hint="A regular tableaux does not allow duplicate literals on any branch in the proof tree" />
+                        <HintIcon hint="A regular tableaux does not allow duplicate literals on any branch in the proof tree." />
                         <br />
                         <Switch
                             label="Backtracking"
                             onChange={setBacktracking}
                         />
-                        <HintIcon hint="Enables ability to undo moves" />
+                        <HintIcon hint={"This allows you to undo moves during the proof." + (!smallScreen ? " (Shortcut: CTRL + Z)" : "")} />
                         <br />
                         <Switch
                             label="Naive CNF transformation"
