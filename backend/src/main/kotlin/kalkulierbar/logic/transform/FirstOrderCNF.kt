@@ -11,38 +11,42 @@ import kalkulierbar.logic.Impl
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
-import kalkulierbar.logic.Var
+import kalkulierbar.logic.Relation
+import kalkulierbar.logic.UniversalQuantifier
 
 /**
- * Visitor-based implementation of the naive CNF transformation
- *
- * Does NOT support first order formulae
+ * Visitor-based implementation of a first order CNF transformation
+ * based on Skolem normal form
  */
-class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
+class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
 
     companion object Companion {
         /**
-         * Transforms a propositional formula into an equivalent ClauseSet
+         * Transforms a first order formula into an equivalent ClauseSet
+         * The output clause set is a CNF representation of the quantor-free
+         * core of the formula in Skolem normal form, with all variables
+         * implicitly universally quantified
+         *
          * NOTE: The resulting ClauseSet may grow exponentially with the input formula size
          *       Should the resulting ClauseSet exceed a certain size, an exception will be thrown
          * @param formula Formula to convert
          * @return ClauseSet equivalent to the input formula
          */
-        fun transform(formula: LogicNode): ClauseSet<String> {
-            val instance = NaiveCNF()
-            return formula.accept(instance)
+        fun transform(formula: LogicNode): ClauseSet<Relation> {
+            val instance = FirstOrderCNF()
+            return SkolemNormalForm.transform(formula).accept(instance)
         }
     }
 
     /**
-     * Transform a Variable into an equivalent ClauseSet
-     * @param node Variable to transform
-     * @return ClauseSet representing the Variable
+     * Transform a Relation into an equivalent ClauseSet
+     * @param node Relation to transform
+     * @return ClauseSet representing the Relation
      */
-    override fun visit(node: Var): ClauseSet<String> {
-        val atom = Atom(node.spelling, false)
+    override fun visit(node: Relation): ClauseSet<Relation> {
+        val atom = Atom(node, false)
         val clause = Clause(mutableListOf(atom))
-        return ClauseSet<String>(mutableListOf(clause))
+        return ClauseSet<Relation>(mutableListOf(clause))
     }
 
     /**
@@ -50,8 +54,8 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
      * @param node Negation to transform
      * @return ClauseSet representing the Negation
      */
-    override fun visit(node: Not): ClauseSet<String> {
-        val res: ClauseSet<String>
+    override fun visit(node: Not): ClauseSet<Relation> {
+        val res: ClauseSet<Relation>
         val child = node.child
 
         // Perform Negation-Pushdown
@@ -78,13 +82,13 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
                 // Translate equivalence into implications
                 res = Not(And(implA, implB)).accept(this)
             }
-            is Var -> {
-                val atom = Atom(child.spelling, true)
+            is Relation -> {
+                val atom = Atom(child, true)
                 val clause = Clause(mutableListOf(atom))
                 res = ClauseSet(mutableListOf(clause))
             }
             else -> {
-                val msg = "Unknown LogicNode encountered during naive CNF transformation"
+                val msg = "Unknown LogicNode encountered during first order CNF transformation"
                 throw FormulaConversionException(msg)
             }
         }
@@ -97,7 +101,7 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
      * @param node And-Operator to transform
      * @return ClauseSet representing the And-Operator
      */
-    override fun visit(node: And): ClauseSet<String> {
+    override fun visit(node: And): ClauseSet<Relation> {
         val leftCS = node.leftChild.accept(this)
         val rightCS = node.rightChild.accept(this)
         leftCS.unite(rightCS)
@@ -109,19 +113,19 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
      * @param node Or-Operator to transform
      * @return ClauseSet representing the Or-Operator
      */
-    override fun visit(node: Or): ClauseSet<String> {
+    override fun visit(node: Or): ClauseSet<Relation> {
         val leftClauses = node.leftChild.accept(this).clauses
         val rightClauses = node.rightChild.accept(this).clauses
-        val cs = ClauseSet<String>()
+        val cs = ClauseSet<Relation>()
 
         // Not limiting resulting clause amount causes server to run out of memory attempting conversion
         // Don't mess with exponential growth
         if (leftClauses.size * rightClauses.size > CNF_BLOWUP_LIMIT)
-            throw FormulaConversionException("Naive CNF transformation resulted in too heavy blow-up")
+            throw FormulaConversionException("First order CNF transformation resulted in too heavy blow-up")
 
         for (lc in leftClauses) {
             for (rc in rightClauses) {
-                val atoms = mutableListOf<Atom<String>>()
+                val atoms = mutableListOf<Atom<Relation>>()
                 atoms.addAll(lc.atoms)
                 atoms.addAll(rc.atoms)
                 val clause = Clause(atoms)
@@ -137,7 +141,7 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
      * @param node Implication to transform
      * @return ClauseSet representing the Implication
      */
-    override fun visit(node: Impl): ClauseSet<String> {
+    override fun visit(node: Impl): ClauseSet<Relation> {
         return node.toBasicOps().accept(this)
     }
 
@@ -146,7 +150,16 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
      * @param node Equivalence to transform
      * @return ClauseSet representing the Equivalence
      */
-    override fun visit(node: Equiv): ClauseSet<String> {
+    override fun visit(node: Equiv): ClauseSet<Relation> {
         return node.toBasicOps().accept(this)
+    }
+
+    /**
+     * 'Skip' universal quantifiers during CNF conversion
+     * @param node Universal quantifier encountered
+     * @return ClauseSet representing the sub-formula without the quantifier
+     */
+    override fun visit(node: UniversalQuantifier): ClauseSet<Relation> {
+        return node.child.accept(this)
     }
 }
