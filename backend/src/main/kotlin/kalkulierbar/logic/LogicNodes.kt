@@ -79,6 +79,15 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || !(other is Relation))
+            return false
+
+        return spelling == other.spelling && arguments == other.arguments
+    }
+
+    override fun hashCode() = toString().hashCode()
 }
 
 class UniversalQuantifier(
