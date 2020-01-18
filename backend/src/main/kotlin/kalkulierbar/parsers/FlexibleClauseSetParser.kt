@@ -17,7 +17,7 @@ class FlexibleClauseSetParser {
          * @param formula formula or clause set to parse
          * @return ClauseSet representing the input formula
          */
-        fun parse(formula: String, strategy: CnfStrategy = CnfStrategy.OPTIMAL): ClauseSet {
+        fun parse(formula: String, strategy: CnfStrategy = CnfStrategy.OPTIMAL): ClauseSet<String> {
             var errorMsg: String
 
             // Try parsing as ClauseSet
@@ -49,8 +49,8 @@ class FlexibleClauseSetParser {
          * @param strategy conversion strategy to apply
          * @return ClauseSet representation of the input formula
          */
-        fun convertToCNF(formula: LogicNode, strategy: CnfStrategy): ClauseSet {
-            var res: ClauseSet
+        fun convertToCNF(formula: LogicNode, strategy: CnfStrategy): ClauseSet<String> {
+            var res: ClauseSet<String>
 
             when (strategy) {
                 CnfStrategy.NAIVE -> res = NaiveCNF.transform(formula)

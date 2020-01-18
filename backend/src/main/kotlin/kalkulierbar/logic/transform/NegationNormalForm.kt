@@ -17,7 +17,7 @@ import kalkulierbar.logic.Var
  *
  * A formula in negation normal form has negations only directly applied on atomic
  * formulae and has only conjunction and disjunction as boolean operators
- * For more information, see https://en.wikipedia.org/wiki/Negation_normal_form 
+ * For more information, see https://en.wikipedia.org/wiki/Negation_normal_form
  *
  * Requires each quantified variable to be bound exactly once
  * An exception will be thrown if this requirement is not met

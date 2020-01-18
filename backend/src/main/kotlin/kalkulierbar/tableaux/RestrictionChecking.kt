@@ -11,7 +11,7 @@ import kalkulierbar.clause.Clause
  * @param leafID ID of the leaf to be expanded
  * @param clause Clause object to be used for expansion
  */
-fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause) {
+fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause<String>) {
     // Create list of predecessor
     val leaf = state.nodes[leafID]
     val lst = mutableListOf(leaf.toAtom().toString())
@@ -146,7 +146,7 @@ fun checkRegularity(state: TableauxState): Boolean {
  * @param lst : list of unique node names of predecessor
  * @return true iff every path from root node to a leaf is regular
  */
-private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<Atom>): Boolean {
+private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<Atom<String>>): Boolean {
     val node = state.nodes[root]
 
     // If node is in list of predecessors return false
@@ -155,8 +155,6 @@ private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: Mutable
 
     // Add node spelling to list of predecessors
     lst.add(node.toAtom())
-
-    var subtreeRegular = true
 
     // Check children for double vars in path and their children respectively
     return node.children.none { !checkRegularitySubtree(state, it, lst) }

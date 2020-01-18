@@ -74,7 +74,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
      * @param atoms2 The second list of atoms
      * @return A pair of the two atoms for resolution.
      */
-    private fun findResCandidates(atoms1: List<Atom>, atoms2: List<Atom>): Pair<Atom, Atom>? {
+    private fun findResCandidates(atoms1: List<Atom<String>>, atoms2: List<Atom<String>>): Pair<Atom<String>, Atom<String>>? {
         val (pos, neg) = atoms2.partition { !it.negated }
 
         for (a1 in atoms1) {
@@ -96,7 +96,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
      * @param a2 The atom to filter out of c2
      * @return A new clause that contains all elements of c1 and c2 except for a1 and a2
      */
-    private fun buildClause(c1: Clause, a1: Atom, c2: Clause, a2: Atom): Clause {
+    private fun buildClause(c1: Clause<String>, a1: Atom<String>, c2: Clause<String>, a2: Atom<String>): Clause<String> {
         val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
                 c2.atoms.filter { it != a2 }.toMutableList()
         return Clause(atoms.distinct().toMutableList())
@@ -178,7 +178,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
 }
 
 @Serializable
-class ResolutionState(val clauseSet: ClauseSet, val highlightSelectable: Boolean) : ProtectedState() {
+class ResolutionState(val clauseSet: ClauseSet<String>, val highlightSelectable: Boolean) : ProtectedState() {
     var newestNode = -1
 
     override var seal = ""

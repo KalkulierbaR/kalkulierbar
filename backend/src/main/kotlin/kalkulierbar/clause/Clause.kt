@@ -3,12 +3,12 @@ package kalkulierbar.clause
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Clause(var atoms: MutableList<Atom> = mutableListOf()) {
-    fun add(a: Atom) {
+class Clause<AtomType>(var atoms: MutableList<Atom<AtomType>> = mutableListOf()) {
+    fun add(a: Atom<AtomType>) {
         atoms.add(a)
     }
 
-    fun addAll(c: Collection<Atom>) {
+    fun addAll(c: Collection<Atom<AtomType>>) {
         c.forEach { add(it) }
     }
 

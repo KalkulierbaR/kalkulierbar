@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 class TableauxState(
-    val clauseSet: ClauseSet,
+    val clauseSet: ClauseSet<String>,
     val type: TableauxType = TableauxType.UNCONNECTED,
     val regular: Boolean = false,
     val undoEnable: Boolean = false
@@ -72,7 +72,7 @@ class TableauxState(
      * @param atom the atom to search for
      * @return true iff the node's transitive parents include the given atom
      */
-    private fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom): Boolean {
+    private fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom<String>): Boolean {
         var node = nodes[nodeID]
 
         // Walk up the tree from start node

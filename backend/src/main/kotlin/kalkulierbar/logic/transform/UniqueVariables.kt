@@ -13,7 +13,7 @@ import kalkulierbar.logic.UniversalQuantifier
  * Visitor-based variable renaming transformation
  * Ensures that every quantified variable is bound exactly once
  * A double-bound variable X will be renamed 'X', 'Xv1', 'Xv2' etc
- */ 
+ */
 class UniqueVariables : DoNothingVisitor() {
 
     companion object Companion {

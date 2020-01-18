@@ -13,10 +13,10 @@ import kalkulierbar.logic.UniversalQuantifier
 /**
  * Visitor-based Skolemization transformation
  * Replaces existential quantifiers with fresh Skolem terms
- * 
+ *
  * Requires absence of variable-hiding in quantifier scopes, will
  * throw an exception otherwise.
- * 
+ *
  * Introduced Skolem terms are of the form 'skN' where N is a number.
  * User-defined functions or constants beginning with 'sk' will be
  * renamed to 'usk' to avoid conflicts.
@@ -60,7 +60,7 @@ class Skolemization : DoNothingVisitor() {
      * Remove existential quantifiers and add necessary variable replacements to the replacement map
      * @param node ExistentialQuantifier encountered
      * @return Skolemized subformula without the existential quantifier
-     */ 
+     */
     override fun visit(node: ExistentialQuantifier): LogicNode {
 
         if (quantifierScope.size > quantifierScope.distinctBy { it.varName }.size)

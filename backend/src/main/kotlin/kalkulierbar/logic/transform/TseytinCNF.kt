@@ -29,11 +29,11 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
          * @param formula Formula to convert
          * @return ClauseSet of equal satisfiability as the given logic node
          */
-        fun transform(formula: LogicNode): ClauseSet {
+        fun transform(formula: LogicNode): ClauseSet<String> {
             val instance = TseytinCNF()
-            val res = ClauseSet()
+            val res = ClauseSet<String>()
 
-            val rootClause = Clause(mutableListOf(Atom(instance.getName(formula), false)))
+            val rootClause = Clause<String>(mutableListOf(Atom(instance.getName(formula), false)))
             res.add(rootClause)
 
             formula.accept(instance)
@@ -44,7 +44,7 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
     }
 
     private var index = 0
-    private val cs = ClauseSet()
+    private val cs = ClauseSet<String>()
 
     /**
      * Compute the name of the tseytin variable representing a given sub-formula

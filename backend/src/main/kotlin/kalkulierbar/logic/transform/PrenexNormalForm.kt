@@ -10,8 +10,8 @@ import kalkulierbar.logic.UniversalQuantifier
  * Visitor-based transformation for FO-formulae into Prenex Normal Form
  *
  * A formula in prenex normal form consists of a string of quantifiers followed
- * by a quantor-free formula 
- * For more information, see https://en.wikipedia.org/wiki/Prenex_normal_form 
+ * by a quantor-free formula
+ * For more information, see https://en.wikipedia.org/wiki/Prenex_normal_form
  *
  * Requires each quantified variable to be bound exactly once
  * An exception will be thrown if this requirement is not met
