@@ -5,16 +5,18 @@ import {
 } from "./resolution";
 import { TableauxMove, TableauxParams, TableauxState } from "./tableaux";
 
-export type Calculus = "prop-tableaux" | "prop-resolution";
+export type Calculus = "prop-tableaux" | "prop-resolution" | "fo-tableaux";
 
 export interface Move {
     "prop-tableaux": TableauxMove;
     "prop-resolution": ResolutionMove;
+    "fo-tableaux": TableauxMove;
 }
 
 export interface Params {
     "prop-tableaux": TableauxParams;
     "prop-resolution": ResolutionParams;
+    "fo-tableaux": TableauxParams;
 }
 
 export enum Theme {
@@ -30,6 +32,7 @@ export interface AppState {
     theme: Theme;
     "prop-tableaux"?: TableauxState;
     "prop-resolution"?: ResolutionState;
+    "fo-tableaux"?: TableauxState;
 }
 
 export interface DerivedAppState extends AppState {

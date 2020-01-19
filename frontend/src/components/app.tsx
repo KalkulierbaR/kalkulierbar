@@ -100,6 +100,22 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
+                        path="/fo-tableaux"
+                        getComponent={() =>
+                            import("../routes/prop-tableaux").then(
+                                m => m.default
+                            )
+                        }
+                    />
+                    <AsyncRoute
+                        path="/fo-tableaux/view"
+                        getComponent={() =>
+                            import("../routes/prop-tableaux/view").then(
+                                m => m.default
+                            )
+                        }
+                    />
+                    <AsyncRoute
                         path="/prop-resolution"
                         getComponent={() =>
                             import("../routes/prop-resolution").then(
