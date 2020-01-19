@@ -1,4 +1,4 @@
 cd ../frontend
-yarn
+yarn > /dev/null 2>&1
 yarn start
 cd ..
