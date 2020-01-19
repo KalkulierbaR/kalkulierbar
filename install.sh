@@ -7,10 +7,10 @@ read opt
 	
 #Install java (v11.0.5)
 if ["$(opt)" == 'yes']; then
-	sudo apt-get install openjdk-11-jre-headles
+	sudo apt-get install openjdk-11-jre-headles;
 #If input does not match neither yes or no -> go to end
 elif ["$(opt)" != 'no']; then
-	exit 1
+	exit 1;
 fi 
 
 #Install curl
