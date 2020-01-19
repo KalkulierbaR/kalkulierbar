@@ -1,3 +1,6 @@
+#Install curl
+sudo apt-get install curl
+
 #Install Node.JS (Ubuntu v13.3.0)
 curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 sudo apt-get install -y nodejs
