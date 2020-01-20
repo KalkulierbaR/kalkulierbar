@@ -1,2 +1,2 @@
-cd ../frontend
+cd ../frontend || exit
 yarn && yarn dev
