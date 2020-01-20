@@ -28,7 +28,7 @@ Please note that this is a mirror of our private development repository. While s
 
 On Linux distributions with [APT](https://de.wikipedia.org/wiki/Advanced_Packaging_Tool) you can use the script "install.sh". Otherwise install everything manually.
 
-### Build & Run
+### Run
 - Windows: "run.bat"
 - Linux: "run.sh"
 
