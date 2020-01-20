@@ -1,15 +1,15 @@
-echo "This will install java v11.0.5 (optional), curl, Node.JS and yarn!"
+echo "This will install Java v11.0.5 (optional), curl, Node.JS and yarn!"
 echo " "
-echo "Installing Java? [yes/no]"
+echo "Install Java? [y/n]"
 
 read opt
 	
 #Install java (v11.0.5)
-if [[ "$opt" == "yes" ]]; then 
+if [[ "$opt" == "y" ]]; then
 sudo apt-get install openjdk-11-jre-headless
 fi
-#If input does not match neither yes or no -> go to end
-if [[ "$opt" != "yes" && "$opt" != "no" ]]; then 
+#If input does not match neither y or no -> go to end
+if [[ "$opt" != "y" && "$opt" != "n" ]]; then
 exit 1
 fi 
 
