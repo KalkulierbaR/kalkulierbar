@@ -1,28 +1,33 @@
-echo "This will install Java v11.0.5 (optional), curl, Node.JS and yarn!"
+#!/bin/sh
+echo "This will install curl, nodeJS and yarn"
 echo " "
-echo "Install Java? [y/n]"
 
-read opt
-	
-#Install java (v11.0.5)
-if [[ "$opt" == "y" ]]; then
-sudo apt-get install openjdk-11-jre-headless
+#If java installed then java_vers is not empty
+java_vers=$(type -p java)
+
+#Check if java is installed
+if [ -z "$java_vers" ]; then
+    echo "Java not found"
+    echo "Please install java"
+    exit 1
+else
+    echo "Java found on your system"
+    echo "Continue with installation"
+    echo ""
 fi
-#If input does not match neither y or no -> go to end
-if [[ "$opt" != "y" && "$opt" != "n" ]]; then
-exit 1
-fi 
 
 #Install curl
 sudo apt-get install curl
 
 #Install Node.JS (Ubuntu v13.3.0)
-curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-sudo apt-get install -y nodejs
-sudo apt-get install -y build-essential
+curl https://nodejs.org/dist/v12.14.1/node-v12.14.1-linux-x64.tar.xz > node.tar.xz
+sudo mkdir -p /usr/local/lib/nodejs
+sudo tar -xJvf node.tar.xz -C /usr/local/lib/nodejs
+rm node.tar.xz
+
+#curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+#sudo apt-get install -y nodejs
+#sudo apt-get install -y build-essential
 
 #Install yarn (Ubuntu v1.21.1)
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-sudo apt update && sudo apt install yarn
-
+curl -o- -L https://yarnpkg.com/install.sh | bash
