@@ -9,7 +9,7 @@ export interface TableauxNode {
     children: number[];
 }
 
-export interface TableauxState {
+export interface PropTableauxState {
     seal: string;
     clauseSet: ClauseSet;
     nodes: TableauxNode[];
@@ -18,6 +18,10 @@ export interface TableauxState {
     undoEnable: boolean;
     moveHistory: TableauxMove[];
     usedUndo: boolean;
+}
+
+export interface FoTableauxState extends PropTableauxState {
+    manualUnification: boolean;
 }
 
 export interface TableauxExpandMove {
@@ -30,17 +34,16 @@ export interface TableauxCloseMove {
     type: "CLOSE";
     id1: number;
     id2: number;
+    unification?: Unification;
 }
 
 export interface TableauxUndoMove {
     type: "UNDO";
-}
-
-export interface TableauxMove {
-    type: "EXPAND" | "CLOSE" | "UNDO";
     id1: number;
     id2: number;
 }
+
+export type TableauxMove = TableauxExpandMove | TableauxCloseMove | TableauxUndoMove;
 
 export enum TableauxType {
     unconnected = "UNCONNECTED",
@@ -80,4 +83,13 @@ export interface SelectNodeOptions {
      * Defaults to `false`.
      */
     ignoreClause?: boolean;
+}
+
+export interface VarToTerm {
+    var: string;
+    term: string;
+}
+
+export interface Unification {
+    unification: VarToTerm [];
 }

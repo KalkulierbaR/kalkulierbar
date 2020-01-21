@@ -1,6 +1,6 @@
-import {TableauxState, TableauxType} from "../../../types/tableaux";
+import {PropTableauxState, TableauxType} from "../../../types/tableaux";
 
-const example: TableauxState = {
+const example: PropTableauxState = {
     "clauseSet": {
         "clauses": [{
             "atoms": [{"lit": "a", "negated": true}, {

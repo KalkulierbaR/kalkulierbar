@@ -1,7 +1,13 @@
 import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import {AppStateUpdater, TableauxCalculus} from "../../../types/app";
-import { SelectNodeOptions, TableauxState } from "../../../types/tableaux";
+import {
+    SelectNodeOptions,
+    PropTableauxState,
+    FoTableauxState,
+    Unification,
+    TableauxCloseMove
+} from "../../../types/tableaux";
 import * as style from "./style.scss";
 
 import CheckCloseBtn from "../../../components/check-close";
@@ -32,14 +38,14 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
     /**
      * Wrapper to send move request
      * @param {string} server - URL of the server
-     * @param {TableauxState} state - The current State
+     * @param {PropTableauxState} state - The current State
      * @param {AppStateUpdater} stateChanger - The state update function
      * @param {Function} onError - Error handler
      * @returns {Promise<void>} - Promise that resolves after the request has been handled
      */
     const sendBacktrack = (
         server: string,
-        state: TableauxState,
+        state: PropTableauxState | FoTableauxState,
         stateChanger: AppStateUpdater,
         onError: (msg: string) => void
     ) =>
@@ -47,7 +53,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             server,
             calculus,
             state,
-            { type: "UNDO", id1: -1, id2: -1 },
+            { type: "UNDO", id1: -1, id2: -1},
             stateChanger,
             onError
         );
@@ -55,34 +61,47 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
     /**
      * Wrapper to send close request
      * @param {string} server - URL of server
-     * @param {TableauxState} state - The current State
+     * @param {PropTableauxState} state - The current State
      * @param {AppStateUpdater} stateChanger - The state update function
      * @param {Function} onError - Error handler
      * @param {number} leaf - The selected leaf
      * @param {number} pred - The selected predecessor
+     * @param unification
      * @returns {Promise<void>} - Promise that resolves after the request has been handled
      */
     const sendClose = (
         server: string,
-        state: TableauxState,
+        state: PropTableauxState | FoTableauxState,
         stateChanger: AppStateUpdater,
         onError: (msg: string) => void,
         leaf: number,
-        pred: number
-    ) =>
+        pred: number,
+        unification?: Unification
+    ) => {
+        let move : TableauxCloseMove;
+        switch (calculus) {
+            case "prop-tableaux":
+                move = {type: "CLOSE", id1: leaf, id2: pred};
+                break;
+            case "fo-tableaux":
+                move = {type: "CLOSE", id1: leaf, id2: pred, unification: unification};
+                break;
+        }
+
         sendMove(
             server,
             calculus,
             state,
-            { type: "CLOSE", id1: leaf, id2: pred },
+            move,
             stateChanger,
             onError
         );
+    };
 
     /**
      * Wrapper to send move request
      * @param {string} server - URL of the server
-     * @param {TableauxState} state - The current State
+     * @param {PropTableauxState} state - The current State
      * @param {AppStateUpdater} stateChanger - The state update function
      * @param {Function} onError - Error handler
      * @param {number} leaf - The selected leaf
@@ -91,7 +110,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
      */
     const sendExtend = (
         server: string,
-        state: TableauxState,
+        state: PropTableauxState | FoTableauxState,
         stateChanger: AppStateUpdater,
         onError: (msg: string) => void,
         leaf: number,
@@ -101,7 +120,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             server,
             calculus,
             state,
-            { type: "EXPAND", id1: leaf, id2: clause },
+            {type: "EXPAND", id1: leaf, id2: clause},
             stateChanger,
             onError
         );

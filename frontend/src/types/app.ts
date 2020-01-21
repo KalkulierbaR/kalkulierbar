@@ -3,7 +3,7 @@ import {
     ResolutionParams,
     ResolutionState
 } from "./resolution";
-import {FoTableauxParams, PropTableauxParams, TableauxMove, TableauxState} from "./tableaux";
+import {FoTableauxParams, PropTableauxParams, TableauxMove, PropTableauxState, FoTableauxState} from "./tableaux";
 
 export type TableauxCalculus = "prop-tableaux" | "fo-tableaux";
 export type Calculus = TableauxCalculus | "prop-resolution";
@@ -31,9 +31,9 @@ export interface AppState {
     notification?: Notification;
     smallScreen: boolean;
     theme: Theme;
-    "prop-tableaux"?: TableauxState;
+    "prop-tableaux"?: PropTableauxState;
     "prop-resolution"?: ResolutionState;
-    "fo-tableaux"?: TableauxState;
+    "fo-tableaux"?: FoTableauxState;
 }
 
 export interface DerivedAppState extends AppState {
