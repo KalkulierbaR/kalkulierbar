@@ -2,11 +2,11 @@ import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import {AppStateUpdater, TableauxCalculus} from "../../../types/app";
 import {
-    SelectNodeOptions,
-    PropTableauxState,
     FoTableauxState,
-    Unification,
-    TableauxCloseMove
+    PropTableauxState,
+    SelectNodeOptions,
+    TableauxCloseMove,
+    Unification
 } from "../../../types/tableaux";
 import * as style from "./style.scss";
 
@@ -84,7 +84,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                 move = {type: "CLOSE", id1: leaf, id2: pred};
                 break;
             case "fo-tableaux":
-                move = {type: "CLOSE", id1: leaf, id2: pred, unification: unification};
+                move = {type: "CLOSE", id1: leaf, id2: pred, unification};
                 break;
         }
 
@@ -285,39 +285,43 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             <ControlFAB>
                 {selectedNodeId === undefined ? (
                     <Fragment>
-                        <FAB
-                            icon={<UndoIcon />}
-                            label="Backtrack"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                sendBacktrack(
-                                    server,
-                                    state!,
-                                    onChange,
-                                    onError
-                                );
-                            }}
-                        />
-                        <FAB
-                            icon={<ExploreIcon />}
-                            label="Next Leaf"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                const node = nextOpenLeaf(state!.nodes);
-                                if (node === undefined) {
-                                    return;
-                                }
-                                dispatchEvent(
-                                    new CustomEvent("kbar-go-to-node", {
-                                        detail: { node }
-                                    })
-                                );
-                            }}
-                        />
+                        {state.undoEnable ?
+                            <FAB
+                                icon={<UndoIcon />}
+                                label="Backtrack"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    sendBacktrack(
+                                        server,
+                                        state!,
+                                        onChange,
+                                        onError
+                                    );
+                                }}
+                            /> : ""
+                        }
+                        {state.nodes.filter((node) => !node.isClosed).length > 0 ?
+                            <FAB
+                                icon={<ExploreIcon/>}
+                                label="Next Leaf"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    const node = nextOpenLeaf(state!.nodes);
+                                    if (node === undefined) {
+                                        return;
+                                    }
+                                    dispatchEvent(
+                                        new CustomEvent("kbar-go-to-node", {
+                                            detail: {node}
+                                        })
+                                    );
+                                }}
+                            /> : ""
+                        }
                         <FAB
                             icon={<CenterIcon />}
                             label="Center"
