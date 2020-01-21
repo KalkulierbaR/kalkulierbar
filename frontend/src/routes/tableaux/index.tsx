@@ -8,19 +8,37 @@ import ClauseInput from "../../components/input/clause";
 import Format from "../../components/input/clause/format";
 import Radio from "../../components/radio";
 import { useAppState } from "../../helpers/app-state";
+import {TableauxCalculus} from "../../types/app";
 import {
-    CnfStrategy,
-    TableauxParams,
+    CnfStrategy, FoTableauxParams,
+    PropTableauxParams,
     TableauxType
 } from "../../types/tableaux";
 
-const Tableaux: preact.FunctionalComponent = () => {
+interface Props {
+    /**
+     * Which calculus to use
+     */
+    calculus: TableauxCalculus;
+}
+
+const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
     const { smallScreen } = useAppState();
 
     const [tabType, setTabType] = useState(TableauxType.unconnected);
     const [regular, setRegular] = useState(false);
     const [backtracking, setBacktracking] = useState(false);
     const [cnfStrategy, setStrategy] = useState(CnfStrategy.optimal);
+    const [manualUnification, setManualUnification] = useState(false);
+
+    /**
+     * Handle force naive strategy switch setting
+     * @param {boolean} forceNaive - Switch setting (false: optimal, true: naive)
+     * @returns {void}
+     */
+    const strategySelect = (forceNaive: boolean) => {
+        setStrategy(forceNaive ? CnfStrategy.naive : CnfStrategy.optimal);
+    };
 
     /**
      * Handle the selection of a TableauxType
@@ -33,25 +51,56 @@ const Tableaux: preact.FunctionalComponent = () => {
         setTabType(target.id as TableauxType);
     };
 
-    /**
-     * Handle force naive strategy switch setting
-     * @param {boolean} forceNaive - Switch setting (false: optimal, true: naive)
-     * @returns {void}
-     */
-    const strategySelect = (forceNaive: boolean) => {
-        setStrategy(forceNaive ? CnfStrategy.naive : CnfStrategy.optimal);
-    };
+    let params;
+    switch (calculus) {
+        case "prop-tableaux":
+            const propParams : PropTableauxParams = {
+                type: tabType,
+                regular,
+                backtracking,
+                cnfStrategy
+            };
+            params = propParams;
+            break;
+        case "fo-tableaux":
+            const foParams : FoTableauxParams = {
+                type: tabType,
+                regular,
+                backtracking,
+                manualUnification
+            };
+            params = foParams;
+            break;
+    }
 
-    const params: TableauxParams = {
-        type: tabType,
-        regular,
-        backtracking,
-        cnfStrategy
+    const getCalculusSpecificSwitch = () => {
+        switch(calculus) {
+            case "prop-tableaux":
+                return (
+                    <Fragment>
+                        <Switch
+                            label="Naive CNF transformation"
+                            onChange={strategySelect}
+                        />
+                        <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
+                    </Fragment>
+                );
+            case "fo-tableaux":
+                return (
+                    <Fragment>
+                        <Switch
+                            label="Manual unification"
+                            onChange={setManualUnification}
+                        />
+                        <HintIcon hint="This forces you to provide a term for every variable of the nodes you are closing." />
+                    </Fragment>
+                );
+        }
     };
 
     return (
         <Fragment>
-            <ClauseInput calculus="prop-tableaux" params={params} />
+            <ClauseInput calculus={calculus} params={params} />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
@@ -94,11 +143,7 @@ const Tableaux: preact.FunctionalComponent = () => {
                         />
                         <HintIcon hint={"This allows you to undo moves during the proof." + (!smallScreen ? " (Shortcut: CTRL + Z)" : "")} />
                         <br />
-                        <Switch
-                            label="Naive CNF transformation"
-                            onChange={strategySelect}
-                        />
-                        <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
+                        {getCalculusSpecificSwitch()}
                     </div>
                 </div>
             </div>

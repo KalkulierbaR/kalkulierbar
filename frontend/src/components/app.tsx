@@ -5,7 +5,7 @@ import { useEffect } from "preact/hooks";
 
 import { AppStateProvider, useAppState } from "../helpers/app-state";
 import Confetti from "../helpers/confetti";
-import { AppStateActionType } from "../types/app";
+import {AppStateActionType} from "../types/app";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
@@ -85,32 +85,36 @@ const App: preact.FunctionalComponent = () => {
                     />
                     <AsyncRoute
                         path="/prop-tableaux"
+                        calculus="prop-tableaux"
                         getComponent={() =>
-                            import("../routes/prop-tableaux").then(
+                            import("../routes/tableaux").then(
                                 m => m.default
                             )
                         }
                     />
                     <AsyncRoute
                         path="/prop-tableaux/view"
+                        calculus="prop-tableaux"
                         getComponent={() =>
-                            import("../routes/prop-tableaux/view").then(
+                            import("../routes/tableaux/view").then(
                                 m => m.default
                             )
                         }
                     />
                     <AsyncRoute
                         path="/fo-tableaux"
+                        calculus="fo-tableaux"
                         getComponent={() =>
-                            import("../routes/prop-tableaux").then(
+                            import("../routes/tableaux").then(
                                 m => m.default
                             )
                         }
                     />
                     <AsyncRoute
                         path="/fo-tableaux/view"
+                        calculus="fo-tableaux"
                         getComponent={() =>
-                            import("../routes/prop-tableaux/view").then(
+                            import("../routes/tableaux/view").then(
                                 m => m.default
                             )
                         }

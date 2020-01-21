@@ -54,11 +54,18 @@ export enum CnfStrategy {
     tseytin = "TSEYTIN"
 }
 
-export interface TableauxParams {
+export interface PropTableauxParams {
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;
     cnfStrategy: CnfStrategy;
+}
+
+export interface FoTableauxParams {
+    type: TableauxType;
+    regular: boolean;
+    backtracking: boolean;
+    manualUnification: boolean;
 }
 
 export interface TableauxTreeGoToEvent extends CustomEvent {

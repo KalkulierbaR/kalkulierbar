@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { AppStateUpdater } from "../../../types/app";
+import {AppStateUpdater, TableauxCalculus} from "../../../types/app";
 import { SelectNodeOptions, TableauxState } from "../../../types/tableaux";
 import * as style from "./style.scss";
 
@@ -21,88 +21,94 @@ import { useAppState } from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
 import exampleState from "./example";
 
-/**
- * Wrapper to send move request
- * @param {string} server - URL of the server
- * @param {TableauxState} state - The current State
- * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @returns {Promise<void>} - Promise that resolves after the request has been handled
- */
-const sendBacktrack = (
-    server: string,
-    state: TableauxState,
-    stateChanger: AppStateUpdater,
-    onError: (msg: string) => void
-) =>
-    sendMove(
-        server,
-        "prop-tableaux",
-        state,
-        { type: "UNDO", id1: -1, id2: -1 },
-        stateChanger,
-        onError
-    );
+interface Props {
+    /**
+     * Which calculus to use
+     */
+    calculus: TableauxCalculus;
+}
 
-/**
- * Wrapper to send close request
- * @param {string} server - URL of server
- * @param {TableauxState} state - The current State
- * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {number} leaf - The selected leaf
- * @param {number} pred - The selected predecessor
- * @returns {Promise<void>} - Promise that resolves after the request has been handled
- */
-const sendClose = (
-    server: string,
-    state: TableauxState,
-    stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    leaf: number,
-    pred: number
-) =>
-    sendMove(
-        server,
-        "prop-tableaux",
-        state,
-        { type: "CLOSE", id1: leaf, id2: pred },
-        stateChanger,
-        onError
-    );
+const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
+    /**
+     * Wrapper to send move request
+     * @param {string} server - URL of the server
+     * @param {TableauxState} state - The current State
+     * @param {AppStateUpdater} stateChanger - The state update function
+     * @param {Function} onError - Error handler
+     * @returns {Promise<void>} - Promise that resolves after the request has been handled
+     */
+    const sendBacktrack = (
+        server: string,
+        state: TableauxState,
+        stateChanger: AppStateUpdater,
+        onError: (msg: string) => void
+    ) =>
+        sendMove(
+            server,
+            calculus,
+            state,
+            { type: "UNDO", id1: -1, id2: -1 },
+            stateChanger,
+            onError
+        );
 
-/**
- * Wrapper to send move request
- * @param {string} server - URL of the server
- * @param {TableauxState} state - The current State
- * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {number} leaf - The selected leaf
- * @param {number} clause - The selected clause
- * @returns {Promise<void>} - Promise that resolves after the request has been handled
- */
-const sendExtend = (
-    server: string,
-    state: TableauxState,
-    stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    leaf: number,
-    clause: number
-) =>
-    sendMove(
-        server,
-        "prop-tableaux",
-        state,
-        { type: "EXPAND", id1: leaf, id2: clause },
-        stateChanger,
-        onError
-    );
+    /**
+     * Wrapper to send close request
+     * @param {string} server - URL of server
+     * @param {TableauxState} state - The current State
+     * @param {AppStateUpdater} stateChanger - The state update function
+     * @param {Function} onError - Error handler
+     * @param {number} leaf - The selected leaf
+     * @param {number} pred - The selected predecessor
+     * @returns {Promise<void>} - Promise that resolves after the request has been handled
+     */
+    const sendClose = (
+        server: string,
+        state: TableauxState,
+        stateChanger: AppStateUpdater,
+        onError: (msg: string) => void,
+        leaf: number,
+        pred: number
+    ) =>
+        sendMove(
+            server,
+            calculus,
+            state,
+            { type: "CLOSE", id1: leaf, id2: pred },
+            stateChanger,
+            onError
+        );
 
-// Component displaying the content of the prop-tableaux route
-const TableauxView: preact.FunctionalComponent = () => {
+    /**
+     * Wrapper to send move request
+     * @param {string} server - URL of the server
+     * @param {TableauxState} state - The current State
+     * @param {AppStateUpdater} stateChanger - The state update function
+     * @param {Function} onError - Error handler
+     * @param {number} leaf - The selected leaf
+     * @param {number} clause - The selected clause
+     * @returns {Promise<void>} - Promise that resolves after the request has been handled
+     */
+    const sendExtend = (
+        server: string,
+        state: TableauxState,
+        stateChanger: AppStateUpdater,
+        onError: (msg: string) => void,
+        leaf: number,
+        clause: number
+    ) =>
+        sendMove(
+            server,
+            calculus,
+            state,
+            { type: "EXPAND", id1: leaf, id2: clause },
+            stateChanger,
+            onError
+        );
+
     const {
         server,
-        ["prop-tableaux"]: cState,
+        [calculus]: cState,
         smallScreen,
         onError,
         onChange,
@@ -197,7 +203,7 @@ const TableauxView: preact.FunctionalComponent = () => {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
         state = exampleState;
-        onChange("prop-tableaux", state);
+        onChange(calculus, state);
     }
 
     useEffect(() => {
@@ -230,7 +236,7 @@ const TableauxView: preact.FunctionalComponent = () => {
                             selectedClauseId={selectedClauseId}
                             selectClauseCallback={selectClauseCallback}
                         />
-                        <CheckCloseBtn calculus="prop-tableaux" />
+                        <CheckCloseBtn calculus={calculus} />
                     </div>
                 )}
 
@@ -316,7 +322,7 @@ const TableauxView: preact.FunctionalComponent = () => {
                                     server,
                                     onError,
                                     onSuccess,
-                                    "prop-tableaux",
+                                    calculus,
                                     state
                                 )
                             }
