@@ -2,8 +2,8 @@
 
 ## Requirements
 
--   Install [Java JRE](https://www.java.com/de/download/win10.jsp) or [Java JDK](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html) version > 8
--   Install [Gradle version > 6.0.1](https://gradle.org/install/)
+-   Install [Java JRE](https://www.java.com/de/download/win10.jsp) or [Java JDK](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html) > 8
+-   Install [Gradle](https://gradle.org/install/) > 6.0.1
 -   Go into `backend` and use command `gradle`
 -   Done
 

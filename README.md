@@ -19,16 +19,17 @@ We always appreciate your bug reports, feature ideas or pull requests - so feel 
 
 Please note that this is a mirror of our private development repository. While stable features should eventually end up here, we unfortunately can't provide you with the most bleeding-edge code as of now.
 
-## Build from sources
+## Development
 ### Dependencies
-- [Java JRE](https://www.java.com/de/download/win10.jsp) or [Java JDK](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html) version > 8
-- [Gradle version > 6.0.1](https://gradle.org/install/)
+On `Unix` systems you can use the install script `install.sh`.
+
+On `Windows` install these manually:
+- [Java JRE](https://www.java.com/de/download/win10.jsp) or [Java JDK](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html) > 8
+- [Gradle](https://gradle.org/install/) > 6.0.1
 - [Node.JS](https://nodejs.org/en/download/)
 - [yarn](https://yarnpkg.com/en/docs/install#debian-stable)
 
-On Linux distributions with [APT](https://de.wikipedia.org/wiki/Advanced_Packaging_Tool) you can use the script "install.sh". Otherwise install everything manually.
-
 ### Run
-- Windows: "run.bat"
-- Linux: "run.sh"
+- Unix: `run.sh`
+- Windows: `run.bat`
 
