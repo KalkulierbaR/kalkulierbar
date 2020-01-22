@@ -21,7 +21,7 @@ Please note that this is a mirror of our private development repository. While s
 
 ## Development
 ### Dependencies
-On `Unix` systems you can use the install script `install.sh`.
+On `Linux` systems you can use the install script `install.sh`.
 
 On `Windows` install these manually:
 - [Java JRE](https://www.java.com/de/download/win10.jsp) or [Java JDK](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html) > 8
@@ -30,6 +30,6 @@ On `Windows` install these manually:
 - [yarn](https://yarnpkg.com/en/docs/install#debian-stable)
 
 ### Run
-- Unix: `run.sh`
+- Linux: `run.sh`
 - Windows: `run.bat`
 

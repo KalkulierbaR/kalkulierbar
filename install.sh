@@ -8,16 +8,23 @@ java_vers=$(type -p java)
 #Check if java is installed
 if [ -z "$java_vers" ]; then
     echo "Java not found"
-    echo "Please install java"
+    echo "Please install java manually"
     exit 1
 else
     echo "Java found on your system"
-    echo "Continue with installation"
-    echo ""
 fi
 
-#Install curl
-sudo apt-get install curl
+#Check if curl is installed
+if [ -x "$(command -v curl)" ]; then
+  echo "Curl found on your system"
+elif [ -x "$(command -v apt-get)" ]; then
+  #Install curl
+  sudo apt-get install curl
+else
+    echo 'Curl not found'
+    echo "Please install curl manually"
+    exit 1
+fi
 
 #Install Node.JS (Ubuntu v13.3.0)
 curl https://nodejs.org/dist/v12.14.1/node-v12.14.1-linux-x64.tar.xz > node.tar.xz
