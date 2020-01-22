@@ -22,7 +22,6 @@ class TableauxState(
     override var usedBacktracking = false
     override var seal = ""
 
-
     /**
      * Check if a given node can be closed
      * @param nodeID ID of the node to check
@@ -83,12 +82,14 @@ class TableauxState(
  * @param negated True if the variable is negated, false otherwise
  */
 @Serializable
-class TableauxNode(override val parent: Int?, override val spelling: String, override val negated: Boolean): GenericTableauxNode<String> {
+class TableauxNode(override val parent: Int?, override val spelling: String, override val negated: Boolean) : GenericTableauxNode<String> {
     override var isClosed = false
     override var closeRef: Int? = null
     override val children = mutableListOf<Int>()
     override val isLeaf
         get() = children.size == 0
+    override val literalStem
+        get() = spelling
 
     override fun toString(): String {
         return if (negated) "!$spelling" else spelling

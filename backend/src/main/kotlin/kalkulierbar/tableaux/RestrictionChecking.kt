@@ -11,15 +11,15 @@ import kalkulierbar.clause.Clause
  * @param leafID ID of the leaf to be expanded
  * @param clause Clause object to be used for expansion
  */
-fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause<String>) {
+fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, leafID: Int, clause: Clause<AtomType>) {
     // Create list of predecessor
     val leaf = state.nodes[leafID]
     val lst = mutableListOf(leaf.toAtom().toString())
 
     // Check Leaf for having parent
-    var predecessor: TableauxNode? = null
+    var predecessor: GenericTableauxNode<AtomType>? = null
     if (leaf.parent != null)
-        predecessor = state.nodes[leaf.parent]
+        predecessor = state.nodes[leaf.parent!!]
 
     // Fill list of predecessor
     while (predecessor?.parent != null) {
