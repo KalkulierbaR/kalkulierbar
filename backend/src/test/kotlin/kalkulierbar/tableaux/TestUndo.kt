@@ -40,21 +40,21 @@ class TestUndo {
 
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
 
-        assertEquals(false, state.usedUndo)
+        assertEquals(false, state.usedBacktracking)
 
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.UNDO, 0, 0))
 
-        assert(state.usedUndo)
+        assert(state.usedBacktracking)
 
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
 
-        assert(state.usedUndo)
+        assert(state.usedBacktracking)
     }
 
     @Test
     fun testUndoExpandSimple() {
         var state = instance.parseFormulaToState("a,b;c;!a", opts)
-        state.usedUndo = true // Set to true to enable hash comparison
+        state.usedBacktracking = true // Set to true to enable hash comparison
         val prestateHash = state.getHash()
 
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
@@ -66,7 +66,7 @@ class TestUndo {
     @Test
     fun testUndoCloseSimple() {
         var state = instance.parseFormulaToState("a;!a", opts)
-        state.usedUndo = true // Set to true to enable hash comparison
+        state.usedBacktracking = true // Set to true to enable hash comparison
 
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
@@ -81,7 +81,7 @@ class TestUndo {
     @Test
     fun testUndoComplex() {
         var state = instance.parseFormulaToState("a,b,c;!a;!b;!c", opts)
-        state.usedUndo = true // Set to true to enable hash comparison
+        state.usedBacktracking = true // Set to true to enable hash comparison
 
         val s1 = state.getHash()
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))

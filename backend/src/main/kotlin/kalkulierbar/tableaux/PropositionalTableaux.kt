@@ -113,7 +113,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         }
 
         // Add move to state history
-        if (state.undoEnable) {
+        if (state.backtracking) {
             state.moveHistory.add(TableauxMove(MoveType.CLOSE, leafID, closeNodeID))
         }
 
@@ -166,7 +166,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         verifyExpandConnectedness(state, leafID)
 
         // Add move to state history
-        if (state.undoEnable) {
+        if (state.backtracking) {
             state.moveHistory.add(TableauxMove(MoveType.EXPAND, leafID, clauseID))
         }
 
@@ -180,7 +180,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
      */
     @Suppress("ThrowsCount")
     private fun applyMoveUndo(state: TableauxState): TableauxState {
-        if (!state.undoEnable)
+        if (!state.backtracking)
             throw IllegalMove("Backtracking is not enabled for this proof")
 
         // Throw error if no moves were made already
@@ -192,7 +192,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
         val top = history.removeAt(state.moveHistory.size - 1)
 
         // Set usedUndo to true
-        state.usedUndo = true
+        state.usedBacktracking = true
 
         // Pass undo move to relevant expand and close subfunction
         when (top.type) {
@@ -267,7 +267,7 @@ class PropositionalTableaux : JSONCalculus<TableauxState, TableauxMove, Tableaux
                 connectedness = "weakly connected"
 
             val regularity = if (checkRegularity(state)) "regular " else ""
-            val withWithoutBT = if (state.usedUndo) "with" else "without"
+            val withWithoutBT = if (state.usedBacktracking) "with" else "without"
 
             msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux $withWithoutBT backtracking"
         }

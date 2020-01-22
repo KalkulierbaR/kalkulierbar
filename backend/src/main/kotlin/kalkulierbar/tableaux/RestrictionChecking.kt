@@ -43,7 +43,7 @@ fun verifyExpandRegularity(state: TableauxState, leafID: Int, clause: Clause<Str
  * @param state current state object with the expansion already applied
  * @param leafID ID of the expanded leaf
  */
-fun verifyExpandConnectedness(state: TableauxState, leafID: Int) {
+fun <AtomType> verifyExpandConnectedness(state: GenericTableauxState<AtomType>, leafID: Int) {
     val leaf = state.nodes[leafID]
     val children = leaf.children
 
@@ -70,7 +70,7 @@ fun verifyExpandConnectedness(state: TableauxState, leafID: Int) {
  * @param ctype type of connectedness to check for
  * @return true iff the proof tree is strongly/weakly connected
  */
-fun checkConnectedness(state: TableauxState, ctype: TableauxType): Boolean {
+fun <AtomType> checkConnectedness(state: GenericTableauxState<AtomType>, ctype: TableauxType): Boolean {
     val startNodes = state.root.children // root is excluded from connectedness criteria
 
     if (ctype == TableauxType.UNCONNECTED)
@@ -93,7 +93,7 @@ fun checkConnectedness(state: TableauxState, ctype: TableauxType): Boolean {
  * @param strong true for strong connectedness, false for weak connectedness
  * @return true iff the proof tree is weakly/strongly connected
  */
-private fun checkConnectedSubtree(state: TableauxState, root: Int, strong: Boolean): Boolean {
+private fun <AtomType> checkConnectedSubtree(state: GenericTableauxState<AtomType>, root: Int, strong: Boolean): Boolean {
     val node = state.nodes.get(root)
 
     // A subtree is weakly/strongly connected iff:
@@ -132,7 +132,7 @@ private fun checkConnectedSubtree(state: TableauxState, root: Int, strong: Boole
  * @param state state object to check for regularity
  * @return true iff the proof tree is regular
  */
-fun checkRegularity(state: TableauxState): Boolean {
+fun <AtomType> checkRegularity(state: GenericTableauxState<AtomType>): Boolean {
     val startNodes = state.root.children // root is excluded from connectedness criteria
 
     return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, mutableListOf()) }
@@ -146,7 +146,7 @@ fun checkRegularity(state: TableauxState): Boolean {
  * @param lst : list of unique node names of predecessor
  * @return true iff every path from root node to a leaf is regular
  */
-private fun checkRegularitySubtree(state: TableauxState, root: Int, lst: MutableList<Atom<String>>): Boolean {
+private fun <AtomType> checkRegularitySubtree(state: GenericTableauxState<AtomType>, root: Int, lst: MutableList<Atom<AtomType>>): Boolean {
     val node = state.nodes[root]
 
     // If node is in list of predecessors return false

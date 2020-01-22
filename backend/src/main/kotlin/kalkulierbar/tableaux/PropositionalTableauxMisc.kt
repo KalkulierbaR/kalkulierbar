@@ -12,42 +12,23 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 class TableauxState(
-    val clauseSet: ClauseSet<String>,
-    val type: TableauxType = TableauxType.UNCONNECTED,
-    val regular: Boolean = false,
-    val undoEnable: Boolean = false
-) : ProtectedState() {
-    val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
+    override val clauseSet: ClauseSet<String>,
+    override val type: TableauxType = TableauxType.UNCONNECTED,
+    override val regular: Boolean = false,
+    override val backtracking: Boolean = false
+) : GenericTableauxState<String>, ProtectedState() {
+    override val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
     val moveHistory = mutableListOf<TableauxMove>()
-    var usedUndo = false
-    val root
-        get() = nodes[0]
-    val leaves
-        get() = nodes.filter { it.isLeaf }
+    override var usedBacktracking = false
     override var seal = ""
 
-    /**
-     * Check whether a node is a (transitive) parent of another node
-     * @param parentID Node to check parenthood of
-     * @param childID Child node of suspected parent
-     * @return true iff the parentID is a true ancestor of the childID
-     */
-    @Suppress("ReturnCount")
-    fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
-        val child = nodes.get(childID)
-        if (child.parent == parentID)
-            return true
-        if (child.parent == 0 || child.parent == null)
-            return false
-        return nodeIsParentOf(parentID, child.parent)
-    }
 
     /**
      * Check if a given node can be closed
      * @param nodeID ID of the node to check
      * @return true is the node can be closed, false otherwise
      */
-    fun nodeIsCloseable(nodeID: Int): Boolean {
+    override fun nodeIsCloseable(nodeID: Int): Boolean {
         val node = nodes.get(nodeID)
         return node.isLeaf && nodeAncestryContainsAtom(nodeID, node.toAtom().not())
     }
@@ -57,7 +38,7 @@ class TableauxState(
      * @param nodeID ID of the node to check
      * @return true is the node can be closed directly, false otherwise
      */
-    fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
+    override fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
         val node = nodes[nodeID]
         if (node.parent == null)
             return false
@@ -89,7 +70,7 @@ class TableauxState(
     override fun getHash(): String {
         val nodesHash = nodes.joinToString("|") { it.getHash() }
         val clauseSetHash = clauseSet.toString()
-        val optsHash = "$type|$regular|$undoEnable|$usedUndo"
+        val optsHash = "$type|$regular|$backtracking|$usedBacktracking"
         val historyHash = moveHistory.map { "(${it.type},${it.id1},${it.id2})" }.joinToString(",")
         return "tableauxstate|$optsHash|$clauseSetHash|[$nodesHash]|[$historyHash]"
     }
@@ -102,11 +83,11 @@ class TableauxState(
  * @param negated True if the variable is negated, false otherwise
  */
 @Serializable
-class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean) {
-    var isClosed = false
-    var closeRef: Int? = null
-    val children = mutableListOf<Int>()
-    val isLeaf
+class TableauxNode(override val parent: Int?, override val spelling: String, override val negated: Boolean): GenericTableauxNode<String> {
+    override var isClosed = false
+    override var closeRef: Int? = null
+    override val children = mutableListOf<Int>()
+    override val isLeaf
         get() = children.size == 0
 
     override fun toString(): String {
@@ -128,7 +109,7 @@ class TableauxNode(val parent: Int?, val spelling: String, val negated: Boolean)
         return "$spelling;$neg;$parent;$ref;$leaf;$closed;($childlist)"
     }
 
-    fun toAtom() = Atom(spelling, negated)
+    override fun toAtom() = Atom(spelling, negated)
 }
 
 /**
