@@ -1,6 +1,7 @@
 package kalkulierbar.logic
 
 import kalkulierbar.logic.transform.LogicNodeVisitor
+import kotlinx.serialization.Serializable
 
 class Var(var spelling: String) : LogicNode() {
 
@@ -73,6 +74,7 @@ class Equiv(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, r
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
+@Serializable
 class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : LogicNode() {
     override fun toBasicOps() = this
 
