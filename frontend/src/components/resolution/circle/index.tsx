@@ -2,6 +2,7 @@ import { h } from "preact";
 
 import { CandidateClause } from "../../../types/clause";
 
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { checkClose } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { circleLayout } from "../../../helpers/layout/resolution";
@@ -50,7 +51,9 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         ["prop-resolution"]: state
     } = useAppState();
 
-    const { width, height, data } = circleLayout(clauses);
+    const { width, height, data } = useMemo(() => circleLayout(clauses), [
+        clauses
+    ]);
 
     return (
         <div class={`card ${style.noPad}`}>

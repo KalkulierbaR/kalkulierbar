@@ -1,5 +1,6 @@
-package kalkulierbar
+package kalkulierbar.tests.parsers
 
+import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.parsers.PropositionalParser
 import kotlin.test.Test
 import kotlin.test.assertEquals

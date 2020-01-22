@@ -3,6 +3,7 @@ package main.kotlin
 import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
+import kalkulierbar.FOAcceptor
 import kalkulierbar.KalkulierbarException
 import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.tableaux.PropositionalTableaux
@@ -10,7 +11,7 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
 // List of all active calculi
-val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution())
+val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution(), FOAcceptor())
 
 fun main(args: Array<String>) {
     // Verify that all calculus implementations have unique names
@@ -42,20 +43,19 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         // Enable CORS headers
         config.enableCorsForAllOrigins()
 
-        if (listenGlobally) {
-            // Set a Jetty server manually for more config options
-            config.server {
-                // Create and configure Jetty server
-                Server().apply {
-                    connectors = arrayOf(ServerConnector(this).apply {
-                        this.host = host
-                    })
-                }
+        // Set a Jetty server manually for more config options
+        config.server {
+            // Create and configure Jetty server
+            Server().apply {
+                connectors = arrayOf(ServerConnector(this).apply {
+                    this.host = host
+                    this.port = port
+                })
             }
         }
     }
 
-    app.start(port)
+    app.start()
 
     // Catch explicitly thrown exceptions
     app.exception(KalkulierbarException::class.java) { e, ctx ->

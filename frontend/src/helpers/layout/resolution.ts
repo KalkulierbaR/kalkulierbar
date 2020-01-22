@@ -24,7 +24,7 @@ export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
     const angle = (Math.PI * 2) / clauses.length;
 
     // The height is constant. The value here has no special meaning
-    let height = 15;
+    let height = 35;
 
     let r: number;
 
@@ -33,24 +33,25 @@ export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
         r = height;
     } else {
         // Calculate the radius the circle must have to ensure no overlaps in either height or width
-        r = Math.max(
-            height / Math.sin(angle),
-            (width * Math.tan((Math.PI - angle) / 2)) / Math.sin(angle)
-        );
-
-        console.log(r === height / Math.sin(angle) ? "height" : "width");
+        r =
+            1.2 *
+            Math.max(
+                height / Math.sin(angle),
+                width / Math.sin(angle)
+                // (width * Math.tan((Math.PI - angle) / 2)) / Math.sin(angle)
+            );
     }
 
     return {
         // The width of the svg element must be at least the diameter + padding
         width: 2.2 * r + width,
         // Give a little extra height to give padding
-        height: 2.4 * r + height,
+        height: 2.2 * r + height,
         // Transform polar coordinates to cartesian coordinates
         data: clauses.map((c, i) => ({
             data: c,
-            x: r * Math.sin(angle * i),
-            y: r * Math.cos(angle * i)
+            x: r * Math.cos(angle * i - Math.PI / 2),
+            y: r * Math.sin(angle * i - Math.PI / 2) + 14
         }))
     };
 };

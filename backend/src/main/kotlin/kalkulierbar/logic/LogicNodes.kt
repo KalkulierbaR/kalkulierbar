@@ -5,7 +5,7 @@ import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 
-class Var(var spelling: String) : PropositionalLogicNode() {
+class Var(var spelling: String) : LogicNode() {
 
     /**
      * Translates arbitrary formulae into equivalent representations
@@ -40,7 +40,7 @@ class Var(var spelling: String) : PropositionalLogicNode() {
     override fun toString() = spelling
 }
 
-class Not(child: PropositionalLogicNode) : UnaryOp(child) {
+class Not(child: LogicNode) : UnaryOp(child) {
 
     /**
      * Recursively applies Tseytin transformation on a logic node
@@ -109,7 +109,7 @@ class Not(child: PropositionalLogicNode) : UnaryOp(child) {
                 return ClauseSet(mutableListOf(clause))
             }
             else -> {
-                val msg = "Unknown PropositionalLogicNode encountered during naive CNF transformation"
+                val msg = "Unknown LogicNode encountered during naive CNF transformation"
                 throw FormulaConversionException(msg)
             }
         }
@@ -120,7 +120,7 @@ class Not(child: PropositionalLogicNode) : UnaryOp(child) {
     override fun toString() = "!$child"
 }
 
-class And(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
+class And(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
 
     /**
      * Recursively applies Tseytin transformation on a logic node
@@ -164,7 +164,7 @@ class And(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode)
     override fun toString() = "($leftChild ∧ $rightChild)"
 }
 
-class Or(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
+class Or(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
 
     /**
      * Recursively applies Tseytin transformation on a logic node
@@ -225,14 +225,14 @@ class Or(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) 
     override fun toString() = "($leftChild ∨ $rightChild)"
 }
 
-class Impl(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
+class Impl(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
 
     /**
      * Translates arbitrary formulae into equivalent representations
      * using only basic operations (var, not, and, or)
      * @return representation of this LogicNode using only basic logic operations
      */
-    override fun toBasicOps(): PropositionalLogicNode {
+    override fun toBasicOps(): LogicNode {
         leftChild = leftChild.toBasicOps()
         rightChild = rightChild.toBasicOps()
         return Or(Not(leftChild), rightChild)
@@ -275,14 +275,14 @@ class Impl(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode
     override fun toString() = "($leftChild --> $rightChild)"
 }
 
-class Equiv(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNode) : BinaryOp(leftChild, rightChild) {
+class Equiv(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
 
     /**
      * Translates arbitrary formulae into equivalent representations
      * using only basic operations (var, not, and, or)
      * @return representation of this LogicNode using only basic logic operations
      */
-    override fun toBasicOps(): PropositionalLogicNode {
+    override fun toBasicOps(): LogicNode {
         leftChild = leftChild.toBasicOps()
         rightChild = rightChild.toBasicOps()
         return Or(And(leftChild, rightChild), And(Not(leftChild), Not(rightChild)))
@@ -324,4 +324,35 @@ class Equiv(leftChild: PropositionalLogicNode, rightChild: PropositionalLogicNod
     override fun naiveCNF() = this.toBasicOps().naiveCNF()
 
     override fun toString() = "($leftChild <=> $rightChild)"
+}
+
+class Relation(val spelling: String, val arguments: List<FirstOrderTerm>) : LogicNode() {
+    override fun toBasicOps() = this
+
+    override fun naiveCNF(): ClauseSet {
+        val atom = Atom(toString(), false)
+        val clause = Clause(mutableListOf(atom))
+        return ClauseSet(mutableListOf(clause))
+    }
+
+    override fun getTseytinName(index: Int) = "rel$this"
+    override fun tseytin(cs: ClauseSet, index: Int) = index + 1
+
+    override fun toString() = "$spelling(${arguments.joinToString(", ")})"
+}
+
+class UniversalQuantifier(val varName: String, child: LogicNode, val boundVariables: List<QuantifiedVariable>) : UnaryOp(child) {
+    override fun naiveCNF() = throw FormulaConversionException("CNF conversion applied on universal quantifier")
+    override fun tseytin(cs: ClauseSet, index: Int) = throw FormulaConversionException("CNF conversion applied on universal quantifier")
+    override fun getTseytinName(index: Int) = "forall$index"
+
+    override fun toString() = "(∀$varName: $child)"
+}
+
+class ExistentialQuantifier(val varName: String, child: LogicNode, val boundVariables: List<QuantifiedVariable>) : UnaryOp(child) {
+    override fun naiveCNF() = throw FormulaConversionException("CNF conversion applied on existential quantifier")
+    override fun tseytin(cs: ClauseSet, index: Int) = throw FormulaConversionException("CNF conversion applied on existential quantifier")
+    override fun getTseytinName(index: Int) = "exists$index"
+
+    override fun toString() = "(∃$varName: $child)"
 }
