@@ -2,7 +2,7 @@ import { h } from "preact";
 
 import { CandidateClause } from "../../../types/clause";
 
-import { useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { useMemo } from "preact/hooks";
 import { checkClose } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { circleLayout } from "../../../helpers/layout/resolution";
