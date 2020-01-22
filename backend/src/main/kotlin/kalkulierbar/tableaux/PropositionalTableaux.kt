@@ -13,6 +13,7 @@ import kotlinx.serialization.json.JsonDecodingException
  * Implementation of a simple tableaux calculus on propositional clause sets
  * For calculus specification see docs/PropositionalTableaux.md
  */
+@Suppress("TooManyFunctions")
 class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxState, TableauxMove, TableauxParam>() {
 
     override val identifier = "prop-tableaux"

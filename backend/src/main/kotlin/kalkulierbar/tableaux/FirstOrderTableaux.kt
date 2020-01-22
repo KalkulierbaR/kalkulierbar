@@ -21,6 +21,7 @@ import kotlinx.serialization.json.JsonDecodingException
 
 val serializer = Json(context = FoTermModule)
 
+@Suppress("TooManyFunctions")
 class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxState, FoTableauxMove, FoTableauxParam>() {
 
     override val identifier = "fo-tableaux"

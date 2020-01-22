@@ -18,6 +18,7 @@ interface GenericTableaux<AtomType> {
         }
     }
 
+    @Suppress("ThrowsCount")
     fun ensureExpandability(state: GenericTableauxState<AtomType>, leafID: Int, clauseID: Int) {
         // Don't allow further expand moves if connectedness requires close moves to be applied first
         if (!checkConnectedness(state, state.type))
@@ -45,6 +46,7 @@ interface GenericTableaux<AtomType> {
             verifyExpandRegularity(state, leafID, clause)
     }
 
+    @Suppress("ComplexMethod", "ThrowsCount")
     fun ensureBasicCloseability(state: GenericTableauxState<AtomType>, leafID: Int, closeNodeID: Int) {
         // Verify that both leaf and closeNode are valid nodes
         if (leafID >= state.nodes.size || leafID < 0)
@@ -122,6 +124,7 @@ interface GenericTableauxState<AtomType> {
      * @param childID Child node of suspected parent
      * @return true iff the parentID is a true ancestor of the childID
      */
+    @Suppress("ReturnCount")
     fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
         val child = nodes.get(childID)
         if (child.parent == parentID)
@@ -131,9 +134,9 @@ interface GenericTableauxState<AtomType> {
         return nodeIsParentOf(parentID, child.parent!!)
     }
 
-    abstract fun nodeIsCloseable(nodeID: Int): Boolean
+    fun nodeIsCloseable(nodeID: Int): Boolean
 
-    abstract fun nodeIsDirectlyCloseable(nodeID: Int): Boolean
+    fun nodeIsDirectlyCloseable(nodeID: Int): Boolean
 }
 
 interface GenericTableauxNode<AtomType> {
@@ -146,5 +149,5 @@ interface GenericTableauxNode<AtomType> {
     val children: MutableList<Int>
     val isLeaf: Boolean
 
-    abstract fun toAtom(): Atom<AtomType>
+    fun toAtom(): Atom<AtomType>
 }
