@@ -93,7 +93,11 @@ fun <AtomType> checkConnectedness(state: GenericTableauxState<AtomType>, ctype: 
  * @param strong true for strong connectedness, false for weak connectedness
  * @return true iff the proof tree is weakly/strongly connected
  */
-private fun <AtomType> checkConnectedSubtree(state: GenericTableauxState<AtomType>, root: Int, strong: Boolean): Boolean {
+private fun <AtomType> checkConnectedSubtree(
+    state: GenericTableauxState<AtomType>,
+    root: Int,
+    strong: Boolean
+): Boolean {
     val node = state.nodes.get(root)
 
     // A subtree is weakly/strongly connected iff:
@@ -146,7 +150,11 @@ fun <AtomType> checkRegularity(state: GenericTableauxState<AtomType>): Boolean {
  * @param lst : list of unique node names of predecessor
  * @return true iff every path from root node to a leaf is regular
  */
-private fun <AtomType> checkRegularitySubtree(state: GenericTableauxState<AtomType>, root: Int, lst: MutableList<Atom<AtomType>>): Boolean {
+private fun <AtomType> checkRegularitySubtree(
+    state: GenericTableauxState<AtomType>,
+    root: Int,
+    lst: MutableList<Atom<AtomType>>
+): Boolean {
     val node = state.nodes[root]
 
     // If node is in list of predecessors return false

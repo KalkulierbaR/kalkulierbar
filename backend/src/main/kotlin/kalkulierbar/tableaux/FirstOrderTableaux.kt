@@ -304,11 +304,17 @@ class FoTableauxState(
  * @param negated True if the variable is negated, false otherwise
  */
 @Serializable
-class FoTableauxNode(override val parent: Int?, val relation: Relation, override val negated: Boolean) : GenericTableauxNode<Relation> {
+class FoTableauxNode(
+    override val parent: Int?,
+    val relation: Relation,
+    override val negated: Boolean
+) : GenericTableauxNode<Relation> {
+
     override var isClosed = false
     override var closeRef: Int? = null
     override val children = mutableListOf<Int>()
     override var spelling = relation.toString()
+
     override val isLeaf
         get() = children.size == 0
     override val literalStem
@@ -340,7 +346,12 @@ class FoTableauxNode(override val parent: Int?, val relation: Relation, override
 }
 
 @Serializable
-data class FoTableauxMove(val type: MoveType, val id1: Int, val id2: Int, val varAssign: Map<String, String> = mapOf()) {
+data class FoTableauxMove(
+    val type: MoveType,
+    val id1: Int,
+    val id2: Int,
+    val varAssign: Map<String, String> = mapOf()
+) {
     fun getVarAssignTerms() = varAssign.mapValues { FirstOrderParser.parseTerm(it.value) }
 }
 

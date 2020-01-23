@@ -82,14 +82,22 @@ class TableauxState(
  * @param negated True if the variable is negated, false otherwise
  */
 @Serializable
-class TableauxNode(override val parent: Int?, override val spelling: String, override val negated: Boolean) : GenericTableauxNode<String> {
+class TableauxNode(
+    override val parent: Int?,
+    override val spelling: String,
+    override val negated: Boolean
+) : GenericTableauxNode<String> {
+
     override var isClosed = false
     override var closeRef: Int? = null
     override val children = mutableListOf<Int>()
+
     override val isLeaf
         get() = children.size == 0
     override val literalStem
         get() = spelling
+
+    override fun toAtom() = Atom(spelling, negated)
 
     override fun toString(): String {
         return if (negated) "!$spelling" else spelling
@@ -109,8 +117,6 @@ class TableauxNode(override val parent: Int?, override val spelling: String, ove
         val childlist = children.joinToString(",")
         return "$spelling;$neg;$parent;$ref;$leaf;$closed;($childlist)"
     }
-
-    override fun toAtom() = Atom(spelling, negated)
 }
 
 /**
