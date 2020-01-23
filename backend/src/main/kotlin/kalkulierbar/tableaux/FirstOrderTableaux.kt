@@ -9,6 +9,7 @@ import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
+import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.transform.VariableSuffixAppend
 import kalkulierbar.parsers.FirstOrderParser
@@ -48,18 +49,24 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     }
 
     private fun applyAutoCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int): FoTableauxState {
-        val varAssign = mapOf<String, FirstOrderTerm>()
-        return applyMoveCloseBranch(state, leafID, closeNodeID, varAssign)
-    }
-
-    private fun applyMoveCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int, varAssign: Map<String, FirstOrderTerm>): FoTableauxState {
-
         ensureBasicCloseability(state, leafID, closeNodeID)
-
         val leaf = state.nodes[leafID]
         val closeNode = state.nodes[closeNodeID]
 
+        val varAssign = Unification.unify(leaf.relation, closeNode.relation)
+        return closeBranchCommon(state, leafID, closeNodeID, varAssign)
+    }
+
+    private fun applyMoveCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int, varAssign: Map<String, FirstOrderTerm>): FoTableauxState {
+        ensureBasicCloseability(state, leafID, closeNodeID)
+        return closeBranchCommon(state, leafID, closeNodeID, varAssign)
+    }
+
+    private fun closeBranchCommon(state: FoTableauxState, leafID: Int, closeNodeID: Int, varAssign: Map<String, FirstOrderTerm>): FoTableauxState {
         applyVarInstantiation(state, varAssign)
+
+        val leaf = state.nodes[leafID]
+        val closeNode = state.nodes[closeNodeID]
 
         if (leaf.relation != closeNode.relation)
             throw IllegalMove("Node '$leaf' and '$closeNode' are not equal after variable instantiation")
@@ -243,7 +250,7 @@ class FoTableauxState(
      */
     override fun nodeIsCloseable(nodeID: Int): Boolean {
         val node = nodes.get(nodeID)
-        return node.isLeaf && nodeAncestryContainsAtom(nodeID, node.toAtom().not())
+        return node.isLeaf && nodeAncestryContainsUnifiable(nodeID, node.toAtom())
     }
 
     /**
@@ -253,28 +260,35 @@ class FoTableauxState(
      */
     override fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
         val node = nodes[nodeID]
-        if (node.parent == null)
+        if (node.parent == null || !node.isLeaf || node.negated == nodes[node.parent].negated)
             return false
         val parent = nodes[node.parent]
 
-        return node.isLeaf && node.toAtom() == parent.toAtom().not()
+        var res: Boolean
+
+        try {
+            Unification.unify(node.relation, parent.relation)
+            res = true
+        } catch (e: IllegalMove) {
+            res = false
+        }
+
+        return res
     }
 
-    /**
-     * Check if a node's ancestry includes a specified atom
-     * @param nodeID ID of the node to check
-     * @param atom the atom to search for
-     * @return true iff the node's transitive parents include the given atom
-     */
-    private fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom<Relation>): Boolean {
+    private fun nodeAncestryContainsUnifiable(nodeID: Int, atom: Atom<Relation>): Boolean {
         var node = nodes[nodeID]
 
         // Walk up the tree from start node
         while (node.parent != null) {
             node = nodes[node.parent!!]
-            // Check if current node is identical to atom
-            if (node.toAtom() == atom)
-                return true
+            // Check if current node can be unified with given atom
+            if (node.negated != atom.negated && node.relation.spelling == atom.lit.spelling) {
+                try {
+                    Unification.unify(node.relation, atom.lit)
+                    return true
+                } catch (e: IllegalMove) {}
+            }
         }
 
         return false
