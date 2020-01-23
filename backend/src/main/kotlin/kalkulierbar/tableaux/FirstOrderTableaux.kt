@@ -27,24 +27,23 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     override val identifier = "fo-tableaux"
 
     override fun parseFormulaToState(formula: String, params: FoTableauxParam?): FoTableauxState {
-        val parser = FirstOrderParser()
-        val clauses = FirstOrderCNF.transform(parser.parse(formula))
+        val clauses = FirstOrderCNF.transform(FirstOrderParser.parse(formula))
 
         if (params == null)
-            return FoTableauxState(clauses)
+            return FoTableauxState(clauses, formula)
         else
-            return FoTableauxState(clauses, params.type, params.regular, params.backtracking)
+            return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking)
     }
 
     override fun applyMoveOnState(state: FoTableauxState, move: FoTableauxMove): FoTableauxState {
         // Pass expand, close, undo moves to relevant subfunction
         return when (move.type) {
             // MoveType.AUTOCLOSE -> applyAutoCloseBranch(state, move.id1, move.id2)
-            MoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2, move.varAssign)
+            MoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2, move.getVarAssignTerms())
             MoveType.EXPAND -> applyMoveExpandLeaf(state, move.id1, move.id2)
             MoveType.UNDO -> applyMoveUndo(state)
 
-            else -> throw IllegalMove("Unknown move. Valid moves are EXPAND, CLOSE, ATUOCLOSE or UNDO.")
+            else -> throw IllegalMove("Unknown move. Valid moves are EXPAND, CLOSE, AUTOCLOSE or UNDO.")
         }
     }
 
@@ -157,6 +156,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
      */
     @kotlinx.serialization.UnstableDefault
     override fun stateToJson(state: FoTableauxState): String {
+        state.render()
         state.computeSeal()
         return serializer.stringify(FoTableauxState.serializer(), state)
     }
@@ -209,6 +209,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
 @Serializable
 class FoTableauxState(
     override val clauseSet: ClauseSet<Relation>,
+    val formula: String,
     override val type: TableauxType = TableauxType.UNCONNECTED,
     override val regular: Boolean = false,
     override val backtracking: Boolean = false
@@ -217,7 +218,9 @@ class FoTableauxState(
     val moveHistory = mutableListOf<FoTableauxMove>()
     override var usedBacktracking = false
     var expansionCounter = 0
+
     override var seal = ""
+    var renderedClauseSet = listOf<String>()
 
     /**
      * Check if a given node can be closed
@@ -263,7 +266,21 @@ class FoTableauxState(
         return false
     }
 
-    override fun getHash() = "HashyMcHashface"
+    fun render() {
+        renderedClauseSet = clauseSet.clauses.map { it.atoms.joinToString(", ") }
+        nodes.forEach {
+            it.render()
+        }
+    }
+
+    override fun getHash(): String {
+        val nodesHash = nodes.joinToString("|") { it.getHash() }
+        val clauseSetHash = clauseSet.toString()
+        val optsHash = "$type|$regular|$backtracking|$usedBacktracking"
+        val variousHash = "$formula|$expansionCounter"
+        val historyHash = moveHistory.map { "(${it.type},${it.id1},${it.id2},${it.varAssign})" }.joinToString(",")
+        return "fotableaux|$variousHash|$optsHash|$clauseSetHash|[$nodesHash]|[$historyHash]"
+    }
 }
 
 /**
@@ -277,22 +294,41 @@ class FoTableauxNode(override val parent: Int?, val relation: Relation, override
     override var isClosed = false
     override var closeRef: Int? = null
     override val children = mutableListOf<Int>()
+    override var spelling = relation.toString()
     override val isLeaf
         get() = children.size == 0
-    override val spelling
-        get() = relation.toString()
     override val literalStem
         get() = "${relation.spelling}${relation.arguments.size}"
 
     override fun toString(): String {
-        return if (negated) "!$spelling" else spelling
+        return if (negated) "!$relation" else "$relation"
     }
 
     override fun toAtom() = Atom(relation, negated)
+
+    fun render() {
+        spelling = relation.toString()
+    }
+
+    /**
+     * Pack the node into a well-defined, unambiguous string representation
+     * Used to calculate checksums over state objects as JSON representation
+     * might differ slightly between clients, encodings, etc
+     * @return Canonical node representations
+     */
+    fun getHash(): String {
+        val neg = if (negated) "n" else "p"
+        val closed = if (isClosed) "c" else "o"
+        val ref = if (closeRef != null) closeRef.toString() else "-"
+        val childlist = children.joinToString(",")
+        return "$relation;$neg;$parent;$ref;$closed;($childlist)"
+    }
 }
 
 @Serializable
-data class FoTableauxMove(val type: MoveType, val id1: Int, val id2: Int, val varAssign: Map<String, FirstOrderTerm>)
+data class FoTableauxMove(val type: MoveType, val id1: Int, val id2: Int, val varAssign: Map<String, String>) {
+    fun getVarAssignTerms() = varAssign.mapValues { FirstOrderParser.parseTerm(it.value) }
+}
 
 @Serializable
 data class FoTableauxParam(
