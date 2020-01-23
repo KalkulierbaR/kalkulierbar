@@ -2,11 +2,8 @@
 echo "This will install curl, nodeJS and yarn"
 echo " "
 
-#If java installed then java_vers is not empty
-java_vers=$(type -p java)
-
 #Check if java is installed
-if [ -z "$java_vers" ]; then
+if [ -x "$(command -v java)" ]; then
     echo "Java not found"
     echo "Please install java manually"
     exit 1
@@ -18,8 +15,18 @@ fi
 if [ -x "$(command -v curl)" ]; then
   echo "Curl found on your system"
 elif [ -x "$(command -v apt-get)" ]; then
-  #Install curl
+  #Install curl debian/ubuntu
+  sudo apt-get update
   sudo apt-get install curl
+elif [ -x "$(command -v yum)" ]; then
+  #Install curl RHEL/CentOS/Fedora
+  yum install curl
+elif [ -x "$(command -v zypper)" ]; then
+  #Install curl OpenSUSE
+  zypper install curl
+elif [ -x "$(command -v pacman)" ]; then
+  #Install curl ArchLinux
+  pacman -Sy curl
 else
     echo 'Curl not found'
     echo "Please install curl manually"
