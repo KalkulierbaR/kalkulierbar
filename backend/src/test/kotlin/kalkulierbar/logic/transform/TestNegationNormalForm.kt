@@ -11,7 +11,7 @@ class TestNegationNormalForm {
             "R(a) -> R(b)" to "(!R(a) ∨ R(b))",
             "!(R(a) | R(b))" to "(!R(a) ∧ !R(b))",
             "!(R(a) & R(b))" to "(!R(a) ∨ !R(b))",
-            //"!!R(a)" to "R(a)",
+            "!(!R(a))" to "R(a)",
             "!\\ex A : R(A)" to "(∀A: !R(A))",
             "!\\all A : R(A)" to "(∃A: !R(A))"
     )

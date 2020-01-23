@@ -14,7 +14,6 @@ import kalkulierbar.logic.transform.TseytinCNF
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
-import kotlin.test.assertTrue
 
 class TestPropositionalLogic {
 

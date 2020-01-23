@@ -10,7 +10,6 @@ import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.UniversalQuantifier
-import kalkulierbar.logic.Var
 
 /**
  * Visitor-based transformation for FO-formulae into Negation Normal Form
@@ -76,9 +75,6 @@ class NegationNormalForm : DoNothingVisitor() {
             }
             is ExistentialQuantifier -> {
                 res = UniversalQuantifier(child.varName, Not(child.child), child.boundVariables).accept(this)
-            }
-            is Var -> {
-                res = node
             }
             is Relation -> {
                 res = node
