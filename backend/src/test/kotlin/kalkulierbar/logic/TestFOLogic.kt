@@ -1,23 +1,11 @@
 package kalkulierbar.tests.logic
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.And
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.ExistentialQuantifier
+import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
-import kalkulierbar.logic.Var
 import kalkulierbar.logic.transform.NaiveCNF
 import kalkulierbar.logic.transform.TseytinCNF
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlin.test.*
 
 class TestFOLogic {
     private lateinit var r1: Relation
@@ -92,6 +80,22 @@ class TestFOLogic {
     }
 
     @Test
+    fun testConstEquals() {
+        assertEquals(Constant("c"), Constant("c"))
+        assertEquals(Constant("complexConst"), Constant("complexConst"))
+        assertEquals(Constant("c").hashCode(), Constant("c").hashCode())
+        assertNotEquals(Constant("c"), Constant("d"))
+        assertNotEquals<Any?>(Constant("c"), null)
+        assertNotEquals<Any>(Constant("c"), Var("c"))
+    }
+
+    @Test
+    fun testConstClone() {
+        val c = Constant("c")
+        assertEquals(c, c.clone())
+    }
+
+    @Test
     fun testRelBasicOps() {
         assertEquals("R1(Abc)", r1.toBasicOps().toString())
         assertEquals("NewRel(c, f(d, X))", r2.toBasicOps().toString())
@@ -103,6 +107,16 @@ class TestFOLogic {
         assertEquals("(∀X: (X ∨ !X))", u1.toBasicOps().toString())
         assertEquals("(∀X: (∃Y: (∀Z: (R(X, Y) ∧ R(Y, Z)))))", u2.toBasicOps().toString())
         assertEquals("(∀Number1: (∃Number2: Greater(Number1, Number2)))", u3.toBasicOps().toString())
+    }
+
+    @Test
+    fun testRelEquals() {
+        assertEquals(r1, Relation("R1", listOf(QuantifiedVariable("Abc"))))
+        assertNotEquals(r1, Relation("R1", listOf(QuantifiedVariable("Abcd"))))
+        assertEquals(r1.hashCode(), Relation("R1", listOf(QuantifiedVariable("Abc"))).hashCode())
+        assertNotEquals<Relation?>(r1, null)
+        assertNotEquals<Any>(r1, u1)
+        assertNotEquals(r2, r3)
     }
 
     @Test
