@@ -39,6 +39,7 @@ class Unification {
             return unifyTerms(terms)
         }
 
+        @Suppress("ComplexMethod")
         private fun unifyTerms(terms: MutableList<Pair<FirstOrderTerm, FirstOrderTerm>>): Map<String, FirstOrderTerm> {
             val map = mutableMapOf<String, FirstOrderTerm>()
 

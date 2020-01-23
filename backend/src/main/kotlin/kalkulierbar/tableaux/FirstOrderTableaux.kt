@@ -276,6 +276,7 @@ class FoTableauxState(
         return res
     }
 
+    @Suppress("EmptyCatchBlock")
     private fun nodeAncestryContainsUnifiable(nodeID: Int, atom: Atom<Relation>): Boolean {
         var node = nodes[nodeID]
 
