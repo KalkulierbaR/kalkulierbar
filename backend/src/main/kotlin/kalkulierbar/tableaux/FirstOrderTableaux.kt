@@ -71,7 +71,8 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         leaf.closeRef = closeNodeID
         setNodeClosed(state, leaf)
 
-        // TODO: Backtracking
+        if (state.backtracking)
+            state.moveHistory.add(FoTableauxMove(MoveType.CLOSE, leafID, closeNodeID, varAssign.mapValues { it.value.toString() }))
 
         return state
     }
@@ -96,7 +97,8 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         // Verify compliance with connectedness criteria
         verifyExpandConnectedness(state, leafID)
 
-        // TODO: Backtracking
+        if (state.backtracking)
+            state.moveHistory.add(FoTableauxMove(MoveType.EXPAND, leafID, clauseID))
 
         return state
     }
@@ -105,8 +107,20 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         if (!state.backtracking)
             throw IllegalMove("Backtracking is not enabled for this proof")
 
-        // TODO
-        return state
+        // Create a fresh clone-state with the same parameters and input formula
+        val params = FoTableauxParam(state.type, state.regular, state.backtracking)
+        var freshState = parseFormulaToState(state.formula, params)
+        freshState.usedBacktracking = true
+
+        // We don't want to re-do the last move
+        state.moveHistory.removeAt(state.moveHistory.size - 1)
+
+        // Re-build the proof tree in the clone state
+        state.moveHistory.forEach {
+            freshState = applyMoveOnState(freshState, it)
+        }
+
+        return freshState
     }
 
     override fun checkCloseOnState(state: FoTableauxState) = getCloseMessage(state)
@@ -326,7 +340,7 @@ class FoTableauxNode(override val parent: Int?, val relation: Relation, override
 }
 
 @Serializable
-data class FoTableauxMove(val type: MoveType, val id1: Int, val id2: Int, val varAssign: Map<String, String>) {
+data class FoTableauxMove(val type: MoveType, val id1: Int, val id2: Int, val varAssign: Map<String, String> = mapOf()) {
     fun getVarAssignTerms() = varAssign.mapValues { FirstOrderParser.parseTerm(it.value) }
 }
 
