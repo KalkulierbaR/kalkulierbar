@@ -12,19 +12,19 @@ else
 fi
 
 #Check if curl is installed
-if [ -z "$(command -v curl)" ]; then
+if [ ! -z "$(command -v curl)" ]; then
   echo "Curl found on your system"
-elif [ -z "$(command -v apt-get)" ]; then
+elif [ ! -z "$(command -v apt-get)" ]; then
   #Install curl debian/ubuntu
   sudo apt-get update
   sudo apt-get install curl
-elif [ -z "$(command -v yum)" ]; then
+elif [ ! -z "$(command -v yum)" ]; then
   #Install curl RHEL/CentOS/Fedora
   yum install curl
-elif [ -z "$(command -v zypper)" ]; then
+elif [ ! -z "$(command -v zypper)" ]; then
   #Install curl OpenSUSE
   zypper install curl
-elif [ -z "$(command -v pacman)" ]; then
+elif [ ! -z "$(command -v pacman)" ]; then
   #Install curl ArchLinux
   pacman -Sy curl
 else
