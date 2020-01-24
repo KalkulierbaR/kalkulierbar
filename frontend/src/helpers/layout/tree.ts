@@ -158,11 +158,12 @@ const separate = <T>(t: Tree<T>, i: number, ih: LeftSiblingList) => {
                 mssr += sr.mod;
             }
         }
-        if (sy >= cy) {
-            cl = nextLeftContour(cl);
-            if (cl) {
-                mscl += cl.mod;
-            }
+        if (sy < cy) {
+            continue;
+        }
+        cl = nextLeftContour(cl);
+        if (cl) {
+            mscl += cl.mod;
         }
     }
 
