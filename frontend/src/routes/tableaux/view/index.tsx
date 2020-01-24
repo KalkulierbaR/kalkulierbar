@@ -285,23 +285,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             <ControlFAB>
                 {selectedNodeId === undefined ? (
                     <Fragment>
-                        {state.undoEnable ?
-                            <FAB
-                                icon={<UndoIcon />}
-                                label="Backtrack"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    sendBacktrack(
-                                        server,
-                                        state!,
-                                        onChange,
-                                        onError
-                                    );
-                                }}
-                            /> : ""
-                        }
                         {state.nodes.filter((node) => !node.isClosed).length > 0 ?
                             <FAB
                                 icon={<ExploreIcon/>}
@@ -350,6 +333,23 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                                 )
                             }
                         />
+                        {state.undoEnable ?
+                            <FAB
+                                icon={<UndoIcon />}
+                                label="Undo"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    sendBacktrack(
+                                        server,
+                                        state!,
+                                        onChange,
+                                        onError
+                                    );
+                                }}
+                            /> : ""
+                        }
                     </Fragment>
                 ) : (
                     <Fragment>

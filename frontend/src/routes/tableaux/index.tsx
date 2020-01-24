@@ -27,7 +27,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
 
     const [tabType, setTabType] = useState(TableauxType.unconnected);
     const [regular, setRegular] = useState(false);
-    const [backtracking, setBacktracking] = useState(false);
+    const [backtracking, setBacktracking] = useState(true);
     const [cnfStrategy, setStrategy] = useState(CnfStrategy.optimal);
     const [manualUnification, setManualUnification] = useState(false);
 
@@ -134,14 +134,15 @@ const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
                         <HintIcon hint="A strongly connected tableaux enforces that every inner node in the proof tree has at least one child that is closed with its parent node." />
                     </div>
                     <div class="switches">
-                        <Switch label="Regular" onChange={setRegular} />
-                        <HintIcon hint="A regular tableaux does not allow duplicate literals on any branch in the proof tree." />
-                        <br />
                         <Switch
                             label="Backtracking"
                             onChange={setBacktracking}
+                            initialState={true}
                         />
                         <HintIcon hint={"This allows you to undo moves during the proof." + (!smallScreen ? " (Shortcut: CTRL + Z)" : "")} />
+                        <br />
+                        <Switch label="Regular" onChange={setRegular} />
+                        <HintIcon hint="A regular tableaux does not allow duplicate literals on any branch in the proof tree." />
                         <br />
                         {getCalculusSpecificSwitch()}
                     </div>
