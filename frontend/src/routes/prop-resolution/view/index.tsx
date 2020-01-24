@@ -161,14 +161,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             const candidateClause = candidateClauses.find(
                 c => c.index === newClauseId
             )!;
-            let resolventLiteral: string;
+            let resolventLiteral: string | null;
             if (candidateClause.candidateLiterals.length > 1) {
                 // Show dialog for literal selection
                 setSelectedClauses([selectedClauses![0], newClauseId]);
                 return;
             }
 
-            resolventLiteral = candidateClause.candidateLiterals[0];
+            resolventLiteral = candidateClause.candidateLiterals.length === 0 ? null : candidateClause.candidateLiterals[0];
 
             // Send resolve move to backend
             sendMove(
