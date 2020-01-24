@@ -6,7 +6,6 @@ import {
     PropTableauxState,
     SelectNodeOptions,
     TableauxCloseMove,
-    Unification
 } from "../../../types/tableaux";
 import * as style from "./style.scss";
 
@@ -27,6 +26,104 @@ import { useAppState } from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
 import exampleState from "./example";
 
+/**
+ * Wrapper to send close request
+ * @param {TableauxCalculus} calculus - The calculus to do the move on
+ * @param {string} server - URL of server
+ * @param {PropTableauxState} state - The current State
+ * @param {AppStateUpdater} stateChanger - The state update function
+ * @param {Function} onError - Error handler
+ * @param {number} leaf - The selected leaf
+ * @param {number} pred - The selected predecessor
+ * @param {Map<string, string>} varAssignments - Variable assignments for manual unification
+ * @returns {Promise<void>} - Promise that resolves after the request has been handled
+ */
+const sendClose = (
+    calculus: TableauxCalculus,
+    server: string,
+    state: PropTableauxState | FoTableauxState,
+    stateChanger: AppStateUpdater,
+    onError: (msg: string) => void,
+    leaf: number,
+    pred: number,
+    varAssignments?: Map<string, string>
+) => {
+    let move : TableauxCloseMove;
+    switch (calculus) {
+        case "prop-tableaux":
+            move = {type: "CLOSE", id1: leaf, id2: pred};
+            break;
+        case "fo-tableaux":
+            move = {type: "CLOSE", id1: leaf, id2: pred, varAssign: varAssignments};
+            break;
+    }
+
+    sendMove(
+        server,
+        calculus,
+        state,
+        move,
+        stateChanger,
+        onError
+    );
+};
+
+/**
+ * Wrapper to send move request
+ * @param {TableauxCalculus} calculus - The calculus to do the move on
+ * @param {string} server - URL of the server
+ * @param {PropTableauxState} state - The current State
+ * @param {AppStateUpdater} stateChanger - The state update function
+ * @param {Function} onError - Error handler
+ * @returns {Promise<void>} - Promise that resolves after the request has been handled
+ */
+const sendBacktrack = (
+    calculus: TableauxCalculus,
+    server: string,
+    state: PropTableauxState | FoTableauxState,
+    stateChanger: AppStateUpdater,
+    onError: (msg: string) => void
+) =>
+    sendMove(
+        server,
+        calculus,
+        state,
+        { type: "UNDO", id1: -1, id2: -1},
+        stateChanger,
+        onError
+    );
+
+
+
+/**
+ * Wrapper to send move request
+ * @param {TableauxCalculus} calculus - The calculus to do the move on
+ * @param {string} server - URL of the server
+ * @param {PropTableauxState} state - The current State
+ * @param {AppStateUpdater} stateChanger - The state update function
+ * @param {Function} onError - Error handler
+ * @param {number} leaf - The selected leaf
+ * @param {number} clause - The selected clause
+ * @returns {Promise<void>} - Promise that resolves after the request has been handled
+ */
+const sendExtend = (
+    calculus: TableauxCalculus,
+    server: string,
+    state: PropTableauxState | FoTableauxState,
+    stateChanger: AppStateUpdater,
+    onError: (msg: string) => void,
+    leaf: number,
+    clause: number
+) =>
+    sendMove(
+        server,
+        calculus,
+        state,
+        {type: "EXPAND", id1: leaf, id2: clause},
+        stateChanger,
+        onError
+    );
+
 interface Props {
     /**
      * Which calculus to use
@@ -35,95 +132,7 @@ interface Props {
 }
 
 const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
-    /**
-     * Wrapper to send move request
-     * @param {string} server - URL of the server
-     * @param {PropTableauxState} state - The current State
-     * @param {AppStateUpdater} stateChanger - The state update function
-     * @param {Function} onError - Error handler
-     * @returns {Promise<void>} - Promise that resolves after the request has been handled
-     */
-    const sendBacktrack = (
-        server: string,
-        state: PropTableauxState | FoTableauxState,
-        stateChanger: AppStateUpdater,
-        onError: (msg: string) => void
-    ) =>
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "UNDO", id1: -1, id2: -1},
-            stateChanger,
-            onError
-        );
 
-    /**
-     * Wrapper to send close request
-     * @param {string} server - URL of server
-     * @param {PropTableauxState} state - The current State
-     * @param {AppStateUpdater} stateChanger - The state update function
-     * @param {Function} onError - Error handler
-     * @param {number} leaf - The selected leaf
-     * @param {number} pred - The selected predecessor
-     * @param unification
-     * @returns {Promise<void>} - Promise that resolves after the request has been handled
-     */
-    const sendClose = (
-        server: string,
-        state: PropTableauxState | FoTableauxState,
-        stateChanger: AppStateUpdater,
-        onError: (msg: string) => void,
-        leaf: number,
-        pred: number,
-        unification?: Unification
-    ) => {
-        let move : TableauxCloseMove;
-        switch (calculus) {
-            case "prop-tableaux":
-                move = {type: "CLOSE", id1: leaf, id2: pred};
-                break;
-            case "fo-tableaux":
-                move = {type: "CLOSE", id1: leaf, id2: pred, unification};
-                break;
-        }
-
-        sendMove(
-            server,
-            calculus,
-            state,
-            move,
-            stateChanger,
-            onError
-        );
-    };
-
-    /**
-     * Wrapper to send move request
-     * @param {string} server - URL of the server
-     * @param {PropTableauxState} state - The current State
-     * @param {AppStateUpdater} stateChanger - The state update function
-     * @param {Function} onError - Error handler
-     * @param {number} leaf - The selected leaf
-     * @param {number} clause - The selected clause
-     * @returns {Promise<void>} - Promise that resolves after the request has been handled
-     */
-    const sendExtend = (
-        server: string,
-        state: PropTableauxState | FoTableauxState,
-        stateChanger: AppStateUpdater,
-        onError: (msg: string) => void,
-        leaf: number,
-        clause: number
-    ) =>
-        sendMove(
-            server,
-            calculus,
-            state,
-            {type: "EXPAND", id1: leaf, id2: clause},
-            stateChanger,
-            onError
-        );
 
     const {
         server,
@@ -159,6 +168,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             if (selectedNodeId !== undefined) {
                 // The clause and node have been selected => send extend move request to backend
                 sendExtend(
+                    calculus,
                     server,
                     state!,
                     onChange,
@@ -193,6 +203,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             } else if (selectedClauseId !== undefined) {
                 // The clause and node have been selected => send extend move request to backend
                 sendExtend(
+                    calculus,
                     server,
                     state!,
                     onChange,
@@ -207,6 +218,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             // We already have a leaf node selected => Try close move
             // If we can't do it, let server handle it
             sendClose(
+                calculus,
                 server,
                 state!,
                 onChange,
@@ -233,7 +245,13 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             }
             e.preventDefault();
             e.stopImmediatePropagation();
-            sendBacktrack(server, state!, onChange, onError);
+            sendBacktrack(
+                calculus,
+                server,
+                state!,
+                onChange,
+                onError
+            );
         };
 
         window.addEventListener("keydown", handleKeyDown);
@@ -342,6 +360,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                                 showIconAtEnd={true}
                                 onClick={() => {
                                     sendBacktrack(
+                                        calculus,
                                         server,
                                         state!,
                                         onChange,

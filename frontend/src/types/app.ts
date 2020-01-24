@@ -3,7 +3,7 @@ import {
     ResolutionParams,
     ResolutionState
 } from "./resolution";
-import {FoTableauxParams, PropTableauxParams, TableauxMove, PropTableauxState, FoTableauxState} from "./tableaux";
+import {FoTableauxParams, FoTableauxState, PropTableauxParams, PropTableauxState, TableauxMove} from "./tableaux";
 
 export type TableauxCalculus = "prop-tableaux" | "fo-tableaux";
 export type Calculus = TableauxCalculus | "prop-resolution";

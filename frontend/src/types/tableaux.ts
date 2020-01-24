@@ -34,7 +34,7 @@ export interface TableauxCloseMove {
     type: "CLOSE";
     id1: number;
     id2: number;
-    unification?: Unification;
+    varAssign?: Map<string, string>;
 }
 
 export interface TableauxUndoMove {
@@ -83,13 +83,4 @@ export interface SelectNodeOptions {
      * Defaults to `false`.
      */
     ignoreClause?: boolean;
-}
-
-export interface VarToTerm {
-    var: string;
-    term: string;
-}
-
-export interface Unification {
-    unification: VarToTerm [];
 }
