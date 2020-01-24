@@ -6,6 +6,7 @@ import {
     PropTableauxState,
     SelectNodeOptions,
     TableauxCloseMove,
+    TableauxTreeLayoutNode
 } from "../../../types/tableaux";
 import * as style from "./style.scss";
 
@@ -19,7 +20,6 @@ import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
 import UndoIcon from "../../../components/icons/undo";
-import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
@@ -185,7 +185,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
      * @returns {void}
      */
     const selectNodeCallback = (
-        newNode: D3Data,
+        newNode: TableauxTreeLayoutNode,
         { ignoreClause = false }: SelectNodeOptions = {}
     ) => {
         if (newNode.id === selectedNodeId) {
@@ -211,7 +211,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             }
         } else {
             const selectedNodeIsLeaf = state!.nodes[selectedNodeId].children.length === 0;
-            if (selectedNodeIsLeaf && newNode.isLeaf || !selectedNodeIsLeaf && !newNode.isLeaf){
+            const newNodeIsLeaf = newNode.children.length === 0;
+            if (selectedNodeIsLeaf && newNodeIsLeaf || !selectedNodeIsLeaf && !newNodeIsLeaf){
                 setSelectedNodeId(newNode.id);
             } else {
                 // Now we have a leaf and a predecessor => Try close move
@@ -222,8 +223,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                     state!,
                     onChange,
                     onError,
-                    newNode.isLeaf ? newNode.id : selectedNodeId,
-                    newNode.isLeaf ? selectedNodeId : newNode.id
+                    newNodeIsLeaf ? newNode.id : selectedNodeId,
+                    newNodeIsLeaf ? selectedNodeId : newNode.id
                 );
                 setSelectedNodeId(undefined);
             }
@@ -316,8 +317,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                                         return;
                                     }
                                     dispatchEvent(
-                                        new CustomEvent("kbar-go-to-node", {
-                                            detail: {node}
+                                        new CustomEvent("go-to", {
+                                            detail: { node }
                                         })
                                     );
                                 }}
@@ -330,9 +331,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                dispatchEvent(
-                                    new CustomEvent("kbar-center-tree")
-                                );
+                                dispatchEvent(new CustomEvent("center"));
                             }}
                         />
                         <FAB
@@ -379,9 +378,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                dispatchEvent(
-                                    new CustomEvent("kbar-center-tree")
-                                );
+                                dispatchEvent(new CustomEvent("center"));
                             }}
                         />
                         <FAB

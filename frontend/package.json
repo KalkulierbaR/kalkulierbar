@@ -32,7 +32,6 @@
         "build/*"
     ],
     "devDependencies": {
-        "@types/d3": "^5.7.2",
         "@types/jest": "^23.3.10",
         "@types/webpack-env": "^1.13.9",
         "css-loader": "^1.0.1",
@@ -59,15 +58,14 @@
     "dependencies": {
         "@material/radio": "^4.0.0",
         "@material/switch": "^4.0.0",
-        "d3": "^5.14.2",
         "preact": "^10.0.0",
         "preact-async-route": "^2.2.1",
         "preact-jsx-chai": "^3.0.0",
         "preact-markup": "^2.0.0",
         "preact-render-to-string": "^5.0.6",
         "preact-router": "^3.0.1",
-        "serve": "^11.3.0",
-        "react-hint": "^3.2.0"
+        "react-hint": "^3.2.0",
+        "serve": "^11.3.0"
     },
     "peerDependencies": {
         "prettier": ">1.0.0",
