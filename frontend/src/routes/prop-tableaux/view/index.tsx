@@ -1,7 +1,11 @@
 import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { AppStateUpdater } from "../../../types/app";
-import { SelectNodeOptions, TableauxState } from "../../../types/tableaux";
+import {
+    SelectNodeOptions,
+    TableauxState,
+    TableauxTreeLayoutNode
+} from "../../../types/tableaux";
 import * as style from "./style.scss";
 
 import CheckCloseBtn from "../../../components/check-close";
@@ -14,7 +18,6 @@ import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
 import UndoIcon from "../../../components/icons/undo";
-import { D3Data } from "../../../components/tableaux/tree";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
@@ -154,13 +157,13 @@ const TableauxView: preact.FunctionalComponent = () => {
      * @returns {void}
      */
     const selectNodeCallback = (
-        newNode: D3Data,
+        newNode: TableauxTreeLayoutNode,
         { ignoreClause = false }: SelectNodeOptions = {}
     ) => {
         if (newNode.id === selectedNodeId) {
             // The same node was selected again => deselect it
             setSelectedNodeId(undefined);
-        } else if (newNode.isLeaf) {
+        } else if (newNode.children.length === 0) {
             // If the newly selected node is a leaf => accept new node id
             setSelectedNodeId(newNode.id);
             if (ignoreClause) {
@@ -287,7 +290,7 @@ const TableauxView: preact.FunctionalComponent = () => {
                                     return;
                                 }
                                 dispatchEvent(
-                                    new CustomEvent("kbar-go-to-node", {
+                                    new CustomEvent("go-to", {
                                         detail: { node }
                                     })
                                 );
@@ -300,9 +303,7 @@ const TableauxView: preact.FunctionalComponent = () => {
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                dispatchEvent(
-                                    new CustomEvent("kbar-center-tree")
-                                );
+                                dispatchEvent(new CustomEvent("center"));
                             }}
                         />
                         <FAB
@@ -331,9 +332,7 @@ const TableauxView: preact.FunctionalComponent = () => {
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                dispatchEvent(
-                                    new CustomEvent("kbar-center-tree")
-                                );
+                                dispatchEvent(new CustomEvent("center"));
                             }}
                         />
                         <FAB

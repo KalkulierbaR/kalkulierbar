@@ -9,6 +9,8 @@ export interface TableauxNode {
     children: number[];
 }
 
+export type TableauxTreeLayoutNode = TableauxNode & { id: number };
+
 export interface TableauxState {
     seal: string;
     clauseSet: ClauseSet;
@@ -59,12 +61,6 @@ export interface TableauxParams {
     regular: boolean;
     backtracking: boolean;
     cnfStrategy: CnfStrategy;
-}
-
-export interface TableauxTreeGoToEvent extends CustomEvent {
-    detail: {
-        node: number;
-    };
 }
 
 export interface SelectNodeOptions {

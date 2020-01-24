@@ -1,43 +1,13 @@
 import { Clause } from "../../types/clause";
-import { LayoutData } from "../../types/layout";
-import { clauseToString } from "../clause";
-
-/**
- * Determine the longest clause
- * @param {Clause[]} clauses - The clauses
- * @returns {Clause} - The longest clause
- */
-const maxLengthClause = (clauses: readonly Clause[]) =>
-    clauses.reduce(
-        (prev, clause) => Math.max(prev, clauseToString(clause).length),
-        0
-    );
-
-export interface CircleLayoutData {
-    /**
-     * The width of the circle
-     */
-    width: number;
-    /**
-     * The height of the circle
-     */
-    height: number;
-    /**
-     * The array of clauses with their coordinates
-     */
-    data: Array<LayoutData<Clause>>;
-}
+import { Layout } from "../../types/layout";
+import { maxLengthClause } from "../clause";
 
 /**
  * Calculate the circle layout to avoid overlapping or cutting of clauses
  * @param {Clause[]} clauses - The clauses to display in a circle
- * @param {boolean} debug - Whether to log debug info
- * @returns {CircleLayoutData} - The circle layout of the clauses
+ * @returns {Layout<Clause>} - The circle layout of the clauses
  */
-export const circleLayout = (
-    clauses: readonly Clause[],
-    debug: boolean = true
-): CircleLayoutData => {
+export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
     if (clauses.length === 0) {
         return { width: 0, height: 0, data: [] };
     }
@@ -70,9 +40,6 @@ export const circleLayout = (
                 width / Math.sin(angle)
                 // (width * Math.tan((Math.PI - angle) / 2)) / Math.sin(angle)
             );
-        if (debug) {
-            console.log(r === height / Math.sin(angle) ? "height" : "width");
-        }
     }
 
     return {
