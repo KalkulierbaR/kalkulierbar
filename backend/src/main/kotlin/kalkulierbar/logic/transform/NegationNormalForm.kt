@@ -2,9 +2,7 @@ package kalkulierbar.logic.transform
 
 import kalkulierbar.FormulaConversionException
 import kalkulierbar.logic.And
-import kalkulierbar.logic.Equiv
 import kalkulierbar.logic.ExistentialQuantifier
-import kalkulierbar.logic.Impl
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
@@ -59,16 +57,6 @@ class NegationNormalForm : DoNothingVisitor() {
             is And -> {
                 // De-Morgan And
                 res = Or(Not(child.leftChild), Not(child.rightChild)).accept(this)
-            }
-            is Impl -> {
-                // !(a->b) = !(!a v b) = a^!b
-                res = And(child.leftChild, Not(child.rightChild)).accept(this)
-            }
-            is Equiv -> {
-                val implA = Impl(child.leftChild, child.rightChild)
-                val implB = Impl(child.rightChild, child.leftChild)
-                // Translate equivalence into implications
-                res = Not(And(implA, implB)).accept(this)
             }
             is UniversalQuantifier -> {
                 res = ExistentialQuantifier(child.varName, Not(child.child), child.boundVariables).accept(this)
