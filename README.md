@@ -22,8 +22,11 @@ Please note that this is a mirror of our private development repository. While s
 ## Development
 ### Dependencies
 On `Linux` systems you can use the install script `install.sh`.
+
 Supported OS are `debian/ubuntu`, `RHEL/CentOS/Fedora`, `OpenSUSE`, `ArchLinux`.
+
 Just open your terminal, `cd` into source directory and type `./install.sh`.
+
 -> Problems? Then install `java`, `nodeJS` and `yarn`.
 
 On `Windows` install these manually:
