@@ -93,8 +93,6 @@ const sendBacktrack = (
         onError
     );
 
-
-
 /**
  * Wrapper to send move request
  * @param {TableauxCalculus} calculus - The calculus to do the move on
@@ -132,8 +130,6 @@ interface Props {
 }
 
 const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
-
-
     const {
         server,
         [calculus]: cState,
@@ -195,12 +191,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
         if (newNode.id === selectedNodeId) {
             // The same node was selected again => deselect it
             setSelectedNodeId(undefined);
-        } else if (newNode.isLeaf) {
-            // If the newly selected node is a leaf => accept new node id
+        } else if (selectedNodeId === undefined) {
             setSelectedNodeId(newNode.id);
             if (ignoreClause) {
                 setSelectedClauseId(undefined);
-            } else if (selectedClauseId !== undefined) {
+            } else if (selectedClauseId !== undefined && newNode.isLeaf) {
                 // The clause and node have been selected => send extend move request to backend
                 sendExtend(
                     calculus,
@@ -214,19 +209,24 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                 setSelectedNodeId(undefined);
                 setSelectedClauseId(undefined);
             }
-        } else if (selectedNodeId !== undefined) {
-            // We already have a leaf node selected => Try close move
-            // If we can't do it, let server handle it
-            sendClose(
-                calculus,
-                server,
-                state!,
-                onChange,
-                onError,
-                selectedNodeId,
-                newNode.id
-            );
-            setSelectedNodeId(undefined);
+        } else {
+            const selectedNodeIsLeaf = state!.nodes[selectedNodeId].children.length === 0;
+            if (selectedNodeIsLeaf && newNode.isLeaf || !selectedNodeIsLeaf && !newNode.isLeaf){
+                setSelectedNodeId(newNode.id);
+            } else {
+                // Now we have a leaf and a predecessor => Try close move
+                // If we can't do it, let server handle it
+                sendClose(
+                    calculus,
+                    server,
+                    state!,
+                    onChange,
+                    onError,
+                    newNode.isLeaf ? newNode.id : selectedNodeId,
+                    newNode.isLeaf ? selectedNodeId : newNode.id
+                );
+                setSelectedNodeId(undefined);
+            }
         }
     };
 
