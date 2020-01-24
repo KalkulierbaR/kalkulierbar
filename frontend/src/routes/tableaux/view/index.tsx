@@ -180,7 +180,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
 
     /**
      * The function to call, when the user selects a node
-     * @param {D3Data} newNode - The id of the clause, which was clicked on
+     * @param {TableauxTreeLayoutNode} newNode - The id of the clause, which was clicked on
      * @param {boolean} ignoreClause - Whether to not select a clause
      * @returns {void}
      */
@@ -195,7 +195,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             setSelectedNodeId(newNode.id);
             if (ignoreClause) {
                 setSelectedClauseId(undefined);
-            } else if (selectedClauseId !== undefined && newNode.isLeaf) {
+            } else if (selectedClauseId !== undefined && newNode.children.length === 0) {
                 // The clause and node have been selected => send extend move request to backend
                 sendExtend(
                     calculus,

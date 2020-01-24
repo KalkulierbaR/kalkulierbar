@@ -9,7 +9,7 @@ export interface TableauxNode {
     children: number[];
 }
 
-export type TableauxTreeLayoutNode = TableauxNode & { id: number };
+export type TableauxTreeLayoutNode = TableauxNode & { id: number};
 
 export interface PropTableauxState {
     seal: string;
@@ -71,12 +71,6 @@ export interface FoTableauxParams {
     regular: boolean;
     backtracking: boolean;
     manualUnification: boolean;
-}
-
-export interface TableauxTreeGoToEvent extends CustomEvent {
-    detail: {
-        node: number;
-    };
 }
 
 export interface SelectNodeOptions {
