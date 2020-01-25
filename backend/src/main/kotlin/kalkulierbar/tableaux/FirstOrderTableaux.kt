@@ -3,6 +3,7 @@ package kalkulierbar.tableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
+import kalkulierbar.UnificationImpossible
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.FirstOrderTerm
@@ -53,8 +54,12 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         val leaf = state.nodes[leafID]
         val closeNode = state.nodes[closeNodeID]
 
-        val varAssign = Unification.unify(leaf.relation, closeNode.relation)
-        return closeBranchCommon(state, leafID, closeNodeID, varAssign)
+        try {
+            val varAssign = Unification.unify(leaf.relation, closeNode.relation)
+            return closeBranchCommon(state, leafID, closeNodeID, varAssign)
+        } catch (e: UnificationImpossible) {
+            throw IllegalMove("Cannot unify '$leaf' and '$closeNode': ${e.message}")
+        }
     }
 
     private fun applyMoveCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int, varAssign: Map<String, FirstOrderTerm>): FoTableauxState {
@@ -269,7 +274,7 @@ class FoTableauxState(
         try {
             Unification.unify(node.relation, parent.relation)
             res = true
-        } catch (e: IllegalMove) {
+        } catch (e: UnificationImpossible) {
             res = false
         }
 
@@ -288,7 +293,7 @@ class FoTableauxState(
                 try {
                     Unification.unify(node.relation, atom.lit)
                     return true
-                } catch (e: IllegalMove) {}
+                } catch (e: UnificationImpossible) {}
             }
         }
 

@@ -1,6 +1,6 @@
 package kalkulierbar.logic.transform
 
-import kalkulierbar.IllegalMove
+import kalkulierbar.UnificationImpossible
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
 import kalkulierbar.logic.QuantifiedVariable
@@ -26,10 +26,10 @@ class Unification {
 
             // Spelling has to be the same
             if (rel1.spelling != rel2.spelling)
-                throw IllegalMove("Relations '$r1' and '$r2' have different names")
+                throw UnificationImpossible("Relations '$r1' and '$r2' have different names")
             // Arg size has to be the same length
             if (arg1.size != arg2.size)
-                throw IllegalMove("Relations '$r1' and '$r2' have different numbers of arguments")
+                throw UnificationImpossible("Relations '$r1' and '$r2' have different numbers of arguments")
 
             val terms = mutableListOf<Pair<FirstOrderTerm, FirstOrderTerm>>()
 
@@ -39,6 +39,11 @@ class Unification {
             return unifyTerms(terms)
         }
 
+        /**
+         * Unify a set of term pairs according to Robinson's algorithm
+         * @param terms List of term pairs to be unified
+         * @return Variable instantiation map
+         */
         @Suppress("ComplexMethod")
         private fun unifyTerms(terms: MutableList<Pair<FirstOrderTerm, FirstOrderTerm>>): Map<String, FirstOrderTerm> {
             val map = mutableMapOf<String, FirstOrderTerm>()
@@ -58,7 +63,7 @@ class Unification {
                 } else if (term1 is QuantifiedVariable) {
                     // Unification not possible if one is variable and appears in others arguments
                     if (term2 is Function && TermContainsVariable.check(term2, term1.spelling))
-                        throw IllegalMove("Variable '$term1' appears in '$term2'")
+                        throw UnificationImpossible("Variable '$term1' appears in '$term2'")
 
                     // Add substitution to map
                     map.put(term1.spelling, term2)
@@ -70,7 +75,7 @@ class Unification {
                     for (i in term1.arguments.indices)
                         terms.add(Pair(term1.arguments[i], term2.arguments[i]))
                 } else
-                    throw IllegalMove("Cannot unify '$term1' and '$term2'")
+                    throw UnificationImpossible("'$term1' and '$term2' cannot be unified")
             }
             return map
         }

@@ -4,7 +4,6 @@ import kalkulierbar.logic.Constant
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
 import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Relation
 
 class VariableInstantiator(val replacementMap: Map<String, FirstOrderTerm>) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
