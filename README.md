@@ -18,3 +18,24 @@ Ever wanted to play with your own calculus? We provide a set of different parser
 We always appreciate your bug reports, feature ideas or pull requests - so feel free to join us in building something cool!  
 
 Please note that this is a mirror of our private development repository. While stable features should eventually end up here, we unfortunately can't provide you with the most bleeding-edge code as of now.
+
+## Development
+### Dependencies
+On `Linux` systems you can use the install script `./install.sh`.
+
+Supported OS are `debian/ubuntu`, `RHEL/CentOS/Fedora`, `OpenSUSE`, `ArchLinux`.
+
+Just open your terminal, `cd` into source directory and type `./install.sh`.
+
+-> Problems? Then install `java`, `nodeJS` and `yarn`.
+
+On `Windows` install these manually:
+- [Java JRE](https://www.java.com/de/download/win10.jsp) or [Java JDK](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html) > 8
+- [Gradle](https://gradle.org/install/) > 6.0.1
+- [Node.JS](https://nodejs.org/en/download/)
+- [yarn](https://yarnpkg.com/en/docs/install#debian-stable)
+
+### Run
+- Linux: type `./run.sh`
+- Windows: `run.bat`
+
