@@ -43,7 +43,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                     <label for={variable}>{variable}</label>
                     <input
                         id={variable}
-                        onInput={true}{onInput}
+                        // onInput={true}{onInput}
                         required={requireAll}
                     />
                 </p>
