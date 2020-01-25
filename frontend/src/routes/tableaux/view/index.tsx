@@ -2,7 +2,7 @@ import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import {AppStateUpdater, TableauxCalculus} from "../../../types/app";
 import {
-    FoTableauxState,
+    FoTableauxState, instanceOfFoTableauxState,
     PropTableauxState,
     SelectNodeOptions,
     TableauxCloseMove,
@@ -21,6 +21,7 @@ import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
 import UndoIcon from "../../../components/icons/undo";
 import TableauxTreeView from "../../../components/tableaux/tree";
+import VarAssignList from "../../../components/var-assign-list";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
@@ -146,7 +147,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
         undefined
     );
 
-    const [showDialog, setShowDialog] = useState(false);
+    const [showClauseDialog, setShowClauseDialog] = useState(false);
+    const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
+    const [varsToAssign, setVarsToAssign] = useState([]);
 
     /**
      * The function to call, when the user selects a clause
@@ -158,36 +161,36 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             // The same clause was selected again => deselect it
             setSelectedClauseId(undefined);
             setSelectedNodeId(undefined);
+        } else if (selectedNodeId !== undefined) {
+            // The clause and node have been selected => send extend move request to backend
+            sendExtend(
+                calculus,
+                server,
+                state!,
+                onChange,
+                onError,
+                selectedNodeId,
+                newClauseId
+            );
+            setSelectedNodeId(undefined);
+            setSelectedClauseId(undefined);
         } else {
             setSelectedClauseId(newClauseId);
-
-            if (selectedNodeId !== undefined) {
-                // The clause and node have been selected => send extend move request to backend
-                sendExtend(
-                    calculus,
-                    server,
-                    state!,
-                    onChange,
-                    onError,
-                    selectedNodeId,
-                    newClauseId
-                );
-                setSelectedNodeId(undefined);
-                setSelectedClauseId(undefined);
-            }
         }
     };
 
     /**
      * The function to call, when the user selects a node
-     * @param {TableauxTreeLayoutNode} newNode - The id of the clause, which was clicked on
-     * @param {boolean} ignoreClause - Whether to not select a clause
+     * @param {TableauxTreeLayoutNode} newNode - The node which was clicked on
+     * @param {boolean} ignoreClause - Whether to ignore the clause if one is selected
      * @returns {void}
      */
     const selectNodeCallback = (
         newNode: TableauxTreeLayoutNode,
         { ignoreClause = false }: SelectNodeOptions = {}
     ) => {
+        const newNodeIsLeaf = newNode.children.length === 0;
+
         if (newNode.id === selectedNodeId) {
             // The same node was selected again => deselect it
             setSelectedNodeId(undefined);
@@ -195,7 +198,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             setSelectedNodeId(newNode.id);
             if (ignoreClause) {
                 setSelectedClauseId(undefined);
-            } else if (selectedClauseId !== undefined && newNode.children.length === 0) {
+            } else if (selectedClauseId !== undefined && newNodeIsLeaf) {
                 // The clause and node have been selected => send extend move request to backend
                 sendExtend(
                     calculus,
@@ -211,23 +214,50 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             }
         } else {
             const selectedNodeIsLeaf = state!.nodes[selectedNodeId].children.length === 0;
-            const newNodeIsLeaf = newNode.children.length === 0;
+
             if (selectedNodeIsLeaf && newNodeIsLeaf || !selectedNodeIsLeaf && !newNodeIsLeaf){
                 setSelectedNodeId(newNode.id);
             } else {
-                // Now we have a leaf and a predecessor => Try close move
-                // If we can't do it, let server handle it
-                sendClose(
-                    calculus,
-                    server,
-                    state!,
-                    onChange,
-                    onError,
-                    newNodeIsLeaf ? newNode.id : selectedNodeId,
-                    newNodeIsLeaf ? selectedNodeId : newNode.id
-                );
-                setSelectedNodeId(undefined);
+                switch (calculus) {
+                    case "prop-tableaux":
+                        // Now we have a leaf and a predecessor => Try close move
+                        // If we can't do it, let server handle it
+                        sendClose(
+                            calculus,
+                            server,
+                            state!,
+                            onChange,
+                            onError,
+                            newNodeIsLeaf ? newNode.id : selectedNodeId,
+                            newNodeIsLeaf ? selectedNodeId : newNode.id
+                        );
+                        setSelectedNodeId(undefined);
+                        break;
+                    case "fo-tableaux":
+                        // Open dialog for automatic/manual unification
+                        setVarsToAssign([]); // @todo filter for correct vars
+                        setShowVarAssignDialog(true);
+                        break;
+                }
             }
+        }
+    };
+
+    const submitVarAssign = (varAssign: Map<string, string>) => {
+        if(selectedNodeId !== undefined) {
+            sendClose(
+                calculus,
+                server,
+                state!,
+                onChange,
+                onError,
+                selectedNodeId,
+                selectedNodeId,
+                varAssign
+            );
+            setSelectedNodeId(undefined);
+        } else {
+            throw new Error("Close move went wrong, since selected nodes could not be identified.");
         }
     };
 
@@ -287,19 +317,36 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             </div>
 
             <Dialog
-                open={showDialog}
+                open={showClauseDialog}
                 label="Choose Clause"
-                onClose={() => setShowDialog(false)}
+                onClose={() => setShowClauseDialog(false)}
             >
                 <ClauseList
                     clauseSet={state.clauseSet}
                     selectedClauseId={undefined}
                     selectClauseCallback={(id: number) => {
-                        setShowDialog(false);
+                        setShowClauseDialog(false);
                         selectClauseCallback(id);
                     }}
                 />
             </Dialog>
+
+            {calculus === "fo-tableaux" && instanceOfFoTableauxState(state) ?
+                <Dialog
+                    open={showVarAssignDialog}
+                    label={state.manualVarAssign ?
+                        "Please provide all variable assignments." :
+                        "Choose variable assignments and hit <span style='color:blue'>Submit</span>. Blank fields will be calculated automatically."
+                    }
+                    onClose={() => setShowVarAssignDialog(false)}
+                >
+                    <VarAssignList
+                        vars={varsToAssign}
+                        requireAll={state.manualVarAssign}
+                        submitVarAssignCallback={submitVarAssign}
+                    />
+                </Dialog> : ""
+            }
 
             <ControlFAB>
                 {selectedNodeId === undefined ? (
@@ -388,7 +435,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                setShowDialog(!showDialog);
+                                setShowClauseDialog(!showClauseDialog);
                             }}
                         />
                     </Fragment>

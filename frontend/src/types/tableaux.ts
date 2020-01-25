@@ -23,7 +23,12 @@ export interface PropTableauxState {
 }
 
 export interface FoTableauxState extends PropTableauxState {
-    manualUnification: boolean;
+    manualVarAssign: boolean;
+    renderedClauseSet: string [];
+}
+
+export function instanceOfFoTableauxState(object: any): object is FoTableauxState {
+    return 'manualVarAssign' in object;
 }
 
 export interface TableauxExpandMove {
