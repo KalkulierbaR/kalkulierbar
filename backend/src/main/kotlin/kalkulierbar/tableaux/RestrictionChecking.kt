@@ -14,7 +14,7 @@ import kalkulierbar.clause.Clause
 fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, leafID: Int, clause: Clause<AtomType>) {
     // Create list of predecessor
     val leaf = state.nodes[leafID]
-    val lst = mutableListOf(leaf.toAtom().toString())
+    val lst = mutableListOf(leaf.toAtom())
 
     // Check Leaf for having parent
     var predecessor: GenericTableauxNode<AtomType>? = null
@@ -23,17 +23,17 @@ fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, lea
 
     // Fill list of predecessor
     while (predecessor?.parent != null) {
-        lst.add(predecessor.toAtom().toString())
+        lst.add(predecessor.toAtom())
         predecessor = state.nodes[predecessor.parent!!]
     }
 
     for (atom in clause.atoms) {
         // check if similar predecessor exists
-        val isPathRegular = !lst.contains(atom.toString())
+        val isPathRegular = !lst.contains(atom)
 
         if (!isPathRegular)
-            throw IllegalMove("""Expanding this clause would introduce a duplicate
-                node '$atom' on the branch, making the tree irregular""")
+            throw IllegalMove("Expanding this clause would introduce a duplicate" +
+                "node '$atom' on the branch, making the tree irregular")
     }
 }
 
