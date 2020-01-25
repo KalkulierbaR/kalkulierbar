@@ -44,12 +44,10 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     @Suppress("ReturnCount")
     override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
         // Pass expand, close, undo moves to relevant subfunction
-        when (move.type) {
-            MoveType.CLOSE -> return applyMoveCloseBranch(state, move.id1, move.id2)
-            MoveType.EXPAND -> return applyMoveExpandLeaf(state, move.id1, move.id2)
-            MoveType.UNDO -> return applyMoveUndo(state)
-
-            else -> throw IllegalMove("Unknown move. Valid moves are EXPAND (expand), CLOSE (close) or UNDO (undo).")
+        return when (move.type) {
+            MoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2)
+            MoveType.EXPAND -> applyMoveExpandLeaf(state, move.id1, move.id2)
+            MoveType.UNDO -> applyMoveUndo(state)
         }
     }
 

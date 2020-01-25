@@ -40,12 +40,10 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     override fun applyMoveOnState(state: FoTableauxState, move: FoTableauxMove): FoTableauxState {
         // Pass expand, close, undo moves to relevant subfunction
         return when (move.type) {
-            // MoveType.AUTOCLOSE -> applyAutoCloseBranch(state, move.id1, move.id2)
-            MoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2, move.getVarAssignTerms())
-            MoveType.EXPAND -> applyMoveExpandLeaf(state, move.id1, move.id2)
-            MoveType.UNDO -> applyMoveUndo(state)
-
-            else -> throw IllegalMove("Unknown move. Valid moves are EXPAND, CLOSE, AUTOCLOSE or UNDO.")
+            FoMoveType.AUTOCLOSE -> applyAutoCloseBranch(state, move.id1, move.id2)
+            FoMoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2, move.getVarAssignTerms())
+            FoMoveType.EXPAND -> applyMoveExpandLeaf(state, move.id1, move.id2)
+            FoMoveType.UNDO -> applyMoveUndo(state)
         }
     }
 
@@ -84,7 +82,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         setNodeClosed(state, leaf)
 
         if (state.backtracking)
-            state.moveHistory.add(FoTableauxMove(MoveType.CLOSE, leafID, closeNodeID, varAssign.mapValues { it.value.toString() }))
+            state.moveHistory.add(FoTableauxMove(FoMoveType.CLOSE, leafID, closeNodeID, varAssign.mapValues { it.value.toString() }))
 
         return state
     }
@@ -110,7 +108,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         verifyExpandConnectedness(state, leafID)
 
         if (state.backtracking)
-            state.moveHistory.add(FoTableauxMove(MoveType.EXPAND, leafID, clauseID))
+            state.moveHistory.add(FoTableauxMove(FoMoveType.EXPAND, leafID, clauseID))
 
         return state
     }
@@ -365,7 +363,7 @@ class FoTableauxNode(
 
 @Serializable
 data class FoTableauxMove(
-    val type: MoveType,
+    val type: FoMoveType,
     val id1: Int,
     val id2: Int,
     val varAssign: Map<String, String> = mapOf()
@@ -379,3 +377,7 @@ data class FoTableauxParam(
     val regular: Boolean,
     val backtracking: Boolean
 )
+
+enum class FoMoveType {
+    EXPAND, CLOSE, AUTOCLOSE, UNDO
+}
