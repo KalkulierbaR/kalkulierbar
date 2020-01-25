@@ -1,6 +1,7 @@
 package kalkulierbar.tableaux
 
 import kalkulierbar.clause.Atom
+import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.CnfStrategy
 import kalkulierbar.tamperprotect.ProtectedState
@@ -45,6 +46,13 @@ class TableauxState(
 
         return node.isLeaf && node.toAtom() == parent.toAtom().not()
     }
+
+    /**
+     * Propositional tableaux does not require any preprocessing on clauses to be expanded
+     * @param clause Clause to be expanded
+     * @return List of atoms in the clause as they would be expanded
+     */
+    override fun clauseExpandPreprocessing(clause: Clause<String>) = clause.atoms
 
     /**
      * Check if a node's ancestry includes a specified atom

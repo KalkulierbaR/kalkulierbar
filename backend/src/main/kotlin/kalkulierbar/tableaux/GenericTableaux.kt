@@ -3,6 +3,7 @@ package kalkulierbar.tableaux
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.clause.Atom
+import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 
 /**
@@ -183,6 +184,8 @@ interface GenericTableauxState<AtomType> {
     fun nodeIsCloseable(nodeID: Int): Boolean
 
     fun nodeIsDirectlyCloseable(nodeID: Int): Boolean
+
+    fun clauseExpandPreprocessing(clause: Clause<AtomType>): List<Atom<AtomType>>
 }
 
 /**

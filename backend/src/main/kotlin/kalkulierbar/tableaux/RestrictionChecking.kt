@@ -27,11 +27,8 @@ fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, lea
         predecessor = state.nodes[predecessor.parent!!]
     }
 
-    for (atom in clause.atoms) {
-        // check if similar predecessor exists
-        val isPathRegular = !lst.contains(atom)
-
-        if (!isPathRegular)
+    for (atom in state.clauseExpandPreprocessing(clause)) {
+        if (lst.contains(atom))
             throw IllegalMove("Expanding this clause would introduce a duplicate" +
                 "node '$atom' on the branch, making the tree irregular")
     }
