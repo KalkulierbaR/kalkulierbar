@@ -5,7 +5,19 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
 
+/**
+ * Interface defining common methods useful for both Propositional
+ * and First Order tableaux calculi
+ */
 interface GenericTableaux<AtomType> {
+
+    /**
+     * Marks a tree node and its ancestry as closed
+     * NOTE: This does NOT set the closeRef of the closed leaf
+     *       so make sure the closeRef is set before calling this
+     * @param state State object to modify
+     * @param leaf The leaf to mark as closed
+     */
     fun setNodeClosed(state: GenericTableauxState<AtomType>, leaf: GenericTableauxNode<AtomType>) {
         var node = leaf
 
@@ -18,6 +30,17 @@ interface GenericTableaux<AtomType> {
         }
     }
 
+    /**
+     * Ensure the basic sanity of an expand move application
+     * If a condition is not met, an explaining exception will be thrown
+     * Conditions include:
+     *  - Both the specified leaf and clause exist
+     *  - The specified leaf is a leaf and not already closed
+     *  - Expanding the specified clause at the leaf would not violate regularity
+     * @param state State the expansion is to be applied in
+     * @param leafID The leaf to expand
+     * @param clauseID The clause to expand at the leaf
+     */
     @Suppress("ThrowsCount")
     fun ensureExpandability(state: GenericTableauxState<AtomType>, leafID: Int, clauseID: Int) {
         // Don't allow further expand moves if connectedness requires close moves to be applied first
@@ -46,6 +69,20 @@ interface GenericTableaux<AtomType> {
             verifyExpandRegularity(state, leafID, clause)
     }
 
+    /**
+     * Ensures that basic conditions for branch closure are met
+     * If a condition is not met, an explaining exception will be thrown
+     * Conditions inlcude:
+     *  - Both nodes exist
+     *  - The specified leaf is a leaf and not yet closed
+     *  - Both nodes share the same literal stem (variable name or relation name)
+     *  - The nodes are of opposite polarity
+     *  - The closeNode is an ancestor of the leaf
+     *
+     * @param state State to apply close move in
+     * @param leafID Leaf to close
+     * @param closeNodeID Node to close with
+     */
     @Suppress("ComplexMethod", "ThrowsCount")
     fun ensureBasicCloseability(state: GenericTableauxState<AtomType>, leafID: Int, closeNodeID: Int) {
         // Verify that both leaf and closeNode are valid nodes
@@ -85,6 +122,12 @@ interface GenericTableaux<AtomType> {
             throw IllegalMove("Node '$closeNode' is not an ancestor of leaf '$leaf'")
     }
 
+    /**
+     * Generates a CloseMessage stating whether the proof is closed and, if so,
+     * what type of tableaux the proof is valid in
+     * @param State to generate message for
+     * @return CloseMessage explaining the proof state
+     */
     fun getCloseMessage(state: GenericTableauxState<AtomType>): CloseMessage {
         var msg = "The proof tree is not closed"
 
@@ -105,6 +148,11 @@ interface GenericTableaux<AtomType> {
     }
 }
 
+/**
+ * Interface for a generic/common tableaux state
+ * Methods and properties defined here should be sufficient
+ * to use the methods provided by the GenericTableaux interface
+ */
 interface GenericTableauxState<AtomType> {
     val type: TableauxType
     val regular: Boolean
@@ -115,8 +163,6 @@ interface GenericTableauxState<AtomType> {
     val nodes: List<GenericTableauxNode<AtomType>>
     val root
         get() = nodes[0]
-    val leaves
-        get() = nodes.filter { it.isLeaf }
 
     /**
      * Check whether a node is a (transitive) parent of another node
@@ -139,6 +185,11 @@ interface GenericTableauxState<AtomType> {
     fun nodeIsDirectlyCloseable(nodeID: Int): Boolean
 }
 
+/**
+ * Interface for a generic/common tableaux node
+ * Methods and properties defined here should be sufficient
+ * to use the methods provided by the GenericTableaux interface
+ */
 interface GenericTableauxNode<AtomType> {
     val parent: Int?
     val spelling: String
@@ -147,7 +198,8 @@ interface GenericTableauxNode<AtomType> {
     var isClosed: Boolean
     var closeRef: Int?
     val children: MutableList<Int>
-    val isLeaf: Boolean
+    val isLeaf
+        get() = children.size == 0
 
     fun toAtom(): Atom<AtomType>
 }

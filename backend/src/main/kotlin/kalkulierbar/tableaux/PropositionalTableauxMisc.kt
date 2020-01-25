@@ -92,8 +92,6 @@ class TableauxNode(
     override var closeRef: Int? = null
     override val children = mutableListOf<Int>()
 
-    override val isLeaf
-        get() = children.size == 0
     override val literalStem
         get() = spelling
 

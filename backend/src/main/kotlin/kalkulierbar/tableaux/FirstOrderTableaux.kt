@@ -330,8 +330,6 @@ class FoTableauxNode(
     override val children = mutableListOf<Int>()
     override var spelling = relation.toString()
 
-    override val isLeaf
-        get() = children.size == 0
     override val literalStem
         get() = "${relation.spelling}${relation.arguments.size}"
 
