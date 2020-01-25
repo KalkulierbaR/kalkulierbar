@@ -5,7 +5,7 @@ echo " "
 #Check if java is installed
 if [ -z "$(command -v java)" ]; then
     echo "Java not found"
-    echo "Please install java manually"
+    echo "Please install Java > 8 manually!"
     exit 1
 else
     echo "Java found on your system"
@@ -29,7 +29,7 @@ elif [ "$(command -v pacman)" ]; then
   pacman -Sy curl
 else
     echo 'Curl not found'
-    echo "Please install curl manually"
+    echo 'Please install curl manually!'
     exit 1
 fi
 
@@ -45,3 +45,6 @@ export PATH=/usr/local/lib/nodejs/node-v12.14.1-linux-x64/bin:$PATH
 
 #Install yarn (Ubuntu v1.21.1)
 curl -o- -L https://yarnpkg.com/install.sh | bash
+
+echo 'If you want to use yarn in your command line, please save the following line in your user profile:'
+echo 'export PATH=/usr/local/lib/nodejs/node-v12.14.1-linux-x64/bin:$PATH'

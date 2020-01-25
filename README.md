@@ -21,7 +21,7 @@ Please note that this is a mirror of our private development repository. While s
 
 ## Development
 ### Dependencies
-On `Linux` systems you can use the install script `install.sh`.
+On `Linux` systems you can use the install script `./install.sh`.
 
 Supported OS are `debian/ubuntu`, `RHEL/CentOS/Fedora`, `OpenSUSE`, `ArchLinux`.
 
