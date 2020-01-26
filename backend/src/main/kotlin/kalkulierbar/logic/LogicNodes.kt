@@ -95,7 +95,7 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
      * (based on syntactic equality)
      * This may lead to unexpected consequences when using Relations directly
      */
-     // FIXME
+    // FIXME
     override fun equals(other: Any?) = synEq(other)
 
     override fun hashCode() = toString().hashCode()

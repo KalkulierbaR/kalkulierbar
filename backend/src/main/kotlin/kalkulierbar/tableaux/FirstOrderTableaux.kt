@@ -25,7 +25,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
 
         if (params == null)
             return FoTableauxState(clauses, formula)
-        
+
         return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking, params.manualUnification)
     }
 

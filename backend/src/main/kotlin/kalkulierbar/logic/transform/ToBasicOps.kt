@@ -33,7 +33,7 @@ class ToBasicOps : DoNothingVisitor() {
      * Translate an Implication using the (a -> b) <-> (!a v b) equivalence
      * @param node Implication encountered
      * @return Alternative representation of the implication
-     */ 
+     */
     override fun visit(node: Impl): LogicNode {
         val left = node.leftChild.accept(this)
         val right = node.rightChild.accept(this)
@@ -44,7 +44,7 @@ class ToBasicOps : DoNothingVisitor() {
      * Translate an Equivalence using the (a <-> b) <-> ((a ^ b) v (!a ^ !b)) equivalence
      * @param node Equivalence encountered
      * @return Alternative representation of the equivalence
-     */ 
+     */
     override fun visit(node: Equiv): LogicNode {
         val left = node.leftChild
         val right = node.rightChild
