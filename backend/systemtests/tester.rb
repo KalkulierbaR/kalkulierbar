@@ -113,7 +113,7 @@ def fuzzFormulaParsing(trq, count = 100)
 	end
 end
 
-def fuzzFirstOrderParsing(trq, count = 100)
+def fuzzFirstOrderParsing(trq, count = 50)
 	logMsg "Fuzzing valid first-order formulas"
 	success = true
 	fg = FormulaGenerator.new(true)
@@ -122,7 +122,7 @@ def fuzzFirstOrderParsing(trq, count = 100)
 		raw = fg.generate
 		string = CGI.escape(raw)
 		# For simplicity, check only that parsing is successful
-		success &= trq.post('/fo-acceptor/parse', "formula=#{string}", /.*/, 200)
+		success &= trq.post('/fo-tableaux/parse', "formula=#{string}", /.*/, 200)
 	}
 
 	if success
