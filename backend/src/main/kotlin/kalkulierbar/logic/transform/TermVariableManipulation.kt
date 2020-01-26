@@ -12,6 +12,7 @@ class VariableInstantiator(val replacementMap: Map<String, FirstOrderTerm>) : Fi
     companion object {
         /**
          * Instantiate the variables given in the map with their respective FO Term replacements
+         * NOTE: This will break variable quantifier linking
          * @param term FO term to apply instantiations on
          * @param map Map of variable instantiations to perform
          * @return Term with instantiations applied
