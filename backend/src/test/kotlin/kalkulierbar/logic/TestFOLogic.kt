@@ -19,6 +19,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotEquals
 
 class TestFOLogic {
     private lateinit var r1: Relation
@@ -97,6 +98,16 @@ class TestFOLogic {
         assertEquals("(∀X: (X ∨ !X))", ToBasicOps.transform(u1).toString())
         assertEquals("(∀X: (∃Y: (∀Z: (R(X, Y) ∧ R(Y, Z)))))", ToBasicOps.transform(u2).toString())
         assertEquals("(∀Number1: (∃Number2: Greater(Number1, Number2)))", ToBasicOps.transform(u3).toString())
+    }
+
+    @Test
+    fun testRelEquals() {
+        assertEquals(r1, Relation("R1", listOf(QuantifiedVariable("Abc"))))
+        assertNotEquals(r1, Relation("R1", listOf(QuantifiedVariable("Abcd"))))
+        assertEquals(r1.hashCode(), Relation("R1", listOf(QuantifiedVariable("Abc"))).hashCode())
+        assertNotEquals<Relation?>(r1, null)
+        assertNotEquals<Any>(r1, u1)
+        assertNotEquals(r2, r3)
     }
 
     @Test

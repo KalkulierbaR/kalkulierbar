@@ -65,7 +65,7 @@ class FirstOrderParser : PropositionalParser() {
 
         if (nextTokenIs(TokenType.NOT)) {
             consume()
-            return Not(parseQuantifier())
+            return Not(parseNot())
         } else {
             return parseQuantifier()
         }
