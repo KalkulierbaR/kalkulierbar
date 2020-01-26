@@ -11,10 +11,7 @@ import kalkulierbar.logic.transform.FirstOrderCNF
 import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.parsers.FirstOrderParser
-import kotlinx.serialization.MissingFieldException
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonDecodingException
 
 val serializer = Json(context = FoTermModule)
 
@@ -29,7 +26,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         if (params == null)
             return FoTableauxState(clauses, formula)
         else
-            return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking)
+            return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking, params.manualUnification)
     }
 
     override fun applyMoveOnState(state: FoTableauxState, move: FoTableauxMove): FoTableauxState {
@@ -43,6 +40,9 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     }
 
     private fun applyAutoCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int): FoTableauxState {
+        if (state.manualUnificationOnly)
+            throw IllegalMove("Auto-close is not enabled for this proof")
+
         ensureBasicCloseability(state, leafID, closeNodeID)
         val leaf = state.nodes[leafID]
         val closeNode = state.nodes[closeNodeID]
@@ -111,7 +111,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             throw IllegalMove("Backtracking is not enabled for this proof")
 
         // Create a fresh clone-state with the same parameters and input formula
-        val params = FoTableauxParam(state.type, state.regular, state.backtracking)
+        val params = FoTableauxParam(state.type, state.regular, state.backtracking, state.manualUnificationOnly)
         var freshState = parseFormulaToState(state.formula, params)
         freshState.usedBacktracking = true
 
@@ -153,16 +153,9 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
                 throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
 
             return parsed
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON state: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -187,16 +180,9 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     override fun jsonToMove(json: String): FoTableauxMove {
         try {
             return Json.parse(FoTableauxMove.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON move: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -209,16 +195,9 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     override fun jsonToParam(json: String): FoTableauxParam {
         try {
             return Json.parse(FoTableauxParam.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON params"
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 }

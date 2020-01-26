@@ -73,8 +73,8 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
         if (other == null || !(other is Relation) || spelling != other.spelling || arguments.size != other.arguments.size)
             return false
 
-        for(i in arguments.indices) {
-            if(!arguments[i].synEq(other.arguments[i]))
+        for (i in arguments.indices) {
+            if (!arguments[i].synEq(other.arguments[i]))
                 return false
         }
 

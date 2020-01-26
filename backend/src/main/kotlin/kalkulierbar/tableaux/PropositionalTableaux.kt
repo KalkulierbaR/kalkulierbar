@@ -4,10 +4,7 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.parsers.FlexibleClauseSetParser
-import kotlinx.serialization.MissingFieldException
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonDecodingException
 
 /**
  * Implementation of a simple tableaux calculus on propositional clause sets
@@ -209,16 +206,9 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
                 throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
 
             return parsed
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON state: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -242,16 +232,9 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     override fun jsonToMove(json: String): TableauxMove {
         try {
             return Json.parse(TableauxMove.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON move: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -264,16 +247,9 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     override fun jsonToParam(json: String): TableauxParam {
         try {
             return Json.parse(TableauxParam.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON params: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 }

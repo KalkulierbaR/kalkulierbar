@@ -10,12 +10,9 @@ import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.CnfStrategy
 import kalkulierbar.parsers.FlexibleClauseSetParser
 import kalkulierbar.tamperprotect.ProtectedState
-import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonDecodingException
 
 class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
     override val identifier = "prop-resolution"
@@ -126,16 +123,9 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
                 throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
 
             return parsed
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON state: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -149,16 +139,9 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
     override fun jsonToMove(json: String): ResolutionMove {
         try {
             return Json.parse(ResolutionMove.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON move: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -171,16 +154,9 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
     override fun jsonToParam(json: String): ResolutionParam {
         try {
             return Json.parse(ResolutionParam.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON params: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 }

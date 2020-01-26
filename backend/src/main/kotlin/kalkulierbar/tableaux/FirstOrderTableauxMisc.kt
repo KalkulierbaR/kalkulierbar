@@ -17,7 +17,8 @@ class FoTableauxState(
     val formula: String,
     override val type: TableauxType = TableauxType.UNCONNECTED,
     override val regular: Boolean = false,
-    override val backtracking: Boolean = false
+    override val backtracking: Boolean = false,
+    val manualUnificationOnly: Boolean = false
 ) : GenericTableauxState<Relation>, ProtectedState() {
     override val nodes = mutableListOf<FoTableauxNode>(FoTableauxNode(null, Relation("true", listOf()), false))
     val moveHistory = mutableListOf<FoTableauxMove>()
@@ -103,7 +104,7 @@ class FoTableauxState(
     override fun getHash(): String {
         val nodesHash = nodes.joinToString("|") { it.getHash() }
         val clauseSetHash = clauseSet.toString()
-        val optsHash = "$type|$regular|$backtracking|$usedBacktracking"
+        val optsHash = "$type|$regular|$backtracking|$usedBacktracking|$manualUnificationOnly"
         val variousHash = "$formula|$expansionCounter"
         val historyHash = moveHistory.map { "(${it.type},${it.id1},${it.id2},${it.varAssign})" }.joinToString(",")
         return "fotableaux|$variousHash|$optsHash|$clauseSetHash|[$nodesHash]|[$historyHash]"
@@ -170,7 +171,8 @@ data class FoTableauxMove(
 data class FoTableauxParam(
     val type: TableauxType,
     val regular: Boolean,
-    val backtracking: Boolean
+    val backtracking: Boolean,
+    val manualUnification: Boolean
 )
 
 enum class FoMoveType {
