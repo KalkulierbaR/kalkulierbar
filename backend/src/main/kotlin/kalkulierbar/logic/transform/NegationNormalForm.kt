@@ -33,7 +33,8 @@ class NegationNormalForm : DoNothingVisitor() {
          */
         fun transform(formula: LogicNode): LogicNode {
             val instance = NegationNormalForm()
-            return formula.toBasicOps().accept(instance)
+            val basicOps = ToBasicOps.transform(formula)
+            return basicOps.accept(instance)
         }
     }
 

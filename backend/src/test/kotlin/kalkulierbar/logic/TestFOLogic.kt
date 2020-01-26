@@ -13,6 +13,7 @@ import kalkulierbar.logic.Relation
 import kalkulierbar.logic.UniversalQuantifier
 import kalkulierbar.logic.Var
 import kalkulierbar.logic.transform.NaiveCNF
+import kalkulierbar.logic.transform.ToBasicOps
 import kalkulierbar.logic.transform.TseytinCNF
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -48,7 +49,7 @@ class TestFOLogic {
                                         Function("f",
                                                 listOf(Constant("c"), Constant("k")))))))
 
-        u1 = UniversalQuantifier("X", Or(Var("X"), Not(Var("X"))), mutableListOf())
+        u1 = UniversalQuantifier("X", Or(Var("X"), Not(Var("X"))), mutableSetOf())
         u2 = UniversalQuantifier("X",
                 ExistentialQuantifier("Y",
                         UniversalQuantifier("Z",
@@ -59,18 +60,18 @@ class TestFOLogic {
                                         Relation("R",
                                                 listOf(QuantifiedVariable("Y"),
                                                         QuantifiedVariable("Z")))),
-                                mutableListOf()),
-                        mutableListOf()),
-                mutableListOf())
+                                mutableSetOf()),
+                        mutableSetOf()),
+                mutableSetOf())
         u3 = UniversalQuantifier("Number1",
                 ExistentialQuantifier("Number2",
                         Relation("Greater",
                                 listOf(QuantifiedVariable("Number1"),
                                         QuantifiedVariable("Number2"))),
-                        mutableListOf()),
-                mutableListOf())
+                        mutableSetOf()),
+                mutableSetOf())
 
-        e1 = ExistentialQuantifier("C", Not(Relation("Q", listOf(QuantifiedVariable("C")))), mutableListOf())
+        e1 = ExistentialQuantifier("C", Not(Relation("Q", listOf(QuantifiedVariable("C")))), mutableSetOf())
         e2 = ExistentialQuantifier("X",
                 UniversalQuantifier("Y",
                         Relation("=",
@@ -79,30 +80,23 @@ class TestFOLogic {
                                         Function("m",
                                                 listOf(QuantifiedVariable("X"),
                                                         QuantifiedVariable("Y"))))),
-                        mutableListOf()),
-                mutableListOf())
+                        mutableSetOf()),
+                mutableSetOf())
         e3 = ExistentialQuantifier("El",
                 Impl(
                         Relation("P", listOf(QuantifiedVariable("El"))),
                         UniversalQuantifier("Y",
                                 Relation("P", listOf(QuantifiedVariable("Y"))),
-                                mutableListOf())
+                                mutableSetOf())
                 ),
-                mutableListOf())
-    }
-
-    @Test
-    fun testRelBasicOps() {
-        assertEquals("R1(Abc)", r1.toBasicOps().toString())
-        assertEquals("NewRel(c, f(d, X))", r2.toBasicOps().toString())
-        assertEquals("Aefjwadg(g(f(c, k)))", r3.toBasicOps().toString())
+                mutableSetOf())
     }
 
     @Test
     fun testAllBasicOps() {
-        assertEquals("(∀X: (X ∨ !X))", u1.toBasicOps().toString())
-        assertEquals("(∀X: (∃Y: (∀Z: (R(X, Y) ∧ R(Y, Z)))))", u2.toBasicOps().toString())
-        assertEquals("(∀Number1: (∃Number2: Greater(Number1, Number2)))", u3.toBasicOps().toString())
+        assertEquals("(∀X: (X ∨ !X))", ToBasicOps.transform(u1).toString())
+        assertEquals("(∀X: (∃Y: (∀Z: (R(X, Y) ∧ R(Y, Z)))))", ToBasicOps.transform(u2).toString())
+        assertEquals("(∀Number1: (∃Number2: Greater(Number1, Number2)))", ToBasicOps.transform(u3).toString())
     }
 
     @Test
@@ -121,9 +115,9 @@ class TestFOLogic {
 
     @Test
     fun testExBasicOps() {
-        assertEquals("(∃C: !Q(C))", e1.toBasicOps().toString())
-        assertEquals("(∃X: (∀Y: =(Y, m(X, Y))))", e2.toBasicOps().toString())
-        assertEquals("(∃El: (!P(El) ∨ (∀Y: P(Y))))", e3.toBasicOps().toString())
+        assertEquals("(∃C: !Q(C))", ToBasicOps.transform(e1).toString())
+        assertEquals("(∃X: (∀Y: =(Y, m(X, Y))))", ToBasicOps.transform(e2).toString())
+        assertEquals("(∃El: (!P(El) ∨ (∀Y: P(Y))))", ToBasicOps.transform(e3).toString())
     }
 
     @Test

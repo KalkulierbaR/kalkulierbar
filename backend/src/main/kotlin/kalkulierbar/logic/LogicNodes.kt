@@ -5,14 +5,9 @@ import kotlinx.serialization.Serializable
 
 class Var(var spelling: String) : LogicNode() {
 
-    /**
-     * Translates arbitrary formulae into equivalent representations
-     * using only basic operations (var, not, and, or)
-     * @return representation of this LogicNode using only basic logic operations
-     */
-    override fun toBasicOps() = this
-
     override fun toString() = spelling
+
+    override fun clone() = Var(spelling)
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -21,12 +16,16 @@ class Not(child: LogicNode) : UnaryOp(child) {
 
     override fun toString() = "!$child"
 
+    override fun clone() = Not(child.clone())
+
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class And(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
 
     override fun toString() = "($leftChild ∧ $rightChild)"
+
+    override fun clone() = And(leftChild.clone(), rightChild.clone())
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -35,50 +34,38 @@ class Or(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, righ
 
     override fun toString() = "($leftChild ∨ $rightChild)"
 
+    override fun clone() = Or(leftChild.clone(), rightChild.clone())
+
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class Impl(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
 
-    /**
-     * Translates arbitrary formulae into equivalent representations
-     * using only basic operations (var, not, and, or)
-     * @return representation of this LogicNode using only basic logic operations
-     */
-    override fun toBasicOps(): LogicNode {
-        leftChild = leftChild.toBasicOps()
-        rightChild = rightChild.toBasicOps()
-        return Or(Not(leftChild), rightChild)
-    }
-
     override fun toString() = "($leftChild --> $rightChild)"
+
+    override fun clone() = Impl(leftChild.clone(), rightChild.clone())
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class Equiv(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
 
-    /**
-     * Translates arbitrary formulae into equivalent representations
-     * using only basic operations (var, not, and, or)
-     * @return representation of this LogicNode using only basic logic operations
-     */
-    override fun toBasicOps(): LogicNode {
-        leftChild = leftChild.toBasicOps()
-        rightChild = rightChild.toBasicOps()
-        return Or(And(leftChild, rightChild), And(Not(leftChild), Not(rightChild)))
-    }
-
     override fun toString() = "($leftChild <=> $rightChild)"
+
+    override fun clone() = Equiv(leftChild.clone(), rightChild.clone())
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 @Serializable
 class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : LogicNode() {
-    override fun toBasicOps() = this
 
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
+
+    override fun clone(): LogicNode {
+        val args = arguments.map { it.clone() }
+        return Relation(spelling, args)
+    }
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
@@ -93,23 +80,27 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
 }
 
 class UniversalQuantifier(
-    var varName: String,
+    varName: String,
     child: LogicNode,
-    val boundVariables: MutableList<QuantifiedVariable>
-) : UnaryOp(child) {
+    boundVariables: MutableSet<QuantifiedVariable>
+) : Quantifier(varName, child, boundVariables) {
 
     override fun toString() = "(∀$varName: $child)"
+
+    override fun clone() = UniversalQuantifier(varName, child.clone(), mutableSetOf())
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
 class ExistentialQuantifier(
-    var varName: String,
+    varName: String,
     child: LogicNode,
-    val boundVariables: MutableList<QuantifiedVariable>
-) : UnaryOp(child) {
+    boundVariables: MutableSet<QuantifiedVariable>
+) : Quantifier(varName, child, boundVariables) {
 
     override fun toString() = "(∃$varName: $child)"
+
+    override fun clone() = ExistentialQuantifier(varName, child.clone(), mutableSetOf())
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }

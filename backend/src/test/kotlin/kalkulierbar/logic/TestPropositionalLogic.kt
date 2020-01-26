@@ -10,6 +10,7 @@ import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
 import kalkulierbar.logic.transform.NaiveCNF
+import kalkulierbar.logic.transform.ToBasicOps
 import kalkulierbar.logic.transform.TseytinCNF
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
@@ -54,9 +55,9 @@ class TestPropositionalLogic {
 
     @Test
     fun testVarToBasicOps() {
-        assertEquals("a", v1.toBasicOps().toString())
-        assertEquals("MyTestVar", v2.toBasicOps().toString())
-        assertEquals("MyT35tV4r", v3.toBasicOps().toString())
+        assertEquals("a", ToBasicOps.transform(v1).toString())
+        assertEquals("MyTestVar", ToBasicOps.transform(v2).toString())
+        assertEquals("MyT35tV4r", ToBasicOps.transform(v3).toString())
     }
 
     @Test
@@ -80,9 +81,9 @@ class TestPropositionalLogic {
 
     @Test
     fun testNotToBasicOps() {
-        assertEquals("!a", n1.toBasicOps().toString())
-        assertEquals("!((!!b ∧ a) ∨ (!!!b ∧ !a))", n2.toBasicOps().toString())
-        assertEquals("!((a ∨ !a) ∧ !c)", n3.toBasicOps().toString())
+        assertEquals("!a", ToBasicOps.transform(n1).toString())
+        assertEquals("!((!!b ∧ a) ∨ (!!!b ∧ !a))", ToBasicOps.transform(n2).toString())
+        assertEquals("!((a ∨ !a) ∧ !c)", ToBasicOps.transform(n3).toString())
     }
 
     @Test
@@ -111,9 +112,9 @@ class TestPropositionalLogic {
 
     @Test
     fun testAndToBasicOps() {
-        assertEquals("(!a ∧ (b ∧ (!b ∨ a)))", a1.toBasicOps().toString())
-        assertEquals("(a ∧ !a)", a2.toBasicOps().toString())
-        assertEquals("((a ∨ !a) ∧ b)", a3.toBasicOps().toString())
+        assertEquals("(!a ∧ (b ∧ (!b ∨ a)))", ToBasicOps.transform(a1).toString())
+        assertEquals("(a ∧ !a)", ToBasicOps.transform(a2).toString())
+        assertEquals("((a ∨ !a) ∧ b)", ToBasicOps.transform(a3).toString())
     }
 
     @Test
@@ -138,9 +139,9 @@ class TestPropositionalLogic {
 
     @Test
     fun testOrToBasicOps() {
-        assertEquals("(a ∨ b)", o1.toBasicOps().toString())
-        assertEquals("((a ∨ !b) ∨ ((a ∧ b) ∨ (!a ∧ !b)))", o2.toBasicOps().toString())
-        assertEquals("(!(a ∧ b) ∨ !(!b ∨ !b))", o3.toBasicOps().toString())
+        assertEquals("(a ∨ b)", ToBasicOps.transform(o1).toString())
+        assertEquals("((a ∨ !b) ∨ ((a ∧ b) ∨ (!a ∧ !b)))", ToBasicOps.transform(o2).toString())
+        assertEquals("(!(a ∧ b) ∨ !(!b ∨ !b))", ToBasicOps.transform(o3).toString())
     }
 
     @Test

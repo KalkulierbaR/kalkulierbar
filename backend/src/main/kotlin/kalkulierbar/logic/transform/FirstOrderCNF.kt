@@ -142,7 +142,7 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
      * @return ClauseSet representing the Implication
      */
     override fun visit(node: Impl): ClauseSet<Relation> {
-        return node.toBasicOps().accept(this)
+        return ToBasicOps.transform(node).accept(this)
     }
 
     /**
@@ -151,7 +151,7 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
      * @return ClauseSet representing the Equivalence
      */
     override fun visit(node: Equiv): ClauseSet<Relation> {
-        return node.toBasicOps().accept(this)
+        return ToBasicOps.transform(node).accept(this)
     }
 
     /**

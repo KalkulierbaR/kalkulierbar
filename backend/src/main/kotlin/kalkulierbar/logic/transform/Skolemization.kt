@@ -127,7 +127,7 @@ class SkolemTermReplacer(
      */
     override fun visit(node: QuantifiedVariable): FirstOrderTerm {
         if (replacementMap[node] != null) {
-            val linker = SkolemQuantifierLinker(bindingQuantifiers)
+            val linker = QuantifierLinker(bindingQuantifiers, true)
 
             // Clone the term to avoid object-sharing related weirdness
             val skolemTerm = replacementMap[node]!!.clone()
@@ -165,38 +165,5 @@ class SkolemTermReplacer(
             return node
 
         return Function("u${node.spelling}", node.arguments)
-    }
-}
-
-/**
- * Registers newly created variables in Skolem-terms with their respective quantifiers
- * Requires absence of variable-hiding in the current quantifier scope,
- * will throw an exception otherwise
- * @param quantifers List of quantifiers in whose scope the term in question resides
- */
-class SkolemQuantifierLinker(val quantifiers: List<UniversalQuantifier>) : FirstOrderTermVisitor<Unit>() {
-
-    /**
-     * Match a QuantifiedVariable to its binding quantifier
-     * @param node QuantifiedVariable encountered
-     */
-    override fun visit(node: QuantifiedVariable) {
-        val matchingQuantifiers = quantifiers.filter { it.varName == node.spelling }
-
-        if (matchingQuantifiers.size == 0)
-            throw FormulaConversionException("Error linking variables to quantifiers: " +
-                "Variable '${node.spelling}' is not bound by any universal quantifier")
-        else if (matchingQuantifiers.size > 1)
-            throw FormulaConversionException("Error linking variables to quantifiers: " +
-                "Variable '${node.spelling}' is bound by more than one universal quantifier")
-
-        matchingQuantifiers[0].boundVariables.add(node)
-    }
-
-    @Suppress("EmptyFunctionBlock")
-    override fun visit(node: Constant) {}
-
-    override fun visit(node: Function) {
-        node.arguments.forEach { it.accept(this) }
     }
 }

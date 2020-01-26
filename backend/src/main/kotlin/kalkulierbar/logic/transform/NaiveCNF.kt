@@ -138,7 +138,7 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
      * @return ClauseSet representing the Implication
      */
     override fun visit(node: Impl): ClauseSet<String> {
-        return node.toBasicOps().accept(this)
+        return ToBasicOps.transform(node).accept(this)
     }
 
     /**
@@ -147,6 +147,6 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
      * @return ClauseSet representing the Equivalence
      */
     override fun visit(node: Equiv): ClauseSet<String> {
-        return node.toBasicOps().accept(this)
+        return ToBasicOps.transform(node).accept(this)
     }
 }

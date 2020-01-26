@@ -1,9 +1,11 @@
 package kalkulierbar.logic.transform
 
+import kalkulierbar.FormulaConversionException
 import kalkulierbar.logic.Constant
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
 import kalkulierbar.logic.QuantifiedVariable
+import kalkulierbar.logic.Quantifier
 
 class VariableInstantiator(val replacementMap: Map<String, FirstOrderTerm>) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
@@ -119,4 +121,39 @@ class TermContainsVariable(val variable: String) : FirstOrderTermVisitor<Boolean
      * @return true iff at least one argument contains the variable
      */
     override fun visit(node: Function) = node.arguments.fold(false) { acc, term -> acc || term.accept(this) }
+}
+
+/**
+ * Registers newly created variables in terms with their respective quantifiers
+ * Variables will be bound to the innermost matching quantifier
+ * @param quantifers List of quantifiers in whose scope the term in question resides
+ * @param enforceUnique Set to true to ensure no variable hiding is taking place
+ *        (i.e. binding quantifiers are unambiguous)
+ */
+class QuantifierLinker(val quantifiers: List<Quantifier>, val enforceUnique: Boolean) : FirstOrderTermVisitor<Unit>() {
+
+    /**
+     * Match a QuantifiedVariable to its binding quantifier
+     * @param node QuantifiedVariable encountered
+     */
+    override fun visit(node: QuantifiedVariable) {
+        val matchingQuantifiers = quantifiers.filter { it.varName == node.spelling }
+
+        if (matchingQuantifiers.size == 0)
+            throw FormulaConversionException("Error linking variables to quantifiers: " +
+                "Variable '${node.spelling}' is not bound by any quantifier")
+        else if (matchingQuantifiers.size > 1 && enforceUnique)
+            throw FormulaConversionException("Error linking variables to quantifiers: " +
+                "Variable '${node.spelling}' is bound by more than one quantifier")
+
+        // The last-defined quantifier is the binding one for the variable occurrence
+        matchingQuantifiers[matchingQuantifiers.size - 1].boundVariables.add(node)
+    }
+
+    @Suppress("EmptyFunctionBlock")
+    override fun visit(node: Constant) {}
+
+    override fun visit(node: Function) {
+        node.arguments.forEach { it.accept(this) }
+    }
 }
