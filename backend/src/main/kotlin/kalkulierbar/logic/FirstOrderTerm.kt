@@ -54,8 +54,12 @@ class Function(val spelling: String, var arguments: List<FirstOrderTerm>) : Firs
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)
     override fun clone() = Function(spelling, arguments.map { it.clone() })
 
+    @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
-        if (other == null || !(other is Function) || spelling != other.spelling || arguments.size != other.arguments.size)
+        if (other == null || !(other is Function))
+            return false
+
+        if (spelling != other.spelling || arguments.size != other.arguments.size)
             return false
 
         for (i in arguments.indices) {

@@ -69,8 +69,12 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
+    @Suppress("ReturnCount")
     fun synEq(other: Any?): Boolean {
-        if (other == null || !(other is Relation) || spelling != other.spelling || arguments.size != other.arguments.size)
+        if (other == null || !(other is Relation))
+            return false
+
+        if (spelling != other.spelling || arguments.size != other.arguments.size)
             return false
 
         for (i in arguments.indices) {
@@ -81,9 +85,7 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
         return true
     }
 
-    override fun equals(other: Any?): Boolean {
-        throw Exception("Relation equality used")
-    }
+    override fun equals(other: Any?) = synEq(other)
 
     override fun hashCode() = toString().hashCode()
 }

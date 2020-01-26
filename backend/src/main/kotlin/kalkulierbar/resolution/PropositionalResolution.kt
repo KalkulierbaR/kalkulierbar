@@ -113,6 +113,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         return CloseMessage(hasEmptyClause, msg)
     }
 
+    @Suppress("TooGenericExceptionCaught")
     @UnstableDefault
     override fun jsonToState(json: String): ResolutionState {
         try {
@@ -135,6 +136,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         return Json.stringify(ResolutionState.serializer(), state)
     }
 
+    @Suppress("TooGenericExceptionCaught")
     @UnstableDefault
     override fun jsonToMove(json: String): ResolutionMove {
         try {
@@ -150,6 +152,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
      * @param json JSON parameter representation
      * @return parsed param object
      */
+    @Suppress("TooGenericExceptionCaught")
     @UnstableDefault
     override fun jsonToParam(json: String): ResolutionParam {
         try {

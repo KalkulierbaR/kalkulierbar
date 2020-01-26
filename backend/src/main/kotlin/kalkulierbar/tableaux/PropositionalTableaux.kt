@@ -196,6 +196,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      * @param json JSON state representation
      * @return parsed state object
      */
+    @Suppress("TooGenericExceptionCaught")
     @kotlinx.serialization.UnstableDefault
     override fun jsonToState(json: String): TableauxState {
         try {
@@ -228,6 +229,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      * @param json JSON move representation
      * @return parsed move object
      */
+    @Suppress("TooGenericExceptionCaught")
     @kotlinx.serialization.UnstableDefault
     override fun jsonToMove(json: String): TableauxMove {
         try {
@@ -243,6 +245,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      * @param json JSON parameter representation
      * @return parsed param object
      */
+    @Suppress("TooGenericExceptionCaught")
     @kotlinx.serialization.UnstableDefault
     override fun jsonToParam(json: String): TableauxParam {
         try {

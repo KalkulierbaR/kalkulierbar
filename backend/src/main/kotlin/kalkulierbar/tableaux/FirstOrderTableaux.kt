@@ -55,12 +55,22 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         }
     }
 
-    private fun applyMoveCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int, varAssign: Map<String, FirstOrderTerm>): FoTableauxState {
+    private fun applyMoveCloseBranch(
+        state: FoTableauxState,
+        leafID: Int,
+        closeNodeID: Int,
+        varAssign: Map<String, FirstOrderTerm>
+    ): FoTableauxState {
         ensureBasicCloseability(state, leafID, closeNodeID)
         return closeBranchCommon(state, leafID, closeNodeID, varAssign)
     }
 
-    private fun closeBranchCommon(state: FoTableauxState, leafID: Int, closeNodeID: Int, varAssign: Map<String, FirstOrderTerm>): FoTableauxState {
+    private fun closeBranchCommon(
+        state: FoTableauxState,
+        leafID: Int,
+        closeNodeID: Int,
+        varAssign: Map<String, FirstOrderTerm>
+    ): FoTableauxState {
         applyVarInstantiation(state, varAssign)
 
         val leaf = state.nodes[leafID]
@@ -76,8 +86,11 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         leaf.closeRef = closeNodeID
         setNodeClosed(state, leaf)
 
-        if (state.backtracking)
-            state.moveHistory.add(FoTableauxMove(FoMoveType.CLOSE, leafID, closeNodeID, varAssign.mapValues { it.value.toString() }))
+        if (state.backtracking) {
+            val varAssignStrings = varAssign.mapValues { it.value.toString() }
+            val move = FoTableauxMove(FoMoveType.CLOSE, leafID, closeNodeID, varAssignStrings)
+            state.moveHistory.add(move)
+        }
 
         return state
     }
@@ -143,6 +156,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
      * @param json JSON state representation
      * @return parsed state object
      */
+    @Suppress("TooGenericExceptionCaught")
     @kotlinx.serialization.UnstableDefault
     override fun jsonToState(json: String): FoTableauxState {
         try {
@@ -176,6 +190,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
      * @param json JSON move representation
      * @return parsed move object
      */
+    @Suppress("TooGenericExceptionCaught")
     @kotlinx.serialization.UnstableDefault
     override fun jsonToMove(json: String): FoTableauxMove {
         try {
@@ -191,6 +206,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
      * @param json JSON parameter representation
      * @return parsed param object
      */
+    @Suppress("TooGenericExceptionCaught")
     @kotlinx.serialization.UnstableDefault
     override fun jsonToParam(json: String): FoTableauxParam {
         try {

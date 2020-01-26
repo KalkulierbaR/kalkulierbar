@@ -70,14 +70,31 @@ class Unification {
                 } else if (term2 is QuantifiedVariable) {
                     // Swap them around to be processed later
                     terms.add(Pair(term2, term1))
-                } else if (term1 is Function && term2 is Function && term1.spelling == term2.spelling && term1.arguments.size == term2.arguments.size) {
+                } else if (isCompatibleFunction(term1, term2)) {
+                    val t1 = term1 as Function
+                    val t2 = term2 as Function
                     // Break down into subterms
-                    for (i in term1.arguments.indices)
-                        terms.add(Pair(term1.arguments[i], term2.arguments[i]))
-                } else
+                    for (i in t1.arguments.indices)
+                        terms.add(Pair(t1.arguments[i], t2.arguments[i]))
+                } else {
                     throw UnificationImpossible("'$term1' and '$term2' cannot be unified")
+                }
             }
             return map
+        }
+
+        /**
+         * Determine if two terms represent the same function (same name and arity)
+         * Arguments of the function may differ
+         * @param t1 First term
+         * @param t2 Second term
+         * @return true iff the two terms represent the same functions
+         */
+        private fun isCompatibleFunction(t1: FirstOrderTerm, t2: FirstOrderTerm): Boolean {
+            if (t1 is Function && t2 is Function)
+                return t1.spelling == t2.spelling && t1.arguments.size == t2.arguments.size
+
+            return false
         }
     }
 }
