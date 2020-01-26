@@ -42,7 +42,7 @@ class PrenexNormalForm : DoNothingVisitor() {
         }
     }
 
-    private var quantifiers: MutableList<Triple<String, Boolean, MutableSet<QuantifiedVariable>>> = mutableListOf()
+    private var quantifiers: MutableList<Triple<String, Boolean, MutableList<QuantifiedVariable>>> = mutableListOf()
     private var encounteredVars: MutableList<String> = mutableListOf()
 
     /**

@@ -32,5 +32,5 @@ abstract class UnaryOp(var child: LogicNode) : LogicNode() {
 abstract class Quantifier(
     var varName: String,
     child: LogicNode,
-    val boundVariables: MutableSet<QuantifiedVariable>
+    val boundVariables: MutableList<QuantifiedVariable>
 ) : UnaryOp(child)

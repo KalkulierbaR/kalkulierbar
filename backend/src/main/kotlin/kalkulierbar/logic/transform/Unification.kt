@@ -58,7 +58,7 @@ class Unification {
                 term2 = VariableInstantiator.transform(term2, map)
 
                 // Skip terms if already equal
-                if (term1 == term2) {
+                if (term1.synEq(term2)) {
                     continue
                 } else if (term1 is QuantifiedVariable) {
                     // Unification not possible if one is variable and appears in others arguments

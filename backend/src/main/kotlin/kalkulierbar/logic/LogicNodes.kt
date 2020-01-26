@@ -69,11 +69,20 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
-    override fun equals(other: Any?): Boolean {
-        if (other == null || !(other is Relation))
+    fun synEq(other: Any?): Boolean {
+        if (other == null || !(other is Relation) || spelling != other.spelling || arguments.size != other.arguments.size)
             return false
 
-        return spelling == other.spelling && arguments == other.arguments
+        for(i in arguments.indices) {
+            if(!arguments[i].synEq(other.arguments[i]))
+                return false
+        }
+
+        return true
+    }
+
+    override fun equals(other: Any?): Boolean {
+        throw Exception("Relation equality used")
     }
 
     override fun hashCode() = toString().hashCode()
@@ -82,12 +91,12 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
 class UniversalQuantifier(
     varName: String,
     child: LogicNode,
-    boundVariables: MutableSet<QuantifiedVariable>
+    boundVariables: MutableList<QuantifiedVariable>
 ) : Quantifier(varName, child, boundVariables) {
 
     override fun toString() = "(∀$varName: $child)"
 
-    override fun clone() = UniversalQuantifier(varName, child.clone(), mutableSetOf())
+    override fun clone() = UniversalQuantifier(varName, child.clone(), mutableListOf())
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -95,12 +104,12 @@ class UniversalQuantifier(
 class ExistentialQuantifier(
     varName: String,
     child: LogicNode,
-    boundVariables: MutableSet<QuantifiedVariable>
+    boundVariables: MutableList<QuantifiedVariable>
 ) : Quantifier(varName, child, boundVariables) {
 
     override fun toString() = "(∃$varName: $child)"
 
-    override fun clone() = ExistentialQuantifier(varName, child.clone(), mutableSetOf())
+    override fun clone() = ExistentialQuantifier(varName, child.clone(), mutableListOf())
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }

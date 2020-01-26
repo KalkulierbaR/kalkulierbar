@@ -45,6 +45,8 @@ class ToBasicOps : DoNothingVisitor() {
      * @return Universal quantifier with child sub-formula transformed to basic ops
      */
     override fun visit(node: UniversalQuantifier): LogicNode {
+        // Clear associated variables as we will re-link later
+        node.boundVariables.clear()
         quantifiers.add(node)
         node.child = node.child.accept(this)
         quantifiers.removeAt(quantifiers.size - 1)
@@ -58,6 +60,8 @@ class ToBasicOps : DoNothingVisitor() {
      * @return Existential quantifier with child sub-formula transformed to basic ops
      */
     override fun visit(node: ExistentialQuantifier): LogicNode {
+        // Clear associated variables as we will re-link later
+        node.boundVariables.clear()
         quantifiers.add(node)
         node.child = node.child.accept(this)
         quantifiers.removeAt(quantifiers.size - 1)
