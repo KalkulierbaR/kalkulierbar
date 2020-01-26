@@ -20,8 +20,8 @@ import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
 import UndoIcon from "../../../components/icons/undo";
+import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxTreeView from "../../../components/tableaux/tree";
-import VarAssignList from "../../../components/var-assign-list";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
@@ -146,10 +146,13 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
         undefined
     );
+    const [closeMoveSecondNodeId, setCloseMoveSecondNodeId] = useState<number | undefined>(
+        undefined
+    );
 
     const [showClauseDialog, setShowClauseDialog] = useState(false);
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
-    const [varsToAssign, setVarsToAssign] = useState([]);
+    const [varsToAssign, setVarsToAssign] = useState<string[]>( []);
 
     /**
      * The function to call, when the user selects a clause
@@ -213,7 +216,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                 setSelectedClauseId(undefined);
             }
         } else {
-            const selectedNodeIsLeaf = state!.nodes[selectedNodeId].children.length === 0;
+            const selectedNode = state!.nodes[selectedNodeId];
+            const selectedNodeIsLeaf = selectedNode.children.length === 0;
 
             if (selectedNodeIsLeaf && newNodeIsLeaf || !selectedNodeIsLeaf && !newNodeIsLeaf){
                 setSelectedNodeId(newNode.id);
@@ -235,30 +239,40 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         break;
                     case "fo-tableaux":
                         // Open dialog for automatic/manual unification
-                        setVarsToAssign([]); // @todo filter for correct vars
+                        setCloseMoveSecondNodeId(newNode.id);
+                        const vars = ["A", "B"]; // @todo proper filtering to get distinct values
+                        if(vars.length <= 0) {
+                            break;
+                        }
+                        console.log(vars);
+                        setVarsToAssign(vars);
                         setShowVarAssignDialog(true);
-                        break;
                 }
             }
         }
     };
 
     const submitVarAssign = (varAssign: Map<string, string>) => {
-        if(selectedNodeId !== undefined) {
+        if(selectedNodeId !== undefined && closeMoveSecondNodeId !== undefined) {
+            const selectedNode = state!.nodes[selectedNodeId];
+            const leafNodeId = selectedNode.children.length === 0 ? selectedNodeId : closeMoveSecondNodeId;
+            const predNodeId = selectedNode.children.length === 0 ? closeMoveSecondNodeId : selectedNodeId;
+
             sendClose(
                 calculus,
                 server,
                 state!,
                 onChange,
                 onError,
-                selectedNodeId,
-                selectedNodeId,
+                leafNodeId,
+                predNodeId,
                 varAssign
             );
             setSelectedNodeId(undefined);
-        } else {
-            throw new Error("Close move went wrong, since selected nodes could not be identified.");
+            setCloseMoveSecondNodeId(undefined);
+            return;
         }
+        throw new Error("Close move went wrong, since selected nodes could not be identified.");
     };
 
     if (!state) {

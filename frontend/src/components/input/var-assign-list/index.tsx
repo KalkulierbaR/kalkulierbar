@@ -1,12 +1,12 @@
 import { h } from "preact";
-import Btn from "../btn";
+import Btn from "../../btn";
 import * as style from "./style.scss";
 
 interface Props {
     /**
      * Which vars shall be assigned
      */
-    vars: string [];
+    vars: string[];
     /**
      * Whether all variable assignments need to be provided by the user
      */
@@ -43,7 +43,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                     <label for={variable}>{variable}</label>
                     <input
                         id={variable}
-                        // onInput={true}{onInput}
+                        onInput={onInput}
                         required={requireAll}
                     />
                 </p>

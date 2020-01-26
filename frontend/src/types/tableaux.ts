@@ -24,7 +24,13 @@ export interface PropTableauxState {
 
 export interface FoTableauxState extends PropTableauxState {
     manualVarAssign: boolean;
-    renderedClauseSet: string [];
+    renderedClauseSet: string[];
+    relation: FoRelation;
+}
+
+export interface FoRelation {
+    spelling: string;
+    arguments: [];
 }
 
 export function instanceOfFoTableauxState(object: any): object is FoTableauxState {
