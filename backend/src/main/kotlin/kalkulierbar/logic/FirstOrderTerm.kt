@@ -15,9 +15,29 @@ val FoTermModule = SerializersModule {
 @Serializable
 abstract class FirstOrderTerm {
     abstract fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>): ReturnType
+
+    /**
+     * Create a deep copy of a term
+     * NOTE: This will break quantifier linking
+     * @return copy of the current term
+     */
     abstract fun clone(): FirstOrderTerm
+
+    /**
+     * Check if two terms are syntactically (as opposed to referentially) identical
+     * @param other Object to check for syntactic equality
+     * @return true iff the terms are equal
+     */
     abstract fun synEq(other: Any?): Boolean
-    override fun equals(other: Any?) = throw Exception("Fixme")
+
+    /**
+     * Leftover from previous implementation
+     * I am not sure if any functionality still depends on equality of FO terms
+     * possibly assuming syntactic equality
+     * So we will throw an exception to draw attention to any such cases
+     */
+    // FIXME
+    override fun equals(other: Any?) = throw Exception("Equality used on First-Order Term")
 }
 
 @Serializable

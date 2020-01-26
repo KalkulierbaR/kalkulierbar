@@ -61,6 +61,16 @@ class FoTableauxState(
         return res
     }
 
+    /**
+     * The First-Order tableaux requires that variables introduced in a tree expansion
+     * are fresh. Therefore, we add a suffix with the number of the current expansion
+     * to every introduced variable.
+     * @param clause Clause to be expanded
+     * @return List of Atoms to be expanded with variables renamed to be fresh
+     */
+    // TODO: Does this actually ensure the required level of freshness?
+    // Would it cause problems if I could instantiate 'Xv1' with 'Xv2', then expand again, causing
+    // another Xv2 to be generated? Does this scenario have to be avoided?
     override fun clauseExpandPreprocessing(clause: Clause<Relation>): List<Atom<Relation>> {
         val suffixAppender = VariableSuffixAppend("v${expansionCounter + 1}")
         val atomList = mutableListOf<Atom<Relation>>()
@@ -75,6 +85,12 @@ class FoTableauxState(
         return atomList
     }
 
+    /**
+     * Search the ancestry of a tree node for a node that can be unified with the given atom
+     * @param nodeID Node to search ancestry of
+     * @param atom Atom to find unification partner for
+     * @return true iff the ancestry contains a suitable unification partner
+     */
     @Suppress("EmptyCatchBlock")
     private fun nodeAncestryContainsUnifiable(nodeID: Int, atom: Atom<Relation>): Boolean {
         var node = nodes[nodeID]
@@ -94,6 +110,9 @@ class FoTableauxState(
         return false
     }
 
+    /**
+     * Update properties of the state used for frontend representation
+     */
     fun render() {
         renderedClauseSet = clauseSet.clauses.map { it.atoms.joinToString(", ") }
         nodes.forEach {

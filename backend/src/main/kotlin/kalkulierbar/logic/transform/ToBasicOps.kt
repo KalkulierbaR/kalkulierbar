@@ -14,6 +14,13 @@ import kalkulierbar.logic.UniversalQuantifier
 class ToBasicOps : DoNothingVisitor() {
 
     companion object Companion {
+        /**
+         * Transform an arbitrary formula into a formula using
+         * only basic boolean logic operations (and, or, not)
+         * Suitable for both propositional and first-order formulae
+         * @param formula Input formula to transform
+         * @return Equivalent formula using only basic operations
+         */
         fun transform(formula: LogicNode): LogicNode {
             val instance = ToBasicOps()
             return formula.accept(instance)
@@ -22,16 +29,29 @@ class ToBasicOps : DoNothingVisitor() {
 
     private val quantifiers = mutableListOf<Quantifier>()
 
+    /**
+     * Translate an Implication using the (a -> b) <-> (!a v b) equivalence
+     * @param node Implication encountered
+     * @return Alternative representation of the implication
+     */ 
     override fun visit(node: Impl): LogicNode {
         val left = node.leftChild.accept(this)
         val right = node.rightChild.accept(this)
         return Or(Not(left), right)
     }
 
+    /**
+     * Translate an Equivalence using the (a <-> b) <-> ((a ^ b) v (!a ^ !b)) equivalence
+     * @param node Equivalence encountered
+     * @return Alternative representation of the equivalence
+     */ 
     override fun visit(node: Equiv): LogicNode {
         val left = node.leftChild
         val right = node.rightChild
 
+        // Cloning the sub-terms here is important!
+        // Not cloning leads to object-reuse which causes all sorts of weirdness
+        // especially when used with Quantifiers
         val bothTrue = And(left, right)
         val bothFalse = And(Not(left.clone()), Not(right.clone()))
 

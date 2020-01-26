@@ -69,6 +69,11 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
+    /**
+     * Check if two relations are syntactically (as opposed to referentially) identical
+     * @param other Object to check for syntactic equality
+     * @return true iff the relations are equal
+     */
     @Suppress("ReturnCount")
     fun synEq(other: Any?): Boolean {
         if (other == null || !(other is Relation))
@@ -85,6 +90,12 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
         return true
     }
 
+    /**
+     * Overriding equality here to make equality checks on Atoms work as expected
+     * (based on syntactic equality)
+     * This may lead to unexpected consequences when using Relations directly
+     */
+     // FIXME
     override fun equals(other: Any?) = synEq(other)
 
     override fun hashCode() = toString().hashCode()
