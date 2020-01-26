@@ -25,7 +25,8 @@ import TableauxTreeView from "../../../components/tableaux/tree";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
-import exampleState from "./example";
+import foExampleState from "./fo-example";
+import propExampleState from "./prop-example";
 
 /**
  * Wrapper to send close request
@@ -278,7 +279,14 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
-        state = exampleState;
+        switch (calculus) {
+            case "prop-tableaux":
+                state = propExampleState;
+                break;
+            case "fo-tableaux":
+                state = foExampleState;
+                break;
+        }
         onChange(calculus, state);
     }
 
@@ -411,7 +419,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                                 )
                             }
                         />
-                        {state.undoEnable ?
+                        {state.backtracking ?
                             <FAB
                                 icon={<UndoIcon />}
                                 label="Undo"

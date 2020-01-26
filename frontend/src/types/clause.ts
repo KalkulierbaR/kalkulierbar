@@ -28,3 +28,41 @@ export interface CandidateClause extends Clause {
     index: number;
     candidateLiterals: string[];
 }
+
+/**
+ * The Atom object received from the backend
+ */
+export interface FoLiteral {
+    spelling: string;
+    arguments: FoArgument[];
+}
+
+/**
+ * The Atom object received from the backend
+ */
+export interface FoAtom {
+    lit: FoLiteral;
+    negated: boolean;
+}
+
+/**
+ * Clause is a list of Atoms
+ */
+export interface FoClause {
+    atoms: FoAtom[];
+}
+
+/**
+ * Clause sets are sets of Clauses
+ */
+export interface FoClauseSet {
+    clauses: FoClause[];
+}
+
+/**
+ * An argument in FO
+ */
+export interface FoArgument {
+    type: string;
+    spelling: string;
+}

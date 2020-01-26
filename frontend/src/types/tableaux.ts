@@ -1,4 +1,4 @@
-import { ClauseSet } from "./clause";
+import {ClauseSet, FoClauseSet} from "./clause";
 
 export interface TableauxNode {
     parent: number | null;
@@ -7,6 +7,7 @@ export interface TableauxNode {
     isClosed: boolean;
     closeRef: number | null;
     children: number[];
+    relation?: FoRelation;
 }
 
 export type TableauxTreeLayoutNode = TableauxNode & { id: number};
@@ -17,15 +18,24 @@ export interface PropTableauxState {
     nodes: TableauxNode[];
     type: TableauxType;
     regular: boolean;
-    undoEnable: boolean;
+    backtracking: boolean;
     moveHistory: TableauxMove[];
-    usedUndo: boolean;
+    usedBacktracking: boolean;
 }
 
-export interface FoTableauxState extends PropTableauxState {
+export interface FoTableauxState {
+    seal: string;
+    clauseSet: FoClauseSet;
+    nodes: TableauxNode[];
+    type: TableauxType;
+    regular: boolean;
+    backtracking: boolean;
+    moveHistory: TableauxMove[];
+    usedBacktracking: boolean;
+    formula: string;
+    expansionCounter: number;
     manualVarAssign: boolean;
     renderedClauseSet: string[];
-    relation: FoRelation;
 }
 
 export interface FoRelation {
