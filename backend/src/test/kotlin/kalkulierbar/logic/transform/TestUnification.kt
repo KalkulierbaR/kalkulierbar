@@ -54,7 +54,7 @@ class TestUnification {
             val r1 = cs.clauses[0].atoms[0].lit
             val r2 = cs.clauses[1].atoms[0].lit
 
-            assertFailsWith<UnificationImpossible>{
+            assertFailsWith<UnificationImpossible> {
                 Unification.unify(r1, r2)
             }
         }
