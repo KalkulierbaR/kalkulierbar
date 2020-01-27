@@ -38,7 +38,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
         <div class={`card ${className}`}>
             {vars.map((variable) => (
                 <p
-                    class={style.clauseListItem}
+                    class={style.option}
                 >
                     <label for={variable}>{variable}</label>
                     <input

@@ -377,7 +377,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                     <VarAssignList
                         vars={varsToAssign}
                         requireAll={state.manualVarAssign}
-                        submitVarAssignCallback={submitVarAssign}
+                        submitVarAssignCallback={() => submitVarAssign}
                     />
                 </Dialog> : ""
             }
