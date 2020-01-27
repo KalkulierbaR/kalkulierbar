@@ -1,5 +1,5 @@
 import { h } from "preact";
-import {VarAssignment} from "../../../types/tableaux";
+import { VarAssign } from "../../../types/tableaux";
 import Btn from "../../btn";
 import TextInput from "../text";
 
@@ -15,7 +15,7 @@ interface Props {
     /**
      * The function to call, when the user submits the list
      */
-    submitVarAssignCallback: CallableFunction;
+    submitVarAssignCallback: (auto: boolean, va?: VarAssign) => void;
     /**
      * Label for the submit button
      */
@@ -27,7 +27,7 @@ interface Props {
     /**
      * The function to call, when the user clicks the second submit button
      */
-    secondSubmitEvent?: CallableFunction;
+    secondSubmitEvent?: (auto: boolean, va?: VarAssign) => void;
     /**
      * Additional className for the element
      */
@@ -43,25 +43,22 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
     secondSubmitEvent,
     className
 }) => {
-    const varAssign : VarAssignment[] = [];
+    const varAssign: VarAssign = {};
 
     const submitVarAssign = () => {
-        vars.forEach((variable) => {
+        vars.forEach(variable => {
             const textInput = document.getElementById(variable);
             if (!(textInput && textInput instanceof HTMLInputElement)) {
                 return;
             }
-            varAssign.push({
-                key: variable,
-                value: textInput.value
-            });
+            varAssign[variable] = textInput.value;
         });
         submitVarAssignCallback(false, varAssign);
     };
 
     return (
         <div class={`card ${className}`}>
-            {vars.map((variable) => (
+            {vars.map(variable => (
                 <p>
                     <TextInput
                         id={variable}
@@ -71,15 +68,15 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                     />
                 </p>
             ))}
-            <Btn onClick={submitVarAssign} >
-                {submitLabel}
-            </Btn>
+            <Btn onClick={submitVarAssign}>{submitLabel}</Btn>
 
-            {!manualVarAssign && secondSubmitLabel && secondSubmitEvent ?
-                <Btn onClick={() => secondSubmitEvent(true)} >
+            {!manualVarAssign && secondSubmitLabel && secondSubmitEvent ? (
+                <Btn onClick={() => secondSubmitEvent(true)}>
                     {secondSubmitLabel}
-                </Btn> : ""
-            }
+                </Btn>
+            ) : (
+                ""
+            )}
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import {ClauseSet, FoArgument, FoClauseSet} from "./clause";
+import { ClauseSet, FoArgument, FoClauseSet } from "./clause";
 
 export interface TableauxNode {
     parent: number | null;
@@ -10,7 +10,7 @@ export interface TableauxNode {
     relation?: FoRelation;
 }
 
-export type TableauxTreeLayoutNode = TableauxNode & { id: number};
+export type TableauxTreeLayoutNode = TableauxNode & { id: number };
 
 export interface PropTableauxState {
     seal: string;
@@ -23,8 +23,10 @@ export interface PropTableauxState {
     usedBacktracking: boolean;
 }
 
-export function instanceOfPropTableauxState(object: any): object is PropTableauxState {
-    return 'clauseSet' in object;
+export function instanceOfPropTableauxState(
+    object: any
+): object is PropTableauxState {
+    return "clauseSet" in object;
 }
 
 export interface TableauxExpandMove {
@@ -45,7 +47,10 @@ export interface TableauxUndoMove {
     id2: number;
 }
 
-export type TableauxMove = TableauxExpandMove | TableauxCloseMove | TableauxUndoMove;
+export type TableauxMove =
+    | TableauxExpandMove
+    | TableauxCloseMove
+    | TableauxUndoMove;
 
 export enum TableauxType {
     unconnected = "UNCONNECTED",
@@ -89,16 +94,17 @@ export interface FoTableauxState {
     renderedClauseSet: string[];
 }
 
-export function instanceOfFoTableauxState(object: any): object is FoTableauxState {
-    return 'formula' in object;
+export function instanceOfFoTableauxState(
+    object: any
+): object is FoTableauxState {
+    return "formula" in object;
 }
 
-export type FoTableauxMove = TableauxMove & { varAssign: VarAssignment[]; }
-
-export interface VarAssignment {
-    key: string;
-    value: string;
+export interface VarAssign {
+    [key: string]: string;
 }
+
+export type FoTableauxMove = TableauxMove & { varAssign: VarAssign };
 
 export interface FoRelation {
     spelling: string;
