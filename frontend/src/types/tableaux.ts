@@ -81,7 +81,7 @@ export interface FoTableauxState {
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;
-    moveHistory: TableauxMove[];
+    moveHistory: FoTableauxMove[];
     usedBacktracking: boolean;
     formula: string;
     expansionCounter: number;
@@ -93,7 +93,12 @@ export function instanceOfFoTableauxState(object: any): object is FoTableauxStat
     return 'formula' in object;
 }
 
-export type FoTableauxMove = TableauxMove & { varAssign: Map<string, string>; }
+export type FoTableauxMove = TableauxMove & { varAssign: VarAssignment[]; }
+
+export interface VarAssignment {
+    key: string;
+    value: string;
+}
 
 export interface FoRelation {
     spelling: string;

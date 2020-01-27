@@ -5,7 +5,7 @@ import {
     FoTableauxState, instanceOfFoTableauxState, instanceOfPropTableauxState,
     PropTableauxState,
     SelectNodeOptions,
-    TableauxTreeLayoutNode
+    TableauxTreeLayoutNode, VarAssignment
 } from "../../../types/tableaux";
 import * as style from "./style.scss";
 
@@ -50,7 +50,7 @@ const sendClose = (
     onError: (msg: string) => void,
     leaf: number,
     pred: number,
-    varAssignments?: Map<string, string>,
+    varAssignments?: VarAssignment[],
     autoClose?: boolean
 ) => {
     if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
@@ -106,7 +106,7 @@ const sendBacktrack = (
             server,
             calculus,
             state,
-            {type: "UNDO", id1: -1, id2: -1, varAssign: new Map<string, string>()},
+            {type: "UNDO", id1: -1, id2: -1, varAssign: []},
             stateChanger,
             onError
         );
@@ -148,7 +148,7 @@ const sendExtend = (
             server,
             calculus,
             state,
-            {type: "EXPAND", id1: leaf, id2: clause, varAssign: new Map<string, string>()},
+            {type: "EXPAND", id1: leaf, id2: clause, varAssign: []},
             stateChanger,
             onError
         );
@@ -303,13 +303,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
         }
     };
 
-    const submitVarAssign = (autoClose: boolean, varAssign: Map<string, string> = new Map<string, string>()) => {
+    const submitVarAssign = (autoClose: boolean, varAssign: VarAssignment[] = []) => {
         setShowVarAssignDialog(false);
         if(selectedNodeId === undefined || closeMoveSecondNodeId === undefined) {
             throw new Error("Close move went wrong, since selected nodes could not be identified.");
-
         }
-        console.log(autoClose);
         const selectedNode = state!.nodes[selectedNodeId];
         const leafNodeId = selectedNode.children.length === 0 ? selectedNodeId : closeMoveSecondNodeId;
         const predNodeId = selectedNode.children.length === 0 ? closeMoveSecondNodeId : selectedNodeId;

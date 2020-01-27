@@ -1,4 +1,5 @@
 import { h } from "preact";
+import {VarAssignment} from "../../../types/tableaux";
 import Btn from "../../btn";
 import TextInput from "../text";
 
@@ -42,27 +43,35 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
     secondSubmitEvent,
     className
 }) => {
-    const varAssign : Map<string, string> = new Map<string, string>();
+    const varAssign : VarAssignment[] = [];
 
-    const onInput = ({ target }: Event) => {
-        const { id, value } = target as HTMLTextAreaElement;
-        varAssign.set(vars[parseInt(id)], value);
+    const submitVarAssign = () => {
+        vars.forEach((variable) => {
+            const textInput = document.getElementById(variable);
+            if (!(textInput && textInput instanceof HTMLInputElement)) {
+                return;
+            }
+            varAssign.push({
+                key: variable,
+                value: textInput.value
+            });
+        });
+        submitVarAssignCallback(false, varAssign);
     };
 
     return (
         <div class={`card ${className}`}>
-            {vars.map((variable, index) => (
+            {vars.map((variable) => (
                 <p>
                     <TextInput
-                        id={index.toString()}
+                        id={variable}
                         label={variable + " := "}
-                        onChange={() => onInput}
                         required={manualVarAssign}
                         inline={true}
                     />
                 </p>
             ))}
-            <Btn onClick={() => submitVarAssignCallback(false, varAssign)} >
+            <Btn onClick={submitVarAssign} >
                 {submitLabel}
             </Btn>
 
