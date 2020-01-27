@@ -89,8 +89,6 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Synt
 
         return true
     }
-
-    override fun hashCode() = toString().hashCode()
 }
 
 class UniversalQuantifier(

@@ -29,4 +29,6 @@ data class Atom<AtomType>(val lit: AtomType, val negated: Boolean = false) {
 
         return eq
     }
+
+    override fun hashCode() = lit.toString().hashCode() + negated.toString().hashCode()
 }
