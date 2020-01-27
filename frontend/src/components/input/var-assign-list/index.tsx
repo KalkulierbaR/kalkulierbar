@@ -10,7 +10,7 @@ interface Props {
     /**
      * Whether all variable assignments need to be provided by the user
      */
-    requireAll: boolean;
+    manualVarAssign: boolean;
     /**
      * The function to call, when the user submits the list
      */
@@ -20,6 +20,14 @@ interface Props {
      */
     submitLabel: string;
     /**
+     * Label for the 2nd button
+     */
+    alternativeLabel: string;
+    /**
+     * The function to call, when the user chooses the alternativ event
+     */
+    alternativeEvent?: CallableFunction;
+    /**
      * Additional className for the element
      */
     className?: string;
@@ -27,9 +35,12 @@ interface Props {
 
 const VarAssignList: preact.FunctionalComponent<Props> = ({
     vars,
-    requireAll,
+    manualVarAssign,
     submitVarAssignCallback,
     submitLabel,
+    // todo: Bessere Variablen namen?
+    alternativeLabel,
+    alternativeEvent,
     className
 }) => {
     const varAssign : Map<string, string> = new Map<string, string>();
@@ -47,7 +58,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                         id={index.toString()}
                         label={variable + " := "}
                         onChange={() => onInput}
-                        required={requireAll}
+                        required={manualVarAssign}
                         inline={true}
                     />
                 </p>
@@ -55,6 +66,12 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
             <Btn onClick={submitVarAssignCallback(varAssign)} >
                 {submitLabel}
             </Btn>
+
+            {!manualVarAssign && alternativeLabel && alternativeEvent? (
+                <Btn onClick={alternativeEvent()}>
+                    {alternativeLabel}
+                </Btn>
+            ) : ""}
         </div>
     );
 };

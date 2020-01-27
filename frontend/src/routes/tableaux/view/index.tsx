@@ -38,6 +38,7 @@ import propExampleState from "./prop-example";
  * @param {number} leaf - The selected leaf
  * @param {number} pred - The selected predecessor
  * @param {Map<string, string>} varAssignments - Variable assignments for manual unification
+ * @param {boolean} autoClose - The server should decide about the variable assignment
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 const sendClose = (
@@ -48,9 +49,11 @@ const sendClose = (
     onError: (msg: string) => void,
     leaf: number,
     pred: number,
-    varAssignments?: Map<string, string>
+    varAssignments?: Map<string, string>,
+    // todo: Passt das so?
+    autoClose?: boolean
 ) => {
-    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
+    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state) && !autoClose) {
         sendMove(
             server,
             calculus,
@@ -60,12 +63,22 @@ const sendClose = (
             onError
         );
     }
-    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
+    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state) && !autoClose){
         sendMove(
             server,
             calculus,
             state,
             {type: "CLOSE", id1: leaf, id2: pred, varAssign: varAssignments!},
+            stateChanger,
+            onError
+        );
+    }
+    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state) && autoClose){
+        sendMove(
+            server,
+            calculus,
+            state,
+            {type: "AUTOCLOSE", id1: leaf, id2: pred, varAssign: varAssignments!},
             stateChanger,
             onError
         );
@@ -295,8 +308,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             }
         }
     };
-
+    // todo: doppelten code optimieren
     const submitVarAssign = (varAssign: Map<string, string>) => {
+        setShowVarAssignDialog(false);
         if(selectedNodeId !== undefined && closeMoveSecondNodeId !== undefined) {
             const selectedNode = state!.nodes[selectedNodeId];
             const leafNodeId = selectedNode.children.length === 0 ? selectedNodeId : closeMoveSecondNodeId;
@@ -318,6 +332,32 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
         }
         throw new Error("Close move went wrong, since selected nodes could not be identified.");
     };
+
+    const submitAutoVarAssign = () => {
+        setShowVarAssignDialog(false);
+        if(selectedNodeId !== undefined && closeMoveSecondNodeId !== undefined) {
+            const selectedNode = state!.nodes[selectedNodeId];
+            const leafNodeId = selectedNode.children.length === 0 ? selectedNodeId : closeMoveSecondNodeId;
+            const predNodeId = selectedNode.children.length === 0 ? closeMoveSecondNodeId : selectedNodeId;
+
+            sendClose(
+                calculus,
+                server,
+                state!,
+                onChange,
+                onError,
+                leafNodeId,
+                predNodeId,
+                new Map<string, string>(),
+                true
+            );
+            setSelectedNodeId(undefined);
+            setCloseMoveSecondNodeId(undefined);
+            return;
+        }
+        throw new Error("Close move went wrong, Automatic assingment of variables threw an Error.");
+    };
+
 
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
@@ -407,9 +447,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                 >
                     <VarAssignList
                         vars={varsToAssign}
-                        requireAll={state.manualVarAssign}
+                        manualVarAssign={state.manualVarAssign}
                         submitVarAssignCallback={() => submitVarAssign}
                         submitLabel="Assign variables"
+                        alternativeEvent={() => submitAutoVarAssign}
+                        alternativeLabel="Use automated variable selection"
                     />
                 </Dialog> : ""
             }
