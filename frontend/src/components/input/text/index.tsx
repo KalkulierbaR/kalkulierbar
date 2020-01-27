@@ -1,6 +1,7 @@
 import { ComponentChild, h } from "preact";
 import { useRef, useState } from "preact/hooks";
 
+import {classMap} from "../../../helpers/class-map";
 import * as style from "./style.scss";
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
     class?: string;
     value?: string;
     required?: boolean;
+    inline?: boolean;
 }
 
 const TextInput: preact.FunctionalComponent<Props> = ({
@@ -22,6 +24,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
     value,
     onKeyDown,
     required,
+    inline = false,
     ...props
 }) => {
     const input = useRef<HTMLInputElement>();
@@ -32,11 +35,26 @@ const TextInput: preact.FunctionalComponent<Props> = ({
 
     return (
         <div {...props}>
-            <label for={id ? id : randomId}>{label}</label>
-            <div class={style.row}>
+            <label
+                for={id ? id : randomId}
+                class={classMap({
+                    [style.inline]: inline
+                })}
+                >
+                {label}
+            </label>
+            <div
+                class={classMap({
+                    [style.row]: true,
+                    [style.inline]: inline
+                })}
+                >
                 <input
                     id={id ? id : randomId}
-                    class={style.input}
+                    class={classMap({
+                        [style.input]: true,
+                        [style.inline]: inline
+                    })}
                     ref={input}
                     value={text}
                     onInput={e => {

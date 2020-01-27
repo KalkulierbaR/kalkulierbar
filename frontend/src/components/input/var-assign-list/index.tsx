@@ -48,6 +48,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                         label={variable + " := "}
                         onChange={() => onInput}
                         required={requireAll}
+                        inline={true}
                     />
                 </p>
             ))}
