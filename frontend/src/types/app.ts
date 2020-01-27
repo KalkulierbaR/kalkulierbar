@@ -3,7 +3,14 @@ import {
     ResolutionParams,
     ResolutionState
 } from "./resolution";
-import {FoTableauxParams, FoTableauxState, PropTableauxParams, PropTableauxState, TableauxMove} from "./tableaux";
+import {
+    FoTableauxMove,
+    FoTableauxParams,
+    FoTableauxState,
+    PropTableauxParams,
+    PropTableauxState,
+    TableauxMove
+} from "./tableaux";
 
 export type TableauxCalculus = "prop-tableaux" | "fo-tableaux";
 export type Calculus = TableauxCalculus | "prop-resolution";
@@ -11,7 +18,7 @@ export type Calculus = TableauxCalculus | "prop-resolution";
 export interface Move {
     "prop-tableaux": TableauxMove;
     "prop-resolution": ResolutionMove;
-    "fo-tableaux": TableauxMove;
+    "fo-tableaux": FoTableauxMove;
 }
 
 export interface Params {

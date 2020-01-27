@@ -34,10 +34,9 @@ export interface TableauxExpandMove {
 }
 
 export interface TableauxCloseMove {
-    type: "CLOSE";
+    type: "CLOSE" | "AUTOCLOSE";
     id1: number;
     id2: number;
-    varAssign?: Map<string, string>;
 }
 
 export interface TableauxUndoMove {
@@ -94,6 +93,7 @@ export function instanceOfFoTableauxState(object: any): object is FoTableauxStat
     return 'formula' in object;
 }
 
+export type FoTableauxMove = TableauxMove & { varAssign: Map<string, string>; }
 
 export interface FoRelation {
     spelling: string;

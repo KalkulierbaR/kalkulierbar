@@ -5,7 +5,6 @@ import {
     FoTableauxState, instanceOfFoTableauxState, instanceOfPropTableauxState,
     PropTableauxState,
     SelectNodeOptions,
-    TableauxCloseMove,
     TableauxTreeLayoutNode
 } from "../../../types/tableaux";
 import * as style from "./style.scss";
@@ -51,24 +50,26 @@ const sendClose = (
     pred: number,
     varAssignments?: Map<string, string>
 ) => {
-    let move : TableauxCloseMove;
-    switch (calculus) {
-        case "prop-tableaux":
-            move = {type: "CLOSE", id1: leaf, id2: pred};
-            break;
-        case "fo-tableaux":
-            move = {type: "CLOSE", id1: leaf, id2: pred, varAssign: varAssignments};
-            break;
+    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
+        sendMove(
+            server,
+            calculus,
+            state,
+            {type: "CLOSE", id1: leaf, id2: pred},
+            stateChanger,
+            onError
+        );
     }
-
-    sendMove(
-        server,
-        calculus,
-        state,
-        move,
-        stateChanger,
-        onError
-    );
+    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
+        sendMove(
+            server,
+            calculus,
+            state,
+            {type: "CLOSE", id1: leaf, id2: pred, varAssign: varAssignments!},
+            stateChanger,
+            onError
+        );
+    }
 };
 
 /**
@@ -86,15 +87,28 @@ const sendBacktrack = (
     state: PropTableauxState | FoTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void
-) =>
-    sendMove(
-        server,
-        calculus,
-        state,
-        { type: "UNDO", id1: -1, id2: -1},
-        stateChanger,
-        onError
-    );
+) => {
+    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
+        sendMove(
+            server,
+            calculus,
+            state,
+            {type: "UNDO", id1: -1, id2: -1},
+            stateChanger,
+            onError
+        );
+    }
+    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
+        sendMove(
+            server,
+            calculus,
+            state,
+            {type: "UNDO", id1: -1, id2: -1, varAssign: new Map<string, string>()},
+            stateChanger,
+            onError
+        );
+    }
+};
 
 /**
  * Wrapper to send move request
@@ -115,15 +129,28 @@ const sendExtend = (
     onError: (msg: string) => void,
     leaf: number,
     clause: number
-) =>
-    sendMove(
-        server,
-        calculus,
-        state,
-        {type: "EXPAND", id1: leaf, id2: clause},
-        stateChanger,
-        onError
-    );
+) => {
+    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
+        sendMove(
+            server,
+            calculus,
+            state,
+            {type: "EXPAND", id1: leaf, id2: clause},
+            stateChanger,
+            onError
+        );
+    }
+    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
+        sendMove(
+            server,
+            calculus,
+            state,
+            {type: "EXPAND", id1: leaf, id2: clause, varAssign: new Map<string, string>()},
+            stateChanger,
+            onError
+        );
+    }
+};
 
 interface Props {
     /**
@@ -142,12 +169,24 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
         onSuccess
     } = useAppState();
     let state = cState;
-    const [selectedClauseId, setSelectedClauseId] = useState<number | undefined>(undefined);
-    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(undefined);
-    const [closeMoveSecondNodeId, setCloseMoveSecondNodeId] = useState<number | undefined>(undefined);
-    const [showClauseDialog, setShowClauseDialog] = useState(false);
-    const [showVarAssignDialog, setShowVarAssignDialog] = useState(true);
-    const [varsToAssign, setVarsToAssign] = useState<string[]>( ["A", "B"]);
+    const [selectedClauseId, setSelectedClauseId] = useState<number | undefined>(
+        undefined
+    );
+    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
+        undefined
+    );
+    const [closeMoveSecondNodeId, setCloseMoveSecondNodeId] = useState<number | undefined>(
+        undefined
+    );
+    const [showClauseDialog, setShowClauseDialog] = useState(
+        false
+    );
+    const [showVarAssignDialog, setShowVarAssignDialog] = useState(
+        true
+    );
+    const [varsToAssign, setVarsToAssign] = useState<string[]>(
+        ["A", "B"]
+    );
 
     const clauseOptions = () => {
         let options: string[] = [];
