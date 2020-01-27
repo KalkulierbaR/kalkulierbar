@@ -10,7 +10,7 @@ class FormulaGenerator
 	end
 
 	def generateEquiv
-		if chance(0.15)
+		if chance(0.1)
 			op = chance(0.5) ? "<->" : "<=>"
 			return "#{generateImpl} #{op} #{generateImpl}"
 		else
@@ -19,7 +19,7 @@ class FormulaGenerator
 	end
 
 	def generateImpl
-		if chance(0.15)
+		if chance(0.1)
 			return "#{generateOr} -> #{generateOr}"
 		else
 			return generateOr
@@ -27,7 +27,7 @@ class FormulaGenerator
 	end
 
 	def generateOr
-		if chance(0.3)
+		if chance(0.2)
 			return "#{generateAnd} | #{generateOr}"
 		else
 			return generateAnd
@@ -35,7 +35,7 @@ class FormulaGenerator
 	end
 
 	def generateAnd
-		if chance(0.3)
+		if chance(0.2)
 			return "#{generateNot} & #{generateAnd}"
 		else
 			return generateNot
@@ -68,7 +68,7 @@ class FormulaGenerator
 	end
 
 	def generateAtom
-		if chance(0.3)
+		if chance(0.2)
 			return "( #{generateEquiv} )"
 		else
 			return @isFO ? generateRelation : generateVar
@@ -82,13 +82,13 @@ class FormulaGenerator
 	def generateRelation
 		name = ["R", "Q", "P", "S", "Relation", "R1", "REL"].sample
 		joinString = [",", ", ", " , "].sample
-		arity = rand(1..4)
+		arity = rand(1..3)
 		args = (1..arity).map { |e| generateFunction }
 		"#{name}(#{args.join(joinString)})"
 	end
 
 	def generateFunction
-		return generateQuantifiedVariable if chance(0.7)
+		return generateQuantifiedVariable if chance(0.8)
 
 		name = ["f", "g", "h", "fun", "functionCall", "1", "42"].sample
 		joinString = [",", ", ", " , "].sample

@@ -3,22 +3,23 @@ package main.kotlin
 import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
-import kalkulierbar.FOAcceptor
+import kalkulierbar.KBAR_DEFAULT_PORT
 import kalkulierbar.KalkulierbarException
 import kalkulierbar.resolution.PropositionalResolution
+import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
 // List of all active calculi
-val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution(), FOAcceptor())
+val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution(), FirstOrderTableaux())
 
 fun main(args: Array<String>) {
     // Verify that all calculus implementations have unique names
     if (endpoints.size != endpoints.map { it.identifier }.distinct().size)
         throw KalkulierbarException("Set of active calculus implementations contains duplicate identifiers")
 
-    val port = getHerokuPort()
+    val port = getEnvPort()
 
     // Only listen globally if cli argument is present
     val listenGlobally = args.isNotEmpty() && (args[0] == "--global" || args[0] == "-g")
@@ -26,8 +27,7 @@ fun main(args: Array<String>) {
     httpApi(port, endpoints, listenGlobally)
 }
 
-@Suppress("MagicNumber")
-fun getHerokuPort() = System.getenv("PORT")?.toInt() ?: 7000
+fun getEnvPort() = System.getenv("PORT")?.toInt() ?: KBAR_DEFAULT_PORT
 
 /**
  * Starts a Javalin Server and creates API methods for active calculus objects

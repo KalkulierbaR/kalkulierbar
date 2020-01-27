@@ -23,7 +23,7 @@ class ClauseSetParser {
          * @param atomSeparator string separating atoms (variables) from each other, e.g. ","
          * @return ClauseSet representing the input formula
          */
-        fun parseGeneric(formula: String, clauseSeparator: String, atomSeparator: String): ClauseSet {
+        fun parseGeneric(formula: String, clauseSeparator: String, atomSeparator: String): ClauseSet<String> {
 
             // Preprocessing: Remove whitespace & newlines
             var processedFormula = formula.replace("\n", clauseSeparator).replace(Regex("\\s"), "").replace(Regex(";$"), "")
@@ -45,17 +45,17 @@ class ClauseSetParser {
                     Please adhere to the following format: $formatExample with variables in [a-zA-Z]+"""
                         .trimMargin().trimIndent())
 
-            val parsed = ClauseSet()
+            val parsed = ClauseSet<String>()
             val clauses = processedFormula.split(clauseSeparator)
 
             for (clause in clauses) {
                 val members = clause.split(atomSeparator)
-                val parsedClause = Clause()
+                val parsedClause = Clause<String>()
 
                 for (member in members) {
                     // Check if the member variable is negated and set a boolean flag accordingly
                     // true -> positive variable / false -> negated variable
-                    val atom: Atom
+                    val atom: Atom<String>
 
                     if (member[0] == '!')
                         atom = Atom(member.substring(1), true)

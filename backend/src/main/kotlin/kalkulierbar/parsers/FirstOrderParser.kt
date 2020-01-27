@@ -18,8 +18,17 @@ import kalkulierbar.logic.UniversalQuantifier
 @Suppress("TooManyFunctions")
 class FirstOrderParser : PropositionalParser() {
 
+    companion object {
+        val instance = FirstOrderParser()
+
+        fun parse(formula: String) = instance.parse(formula)
+
+        fun parseTerm(term: String) = instance.parseTerm(term)
+    }
+
     // List of quantifier scopes for correct variable binding
     private val quantifierScope = mutableListOf<MutableList<QuantifiedVariable>>()
+    private var bindQuantifiedVariables = true
 
     /**
      * Parses a first order formula
@@ -29,7 +38,23 @@ class FirstOrderParser : PropositionalParser() {
     override fun parse(formula: String): LogicNode {
         // Clear quantifier scope to avoid problems on instance re-use
         quantifierScope.clear()
+        bindQuantifiedVariables = true
         return super.parse(formula)
+    }
+
+    /**
+     * Parses a first order term
+     * @param term input term
+     * @return FirstOrderTerm representing the term
+     */
+    fun parseTerm(term: String): FirstOrderTerm {
+        tokens = Tokenizer.tokenize(term)
+        bindQuantifiedVariables = false
+        val res = parseTerm()
+        if (tokens.isNotEmpty())
+            throw InvalidFormulaFormat("Expected end of term but got ${gotMsg()}")
+
+        return res
     }
 
     /**
@@ -40,7 +65,7 @@ class FirstOrderParser : PropositionalParser() {
 
         if (nextTokenIs(TokenType.NOT)) {
             consume()
-            return Not(parseQuantifier())
+            return Not(parseNot())
         } else {
             return parseQuantifier()
         }
@@ -73,7 +98,7 @@ class FirstOrderParser : PropositionalParser() {
 
         // Bound variables are variables with the spelling specified in the quantifier
         // Variables encountered with other spellings may be bound by surrounding quantifiers
-        val boundVariables = quantifierScope.last().filter { it.spelling == varName }
+        val boundVariables = quantifierScope.last().filter { it.spelling == varName }.toMutableList()
         val boundBefore = quantifierScope.last().filter { it.spelling != varName }
         quantifierScope.removeAt(quantifierScope.size - 1) // Close the scope
 
@@ -190,10 +215,11 @@ class FirstOrderParser : PropositionalParser() {
         val res = QuantifiedVariable(tokens.first().spelling)
 
         // Add variable to list of bound variables so the binding quantifier is informed of its existence
-        if (quantifierScope.size == 0)
+        if (quantifierScope.size == 0 && bindQuantifiedVariables)
             throw InvalidFormulaFormat("Unbound variable ${gotMsg()}")
 
-        quantifierScope.last().add(res)
+        if (bindQuantifiedVariables)
+            quantifierScope.last().add(res)
 
         consume(TokenType.CAPID)
         return res
