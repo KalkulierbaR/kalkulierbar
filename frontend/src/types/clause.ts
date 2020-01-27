@@ -65,9 +65,11 @@ export interface FoClauseSet {
 export interface FoArgument {
     type: string;
     spelling: string;
+    arguments?: FoArgument[];
 }
 
 export enum FoArgumentType {
     quantifiedVariable = "kalkulierbar.logic.QuantifiedVariable",
     constant = "kalkulierbar.logic.Constant",
+    function = "kalkulierbar.logic.Function",
 }

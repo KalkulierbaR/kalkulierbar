@@ -298,11 +298,15 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     if (argument.type === FoArgumentType.quantifiedVariable) {
                         vars.push(argument.spelling);
                     }
+                    if(argument.arguments) {
+                        argument.arguments.forEach(checkArgumentForVar);
+                    }
                 };
                 selectedNode.relation!.arguments.forEach(checkArgumentForVar);
                 newNode.relation!.arguments.forEach(checkArgumentForVar);
                 if (vars.length <= 0) {
                     submitVarAssign(true);
+                    return;
                 }
                 setVarsToAssign(vars);
                 setShowVarAssignDialog(true);

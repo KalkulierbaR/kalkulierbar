@@ -36,7 +36,7 @@ export const checkClose = async <C extends Calculus = Calculus>(
                 "Content-Type": "text/plain"
             },
             method: "POST",
-            body: `state=${JSON.stringify(state)}`
+            body: `state=${encodeURIComponent(JSON.stringify(state))}`
         });
         if (response.status !== 200) {
             onError(await response.text());
