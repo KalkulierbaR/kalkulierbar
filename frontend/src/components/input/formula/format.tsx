@@ -1,5 +1,7 @@
 import {Fragment, h} from "preact";
 
+import * as style from "./style.scss";
+
 interface Props {
     /**
      * Display the format for First Order logic
@@ -7,14 +9,11 @@ interface Props {
     foLogic?: boolean;
 }
 
-const Format: preact.FunctionalComponent<Props> = ({
-                                                       foLogic = false
-                                                   }) => (
+const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
     <div class="card">
         <h3>Format</h3>
         <ul>
-
-            {foLogic ? // Todo: Styling
+            {foLogic ? ( // Todo: Styling
                 <li>
                     <p>
                         <b>First Order Formulas</b>
@@ -78,38 +77,51 @@ const Format: preact.FunctionalComponent<Props> = ({
                         </table>
                     </p>
                     <p>
-                        Operator precedence is defined as
-                        follows: <code>{"()  >  !  >  \\ex = \\all  >  &  >  |  >  ->  > <=>"}</code>
+                        Operator precedence is defined as follows:{" "}
+                        <code>
+                            {
+                                "()  >  !  >  \\ex = \\all  >  &  >  |  >  ->  > <=>"
+                            }
+                        </code>
                     </p>
                 </li>
-                : <Fragment>
+            ) : (
+                <Fragment>
                     <li>
                         <p>
                             <b>Clause Sets</b>
                         </p>
                         <p>
-                            <code>{"{{a, ¬c}, {b}}"}</code>&nbsp;&nbsp;&nbsp;needs to be entered as&nbsp;&nbsp;&nbsp;
-                            <code>a,!c;b</code>
+                            <code class={style.padRight}>
+                                {"{{a, ¬c}, {b}}"}
+                            </code>
+                            needs to be entered as{" "}
+                            <code class={style.padLeft}>a,!c;b</code>
                         </p>
                         <p>
                             Use a semicolon or linebreak to signal a new clause.
                         </p>
                     </li>
-                    <br/>
+                    <br />
                     <li>
                         <p>
                             <b>Propositional Formulas</b>
                         </p>
                         <p>
-                            <code>{"!a -> ( a & b <=> a | b)"}</code>&nbsp;&nbsp;&nbsp;is a valid input.
+                            <code class={style.padRight}>
+                                {"!a -> ( a & b <=> a | b)"}
+                            </code>
+                            is a valid input.
                         </p>
                         <p>
-                            <code>{"<=>"}</code>&nbsp;&nbsp;&nbsp;and&nbsp;&nbsp;&nbsp;
-                            <code>{"<->"}</code>&nbsp;&nbsp;&nbsp;are synonymous.
+                            <code class={style.padRight}>{"<=>"}</code>
+                            and
+                            <code class={style.padLeft}>{"<->"}</code> are
+                            synonymous.
                         </p>
                     </li>
                 </Fragment>
-            }
+            )}
         </ul>
     </div>
 );

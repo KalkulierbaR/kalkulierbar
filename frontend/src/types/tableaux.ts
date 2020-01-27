@@ -1,4 +1,4 @@
-import { ClauseSet, FoArgument, FoClauseSet } from "./clause";
+import { ClauseSet, FOArgument, FOClauseSet } from "./clause";
 
 export interface TableauxNode {
     parent: number | null;
@@ -7,7 +7,7 @@ export interface TableauxNode {
     isClosed: boolean;
     closeRef: number | null;
     children: number[];
-    relation?: FoRelation;
+    relation?: FORelation;
 }
 
 export type TableauxTreeLayoutNode = TableauxNode & { id: number };
@@ -79,14 +79,14 @@ export interface SelectNodeOptions {
     ignoreClause?: boolean;
 }
 
-export interface FoTableauxState {
+export interface FOTableauxState {
     seal: string;
-    clauseSet: FoClauseSet;
+    clauseSet: FOClauseSet;
     nodes: TableauxNode[];
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;
-    moveHistory: FoTableauxMove[];
+    moveHistory: FOTableauxMove[];
     usedBacktracking: boolean;
     formula: string;
     expansionCounter: number;
@@ -94,9 +94,9 @@ export interface FoTableauxState {
     renderedClauseSet: string[];
 }
 
-export function instanceOfFoTableauxState(
+export function instanceOfFOTableauxState(
     object: any
-): object is FoTableauxState {
+): object is FOTableauxState {
     return "formula" in object;
 }
 
@@ -104,14 +104,14 @@ export interface VarAssign {
     [key: string]: string;
 }
 
-export type FoTableauxMove = TableauxMove & { varAssign: VarAssign };
+export type FOTableauxMove = TableauxMove & { varAssign: VarAssign };
 
-export interface FoRelation {
+export interface FORelation {
     spelling: string;
-    arguments: FoArgument[];
+    arguments: FOArgument[];
 }
 
-export interface FoTableauxParams {
+export interface FOTableauxParams {
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;
