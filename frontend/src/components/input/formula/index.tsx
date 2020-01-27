@@ -43,7 +43,7 @@ const normalizeInput = (input: string) => {
  * It also redirects the user after a successful response from the server
  * to the corresponding view of the calculus
  */
-const ClauseInput: preact.FunctionalComponent<Props> = ({
+const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params
 }) => {
@@ -127,4 +127,4 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
     );
 };
 
-export default ClauseInput;
+export default FormulaInput;

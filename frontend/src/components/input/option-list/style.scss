@@ -1,4 +1,4 @@
-.clause-list-item {
+.option {
     padding: 8px;
     cursor: pointer;
     background-color: #00000000;
@@ -10,7 +10,7 @@
     }
 }
 
-.clause-selected {
+.option-selected {
     background-color: var(--kbar-selected-color);
 
     &:hover {

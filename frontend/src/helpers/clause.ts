@@ -1,4 +1,4 @@
-import { Atom, Clause } from "../types/clause";
+import {Atom, Clause, ClauseSet} from "../types/clause";
 import { maxBy } from "./max-by";
 
 /**
@@ -19,6 +19,19 @@ export const clauseToString = (clause: Clause) => {
         return "∅";
     }
     return clause.atoms.map(atomToString).join(", ");
+};
+
+/**
+ * Transforms a clause set to a string array
+ * @param {ClauseSet} clauseSet - A set of clauses
+ * @returns {string[]} - The clauses as string array
+ */
+export const clauseSetToStringArray = (clauseSet: ClauseSet) => {
+    const clauses: string[] = [];
+    clauseSet.clauses.forEach((clause) => {
+        clauses.push(clauseToString(clause));
+    });
+    return clauses;
 };
 
 /**

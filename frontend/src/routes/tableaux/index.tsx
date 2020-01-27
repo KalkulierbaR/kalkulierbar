@@ -4,8 +4,8 @@ import Switch from "../../components/switch";
 
 import { useState } from "preact/hooks";
 import HintIcon, { Hint } from "../../components/hint";
-import ClauseInput from "../../components/input/clause";
-import Format from "../../components/input/clause/format";
+import FormulaInput from "../../components/input/formula";
+import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
 import { useAppState } from "../../helpers/app-state";
 import {TableauxCalculus} from "../../types/app";
@@ -100,7 +100,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
 
     return (
         <Fragment>
-            <ClauseInput calculus={calculus} params={params} />
+            <FormulaInput calculus={calculus} params={params} />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />

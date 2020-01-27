@@ -2,7 +2,7 @@ import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import {AppStateUpdater, TableauxCalculus} from "../../../types/app";
 import {
-    FoTableauxState, instanceOfFoTableauxState,
+    FoTableauxState, instanceOfFoTableauxState, instanceOfPropTableauxState,
     PropTableauxState,
     SelectNodeOptions,
     TableauxCloseMove,
@@ -11,7 +11,6 @@ import {
 import * as style from "./style.scss";
 
 import CheckCloseBtn from "../../../components/check-close";
-import ClauseList from "../../../components/clause-list";
 import ControlFAB from "../../../components/control-fab";
 import Dialog from "../../../components/dialog";
 import FAB from "../../../components/fab";
@@ -20,10 +19,12 @@ import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
 import UndoIcon from "../../../components/icons/undo";
+import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
+import {clauseSetToStringArray} from "../../../helpers/clause";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
 import foExampleState from "./fo-example";
 import propExampleState from "./prop-example";
@@ -154,6 +155,17 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
     const [showClauseDialog, setShowClauseDialog] = useState(false);
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>( []);
+
+    const clauseOptions = () => {
+        let options: string[] = [];
+        if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
+            options = clauseSetToStringArray(state!.clauseSet);
+        }
+        if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
+            options = state!.renderedClauseSet;
+        }
+        return options;
+    };
 
     /**
      * The function to call, when the user selects a clause
@@ -321,10 +333,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             <div class={style.view}>
                 {!smallScreen && (
                     <div>
-                        <ClauseList
-                            clauseSet={state!.clauseSet}
-                            selectedClauseId={selectedClauseId}
-                            selectClauseCallback={selectClauseCallback}
+                        <OptionList
+                            options={clauseOptions()}
+                            selectedOptionId={selectedClauseId}
+                            selectOptionCallback={selectClauseCallback}
                         />
                         <CheckCloseBtn calculus={calculus} />
                     </div>
@@ -343,10 +355,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                 label="Choose Clause"
                 onClose={() => setShowClauseDialog(false)}
             >
-                <ClauseList
-                    clauseSet={state.clauseSet}
-                    selectedClauseId={undefined}
-                    selectClauseCallback={(id: number) => {
+                <OptionList
+                    options={clauseOptions()}
+                    selectedOptionId={undefined}
+                    selectOptionCallback={(id: number) => {
                         setShowClauseDialog(false);
                         selectClauseCallback(id);
                     }}

@@ -23,30 +23,6 @@ export interface PropTableauxState {
     usedBacktracking: boolean;
 }
 
-export interface FoTableauxState {
-    seal: string;
-    clauseSet: FoClauseSet;
-    nodes: TableauxNode[];
-    type: TableauxType;
-    regular: boolean;
-    backtracking: boolean;
-    moveHistory: TableauxMove[];
-    usedBacktracking: boolean;
-    formula: string;
-    expansionCounter: number;
-    manualVarAssign: boolean;
-    renderedClauseSet: string[];
-}
-
-export interface FoRelation {
-    spelling: string;
-    arguments: [];
-}
-
-export function instanceOfFoTableauxState(object: any): object is FoTableauxState {
-    return 'manualVarAssign' in object;
-}
-
 export interface TableauxExpandMove {
     type: "EXPAND";
     id1: number;
@@ -87,17 +63,46 @@ export interface PropTableauxParams {
     cnfStrategy: CnfStrategy;
 }
 
-export interface FoTableauxParams {
-    type: TableauxType;
-    regular: boolean;
-    backtracking: boolean;
-    manualUnification: boolean;
-}
-
 export interface SelectNodeOptions {
     /**
      * Ignores any selected clause and deselects all clauses.
      * Defaults to `false`.
      */
     ignoreClause?: boolean;
+}
+
+export function instanceOfPropTableauxState(object: any): object is PropTableauxState {
+    return 'clauseSet' in object;
+}
+
+export interface FoTableauxState {
+    seal: string;
+    clauseSet: FoClauseSet;
+    nodes: TableauxNode[];
+    type: TableauxType;
+    regular: boolean;
+    backtracking: boolean;
+    moveHistory: TableauxMove[];
+    usedBacktracking: boolean;
+    formula: string;
+    expansionCounter: number;
+    manualVarAssign: boolean;
+    renderedClauseSet: string[];
+}
+
+export function instanceOfFoTableauxState(object: any): object is FoTableauxState {
+    return 'formula' in object;
+}
+
+
+export interface FoRelation {
+    spelling: string;
+    arguments: [];
+}
+
+export interface FoTableauxParams {
+    type: TableauxType;
+    regular: boolean;
+    backtracking: boolean;
+    manualUnification: boolean;
 }
