@@ -30,7 +30,7 @@ export interface CandidateClause extends Clause {
 }
 
 /**
- * The Atom object received from the backend
+ * A literal in FO
  */
 export interface FoLiteral {
     spelling: string;
@@ -38,7 +38,7 @@ export interface FoLiteral {
 }
 
 /**
- * The Atom object received from the backend
+ * The FoAtom object received from the backend
  */
 export interface FoAtom {
     lit: FoLiteral;
@@ -46,7 +46,7 @@ export interface FoAtom {
 }
 
 /**
- * Clause is a list of Atoms
+ * FoClause is a list of FoAtoms
  */
 export interface FoClause {
     atoms: FoAtom[];

@@ -23,6 +23,10 @@ export interface PropTableauxState {
     usedBacktracking: boolean;
 }
 
+export function instanceOfPropTableauxState(object: any): object is PropTableauxState {
+    return 'clauseSet' in object;
+}
+
 export interface TableauxExpandMove {
     type: "EXPAND";
     id1: number;
@@ -69,10 +73,6 @@ export interface SelectNodeOptions {
      * Defaults to `false`.
      */
     ignoreClause?: boolean;
-}
-
-export function instanceOfPropTableauxState(object: any): object is PropTableauxState {
-    return 'clauseSet' in object;
 }
 
 export interface FoTableauxState {
