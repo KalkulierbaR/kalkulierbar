@@ -142,19 +142,12 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
         onSuccess
     } = useAppState();
     let state = cState;
-    const [selectedClauseId, setSelectedClauseId] = useState<
-        number | undefined
-    >(undefined);
-    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
-        undefined
-    );
-    const [closeMoveSecondNodeId, setCloseMoveSecondNodeId] = useState<number | undefined>(
-        undefined
-    );
-
+    const [selectedClauseId, setSelectedClauseId] = useState<number | undefined>(undefined);
+    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(undefined);
+    const [closeMoveSecondNodeId, setCloseMoveSecondNodeId] = useState<number | undefined>(undefined);
     const [showClauseDialog, setShowClauseDialog] = useState(false);
-    const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
-    const [varsToAssign, setVarsToAssign] = useState<string[]>( []);
+    const [showVarAssignDialog, setShowVarAssignDialog] = useState(true);
+    const [varsToAssign, setVarsToAssign] = useState<string[]>( ["A", "B"]);
 
     const clauseOptions = () => {
         let options: string[] = [];
@@ -257,7 +250,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         if(vars.length <= 0) {
                             break;
                         }
-                        console.log(vars);
                         setVarsToAssign(vars);
                         setShowVarAssignDialog(true);
                 }
@@ -369,8 +361,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                 <Dialog
                     open={showVarAssignDialog}
                     label={state.manualVarAssign ?
-                        "Please provide all variable assignments." :
-                        "Choose variable assignments and hit <span style='color:blue'>Submit</span>. Blank fields will be calculated automatically."
+                        "Choose all variable assignments" :
+                        "Choose variable assignments or leave them blank"
                     }
                     onClose={() => setShowVarAssignDialog(false)}
                 >
@@ -378,6 +370,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         vars={varsToAssign}
                         requireAll={state.manualVarAssign}
                         submitVarAssignCallback={() => submitVarAssign}
+                        submitLabel="Assign variables"
                     />
                 </Dialog> : ""
             }

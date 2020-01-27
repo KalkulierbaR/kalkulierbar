@@ -120,7 +120,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     autocapitalize="off"
                 />
                 <Btn type="submit" disabled={userInput.length === 0}>
-                    Send
+                    Start proof
                 </Btn>
             </form>
         </div>

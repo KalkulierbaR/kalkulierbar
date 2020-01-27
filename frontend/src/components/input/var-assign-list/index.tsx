@@ -1,6 +1,6 @@
 import { h } from "preact";
 import Btn from "../../btn";
-import * as style from "./style.scss";
+import TextInput from "../text";
 
 interface Props {
     /**
@@ -16,6 +16,10 @@ interface Props {
      */
     submitVarAssignCallback: CallableFunction;
     /**
+     * Label for the submit button
+     */
+    submitLabel: string;
+    /**
      * Additional className for the element
      */
     className?: string;
@@ -25,6 +29,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
     vars,
     requireAll,
     submitVarAssignCallback,
+    submitLabel,
     className
 }) => {
     const varAssign : Map<string, string> = new Map<string, string>();
@@ -36,22 +41,19 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
 
     return (
         <div class={`card ${className}`}>
-            {vars.map((variable) => (
-                <p
-                    class={style.option}
-                >
-                    <label for={variable}>{variable}</label>
-                    <input
-                        id={variable}
-                        onInput={onInput}
+            {vars.map((variable, index) => (
+                <p>
+                    <TextInput
+                        id={index.toString()}
+                        label={variable + " := "}
+                        onChange={() => onInput}
                         required={requireAll}
                     />
                 </p>
             ))}
             <Btn onClick={submitVarAssignCallback(varAssign)} >
-                Submit
+                {submitLabel}
             </Btn>
-            <input/>
         </div>
     );
 };
