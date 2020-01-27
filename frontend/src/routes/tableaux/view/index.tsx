@@ -306,7 +306,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     />
                 </Dialog>
             ) : (
-                ""
+                undefined
             )}
 
             <ControlFAB>
@@ -333,7 +333,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 }}
                             />
                         ) : (
-                            ""
+                            undefined
                         )}
                         <FAB
                             icon={<CenterIcon />}
@@ -379,7 +379,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 }}
                             />
                         ) : (
-                            ""
+                            undefined
                         )}
                     </Fragment>
                 ) : (
