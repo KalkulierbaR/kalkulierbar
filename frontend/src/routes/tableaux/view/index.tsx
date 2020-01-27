@@ -451,7 +451,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         submitVarAssignCallback={() => submitVarAssign}
                         submitLabel="Assign variables"
                         alternativeEvent={() => submitAutoVarAssign}
-                        alternativeLabel="Use automated variable selection"
+                        alternativeLabel="Ask the great oracle"
                     />
                 </Dialog> : ""
             }
