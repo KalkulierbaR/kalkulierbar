@@ -50,7 +50,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                         </table>
                     </p>
                     <p>
-                        Operator precedence is defined as follows: <code>{"() > ! > \\ex = \\all > & > | > -> > <=>"}</code>
+                        Operator precedence is defined as follows: <code>{"()  >  !  >  \\ex = \\all  >  &  >  |  >  ->  > <=>"}</code>
                     </p>
                 </li>
                 : <Fragment>
