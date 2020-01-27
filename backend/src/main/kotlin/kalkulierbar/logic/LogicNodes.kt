@@ -58,7 +58,7 @@ class Equiv(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, r
 }
 
 @Serializable
-class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : LogicNode() {
+class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : SyntacticEquality, LogicNode() {
 
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
 
@@ -75,7 +75,7 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
      * @return true iff the relations are equal
      */
     @Suppress("ReturnCount")
-    fun synEq(other: Any?): Boolean {
+    override fun synEq(other: Any?): Boolean {
         if (other == null || !(other is Relation))
             return false
 
@@ -89,14 +89,6 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Logi
 
         return true
     }
-
-    /**
-     * Overriding equality here to make equality checks on Atoms work as expected
-     * (based on syntactic equality)
-     * This may lead to unexpected consequences when using Relations directly
-     */
-    // FIXME
-    override fun equals(other: Any?) = synEq(other)
 
     override fun hashCode() = toString().hashCode()
 }
