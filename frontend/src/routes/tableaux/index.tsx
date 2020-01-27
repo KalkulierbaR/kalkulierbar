@@ -148,7 +148,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
                     </div>
                 </div>
             </div>
-            <Format />
+            <Format foLogic={calculus === "fo-tableaux"} />
         </Fragment>
     );
 };
