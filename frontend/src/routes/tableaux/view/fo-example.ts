@@ -1,6 +1,6 @@
-import {FoTableauxState, TableauxType} from "../../../types/tableaux";
+import {FOTableauxState, TableauxType} from "../../../types/tableaux";
 
-const foExample: FoTableauxState = {
+const foExample: FOTableauxState = {
     "clauseSet": {
         "clauses": [{
             "atoms": [{

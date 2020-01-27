@@ -48,7 +48,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
     const submitVarAssign = () => {
         vars.forEach(variable => {
             const textInput = document.getElementById(variable);
-            if (!(textInput && textInput instanceof HTMLInputElement)) {
+            if (!(textInput && textInput instanceof HTMLInputElement && textInput.value)) {
                 return;
             }
             varAssign[variable] = textInput.value;
