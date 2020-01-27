@@ -25,6 +25,7 @@ import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import {clauseSetToStringArray} from "../../../helpers/clause";
 import { nextOpenLeaf } from "../../../helpers/tableaux";
+import {FoArgument, FoArgumentType} from "../../../types/clause";
 import foExampleState from "./fo-example";
 import propExampleState from "./prop-example";
 
@@ -50,10 +51,9 @@ const sendClose = (
     leaf: number,
     pred: number,
     varAssignments?: Map<string, string>,
-    // todo: Passt das so?
     autoClose?: boolean
 ) => {
-    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state) && !autoClose) {
+    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
         sendMove(
             server,
             calculus,
@@ -63,22 +63,12 @@ const sendClose = (
             onError
         );
     }
-    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state) && !autoClose){
+    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
         sendMove(
             server,
             calculus,
             state,
-            {type: "CLOSE", id1: leaf, id2: pred, varAssign: varAssignments!},
-            stateChanger,
-            onError
-        );
-    }
-    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state) && autoClose){
-        sendMove(
-            server,
-            calculus,
-            state,
-            {type: "AUTOCLOSE", id1: leaf, id2: pred, varAssign: varAssignments!},
+            {type: autoClose ? "AUTOCLOSE" : "CLOSE", id1: leaf, id2: pred, varAssign: varAssignments!},
             stateChanger,
             onError
         );
@@ -279,85 +269,64 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
 
             if (selectedNodeIsLeaf && newNodeIsLeaf || !selectedNodeIsLeaf && !newNodeIsLeaf){
                 setSelectedNodeId(newNode.id);
-            } else {
-                switch (calculus) {
-                    case "prop-tableaux":
-                        // Now we have a leaf and a predecessor => Try close move
-                        // If we can't do it, let server handle it
-                        sendClose(
-                            calculus,
-                            server,
-                            state!,
-                            onChange,
-                            onError,
-                            newNodeIsLeaf ? newNode.id : selectedNodeId,
-                            newNodeIsLeaf ? selectedNodeId : newNode.id
-                        );
-                        setSelectedNodeId(undefined);
-                        break;
-                    case "fo-tableaux":
-                        // Prepare dialog for automatic/manual unification
-                        setCloseMoveSecondNodeId(newNode.id);
-                        const vars = ["A", "B"]; // @todo proper filtering to get distinct values
-                        if(vars.length <= 0) {
-                            break;
-                        }
-                        setVarsToAssign(vars);
-                        setShowVarAssignDialog(true);
+            } else if(calculus === "prop-tableaux"){
+                // Now we have a leaf and a predecessor => Try close move
+                // If we can't do it, let server handle it
+                sendClose(
+                    calculus,
+                    server,
+                    state!,
+                    onChange,
+                    onError,
+                    newNodeIsLeaf ? newNode.id : selectedNodeId,
+                    newNodeIsLeaf ? selectedNodeId : newNode.id
+                );
+                setSelectedNodeId(undefined);
+            }
+            else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
+                // Prepare dialog for automatic/manual unification
+                setCloseMoveSecondNodeId(newNode.id);
+                const vars: string[] = [];
+                const checkArgumentForVar = (argument: FoArgument) => {
+                    if(argument.type === FoArgumentType.quantifiedVariable){
+                        vars.push(argument.spelling);
+                    }
+                };
+                selectedNode.relation!.arguments.forEach(checkArgumentForVar);
+                newNode.relation!.arguments.forEach(checkArgumentForVar);
+                if(vars.length <= 0) {
+                    submitVarAssign(true);
                 }
+                setVarsToAssign(vars);
+                setShowVarAssignDialog(true);
             }
         }
     };
-    // todo: doppelten code optimieren
-    const submitVarAssign = (varAssign: Map<string, string>) => {
+
+    const submitVarAssign = (autoClose: boolean, varAssign: Map<string, string> = new Map<string, string>()) => {
         setShowVarAssignDialog(false);
-        if(selectedNodeId !== undefined && closeMoveSecondNodeId !== undefined) {
-            const selectedNode = state!.nodes[selectedNodeId];
-            const leafNodeId = selectedNode.children.length === 0 ? selectedNodeId : closeMoveSecondNodeId;
-            const predNodeId = selectedNode.children.length === 0 ? closeMoveSecondNodeId : selectedNodeId;
+        if(selectedNodeId === undefined || closeMoveSecondNodeId === undefined) {
+            throw new Error("Close move went wrong, since selected nodes could not be identified.");
 
-            sendClose(
-                calculus,
-                server,
-                state!,
-                onChange,
-                onError,
-                leafNodeId,
-                predNodeId,
-                varAssign
-            );
-            setSelectedNodeId(undefined);
-            setCloseMoveSecondNodeId(undefined);
-            return;
         }
-        throw new Error("Close move went wrong, since selected nodes could not be identified.");
+        console.log(autoClose);
+        const selectedNode = state!.nodes[selectedNodeId];
+        const leafNodeId = selectedNode.children.length === 0 ? selectedNodeId : closeMoveSecondNodeId;
+        const predNodeId = selectedNode.children.length === 0 ? closeMoveSecondNodeId : selectedNodeId;
+        sendClose(
+            calculus,
+            server,
+            state!,
+            onChange,
+            onError,
+            leafNodeId,
+            predNodeId,
+            varAssign,
+            autoClose
+        );
+        setSelectedNodeId(undefined);
+        setCloseMoveSecondNodeId(undefined);
     };
-
-    const submitAutoVarAssign = () => {
-        setShowVarAssignDialog(false);
-        if(selectedNodeId !== undefined && closeMoveSecondNodeId !== undefined) {
-            const selectedNode = state!.nodes[selectedNodeId];
-            const leafNodeId = selectedNode.children.length === 0 ? selectedNodeId : closeMoveSecondNodeId;
-            const predNodeId = selectedNode.children.length === 0 ? closeMoveSecondNodeId : selectedNodeId;
-
-            sendClose(
-                calculus,
-                server,
-                state!,
-                onChange,
-                onError,
-                leafNodeId,
-                predNodeId,
-                new Map<string, string>(),
-                true
-            );
-            setSelectedNodeId(undefined);
-            setCloseMoveSecondNodeId(undefined);
-            return;
-        }
-        throw new Error("Close move went wrong, Automatic assingment of variables threw an Error.");
-    };
-
 
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
@@ -439,19 +408,16 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             {calculus === "fo-tableaux" && instanceOfFoTableauxState(state) ?
                 <Dialog
                     open={showVarAssignDialog}
-                    label={state.manualVarAssign ?
-                        "Choose all variable assignments" :
-                        "Choose variable assignments or leave them blank"
-                    }
+                    label="Choose variable assignments or leave them blank"
                     onClose={() => setShowVarAssignDialog(false)}
                 >
                     <VarAssignList
                         vars={varsToAssign}
                         manualVarAssign={state.manualVarAssign}
-                        submitVarAssignCallback={() => submitVarAssign}
+                        submitVarAssignCallback={submitVarAssign}
                         submitLabel="Assign variables"
-                        alternativeEvent={() => submitAutoVarAssign}
-                        alternativeLabel="Ask the great oracle"
+                        secondSubmitEvent={submitVarAssign}
+                        secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog> : ""
             }

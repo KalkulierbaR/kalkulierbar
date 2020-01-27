@@ -22,11 +22,11 @@ interface Props {
     /**
      * Label for the 2nd button
      */
-    alternativeLabel: string;
+    secondSubmitLabel: string;
     /**
-     * The function to call, when the user chooses the alternativ event
+     * The function to call, when the user clicks the second submit button
      */
-    alternativeEvent?: CallableFunction;
+    secondSubmitEvent?: CallableFunction;
     /**
      * Additional className for the element
      */
@@ -38,9 +38,8 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
     manualVarAssign,
     submitVarAssignCallback,
     submitLabel,
-    // todo: Bessere Variablen namen?
-    alternativeLabel,
-    alternativeEvent,
+    secondSubmitLabel,
+    secondSubmitEvent,
     className
 }) => {
     const varAssign : Map<string, string> = new Map<string, string>();
@@ -63,15 +62,15 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                     />
                 </p>
             ))}
-            <Btn onClick={submitVarAssignCallback(varAssign)} >
+            <Btn onClick={() => submitVarAssignCallback(false, varAssign)} >
                 {submitLabel}
             </Btn>
 
-            {!manualVarAssign && alternativeLabel && alternativeEvent? (
-                <Btn onClick={alternativeEvent()}>
-                    {alternativeLabel}
-                </Btn>
-            ) : ""}
+            {!manualVarAssign && secondSubmitLabel && secondSubmitEvent ?
+                <Btn onClick={() => secondSubmitEvent(true)} >
+                    {secondSubmitLabel}
+                </Btn> : ""
+            }
         </div>
     );
 };

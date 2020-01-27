@@ -66,3 +66,8 @@ export interface FoArgument {
     type: string;
     spelling: string;
 }
+
+export enum FoArgumentType {
+    quantifiedVariable = "kalkulierbar.logic.QuantifiedVariable",
+    constant = "kalkulierbar.logic.Constant",
+}
