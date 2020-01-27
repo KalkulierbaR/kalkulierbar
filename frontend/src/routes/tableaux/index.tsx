@@ -8,9 +8,10 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
 import { useAppState } from "../../helpers/app-state";
-import {TableauxCalculus} from "../../types/app";
+import { TableauxCalculus } from "../../types/app";
 import {
-    CnfStrategy, FoTableauxParams,
+    CnfStrategy,
+    FOTableauxParams,
     PropTableauxParams,
     TableauxType
 } from "../../types/tableaux";
@@ -22,7 +23,7 @@ interface Props {
     calculus: TableauxCalculus;
 }
 
-const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
+const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const { smallScreen } = useAppState();
 
     const [tabType, setTabType] = useState(TableauxType.unconnected);
@@ -54,7 +55,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
     let params;
     switch (calculus) {
         case "prop-tableaux":
-            const propParams : PropTableauxParams = {
+            const propParams: PropTableauxParams = {
                 type: tabType,
                 regular,
                 backtracking,
@@ -63,7 +64,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
             params = propParams;
             break;
         case "fo-tableaux":
-            const foParams : FoTableauxParams = {
+            const foParams: FOTableauxParams = {
                 type: tabType,
                 regular,
                 backtracking,
@@ -74,7 +75,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
     }
 
     const getCalculusSpecificSwitch = () => {
-        switch(calculus) {
+        switch (calculus) {
             case "prop-tableaux":
                 return (
                     <Fragment>
@@ -139,7 +140,12 @@ const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
                             onChange={setBacktracking}
                             initialState={true}
                         />
-                        <HintIcon hint={"This allows you to undo moves during the proof." + (!smallScreen ? " (Shortcut: CTRL + Z)" : "")} />
+                        <HintIcon
+                            hint={
+                                "This allows you to undo moves during the proof." +
+                                (!smallScreen ? " (Shortcut: CTRL + Z)" : "")
+                            }
+                        />
                         <br />
                         <Switch label="Regular" onChange={setRegular} />
                         <HintIcon hint="A regular tableaux does not allow duplicate literals on any branch in the proof tree." />

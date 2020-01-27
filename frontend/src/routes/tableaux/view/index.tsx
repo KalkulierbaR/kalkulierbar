@@ -2,7 +2,7 @@ import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { TableauxCalculus } from "../../../types/app";
 import {
-    instanceOfFoTableauxState,
+    instanceOfFOTableauxState,
     instanceOfPropTableauxState,
     SelectNodeOptions,
     TableauxTreeLayoutNode,
@@ -31,7 +31,7 @@ import {
     sendClose,
     sendExtend
 } from "../../../helpers/tableaux";
-import { FoArgument, FoArgumentType } from "../../../types/clause";
+import { FOArgument, FOArgumentType } from "../../../types/clause";
 import foExampleState from "./fo-example";
 import propExampleState from "./prop-example";
 
@@ -73,7 +73,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         ) {
             options = clauseSetToStringArray(state!.clauseSet);
         }
-        if (calculus === "fo-tableaux" && instanceOfFoTableauxState(state)) {
+        if (calculus === "fo-tableaux" && instanceOfFOTableauxState(state)) {
             options = state!.renderedClauseSet;
         }
         return options;
@@ -164,13 +164,13 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setSelectedNodeId(undefined);
             } else if (
                 calculus === "fo-tableaux" &&
-                instanceOfFoTableauxState(state)
+                instanceOfFOTableauxState(state)
             ) {
                 // Prepare dialog for automatic/manual unification
                 setCloseMoveSecondNodeId(newNode.id);
                 const vars: string[] = [];
-                const checkArgumentForVar = (argument: FoArgument) => {
-                    if (argument.type === FoArgumentType.quantifiedVariable) {
+                const checkArgumentForVar = (argument: FOArgument) => {
+                    if (argument.type === FOArgumentType.quantifiedVariable) {
                         vars.push(argument.spelling);
                     }
                 };
@@ -290,7 +290,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             </Dialog>
 
-            {calculus === "fo-tableaux" && instanceOfFoTableauxState(state) ? (
+            {calculus === "fo-tableaux" && instanceOfFOTableauxState(state) ? (
                 <Dialog
                     open={showVarAssignDialog}
                     label="Choose variable assignments or leave them blank"

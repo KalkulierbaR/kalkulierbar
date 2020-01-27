@@ -1,7 +1,7 @@
 import { AppStateUpdater, TableauxCalculus } from "../types/app";
 import {
-    FoTableauxState,
-    instanceOfFoTableauxState,
+    FOTableauxState,
+    instanceOfFOTableauxState,
     instanceOfPropTableauxState,
     PropTableauxState,
     TableauxNode,
@@ -40,7 +40,7 @@ export const nextOpenLeaf = (nodes: TableauxNode[]) => {
 export const sendClose = (
     calculus: TableauxCalculus,
     server: string,
-    state: PropTableauxState | FoTableauxState,
+    state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
     leaf: number,
@@ -57,7 +57,7 @@ export const sendClose = (
             stateChanger,
             onError
         );
-    } else if (calculus === "fo-tableaux" && instanceOfFoTableauxState(state)) {
+    } else if (calculus === "fo-tableaux" && instanceOfFOTableauxState(state)) {
         sendMove(
             server,
             calculus,
@@ -86,7 +86,7 @@ export const sendClose = (
 export const sendBacktrack = (
     calculus: TableauxCalculus,
     server: string,
-    state: PropTableauxState | FoTableauxState,
+    state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void
 ) => {
@@ -99,7 +99,7 @@ export const sendBacktrack = (
             stateChanger,
             onError
         );
-    } else if (calculus === "fo-tableaux" && instanceOfFoTableauxState(state)) {
+    } else if (calculus === "fo-tableaux" && instanceOfFOTableauxState(state)) {
         sendMove(
             server,
             calculus,
@@ -125,7 +125,7 @@ export const sendBacktrack = (
 export const sendExtend = (
     calculus: TableauxCalculus,
     server: string,
-    state: PropTableauxState | FoTableauxState,
+    state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
     leaf: number,
@@ -140,7 +140,7 @@ export const sendExtend = (
             stateChanger,
             onError
         );
-    } else if (calculus === "fo-tableaux" && instanceOfFoTableauxState(state)) {
+    } else if (calculus === "fo-tableaux" && instanceOfFOTableauxState(state)) {
         sendMove(
             server,
             calculus,
