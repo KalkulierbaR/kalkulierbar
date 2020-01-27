@@ -1,4 +1,4 @@
-import {ClauseSet, FoClauseSet} from "./clause";
+import {ClauseSet, FoArgument, FoClauseSet} from "./clause";
 
 export interface TableauxNode {
     parent: number | null;
@@ -97,12 +97,12 @@ export type FoTableauxMove = TableauxMove & { varAssign: Map<string, string>; }
 
 export interface FoRelation {
     spelling: string;
-    arguments: [];
+    arguments: FoArgument[];
 }
 
 export interface FoTableauxParams {
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;
-    manualUnification: boolean;
+    manualVarAssign: boolean;
 }

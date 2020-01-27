@@ -182,10 +182,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
         false
     );
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(
-        true
+        false
     );
     const [varsToAssign, setVarsToAssign] = useState<string[]>(
-        ["A", "B"]
+        []
     );
 
     const clauseOptions = () => {
@@ -283,7 +283,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         setSelectedNodeId(undefined);
                         break;
                     case "fo-tableaux":
-                        // Open dialog for automatic/manual unification
+                        // Prepare dialog for automatic/manual unification
                         setCloseMoveSecondNodeId(newNode.id);
                         const vars = ["A", "B"]; // @todo proper filtering to get distinct values
                         if(vars.length <= 0) {

@@ -36,7 +36,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
 
     const onInput = ({ target }: Event) => {
         const { id, value } = target as HTMLTextAreaElement;
-        varAssign.set(id, value);
+        varAssign.set(vars[parseInt(id)], value);
     };
 
     return (

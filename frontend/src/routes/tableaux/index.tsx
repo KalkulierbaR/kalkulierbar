@@ -67,7 +67,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({calculus}) => {
                 type: tabType,
                 regular,
                 backtracking,
-                manualUnification
+                manualVarAssign: manualUnification
             };
             params = foParams;
             break;

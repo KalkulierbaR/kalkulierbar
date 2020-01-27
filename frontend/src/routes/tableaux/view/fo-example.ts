@@ -2,69 +2,41 @@ import {FoTableauxState, TableauxType} from "../../../types/tableaux";
 
 const foExample: FoTableauxState = {
         "clauseSet": {
-            "clauses": [
-                {
-                    "atoms": [
-                        {
-                            "lit": {
-                                "spelling": "P",
-                                "arguments": [
-                                    {
-                                        "type": "kalkulierbar.logic.QuantifiedVariable",
-                                        "spelling": "X"
-                                    }
-                                ]
-                            },
-                            "negated": false
-                        }
-                    ]
-                },
-                {
-                    "atoms": [
-                        {
-                            "lit": {
-                                "spelling": "P",
-                                "arguments": [
-                                    {
-                                        "type": "kalkulierbar.logic.QuantifiedVariable",
-                                        "spelling": "Y"
-                                    }
-                                ]
-                            },
-                            "negated": true
-                        }
-                    ]
-                }
-            ]
+            "clauses": [{
+                "atoms": [{
+                    "lit": {
+                        "spelling": "R",
+                        "arguments": [{"type": "kalkulierbar.logic.QuantifiedVariable", "spelling": "X"}]
+                    }, "negated": false
+                }]
+            }, {
+                "atoms": [{
+                    "lit": {
+                        "spelling": "R",
+                        "arguments": [{"type": "kalkulierbar.logic.Constant", "spelling": "sk1"}]
+                    }, "negated": true
+                }]
+            }]
         },
-        "formula": "\\all X: P(X) & \\all Y: !P(Y)",
+        "formula": "\\all X: R(X) & \\ex X: !R(X)",
         "type": TableauxType.unconnected,
         "regular": false,
-        "backtracking": false,
-        "nodes": [
-            {
-                "parent": null,
-                "relation": {
-                    "spelling": "true",
-                    "arguments": []
-                },
-                "negated": false,
-                "isClosed": false,
-                "closeRef": null,
-                "children": [],
-                "spelling": "true()"
-            }
-        ],
+        "backtracking": true,
+        "manualVarAssign": false,
+        "nodes": [{
+            "parent": null,
+            "relation": {"spelling": "true", "arguments": []},
+            "negated": false,
+            "isClosed": false,
+            "closeRef": null,
+            "children": [],
+            "spelling": "true()"
+        }],
         "moveHistory": [],
         "usedBacktracking": false,
         "expansionCounter": 0,
-        "manualVarAssign": false,
-        "seal": "06BCC3ECA6B357691B7786F96F53E2875BF0573BB0A4B3362C0A371847B6A3D5",
-        "renderedClauseSet": [
-            "P(X)",
-            "!P(Y)"
-        ]
-    }
-;
+        "seal": "10CF4E0CEF4DB4F67025E580C16EC5923FFB6C90DD46971F7E83066C16D58A05",
+        "renderedClauseSet": ["R(X)", "!R(sk1)"]
+    };
 
 export default foExample;

@@ -83,7 +83,7 @@ export const sendMove = async <C extends Calculus = Calculus>(
                 "Content-Type": "text/plain"
             },
             method: "POST",
-            body: `move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`
+            body: `move=${encodeURIComponent(JSON.stringify(move))}&state=${encodeURIComponent(JSON.stringify(state))}`
         });
         if (res.status !== 200) {
             onError(await res.text());
