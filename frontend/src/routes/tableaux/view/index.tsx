@@ -309,14 +309,12 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog>
-            ) : (
-                undefined
-            )}
+            ) : undefined}
 
             <ControlFAB>
                 {selectedNodeId === undefined ? (
                     <Fragment>
-                        {state.nodes.filter(node => !node.isClosed).length >
+                        {state!.nodes.filter(node => !node.isClosed).length >
                         0 ? (
                             <FAB
                                 icon={<ExploreIcon />}
@@ -336,9 +334,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                     );
                                 }}
                             />
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                         <FAB
                             icon={<CenterIcon />}
                             label="Center"
@@ -365,7 +361,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 )
                             }
                         />
-                        {state.backtracking ? (
+                        {state!.backtracking ? (
                             <FAB
                                 icon={<UndoIcon />}
                                 label="Undo"
@@ -382,9 +378,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                     );
                                 }}
                             />
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                     </Fragment>
                 ) : (
                     <Fragment>

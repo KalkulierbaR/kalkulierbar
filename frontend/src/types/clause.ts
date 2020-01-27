@@ -65,7 +65,7 @@ export interface FOClauseSet {
 export interface FOArgument {
     type: string;
     spelling: string;
-    arguments?: FoArgument[];
+    arguments?: FOArgument[];
 }
 
 export enum FOArgumentType {
