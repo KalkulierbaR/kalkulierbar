@@ -22,8 +22,9 @@ import kalkulierbar.logic.UniversalQuantifier
  * Note: I'm unsure if this implementation produces correct results
  *       if it is not applied as part of the Skolem Normal Form transformation,
  *       especially if only a subformula is being skolemized
+ * @param nameBlacklist Set of names already used in the tree to avoid for skolem constants
  */
-class Skolemization : DoNothingVisitor() {
+class Skolemization(val nameBlacklist: Set<String>) : DoNothingVisitor() {
 
     companion object Companion {
         /**
@@ -32,7 +33,9 @@ class Skolemization : DoNothingVisitor() {
          * @return Skolemized formula
          */
         fun transform(formula: LogicNode): LogicNode {
-            val instance = Skolemization()
+            // Collect all identifiers already in use and add to blacklist
+            val blacklist = IdentifierCollector.collect(formula)
+            val instance = Skolemization(blacklist)
             return formula.accept(instance)
         }
     }
@@ -88,15 +91,21 @@ class Skolemization : DoNothingVisitor() {
 
     /**
      * Get a fresh skolem term for the current quantifier scope
-     * Freshness is ensured by using a dash in the variable name
-     * which is not permitted in user-input formulae
      * @return Skolem term
      */
     private fun getSkolemTerm(): FirstOrderTerm {
+
         skolemCounter += 1
+        var skolemName = "sk-$skolemCounter"
+
+        // Ensure freshness
+        while (nameBlacklist.contains(skolemName)) {
+            skolemCounter += 1
+            skolemName = "sk-$skolemCounter"
+        }
 
         if (quantifierScope.size == 0)
-            return Constant("sk-$skolemCounter")
+            return Constant(skolemName)
 
         val argList = mutableListOf<FirstOrderTerm>()
 
@@ -104,14 +113,12 @@ class Skolemization : DoNothingVisitor() {
             argList.add(QuantifiedVariable(it.varName))
         }
 
-        return Function("sk-$skolemCounter", argList)
+        return Function(skolemName, argList)
     }
 }
 
 /**
  * Replaces QuantifiedVariables with their respective Skolem terms
- * User-defined constants or functions starting with 'sk' will be renamed
- * to start in 'usk' to ensure that Skolem terms are fresh
  * @param replacementMap Map of variable instances to replace alongside their Skolem term
  * @param bindingQuantifiers List of quantifiers in effect for the term in question
  */
