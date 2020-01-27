@@ -1,4 +1,4 @@
-import {Atom, Clause, ClauseSet} from "../types/clause";
+import { Atom, Clause, ClauseSet } from "../types/clause";
 import { maxBy } from "./max-by";
 
 /**
@@ -26,13 +26,8 @@ export const clauseToString = (clause: Clause) => {
  * @param {ClauseSet} clauseSet - A set of clauses
  * @returns {string[]} - The clauses as string array
  */
-export const clauseSetToStringArray = (clauseSet: ClauseSet) => {
-    const clauses: string[] = [];
-    clauseSet.clauses.forEach((clause) => {
-        clauses.push(clauseToString(clause));
-    });
-    return clauses;
-};
+export const clauseSetToStringArray = (clauseSet: ClauseSet) =>
+    clauseSet.clauses.map(clauseToString);
 
 /**
  * Determine the longest clause
