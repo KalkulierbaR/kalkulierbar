@@ -17,9 +17,7 @@ import kalkulierbar.logic.UniversalQuantifier
  * Requires absence of variable-hiding in quantifier scopes, will
  * throw an exception otherwise.
  *
- * Introduced Skolem terms are of the form 'skN' where N is a number.
- * User-defined functions or constants beginning with 'sk' will be
- * renamed to 'usk' to avoid conflicts.
+ * Introduced Skolem terms are of the form 'sk-N' where N is a number.
  *
  * Note: I'm unsure if this implementation produces correct results
  *       if it is not applied as part of the Skolem Normal Form transformation,
@@ -90,13 +88,15 @@ class Skolemization : DoNothingVisitor() {
 
     /**
      * Get a fresh skolem term for the current quantifier scope
+     * Freshness is ensured by using a dash in the variable name
+     * which is not permitted in user-input formulae
      * @return Skolem term
      */
     private fun getSkolemTerm(): FirstOrderTerm {
         skolemCounter += 1
 
         if (quantifierScope.size == 0)
-            return Constant("sk$skolemCounter")
+            return Constant("sk-$skolemCounter")
 
         val argList = mutableListOf<FirstOrderTerm>()
 
@@ -104,7 +104,7 @@ class Skolemization : DoNothingVisitor() {
             argList.add(QuantifiedVariable(it.varName))
         }
 
-        return Function("sk$skolemCounter", argList)
+        return Function("sk-$skolemCounter", argList)
     }
 }
 
@@ -141,29 +141,10 @@ class SkolemTermReplacer(
         return node
     }
 
-    /**
-     * Re-name constants starting in 'sk' to avoid conflicts
-     * @param node Constant encountered
-     * @return Disambiguated constant
-     */
-    override fun visit(node: Constant): FirstOrderTerm {
-        if (node.spelling.length < 2 || node.spelling.substring(0, 2) != "sk")
-            return node
+    override fun visit(node: Constant) = node
 
-        return Constant("u${node.spelling}")
-    }
-
-    /**
-     * Re-name functions starting in 'sk' to avoid conflicts
-     * @param node Function encountered
-     * @return Disambiguated function
-     */
     override fun visit(node: Function): FirstOrderTerm {
         node.arguments = node.arguments.map { it.accept(this) }
-
-        if (node.spelling.length < 2 || node.spelling.substring(0, 2) != "sk")
-            return node
-
-        return Function("u${node.spelling}", node.arguments)
+        return node
     }
 }

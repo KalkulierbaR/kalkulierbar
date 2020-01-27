@@ -101,16 +101,6 @@ class TestFOLogic {
     }
 
     @Test
-    fun testRelEquals() {
-        assertEquals(r1, Relation("R1", listOf(QuantifiedVariable("Abc"))))
-        assertNotEquals(r1, Relation("R1", listOf(QuantifiedVariable("Abcd"))))
-        assertEquals(r1.hashCode(), Relation("R1", listOf(QuantifiedVariable("Abc"))).hashCode())
-        assertNotEquals<Relation?>(r1, null)
-        assertNotEquals<Any>(r1, u1)
-        assertNotEquals(r2, r3)
-    }
-
-    @Test
     fun testAllNaiveCNF() {
         assertFailsWith<FormulaConversionException> {
             NaiveCNF.transform(u1)
