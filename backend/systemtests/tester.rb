@@ -267,6 +267,16 @@ def tryCloseTrivialResolution(trq, iterations = 10, verbose = false)
 	end
 end
 
+def tryCloseTrivialFirstOrder(trq, iterations = 10, verbose = false)
+	logMsg "Trying to close a trivial first order proof"
+
+	if bogoATP(trq, "\\all X: P(X) & \\ex Y: !P(Y)", "WEAKLYCONNECTED", false, iterations, verbose, isFO: true)
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
 def tryCloseCloseable(trq, iterations = 15, verbose = false)
 	logMsg "Trying to close a proof"
 	
@@ -391,3 +401,4 @@ testRegularityRestriction(trq)
 testUndo(trq)
 testResolutionInitialState(trq)
 tryCloseTrivialResolution(trq)
+tryCloseTrivialFirstOrder(trq)

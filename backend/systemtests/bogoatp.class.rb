@@ -1,9 +1,15 @@
 require_relative 'dotgenerator.class'
 
-def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterations = 10, verbose = false, getTree: false)
+def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterations = 10, verbose = false, getTree: false, isFO: false)
+	calculus = isFO ? "fo-tableaux" : "prop-tableaux"
+
+	propParams = "{\"type\":\"#{connectedness.to_s}\",\"regular\":#{regular.to_s},\"backtracking\":false}"
+	foParams = "{\"type\":\"#{connectedness.to_s}\",\"regular\":#{regular.to_s},\"backtracking\":false,\"manualVarAssign\":false}"
+
+	params = isFO ? foParams  : propParams
 	rqcount = 1
 	moves = 0
-	state = trq.getPostResponse('/prop-tableaux/parse', "formula=#{formula}&params={\"type\":\"#{connectedness.to_s}\",\"regular\":#{regular.to_s},\"backtracking\":false}")
+	state = trq.getPostResponse("/#{calculus}/parse", "formula=#{CGI.escape(formula)}&params=#{params}")
 	parsed = JSON.parse(state)
 
 	# Apply all single-literal clauses to improve closability and control tree fanout
@@ -12,7 +18,7 @@ def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterat
 		parsed['clauseSet']['clauses'].each_with_index { |c,i|
 			if c['atoms'].length == 1
 				logMsg "Pre-expanding clause #{i.to_s} on node #{lid.to_s}" if verbose
-				newstate = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"EXPAND\",id1:#{lid.to_s},id2:#{i.to_s}}", false, true)
+				newstate = trq.getPostResponse("/#{calculus}/move", "state=#{state}&move=#{genExpandMove(lid,i,isFO)}", false, true)
 				state = newstate == nil ? state : newstate
 				lid += newstate == nil ? 0 : 1
 				rqcount += 1
@@ -31,7 +37,7 @@ def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterat
 			if n['children'].length == 0 && !n['isClosed']
 				# Brute-force close with every available ID
 				parsed['nodes'].length.times() { |j|
-					newstate = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"CLOSE\",id1:#{i.to_s},id2:#{j.to_s}}", false, true)
+					newstate = trq.getPostResponse("/#{calculus}/move", "state=#{state}&move=#{genCloseMove(i,j,isFO)}", false, true)
 					rqcount += 1
 
 					if newstate != nil
@@ -48,7 +54,7 @@ def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterat
 
 		# Try closing the proof
 		logMsg "Trying to close proof" if verbose
-		if !trq.post('/prop-tableaux/close', "state=#{state}", /.*"closed":false.*/, 200)
+		if !trq.post("/#{calculus}/close", "state=#{state}", /.*"closed":false.*/, 200)
 			logMsg "BogoATP Proof closed - #{rqcount.to_s} requests sent / #{moves.to_s} moves applied"
 			logMsg generateDOT(parsed['nodes']) if verbose
 			return getTree ? parsed['nodes'] : true
@@ -62,7 +68,7 @@ def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterat
 		breakFlag = false
 		leaves.each { |l|
 			clauses.each { |c|
-				newstate = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"EXPAND\",id1:#{l.to_s},id2:#{c.to_s}}", false, true)
+				newstate = trq.getPostResponse("/#{calculus}/move", "state=#{state}&move=#{genExpandMove(l,c,isFO)}", false, true)
 				rqcount += 1
 				if newstate != nil
 					logMsg "Expanded leaf #{l.to_s} with clause #{c.to_s}" if verbose
@@ -87,7 +93,8 @@ def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterat
 	return getTree ? parsed['nodes'] : false
 end
 
-def bogoATPapplyRandomMove(state, trq)
+def bogoATPapplyRandomMove(state, trq, isFO: false)
+	calculus = isFO ? "fo-tableaux" : "prop-tableaux"
 	parsed = JSON.parse(state)
 
 	leaves = parsed['nodes'].each_with_index.filter{ |n,i| n['children'].length == 0 && !n['isClosed'] }.map { |x,i| i }.shuffle
@@ -96,7 +103,7 @@ def bogoATPapplyRandomMove(state, trq)
 	# Try closing a leaf
 	leaves.each{ |i|
 		parsed['nodes'].length.times() { |j|
-			newstate = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"CLOSE\",id1:#{i.to_s},id2:#{j.to_s}}", false, true)
+			newstate = trq.getPostResponse("/#{calculus}/move", "state=#{state}&move=#{genCloseMove(i,j,isFO)}", false, true)
 			return newstate unless newstate == nil
 		}
 	}
@@ -104,10 +111,26 @@ def bogoATPapplyRandomMove(state, trq)
 	# Try expanding a leaf
 	leaves.each { |l|
 		clauses.each { |c|
-			newstate = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={type:\"EXPAND\",id1:#{l.to_s},id2:#{c.to_s}}", false, true)
+			newstate = trq.getPostResponse("/#{calculus}/move", "state=#{state}&move=#{genExpandMove(l,c,isFO)}", false, true)
 			return newstate unless newstate == nil
 		}
 	}
 
 	return false
+end
+
+def genExpandMove(id1, id2, isFO = false)
+	if isFO
+		"{type:\"EXPAND\",id1:#{id1.to_s},id2:#{id2.to_s},varAssign:{}}"
+	else
+		"{type:\"EXPAND\",id1:#{id1.to_s},id2:#{id2.to_s}}"
+	end
+end
+
+def genCloseMove(id1, id2, isFO = false)
+	if isFO
+		"{type:\"AUTOCLOSE\",id1:#{id1.to_s},id2:#{id2.to_s},varAssign:{}}"
+	else
+		"{type:\"CLOSE\",id1:#{id1.to_s},id2:#{id2.to_s}}"
+	end
 end
