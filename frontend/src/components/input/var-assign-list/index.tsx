@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { VarAssign } from "../../../types/tableaux";
 import Btn from "../../btn";
 import TextInput from "../text";
 
@@ -14,7 +15,7 @@ interface Props {
     /**
      * The function to call, when the user submits the list
      */
-    submitVarAssignCallback: CallableFunction;
+    submitVarAssignCallback: (auto: boolean, va?: VarAssign) => void;
     /**
      * Label for the submit button
      */
@@ -26,7 +27,7 @@ interface Props {
     /**
      * The function to call, when the user clicks the second submit button
      */
-    secondSubmitEvent?: CallableFunction;
+    secondSubmitEvent?: (auto: boolean, va?: VarAssign) => void;
     /**
      * Additional className for the element
      */
@@ -42,35 +43,40 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
     secondSubmitEvent,
     className
 }) => {
-    const varAssign : Map<string, string> = new Map<string, string>();
+    const varAssign: VarAssign = {};
 
-    const onInput = ({ target }: Event) => {
-        const { id, value } = target as HTMLTextAreaElement;
-        varAssign.set(vars[parseInt(id)], value);
+    const submitVarAssign = () => {
+        vars.forEach(variable => {
+            const textInput = document.getElementById(variable);
+            if (!(textInput && textInput instanceof HTMLInputElement && textInput.value)) {
+                return;
+            }
+            varAssign[variable] = textInput.value;
+        });
+        submitVarAssignCallback(false, varAssign);
     };
 
     return (
         <div class={`card ${className}`}>
-            {vars.map((variable, index) => (
+            {vars.map(variable => (
                 <p>
                     <TextInput
-                        id={index.toString()}
+                        id={variable}
                         label={variable + " := "}
-                        onChange={() => onInput}
                         required={manualVarAssign}
                         inline={true}
                     />
                 </p>
             ))}
-            <Btn onClick={() => submitVarAssignCallback(false, varAssign)} >
-                {submitLabel}
-            </Btn>
+            <Btn onClick={submitVarAssign}>{submitLabel}</Btn>
 
-            {!manualVarAssign && secondSubmitLabel && secondSubmitEvent ?
-                <Btn onClick={() => secondSubmitEvent(true)} >
+            {!manualVarAssign && secondSubmitLabel && secondSubmitEvent ? (
+                <Btn onClick={() => secondSubmitEvent(true)}>
                     {secondSubmitLabel}
-                </Btn> : ""
-            }
+                </Btn>
+            ) : (
+                ""
+            )}
         </div>
     );
 };

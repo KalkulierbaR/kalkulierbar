@@ -33,7 +33,7 @@ export const treeLayout = (
 ): Layout<TableauxTreeLayoutNode> & { links: Link[] } => {
     const root = tabNodeToTree(nodes);
     layout(root);
-    console.log(root);
+    // console.log(root);
     const data = treeToLayoutItem(root);
     const width =
         root.extremeLeft!.x -

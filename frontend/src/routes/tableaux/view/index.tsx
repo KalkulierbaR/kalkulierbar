@@ -1,11 +1,12 @@
 import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import {AppStateUpdater, TableauxCalculus} from "../../../types/app";
+import { TableauxCalculus } from "../../../types/app";
 import {
-    FoTableauxState, instanceOfFoTableauxState, instanceOfPropTableauxState,
-    PropTableauxState,
+    instanceOfFOTableauxState,
+    instanceOfPropTableauxState,
     SelectNodeOptions,
-    TableauxTreeLayoutNode
+    TableauxTreeLayoutNode,
+    VarAssign
 } from "../../../types/tableaux";
 import * as style from "./style.scss";
 
@@ -21,139 +22,18 @@ import UndoIcon from "../../../components/icons/undo";
 import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxTreeView from "../../../components/tableaux/tree";
-import { checkClose, sendMove } from "../../../helpers/api";
+import { checkClose } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
-import {clauseSetToStringArray} from "../../../helpers/clause";
-import { nextOpenLeaf } from "../../../helpers/tableaux";
-import {FoArgument, FoArgumentType} from "../../../types/clause";
+import { clauseSetToStringArray } from "../../../helpers/clause";
+import {
+    nextOpenLeaf,
+    sendBacktrack,
+    sendClose,
+    sendExtend
+} from "../../../helpers/tableaux";
+import { FOArgument, FOArgumentType } from "../../../types/clause";
 import foExampleState from "./fo-example";
 import propExampleState from "./prop-example";
-
-/**
- * Wrapper to send close request
- * @param {TableauxCalculus} calculus - The calculus to do the move on
- * @param {string} server - URL of server
- * @param {PropTableauxState} state - The current State
- * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {number} leaf - The selected leaf
- * @param {number} pred - The selected predecessor
- * @param {Map<string, string>} varAssignments - Variable assignments for manual unification
- * @param {boolean} autoClose - The server should decide about the variable assignment
- * @returns {Promise<void>} - Promise that resolves after the request has been handled
- */
-const sendClose = (
-    calculus: TableauxCalculus,
-    server: string,
-    state: PropTableauxState | FoTableauxState,
-    stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    leaf: number,
-    pred: number,
-    varAssignments?: Map<string, string>,
-    autoClose?: boolean
-) => {
-    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            {type: "CLOSE", id1: leaf, id2: pred},
-            stateChanger,
-            onError
-        );
-    }
-    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
-        sendMove(
-            server,
-            calculus,
-            state,
-            {type: autoClose ? "AUTOCLOSE" : "CLOSE", id1: leaf, id2: pred, varAssign: varAssignments!},
-            stateChanger,
-            onError
-        );
-    }
-};
-
-/**
- * Wrapper to send move request
- * @param {TableauxCalculus} calculus - The calculus to do the move on
- * @param {string} server - URL of the server
- * @param {PropTableauxState} state - The current State
- * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @returns {Promise<void>} - Promise that resolves after the request has been handled
- */
-const sendBacktrack = (
-    calculus: TableauxCalculus,
-    server: string,
-    state: PropTableauxState | FoTableauxState,
-    stateChanger: AppStateUpdater,
-    onError: (msg: string) => void
-) => {
-    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            {type: "UNDO", id1: -1, id2: -1},
-            stateChanger,
-            onError
-        );
-    }
-    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
-        sendMove(
-            server,
-            calculus,
-            state,
-            {type: "UNDO", id1: -1, id2: -1, varAssign: new Map<string, string>()},
-            stateChanger,
-            onError
-        );
-    }
-};
-
-/**
- * Wrapper to send move request
- * @param {TableauxCalculus} calculus - The calculus to do the move on
- * @param {string} server - URL of the server
- * @param {PropTableauxState} state - The current State
- * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {number} leaf - The selected leaf
- * @param {number} clause - The selected clause
- * @returns {Promise<void>} - Promise that resolves after the request has been handled
- */
-const sendExtend = (
-    calculus: TableauxCalculus,
-    server: string,
-    state: PropTableauxState | FoTableauxState,
-    stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    leaf: number,
-    clause: number
-) => {
-    if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            {type: "EXPAND", id1: leaf, id2: clause},
-            stateChanger,
-            onError
-        );
-    }
-    else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
-        sendMove(
-            server,
-            calculus,
-            state,
-            {type: "EXPAND", id1: leaf, id2: clause, varAssign: new Map<string, string>()},
-            stateChanger,
-            onError
-        );
-    }
-};
 
 interface Props {
     /**
@@ -162,7 +42,7 @@ interface Props {
     calculus: TableauxCalculus;
 }
 
-const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
+const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const {
         server,
         [calculus]: cState,
@@ -172,31 +52,28 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
         onSuccess
     } = useAppState();
     let state = cState;
-    const [selectedClauseId, setSelectedClauseId] = useState<number | undefined>(
-        undefined
-    );
+    const [selectedClauseId, setSelectedClauseId] = useState<
+        number | undefined
+    >(undefined);
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
         undefined
     );
-    const [closeMoveSecondNodeId, setCloseMoveSecondNodeId] = useState<number | undefined>(
-        undefined
-    );
-    const [showClauseDialog, setShowClauseDialog] = useState(
-        false
-    );
-    const [showVarAssignDialog, setShowVarAssignDialog] = useState(
-        false
-    );
-    const [varsToAssign, setVarsToAssign] = useState<string[]>(
-        []
-    );
+    const [closeMoveSecondNodeId, setCloseMoveSecondNodeId] = useState<
+        number | undefined
+    >(undefined);
+    const [showClauseDialog, setShowClauseDialog] = useState(false);
+    const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
+    const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
 
     const clauseOptions = () => {
         let options: string[] = [];
-        if(calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
+        if (
+            calculus === "prop-tableaux" &&
+            instanceOfPropTableauxState(state)
+        ) {
             options = clauseSetToStringArray(state!.clauseSet);
         }
-        if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
+        if (calculus === "fo-tableaux" && instanceOfFOTableauxState(state)) {
             options = state!.renderedClauseSet;
         }
         return options;
@@ -267,9 +144,12 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             const selectedNode = state!.nodes[selectedNodeId];
             const selectedNodeIsLeaf = selectedNode.children.length === 0;
 
-            if (selectedNodeIsLeaf && newNodeIsLeaf || !selectedNodeIsLeaf && !newNodeIsLeaf){
+            if (
+                (selectedNodeIsLeaf && newNodeIsLeaf) ||
+                (!selectedNodeIsLeaf && !newNodeIsLeaf)
+            ) {
                 setSelectedNodeId(newNode.id);
-            } else if(calculus === "prop-tableaux"){
+            } else if (calculus === "prop-tableaux") {
                 // Now we have a leaf and a predecessor => Try close move
                 // If we can't do it, let server handle it
                 sendClose(
@@ -282,20 +162,26 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                     newNodeIsLeaf ? selectedNodeId : newNode.id
                 );
                 setSelectedNodeId(undefined);
-            }
-            else if(calculus === "fo-tableaux" && instanceOfFoTableauxState(state)){
+            } else if (
+                calculus === "fo-tableaux" &&
+                instanceOfFOTableauxState(state)
+            ) {
                 // Prepare dialog for automatic/manual unification
                 setCloseMoveSecondNodeId(newNode.id);
                 const vars: string[] = [];
-                const checkArgumentForVar = (argument: FoArgument) => {
-                    if(argument.type === FoArgumentType.quantifiedVariable){
+                const checkArgumentForVar = (argument: FOArgument) => {
+                    if (argument.type === FOArgumentType.quantifiedVariable) {
                         vars.push(argument.spelling);
+                    }
+                    if(argument.arguments) {
+                        argument.arguments.forEach(checkArgumentForVar);
                     }
                 };
                 selectedNode.relation!.arguments.forEach(checkArgumentForVar);
                 newNode.relation!.arguments.forEach(checkArgumentForVar);
-                if(vars.length <= 0) {
+                if (vars.length <= 0) {
                     submitVarAssign(true);
+                    return;
                 }
                 setVarsToAssign(vars);
                 setShowVarAssignDialog(true);
@@ -303,16 +189,25 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
         }
     };
 
-    const submitVarAssign = (autoClose: boolean, varAssign: Map<string, string> = new Map<string, string>()) => {
+    const submitVarAssign = (autoClose: boolean, varAssign: VarAssign = {}) => {
         setShowVarAssignDialog(false);
-        if(selectedNodeId === undefined || closeMoveSecondNodeId === undefined) {
-            throw new Error("Close move went wrong, since selected nodes could not be identified.");
-
+        if (
+            selectedNodeId === undefined ||
+            closeMoveSecondNodeId === undefined
+        ) {
+            throw new Error(
+                "Close move went wrong, since selected nodes could not be identified."
+            );
         }
-        console.log(autoClose);
         const selectedNode = state!.nodes[selectedNodeId];
-        const leafNodeId = selectedNode.children.length === 0 ? selectedNodeId : closeMoveSecondNodeId;
-        const predNodeId = selectedNode.children.length === 0 ? closeMoveSecondNodeId : selectedNodeId;
+        const leafNodeId =
+            selectedNode.children.length === 0
+                ? selectedNodeId
+                : closeMoveSecondNodeId;
+        const predNodeId =
+            selectedNode.children.length === 0
+                ? closeMoveSecondNodeId
+                : selectedNodeId;
         sendClose(
             calculus,
             server,
@@ -350,13 +245,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
             }
             e.preventDefault();
             e.stopImmediatePropagation();
-            sendBacktrack(
-                calculus,
-                server,
-                state!,
-                onChange,
-                onError
-            );
+            sendBacktrack(calculus, server, state!, onChange, onError);
         };
 
         window.addEventListener("keydown", handleKeyDown);
@@ -405,7 +294,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                 />
             </Dialog>
 
-            {calculus === "fo-tableaux" && instanceOfFoTableauxState(state) ?
+            {calculus === "fo-tableaux" && instanceOfFOTableauxState(state) ? (
                 <Dialog
                     open={showVarAssignDialog}
                     label="Choose variable assignments or leave them blank"
@@ -419,15 +308,16 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         secondSubmitEvent={submitVarAssign}
                         secondSubmitLabel="Automatic assignment"
                     />
-                </Dialog> : ""
-            }
+                </Dialog>
+            ) : undefined}
 
             <ControlFAB>
                 {selectedNodeId === undefined ? (
                     <Fragment>
-                        {state.nodes.filter((node) => !node.isClosed).length > 0 ?
+                        {state!.nodes.filter(node => !node.isClosed).length >
+                        0 ? (
                             <FAB
-                                icon={<ExploreIcon/>}
+                                icon={<ExploreIcon />}
                                 label="Next Leaf"
                                 mini={true}
                                 extended={true}
@@ -443,8 +333,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                                         })
                                     );
                                 }}
-                            /> : ""
-                        }
+                            />
+                        ) : undefined}
                         <FAB
                             icon={<CenterIcon />}
                             label="Center"
@@ -471,7 +361,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                                 )
                             }
                         />
-                        {state.backtracking ?
+                        {state!.backtracking ? (
                             <FAB
                                 icon={<UndoIcon />}
                                 label="Undo"
@@ -487,8 +377,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({calculus}) => {
                                         onError
                                     );
                                 }}
-                            /> : ""
-                        }
+                            />
+                        ) : undefined}
                     </Fragment>
                 ) : (
                     <Fragment>
