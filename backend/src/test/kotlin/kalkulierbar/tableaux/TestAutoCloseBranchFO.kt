@@ -101,6 +101,39 @@ class TestAutoCloseBranchFO {
     }
 
     @Test
+    fun invalid() {
+        var state = states[0]
+        // {!R(a), R(b), !R(b)}, {!R(a), !R(a), !R(b)}
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 1))
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, -1))
+        }
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, 42))
+        }
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, 0))
+        }
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, -1, 1))
+        }
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 777, 2))
+        }
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, -1))
+        }
+        assertFailsWith<IllegalMove> {
+            state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, Int.MAX_VALUE, 5))
+        }
+        assertFailsWith<IllegalMove> {
+            state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, Int.MIN_VALUE))
+        }
+    }
+
+    @Test
     // Prints ClauseSet of each state
     fun printStateClauseSet() {
         for (state in states) {
