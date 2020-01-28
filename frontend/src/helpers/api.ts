@@ -1,12 +1,12 @@
 import {
     AppState,
     AppStateUpdater,
-    Calculus,
+    CalculusType,
     CheckCloseResponse,
     Move
 } from "../types/app";
 
-export type checkCloseFn<C extends Calculus = Calculus> = (
+export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
     state: AppState[C]
 ) => Promise<void>;
@@ -22,7 +22,7 @@ export type checkCloseFn<C extends Calculus = Calculus> = (
  * @param {any} state - Current state for the calculus
  * @returns {Promise<void>} - Resolves when the request is done
  */
-export const checkClose = async <C extends Calculus = Calculus>(
+export const checkClose = async <C extends CalculusType = CalculusType>(
     server: string,
     onError: (msg: string) => void,
     onSuccess: (msg: string) => void,
@@ -36,7 +36,7 @@ export const checkClose = async <C extends Calculus = Calculus>(
                 "Content-Type": "text/plain"
             },
             method: "POST",
-            body: `state=${JSON.stringify(state)}`
+            body: `state=${encodeURIComponent(JSON.stringify(state))}`
         });
         if (response.status !== 200) {
             onError(await response.text());
@@ -68,7 +68,7 @@ export const checkClose = async <C extends Calculus = Calculus>(
  * @param {Function} onError - error handler
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
-export const sendMove = async <C extends Calculus = Calculus>(
+export const sendMove = async <C extends CalculusType = CalculusType>(
     server: string,
     calculus: C,
     state: AppState[C],
@@ -78,12 +78,14 @@ export const sendMove = async <C extends Calculus = Calculus>(
 ) => {
     const url = `${server}/${calculus}/move`;
     try {
+        console.log(move);
+        console.log(JSON.stringify(move));
         const res = await fetch(url, {
             headers: {
                 "Content-Type": "text/plain"
             },
             method: "POST",
-            body: `move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`
+            body: `move=${encodeURIComponent(JSON.stringify(move))}&state=${encodeURIComponent(JSON.stringify(state))}`
         });
         if (res.status !== 200) {
             onError(await res.text());

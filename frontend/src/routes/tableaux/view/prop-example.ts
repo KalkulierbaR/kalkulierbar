@@ -1,6 +1,6 @@
-import {TableauxState, TableauxType} from "../../../types/tableaux";
+import {PropTableauxState, TableauxType} from "../../../types/tableaux";
 
-const example: TableauxState = {
+const propExample: PropTableauxState = {
     "clauseSet": {
         "clauses": [{
             "atoms": [{"lit": "a", "negated": true}, {
@@ -11,7 +11,7 @@ const example: TableauxState = {
     },
     "type": TableauxType.unconnected,
     "regular": false,
-    "undoEnable": true,
+    "backtracking": true,
     "nodes": [{
         "parent": null,
         "spelling": "true",
@@ -46,8 +46,8 @@ const example: TableauxState = {
         "id1": 2,
         "id2": 2
     }],
-    "usedUndo": false,
+    "usedBacktracking": false,
     "seal": "D2A6057DD55D161AA29B0E00D0E9B7CC750EEA2C6372A7A96740123385CE50CE"
 };
 
-export default example;
+export default propExample;

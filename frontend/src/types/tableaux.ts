@@ -1,4 +1,4 @@
-import { ClauseSet } from "./clause";
+import { ClauseSet, FOArgument, FOClauseSet } from "./clause";
 
 export interface TableauxNode {
     parent: number | null;
@@ -7,19 +7,26 @@ export interface TableauxNode {
     isClosed: boolean;
     closeRef: number | null;
     children: number[];
+    relation?: FORelation;
 }
 
 export type TableauxTreeLayoutNode = TableauxNode & { id: number };
 
-export interface TableauxState {
+export interface PropTableauxState {
     seal: string;
     clauseSet: ClauseSet;
     nodes: TableauxNode[];
     type: TableauxType;
     regular: boolean;
-    undoEnable: boolean;
+    backtracking: boolean;
     moveHistory: TableauxMove[];
-    usedUndo: boolean;
+    usedBacktracking: boolean;
+}
+
+export function instanceOfPropTableauxState(
+    object: any
+): object is PropTableauxState {
+    return "clauseSet" in object;
 }
 
 export interface TableauxExpandMove {
@@ -29,20 +36,21 @@ export interface TableauxExpandMove {
 }
 
 export interface TableauxCloseMove {
-    type: "CLOSE";
+    type: "CLOSE" | "AUTOCLOSE";
     id1: number;
     id2: number;
 }
 
 export interface TableauxUndoMove {
     type: "UNDO";
-}
-
-export interface TableauxMove {
-    type: "EXPAND" | "CLOSE" | "UNDO";
     id1: number;
     id2: number;
 }
+
+export type TableauxMove =
+    | TableauxExpandMove
+    | TableauxCloseMove
+    | TableauxUndoMove;
 
 export enum TableauxType {
     unconnected = "UNCONNECTED",
@@ -56,7 +64,7 @@ export enum CnfStrategy {
     tseytin = "TSEYTIN"
 }
 
-export interface TableauxParams {
+export interface PropTableauxParams {
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;
@@ -69,4 +77,43 @@ export interface SelectNodeOptions {
      * Defaults to `false`.
      */
     ignoreClause?: boolean;
+}
+
+export interface FOTableauxState {
+    seal: string;
+    clauseSet: FOClauseSet;
+    nodes: TableauxNode[];
+    type: TableauxType;
+    regular: boolean;
+    backtracking: boolean;
+    moveHistory: FOTableauxMove[];
+    usedBacktracking: boolean;
+    formula: string;
+    expansionCounter: number;
+    manualVarAssign: boolean;
+    renderedClauseSet: string[];
+}
+
+export function instanceOfFOTableauxState(
+    object: any
+): object is FOTableauxState {
+    return "formula" in object;
+}
+
+export interface VarAssign {
+    [key: string]: string;
+}
+
+export type FOTableauxMove = TableauxMove & { varAssign: VarAssign };
+
+export interface FORelation {
+    spelling: string;
+    arguments: FOArgument[];
+}
+
+export interface FOTableauxParams {
+    type: TableauxType;
+    regular: boolean;
+    backtracking: boolean;
+    manualVarAssign: boolean;
 }

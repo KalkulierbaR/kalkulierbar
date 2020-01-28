@@ -2,7 +2,7 @@ import { h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 import { useAppState } from "../../../helpers/app-state";
-import { Calculus, Params } from "../../../types/app";
+import { CalculusType, Params } from "../../../types/app";
 import Btn from "../../btn";
 import * as style from "./style.scss";
 
@@ -14,16 +14,15 @@ declare module "preact" {
     }
 }
 
-// Properties Interface for the ClauseInput component
 interface Props {
     /**
      * The calculus to use. Specifies API endpoint
      */
-    calculus: Calculus;
+    calculus: CalculusType;
     /**
      * Additional params for the calculus
      */
-    params?: Params[Calculus];
+    params?: Params[CalculusType];
 }
 
 /**
@@ -39,11 +38,11 @@ const normalizeInput = (input: string) => {
 };
 
 /*
- * A component for entering clause sets and sending them to the server.
+ * A component for entering formulae or clause sets and sending them to the server.
  * It also redirects the user after a successful response from the server
  * to the corresponding view of the calculus
  */
-const ClauseInput: preact.FunctionalComponent<Props> = ({
+const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params
 }) => {
@@ -120,11 +119,11 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
                     autocapitalize="off"
                 />
                 <Btn type="submit" disabled={userInput.length === 0}>
-                    Send
+                    Start proof
                 </Btn>
             </form>
         </div>
     );
 };
 
-export default ClauseInput;
+export default FormulaInput;

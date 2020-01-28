@@ -10,12 +10,9 @@ import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.CnfStrategy
 import kalkulierbar.parsers.FlexibleClauseSetParser
 import kalkulierbar.tamperprotect.ProtectedState
-import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonDecodingException
 
 class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
     override val identifier = "prop-resolution"
@@ -114,7 +111,10 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
      * @param atoms2 The second list of atoms
      * @return A pair of the two atoms for resolution.
      */
-    private fun findResCandidates(atoms1: List<Atom>, atoms2: List<Atom>): Pair<Atom, Atom>? {
+    private fun findResCandidates(
+        atoms1: List<Atom<String>>,
+        atoms2: List<Atom<String>>
+    ): Pair<Atom<String>, Atom<String>>? {
         val (pos, neg) = atoms2.partition { !it.negated }
 
         for (a1 in atoms1) {
@@ -136,7 +136,12 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
      * @param a2 The atom to filter out of c2
      * @return A new clause that contains all elements of c1 and c2 except for a1 and a2
      */
-    private fun buildClause(c1: Clause, a1: Atom, c2: Clause, a2: Atom): Clause {
+    private fun buildClause(
+        c1: Clause<String>,
+        a1: Atom<String>,
+        c2: Clause<String>,
+        a2: Atom<String>
+    ): Clause<String> {
         val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
                 c2.atoms.filter { it != a2 }.toMutableList()
         return Clause(atoms.distinct().toMutableList())
@@ -148,6 +153,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         return CloseMessage(hasEmptyClause, msg)
     }
 
+    @Suppress("TooGenericExceptionCaught")
     @UnstableDefault
     override fun jsonToState(json: String): ResolutionState {
         try {
@@ -158,16 +164,9 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
                 throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
 
             return parsed
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON state: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -177,20 +176,14 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         return Json.stringify(ResolutionState.serializer(), state)
     }
 
+    @Suppress("TooGenericExceptionCaught")
     @UnstableDefault
     override fun jsonToMove(json: String): ResolutionMove {
         try {
             return Json.parse(ResolutionMove.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON move: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -199,26 +192,20 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
      * @param json JSON parameter representation
      * @return parsed param object
      */
+    @Suppress("TooGenericExceptionCaught")
     @UnstableDefault
     override fun jsonToParam(json: String): ResolutionParam {
         try {
             return Json.parse(ResolutionParam.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON params: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 }
 
 @Serializable
-class ResolutionState(val clauseSet: ClauseSet, val highlightSelectable: Boolean) : ProtectedState() {
+class ResolutionState(val clauseSet: ClauseSet<String>, val highlightSelectable: Boolean) : ProtectedState() {
     var newestNode = -1
 
     override var seal = ""

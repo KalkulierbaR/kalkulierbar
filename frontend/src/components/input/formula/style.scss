@@ -12,3 +12,24 @@
     background-color: var(--kbar-3dp-color);
     color: var(--kbar-primary-text-color);
 }
+p ul li {
+    padding: 5px;
+}
+table tr {
+    padding: 5px;
+    text-align: center;
+}
+table tr td {
+    padding: 3px;
+    border: #666666;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.pad-right {
+    margin-right: 8px;
+}
+
+.pad-left {
+    margin-left: 8px;
+}

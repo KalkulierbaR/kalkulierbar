@@ -12,10 +12,14 @@ import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.UniversalQuantifier
 import kalkulierbar.logic.Var
+import kalkulierbar.logic.transform.NaiveCNF
+import kalkulierbar.logic.transform.ToBasicOps
+import kalkulierbar.logic.transform.TseytinCNF
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotEquals
 
 class TestFOLogic {
     private lateinit var r1: Relation
@@ -46,7 +50,7 @@ class TestFOLogic {
                                         Function("f",
                                                 listOf(Constant("c"), Constant("k")))))))
 
-        u1 = UniversalQuantifier("X", Or(Var("X"), Not(Var("X"))), listOf())
+        u1 = UniversalQuantifier("X", Or(Var("X"), Not(Var("X"))), mutableListOf())
         u2 = UniversalQuantifier("X",
                 ExistentialQuantifier("Y",
                         UniversalQuantifier("Z",
@@ -57,18 +61,18 @@ class TestFOLogic {
                                         Relation("R",
                                                 listOf(QuantifiedVariable("Y"),
                                                         QuantifiedVariable("Z")))),
-                                listOf()),
-                        listOf()),
-                listOf())
+                                mutableListOf()),
+                        mutableListOf()),
+                mutableListOf())
         u3 = UniversalQuantifier("Number1",
                 ExistentialQuantifier("Number2",
                         Relation("Greater",
                                 listOf(QuantifiedVariable("Number1"),
                                         QuantifiedVariable("Number2"))),
-                        listOf()),
-                listOf())
+                        mutableListOf()),
+                mutableListOf())
 
-        e1 = ExistentialQuantifier("C", Not(Relation("Q", listOf(QuantifiedVariable("C")))), listOf())
+        e1 = ExistentialQuantifier("C", Not(Relation("Q", listOf(QuantifiedVariable("C")))), mutableListOf())
         e2 = ExistentialQuantifier("X",
                 UniversalQuantifier("Y",
                         Relation("=",
@@ -77,78 +81,67 @@ class TestFOLogic {
                                         Function("m",
                                                 listOf(QuantifiedVariable("X"),
                                                         QuantifiedVariable("Y"))))),
-                        listOf()),
-                listOf())
+                        mutableListOf()),
+                mutableListOf())
         e3 = ExistentialQuantifier("El",
                 Impl(
                         Relation("P", listOf(QuantifiedVariable("El"))),
                         UniversalQuantifier("Y",
                                 Relation("P", listOf(QuantifiedVariable("Y"))),
-                                listOf())
+                                mutableListOf())
                 ),
-                listOf())
-    }
-
-    @Test
-    fun testRelBasicOps() {
-        assertEquals("R1(Abc)", r1.toBasicOps().toString())
-        assertEquals("NewRel(c, f(d, X))", r2.toBasicOps().toString())
-        assertEquals("Aefjwadg(g(f(c, k)))", r3.toBasicOps().toString())
-    }
-
-    @Test
-    fun testRelNaiveCNF() {
-        assertEquals("{R1(Abc)}", r1.naiveCNF().toString())
-        assertEquals("{NewRel(c, f(d, X))}", r2.naiveCNF().toString())
-        assertEquals("{Aefjwadg(g(f(c, k)))}", r3.naiveCNF().toString())
-    }
-
-    @Test
-    fun testRelTseytin() {
-        assertEquals("{relR1(Abc)}", r1.tseytinCNF().toString())
-        assertEquals("{relNewRel(c, f(d, X))}", r2.tseytinCNF().toString())
-        assertEquals("{relAefjwadg(g(f(c, k)))}", r3.tseytinCNF().toString())
+                mutableListOf())
     }
 
     @Test
     fun testAllBasicOps() {
-        assertEquals("(∀X: (X ∨ !X))", u1.toBasicOps().toString())
-        assertEquals("(∀X: (∃Y: (∀Z: (R(X, Y) ∧ R(Y, Z)))))", u2.toBasicOps().toString())
-        assertEquals("(∀Number1: (∃Number2: Greater(Number1, Number2)))", u3.toBasicOps().toString())
+        assertEquals("(∀X: (X ∨ !X))", ToBasicOps.transform(u1).toString())
+        assertEquals("(∀X: (∃Y: (∀Z: (R(X, Y) ∧ R(Y, Z)))))", ToBasicOps.transform(u2).toString())
+        assertEquals("(∀Number1: (∃Number2: Greater(Number1, Number2)))", ToBasicOps.transform(u3).toString())
+    }
+
+    @Test
+    fun testRelEquals() {
+        assertEquals(r1, Relation("R1", listOf(QuantifiedVariable("Abc"))))
+        assertNotEquals(r1, Relation("R1", listOf(QuantifiedVariable("Abcd"))))
+        assertEquals(r1.hashCode(), Relation("R1", listOf(QuantifiedVariable("Abc"))).hashCode())
+        assertNotEquals<Relation?>(r1, null)
+        assertNotEquals<Any>(r1, u1)
+        assertNotEquals(r2, r3)
     }
 
     @Test
     fun testAllNaiveCNF() {
         assertFailsWith<FormulaConversionException> {
-            u1.naiveCNF()
+            NaiveCNF.transform(u1)
         }
     }
 
     @Test
     fun testAllTseytin() {
         assertFailsWith<FormulaConversionException> {
-            u1.tseytinCNF()
+            TseytinCNF.transform(u1)
         }
     }
 
     @Test
     fun testExBasicOps() {
-        assertEquals("(∃C: !Q(C))", e1.toBasicOps().toString())
-        assertEquals("(∃X: (∀Y: =(Y, m(X, Y))))", e2.toBasicOps().toString())
-        assertEquals("(∃El: (!P(El) ∨ (∀Y: P(Y))))", e3.toBasicOps().toString())
+        assertEquals("(∃C: !Q(C))", ToBasicOps.transform(e1).toString())
+        assertEquals("(∃X: (∀Y: =(Y, m(X, Y))))", ToBasicOps.transform(e2).toString())
+        assertEquals("(∃El: (!P(El) ∨ (∀Y: P(Y))))", ToBasicOps.transform(e3).toString())
     }
 
     @Test
     fun testExNaiveCNF() {
         assertFailsWith<FormulaConversionException> {
-            e1.naiveCNF()
+            NaiveCNF.transform(e1)
         }
     }
 
     @Test
     fun testExTseytin() {
         assertFailsWith<FormulaConversionException> {
-            e1.tseytinCNF()
+            TseytinCNF.transform(e1)
         }
     }
 }

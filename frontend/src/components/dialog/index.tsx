@@ -56,7 +56,7 @@ const Dialog: preact.FunctionalComponent<Props> = ({
     return (
         <div class={c} onClick={handleClick}>
             <div class={`card  ${style.container} ${className}`}>
-                <h2>{label}</h2>
+                <h2 class={style.label}>{label}</h2>
                 <button
                     class={style.closeBtn}
                     onClick={onClose}
