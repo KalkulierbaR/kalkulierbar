@@ -17,7 +17,8 @@ class TestAutoCloseBranchFO {
             "(R(a) <-> !R(b)) | (!R(a) -> R(b))",
             "\\ex A : (R(A) & (\\all B: !R(b) & !R(A)))",
             "\\ex Usk: (R(Usk) -> (!\\ex Usk: (R(sk1) & !R(Usk) | R(Usk) & !R(sk1))))",
-            "\\all A: (Sk1(A) -> !\\ex B: (R(A) & !R(B) -> Sk1(B) | !Sk1(A)))"
+            "\\all A: (Sk1(A) -> !\\ex B: (R(A) & !R(B) -> Sk1(B) | !Sk1(A)))",
+            "\\all X: (R(g(X)) & !R(f(X)))"
     )
 
     @BeforeTest
@@ -130,6 +131,17 @@ class TestAutoCloseBranchFO {
         }
         assertFailsWith<IllegalMove> {
             state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, Int.MIN_VALUE))
+        }
+    }
+
+    @Test
+    fun testImpossibleUnification() {
+        var state = states[5]
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1))
+
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 2, 1))
         }
     }
 
