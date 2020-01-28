@@ -2,7 +2,7 @@ import { h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 import { useAppState } from "../../../helpers/app-state";
-import { Calculus, Params } from "../../../types/app";
+import { CalculusType, Params } from "../../../types/app";
 import Btn from "../../btn";
 import * as style from "./style.scss";
 
@@ -18,11 +18,11 @@ interface Props {
     /**
      * The calculus to use. Specifies API endpoint
      */
-    calculus: Calculus;
+    calculus: CalculusType;
     /**
      * Additional params for the calculus
      */
-    params?: Params[Calculus];
+    params?: Params[CalculusType];
 }
 
 /**

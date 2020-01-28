@@ -6,6 +6,7 @@ import { useMemo } from "preact/hooks";
 import { checkClose } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { circleLayout } from "../../../helpers/layout/resolution";
+import {Calculus} from "../../../types/app";
 import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
 import CenterIcon from "../../icons/center";
@@ -48,7 +49,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         server,
         onError,
         onSuccess,
-        ["prop-resolution"]: state
+        [Calculus.propResolution]: state
     } = useAppState();
 
     const { width, height, data } = useMemo(() => circleLayout(clauses), [
@@ -110,7 +111,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                             server,
                             onError,
                             onSuccess,
-                            "prop-resolution",
+                            Calculus.propResolution,
                             state
                         )
                     }

@@ -8,7 +8,7 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
 import { useAppState } from "../../helpers/app-state";
-import { TableauxCalculus } from "../../types/app";
+import {Calculus, TableauxCalculusType} from "../../types/app";
 import {
     CnfStrategy,
     FOTableauxParams,
@@ -20,7 +20,7 @@ interface Props {
     /**
      * Which calculus to use
      */
-    calculus: TableauxCalculus;
+    calculus: TableauxCalculusType;
 }
 
 const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
@@ -54,7 +54,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     let params;
     switch (calculus) {
-        case "prop-tableaux":
+        case Calculus.propTableaux:
             const propParams: PropTableauxParams = {
                 type: tabType,
                 regular,
@@ -63,7 +63,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
             };
             params = propParams;
             break;
-        case "fo-tableaux":
+        case Calculus.foTableaux:
             const foParams: FOTableauxParams = {
                 type: tabType,
                 regular,
@@ -76,7 +76,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const getCalculusSpecificSwitch = () => {
         switch (calculus) {
-            case "prop-tableaux":
+            case Calculus.propTableaux:
                 return (
                     <Fragment>
                         <Switch
@@ -86,7 +86,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
                     </Fragment>
                 );
-            case "fo-tableaux":
+            case Calculus.foTableaux:
                 return (
                     <Fragment>
                         <Switch
@@ -96,6 +96,8 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         <HintIcon hint="This forces you to provide a term for every variable of the nodes you are closing." />
                     </Fragment>
                 );
+            default:
+                return;
         }
     };
 
@@ -154,7 +156,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
-            <Format foLogic={calculus === "fo-tableaux"} />
+            <Format foLogic={calculus === Calculus.foTableaux} />
         </Fragment>
     );
 };

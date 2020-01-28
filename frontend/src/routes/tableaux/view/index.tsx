@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { TableauxCalculus } from "../../../types/app";
+import {Calculus, TableauxCalculusType} from "../../../types/app";
 import {
     instanceOfFOTableauxState,
     instanceOfPropTableauxState,
@@ -39,7 +39,7 @@ interface Props {
     /**
      * Which calculus to use
      */
-    calculus: TableauxCalculus;
+    calculus: TableauxCalculusType;
 }
 
 const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
@@ -68,12 +68,12 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const clauseOptions = () => {
         let options: string[] = [];
         if (
-            calculus === "prop-tableaux" &&
+            calculus === Calculus.propTableaux &&
             instanceOfPropTableauxState(state)
         ) {
             options = clauseSetToStringArray(state!.clauseSet);
         }
-        if (calculus === "fo-tableaux" && instanceOfFOTableauxState(state)) {
+        if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
             options = state!.renderedClauseSet;
         }
         return options;
@@ -149,7 +149,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 (!selectedNodeIsLeaf && !newNodeIsLeaf)
             ) {
                 setSelectedNodeId(newNode.id);
-            } else if (calculus === "prop-tableaux") {
+            } else if (calculus === Calculus.propTableaux) {
                 // Now we have a leaf and a predecessor => Try close move
                 // If we can't do it, let server handle it
                 sendClose(
@@ -163,7 +163,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 );
                 setSelectedNodeId(undefined);
             } else if (
-                calculus === "fo-tableaux" &&
+                calculus === Calculus.foTableaux &&
                 instanceOfFOTableauxState(state)
             ) {
                 // Prepare dialog for automatic/manual unification
@@ -227,10 +227,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
         switch (calculus) {
-            case "prop-tableaux":
+            case Calculus.propTableaux:
                 state = propExampleState;
                 break;
-            case "fo-tableaux":
+            case Calculus.foTableaux:
                 state = foExampleState;
                 break;
         }
@@ -294,7 +294,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             </Dialog>
 
-            {calculus === "fo-tableaux" && instanceOfFOTableauxState(state) ? (
+            {calculus === Calculus.foTableaux && instanceOfFOTableauxState(state) ? (
                 <Dialog
                     open={showVarAssignDialog}
                     label="Choose variable assignments or leave them blank"

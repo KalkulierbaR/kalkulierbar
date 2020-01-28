@@ -68,8 +68,16 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
-        &.active {
-            border-bottom: 3px #fff solid;
+        &.current {
+            @media (max-width: 700px) {
+                background: rgba(0, 0, 0, 0.2);
+            }
+            @media (min-width: 700px) {
+                background-size: 100% 0.3rem;
+                background-position: center top;
+                background-repeat: no-repeat;
+                background-image: linear-gradient(#ad80ff, #ad80ff);
+            }
         }
     }
 
