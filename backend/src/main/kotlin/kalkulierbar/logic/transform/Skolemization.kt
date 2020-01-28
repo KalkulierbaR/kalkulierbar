@@ -17,7 +17,7 @@ import kalkulierbar.logic.UniversalQuantifier
  * Requires absence of variable-hiding in quantifier scopes, will
  * throw an exception otherwise.
  *
- * Introduced Skolem terms are of the form 'sk-N' where N is a number.
+ * Introduced Skolem terms are of the form 'skN' where N is a number.
  *
  * Note: I'm unsure if this implementation produces correct results
  *       if it is not applied as part of the Skolem Normal Form transformation,
@@ -96,12 +96,12 @@ class Skolemization(val nameBlacklist: Set<String>) : DoNothingVisitor() {
     private fun getSkolemTerm(): FirstOrderTerm {
 
         skolemCounter += 1
-        var skolemName = "sk-$skolemCounter"
+        var skolemName = "sk$skolemCounter"
 
         // Ensure freshness
         while (nameBlacklist.contains(skolemName)) {
             skolemCounter += 1
-            skolemName = "sk-$skolemCounter"
+            skolemName = "sk$skolemCounter"
         }
 
         if (quantifierScope.size == 0)
