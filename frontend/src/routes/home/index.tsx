@@ -11,6 +11,9 @@ const Home: preact.FunctionalComponent = () => {
                         <a href="/prop-tableaux">Tableaux</a>
                     </li>
                     <li class={style.calculusListItem}>
+                        <a href="/fo-tableaux">First Order Tableaux</a>
+                    </li>
+                    <li class={style.calculusListItem}>
                         <a href="/prop-resolution">Resolution</a>
                     </li>
                 </ul>

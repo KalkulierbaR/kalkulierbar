@@ -102,6 +102,13 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
         <Link
             onClick={() => onLinkClick()}
             activeClassName={style.active}
+            href="/fo-tableaux"
+        >
+            First Order Tableaux
+        </Link>
+        <Link
+            onClick={() => onLinkClick()}
+            activeClassName={style.active}
             href="/prop-resolution"
         >
             Resolution
