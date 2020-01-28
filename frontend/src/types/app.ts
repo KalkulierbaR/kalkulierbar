@@ -27,6 +27,8 @@ export interface Params {
     "fo-tableaux": FOTableauxParams;
 }
 
+export type Formulas = Record<Calculus, string>;
+
 export enum Theme {
     dark = "dark",
     light = "light",
@@ -38,6 +40,7 @@ export interface AppState {
     notification?: Notification;
     smallScreen: boolean;
     theme: Theme;
+    savedFormulas: Formulas;
     "prop-tableaux"?: PropTableauxState;
     "prop-resolution"?: ResolutionState;
     "fo-tableaux"?: FOTableauxState;
@@ -65,7 +68,8 @@ export enum AppStateActionType {
     REMOVE_NOTIFICATION,
     UPDATE_CALCULUS_STATE,
     SET_THEME,
-    SET_SERVER
+    SET_SERVER,
+    UPDATE_SAVED_FORMULA
 }
 
 export interface SetSmallScreen extends AppStateActionBase {
@@ -99,13 +103,20 @@ export interface SetServer extends AppStateActionBase {
     value: string;
 }
 
+export interface UpdateSavedFormula extends AppStateActionBase {
+    type: AppStateActionType.UPDATE_SAVED_FORMULA;
+    calculus: Calculus;
+    value: string;
+}
+
 export type AppStateAction =
     | SetSmallScreen
     | AddNotification
     | RemoveNotification
     | UpdateCalculusState
     | SetTheme
-    | SetServer;
+    | SetServer
+    | UpdateSavedFormula;
 
 export type AppStateUpdater = <C extends Calculus = Calculus>(
     id: C,
