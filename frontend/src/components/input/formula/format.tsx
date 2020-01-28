@@ -47,6 +47,8 @@ const Format: preact.FunctionalComponent<Props> = ({
                             <tr><td>Implication</td><td>{"->"}</td><td>{"rain -> wet"}</td></tr>
                             <tr><td>Equivalence</td><td>{"<=> or <->"}</td><td>{"right <=> !left"}</td></tr>
                             <tr><td>Parentheses</td><td>()</td><td>(a | b) & c</td></tr>
+                            <tr><td>Universal quantifiers</td><td>\all X</td><td>\all X: (R(X) & Q(X))</td></tr>
+                            <tr><td>Existential quantifiers</td><td>\ex X</td><td>\ex X: (R(X) & Q(X))</td></tr>
                         </table>
                     </p>
                     <p>
