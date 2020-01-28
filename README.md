@@ -27,6 +27,8 @@ Supported OS are `debian/ubuntu`, `RHEL/CentOS/Fedora`, `OpenSUSE`, `ArchLinux`.
 
 Just open your terminal, `cd` into source directory and type `./install.sh`.
 
+If you want to use command `yarn` and `node` elswhere or run fronted without the run.sh script then add `/usr/local/lib/nodejs/node-v12.14.1-linux-x64/bin` to your path.
+
 -> Problems? Then install `java`, `nodeJS` and `yarn`.
 
 On `Windows` install these manually:

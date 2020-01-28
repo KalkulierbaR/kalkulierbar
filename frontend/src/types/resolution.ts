@@ -11,7 +11,7 @@ export interface ResolutionState {
 export interface ResolutionMove {
     c1: number;
     c2: number;
-    spelling: string;
+    spelling: string | null;
 }
 
 export interface ResolutionParams {

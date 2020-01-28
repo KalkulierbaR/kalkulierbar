@@ -76,7 +76,7 @@ const App: preact.FunctionalComponent = () => {
         <div id="app">
             <Header />
             <main class={style.main}>
-                <Router>
+                <Router onChange={removeNotification}>
                     <AsyncRoute
                         path="/"
                         getComponent={() =>

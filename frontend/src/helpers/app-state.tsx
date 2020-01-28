@@ -40,11 +40,15 @@ const reducer: Reducer<AppState, AppStateAction> = (
         case AppStateActionType.REMOVE_NOTIFICATION:
             return { ...state, notification: undefined };
         case AppStateActionType.UPDATE_CALCULUS_STATE:
-            return { ...state, [action.calculus]: action.value };
+            return {
+                ...state,
+                [action.calculus]: action.value,
+                notification: undefined
+            };
         case AppStateActionType.SET_THEME:
             return { ...state, theme: action.value };
         case AppStateActionType.SET_SERVER:
-            return { ...state, server: action.value };
+            return { ...state, server: action.value, notification: undefined };
         case AppStateActionType.UPDATE_SAVED_FORMULA:
             return {
                 ...state,
