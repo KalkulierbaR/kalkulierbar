@@ -105,7 +105,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         val leaf = state.nodes[leafID]
         val closeNode = state.nodes[closeNodeID]
 
-        if (leaf.relation != closeNode.relation)
+        if (!leaf.relation.synEq(closeNode.relation))
             throw IllegalMove("Node '$leaf' and '$closeNode' are not equal after variable instantiation")
 
         // Instantiating variables globally may violate regularity in unexpected places
