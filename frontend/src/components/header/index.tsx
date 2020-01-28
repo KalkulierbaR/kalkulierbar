@@ -97,7 +97,7 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
             activeClassName={style.active}
             href="/prop-tableaux"
         >
-            Tableaux
+            Propositional Tableaux
         </Link>
         <Link
             onClick={() => onLinkClick()}
@@ -111,7 +111,7 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
             activeClassName={style.active}
             href="/prop-resolution"
         >
-            Resolution
+            Propositional Resolution
         </Link>
     </nav>
 );

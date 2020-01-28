@@ -14,7 +14,6 @@ declare module "preact" {
     }
 }
 
-// Properties Interface for the ClauseInput component
 interface Props {
     /**
      * The calculus to use. Specifies API endpoint
@@ -39,7 +38,7 @@ const normalizeInput = (input: string) => {
 };
 
 /*
- * A component for entering clause sets and sending them to the server.
+ * A component for entering formulae or clause sets and sending them to the server.
  * It also redirects the user after a successful response from the server
  * to the corresponding view of the calculus
  */
