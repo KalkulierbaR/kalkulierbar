@@ -30,7 +30,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [regular, setRegular] = useState(false);
     const [backtracking, setBacktracking] = useState(true);
     const [cnfStrategy, setStrategy] = useState(CnfStrategy.optimal);
-    const [manualUnification, setManualUnification] = useState(false);
+    const [manualVarAssign, setManualVarAssign] = useState(false);
 
     /**
      * Handle force naive strategy switch setting
@@ -68,12 +68,16 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 type: tabType,
                 regular,
                 backtracking,
-                manualVarAssign: manualUnification
+                manualVarAssign
             };
             params = foParams;
             break;
     }
 
+    /**
+     * Get the right switch depending on the calculus
+     * @returns {HTMLElement | void} - The switch with its hint
+     */
     const getCalculusSpecificSwitch = () => {
         switch (calculus) {
             case Calculus.propTableaux:
@@ -91,7 +95,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     <Fragment>
                         <Switch
                             label="Manual unification"
-                            onChange={setManualUnification}
+                            onChange={setManualVarAssign}
                         />
                         <HintIcon hint="This forces you to provide a term for every variable of the nodes you are closing." />
                     </Fragment>
