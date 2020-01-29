@@ -1,7 +1,7 @@
 import { h } from "preact";
 import AsyncRoute from "preact-async-route";
-import {Router} from "preact-router";
-import { useEffect } from "preact/hooks";
+import {getCurrentUrl, Router, RouterOnChangeArgs} from "preact-router";
+import {useEffect, useState} from "preact/hooks";
 
 import { AppStateProvider, useAppState } from "../helpers/app-state";
 import Confetti from "../helpers/confetti";
@@ -54,6 +54,25 @@ const App: preact.FunctionalComponent = () => {
     } = useAppState();
     const setSmallScreen = (small: boolean) =>
         dispatch({ type: AppStateActionType.SET_SMALL_SCREEN, value: small });
+    const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
+
+    const onChangeRoute = (args: RouterOnChangeArgs) => {
+        setCurrentUrl(args.url);
+        removeNotification();
+        const listener = (e: Event) => {
+            // Cancel the event
+            e.preventDefault();
+            // Chrome requires returnValue to be set
+            e.returnValue = false;
+        };
+        console.log(args.url);
+        // if (args.url.includes("/view")) {
+        //     window.addEventListener('beforeunload',  listener);
+        // }
+        // else {
+        //     window.removeEventListener('beforeunload', listener);
+        // }
+    };
 
     useEffect(() => {
         checkServer(server, onError);
@@ -76,7 +95,7 @@ const App: preact.FunctionalComponent = () => {
         <div id="app">
             <Header />
             <main class={style.main}>
-                <Router onChange={removeNotification}>
+                <Router onChange={onChangeRoute} >
                     <AsyncRoute
                         path="/"
                         getComponent={() =>
