@@ -108,9 +108,9 @@ export interface SetServer extends AppStateActionBase {
     value: string;
 }
 
-export interface UpdateSavedFormula extends AppStateActionBase {
+export interface UpdateSavedFormula<C extends CalculusType = CalculusType> extends AppStateActionBase {
     type: AppStateActionType.UPDATE_SAVED_FORMULA;
-    calculus: Calculus;
+    calculus: C;
     value: string;
 }
 
