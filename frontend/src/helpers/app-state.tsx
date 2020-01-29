@@ -4,7 +4,7 @@ import {
     AddNotification,
     AppState,
     AppStateAction,
-    AppStateActionType,
+    AppStateActionType, Calculus,
     CalculusType,
     DerivedAppState,
     NotificationType,
@@ -18,9 +18,9 @@ const isDeployed = location.port !== "8080";
 const INIT_APP_STATE: AppState = {
     smallScreen: false,
     savedFormulas: {
-        "prop-resolution": "",
-        "prop-tableaux": "",
-        "fo-tableaux": ""
+        [Calculus.propResolution]: "",
+        [Calculus.propTableaux]: "",
+        [Calculus.foTableaux]: ""
     },
     server: isDeployed
         ? "https://kalkulierbar-api.herokuapp.com"

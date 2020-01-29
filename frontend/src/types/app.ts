@@ -21,15 +21,15 @@ export enum Calculus {
     propResolution = "prop-resolution",
 }
 export interface Move {
-    "prop-tableaux": TableauxMove;
-    "prop-resolution": ResolutionMove;
-    "fo-tableaux": FOTableauxMove;
+    [Calculus.propTableaux]: TableauxMove;
+    [Calculus.propResolution]: ResolutionMove;
+    [Calculus.foTableaux]: FOTableauxMove;
 }
 
 export interface Params {
-    "prop-tableaux": PropTableauxParams;
-    "prop-resolution": ResolutionParams;
-    "fo-tableaux": FOTableauxParams;
+    [Calculus.propTableaux]: PropTableauxParams;
+    [Calculus.propResolution]: ResolutionParams;
+    [Calculus.foTableaux]: FOTableauxParams;
 }
 
 export type Formulas = Record<Calculus, string>;
