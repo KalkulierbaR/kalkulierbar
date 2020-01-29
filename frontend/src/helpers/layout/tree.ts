@@ -47,8 +47,8 @@ const tabNodeToTree = (
     i: number = 0,
     y: number = 16
 ): Tree<TableauxTreeLayoutNode> => {
-    // const width = (n.spelling.length + (n.isClosed ? 1 : 0)) * 70;
-    const width = estimateSVGTextWidth(n.spelling) + 56;
+    const width =
+        estimateSVGTextWidth(`${n.negated ? "¬" : ""}${n.spelling}`) + 56;
     return tree(
         width,
         72,
