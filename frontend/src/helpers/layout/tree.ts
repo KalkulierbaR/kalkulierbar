@@ -2,6 +2,7 @@ import { Layout, LayoutItem } from "../../types/layout";
 import { TableauxNode, TableauxTreeLayoutNode } from "../../types/tableaux";
 import { LeftSiblingList, Link, Tree } from "../../types/tree";
 import { maxBy } from "../max-by";
+import { estimateSVGTextWidth } from "../text-width";
 
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
 // https://doi.org/10.1002/spe.2213
@@ -49,7 +50,9 @@ const tabNodeToTree = (
     i: number = 0,
     y: number = 16
 ): Tree<TableauxTreeLayoutNode> => {
-    const width = (n.spelling.length + (n.isClosed ? 1 : 0)) * 70;
+    // const width = (n.spelling.length + (n.isClosed ? 1 : 0)) * 70;
+    const width = estimateSVGTextWidth(n.spelling) + 56;
+    console.log(`${n.spelling}: ${width}`);
     return tree(
         width,
         72,
