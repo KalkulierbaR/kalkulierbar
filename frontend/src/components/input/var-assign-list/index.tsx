@@ -15,7 +15,7 @@ interface Props {
     /**
      * The function to call, when the user submits the list
      */
-    submitVarAssignCallback: (va?: VarAssign) => void;
+    submitVarAssignCallback: (auto: boolean, va?: VarAssign) => void;
     /**
      * Label for the submit button
      */
@@ -27,7 +27,7 @@ interface Props {
     /**
      * The function to call, when the user clicks the second submit button
      */
-    secondSubmitEvent?: (va?: VarAssign) => void;
+    secondSubmitEvent?: (auto: boolean, va?: VarAssign) => void;
     /**
      * Additional className for the element
      */
@@ -57,7 +57,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
             }
             varAssign[variable] = textInput.value;
         });
-        submitVarAssignCallback(varAssign);
+        submitVarAssignCallback(false, varAssign);
     };
 
     return (
@@ -75,7 +75,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
             <Btn onClick={submitVarAssign}>{submitLabel}</Btn>
 
             {!manualVarAssign && secondSubmitLabel && secondSubmitEvent ? (
-                <Btn onClick={() => secondSubmitEvent()}>
+                <Btn onClick={() => secondSubmitEvent(true)}>
                     {secondSubmitLabel}
                 </Btn>
             ) : (

@@ -180,7 +180,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 selectedNode.relation!.arguments.forEach(checkArgumentForVar);
                 newNode.relation!.arguments.forEach(checkArgumentForVar);
                 if (vars.length <= 0) {
-                    submitVarAssign();
+                    submitVarAssign(false);
                     return;
                 }
                 setVarsToAssign(vars);
@@ -192,10 +192,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     /**
      * Submit a close move containing variable assignment rules
      * in the FO Tableaux calculus
+     * @param {boolean} auto - Automatically assign variables if this is set to true
      * @param {VarAssign} varAssign - Variable assignments by the user
      * @returns {void | Error} - Error if the two nodes for the close move can't be identified
      */
-    const submitVarAssign = (varAssign: VarAssign = {}) => {
+    const submitVarAssign = (auto: boolean, varAssign: VarAssign = {}) => {
         setShowVarAssignDialog(false);
         if (
             selectedNodeId === undefined ||
@@ -223,7 +224,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             leafNodeId,
             predNodeId,
             varAssign,
-            Object.keys(varAssign).length <= 0
+            auto
         );
         setSelectedNodeId(undefined);
         setCloseMoveSecondNodeId(undefined);
