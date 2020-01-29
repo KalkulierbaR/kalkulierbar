@@ -37,9 +37,9 @@ interface Props {
 
 /**
  *
- * @param {Array<HierarchyNode<D3Data>>} nodes - The nodes we iterate over
+ * @param {Array<LayoutItem<TableauxTreeLayoutNode>>} nodes - The nodes we iterate over
  * @param {number} id - Id of the ancestor
- * @returns {HierarchyNode<D3Data>} - The ancestor
+ * @returns {TableauxTreeLayoutNode} - The ancestor
  */
 const getNodeById = (
     nodes: Array<LayoutItem<TableauxTreeLayoutNode>>,
@@ -70,17 +70,17 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     // should look like d="M x1 x2 Q xC yC x2 y2"
     const xVektor = x1 - x2;
     const yVektor = y1 - y2;
-    let xControlpoint = x1 - xVektor / 2;
-    let yControlpoint = y1 - yVektor / 2;
+    let xControlpoint = x1 - (xVektor / 2);
+    let yControlpoint = y1 - (yVektor / 2);
     const divisor = 2;
     if (x1 > x2) {
         // child is to the right of the parent
-        xControlpoint = xControlpoint - -yVektor / divisor;
-        yControlpoint = yControlpoint - xVektor / divisor;
+        xControlpoint = xControlpoint - (-yVektor / divisor);
+        yControlpoint = yControlpoint - (xVektor / divisor);
     } else {
         // child is to the left of the parent
-        xControlpoint = xControlpoint - yVektor / divisor;
-        yControlpoint = yControlpoint - -xVektor / divisor;
+        xControlpoint = xControlpoint - (yVektor / divisor);
+        yControlpoint = yControlpoint - (-xVektor / divisor);
     }
 
     const d =
@@ -96,7 +96,6 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
         x2 +
         " " +
         y2;
-    //   console.log('M ${x1} ${y1} Q ${xControlpoint} ${yControlpoint} ${x2} ${y2}')
     return <path d={d} class={style.link} />;
 };
 
@@ -153,7 +152,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     x1={l.source[0]}
                                     y1={l.source[1] + 6}
                                     x2={l.target[0]}
-                                    y2={l.target[1] - 18}
+                                    y2={l.target[1] - 16}
                                 />
                             ))}
                             {/* Third render nodes -> renders above all previous elements */
