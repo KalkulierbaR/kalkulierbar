@@ -2,6 +2,7 @@ import { Layout, LayoutItem } from "../../types/layout";
 import { TableauxNode, TableauxTreeLayoutNode } from "../../types/tableaux";
 import { LeftSiblingList, Link, Tree } from "../../types/tree";
 import { maxBy } from "../max-by";
+import { estimateSVGTextWidth } from "../text-width";
 
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
 // https://doi.org/10.1002/spe.2213
@@ -35,10 +36,7 @@ export const treeLayout = (
     layout(root);
     // console.log(root);
     const data = treeToLayoutItem(root);
-    const width =
-        root.extremeLeft!.x -
-        root.extremeLeft!.width / 2 +
-        (root.extremeRight!.x + root.extremeRight!.width / 2);
+    const width = treeWidth(root);
     const links = getLinks(root);
     return { width, height: root.treeHeight, data, links };
 };
@@ -49,7 +47,8 @@ const tabNodeToTree = (
     i: number = 0,
     y: number = 16
 ): Tree<TableauxTreeLayoutNode> => {
-    const width = (n.spelling.length + (n.isClosed ? 1 : 0)) * 70;
+    const width =
+        estimateSVGTextWidth(`${n.negated ? "¬" : ""}${n.spelling}`) + 56;
     return tree(
         width,
         72,
@@ -282,4 +281,12 @@ const updateIYL = (
         ih = ih.next;
     }
     return iyl(minY, i, ih);
+};
+
+const treeWidth = <T>(t: Tree<T>): number => {
+    const width = t.x + t.width / 2;
+    if (t.children.length) {
+        return Math.max(width, treeWidth(t.children[t.children.length - 1]));
+    }
+    return width;
 };

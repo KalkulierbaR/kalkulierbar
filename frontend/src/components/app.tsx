@@ -1,11 +1,11 @@
 import { h } from "preact";
 import AsyncRoute from "preact-async-route";
-import {Router} from "preact-router";
+import { Router } from "preact-router";
 import { useEffect } from "preact/hooks";
 
 import { AppStateProvider, useAppState } from "../helpers/app-state";
 import Confetti from "../helpers/confetti";
-import {AppStateActionType, Calculus} from "../types/app";
+import { AppStateActionType, Calculus } from "../types/app";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
@@ -87,9 +87,7 @@ const App: preact.FunctionalComponent = () => {
                         path={"/" + Calculus.propTableaux}
                         calculus={Calculus.propTableaux}
                         getComponent={() =>
-                            import("../routes/tableaux").then(
-                                m => m.default
-                            )
+                            import("../routes/tableaux").then(m => m.default)
                         }
                     />
                     <AsyncRoute
@@ -105,9 +103,7 @@ const App: preact.FunctionalComponent = () => {
                         path="/fo-tableaux"
                         calculus={Calculus.foTableaux}
                         getComponent={() =>
-                            import("../routes/tableaux").then(
-                                m => m.default
-                            )
+                            import("../routes/tableaux").then(m => m.default)
                         }
                     />
                     <AsyncRoute
@@ -145,6 +141,7 @@ const App: preact.FunctionalComponent = () => {
                     />
                 )}
             </div>
+            <svg id="kbar-svg" />
         </div>
     );
 };
