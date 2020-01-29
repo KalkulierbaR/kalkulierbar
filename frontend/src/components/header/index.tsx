@@ -1,4 +1,4 @@
-import { Fragment, h } from "preact";
+import {Fragment, h} from "preact";
 import {Link} from "preact-router";
 import {useCallback, useState} from "preact/hooks";
 import { useAppState } from "../../helpers/app-state";
@@ -15,7 +15,11 @@ import ThemeLight from "../icons/theme-light";
 import TextInput from "../input/text";
 import * as style from "./style.scss";
 
-const Header: preact.FunctionalComponent = () => {
+interface HeaderProps {
+    currentUrl: string;
+}
+
+const Header: preact.FunctionalComponent<HeaderProps> = ({currentUrl}) => {
     const { smallScreen } = useAppState();
     const [open, setOpen] = useState(false);
     const toggle = useCallback(() => setOpen(!open), [open]);
@@ -28,6 +32,7 @@ const Header: preact.FunctionalComponent = () => {
             <Nav
                 smallScreen={false}
                 onLinkClick={setClosed}
+                currentUrl={currentUrl}
             />
             <Btn class={style.settingsBtn} onClick={toggle} >
                 <SettingsIcon />
@@ -50,6 +55,7 @@ const Header: preact.FunctionalComponent = () => {
             <Drawer
                 open={open}
                 onLinkClick={setClosed}
+                currentUrl={currentUrl}
             />
             <Dialog
                 class={style.dialog}
@@ -85,11 +91,13 @@ const Hamburger: preact.FunctionalComponent<HamburgerProps> = ({
 interface NavProps {
     smallScreen: boolean;
     onLinkClick: CallableFunction;
+    currentUrl: string;
 }
 
 const Nav: preact.FunctionalComponent<NavProps> = ({
     smallScreen,
-    onLinkClick
+    onLinkClick,
+    currentUrl,
 }) => (
         <nav
             class={classMap({
@@ -98,19 +106,22 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
             })}
         >
             <Link
-                onClick={() => onLinkClick()}
-                href={"/" + Calculus.propTableaux}
-            >
-                Propositional Tableaux
-            </Link>
+                    onClick={() => onLinkClick()}
+                    class={currentUrl.includes(Calculus.propTableaux) ? style.current : undefined}
+                    href={"/" + Calculus.propTableaux}
+                >
+                    Propositional Tableaux
+                </Link>
+                <Link
+                    onClick={() => onLinkClick()}
+                    class={currentUrl.includes(Calculus.foTableaux) ? style.current : undefined}
+                    href={"/" + Calculus.foTableaux}
+                >
+                    First Order Tableaux
+                </Link>
             <Link
                 onClick={() => onLinkClick()}
-                href={"/" + Calculus.foTableaux}
-            >
-                First Order Tableaux
-            </Link>
-            <Link
-                onClick={() => onLinkClick()}
+                class={currentUrl.includes(Calculus.propResolution) ? style.current : undefined}
                 href={"/" + Calculus.propResolution}
             >
                 Propositional Resolution
@@ -234,11 +245,13 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
 interface DrawerProps {
     open: boolean;
     onLinkClick: CallableFunction;
+    currentUrl: string;
 }
 
 const Drawer: preact.FunctionalComponent<DrawerProps> = ({
     open,
     onLinkClick,
+    currentUrl,
 }) => (
     <div class={classMap({ [style.drawer]: true, [style.open]: open })}>
         <div class={style.inner}>
@@ -246,6 +259,7 @@ const Drawer: preact.FunctionalComponent<DrawerProps> = ({
             <Nav
                 smallScreen={true}
                 onLinkClick={onLinkClick}
+                currentUrl={currentUrl}
             />
             <h3>Settings</h3>
             <Settings />

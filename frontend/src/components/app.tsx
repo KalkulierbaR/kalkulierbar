@@ -56,22 +56,14 @@ const App: preact.FunctionalComponent = () => {
         dispatch({ type: AppStateActionType.SET_SMALL_SCREEN, value: small });
     const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
 
+    /**
+     * Execute actions based upon if the route changed
+     * @param {RouterOnChangeArgs} args - The arguments of the current route change
+     * @returns {void}
+     */
     const onChangeRoute = (args: RouterOnChangeArgs) => {
         setCurrentUrl(args.url);
         removeNotification();
-        const listener = (e: Event) => {
-            // Cancel the event
-            e.preventDefault();
-            // Chrome requires returnValue to be set
-            e.returnValue = false;
-        };
-        console.log(args.url);
-        // if (args.url.includes("/view")) {
-        //     window.addEventListener('beforeunload',  listener);
-        // }
-        // else {
-        //     window.removeEventListener('beforeunload', listener);
-        // }
     };
 
     useEffect(() => {
@@ -93,7 +85,7 @@ const App: preact.FunctionalComponent = () => {
 
     return (
         <div id="app">
-            <Header />
+            <Header currentUrl={currentUrl} />
             <main class={style.main}>
                 <Router onChange={onChangeRoute} >
                     <AsyncRoute
