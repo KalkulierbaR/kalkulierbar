@@ -10,7 +10,7 @@ import kotlin.test.assertFailsWith
 class TestIssue48 {
 
     private val testStrings = mapOf(
-            "\\ex X: R(X) & (R(sk1) <-> R(usk1))" to "(R(sk-1) ∧ (R(sk1) <=> R(usk1)))"
+            "\\ex X: R(X) & (R(sk1) <-> R(usk1))" to "(R(sk2) ∧ (R(sk1) <=> R(usk1)))"
     )
 
     private val invalid = listOf(

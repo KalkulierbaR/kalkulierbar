@@ -6,8 +6,6 @@ import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.And
-import kalkulierbar.logic.Equiv
-import kalkulierbar.logic.Impl
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
@@ -58,30 +56,9 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
         val res: ClauseSet<Relation>
         val child = node.child
 
-        // Perform Negation-Pushdown
+        // Negation pushdown has already been performed by SNF conversion,
+        // negations can only occur in front of relations
         when (child) {
-            is Not -> {
-                // Eliminate double negation
-                res = child.child.accept(this)
-            }
-            is Or -> {
-                // De-Morgan Or
-                res = And(Not(child.leftChild), Not(child.rightChild)).accept(this)
-            }
-            is And -> {
-                // De-Morgan And
-                res = Or(Not(child.leftChild), Not(child.rightChild)).accept(this)
-            }
-            is Impl -> {
-                // !(a->b) = !(!a v b) = a^!b
-                res = And(child.leftChild, Not(child.rightChild)).accept(this)
-            }
-            is Equiv -> {
-                val implA = Impl(child.leftChild, child.rightChild)
-                val implB = Impl(child.rightChild, child.leftChild)
-                // Translate equivalence into implications
-                res = Not(And(implA, implB)).accept(this)
-            }
             is Relation -> {
                 val atom = Atom(child, true)
                 val clause = Clause(mutableListOf(atom))
@@ -134,24 +111,6 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
         }
 
         return cs
-    }
-
-    /**
-     * Transform an Implication into an equivalent ClauseSet
-     * @param node Implication to transform
-     * @return ClauseSet representing the Implication
-     */
-    override fun visit(node: Impl): ClauseSet<Relation> {
-        return ToBasicOps.transform(node).accept(this)
-    }
-
-    /**
-     * Transform an Equivalence into an equivalent ClauseSet
-     * @param node Equivalence to transform
-     * @return ClauseSet representing the Equivalence
-     */
-    override fun visit(node: Equiv): ClauseSet<Relation> {
-        return ToBasicOps.transform(node).accept(this)
     }
 
     /**

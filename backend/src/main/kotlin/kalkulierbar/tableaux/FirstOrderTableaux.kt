@@ -172,6 +172,10 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         if (!state.backtracking)
             throw IllegalMove("Backtracking is not enabled for this proof")
 
+        // Can't undo any more moves in initial state
+        if (state.moveHistory.isEmpty())
+            return state
+
         // Create a fresh clone-state with the same parameters and input formula
         val params = FoTableauxParam(state.type, state.regular, state.backtracking, state.manualUnificationOnly)
         var freshState = parseFormulaToState(state.formula, params)
