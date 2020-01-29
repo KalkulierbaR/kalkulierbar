@@ -18,28 +18,15 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                         <b>First Order Formulas</b>
                     </p>
                     <p>
-                        <ul>
-                            <li>
-                                All constants (identifiers with a lowercase or numeric first character) are terms.
-                            </li>
-                            <li>
-                                All variables (identifiers with an uppercase first character) are terms.
-                            </li>
-                            <li>
-                                Given n terms t1 to tn, all functions f(t1, t2, ... tn) - where f is an identifier with
-                                a lowercase or numeric first character - are terms.
-                            </li>
-                            <li>
-                                An atomic formula is a relation with one or more terms as arguments, written as R(t1,
-                                t2, ... tn) where R is an identifier with an uppercase first character. Please note that
-                                relations with the same name but different numbers of arguments may exist.
-                            </li>
-                        </ul>
+                        <code class={style.padRight}>
+                            {"\\all X: R(f(X, a)) & !R(f(b, a)"}
+                        </code>
+                        is a valid input.
                     </p>
                     <p>
                         <table>
                             <tr>
-                                <th>Operation</th>
+                                <th>Operator</th>
                                 <th>Symbol</th>
                                 <th>Example</th>
                             </tr>
@@ -55,13 +42,13 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                             </tr>
                             <tr>
                                 <td>Universal quantifiers</td>
-                                <td>\all X</td>
-                                <td>\all X: (R(X) & Q(X))</td>
+                                <td><code>\all X</code></td>
+                                <td><code>\all X: (R(X) & Q(X))</code></td>
                             </tr>
                             <tr>
                                 <td>Existential quantifiers</td>
-                                <td>\ex X</td>
-                                <td>\ex X: (R(X) & Q(X))</td>
+                                <td><code>\ex X</code></td>
+                                <td><code>\ex X: (R(X) & Q(X))</code></td>
                             </tr>
                             <tr>
                                 <td>Binary And</td>
@@ -97,13 +84,13 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                         </p>
                         <p>
                             <code class={style.padRight}>
-                                {"{{a, ¬c}, {b}}"}
+                                {"{{a, ¬b}, {¬a}, {b}}"}
                             </code>
                             needs to be entered as{" "}
-                            <code class={style.padLeft}>a,!c;b</code>
+                            <code class={style.padLeft}>a,!b;!a;b</code>
                         </p>
                         <p>
-                            Use a semicolon or linebreak to signal a new clause.
+                            Use a semicolon or linebreak to signal a new clause. Whitespaces are ignored.
                         </p>
                     </li>
                     <br />
@@ -113,7 +100,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                         </p>
                         <p>
                             <code class={style.padRight}>
-                                {"!a -> ( a & b <=> a | b)"}
+                                {"!a & (!b -> b) & !b"}
                             </code>
                             is a valid input.
                         </p>

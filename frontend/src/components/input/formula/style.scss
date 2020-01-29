@@ -21,9 +21,12 @@ table tr {
 }
 table tr td {
     padding: 3px;
-    border: #666666;
-    border-width: 1px;
-    border-style: solid;
+    border: 1px solid #666666;
+}
+
+code {
+    color: var(--kbar-secondary-text-color);
+    font-weight: bold;
 }
 
 .pad-right {

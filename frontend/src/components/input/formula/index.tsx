@@ -1,4 +1,4 @@
-import { h } from "preact";
+import {h} from "preact";
 import { route } from "preact-router";
 import { useAppState } from "../../../helpers/app-state";
 import { AppStateActionType, CalculusType, Params } from "../../../types/app";
@@ -93,12 +93,14 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
 
     /**
      * Handle the Input event of the textarea
-     * @param {EventTarget} target - The HTML element which received input
+     * @param {Event} event - The event triggered by input
      * @returns {void}
      */
-    const onInput = ({ target }: Event) => {
-        const { value } = target as HTMLTextAreaElement;
-        setUserInput(value);
+    const onInput = (event: Event) => {
+        const target: HTMLTextAreaElement = event.target as HTMLTextAreaElement;
+        target.style.height = 'inherit';
+        target.style.height = `${target.scrollHeight + 4}px`;
+        setUserInput(target.value);
     };
 
     /**
