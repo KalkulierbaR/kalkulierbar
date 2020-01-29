@@ -13,9 +13,9 @@ class TestAutoCloseBranchFO {
     var states = mutableListOf<FoTableauxState>()
 
     val formula = mutableListOf<String>(
-            "R(a) -> R(b) & !R(a) | !R(b)",
+            "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
             "(R(a) <-> !R(b)) | (!R(a) -> R(b))",
-            "\\ex A : (R(A) & (\\all B: !R(b) & !R(A)))",
+            "\\ex A : (R(A) & (\\all B: !R(B) & !R(A)))",
             "\\ex Usk: (R(Usk) -> (!\\ex Usk: (R(sk1) & !R(Usk) | R(Usk) & !R(sk1))))",
             "\\all A: (Sk1(A) -> !\\ex B: (R(A) & !R(B) -> Sk1(B) | !Sk1(A)))"
     )
@@ -34,6 +34,9 @@ class TestAutoCloseBranchFO {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 1))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, 2))
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 4, 2))
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 5, 2))
+
 
         val nodes = state.nodes
         // check for leaf closed and close ref
@@ -79,11 +82,12 @@ class TestAutoCloseBranchFO {
     @Test
     fun state3() {
         var state = states[2]
-        // {R(sk-1)}, {!R(b)}, {!R(sk-1)}
+        // {R(sk-1)}, {!R(B)}, {!R(sk-1)}
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 2))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 3, 1))
+
 
         val nodes = state.nodes
         // check for leaf closed and close ref
