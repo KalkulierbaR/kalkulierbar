@@ -36,10 +36,7 @@ export const treeLayout = (
     layout(root);
     // console.log(root);
     const data = treeToLayoutItem(root);
-    const width =
-        root.extremeLeft!.x -
-        root.extremeLeft!.width / 2 +
-        (root.extremeRight!.x + root.extremeRight!.width / 2);
+    const width = treeWidth(root);
     const links = getLinks(root);
     return { width, height: root.treeHeight, data, links };
 };
@@ -52,7 +49,6 @@ const tabNodeToTree = (
 ): Tree<TableauxTreeLayoutNode> => {
     // const width = (n.spelling.length + (n.isClosed ? 1 : 0)) * 70;
     const width = estimateSVGTextWidth(n.spelling) + 56;
-    console.log(`${n.spelling}: ${width}`);
     return tree(
         width,
         72,
@@ -285,4 +281,12 @@ const updateIYL = (
         ih = ih.next;
     }
     return iyl(minY, i, ih);
+};
+
+const treeWidth = <T>(t: Tree<T>): number => {
+    const width = t.x + t.width / 2;
+    if (t.children.length) {
+        return Math.max(width, treeWidth(t.children[t.children.length - 1]));
+    }
+    return width;
 };
