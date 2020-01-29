@@ -1,8 +1,7 @@
 import { h } from "preact";
 import { route } from "preact-router";
-import { useState } from "preact/hooks";
 import { useAppState } from "../../../helpers/app-state";
-import { CalculusType, Params } from "../../../types/app";
+import { AppStateActionType, CalculusType, Params } from "../../../types/app";
 import Btn from "../../btn";
 import * as style from "./style.scss";
 
@@ -46,9 +45,21 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params
 }) => {
-    const { server, onError, onChange } = useAppState();
-    const [userInput, setUserInput] = useState("");
+    const {
+        server,
+        onError,
+        onChange,
+        savedFormulas,
+        dispatch
+    } = useAppState();
     const url = `${server}/${calculus}/parse`;
+
+    const setUserInput = (input: string) =>
+        dispatch({
+            type: AppStateActionType.UPDATE_SAVED_FORMULA,
+            calculus,
+            value: input
+        });
 
     /**
      * Handle the Submit event of the form
@@ -65,7 +76,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 },
                 method: "POST",
                 body: `formula=${normalizeInput(
-                    userInput
+                    savedFormulas[calculus]
                 )}&params=${JSON.stringify(params)}`
             });
             if (response.status !== 200) {
@@ -114,11 +125,14 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 <textarea
                     name="formula"
                     class={style.input}
-                    value={userInput}
+                    value={savedFormulas[calculus]}
                     onInput={onInput}
                     autocapitalize="off"
                 />
-                <Btn type="submit" disabled={userInput.length === 0}>
+                <Btn
+                    type="submit"
+                    disabled={savedFormulas[calculus].length === 0}
+                >
                     Start proof
                 </Btn>
             </form>

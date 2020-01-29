@@ -4,7 +4,7 @@ import {
     AddNotification,
     AppState,
     AppStateAction,
-    AppStateActionType,
+    AppStateActionType, Calculus,
     CalculusType,
     DerivedAppState,
     NotificationType,
@@ -17,6 +17,11 @@ const isDeployed = location.port !== "8080";
 
 const INIT_APP_STATE: AppState = {
     smallScreen: false,
+    savedFormulas: {
+        [Calculus.propResolution]: "",
+        [Calculus.propTableaux]: "",
+        [Calculus.foTableaux]: ""
+    },
     server: isDeployed
         ? "https://kalkulierbar-api.herokuapp.com"
         : `http://${location.hostname}:7000`,
@@ -44,6 +49,14 @@ const reducer: Reducer<AppState, AppStateAction> = (
             return { ...state, theme: action.value };
         case AppStateActionType.SET_SERVER:
             return { ...state, server: action.value, notification: undefined };
+        case AppStateActionType.UPDATE_SAVED_FORMULA:
+            return {
+                ...state,
+                savedFormulas: {
+                    ...state.savedFormulas,
+                    [action.calculus]: action.value
+                }
+            };
     }
 };
 
