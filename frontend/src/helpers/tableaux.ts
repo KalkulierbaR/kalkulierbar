@@ -1,4 +1,4 @@
-import { AppStateUpdater, TableauxCalculus } from "../types/app";
+import {AppStateUpdater, Calculus, TableauxCalculusType} from "../types/app";
 import {
     FOTableauxState,
     instanceOfFOTableauxState,
@@ -26,7 +26,7 @@ export const nextOpenLeaf = (nodes: TableauxNode[]) => {
 
 /**
  * Wrapper to send close request
- * @param {TableauxCalculus} calculus - The calculus to do the move on
+ * @param {TableauxCalculusType} calculus - The calculus to do the move on
  * @param {string} server - URL of server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
@@ -38,7 +38,7 @@ export const nextOpenLeaf = (nodes: TableauxNode[]) => {
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 export const sendClose = (
-    calculus: TableauxCalculus,
+    calculus: TableauxCalculusType,
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
@@ -48,7 +48,7 @@ export const sendClose = (
     varAssignments?: VarAssign,
     autoClose?: boolean
 ) => {
-    if (calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
+    if (calculus === Calculus.propTableaux && instanceOfPropTableauxState(state)) {
         sendMove(
             server,
             calculus,
@@ -57,7 +57,7 @@ export const sendClose = (
             stateChanger,
             onError
         );
-    } else if (calculus === "fo-tableaux" && instanceOfFOTableauxState(state)) {
+    } else if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
         sendMove(
             server,
             calculus,
@@ -76,7 +76,7 @@ export const sendClose = (
 
 /**
  * Wrapper to send move request
- * @param {TableauxCalculus} calculus - The calculus to do the move on
+ * @param {TableauxCalculusType} calculus - The calculus to do the move on
  * @param {string} server - URL of the server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
@@ -84,13 +84,13 @@ export const sendClose = (
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 export const sendBacktrack = (
-    calculus: TableauxCalculus,
+    calculus: TableauxCalculusType,
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void
 ) => {
-    if (calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
+    if (calculus === Calculus.propTableaux && instanceOfPropTableauxState(state)) {
         sendMove(
             server,
             calculus,
@@ -99,7 +99,7 @@ export const sendBacktrack = (
             stateChanger,
             onError
         );
-    } else if (calculus === "fo-tableaux" && instanceOfFOTableauxState(state)) {
+    } else if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
         sendMove(
             server,
             calculus,
@@ -113,7 +113,7 @@ export const sendBacktrack = (
 
 /**
  * Wrapper to send move request
- * @param {TableauxCalculus} calculus - The calculus to do the move on
+ * @param {TableauxCalculusType} calculus - The calculus to do the move on
  * @param {string} server - URL of the server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
@@ -123,7 +123,7 @@ export const sendBacktrack = (
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 export const sendExtend = (
-    calculus: TableauxCalculus,
+    calculus: TableauxCalculusType,
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
@@ -131,7 +131,7 @@ export const sendExtend = (
     leaf: number,
     clause: number
 ) => {
-    if (calculus === "prop-tableaux" && instanceOfPropTableauxState(state)) {
+    if (calculus === Calculus.propTableaux && instanceOfPropTableauxState(state)) {
         sendMove(
             server,
             calculus,
@@ -140,7 +140,7 @@ export const sendExtend = (
             stateChanger,
             onError
         );
-    } else if (calculus === "fo-tableaux" && instanceOfFOTableauxState(state)) {
+    } else if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
         sendMove(
             server,
             calculus,

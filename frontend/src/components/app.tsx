@@ -1,11 +1,11 @@
 import { h } from "preact";
 import AsyncRoute from "preact-async-route";
-import { Router } from "preact-router";
+import {Router} from "preact-router";
 import { useEffect } from "preact/hooks";
 
 import { AppStateProvider, useAppState } from "../helpers/app-state";
 import Confetti from "../helpers/confetti";
-import {AppStateActionType} from "../types/app";
+import {AppStateActionType, Calculus} from "../types/app";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
@@ -84,8 +84,8 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path="/prop-tableaux"
-                        calculus="prop-tableaux"
+                        path={"/" + Calculus.propTableaux}
+                        calculus={Calculus.propTableaux}
                         getComponent={() =>
                             import("../routes/tableaux").then(
                                 m => m.default
@@ -93,8 +93,8 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path="/prop-tableaux/view"
-                        calculus="prop-tableaux"
+                        path={"/" + Calculus.propTableaux + "/view"}
+                        calculus={Calculus.propTableaux}
                         getComponent={() =>
                             import("../routes/tableaux/view").then(
                                 m => m.default
@@ -103,7 +103,7 @@ const App: preact.FunctionalComponent = () => {
                     />
                     <AsyncRoute
                         path="/fo-tableaux"
-                        calculus="fo-tableaux"
+                        calculus={Calculus.foTableaux}
                         getComponent={() =>
                             import("../routes/tableaux").then(
                                 m => m.default
@@ -111,8 +111,8 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path="/fo-tableaux/view"
-                        calculus="fo-tableaux"
+                        path={"/" + Calculus.foTableaux + "/view"}
+                        calculus={Calculus.foTableaux}
                         getComponent={() =>
                             import("../routes/tableaux/view").then(
                                 m => m.default
@@ -120,7 +120,7 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path="/prop-resolution"
+                        path={"/" + Calculus.propResolution}
                         getComponent={() =>
                             import("../routes/prop-resolution").then(
                                 m => m.default
@@ -128,7 +128,7 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path="/prop-resolution/view"
+                        path={"/" + Calculus.propResolution + "/view"}
                         getComponent={() =>
                             import("../routes/prop-resolution/view").then(
                                 m => m.default

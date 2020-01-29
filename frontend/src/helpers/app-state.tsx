@@ -5,7 +5,7 @@ import {
     AppState,
     AppStateAction,
     AppStateActionType,
-    Calculus,
+    CalculusType,
     DerivedAppState,
     NotificationType,
     RemoveNotification,
@@ -78,7 +78,7 @@ export const createErrorNotification = (msg: string) =>
 export const createSuccessNotification = (msg: string) =>
     createNotification(msg, NotificationType.Success);
 
-export const updateCalculusState = <C extends Calculus = Calculus>(
+export const updateCalculusState = <C extends CalculusType = CalculusType>(
     dispatch: (state: AppStateAction) => void
 ) => (calculus: C, state: AppState[C]) => {
     dispatch({

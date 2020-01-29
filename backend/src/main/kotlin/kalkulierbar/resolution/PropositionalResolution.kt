@@ -42,7 +42,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
 
         val c1 = clauses[cId1]
         val c2 = clauses[cId2]
-        val resCandidates: Pair<Atom, Atom>
+        val resCandidates: Pair<Atom<String>, Atom<String>>
 
         // If the frontend did not pass a resolution target, we'll try to find one ourselves
         if (spelling == null) {
@@ -77,7 +77,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
      * @param c2 Second clause to resolve
      * @return Pair of suitable atoms in c1 and c2 for resolution
      */
-    private fun getAutoResolutionCandidates(c1: Clause, c2: Clause): Pair<Atom, Atom> {
+    private fun getAutoResolutionCandidates(c1: Clause<String>, c2: Clause<String>): Pair<Atom<String>, Atom<String>> {
 
         // Find variables present in both clauses
         var sharedAtoms = c1.atoms.filter {

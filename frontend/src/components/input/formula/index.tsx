@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { route } from "preact-router";
 import { useAppState } from "../../../helpers/app-state";
-import { AppStateActionType, Calculus, Params } from "../../../types/app";
+import { AppStateActionType, CalculusType, Params } from "../../../types/app";
 import Btn from "../../btn";
 import * as style from "./style.scss";
 
@@ -13,16 +13,15 @@ declare module "preact" {
     }
 }
 
-// Properties Interface for the ClauseInput component
 interface Props {
     /**
      * The calculus to use. Specifies API endpoint
      */
-    calculus: Calculus;
+    calculus: CalculusType;
     /**
      * Additional params for the calculus
      */
-    params?: Params[Calculus];
+    params?: Params[CalculusType];
 }
 
 /**
@@ -38,7 +37,7 @@ const normalizeInput = (input: string) => {
 };
 
 /*
- * A component for entering clause sets and sending them to the server.
+ * A component for entering formulae or clause sets and sending them to the server.
  * It also redirects the user after a successful response from the server
  * to the corresponding view of the calculus
  */

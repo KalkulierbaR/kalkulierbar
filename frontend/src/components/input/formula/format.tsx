@@ -1,5 +1,4 @@
-import {Fragment, h} from "preact";
-
+import { Fragment, h } from "preact";
 import * as style from "./style.scss";
 
 interface Props {
@@ -45,9 +44,24 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                                 <th>Example</th>
                             </tr>
                             <tr>
+                                <td>Parentheses</td>
+                                <td><code>()</code></td>
+                                <td><code>(a | b) & c</code></td>
+                            </tr>
+                            <tr>
                                 <td>Unary Not</td>
                                 <td><code>!</code></td>
                                 <td><code>!valid</code></td>
+                            </tr>
+                            <tr>
+                                <td>Universal quantifiers</td>
+                                <td>\all X</td>
+                                <td>\all X: (R(X) & Q(X))</td>
+                            </tr>
+                            <tr>
+                                <td>Existential quantifiers</td>
+                                <td>\ex X</td>
+                                <td>\ex X: (R(X) & Q(X))</td>
                             </tr>
                             <tr>
                                 <td>Binary And</td>
@@ -69,20 +83,10 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                                 <td><code>{"<=> or <->"}</code></td>
                                 <td><code>{"right <=> !left"}</code></td>
                             </tr>
-                            <tr>
-                                <td>Parentheses</td>
-                                <td><code>()</code></td>
-                                <td><code>(a | b) & c</code></td>
-                            </tr>
                         </table>
                     </p>
                     <p>
-                        Operator precedence is defined as follows:{" "}
-                        <code>
-                            {
-                                "()  >  !  >  \\ex = \\all  >  &  >  |  >  ->  > <=>"
-                            }
-                        </code>
+                        Operator precedence is equal to the order of the table above.
                     </p>
                 </li>
             ) : (

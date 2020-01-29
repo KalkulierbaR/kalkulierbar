@@ -45,6 +45,10 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
 }) => {
     const varAssign: VarAssign = {};
 
+    /**
+     * Submit the manual variable assignment by the user
+     * @returns {void}
+     */
     const submitVarAssign = () => {
         vars.forEach(variable => {
             const textInput = document.getElementById(variable);

@@ -1,9 +1,9 @@
 import { Fragment, h } from "preact";
-import { Link } from "preact-router";
-import { useCallback, useState } from "preact/hooks";
+import {Link} from "preact-router";
+import {useCallback, useState} from "preact/hooks";
 import { useAppState } from "../../helpers/app-state";
 import { classMap } from "../../helpers/class-map";
-import { AppStateActionType, Theme } from "../../types/app";
+import {AppStateActionType, Calculus, Theme} from "../../types/app";
 import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";
@@ -15,7 +15,6 @@ import ThemeLight from "../icons/theme-light";
 import TextInput from "../input/text";
 import * as style from "./style.scss";
 
-// Component used to display the navigation, projects logo and name
 const Header: preact.FunctionalComponent = () => {
     const { smallScreen } = useAppState();
     const [open, setOpen] = useState(false);
@@ -26,8 +25,11 @@ const Header: preact.FunctionalComponent = () => {
         <Hamburger open={open} onClick={toggle} />
     ) : (
         <Fragment>
-            <Nav smallScreen={false} onLinkClick={setClosed} />
-            <Btn class={style.settingsBtn} onClick={toggle}>
+            <Nav
+                smallScreen={false}
+                onLinkClick={setClosed}
+            />
+            <Btn class={style.settingsBtn} onClick={toggle} >
                 <SettingsIcon />
             </Btn>
         </Fragment>
@@ -45,7 +47,10 @@ const Header: preact.FunctionalComponent = () => {
             </a>
             <div class={style.spacer} />
             {right}
-            <Drawer open={open} onLinkClick={setClosed} />
+            <Drawer
+                open={open}
+                onLinkClick={setClosed}
+            />
             <Dialog
                 class={style.dialog}
                 open={!smallScreen && open}
@@ -86,27 +91,31 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
     smallScreen,
     onLinkClick
 }) => (
-    <nav
-        class={classMap({
-            [style.nav]: true,
-            [style.hamburgerLink]: smallScreen
-        })}
-    >
-        <Link
-            onClick={() => onLinkClick()}
-            activeClassName={style.active}
-            href="/prop-tableaux"
+        <nav
+            class={classMap({
+                [style.nav]: true,
+                [style.hamburgerLink]: smallScreen
+            })}
         >
-            Tableaux
-        </Link>
-        <Link
-            onClick={() => onLinkClick()}
-            activeClassName={style.active}
-            href="/prop-resolution"
-        >
-            Resolution
-        </Link>
-    </nav>
+            <Link
+                onClick={() => onLinkClick()}
+                href={"/" + Calculus.propTableaux}
+            >
+                Propositional Tableaux
+            </Link>
+            <Link
+                onClick={() => onLinkClick()}
+                href={"/" + Calculus.foTableaux}
+            >
+                First Order Tableaux
+            </Link>
+            <Link
+                onClick={() => onLinkClick()}
+                href={"/" + Calculus.propResolution}
+            >
+                Propositional Resolution
+            </Link>
+        </nav>
 );
 
 const Settings: preact.FunctionalComponent = () => {
@@ -212,12 +221,12 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
         <div onClick={onClick} class={style.themeContainer}>
             <Btn
                 class={style.themeSwitcher}
-                title="Change color scheme"
+                title="Change color theme"
                 id="theme-switcher"
             >
                 {themeSwitcherIcon()}
             </Btn>
-            <label for="theme-switcher">Color theme</label>
+            <label for="theme-switcher">Current theme: {theme}</label>
         </div>
     );
 };
@@ -229,12 +238,15 @@ interface DrawerProps {
 
 const Drawer: preact.FunctionalComponent<DrawerProps> = ({
     open,
-    onLinkClick
+    onLinkClick,
 }) => (
     <div class={classMap({ [style.drawer]: true, [style.open]: open })}>
         <div class={style.inner}>
             <h3>Calculi</h3>
-            <Nav smallScreen={true} onLinkClick={onLinkClick} />
+            <Nav
+                smallScreen={true}
+                onLinkClick={onLinkClick}
+            />
             <h3>Settings</h3>
             <Settings />
         </div>
