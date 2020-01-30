@@ -33,3 +33,41 @@ table tr td {
 .pad-left {
     margin-left: 8px;
 }
+
+.format-header {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.format-heading {
+    display: inline;
+    margin: 0;
+}
+
+.format-content {
+    padding: 0 16px 16px;
+}
+
+.btn-icon {
+    border: none;
+    box-shadow: none;
+    background: none;
+    height: 24px;
+    max-height: 24px;
+    width: 24px;
+    max-width: 24px;
+    margin-right: 8px;
+    padding: 0;
+    cursor: pointer;
+    transform: rotate(0);
+    transition: 0.15s transform ease;
+
+    &.expand {
+        transform: rotate(90deg);
+    }
+}
+
+.no-pad {
+    padding: 0;
+}
