@@ -18,10 +18,10 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                         <b>First Order Formulas</b>
                     </p>
                     <p>
+                        Use names starting in an uppercase letter for variables and relations, names starting with a lowercase letter or a number for constants and functions. Quantifiers can be used like this:{" "}
                         <code class={style.padRight}>
-                            {"\\all X: R(f(X, a)) & !R(f(b, a))"}
+                            {"\\all X: R(f(X, a)) & \\ex Y: !R(f(Y, a))"}
                         </code>
-                        is a valid input.
                     </p>
                     <p>
                         <table>
@@ -73,7 +73,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                         </table>
                     </p>
                     <p>
-                        Operator precedence is equal to the order of the table above.
+                        Unbound variables are not allowed. Quantifier scopes are as small as possible, following the usual conventions for first-order logic.
                     </p>
                 </li>
             ) : (
@@ -90,7 +90,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                             <code class={style.padLeft}>a,!b;!a;b</code>
                         </p>
                         <p>
-                            Use a semicolon or linebreak to signal a new clause. Whitespaces are ignored.
+                            Separate variables with commas, use a semicolon or linebreak to signal a new clause. Whitespace is ignored.
                         </p>
                     </li>
                     <br />
@@ -99,16 +99,17 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                             <b>Propositional Formulas</b>
                         </p>
                         <p>
+                            Enter a formula in the usual ascii-notation like in this example:{" "}
                             <code class={style.padRight}>
-                                {"!a & (!b -> b) & !b"}
+                                {"!(a -> b) & (c <=> d | e) & !a"}
                             </code>
-                            is a valid input.
+                            
                         </p>
                         <p>
                             <code class={style.padRight}>{"<=>"}</code>
                             and
                             <code class={style.padLeft}>{"<->"}</code> are
-                            synonymous.
+                            synonymous, operator precedence follows the conventions for propositional logic. Whitespace is ignored.
                         </p>
                     </li>
                 </Fragment>
