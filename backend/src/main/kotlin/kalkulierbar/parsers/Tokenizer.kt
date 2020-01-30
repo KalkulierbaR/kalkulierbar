@@ -108,7 +108,10 @@ data class Token(val type: TokenType, val spelling: String, val srcPosition: Int
     override fun toString() = spelling
 }
 
-enum class TokenType {
-    AND, OR, NOT, IMPLICATION, EQUIVALENCE, LPAREN, RPAREN, COMMA, COLON,
-    CAPID, LOWERID, UNIVERSALQUANT, EXISTENTIALQUANT, UNKNOWN
+enum class TokenType(val stringRep: String) {
+    AND("&"), OR("|"), NOT("!"), IMPLICATION("->"), EQUIVALENCE("<=>"), LPAREN("("), RPAREN(")"),
+    COMMA(","), COLON(":"), CAPID("uppercase identifier"), LOWERID("lowercase identifier"),
+    UNIVERSALQUANT("\\all"), EXISTENTIALQUANT("\\ex"), UNKNOWN("unknown token");
+
+    override fun toString() = stringRep
 }

@@ -18,14 +18,13 @@ import kalkulierbar.logic.UniversalQuantifier
  * throw an exception otherwise.
  *
  * Introduced Skolem terms are of the form 'skN' where N is a number.
- * User-defined functions or constants beginning with 'sk' will be
- * renamed to 'usk' to avoid conflicts.
  *
  * Note: I'm unsure if this implementation produces correct results
  *       if it is not applied as part of the Skolem Normal Form transformation,
  *       especially if only a subformula is being skolemized
+ * @param nameBlacklist Set of names already used in the tree to avoid for skolem constants
  */
-class Skolemization : DoNothingVisitor() {
+class Skolemization(val nameBlacklist: Set<String>) : DoNothingVisitor() {
 
     companion object Companion {
         /**
@@ -34,7 +33,9 @@ class Skolemization : DoNothingVisitor() {
          * @return Skolemized formula
          */
         fun transform(formula: LogicNode): LogicNode {
-            val instance = Skolemization()
+            // Collect all identifiers already in use and add to blacklist
+            val blacklist = IdentifierCollector.collect(formula)
+            val instance = Skolemization(blacklist)
             return formula.accept(instance)
         }
     }
@@ -93,10 +94,18 @@ class Skolemization : DoNothingVisitor() {
      * @return Skolem term
      */
     private fun getSkolemTerm(): FirstOrderTerm {
+
         skolemCounter += 1
+        var skolemName = "sk$skolemCounter"
+
+        // Ensure freshness
+        while (nameBlacklist.contains(skolemName)) {
+            skolemCounter += 1
+            skolemName = "sk$skolemCounter"
+        }
 
         if (quantifierScope.size == 0)
-            return Constant("sk$skolemCounter")
+            return Constant(skolemName)
 
         val argList = mutableListOf<FirstOrderTerm>()
 
@@ -104,14 +113,12 @@ class Skolemization : DoNothingVisitor() {
             argList.add(QuantifiedVariable(it.varName))
         }
 
-        return Function("sk$skolemCounter", argList)
+        return Function(skolemName, argList)
     }
 }
 
 /**
  * Replaces QuantifiedVariables with their respective Skolem terms
- * User-defined constants or functions starting with 'sk' will be renamed
- * to start in 'usk' to ensure that Skolem terms are fresh
  * @param replacementMap Map of variable instances to replace alongside their Skolem term
  * @param bindingQuantifiers List of quantifiers in effect for the term in question
  */
@@ -141,29 +148,10 @@ class SkolemTermReplacer(
         return node
     }
 
-    /**
-     * Re-name constants starting in 'sk' to avoid conflicts
-     * @param node Constant encountered
-     * @return Disambiguated constant
-     */
-    override fun visit(node: Constant): FirstOrderTerm {
-        if (node.spelling.length < 2 || node.spelling.substring(0, 2) != "sk")
-            return node
+    override fun visit(node: Constant) = node
 
-        return Constant("u${node.spelling}")
-    }
-
-    /**
-     * Re-name functions starting in 'sk' to avoid conflicts
-     * @param node Function encountered
-     * @return Disambiguated function
-     */
     override fun visit(node: Function): FirstOrderTerm {
         node.arguments = node.arguments.map { it.accept(this) }
-
-        if (node.spelling.length < 2 || node.spelling.substring(0, 2) != "sk")
-            return node
-
-        return Function("u${node.spelling}", node.arguments)
+        return node
     }
 }
