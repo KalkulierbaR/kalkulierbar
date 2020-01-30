@@ -5,6 +5,7 @@ import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.KBAR_DEFAULT_PORT
 import kalkulierbar.KalkulierbarException
+import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.PropositionalTableaux
@@ -12,7 +13,7 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
 // List of all active calculi
-val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution(), FirstOrderTableaux())
+val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution(), FirstOrderTableaux(), FirstOrderResolution())
 
 fun main(args: Array<String>) {
     // Verify that all calculus implementations have unique names

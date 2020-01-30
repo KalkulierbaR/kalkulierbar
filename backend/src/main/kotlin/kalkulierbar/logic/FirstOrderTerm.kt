@@ -1,6 +1,7 @@
 package kalkulierbar.logic
 
 import kalkulierbar.logic.transform.FirstOrderTermVisitor
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 
@@ -36,6 +37,7 @@ abstract class FirstOrderTerm : SyntacticEquality {
 }
 
 @Serializable
+@SerialName("QuantifiedVariable")
 class QuantifiedVariable(var spelling: String) : FirstOrderTerm() {
     override fun toString() = spelling
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)
@@ -50,6 +52,7 @@ class QuantifiedVariable(var spelling: String) : FirstOrderTerm() {
 }
 
 @Serializable
+@SerialName("Constant")
 class Constant(val spelling: String) : FirstOrderTerm() {
     override fun toString() = spelling
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)
@@ -64,6 +67,7 @@ class Constant(val spelling: String) : FirstOrderTerm() {
 }
 
 @Serializable
+@SerialName("Function")
 class Function(val spelling: String, var arguments: List<FirstOrderTerm>) : FirstOrderTerm() {
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)

@@ -5,6 +5,7 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
+import kalkulierbar.logic.SyntacticEquality
 
 interface GenericResolution<AtomType> {
 
@@ -34,8 +35,8 @@ interface GenericResolution<AtomType> {
             resCandidates = getAutoResolutionCandidates(c1, c2)
         } else {
             // Filter clauses for atoms with correct literal
-            val atomsInC1 = c1.atoms.filter { it.lit == literal } // TODO
-            val atomsInC2 = c2.atoms.filter { it.lit == literal } // TODO
+            val atomsInC1 = c1.atoms.filter { literalsAreEqual(it.lit, literal) }
+            val atomsInC2 = c2.atoms.filter { literalsAreEqual(it.lit, literal) }
             if (atomsInC1.isEmpty())
                 throw IllegalMove("Clause '$c1' does not contain atom '$literal'")
             if (atomsInC2.isEmpty())
@@ -65,7 +66,7 @@ interface GenericResolution<AtomType> {
         // Find literals present in both clauses
         var sharedAtoms = c1.atoms.filter {
             val c1atom = it
-            c2.atoms.any { it == c1atom || it.not() == c1atom }
+            c2.atoms.any { literalsAreEqual(c1atom.lit, it.lit) }
         }
 
         if (sharedAtoms.isEmpty())
@@ -128,6 +129,16 @@ interface GenericResolution<AtomType> {
         val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
                 c2.atoms.filter { it != a2 }.toMutableList()
         return Clause(atoms.distinct().toMutableList())
+    }
+
+    fun literalsAreEqual(a: AtomType, b: AtomType): Boolean {
+        val eq: Boolean
+        // Use syntactic equality for literal comparison if defined
+        if (a is SyntacticEquality && b is SyntacticEquality)
+            eq = a.synEq(b)
+        else
+            eq = (a == b)
+        return eq
     }
 }
 
