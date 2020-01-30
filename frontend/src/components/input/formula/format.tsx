@@ -19,7 +19,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                     </p>
                     <p>
                         <code class={style.padRight}>
-                            {"\\all X: R(f(X, a)) & !R(f(b, a)"}
+                            {"\\all X: R(f(X, a)) & !R(f(b, a))"}
                         </code>
                         is a valid input.
                     </p>
