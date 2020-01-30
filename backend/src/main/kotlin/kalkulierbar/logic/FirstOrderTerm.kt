@@ -25,15 +25,6 @@ abstract class FirstOrderTerm : SyntacticEquality {
      * @return copy of the current term
      */
     abstract fun clone(): FirstOrderTerm
-
-    /**
-     * Leftover from previous implementation
-     * I am not sure if any functionality still depends on equality of FO terms
-     * possibly assuming syntactic equality
-     * So we will throw an exception to draw attention to any such cases
-     */
-    // FIXME
-    override fun equals(other: Any?) = throw Exception("Equality used on First-Order Term")
 }
 
 @Serializable

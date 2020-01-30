@@ -13,7 +13,12 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
 // List of all active calculi
-val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution(), FirstOrderTableaux(), FirstOrderResolution())
+val endpoints: Set<Calculus> = setOf<Calculus>(
+        PropositionalTableaux(),
+        PropositionalResolution(),
+        FirstOrderTableaux(),
+        FirstOrderResolution()
+    )
 
 fun main(args: Array<String>) {
     // Verify that all calculus implementations have unique names

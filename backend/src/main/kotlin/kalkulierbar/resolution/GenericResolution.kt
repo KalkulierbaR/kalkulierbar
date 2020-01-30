@@ -15,6 +15,7 @@ interface GenericResolution<AtomType> {
         return CloseMessage(hasEmptyClause, msg)
     }
 
+    @Suppress("ThrowsCount")
     fun resolve(state: GenericResolutionState<AtomType>, clause1: Int, clause2: Int, literal: AtomType?) {
         val clauses = state.clauseSet.clauses
 
@@ -23,7 +24,7 @@ interface GenericResolution<AtomType> {
             throw IllegalMove("Both ids refer to the same clause")
         if (clause1 < 0 || clause1 >= clauses.size)
             throw IllegalMove("There is no clause with id $clause1")
-        if (clause1 < 0 || clause2 >= clauses.size)
+        if (clause2 < 0 || clause2 >= clauses.size)
             throw IllegalMove("There is no clause with id $clause2")
 
         val c1 = clauses[clause1]

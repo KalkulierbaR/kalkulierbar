@@ -66,7 +66,11 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         return state
     }
 
-    private fun instantiate(state: FoResolutionState, clauseID: Int, varAssign: Map<String, String>): FoResolutionState {
+    private fun instantiate(
+        state: FoResolutionState,
+        clauseID: Int,
+        varAssign: Map<String, String>
+    ): FoResolutionState {
         if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
 
