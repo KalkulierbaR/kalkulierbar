@@ -54,6 +54,16 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
 
     override fun checkCloseOnState(state: FoResolutionState) = getCloseMessage(state)
 
+
+    /**
+     * Create a new clause by resolving two existing clauses
+     * If the given literal is null, a suitable literal will be determined automatically
+     * @param state Current proof state
+     * @param c1 First clause to use for resolution
+     * @param c2 Second clause to use for resolution
+     * @param litString String representation of the Relation to use for resolution
+     * @return State with the resolved clause added
+     */
     private fun resolveFO(state: FoResolutionState, c1: Int, c2: Int, litString: String?): FoResolutionState {
         val literal: Relation?
 
@@ -66,6 +76,13 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         return state
     }
 
+    /**
+     * Create a new clause by applying a variable instantiation on an existing clause
+     * @param state Current proof state
+     * @param clauseID ID of the clause to use for instantiation
+     * @param varAssign Map of Variables and terms they are instantiated with
+     * @return New state with the clause instance added
+     */
     private fun instantiate(
         state: FoResolutionState,
         clauseID: Int,
@@ -77,9 +94,11 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         val baseClause = state.clauseSet.clauses[clauseID]
         val newClause = Clause<Relation>()
 
+        // Parse the replacement terms and create an instantiation visitor
         val varAssignParsed = varAssign.mapValues { FirstOrderParser.parseTerm(it.value) }
         val instantiator = VariableInstantiator(varAssignParsed)
 
+        // Build the new clause by cloning atoms from the base clause and applying instantiation
         baseClause.atoms.forEach {
             val relationArgs = it.lit.arguments.map { it.clone().accept(instantiator) }
             val newRelation = Relation(it.lit.spelling, relationArgs)
@@ -87,22 +106,36 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
             newClause.add(newAtom)
         }
 
+        // Add new clause to state and update newestNode pointer
         state.clauseSet.add(newClause)
         state.newestNode = state.clauseSet.clauses.size - 1
 
         return state
     }
 
+    /**
+     * Hide a clause from the main view
+     * @param state Current proof state
+     * @param clauseID ID of the clause to be hidden
+     * @return New state with the selected clause hidden
+     */
     private fun hide(state: FoResolutionState, clauseID: Int): FoResolutionState {
         if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
 
+        // Move clause from main clause set to hidden clause set
         val clauseToHide = state.clauseSet.clauses.removeAt(clauseID)
         state.hiddenClauses.add(clauseToHide)
         state.newestNode = -1
         return state
     }
 
+
+    /**
+     * Show all hidden clauses
+     * @param state Current proof state
+     * @return New state with all hidden clauses shown
+     */
     private fun show(state: FoResolutionState): FoResolutionState {
         state.clauseSet.unite(state.hiddenClauses)
         state.hiddenClauses.clauses.clear()

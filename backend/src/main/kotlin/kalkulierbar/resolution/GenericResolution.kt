@@ -9,12 +9,25 @@ import kalkulierbar.logic.SyntacticEquality
 
 interface GenericResolution<AtomType> {
 
+    /**
+     * Get information about a proof state
+     * @param state Current proof state
+     * @return CloseMessage containing information about the proof status
+     */
     fun getCloseMessage(state: GenericResolutionState<AtomType>): CloseMessage {
         val hasEmptyClause = state.clauseSet.clauses.any { it.atoms.isEmpty() }
         val msg = if (hasEmptyClause) "The proof is closed" else "The proof is not closed"
         return CloseMessage(hasEmptyClause, msg)
     }
 
+    /**
+     * Create a new clause by resolving two existing clauses and add it to the clause set
+     * If the given literal is null, a suitable literal will be chosen automatically
+     * @param state Proof state to apply resolution in
+     * @param clause1 ID of the first clause to use for resolution
+     * @param clause2 ID of the second clause to use for resolution
+     * @param literal Literal present in both clauses to use for resolution
+     */
     @Suppress("ThrowsCount")
     fun resolve(state: GenericResolutionState<AtomType>, clause1: Int, clause2: Int, literal: AtomType?) {
         val clauses = state.clauseSet.clauses
