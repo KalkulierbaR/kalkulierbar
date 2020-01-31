@@ -70,6 +70,31 @@ interface GenericResolution<AtomType> {
     }
 
     /**
+     * Hide a clause from the main view
+     * @param state Current proof state
+     * @param clauseID ID of the clause to be hidden
+     */
+    fun hide(state: GenericResolutionState<AtomType>, clauseID: Int) {
+        if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
+            throw IllegalMove("There is no clause with id $clauseID")
+
+        // Move clause from main clause set to hidden clause set
+        val clauseToHide = state.clauseSet.clauses.removeAt(clauseID)
+        state.hiddenClauses.add(clauseToHide)
+        state.newestNode = -1
+    }
+
+    /**
+     * Show all hidden clauses
+     * @param state Current proof state
+     */
+    fun show(state: GenericResolutionState<AtomType>) {
+        state.clauseSet.unite(state.hiddenClauses)
+        state.hiddenClauses.clauses.clear()
+        state.newestNode = -1
+    }
+
+    /**
      * Automatically find a resolution candidate for two given clauses
      * @param c1 First clause to resolve
      * @param c2 Second clause to resolve
@@ -158,6 +183,7 @@ interface GenericResolution<AtomType> {
 
 interface GenericResolutionState<AtomType> {
     val clauseSet: ClauseSet<AtomType>
+    val hiddenClauses: ClauseSet<AtomType>
     val highlightSelectable: Boolean
     var newestNode: Int
 }

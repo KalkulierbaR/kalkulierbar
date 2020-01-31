@@ -86,12 +86,12 @@ class ResolutionState(
     override val highlightSelectable: Boolean
 ) : GenericResolutionState<String>, ProtectedState() {
     override var newestNode = -1
+    override val hiddenClauses = ClauseSet<String>()
 
     override var seal = ""
 
     override fun getHash(): String {
-        val clauseSetHash = clauseSet.toString()
-        return "resolutionstate|$clauseSetHash|$highlightSelectable|$newestNode"
+        return "resolutionstate|$clauseSet|$hiddenClauses|$highlightSelectable|$newestNode"
     }
 }
 

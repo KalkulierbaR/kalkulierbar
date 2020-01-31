@@ -43,17 +43,18 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
     }
 
     override fun applyMoveOnState(state: FoResolutionState, move: FoResolutionMove): FoResolutionState {
-        return when (move) {
+        when (move) {
             is MoveResolve -> resolveFO(state, move.c1, move.c2, move.literal)
             is MoveInstantiate -> instantiate(state, move.c1, move.varAssign)
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
             else -> throw IllegalMove("Unknown move type")
         }
+
+        return state
     }
 
     override fun checkCloseOnState(state: FoResolutionState) = getCloseMessage(state)
-
 
     /**
      * Create a new clause by resolving two existing clauses
@@ -62,9 +63,8 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
      * @param c1 First clause to use for resolution
      * @param c2 Second clause to use for resolution
      * @param litString String representation of the Relation to use for resolution
-     * @return State with the resolved clause added
      */
-    private fun resolveFO(state: FoResolutionState, c1: Int, c2: Int, litString: String?): FoResolutionState {
+    private fun resolveFO(state: FoResolutionState, c1: Int, c2: Int, litString: String?) {
         val literal: Relation?
 
         if (litString == null)
@@ -73,7 +73,6 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
             literal = FirstOrderParser.parseRelation(litString)
 
         resolve(state, c1, c2, literal)
-        return state
     }
 
     /**
@@ -87,7 +86,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         state: FoResolutionState,
         clauseID: Int,
         varAssign: Map<String, String>
-    ): FoResolutionState {
+    ) {
         if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
 
@@ -109,38 +108,6 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         // Add new clause to state and update newestNode pointer
         state.clauseSet.add(newClause)
         state.newestNode = state.clauseSet.clauses.size - 1
-
-        return state
-    }
-
-    /**
-     * Hide a clause from the main view
-     * @param state Current proof state
-     * @param clauseID ID of the clause to be hidden
-     * @return New state with the selected clause hidden
-     */
-    private fun hide(state: FoResolutionState, clauseID: Int): FoResolutionState {
-        if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
-            throw IllegalMove("There is no clause with id $clauseID")
-
-        // Move clause from main clause set to hidden clause set
-        val clauseToHide = state.clauseSet.clauses.removeAt(clauseID)
-        state.hiddenClauses.add(clauseToHide)
-        state.newestNode = -1
-        return state
-    }
-
-
-    /**
-     * Show all hidden clauses
-     * @param state Current proof state
-     * @return New state with all hidden clauses shown
-     */
-    private fun show(state: FoResolutionState): FoResolutionState {
-        state.clauseSet.unite(state.hiddenClauses)
-        state.hiddenClauses.clauses.clear()
-        state.newestNode = -1
-        return state
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -200,8 +167,7 @@ class FoResolutionState(
     override val highlightSelectable: Boolean
 ) : GenericResolutionState<Relation>, ProtectedState() {
     override var newestNode = -1
-
-    val hiddenClauses = ClauseSet<Relation>()
+    override val hiddenClauses = ClauseSet<Relation>()
 
     override var seal = ""
 
