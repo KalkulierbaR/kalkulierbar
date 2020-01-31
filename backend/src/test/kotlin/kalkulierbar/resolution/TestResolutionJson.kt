@@ -1,8 +1,8 @@
 package kalkulierbar.tests.resolution
 
 import kalkulierbar.JsonParseException
+import kalkulierbar.resolution.MoveResolve
 import kalkulierbar.resolution.PropositionalResolution
-import kalkulierbar.resolution.ResolutionMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -18,15 +18,15 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveValid() {
-        val json = "{\"c1\": 1, \"c2\": 2, \"spelling\": \"variable\"}"
+        val json = "{\"type\":\"res-resolve\",\"c1\": 1, \"c2\": 2, \"literal\": \"variable\"}"
         val move = instance.jsonToMove(json)
-        assertEquals(ResolutionMove(1, 2, "variable"), move)
+        assertEquals(MoveResolve(1, 2, "variable"), move)
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveNull() {
-        val json = "{\"c1\": 1, \"c2\": null, \"spelling\": null}"
+        val json = "{\"type\":\"res-resolve\",\"c1\": 1, \"c2\": null, \"spelling\": null}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
@@ -35,7 +35,7 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveMissingField() {
-        val json = "{\"c1\": 4, \"spelling\": \"variable\"}"
+        val json = "{\"type\":\"res-resolve\",\"c1\": 4, \"spelling\": \"variable\"}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
@@ -44,7 +44,7 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveTypeMismatch() {
-        val json = "{\"c1\": 1, \"c2\": false, \"spelling\": \"variable\"}"
+        val json = "{\"type\":\"res-resolve\",\"c1\": 1, \"c2\": false, \"spelling\": \"variable\"}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
