@@ -181,7 +181,10 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
                         [style.expand]: !collapsed
                     })}
                 >
-                    <ChevronRightIcon fill="var(--kbar-primary-text-color)" />
+                    <ChevronRightIcon
+                        size={32}
+                        fill="var(--kbar-primary-text-color)"
+                    />
                 </button>
                 <h3 class={style.formatHeading}>Format</h3>
             </div>
