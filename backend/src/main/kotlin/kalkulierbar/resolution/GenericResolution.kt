@@ -6,6 +6,9 @@ import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.SyntacticEquality
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
 
 interface GenericResolution<AtomType> {
 
@@ -187,3 +190,33 @@ interface GenericResolutionState<AtomType> {
     val highlightSelectable: Boolean
     var newestNode: Int
 }
+
+// Context object for FO term serialization
+// Tells kotlinx.serialize about child types of ResolutionMove
+val resolutionMoveModule = SerializersModule {
+    polymorphic(ResolutionMove::class) {
+        MoveResolve::class with MoveResolve.serializer()
+        MoveInstantiate::class with MoveInstantiate.serializer()
+        MoveHide::class with MoveHide.serializer()
+        MoveShow::class with MoveShow.serializer()
+    }
+}
+
+@Serializable
+abstract class ResolutionMove
+
+@Serializable
+@SerialName("res-resolve")
+data class MoveResolve(val c1: Int, val c2: Int, val literal: String?) : ResolutionMove()
+
+@Serializable
+@SerialName("res-instantiate")
+data class MoveInstantiate(val c1: Int, val varAssign: Map<String, String>) : ResolutionMove()
+
+@Serializable
+@SerialName("res-hide")
+data class MoveHide(val c1: Int) : ResolutionMove()
+
+@Serializable
+@SerialName("res-show")
+class MoveShow : ResolutionMove()

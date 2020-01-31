@@ -1,5 +1,6 @@
 package kalkulierbar.resolution
 
+import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.clause.ClauseSet
@@ -7,11 +8,13 @@ import kalkulierbar.parsers.CnfStrategy
 import kalkulierbar.parsers.FlexibleClauseSetParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.plus
 
 class PropositionalResolution : GenericResolution<String>, JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
     override val identifier = "prop-resolution"
+
+    private val serializer = Json(context = resolutionMoveModule)
 
     override fun parseFormulaToState(formula: String, params: ResolutionParam?): ResolutionState {
         val parsed = if (params == null)
@@ -23,17 +26,21 @@ class PropositionalResolution : GenericResolution<String>, JSONCalculus<Resoluti
     }
 
     override fun applyMoveOnState(state: ResolutionState, move: ResolutionMove): ResolutionState {
-        resolve(state, move.c1, move.c2, move.spelling)
+        when (move) {
+            is MoveResolve -> resolve(state, move.c1, move.c2, move.literal)
+            is MoveHide -> hide(state, move.c1)
+            is MoveShow -> show(state)
+            else -> throw IllegalMove("Unknown move")
+        }
         return state
     }
 
     override fun checkCloseOnState(state: ResolutionState) = getCloseMessage(state)
 
     @Suppress("TooGenericExceptionCaught")
-    @UnstableDefault
     override fun jsonToState(json: String): ResolutionState {
         try {
-            val parsed = Json.parse(ResolutionState.serializer(), json)
+            val parsed = serializer.parse(ResolutionState.serializer(), json)
 
             // Ensure valid, unmodified state object
             if (!parsed.verifySeal())
@@ -46,17 +53,15 @@ class PropositionalResolution : GenericResolution<String>, JSONCalculus<Resoluti
         }
     }
 
-    @UnstableDefault
     override fun stateToJson(state: ResolutionState): String {
         state.computeSeal()
-        return Json.stringify(ResolutionState.serializer(), state)
+        return serializer.stringify(ResolutionState.serializer(), state)
     }
 
     @Suppress("TooGenericExceptionCaught")
-    @UnstableDefault
     override fun jsonToMove(json: String): ResolutionMove {
         try {
-            return Json.parse(ResolutionMove.serializer(), json)
+            return serializer.parse(ResolutionMove.serializer(), json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON move: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -69,10 +74,9 @@ class PropositionalResolution : GenericResolution<String>, JSONCalculus<Resoluti
      * @return parsed param object
      */
     @Suppress("TooGenericExceptionCaught")
-    @UnstableDefault
     override fun jsonToParam(json: String): ResolutionParam {
         try {
-            return Json.parse(ResolutionParam.serializer(), json)
+            return serializer.parse(ResolutionParam.serializer(), json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON params: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -94,9 +98,6 @@ class ResolutionState(
         return "resolutionstate|$clauseSet|$hiddenClauses|$highlightSelectable|$newestNode"
     }
 }
-
-@Serializable
-data class ResolutionMove(val c1: Int, val c2: Int, val spelling: String?)
 
 @Serializable
 data class ResolutionParam(val cnfStrategy: CnfStrategy, val highlightSelectable: Boolean)

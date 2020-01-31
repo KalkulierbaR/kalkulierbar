@@ -12,28 +12,14 @@ import kalkulierbar.logic.transform.FirstOrderCNF
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 
-// Context object for FO term serialization
-// Tells kotlinx.serialize about child types of FoResolutionMove
-val resolutionMoveModule = SerializersModule {
-    polymorphic(FoResolutionMove::class) {
-        MoveResolve::class with MoveResolve.serializer()
-        MoveInstantiate::class with MoveInstantiate.serializer()
-        MoveHide::class with MoveHide.serializer()
-        MoveShow::class with MoveShow.serializer()
-    }
-}
-
-val serializer = Json(context = resolutionMoveModule + FoTermModule)
-
-class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolutionState, FoResolutionMove, FoResolutionParam>() {
+class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
     override val identifier = "fo-resolution"
+
+    private val serializer = Json(context = resolutionMoveModule + FoTermModule)
 
     override fun parseFormulaToState(formula: String, params: FoResolutionParam?): FoResolutionState {
         val parsed = FirstOrderParser.parse(formula)
@@ -42,7 +28,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         return FoResolutionState(clauses, params?.highlightSelectable ?: false)
     }
 
-    override fun applyMoveOnState(state: FoResolutionState, move: FoResolutionMove): FoResolutionState {
+    override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
         when (move) {
             is MoveResolve -> resolveFO(state, move.c1, move.c2, move.literal)
             is MoveInstantiate -> instantiate(state, move.c1, move.varAssign)
@@ -111,7 +97,6 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
     }
 
     @Suppress("TooGenericExceptionCaught")
-    @UnstableDefault
     override fun jsonToState(json: String): FoResolutionState {
         try {
             val parsed = serializer.parse(FoResolutionState.serializer(), json)
@@ -127,17 +112,15 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         }
     }
 
-    @UnstableDefault
     override fun stateToJson(state: FoResolutionState): String {
         state.computeSeal()
         return serializer.stringify(FoResolutionState.serializer(), state)
     }
 
     @Suppress("TooGenericExceptionCaught")
-    @UnstableDefault
-    override fun jsonToMove(json: String): FoResolutionMove {
+    override fun jsonToMove(json: String): ResolutionMove {
         try {
-            return serializer.parse(FoResolutionMove.serializer(), json)
+            return serializer.parse(ResolutionMove.serializer(), json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON move: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -150,7 +133,6 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
      * @return parsed param object
      */
     @Suppress("TooGenericExceptionCaught")
-    @UnstableDefault
     override fun jsonToParam(json: String): FoResolutionParam {
         try {
             return serializer.parse(FoResolutionParam.serializer(), json)
@@ -175,25 +157,6 @@ class FoResolutionState(
         return "resolutionstate|$clauseSet|$hiddenClauses|$highlightSelectable|$newestNode"
     }
 }
-
-@Serializable
-abstract class FoResolutionMove
-
-@Serializable
-@SerialName("fores-resolve")
-data class MoveResolve(val c1: Int, val c2: Int, val literal: String?) : FoResolutionMove()
-
-@Serializable
-@SerialName("fores-instantiate")
-data class MoveInstantiate(val c1: Int, val varAssign: Map<String, String>) : FoResolutionMove()
-
-@Serializable
-@SerialName("fores-hide")
-data class MoveHide(val c1: Int) : FoResolutionMove()
-
-@Serializable
-@SerialName("fores-show")
-class MoveShow : FoResolutionMove()
 
 @Serializable
 data class FoResolutionParam(val highlightSelectable: Boolean)
