@@ -57,16 +57,16 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonState() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"seal":"7974AE7D1720B6B1D249E035F3AB73422527DD4307F85E8F3D65FB401A76BF3A"}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E0C05A7FA9314F20A57557E5F0E5C080263A94A1F1B7C1A25AE47FA86DB9F2A3"}"""
         val state = instance.jsonToState(json)
 
-        assertEquals("resolutionstate|{a, b, c}, {!b, d}, {!c}|false|-1", state.getHash())
+        assertEquals("resolutionstate|{a, b, c}, {!b, d}, {!c}||false|-1", state.getHash())
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonStateCorrupt() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a""negated":false}{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"seal":"DA0B67B5A26E5B52D0F0CFEA1ECAD1402CB4B49ED59F4FBCF1C5B7157D1996E3"}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"anegated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E0C05A7FA9314F20A57557E5F0E5C080263A94A1F1B7C1A25AE47FA86DB9F2A3"}"""
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
@@ -75,7 +75,7 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonStateMissingField() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"seal":"DA0B67B5A26E5B52D0F0CFEA1ECAD1402CB4B49ED59F4FBCF1C5B7157D1996E3"}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E0C05A7FA9314F20A57557E5F0E5C080263A94A1F1B7C1A25AE47FA86DB9F2A3"}"""
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
@@ -84,7 +84,7 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonStateModify() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"c","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"seal":"DA0B67B5A26E5B52D0F0CFEA1ECAD1402CB4B49ED59F4FBCF1C5B7157D1996E3"}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E0C05A7FA9314F20A57557E5F0E5C080263A94A1F1B7C1A25AE47FA86DB9F2A3"}"""
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
