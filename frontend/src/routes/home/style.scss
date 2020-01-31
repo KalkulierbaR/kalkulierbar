@@ -1,16 +1,25 @@
 /* Styles for the home component */
 
-.calculus-list {
+.calculus-grid {
     list-style: none;
+
+    @media (min-width: 700px) {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
-.calculus-list-item::before {
-    content: "\2022";
-    color: var(--kbar-accent-color);
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
+.calculus-item {
+    border-radius: 5px;
+    background-color: var(--kbar-3dp-color);
+    box-shadow: var(--kbar-shadow-3dp);
+
+    &-image {
+        opacity: 0.6;
+        height: 200px;
+        display: block;
+        width: auto;
+    }
 }
 
 .home a {
