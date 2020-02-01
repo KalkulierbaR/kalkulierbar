@@ -1,8 +1,15 @@
 package kalkulierbar.tests.resolution
 
 import kalkulierbar.JsonParseException
+import kalkulierbar.parsers.CnfStrategy
+import kalkulierbar.resolution.FirstOrderResolution
+import kalkulierbar.resolution.FoResolutionParam
+import kalkulierbar.resolution.MoveHide
+import kalkulierbar.resolution.MoveInstantiate
 import kalkulierbar.resolution.MoveResolve
+import kalkulierbar.resolution.MoveShow
 import kalkulierbar.resolution.PropositionalResolution
+import kalkulierbar.resolution.ResolutionParam
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -10,6 +17,45 @@ import kotlin.test.assertFailsWith
 class TestResolutionJson {
 
     val instance = PropositionalResolution()
+    val foInstance = FirstOrderResolution()
+
+    /*
+        Test jsonToParam
+    */
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testJsonParamValid() {
+        val json = "{\"cnfStrategy\": \"TSEYTIN\", \"highlightSelectable\": true}"
+        val param = instance.jsonToParam(json)
+        assertEquals(ResolutionParam(CnfStrategy.TSEYTIN, true), param)
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testJsonParamCorrupt() {
+        val json = "{\"cnfStrategy\": true, \"highlightSelectable\": true}"
+        assertFailsWith<JsonParseException> {
+            instance.jsonToParam(json)
+        }
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testJsonFoParamValid() {
+        val json = "{\"highlightSelectable\": true}"
+        val param = foInstance.jsonToParam(json)
+        assertEquals(FoResolutionParam(true), param)
+    }
+
+    @Test
+    @kotlinx.serialization.UnstableDefault
+    fun testJsonFoParamCorrupt() {
+        val json = "{\"highlightSelectable\": \"maybe\"}"
+        assertFailsWith<JsonParseException> {
+            foInstance.jsonToParam(json)
+        }
+    }
 
     /*
         Test jsonToMove
@@ -18,9 +64,21 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveValid() {
-        val json = "{\"type\":\"res-resolve\",\"c1\": 1, \"c2\": 2, \"literal\": \"variable\"}"
-        val move = instance.jsonToMove(json)
-        assertEquals(MoveResolve(1, 2, "variable"), move)
+        var json = "{\"type\":\"res-resolve\",\"c1\": 1, \"c2\": 2, \"literal\": \"variable\"}"
+        assertEquals(MoveResolve(1, 2, "variable"), instance.jsonToMove(json))
+        assertEquals(MoveResolve(1, 2, "variable"), foInstance.jsonToMove(json))
+
+        json = "{\"type\":\"res-hide\",\"c1\": 1}"
+        assertEquals(MoveHide(1), instance.jsonToMove(json))
+        assertEquals(MoveHide(1), foInstance.jsonToMove(json))
+
+        json = "{\"type\":\"res-show\"}"
+        assert(instance.jsonToMove(json) is MoveShow)
+        assert(foInstance.jsonToMove(json) is MoveShow)
+
+        json = "{\"type\":\"res-instantiate\", \"c1\": 1, \"varAssign\": {\"X\": \"c\"}}"
+        assertEquals(MoveInstantiate(1, mapOf("X" to "c")), instance.jsonToMove(json))
+        assertEquals(MoveInstantiate(1, mapOf("X" to "c")), foInstance.jsonToMove(json))
     }
 
     @Test
@@ -29,6 +87,10 @@ class TestResolutionJson {
         val json = "{\"type\":\"res-resolve\",\"c1\": 1, \"c2\": null, \"spelling\": null}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
+        }
+
+        assertFailsWith<JsonParseException> {
+            foInstance.jsonToMove(json)
         }
     }
 
@@ -39,6 +101,10 @@ class TestResolutionJson {
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
+
+        assertFailsWith<JsonParseException> {
+            foInstance.jsonToMove(json)
+        }
     }
 
     @Test
@@ -47,6 +113,10 @@ class TestResolutionJson {
         val json = "{\"type\":\"res-resolve\",\"c1\": 1, \"c2\": false, \"spelling\": \"variable\"}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
+        }
+
+        assertFailsWith<JsonParseException> {
+            foInstance.jsonToMove(json)
         }
     }
 
@@ -88,5 +158,17 @@ class TestResolutionJson {
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
+    }
+
+    /*
+        Test stateToJson
+    */
+
+    @Test
+    fun testStateToJson() {
+        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false}]},{"atoms":[{"lit":"a","negated":true}]}]},"highlightSelectable":true,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E4B7A88793E5897F47811DB24F7C16DC87E6C9280CA873C293A28D824DB1BA22"}"""
+        val param = "{\"cnfStrategy\": \"NAIVE\", \"highlightSelectable\": true}"
+        val got = instance.parseFormula("a;!a", param)
+        assertEquals(expected, got)
     }
 }
