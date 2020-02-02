@@ -1,3 +1,5 @@
+$hamburgerBreakpoint: 1060px;
+
 .header {
     position: fixed;
     left: 0;
@@ -11,7 +13,7 @@
     display: flex;
     align-items: center;
 
-    @media (min-width: 700px) {
+    @media (min-width: $hamburgerBreakpoint) {
         padding: 0 10vw;
     }
 }
@@ -21,7 +23,7 @@
     height: 48px;
     margin: 0 0 0 8px;
 
-    @media (min-width: 700px) {
+    @media (min-width: $hamburgerBreakpoint) {
         margin: 0;
     }
 }
@@ -71,7 +73,7 @@
         &.current {
             background: rgba(0, 0, 0, 0.2);
 
-            @media (min-width: 700px) {
+            @media (min-width: $hamburgerBreakpoint) {
                 background-size: 100% 0.3rem;
                 background-position: center top;
                 background-repeat: no-repeat;
@@ -80,7 +82,7 @@
         }
     }
 
-    @media (min-width: 700px) {
+    @media (min-width: 1060px) {
         display: block;
     }
 }
@@ -108,7 +110,7 @@
     cursor: pointer;
     transition: opacity 250ms ease;
 
-    @media (max-width: 700px) {
+    @media (max-width: $hamburgerBreakpoint) {
         display: block;
     }
 
@@ -150,7 +152,7 @@
 .settings {
     padding: 0 16px;
 
-    @media (min-width: 700px) {
+    @media (min-width: $hamburgerBreakpoint) {
         padding: 0;
     }
 }
@@ -168,7 +170,7 @@
     color: var(--kbar-primary-text-color);
     background-color: var(--kbar-card-color);
 
-    @media (min-width: 700px) {
+    @media (min-width: $hamburgerBreakpoint) {
         display: none;
     }
 
@@ -218,7 +220,7 @@
     margin-bottom: 15px;
     cursor: pointer;
 
-    @media (max-width: 700px) {
+    @media (max-width: $hamburgerBreakpoint) {
         &:hover,
         &:active,
         &:focus {
@@ -237,7 +239,7 @@
     opacity: 0;
     pointer-events: none;
     transition: background-color 0.2s ease;
-    @media (max-width: 700px) {
+    @media (max-width: $hamburgerBreakpoint) {
         .server-input-wrapper:focus-within & {
             opacity: 0.5;
         }
@@ -248,7 +250,7 @@
     overflow-scrolling: unset;
     transition: all 0.2s ease;
 
-    @media (max-width: 700px) {
+    @media (max-width: $hamburgerBreakpoint) {
         &:focus-within {
             transform: translateY(-256px);
             background-color: var(--kbar-8dp-color);
@@ -263,7 +265,7 @@
 .dialog {
     display: none;
 
-    @media (min-width: 700px) {
+    @media (min-width: $hamburgerBreakpoint) {
         display: block;
         max-width: 720px;
     }
@@ -277,7 +279,7 @@
     height: 48px;
     width: 48px;
 
-    @media (min-width: 700px) {
+    @media (min-width: $hamburgerBreakpoint) {
         margin: 0;
     }
 }

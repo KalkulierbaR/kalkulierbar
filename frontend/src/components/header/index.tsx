@@ -20,17 +20,17 @@ interface HeaderProps {
 }
 
 const Header: preact.FunctionalComponent<HeaderProps> = ({currentUrl}) => {
-    const { smallScreen } = useAppState();
+    const { hamburger } = useAppState();
     const [open, setOpen] = useState(false);
     const toggle = useCallback(() => setOpen(!open), [open]);
     const setClosed = useCallback(() => setOpen(false), [open]);
 
-    const right = smallScreen ? (
+    const right = hamburger ? (
         <Hamburger open={open} onClick={toggle} />
     ) : (
         <Fragment>
             <Nav
-                smallScreen={false}
+                hamburger={false}
                 onLinkClick={setClosed}
                 currentUrl={currentUrl}
             />
@@ -59,7 +59,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({currentUrl}) => {
             />
             <Dialog
                 class={style.dialog}
-                open={!smallScreen && open}
+                open={!hamburger && open}
                 label="Settings"
                 onClose={setClosed}
             >
@@ -89,20 +89,20 @@ const Hamburger: preact.FunctionalComponent<HamburgerProps> = ({
 );
 
 interface NavProps {
-    smallScreen: boolean;
+    hamburger: boolean;
     onLinkClick: CallableFunction;
     currentUrl: string;
 }
 
 const Nav: preact.FunctionalComponent<NavProps> = ({
-    smallScreen,
+    hamburger,
     onLinkClick,
     currentUrl,
 }) => (
         <nav
             class={classMap({
                 [style.nav]: true,
-                [style.hamburgerLink]: smallScreen
+                [style.hamburgerLink]: hamburger
             })}
         >
             <Link
@@ -117,7 +117,7 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
                     class={currentUrl.includes(Calculus.foTableaux) ? style.current : undefined}
                     href={"/" + Calculus.foTableaux}
                 >
-                    First Order Tableaux
+                    FO Tableaux
                 </Link>
             <Link
                 onClick={() => onLinkClick()}
@@ -257,7 +257,7 @@ const Drawer: preact.FunctionalComponent<DrawerProps> = ({
         <div class={style.inner}>
             <h3>Calculi</h3>
             <Nav
-                smallScreen={true}
+                hamburger={true}
                 onLinkClick={onLinkClick}
                 currentUrl={currentUrl}
             />

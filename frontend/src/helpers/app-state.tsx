@@ -17,6 +17,7 @@ const isDeployed = location.port !== "8080";
 
 const INIT_APP_STATE: AppState = {
     smallScreen: false,
+    hamburger: false,
     savedFormulas: {
         [Calculus.propResolution]: "",
         [Calculus.propTableaux]: "",
@@ -33,8 +34,8 @@ const reducer: Reducer<AppState, AppStateAction> = (
     action
 ): AppState => {
     switch (action.type) {
-        case AppStateActionType.SET_SMALL_SCREEN:
-            return { ...state, smallScreen: action.value };
+        case AppStateActionType.UPDATE_SCREEN_SIZE:
+            return { ...state, smallScreen: action.smallScreen, hamburger: action.hamburger };
         case AppStateActionType.ADD_NOTIFICATION:
             return { ...state, notification: action.value };
         case AppStateActionType.REMOVE_NOTIFICATION:
