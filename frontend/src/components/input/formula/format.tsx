@@ -24,10 +24,11 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
             {foLogic ? ( // Todo: Styling
                 <li>
                     <p>
-                        <b>First Order Formulas</b>
+                        <b>FO Formula</b>
                     </p>
                     <p>
-                        Use names starting in an uppercase letter for variables and relations, names starting with a lowercase letter or a number for constants and functions. Quantifiers can be used like this:{" "}
+                        Use names starting in an uppercase letter for variables and relations, names starting with a lowercase letter or a number for constants and functions.<br/>
+                        Quantifiers can be used like this:{" "}
                         <code class={style.padRight}>
                             {"\\all X: R(f(X, a)) & \\ex Y: !R(f(Y, a))"}
                         </code>
@@ -89,7 +90,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
                 <Fragment>
                     <li>
                         <p>
-                            <b>Clause Sets</b>
+                            <b>Clause Set</b>
                         </p>
                         <p>
                             <code class={style.padRight}>
@@ -105,10 +106,10 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
                     <br />
                     <li>
                         <p>
-                            <b>Propositional Formulas</b>
+                            <b>Propositional Formula</b>
                         </p>
                         <p>
-                            Enter a formula in the usual ascii-notation like in this example:{" "}
+                            Use the usual ascii-notation like in this example:{" "}
                             <code class={style.padRight}>
                                 {"!(a -> b) & (c <=> d | e) & !a"}
                             </code>
