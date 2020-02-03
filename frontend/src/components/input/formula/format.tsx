@@ -1,4 +1,7 @@
 import { Fragment, h } from "preact";
+import { useCallback, useState } from "preact/hooks";
+import { classMap } from "../../../helpers/class-map";
+import ChevronRightIcon from "../../icons/chevron-right";
 import * as style from "./style.scss";
 
 interface Props {
@@ -8,9 +11,15 @@ interface Props {
     foLogic?: boolean;
 }
 
-const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
-    <div class="card">
-        <h3>Format</h3>
+const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
+    const [collapsed, setCollapsed] = useState(true);
+
+    const toggleCollapsed = useCallback(() => setCollapsed(!collapsed), [
+        collapsed
+    ]);
+
+    const content = (
+        <div class={style.formatContent}>
         <ul>
             {foLogic ? ( // Todo: Styling
                 <li>
@@ -103,7 +112,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                             <code class={style.padRight}>
                                 {"!(a -> b) & (c <=> d | e) & !a"}
                             </code>
-                            
+
                         </p>
                         <p>
                             <code class={style.padRight}>{"<=>"}</code>
@@ -117,5 +126,26 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
         </ul>
     </div>
 );
+
+    return (
+        <div class={`card ${style.noPad}`}>
+            <div class={style.formatHeader} onClick={toggleCollapsed}>
+                <button
+                    class={classMap({
+                        [style.btnIcon]: true,
+                        [style.expand]: !collapsed
+                    })}
+                >
+                    <ChevronRightIcon
+                        size={32}
+                        fill="var(--kbar-primary-text-color)"
+                    />
+                </button>
+                <h3 class={style.formatHeading}>Format</h3>
+            </div>
+            {!collapsed && content}
+        </div>
+    );
+};
 
 export default Format;

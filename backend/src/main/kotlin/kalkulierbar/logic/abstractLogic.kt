@@ -34,3 +34,16 @@ abstract class Quantifier(
     child: LogicNode,
     val boundVariables: MutableList<QuantifiedVariable>
 ) : UnaryOp(child)
+
+/**
+ * Interface defining a function to check syntactic equality
+ */
+interface SyntacticEquality {
+
+    /**
+     * Check if two terms are syntactically (as opposed to referentially) identical
+     * @param other Object to check for syntactic equality
+     * @return true iff the terms are equal
+     */
+    fun synEq(other: Any?): Boolean
+}

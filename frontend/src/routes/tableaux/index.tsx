@@ -8,7 +8,7 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
 import { useAppState } from "../../helpers/app-state";
-import {Calculus, TableauxCalculusType} from "../../types/app";
+import { Calculus, TableauxCalculusType } from "../../types/app";
 import {
     CnfStrategy,
     FOTableauxParams,
@@ -107,6 +107,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     return (
         <Fragment>
+            <Format foLogic={calculus === Calculus.foTableaux} />
             <FormulaInput calculus={calculus} params={params} />
             <div class="card">
                 <h3>Parameters</h3>
@@ -160,7 +161,6 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
-            <Format foLogic={calculus === Calculus.foTableaux} />
         </Fragment>
     );
 };

@@ -4,6 +4,8 @@ import kalkulierbar.logic.transform.FirstOrderTermVisitor
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 
+// Context object for FO term serialization
+// Tells kotlinx.serialize about child types of FirstOrderTerm
 val FoTermModule = SerializersModule {
     polymorphic(FirstOrderTerm::class) {
         QuantifiedVariable::class with QuantifiedVariable.serializer()
@@ -13,7 +15,7 @@ val FoTermModule = SerializersModule {
 }
 
 @Serializable
-abstract class FirstOrderTerm {
+abstract class FirstOrderTerm : SyntacticEquality {
     abstract fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>): ReturnType
 
     /**
@@ -22,13 +24,6 @@ abstract class FirstOrderTerm {
      * @return copy of the current term
      */
     abstract fun clone(): FirstOrderTerm
-
-    /**
-     * Check if two terms are syntactically (as opposed to referentially) identical
-     * @param other Object to check for syntactic equality
-     * @return true iff the terms are equal
-     */
-    abstract fun synEq(other: Any?): Boolean
 
     /**
      * Leftover from previous implementation
