@@ -1,8 +1,7 @@
 import { h } from "preact";
 import { route } from "preact-router";
-import { useState } from "preact/hooks";
 import { useAppState } from "../../../helpers/app-state";
-import { Calculus, Params } from "../../../types/app";
+import { AppStateActionType, CalculusType, Params } from "../../../types/app";
 import Btn from "../../btn";
 import * as style from "./style.scss";
 
@@ -14,16 +13,15 @@ declare module "preact" {
     }
 }
 
-// Properties Interface for the ClauseInput component
 interface Props {
     /**
      * The calculus to use. Specifies API endpoint
      */
-    calculus: Calculus;
+    calculus: CalculusType;
     /**
      * Additional params for the calculus
      */
-    params?: Params[Calculus];
+    params?: Params[CalculusType];
 }
 
 /**
@@ -39,17 +37,29 @@ const normalizeInput = (input: string) => {
 };
 
 /*
- * A component for entering clause sets and sending them to the server.
+ * A component for entering formulae or clause sets and sending them to the server.
  * It also redirects the user after a successful response from the server
  * to the corresponding view of the calculus
  */
-const ClauseInput: preact.FunctionalComponent<Props> = ({
+const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params
 }) => {
-    const { server, onError, onChange } = useAppState();
-    const [userInput, setUserInput] = useState("");
+    const {
+        server,
+        onError,
+        onChange,
+        savedFormulas,
+        dispatch
+    } = useAppState();
     const url = `${server}/${calculus}/parse`;
+
+    const setUserInput = (input: string) =>
+        dispatch({
+            type: AppStateActionType.UPDATE_SAVED_FORMULA,
+            calculus,
+            value: input
+        });
 
     /**
      * Handle the Submit event of the form
@@ -66,7 +76,7 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
                 },
                 method: "POST",
                 body: `formula=${normalizeInput(
-                    userInput
+                    savedFormulas[calculus]
                 )}&params=${JSON.stringify(params)}`
             });
             if (response.status !== 200) {
@@ -115,16 +125,19 @@ const ClauseInput: preact.FunctionalComponent<Props> = ({
                 <textarea
                     name="formula"
                     class={style.input}
-                    value={userInput}
+                    value={savedFormulas[calculus]}
                     onInput={onInput}
                     autocapitalize="off"
                 />
-                <Btn type="submit" disabled={userInput.length === 0}>
-                    Send
+                <Btn
+                    type="submit"
+                    disabled={savedFormulas[calculus].length === 0}
+                >
+                    Start proof
                 </Btn>
             </form>
         </div>
     );
 };
 
-export default ClauseInput;
+export default FormulaInput;

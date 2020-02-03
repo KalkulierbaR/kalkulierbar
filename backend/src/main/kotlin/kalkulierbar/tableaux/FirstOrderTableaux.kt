@@ -26,7 +26,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         if (params == null)
             return FoTableauxState(clauses, formula)
 
-        return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking, params.manualUnification)
+        return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking, params.manualVarAssign)
     }
 
     override fun applyMoveOnState(state: FoTableauxState, move: FoTableauxMove): FoTableauxState {
@@ -47,7 +47,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
      * @return state with the close move applied
      */
     private fun applyAutoCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int): FoTableauxState {
-        if (state.manualUnificationOnly)
+        if (state.manualVarAssign)
             throw IllegalMove("Auto-close is not enabled for this proof")
 
         ensureBasicCloseability(state, leafID, closeNodeID)
@@ -177,7 +177,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             return state
 
         // Create a fresh clone-state with the same parameters and input formula
-        val params = FoTableauxParam(state.type, state.regular, state.backtracking, state.manualUnificationOnly)
+        val params = FoTableauxParam(state.type, state.regular, state.backtracking, state.manualVarAssign)
         var freshState = parseFormulaToState(state.formula, params)
         freshState.usedBacktracking = true
 

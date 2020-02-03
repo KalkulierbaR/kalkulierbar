@@ -28,3 +28,48 @@ export interface CandidateClause extends Clause {
     index: number;
     candidateLiterals: string[];
 }
+
+/**
+ * A literal in FO
+ */
+export interface FOLiteral {
+    spelling: string;
+    arguments: FOArgument[];
+}
+
+/**
+ * The FOAtom object received from the backend
+ */
+export interface FOAtom {
+    lit: FOLiteral;
+    negated: boolean;
+}
+
+/**
+ * FOClause is a list of FOAtoms
+ */
+export interface FOClause {
+    atoms: FOAtom[];
+}
+
+/**
+ * Clause sets are sets of Clauses
+ */
+export interface FOClauseSet {
+    clauses: FOClause[];
+}
+
+/**
+ * An argument in FO
+ */
+export interface FOArgument {
+    type: string;
+    spelling: string;
+    arguments?: FOArgument[];
+}
+
+export enum FOArgumentType {
+    quantifiedVariable = "kalkulierbar.logic.QuantifiedVariable",
+    constant = "kalkulierbar.logic.Constant",
+    function = "kalkulierbar.logic.Function"
+}

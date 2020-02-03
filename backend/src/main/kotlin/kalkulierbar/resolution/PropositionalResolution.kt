@@ -30,7 +30,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         val cId1 = move.c1
         val cId2 = move.c2
         val clauses = state.clauseSet.clauses
-        val spelling = move.spelling
+        var spelling = move.spelling
 
         // Verify that the clause ids are valid
         if (cId1 == cId2)
@@ -42,19 +42,26 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
 
         val c1 = clauses[cId1]
         val c2 = clauses[cId2]
+        val resCandidates: Pair<Atom<String>, Atom<String>>
 
-        // Filter clauses for atoms with correct spelling
-        val atomsInC1 = c1.atoms.filter { it.lit == spelling }
-        val atomsInC2 = c2.atoms.filter { it.lit == spelling }
-        if (atomsInC1.isEmpty())
-            throw IllegalMove("Clause ${clauses[cId1]} does not contain atoms with spelling $spelling")
-        if (atomsInC2.isEmpty())
-            throw IllegalMove("Clause ${clauses[cId2]} does not contain atoms with spelling $spelling")
+        // If the frontend did not pass a resolution target, we'll try to find one ourselves
+        if (spelling == null) {
+            resCandidates = getAutoResolutionCandidates(c1, c2)
+        } else {
+            // Filter clauses for atoms with correct spelling
+            val atomsInC1 = c1.atoms.filter { it.lit == spelling }
+            val atomsInC2 = c2.atoms.filter { it.lit == spelling }
+            if (atomsInC1.isEmpty())
+                throw IllegalMove("Clause '$c1' does not contain atoms with spelling '$spelling'")
+            if (atomsInC2.isEmpty())
+                throw IllegalMove("Clause '$c2' does not contain atoms with spelling '$spelling'")
 
-        val msg = """Clauses ${clauses[cId1]} and ${clauses[cId2]} do not contain
-                    |atom $spelling in both positive and negated form"""
-        val (a1, a2) = findResCandidates(atomsInC1, atomsInC2)
-                ?: throw IllegalMove(msg)
+            val msg = "Clauses '$c1' and '$c2' do not contain atom '$spelling' in both positive and negated form"
+            resCandidates = findResCandidates(atomsInC1, atomsInC2)
+                    ?: throw IllegalMove(msg)
+        }
+
+        val (a1, a2) = resCandidates
 
         // Add the new node where the second one was. This should be pretty nice for the user
         state.newestNode = cId2
@@ -62,6 +69,39 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         clauses.add(state.newestNode, buildClause(c1, a1, c2, a2))
 
         return state
+    }
+
+    /**
+     * Automatically find a resolution candidate for two given clauses
+     * @param c1 First clause to resolve
+     * @param c2 Second clause to resolve
+     * @return Pair of suitable atoms in c1 and c2 for resolution
+     */
+    private fun getAutoResolutionCandidates(c1: Clause<String>, c2: Clause<String>): Pair<Atom<String>, Atom<String>> {
+
+        // Find variables present in both clauses
+        var sharedAtoms = c1.atoms.filter {
+            val c1atom = it.lit
+            c2.atoms.any { it.lit == c1atom }
+        }
+
+        if (sharedAtoms.isEmpty())
+            throw IllegalMove("Clauses '$c1' and '$c2' contain no common variables")
+
+        // Sort out atoms not present in opposite polarity in c2 (shared atoms came from c1 originally)
+        sharedAtoms = sharedAtoms.filter {
+            c2.atoms.contains(it.not())
+        }
+
+        if (sharedAtoms.isEmpty())
+            throw IllegalMove("Clauses '$c1' and '$c2' contain no common variables that appear" +
+                "in positive and negated form")
+
+        // Choose the first shared variable
+        val a1 = sharedAtoms[0]
+        val a2 = c2.atoms.filter { it == a1.not() }[0]
+
+        return Pair(a1, a2)
     }
 
     /**
@@ -177,7 +217,7 @@ class ResolutionState(val clauseSet: ClauseSet<String>, val highlightSelectable:
 }
 
 @Serializable
-data class ResolutionMove(val c1: Int, val c2: Int, val spelling: String)
+data class ResolutionMove(val c1: Int, val c2: Int, val spelling: String?)
 
 @Serializable
 data class ResolutionParam(val cnfStrategy: CnfStrategy, val highlightSelectable: Boolean)

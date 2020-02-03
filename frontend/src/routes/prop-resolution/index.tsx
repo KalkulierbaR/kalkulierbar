@@ -1,12 +1,11 @@
 import { Fragment, h } from "preact";
-
-import ClauseInput from "../../components/input/clause";
-
 import { useState } from "preact/hooks";
 import HintIcon, { Hint } from "../../components/hint";
-import Format from "../../components/input/clause/format";
+import FormulaInput from "../../components/input/formula";
+import Format from "../../components/input/formula/format";
 import Switch from "../../components/switch";
 import { useAppState } from "../../helpers/app-state";
+import { Calculus } from "../../types/app";
 import { CnfStrategy } from "../../types/tableaux";
 
 const Resolution: preact.FunctionalComponent = () => {
@@ -30,7 +29,8 @@ const Resolution: preact.FunctionalComponent = () => {
 
     return (
         <Fragment>
-            <ClauseInput calculus="prop-resolution" params={params} />
+            <Format />
+            <FormulaInput calculus={Calculus.propResolution} params={params} />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
@@ -50,7 +50,6 @@ const Resolution: preact.FunctionalComponent = () => {
                     </div>
                 </div>
             </div>
-            <Format />
         </Fragment>
     );
 };

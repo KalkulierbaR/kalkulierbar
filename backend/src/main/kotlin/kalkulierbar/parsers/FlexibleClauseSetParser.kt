@@ -20,6 +20,9 @@ class FlexibleClauseSetParser {
         fun parse(formula: String, strategy: CnfStrategy = CnfStrategy.OPTIMAL): ClauseSet<String> {
             var errorMsg: String
 
+            val likelyFormula = (Regex(".*(&|\\||->|<=>).*") matches formula)
+            val likelyClauseSet = (Regex(".*(;|,).*") matches formula)
+
             // Try parsing as ClauseSet
             try {
                 return ClauseSetParser.parse(formula)
@@ -31,7 +34,14 @@ class FlexibleClauseSetParser {
             try {
                 return convertToCNF(PropositionalParser().parse(formula), strategy)
             } catch (e: InvalidFormulaFormat) {
-                errorMsg += "\nParsing as propositional formula failed: ${e.message ?: "unknown error"}"
+
+                // If the input formula is likely intended to be certain input type, only report that error
+                if (likelyFormula && !likelyClauseSet)
+                    errorMsg = ""
+
+                if (likelyFormula || !likelyClauseSet)
+                    errorMsg += "\nParsing as propositional formula failed: ${e.message ?: "unknown error"}"
+
                 throw InvalidFormulaFormat(errorMsg)
             }
         }

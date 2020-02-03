@@ -38,12 +38,10 @@ class ClauseSetParser {
             val aSep = Regex.escape(atomSeparator)
             val cSep = Regex.escape(clauseSeparator)
             val formulaFormat = "(!)?[a-zA-Z]+($aSep(!)?[a-zA-Z]+)*($cSep(!)?[a-zA-Z]+($aSep(!)?[a-zA-Z]+)*)*"
-            val formatExample = "a${aSep}b$cSep!b${aSep}c${cSep}d$aSep!e$aSep!f"
 
             if (!(Regex(formulaFormat) matches processedFormula))
-                throw InvalidFormulaFormat("""Invalid input formula format. 
-                    Please adhere to the following format: $formatExample with variables in [a-zA-Z]+"""
-                        .trimMargin().trimIndent())
+                throw InvalidFormulaFormat("Please use alphanumeric variables only, " +
+                    "separate atoms with '$atomSeparator' and clauses with '$clauseSeparator'.")
 
             val parsed = ClauseSet<String>()
             val clauses = processedFormula.split(clauseSeparator)

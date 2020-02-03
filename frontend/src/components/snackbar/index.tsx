@@ -37,7 +37,7 @@ const Snackbar: preact.FunctionalComponent<Props> = ({
     return (
         <div class={style.snack + typeClass}>
             {notification.message}
-            <button class={style.btn} onClick={onDelete}>
+            <button class={style.btn} onClick={onDelete} aria-label="Close">
                 <CloseIcon fill="hsla(0, 0%, 100%, 0.87)" />
             </button>
         </div>

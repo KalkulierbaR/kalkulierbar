@@ -12,6 +12,10 @@ interface Props {
      * The switch's label
      */
     label?: string;
+    /**
+     * Initial state of the switch
+     */
+    initialState?: boolean;
 }
 
 export default class Switch extends Component<Props, {}> {
@@ -29,6 +33,9 @@ export default class Switch extends Component<Props, {}> {
             return;
         }
         this.MDComponent = new MDCSwitch(this.switch.current);
+        if(this.props.initialState){
+            this.MDComponent.checked = this.props.initialState;
+        }
     }
 
     public componentWillUnmount() {
