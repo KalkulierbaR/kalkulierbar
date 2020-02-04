@@ -20,157 +20,113 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
 
     const content = (
         <div class={style.formatContent}>
-            <ul>
-                {foLogic ? ( // Todo: Styling
+        <ul>
+            {foLogic ? ( // Todo: Styling
+                <li>
+                    <p>
+                        <b>FO Formula</b>
+                    </p>
+                    <p>
+                        Use names starting in an uppercase letter for variables and relations, names starting with a lowercase letter or a number for constants and functions.<br/>
+                        Quantifiers can be used like this:{" "}
+                        <code class={style.padRight}>
+                            {"\\all X: R(f(X, a)) & \\ex Y: !R(f(Y, a))"}
+                        </code>
+                    </p>
+                    <p>
+                        <table>
+                            <tr>
+                                <th>Operator</th>
+                                <th>Symbol</th>
+                                <th>Example</th>
+                            </tr>
+                            <tr>
+                                <td>Parentheses</td>
+                                <td><code>()</code></td>
+                                <td><code>(a | b) & c</code></td>
+                            </tr>
+                            <tr>
+                                <td>Unary Not</td>
+                                <td><code>!</code></td>
+                                <td><code>!valid</code></td>
+                            </tr>
+                            <tr>
+                                <td>Universal quantifiers</td>
+                                <td><code>\all X</code></td>
+                                <td><code>\all X: (R(X) & Q(X))</code></td>
+                            </tr>
+                            <tr>
+                                <td>Existential quantifiers</td>
+                                <td><code>\ex X</code></td>
+                                <td><code>\ex X: (R(X) & Q(X))</code></td>
+                            </tr>
+                            <tr>
+                                <td>Binary And</td>
+                                <td><code>&</code></td>
+                                <td><code>a & b</code></td>
+                            </tr>
+                            <tr>
+                                <td>Binary Or</td>
+                                <td><code>|</code></td>
+                                <td><code>a | b</code></td>
+                            </tr>
+                            <tr>
+                                <td>Implication</td>
+                                <td><code>{"->"}</code></td>
+                                <td><code>{"rain -> wet"}</code></td>
+                            </tr>
+                            <tr>
+                                <td>Equivalence</td>
+                                <td><code>{"<=> or <->"}</code></td>
+                                <td><code>{"right <=> !left"}</code></td>
+                            </tr>
+                        </table>
+                    </p>
+                    <p>
+                        Unbound variables are not allowed. Quantifier scopes are as small as possible, following the usual conventions for first-order logic.
+                    </p>
+                </li>
+            ) : (
+                <Fragment>
                     <li>
                         <p>
-                            <b>First Order Formulas</b>
+                            <b>Clause Set</b>
                         </p>
                         <p>
-                            <ul>
-                                <li>
-                                    All constants (identifiers with a lowercase
-                                    or numeric first character) are terms.
-                                </li>
-                                <li>
-                                    All variables (identifiers with an uppercase
-                                    first character) are terms.
-                                </li>
-                                <li>
-                                    Given n terms t1 to tn, all functions f(t1,
-                                    t2, ... tn) - where f is an identifier with
-                                    a lowercase or numeric first character - are
-                                    terms.
-                                </li>
-                                <li>
-                                    An atomic formula is a relation with one or
-                                    more terms as arguments, written as R(t1,
-                                    t2, ... tn) where R is an identifier with an
-                                    uppercase first character. Please note that
-                                    relations with the same name but different
-                                    numbers of arguments may exist.
-                                </li>
-                            </ul>
+                            <code class={style.padRight}>
+                                {"{{a, ¬b}, {¬a}, {b}}"}
+                            </code>
+                            needs to be entered as{" "}
+                            <code class={style.padLeft}>a,!b;!a;b</code>
                         </p>
                         <p>
-                            <table>
-                                <tr>
-                                    <th>Operation</th>
-                                    <th>Symbol</th>
-                                    <th>Example</th>
-                                </tr>
-                                <tr>
-                                    <td>Parentheses</td>
-                                    <td>
-                                        <code>()</code>
-                                    </td>
-                                    <td>
-                                        <code>(a | b) & c</code>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Unary Not</td>
-                                    <td>
-                                        <code>!</code>
-                                    </td>
-                                    <td>
-                                        <code>!valid</code>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Universal quantifiers</td>
-                                    <td>\all X</td>
-                                    <td>\all X: (R(X) & Q(X))</td>
-                                </tr>
-                                <tr>
-                                    <td>Existential quantifiers</td>
-                                    <td>\ex X</td>
-                                    <td>\ex X: (R(X) & Q(X))</td>
-                                </tr>
-                                <tr>
-                                    <td>Binary And</td>
-                                    <td>
-                                        <code>&</code>
-                                    </td>
-                                    <td>
-                                        <code>a & b</code>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Binary Or</td>
-                                    <td>
-                                        <code>|</code>
-                                    </td>
-                                    <td>
-                                        <code>a | b</code>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Implication</td>
-                                    <td>
-                                        <code>{"->"}</code>
-                                    </td>
-                                    <td>
-                                        <code>{"rain -> wet"}</code>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Equivalence</td>
-                                    <td>
-                                        <code>{"<=> or <->"}</code>
-                                    </td>
-                                    <td>
-                                        <code>{"right <=> !left"}</code>
-                                    </td>
-                                </tr>
-                            </table>
-                        </p>
-                        <p>
-                            Operator precedence is equal to the order of the
-                            table above.
+                            Separate variables with commas, use a semicolon or linebreak to signal a new clause. Whitespace is ignored.
                         </p>
                     </li>
-                ) : (
-                    <Fragment>
-                        <li>
-                            <p>
-                                <b>Clause Sets</b>
-                            </p>
-                            <p>
-                                <code class={style.padRight}>
-                                    {"{{a, ¬c}, {b}}"}
-                                </code>
-                                needs to be entered as{" "}
-                                <code class={style.padLeft}>a,!c;b</code>
-                            </p>
-                            <p>
-                                Use a semicolon or linebreak to signal a new
-                                clause.
-                            </p>
-                        </li>
-                        <br />
-                        <li>
-                            <p>
-                                <b>Propositional Formulas</b>
-                            </p>
-                            <p>
-                                <code class={style.padRight}>
-                                    {"!a -> ( a & b <=> a | b)"}
-                                </code>
-                                is a valid input.
-                            </p>
-                            <p>
-                                <code class={style.padRight}>{"<=>"}</code>
-                                and
-                                <code class={style.padLeft}>{"<->"}</code> are
-                                synonymous.
-                            </p>
-                        </li>
-                    </Fragment>
-                )}
-            </ul>
-        </div>
-    );
+                    <br />
+                    <li>
+                        <p>
+                            <b>Propositional Formula</b>
+                        </p>
+                        <p>
+                            Use the usual ascii-notation like in this example:{" "}
+                            <code class={style.padRight}>
+                                {"!(a -> b) & (c <=> d | e) & !a"}
+                            </code>
+
+                        </p>
+                        <p>
+                            <code class={style.padRight}>{"<=>"}</code>
+                            and
+                            <code class={style.padLeft}>{"<->"}</code> are
+                            synonymous, operator precedence follows the conventions for propositional logic. Whitespace is ignored.
+                        </p>
+                    </li>
+                </Fragment>
+            )}
+        </ul>
+    </div>
+);
 
     return (
         <div class={`card ${style.noPad}`}>

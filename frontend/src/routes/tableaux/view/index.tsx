@@ -318,7 +318,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 </Dialog>
             ) : undefined}
 
-            <ControlFAB>
+            <ControlFAB alwaysOpen={!smallScreen}>
                 {selectedNodeId === undefined ? (
                     <Fragment>
                         {state!.nodes.filter(node => !node.isClosed).length >

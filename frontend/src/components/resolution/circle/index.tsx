@@ -49,7 +49,8 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         server,
         onError,
         onSuccess,
-        [Calculus.propResolution]: state
+        [Calculus.propResolution]: state,
+        smallScreen
     } = useAppState();
 
     const { width, height, data } = useMemo(() => circleLayout(clauses), [
@@ -91,7 +92,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     </g>
                 )}
             </Zoomable>
-            <ControlFAB>
+            <ControlFAB alwaysOpen={!smallScreen}>
                 <FAB
                     mini={true}
                     extended={true}

@@ -4,6 +4,7 @@
     --kbar-bg-color: #121212;
     --kbar-card-color: #212121;
     --kbar-primary-text-color: #fff;
+    --kbar-secondary-text-color: #c2a1fd;
     --kbar-link-color: #c2a1fd;
     --kbar-3dp-color: #242424;
     --kbar-8dp-color: #2d2d2d;
@@ -38,6 +39,7 @@
     --kbar-8dp-color: rgb(218, 218, 218);
     --kbar-selected-color: #d4bcff;
     --kbar-primary-text-color: #444;
+    --kbar-secondary-text-color: var(--kbar-accent-color);
     --kbar-link-color: var(--kbar-accent-color);
     --mdc-theme-secondary: var(--kbar-accent-color);
 }
