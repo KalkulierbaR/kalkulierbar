@@ -1,6 +1,7 @@
 package kalkulierbar.resolution
 
 import kalkulierbar.IllegalMove
+import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.clause.Atom
@@ -55,8 +56,13 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
 
         if (litString == null)
             literal = null
-        else
-            literal = FirstOrderParser.parseRelation(litString)
+        else {
+            try {
+                literal = FirstOrderParser.parseRelation(litString)
+            } catch (e: InvalidFormulaFormat) {
+                throw InvalidFormulaFormat("Could not parse literal '$litString': ${e.message}")
+            }
+        }
 
         resolve(state, c1, c2, literal)
     }
@@ -80,7 +86,13 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         val newClause = Clause<Relation>()
 
         // Parse the replacement terms and create an instantiation visitor
-        val varAssignParsed = varAssign.mapValues { FirstOrderParser.parseTerm(it.value) }
+        val varAssignParsed = varAssign.mapValues {
+            try {
+                FirstOrderParser.parseTerm(it.value)
+            } catch (e: InvalidFormulaFormat) {
+                throw InvalidFormulaFormat("Could not parse term '${it.value}': ${e.message}")
+            }
+        }
         val instantiator = VariableInstantiator(varAssignParsed)
 
         // Build the new clause by cloning atoms from the base clause and applying instantiation
