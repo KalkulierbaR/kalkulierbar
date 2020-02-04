@@ -8,10 +8,20 @@ export interface ResolutionState {
     newestNode: number;
 }
 
-export interface ResolutionMove {
+export interface ResolutionMoveResolve {
+    type: string;
     c1: number;
     c2: number;
-    spelling: string | null;
+    literal: string | null;
+}
+
+export interface ResolutionMoveHide {
+    type: string;
+    c1: number;
+}
+
+export interface ResolutionMoveShow {
+    type: string;
 }
 
 export interface ResolutionParams {

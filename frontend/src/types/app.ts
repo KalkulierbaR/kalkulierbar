@@ -1,5 +1,7 @@
 import {
-    ResolutionMove,
+    ResolutionMoveHide,
+    ResolutionMoveResolve,
+    ResolutionMoveShow,
     ResolutionParams,
     ResolutionState
 } from "./resolution";
@@ -22,7 +24,7 @@ export enum Calculus {
 }
 export interface Move {
     "prop-tableaux": TableauxMove;
-    "prop-resolution": ResolutionMove;
+    "prop-resolution": ResolutionMoveResolve | ResolutionMoveHide | ResolutionMoveShow;
     "fo-tableaux": FOTableauxMove;
 }
 

@@ -146,8 +146,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
     const candidateClauses = getCandidateClauses();
 
     /**
-     * The function to call, when the user selects a clause
-     * @param {number} newClauseId - The id of the clause, which was clicked on
+     * The function to call when the user selects a clause
+     * @param {number} newClauseId - The id of the clause that was clicked on
      * @returns {void}
      */
     const selectClauseCallback = (newClauseId: number) => {
@@ -175,9 +175,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 Calculus.propResolution,
                 state!,
                 {
+                    type: "res-resolve",
                     c1: selectedClauseId,
                     c2: newClauseId,
-                    spelling: resolventLiteral
+                    literal: resolventLiteral
                 },
                 onChange,
                 onError
@@ -187,12 +188,56 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
         }
     };
 
+    /**
+     * The function to call when the user hides a clause
+     * @param {number} clauseId - The id of the clause to hide
+     * @returns {void}
+     */
+    const hideCallback = (clauseId: number) => {
+        // Send hide move to backend
+        sendMove(
+            server,
+            Calculus.propResolution,
+            state!,
+            {
+                type: "res-hide",
+                c1: clauseId
+            },
+            onChange,
+            onError
+        );
+        // Reset selection
+        setSelectedClauses(undefined);
+    };
+
+    /**
+     * The function to call when the user wants to re-show hidden clauses
+     * @returns {void}
+     */
+    const showCallback = () => {
+        // Send show move to backend
+        sendMove(
+            server,
+            Calculus.propResolution,
+            state!,
+            {
+                type: "res-show"
+            },
+            onChange,
+            onError
+        );
+        // Reset selection
+        setSelectedClauses(undefined);
+    };
+
     return (
         <Fragment>
             <h2>Resolution View</h2>
             <ResolutionCircle
                 clauses={candidateClauses}
                 selectClauseCallback={selectClauseCallback}
+                hideCallback={hideCallback}
+                showCallback={showCallback}
                 selectedClauseId={selectedClauseId}
                 highlightSelectable={state.highlightSelectable}
                 newestNode={state.newestNode}
@@ -214,9 +259,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                                         Calculus.propResolution,
                                         state!,
                                         {
+                                            type: "res-resolve",
                                             c1: selectedClauseId!,
                                             c2: selectedClauses[1],
-                                            spelling: l
+                                            literal: l
                                         },
                                         onChange,
                                         onError
