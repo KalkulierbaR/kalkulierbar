@@ -1,8 +1,14 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
+import ControlFAB from "../../../components/control-fab";
 import Dialog from "../../../components/dialog";
+import FAB from "../../../components/fab";
+import CenterIcon from "../../../components/icons/center";
+import CheckCircleIcon from "../../../components/icons/check-circle";
+import HideIcon from "../../../components/icons/hide";
+import ShowIcon from "../../../components/icons/show";
 import ResolutionCircle from "../../../components/resolution/circle";
-import { sendMove } from "../../../helpers/api";
+import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import {Calculus} from "../../../types/app";
 import { CandidateClause } from "../../../types/clause";
@@ -76,7 +82,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
         server,
         [Calculus.propResolution]: cState,
         onError,
-        onChange
+        onChange,
+        onSuccess
     } = useAppState();
     let state = cState;
 
@@ -193,7 +200,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
      * @param {number} clauseId - The id of the clause to hide
      * @returns {void}
      */
-    const hideCallback = (clauseId: number) => {
+    const hideClause = (clauseId: number) => {
         // Send hide move to backend
         sendMove(
             server,
@@ -214,7 +221,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
      * The function to call when the user wants to re-show hidden clauses
      * @returns {void}
      */
-    const showCallback = () => {
+    const showHiddenClauses = () => {
         // Send show move to backend
         sendMove(
             server,
@@ -236,12 +243,54 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             <ResolutionCircle
                 clauses={candidateClauses}
                 selectClauseCallback={selectClauseCallback}
-                hideCallback={hideCallback}
-                showCallback={showCallback}
                 selectedClauseId={selectedClauseId}
                 highlightSelectable={state.highlightSelectable}
                 newestNode={state.newestNode}
             />
+            <ControlFAB>
+                {selectedClauseId !== undefined ? (
+                    <FAB
+                        mini={true}
+                        extended={true}
+                        label="Hide clause"
+                        showIconAtEnd={true}
+                        icon={<HideIcon />}
+                        onClick={() => hideClause(selectedClauseId)}
+                    />
+                ) : undefined}
+                <FAB
+                    mini={true}
+                    extended={true}
+                    label="Show all"
+                    showIconAtEnd={true}
+                    icon={<ShowIcon />}
+                    onClick={() => showHiddenClauses()}
+                />
+                <FAB
+                    mini={true}
+                    extended={true}
+                    label="Center"
+                    showIconAtEnd={true}
+                    icon={<CenterIcon />}
+                    onClick={() => dispatchEvent(new CustomEvent("center"))}
+                />
+                <FAB
+                    icon={<CheckCircleIcon />}
+                    label="Check"
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() =>
+                        checkClose(
+                            server,
+                            onError,
+                            onSuccess,
+                            Calculus.propResolution,
+                            state
+                        )
+                    }
+                />
+            </ControlFAB>
             <Dialog
                 open={showDialog}
                 label="Choose Literal"

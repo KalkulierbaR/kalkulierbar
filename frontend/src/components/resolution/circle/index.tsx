@@ -1,18 +1,7 @@
 import { h } from "preact";
-
-import { CandidateClause } from "../../../types/clause";
-
 import { useMemo } from "preact/hooks";
-import { checkClose } from "../../../helpers/api";
-import { useAppState } from "../../../helpers/app-state";
 import { circleLayout } from "../../../helpers/layout/resolution";
-import {Calculus} from "../../../types/app";
-import ControlFAB from "../../control-fab";
-import FAB from "../../fab";
-import CenterIcon from "../../icons/center";
-import CheckCircleIcon from "../../icons/check-circle";
-import HideIcon from "../../icons/hide";
-import ShowIcon from "../../icons/show";
+import { CandidateClause } from "../../../types/clause";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
@@ -26,14 +15,6 @@ interface Props {
      * The function to call if a clause is selected
      */
     selectClauseCallback: (idx: number) => void;
-    /**
-     * The function to call if a clause is hidden
-     */
-    hideCallback: (idx: number) => void;
-    /**
-     * The function to call to re-show all clauses
-     */
-    showCallback: () => void;
     /**
      * The id of the clause if one is selected
      */
@@ -51,18 +32,10 @@ interface Props {
 const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
     selectClauseCallback,
-    hideCallback,
-    showCallback,
     selectedClauseId,
     highlightSelectable,
     newestNode
 }) => {
-    const {
-        server,
-        onError,
-        onSuccess,
-        [Calculus.propResolution]: state
-    } = useAppState();
 
     const { width, height, data } = useMemo(() => circleLayout(clauses), [
         clauses
@@ -103,50 +76,6 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     </g>
                 )}
             </Zoomable>
-            <ControlFAB>
-                {selectedClauseId !== undefined ? (
-                    <FAB
-                        mini={true}
-                        extended={true}
-                        label="Hide clause"
-                        showIconAtEnd={true}
-                        icon={<HideIcon />}
-                        onClick={() => hideCallback(selectedClauseId)}
-                    />
-                ) : undefined}
-                <FAB
-                    mini={true}
-                    extended={true}
-                    label="Show all"
-                    showIconAtEnd={true}
-                    icon={<ShowIcon />}
-                    onClick={() => showCallback()}
-                />
-                <FAB
-                    mini={true}
-                    extended={true}
-                    label="Center"
-                    showIconAtEnd={true}
-                    icon={<CenterIcon />}
-                    onClick={() => dispatchEvent(new CustomEvent("center"))}
-                />
-                <FAB
-                    icon={<CheckCircleIcon />}
-                    label="Check"
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() =>
-                        checkClose(
-                            server,
-                            onError,
-                            onSuccess,
-                            Calculus.propResolution,
-                            state
-                        )
-                    }
-                />
-            </ControlFAB>
         </div>
     );
 };
