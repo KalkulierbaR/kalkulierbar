@@ -18,15 +18,19 @@ class Tokenizer {
         // VarStartChars is a subset of VarChars
         protected val permittedVarStartChars = Regex("[a-zA-Z0-9]")
         protected val permittedVarChars = permittedVarStartChars
+        protected val extendedVarChars = Regex("[_-]")
+        private var allowExtended = false
 
         /**
 	     * Splits a raw formula into its tokens, removes whitespace etc
 	     * @param formula Input formula to tokenize
 	     * @return list of extracted tokens
 	     */
-        fun tokenize(formula: String): MutableList<Token> {
+        fun tokenize(formula: String, extended: Boolean = false): MutableList<Token> {
             val tokens = mutableListOf<Token>()
             var i = 0
+
+            allowExtended = extended
 
             // Extract single token until end of input reached
             while (i < formula.length) {
@@ -92,7 +96,7 @@ class Tokenizer {
                 val startIndex = i
 
                 // Extract identifier
-                while (i < formula.length && permittedVarChars matches formula[i].toString()) {
+                while (i < formula.length && isAllowedChar(formula[i])) {
                     identifier += formula[i]
                     i += 1
                 }
@@ -101,6 +105,16 @@ class Tokenizer {
                 throw InvalidFormulaFormat("Incorrect formula syntax at char $i")
             }
             return i
+        }
+
+        /**
+         * Check if a character is allowed within an identifier
+         * @param char Character to check
+         * @return true iff the character is allowed as part of an identifier
+         */
+        fun isAllowedChar(char: Char): Boolean {
+            val cs = char.toString()
+            return permittedVarChars matches cs || (allowExtended && extendedVarChars matches cs)
         }
     }
 }

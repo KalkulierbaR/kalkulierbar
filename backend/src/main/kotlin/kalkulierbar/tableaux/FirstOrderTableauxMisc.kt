@@ -72,7 +72,7 @@ class FoTableauxState(
     // Would it cause problems if I could instantiate 'Xv1' with 'Xv2', then expand again, causing
     // another Xv2 to be generated? Does this scenario have to be avoided?
     override fun clauseExpandPreprocessing(clause: Clause<Relation>): List<Atom<Relation>> {
-        val suffixAppender = VariableSuffixAppend("v${expansionCounter + 1}")
+        val suffixAppender = VariableSuffixAppend("_${expansionCounter + 1}")
         val atomList = mutableListOf<Atom<Relation>>()
 
         // Adding every atom in clause to leaf and set parameters
