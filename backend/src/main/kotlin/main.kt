@@ -3,21 +3,23 @@ package main.kotlin
 import io.javalin.Javalin
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
+import kalkulierbar.KBAR_DEFAULT_PORT
 import kalkulierbar.KalkulierbarException
 import kalkulierbar.resolution.PropositionalResolution
+import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 
 // List of all active calculi
-val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution())
+val endpoints: Set<Calculus> = setOf<Calculus>(PropositionalTableaux(), PropositionalResolution(), FirstOrderTableaux())
 
 fun main(args: Array<String>) {
     // Verify that all calculus implementations have unique names
     if (endpoints.size != endpoints.map { it.identifier }.distinct().size)
         throw KalkulierbarException("Set of active calculus implementations contains duplicate identifiers")
 
-    val port = getHerokuPort()
+    val port = getEnvPort()
 
     // Only listen globally if cli argument is present
     val listenGlobally = args.isNotEmpty() && (args[0] == "--global" || args[0] == "-g")
@@ -25,8 +27,7 @@ fun main(args: Array<String>) {
     httpApi(port, endpoints, listenGlobally)
 }
 
-@Suppress("MagicNumber")
-fun getHerokuPort() = System.getenv("PORT")?.toInt() ?: 7000
+fun getEnvPort() = System.getenv("PORT")?.toInt() ?: KBAR_DEFAULT_PORT
 
 /**
  * Starts a Javalin Server and creates API methods for active calculus objects
@@ -42,20 +43,19 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         // Enable CORS headers
         config.enableCorsForAllOrigins()
 
-        if (listenGlobally) {
-            // Set a Jetty server manually for more config options
-            config.server {
-                // Create and configure Jetty server
-                Server().apply {
-                    connectors = arrayOf(ServerConnector(this).apply {
-                        this.host = host
-                    })
-                }
+        // Set a Jetty server manually for more config options
+        config.server {
+            // Create and configure Jetty server
+            Server().apply {
+                connectors = arrayOf(ServerConnector(this).apply {
+                    this.host = host
+                    this.port = port
+                })
             }
         }
     }
 
-    app.start(port)
+    app.start()
 
     // Catch explicitly thrown exceptions
     app.exception(KalkulierbarException::class.java) { e, ctx ->

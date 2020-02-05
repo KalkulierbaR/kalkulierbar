@@ -42,6 +42,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
     isNew
 }) => {
     const textRef = createRef<SVGTextElement>();
+
     return (
         <g
             onClick={() => !disabled && selectCallback(clause.index)}
@@ -51,7 +52,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
                 elementRef={textRef}
                 disabled={disabled}
                 selected={selected}
-                class={isNew ? style.nodeNew : undefined}
+                class={isNew && !selected ? style.nodeNew : undefined}
             />
             <text
                 x={coordinates[0]}

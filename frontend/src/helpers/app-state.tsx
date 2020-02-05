@@ -4,8 +4,8 @@ import {
     AddNotification,
     AppState,
     AppStateAction,
-    AppStateActionType,
-    Calculus,
+    AppStateActionType, Calculus,
+    CalculusType,
     DerivedAppState,
     NotificationType,
     RemoveNotification,
@@ -17,6 +17,12 @@ const isDeployed = location.port !== "8080";
 
 const INIT_APP_STATE: AppState = {
     smallScreen: false,
+    hamburger: false,
+    savedFormulas: {
+        [Calculus.propResolution]: "",
+        [Calculus.propTableaux]: "",
+        [Calculus.foTableaux]: ""
+    },
     server: isDeployed
         ? "https://kalkulierbar-api.herokuapp.com"
         : `http://${location.hostname}:7000`,
@@ -28,18 +34,30 @@ const reducer: Reducer<AppState, AppStateAction> = (
     action
 ): AppState => {
     switch (action.type) {
-        case AppStateActionType.SET_SMALL_SCREEN:
-            return { ...state, smallScreen: action.value };
+        case AppStateActionType.UPDATE_SCREEN_SIZE:
+            return { ...state, smallScreen: action.smallScreen, hamburger: action.hamburger };
         case AppStateActionType.ADD_NOTIFICATION:
             return { ...state, notification: action.value };
         case AppStateActionType.REMOVE_NOTIFICATION:
             return { ...state, notification: undefined };
         case AppStateActionType.UPDATE_CALCULUS_STATE:
-            return { ...state, [action.calculus]: action.value };
+            return {
+                ...state,
+                [action.calculus]: action.value,
+                notification: undefined
+            };
         case AppStateActionType.SET_THEME:
             return { ...state, theme: action.value };
         case AppStateActionType.SET_SERVER:
-            return { ...state, server: action.value };
+            return { ...state, server: action.value, notification: undefined };
+        case AppStateActionType.UPDATE_SAVED_FORMULA:
+            return {
+                ...state,
+                savedFormulas: {
+                    ...state.savedFormulas,
+                    [action.calculus]: action.value
+                }
+            };
     }
 };
 
@@ -61,7 +79,7 @@ export const createErrorNotification = (msg: string) =>
 export const createSuccessNotification = (msg: string) =>
     createNotification(msg, NotificationType.Success);
 
-export const updateCalculusState = <C extends Calculus = Calculus>(
+export const updateCalculusState = <C extends CalculusType = CalculusType>(
     dispatch: (state: AppStateAction) => void
 ) => (calculus: C, state: AppState[C]) => {
     dispatch({

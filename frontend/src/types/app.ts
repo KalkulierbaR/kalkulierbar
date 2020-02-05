@@ -3,19 +3,36 @@ import {
     ResolutionParams,
     ResolutionState
 } from "./resolution";
-import { TableauxMove, TableauxParams, TableauxState } from "./tableaux";
+import {
+    FOTableauxMove,
+    FOTableauxParams,
+    FOTableauxState,
+    PropTableauxParams,
+    PropTableauxState,
+    TableauxMove
+} from "./tableaux";
 
-export type Calculus = "prop-tableaux" | "prop-resolution";
+export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
+export type CalculusType = TableauxCalculusType | "prop-resolution";
 
+export enum Calculus {
+    propTableaux = "prop-tableaux",
+    foTableaux = "fo-tableaux",
+    propResolution = "prop-resolution",
+}
 export interface Move {
     "prop-tableaux": TableauxMove;
     "prop-resolution": ResolutionMove;
+    "fo-tableaux": FOTableauxMove;
 }
 
 export interface Params {
-    "prop-tableaux": TableauxParams;
+    "prop-tableaux": PropTableauxParams;
     "prop-resolution": ResolutionParams;
+    "fo-tableaux": FOTableauxParams;
 }
+
+export type Formulas = Record<Calculus, string>;
 
 export enum Theme {
     dark = "dark",
@@ -27,9 +44,12 @@ export interface AppState {
     server: string;
     notification?: Notification;
     smallScreen: boolean;
+    hamburger: boolean;
     theme: Theme;
-    "prop-tableaux"?: TableauxState;
+    savedFormulas: Formulas;
+    "prop-tableaux"?: PropTableauxState;
     "prop-resolution"?: ResolutionState;
+    "fo-tableaux"?: FOTableauxState;
 }
 
 export interface DerivedAppState extends AppState {
@@ -37,7 +57,7 @@ export interface DerivedAppState extends AppState {
     onSuccess: (msg: string) => void;
     onMessage: (msg: string, type: NotificationType) => void;
     removeNotification: () => void;
-    onChange: <C extends Calculus = Calculus>(
+    onChange: <C extends CalculusType = CalculusType>(
         calculus: C,
         state: AppState[C]
     ) => void;
@@ -49,17 +69,19 @@ interface AppStateActionBase {
 }
 
 export enum AppStateActionType {
-    SET_SMALL_SCREEN,
+    UPDATE_SCREEN_SIZE,
     ADD_NOTIFICATION,
     REMOVE_NOTIFICATION,
     UPDATE_CALCULUS_STATE,
     SET_THEME,
-    SET_SERVER
+    SET_SERVER,
+    UPDATE_SAVED_FORMULA
 }
 
-export interface SetSmallScreen extends AppStateActionBase {
-    type: AppStateActionType.SET_SMALL_SCREEN;
-    value: boolean;
+export interface UpdateScreenSize extends AppStateActionBase {
+    type: AppStateActionType.UPDATE_SCREEN_SIZE;
+    smallScreen: boolean;
+    hamburger: boolean;
 }
 
 export interface AddNotification extends AppStateActionBase {
@@ -71,7 +93,7 @@ export interface RemoveNotification extends AppStateActionBase {
     type: AppStateActionType.REMOVE_NOTIFICATION;
 }
 
-export interface UpdateCalculusState<C extends Calculus = Calculus>
+export interface UpdateCalculusState<C extends CalculusType = CalculusType>
     extends AppStateActionBase {
     type: AppStateActionType.UPDATE_CALCULUS_STATE;
     calculus: C;
@@ -88,15 +110,22 @@ export interface SetServer extends AppStateActionBase {
     value: string;
 }
 
+export interface UpdateSavedFormula<C extends CalculusType = CalculusType> extends AppStateActionBase {
+    type: AppStateActionType.UPDATE_SAVED_FORMULA;
+    calculus: C;
+    value: string;
+}
+
 export type AppStateAction =
-    | SetSmallScreen
+    | UpdateScreenSize
     | AddNotification
     | RemoveNotification
     | UpdateCalculusState
     | SetTheme
-    | SetServer;
+    | SetServer
+    | UpdateSavedFormula;
 
-export type AppStateUpdater = <C extends Calculus = Calculus>(
+export type AppStateUpdater = <C extends CalculusType = CalculusType>(
     id: C,
     newState: AppState[C]
 ) => void;

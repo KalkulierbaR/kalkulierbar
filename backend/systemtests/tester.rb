@@ -113,10 +113,29 @@ def fuzzFormulaParsing(trq, count = 100)
 	end
 end
 
+def fuzzFirstOrderParsing(trq, count = 50)
+	logMsg "Fuzzing valid first-order formulas"
+	success = true
+	fg = FormulaGenerator.new(true)
+
+	count.times() {
+		raw = fg.generate
+		string = CGI.escape(raw)
+		# For simplicity, check only that parsing is successful
+		success &= trq.post('/fo-tableaux/parse', "formula=#{string}", /.*/, 200)
+	}
+
+	if success
+		logSuccess "Test successful - sent #{count.to_s} requests"
+	else
+		logError "Test failed!"
+	end
+end
+
 def testInvalidParam(trq)
 	cg = ClauseGenerator.new
 	logMsg "Testing invalid formulas"
-	formulas = ["", ",", "a,", "a,b;", "a,b;c,", "a,b;c,;e", ",b;c,;e", ";c,;e"]
+	formulas = ["", ",", "a,", "a,b;c,", "a,b;c,;e", ",b;c,;e", ";c,;e"]
 	success = true
 
 	success &= trq.post('/prop-tableaux/parse', "formul=#{cg.genClauseSet()}", /parameter.*needs to be present/i, 400)
@@ -248,6 +267,16 @@ def tryCloseTrivialResolution(trq, iterations = 10, verbose = false)
 	end
 end
 
+def tryCloseTrivialFirstOrder(trq, iterations = 10, verbose = false)
+	logMsg "Trying to close a trivial first order proof"
+
+	if bogoATP(trq, "\\all X: P(X) & \\ex Y: !P(Y)", "WEAKLYCONNECTED", false, iterations, verbose, isFO: true)
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
 def tryCloseCloseable(trq, iterations = 15, verbose = false)
 	logMsg "Trying to close a proof"
 	
@@ -360,6 +389,7 @@ logMsg("Testing PropositionalTableaux")
 testInvalidParam(trq)
 fuzzClauseParsing(trq)
 fuzzFormulaParsing(trq)
+fuzzFirstOrderParsing(trq)
 testRootNodeCreation(trq)
 testStateModification(trq)
 tryCloseTrivial(trq)
@@ -371,3 +401,4 @@ testRegularityRestriction(trq)
 testUndo(trq)
 testResolutionInitialState(trq)
 tryCloseTrivialResolution(trq)
+tryCloseTrivialFirstOrder(trq)

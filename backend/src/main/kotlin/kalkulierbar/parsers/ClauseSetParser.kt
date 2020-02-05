@@ -23,7 +23,7 @@ class ClauseSetParser {
          * @param atomSeparator string separating atoms (variables) from each other, e.g. ","
          * @return ClauseSet representing the input formula
          */
-        fun parseGeneric(formula: String, clauseSeparator: String, atomSeparator: String): ClauseSet {
+        fun parseGeneric(formula: String, clauseSeparator: String, atomSeparator: String): ClauseSet<String> {
 
             // Preprocessing: Remove whitespace & newlines
             var processedFormula = formula.replace("\n", clauseSeparator).replace(Regex("\\s"), "").replace(Regex(";$"), "")
@@ -38,24 +38,22 @@ class ClauseSetParser {
             val aSep = Regex.escape(atomSeparator)
             val cSep = Regex.escape(clauseSeparator)
             val formulaFormat = "(!)?[a-zA-Z]+($aSep(!)?[a-zA-Z]+)*($cSep(!)?[a-zA-Z]+($aSep(!)?[a-zA-Z]+)*)*"
-            val formatExample = "a${aSep}b$cSep!b${aSep}c${cSep}d$aSep!e$aSep!f"
 
             if (!(Regex(formulaFormat) matches processedFormula))
-                throw InvalidFormulaFormat("""Invalid input formula format. 
-                    Please adhere to the following format: $formatExample with variables in [a-zA-Z]+"""
-                        .trimMargin().trimIndent())
+                throw InvalidFormulaFormat("Please use alphanumeric variables only, " +
+                    "separate atoms with '$atomSeparator' and clauses with '$clauseSeparator'.")
 
-            val parsed = ClauseSet()
+            val parsed = ClauseSet<String>()
             val clauses = processedFormula.split(clauseSeparator)
 
             for (clause in clauses) {
                 val members = clause.split(atomSeparator)
-                val parsedClause = Clause()
+                val parsedClause = Clause<String>()
 
                 for (member in members) {
                     // Check if the member variable is negated and set a boolean flag accordingly
                     // true -> positive variable / false -> negated variable
-                    val atom: Atom
+                    val atom: Atom<String>
 
                     if (member[0] == '!')
                         atom = Atom(member.substring(1), true)

@@ -6,3 +6,11 @@ export interface Transform {
      */
     k: number;
 }
+
+export type Point = [number, number];
+
+export type Extent = [Point, Point];
+
+export interface GoToEvent extends CustomEvent {
+    detail: any;
+}

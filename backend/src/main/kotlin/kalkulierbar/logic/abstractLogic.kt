@@ -1,84 +1,49 @@
 package kalkulierbar.logic
 
-import kalkulierbar.clause.Atom
-import kalkulierbar.clause.Clause
-import kalkulierbar.clause.ClauseSet
+import kalkulierbar.logic.transform.LogicNodeVisitor
 
-abstract class PropositionalLogicNode {
+abstract class LogicNode {
 
     /**
-     * Translates arbitrary formulae into equivalent representations
-     * using only basic operations (var, not, and, or)
-     * @return representation of this LogicNode using only basic logic operations
+     * Create a deep copy of a logic node
+     * NOTE: This will break quantifier linking
+     * @return copy of the current logic node
      */
-    abstract fun toBasicOps(): PropositionalLogicNode
+    abstract fun clone(): LogicNode
 
-    /**
-     * Translates an arbitrary fomula into an equivalent ClauseSet using naive conversion to CNF
-     * Algorithm adapted from https://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
-     * @return ClauseSet equivalent to this logic node
-     */
-    abstract fun naiveCNF(): ClauseSet
-
-    /**
-     * Transforms an arbitrary formula into a ClauseSet that is equivalent with regards to satisfiability
-     * For more information, see https://en.wikipedia.org/wiki/Tseytin_transformation
-     * NOTE: The resulting ClauseSet will contain additional variables, making the ClauseSet NOT equivalent
-     *       to the input formula
-     * @return ClauseSet of equal satisfiability as this logic node
-     */
-    fun tseytinCNF(): ClauseSet {
-        val set = ClauseSet()
-
-        // Add root node 
-        set.add(Clause(mutableListOf(Atom(getTseytinName(0), false))))
-
-        tseytin(set, 0) // Build ClauseSet recursively
-        return set
-    }
-
-    abstract fun tseytin(cs: ClauseSet, index: Int): Int
-    abstract fun getTseytinName(index: Int): String
+    abstract fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>): ReturnType
 }
 
 abstract class BinaryOp(
-    var leftChild: PropositionalLogicNode,
-    var rightChild: PropositionalLogicNode
-) : PropositionalLogicNode() {
-
-    /**
-     * Translates arbitrary formulae into equivalent representations
-     * using only basic operations (var, not, and, or)
-     * @return representation of this LogicNode using only basic logic operations
-     */
-    override fun toBasicOps(): PropositionalLogicNode {
-        // Default behaviour: Assume this is a basic operation, do nothing
-        // Make sure child subtrees are also basic operations
-        leftChild = leftChild.toBasicOps()
-        rightChild = rightChild.toBasicOps()
-        return this
-    }
-
+    var leftChild: LogicNode,
+    var rightChild: LogicNode
+) : LogicNode() {
     override fun toString(): String {
         return "( $leftChild bop $rightChild)"
     }
 }
 
-abstract class UnaryOp(var child: PropositionalLogicNode) : PropositionalLogicNode() {
-
-    /**
-     * Translates arbitrary formulae into equivalent representations
-     * using only basic operations (var, not, and, or)
-     * @return representation of this LogicNode using only basic logic operations
-     */
-    override fun toBasicOps(): PropositionalLogicNode {
-        // Default behaviour: Assume this is a basic operation, do nothing
-        // Make sure child subtrees are also basic operations
-        child = child.toBasicOps()
-        return this
-    }
-
+abstract class UnaryOp(var child: LogicNode) : LogicNode() {
     override fun toString(): String {
         return "(uop $child)"
     }
+}
+
+abstract class Quantifier(
+    var varName: String,
+    child: LogicNode,
+    val boundVariables: MutableList<QuantifiedVariable>
+) : UnaryOp(child)
+
+/**
+ * Interface defining a function to check syntactic equality
+ */
+interface SyntacticEquality {
+
+    /**
+     * Check if two terms are syntactically (as opposed to referentially) identical
+     * @param other Object to check for syntactic equality
+     * @return true iff the terms are equal
+     */
+    fun synEq(other: Any?): Boolean
 }

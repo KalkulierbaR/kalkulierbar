@@ -26,7 +26,7 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveNull() {
-        val json = "{\"c1\": 1, \"c2\": 2, \"spelling\": null}"
+        val json = "{\"c1\": 1, \"c2\": null, \"spelling\": null}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }

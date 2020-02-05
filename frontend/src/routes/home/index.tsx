@@ -1,4 +1,5 @@
 import { h } from "preact";
+import {Calculus} from "../../types/app";
 import * as style from "./style.scss";
 
 const Home: preact.FunctionalComponent = () => {
@@ -8,10 +9,13 @@ const Home: preact.FunctionalComponent = () => {
                 <h3>Choose a calculus</h3>
                 <ul class={style.calculusList}>
                     <li class={style.calculusListItem}>
-                        <a href="/prop-tableaux">Tableaux</a>
+                        <a href={"/" + Calculus.propTableaux}>Propositional Tableaux</a>
                     </li>
                     <li class={style.calculusListItem}>
-                        <a href="/prop-resolution">Resolution</a>
+                        <a href={"/" + Calculus.foTableaux}>First Order Tableaux</a>
+                    </li>
+                    <li class={style.calculusListItem}>
+                        <a href={"/" + Calculus.propResolution}>Propositional Resolution</a>
                     </li>
                 </ul>
             </div>

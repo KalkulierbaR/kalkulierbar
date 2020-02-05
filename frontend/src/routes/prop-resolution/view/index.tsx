@@ -1,13 +1,13 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import * as style from "./style.scss";
-
 import Dialog from "../../../components/dialog";
 import ResolutionCircle from "../../../components/resolution/circle";
 import { sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
+import {Calculus} from "../../../types/app";
 import { CandidateClause } from "../../../types/clause";
 import exampleState from "./example";
+import * as style from "./style.scss";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
@@ -71,11 +71,10 @@ interface Props {}
 
 type SelectedClauses = undefined | [number] | [number, number];
 
-// Component displaying the content of the prop-resolution route
 const ResolutionView: preact.FunctionalComponent<Props> = () => {
     const {
         server,
-        ["prop-resolution"]: cState,
+        [Calculus.propResolution]: cState,
         onError,
         onChange
     } = useAppState();
@@ -84,7 +83,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
-        onChange("prop-resolution", exampleState);
+        onChange(Calculus.propResolution, exampleState);
         state = exampleState;
     }
 
@@ -161,19 +160,19 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             const candidateClause = candidateClauses.find(
                 c => c.index === newClauseId
             )!;
-            let resolventLiteral: string;
+            let resolventLiteral: string | null;
             if (candidateClause.candidateLiterals.length > 1) {
                 // Show dialog for literal selection
                 setSelectedClauses([selectedClauses![0], newClauseId]);
                 return;
             }
 
-            resolventLiteral = candidateClause.candidateLiterals[0];
+            resolventLiteral = candidateClause.candidateLiterals.length === 0 ? null : candidateClause.candidateLiterals[0];
 
             // Send resolve move to backend
             sendMove(
                 server,
-                "prop-resolution",
+                Calculus.propResolution,
                 state!,
                 {
                     c1: selectedClauseId,
@@ -212,7 +211,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                                 onClick={() => {
                                     sendMove(
                                         server,
-                                        "prop-resolution",
+                                        Calculus.propResolution,
                                         state!,
                                         {
                                             c1: selectedClauseId!,

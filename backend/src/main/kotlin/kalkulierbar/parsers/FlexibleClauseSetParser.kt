@@ -3,7 +3,9 @@ package kalkulierbar.parsers
 import kalkulierbar.FormulaConversionException
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.clause.ClauseSet
-import kalkulierbar.logic.PropositionalLogicNode
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.transform.NaiveCNF
+import kalkulierbar.logic.transform.TseytinCNF
 
 class FlexibleClauseSetParser {
 
@@ -15,8 +17,11 @@ class FlexibleClauseSetParser {
          * @param formula formula or clause set to parse
          * @return ClauseSet representing the input formula
          */
-        fun parse(formula: String, strategy: CnfStrategy = CnfStrategy.OPTIMAL): ClauseSet {
+        fun parse(formula: String, strategy: CnfStrategy = CnfStrategy.OPTIMAL): ClauseSet<String> {
             var errorMsg: String
+
+            val likelyFormula = (Regex(".*(&|\\||->|<=>).*") matches formula)
+            val likelyClauseSet = (Regex(".*(;|,).*") matches formula)
 
             // Try parsing as ClauseSet
             try {
@@ -29,7 +34,14 @@ class FlexibleClauseSetParser {
             try {
                 return convertToCNF(PropositionalParser().parse(formula), strategy)
             } catch (e: InvalidFormulaFormat) {
-                errorMsg += "\nParsing as propositional formula failed: ${e.message ?: "unknown error"}"
+
+                // If the input formula is likely intended to be certain input type, only report that error
+                if (likelyFormula && !likelyClauseSet)
+                    errorMsg = ""
+
+                if (likelyFormula || !likelyClauseSet)
+                    errorMsg += "\nParsing as propositional formula failed: ${e.message ?: "unknown error"}"
+
                 throw InvalidFormulaFormat(errorMsg)
             }
         }
@@ -47,18 +59,18 @@ class FlexibleClauseSetParser {
          * @param strategy conversion strategy to apply
          * @return ClauseSet representation of the input formula
          */
-        fun convertToCNF(formula: PropositionalLogicNode, strategy: CnfStrategy): ClauseSet {
-            var res: ClauseSet
+        fun convertToCNF(formula: LogicNode, strategy: CnfStrategy): ClauseSet<String> {
+            var res: ClauseSet<String>
 
             when (strategy) {
-                CnfStrategy.NAIVE -> res = formula.naiveCNF()
-                CnfStrategy.TSEYTIN -> res = formula.tseytinCNF()
+                CnfStrategy.NAIVE -> res = NaiveCNF.transform(formula)
+                CnfStrategy.TSEYTIN -> res = TseytinCNF.transform(formula)
                 CnfStrategy.OPTIMAL -> {
-                    val tseytin = formula.tseytinCNF()
+                    val tseytin = TseytinCNF.transform(formula)
                     // Naive transformation might fail for large a large formula
                     // Fall back to tseytin if so
                     try {
-                        val naive = formula.naiveCNF()
+                        val naive = NaiveCNF.transform(formula)
                         if (naive.clauses.size > tseytin.clauses.size)
                             res = tseytin
                         else

@@ -10,12 +10,9 @@ import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.CnfStrategy
 import kalkulierbar.parsers.FlexibleClauseSetParser
 import kalkulierbar.tamperprotect.ProtectedState
-import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonDecodingException
 
 class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
     override val identifier = "prop-resolution"
@@ -33,7 +30,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         val cId1 = move.c1
         val cId2 = move.c2
         val clauses = state.clauseSet.clauses
-        val spelling = move.spelling
+        var spelling = move.spelling
 
         // Verify that the clause ids are valid
         if (cId1 == cId2)
@@ -45,19 +42,26 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
 
         val c1 = clauses[cId1]
         val c2 = clauses[cId2]
+        val resCandidates: Pair<Atom<String>, Atom<String>>
 
-        // Filter clauses for atoms with correct spelling
-        val atomsInC1 = c1.atoms.filter { it.lit == spelling }
-        val atomsInC2 = c2.atoms.filter { it.lit == spelling }
-        if (atomsInC1.isEmpty())
-            throw IllegalMove("Clause ${clauses[cId1]} does not contain atoms with spelling $spelling")
-        if (atomsInC2.isEmpty())
-            throw IllegalMove("Clause ${clauses[cId2]} does not contain atoms with spelling $spelling")
+        // If the frontend did not pass a resolution target, we'll try to find one ourselves
+        if (spelling == null) {
+            resCandidates = getAutoResolutionCandidates(c1, c2)
+        } else {
+            // Filter clauses for atoms with correct spelling
+            val atomsInC1 = c1.atoms.filter { it.lit == spelling }
+            val atomsInC2 = c2.atoms.filter { it.lit == spelling }
+            if (atomsInC1.isEmpty())
+                throw IllegalMove("Clause '$c1' does not contain atoms with spelling '$spelling'")
+            if (atomsInC2.isEmpty())
+                throw IllegalMove("Clause '$c2' does not contain atoms with spelling '$spelling'")
 
-        val msg = """Clauses ${clauses[cId1]} and ${clauses[cId2]} do not contain
-                    |atom $spelling in both positive and negated form"""
-        val (a1, a2) = findResCandidates(atomsInC1, atomsInC2)
-                ?: throw IllegalMove(msg)
+            val msg = "Clauses '$c1' and '$c2' do not contain atom '$spelling' in both positive and negated form"
+            resCandidates = findResCandidates(atomsInC1, atomsInC2)
+                    ?: throw IllegalMove(msg)
+        }
+
+        val (a1, a2) = resCandidates
 
         // Add the new node where the second one was. This should be pretty nice for the user
         state.newestNode = cId2
@@ -68,13 +72,49 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
     }
 
     /**
+     * Automatically find a resolution candidate for two given clauses
+     * @param c1 First clause to resolve
+     * @param c2 Second clause to resolve
+     * @return Pair of suitable atoms in c1 and c2 for resolution
+     */
+    private fun getAutoResolutionCandidates(c1: Clause<String>, c2: Clause<String>): Pair<Atom<String>, Atom<String>> {
+
+        // Find variables present in both clauses
+        var sharedAtoms = c1.atoms.filter {
+            val c1atom = it.lit
+            c2.atoms.any { it.lit == c1atom }
+        }
+
+        if (sharedAtoms.isEmpty())
+            throw IllegalMove("Clauses '$c1' and '$c2' contain no common variables")
+
+        // Sort out atoms not present in opposite polarity in c2 (shared atoms came from c1 originally)
+        sharedAtoms = sharedAtoms.filter {
+            c2.atoms.contains(it.not())
+        }
+
+        if (sharedAtoms.isEmpty())
+            throw IllegalMove("Clauses '$c1' and '$c2' contain no common variables that appear" +
+                "in positive and negated form")
+
+        // Choose the first shared variable
+        val a1 = sharedAtoms[0]
+        val a2 = c2.atoms.filter { it == a1.not() }[0]
+
+        return Pair(a1, a2)
+    }
+
+    /**
      * Searches two atom lists for resolution candidates and returns the first.
      * The lists have to be filtered for the spelling already.
      * @param atoms1 The first list of atoms
      * @param atoms2 The second list of atoms
      * @return A pair of the two atoms for resolution.
      */
-    private fun findResCandidates(atoms1: List<Atom>, atoms2: List<Atom>): Pair<Atom, Atom>? {
+    private fun findResCandidates(
+        atoms1: List<Atom<String>>,
+        atoms2: List<Atom<String>>
+    ): Pair<Atom<String>, Atom<String>>? {
         val (pos, neg) = atoms2.partition { !it.negated }
 
         for (a1 in atoms1) {
@@ -96,7 +136,12 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
      * @param a2 The atom to filter out of c2
      * @return A new clause that contains all elements of c1 and c2 except for a1 and a2
      */
-    private fun buildClause(c1: Clause, a1: Atom, c2: Clause, a2: Atom): Clause {
+    private fun buildClause(
+        c1: Clause<String>,
+        a1: Atom<String>,
+        c2: Clause<String>,
+        a2: Atom<String>
+    ): Clause<String> {
         val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
                 c2.atoms.filter { it != a2 }.toMutableList()
         return Clause(atoms.distinct().toMutableList())
@@ -108,6 +153,7 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         return CloseMessage(hasEmptyClause, msg)
     }
 
+    @Suppress("TooGenericExceptionCaught")
     @UnstableDefault
     override fun jsonToState(json: String): ResolutionState {
         try {
@@ -118,16 +164,9 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
                 throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
 
             return parsed
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON state")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON state - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON state: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -137,20 +176,14 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
         return Json.stringify(ResolutionState.serializer(), state)
     }
 
+    @Suppress("TooGenericExceptionCaught")
     @UnstableDefault
     override fun jsonToMove(json: String): ResolutionMove {
         try {
             return Json.parse(ResolutionMove.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON move")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON move - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON move: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 
@@ -159,26 +192,20 @@ class PropositionalResolution : JSONCalculus<ResolutionState, ResolutionMove, Re
      * @param json JSON parameter representation
      * @return parsed param object
      */
+    @Suppress("TooGenericExceptionCaught")
     @UnstableDefault
     override fun jsonToParam(json: String): ResolutionParam {
         try {
             return Json.parse(ResolutionParam.serializer(), json)
-        } catch (e: JsonDecodingException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: MissingFieldException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - missing field")
-        } catch (e: SerializationException) {
-            throw JsonParseException(e.message ?: "Could not parse JSON params")
-        } catch (e: NumberFormatException) {
-            throw JsonParseException(e.message
-                    ?: "Could not parse JSON params - invalid number format")
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON params: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
     }
 }
 
 @Serializable
-class ResolutionState(val clauseSet: ClauseSet, val highlightSelectable: Boolean) : ProtectedState() {
+class ResolutionState(val clauseSet: ClauseSet<String>, val highlightSelectable: Boolean) : ProtectedState() {
     var newestNode = -1
 
     override var seal = ""
@@ -190,7 +217,7 @@ class ResolutionState(val clauseSet: ClauseSet, val highlightSelectable: Boolean
 }
 
 @Serializable
-data class ResolutionMove(val c1: Int, val c2: Int, val spelling: String)
+data class ResolutionMove(val c1: Int, val c2: Int, val spelling: String?)
 
 @Serializable
 data class ResolutionParam(val cnfStrategy: CnfStrategy, val highlightSelectable: Boolean)

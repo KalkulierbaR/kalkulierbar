@@ -1,14 +1,14 @@
 import { h } from "preact";
 import { checkClose as closeHelper } from "../../helpers/api";
 import { useAppState } from "../../helpers/app-state";
-import { Calculus } from "../../types/app";
+import { CalculusType } from "../../types/app";
 import Btn from "../btn";
 
 interface Props {
     /**
      * The calculus type
      */
-    calculus: Calculus;
+    calculus: CalculusType;
 }
 
 const CheckCloseBtn: preact.FunctionalComponent<Props> = ({ calculus }) => {
