@@ -48,6 +48,10 @@ class Tokenizer {
             var i = index
             val len = formula.length
 
+            // Accept both \quant and /quant spellings
+            val allquant = Regex("[\\\\/]all")
+            val exquant = Regex("[\\\\/]ex")
+
             // If the next token is one char only, we can add it to the list directly
             if (oneCharToken matches formula[i].toString()) {
                 val ttype: TokenType
@@ -74,10 +78,10 @@ class Tokenizer {
             } else if (i + 2 < len && formula.substring(i, i + 3) == "<->") {
                 tokens.add(Token(TokenType.EQUIVALENCE, "<->", i))
                 i += 3
-            } else if (i + 2 < len && formula.substring(i, i + 3) == "\\ex") {
+            } else if (i + 2 < len && formula.substring(i, i + 3) matches exquant) {
                 tokens.add(Token(TokenType.EXISTENTIALQUANT, "\\ex", i))
                 i += 3
-            } else if (i + 3 < len && formula.substring(i, i + 4) == "\\all") {
+            } else if (i + 3 < len && formula.substring(i, i + 4) matches allquant) {
                 tokens.add(Token(TokenType.UNIVERSALQUANT, "\\all", i))
                 i += 4
             } else if (whitespace matches formula[i].toString()) {
