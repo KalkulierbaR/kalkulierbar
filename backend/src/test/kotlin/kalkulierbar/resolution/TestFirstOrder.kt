@@ -2,10 +2,8 @@ package kalkulierbar.tests.resolution
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.resolution.FirstOrderResolution
-import kalkulierbar.resolution.FoResolutionParam
 import kalkulierbar.resolution.MoveHide
 import kalkulierbar.resolution.MoveInstantiate
-import kalkulierbar.resolution.MoveResolve
 import kalkulierbar.resolution.MoveShow
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -56,7 +54,7 @@ class TestFirstOrder {
         assertEquals("{R(X, f(Y, c))}", state.clauseSet.clauses[0].toString())
     }
 
-    @Test
+    /*@Test
     fun testAutoResolve() {
         var state = instance.parseFormulaToState("(R(c) | R(i)) & (!R(c) | R(i))", FoResolutionParam(true))
         state = instance.applyMoveOnState(state, MoveResolve(0, 1, null))
@@ -78,7 +76,7 @@ class TestFirstOrder {
         state = instance.applyMoveOnState(state, MoveResolve(0, 1, "R(c)"))
         val msg = instance.checkCloseOnState(state)
         assert(msg.closed)
-    }
+    }*/
 
     @Test
     fun testShowHide() {

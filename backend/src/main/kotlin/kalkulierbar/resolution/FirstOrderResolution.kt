@@ -1,15 +1,17 @@
 package kalkulierbar.resolution
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
+import kalkulierbar.UnificationImpossible
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
+import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
+import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
@@ -31,8 +33,8 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
 
     override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
         when (move) {
-            is MoveResolve -> resolveFO(state, move.c1, move.c2, move.literal)
-            is MoveInstantiate -> instantiate(state, move.c1, move.varAssign)
+            is MoveResolveUnify -> resolveUnify(state, move.c1, move.c2, move.l1, move.l2)
+            is MoveInstantiate -> instantiate(state, move.c1, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
             else -> throw IllegalMove("Unknown move type")
@@ -43,28 +45,41 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
 
     override fun checkCloseOnState(state: FoResolutionState) = getCloseMessage(state)
 
-    /**
-     * Create a new clause by resolving two existing clauses
-     * If the given literal is null, a suitable literal will be determined automatically
-     * @param state Current proof state
-     * @param c1 First clause to use for resolution
-     * @param c2 Second clause to use for resolution
-     * @param litString String representation of the Relation to use for resolution
-     */
-    private fun resolveFO(state: FoResolutionState, c1: Int, c2: Int, litString: String?) {
-        val literal: Relation?
+    @Suppress("ThrowsCount")
+    private fun resolveUnify(state: FoResolutionState, c1: Int, c2: Int, c1lit: Int, c2lit: Int) {
+        if (c1 < 0 || c1 >= state.clauseSet.clauses.size)
+            throw IllegalMove("There is no clause with id $c1")
+        if (c2 < 0 || c2 >= state.clauseSet.clauses.size)
+            throw IllegalMove("There is no clause with id $c1")
 
-        if (litString == null)
-            literal = null
-        else {
-            try {
-                literal = FirstOrderParser.parseRelation(litString)
-            } catch (e: InvalidFormulaFormat) {
-                throw InvalidFormulaFormat("Could not parse literal '$litString': ${e.message}")
-            }
+        val clause1 = state.clauseSet.clauses[c1]
+        val clause2 = state.clauseSet.clauses[c2]
+
+        if (c1lit < 0 || c1lit >= clause1.atoms.size)
+            throw IllegalMove("Clause $clause1 has no atom with index $c1lit")
+        if (c2lit < 0 || c2lit >= clause2.atoms.size)
+            throw IllegalMove("Clause $clause2 has no atom with index $c2lit")
+
+        val literal1 = clause1.atoms[c1lit].lit
+        val literal2 = clause2.atoms[c2lit].lit
+        val mgu: Map<String, FirstOrderTerm>
+
+        try {
+            mgu = Unification.unify(literal1, literal2)
+        } catch (e: UnificationImpossible) {
+            throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
         }
 
-        resolve(state, c1, c2, literal)
+        instantiate(state, c1, mgu)
+        val instance1 = state.clauseSet.clauses.size - 1
+        instantiate(state, c2, mgu)
+        val instance2 = state.clauseSet.clauses.size - 1
+        val literal = state.clauseSet.clauses[instance1].atoms[c1lit].lit
+
+        resolve(state, instance1, instance2, literal)
+        // TODO these indices arent always correct (also set newest node pointer)
+        // hide(state, instance2)
+        // hide(state, instance1)
     }
 
     /**
@@ -72,12 +87,11 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
      * @param state Current proof state
      * @param clauseID ID of the clause to use for instantiation
      * @param varAssign Map of Variables and terms they are instantiated with
-     * @return New state with the clause instance added
      */
     private fun instantiate(
         state: FoResolutionState,
         clauseID: Int,
-        varAssign: Map<String, String>
+        varAssign: Map<String, FirstOrderTerm>
     ) {
         if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
@@ -85,15 +99,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         val baseClause = state.clauseSet.clauses[clauseID]
         val newClause = Clause<Relation>()
 
-        // Parse the replacement terms and create an instantiation visitor
-        val varAssignParsed = varAssign.mapValues {
-            try {
-                FirstOrderParser.parseTerm(it.value)
-            } catch (e: InvalidFormulaFormat) {
-                throw InvalidFormulaFormat("Could not parse term '${it.value}': ${e.message}")
-            }
-        }
-        val instantiator = VariableInstantiator(varAssignParsed)
+        val instantiator = VariableInstantiator(varAssign)
 
         // Build the new clause by cloning atoms from the base clause and applying instantiation
         baseClause.atoms.forEach {

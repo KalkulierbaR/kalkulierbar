@@ -2,10 +2,12 @@ package kalkulierbar.resolution
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
+import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.SyntacticEquality
+import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -196,6 +198,7 @@ interface GenericResolutionState<AtomType> {
 val resolutionMoveModule = SerializersModule {
     polymorphic(ResolutionMove::class) {
         MoveResolve::class with MoveResolve.serializer()
+        MoveResolveUnify::class with MoveResolveUnify.serializer()
         MoveInstantiate::class with MoveInstantiate.serializer()
         MoveHide::class with MoveHide.serializer()
         MoveShow::class with MoveShow.serializer()
@@ -210,8 +213,20 @@ abstract class ResolutionMove
 data class MoveResolve(val c1: Int, val c2: Int, val literal: String?) : ResolutionMove()
 
 @Serializable
+@SerialName("res-resolveunify")
+data class MoveResolveUnify(val c1: Int, val c2: Int, val l1: Int, val l2: Int) : ResolutionMove()
+
+@Serializable
 @SerialName("res-instantiate")
-data class MoveInstantiate(val c1: Int, val varAssign: Map<String, String>) : ResolutionMove()
+data class MoveInstantiate(val c1: Int, val varAssign: Map<String, String>) : ResolutionMove() {
+    fun getVarAssignTerms() = varAssign.mapValues {
+        try {
+            FirstOrderParser.parseTerm(it.value)
+        } catch (e: InvalidFormulaFormat) {
+            throw InvalidFormulaFormat("Could not parse term '${it.value}': ${e.message}")
+        }
+    }
+}
 
 @Serializable
 @SerialName("res-hide")
