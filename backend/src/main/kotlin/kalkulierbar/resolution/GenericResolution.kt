@@ -34,7 +34,7 @@ interface GenericResolution<AtomType> {
      * @param literal Literal present in both clauses to use for resolution
      */
     @Suppress("ThrowsCount")
-    fun resolve(state: GenericResolutionState<AtomType>, clause1: Int, clause2: Int, literal: AtomType?) {
+    fun resolve(state: GenericResolutionState<AtomType>, clause1: Int, clause2: Int, literal: AtomType?, insertAtEnd: Boolean = false) {
         val clauses = state.clauseSet.clauses
 
         // Verify that the clause ids are valid
@@ -68,8 +68,9 @@ interface GenericResolution<AtomType> {
 
         val (a1, a2) = resCandidates
 
-        // Add the new node where the second one was. This should be pretty nice for the user
-        state.newestNode = clause2
+        // Add the new node where the second one was unless specified otherwise
+        // This should be pretty nice for the user
+        state.newestNode = if (insertAtEnd) clauses.size else clause2
 
         clauses.add(state.newestNode, buildClause(c1, a1, c2, a2))
     }
