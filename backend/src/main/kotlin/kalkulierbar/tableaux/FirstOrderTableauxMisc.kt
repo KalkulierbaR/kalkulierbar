@@ -147,6 +147,7 @@ class FoTableauxNode(
     override var closeRef: Int? = null
     override val children = mutableListOf<Int>()
     override var spelling = relation.toString()
+    override val isLemma = false
 
     override val literalStem
         get() = "${relation.spelling}${relation.arguments.size}"

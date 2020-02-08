@@ -45,6 +45,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
         return when (move.type) {
             MoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2)
             MoveType.EXPAND -> applyMoveExpandLeaf(state, move.id1, move.id2)
+            MoveType.LEMMA -> applyMoveUseLemma(state, move.id1, move.id2)
             MoveType.UNDO -> applyMoveUndo(state)
         }
     }
@@ -142,12 +143,17 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
         // I have no idea if that is actually the case
         verifyExpandRegularity(state, leafID, Clause(mutableListOf(atom)))
 
-        val newLeaf = TableauxNode(leafID, atom.lit, atom.negated)
+        val newLeaf = TableauxNode(leafID, atom.lit, atom.negated, true)
         state.nodes.add(newLeaf)
         leaf.children.add(state.nodes.size - 1)
 
         // Verify compliance with connectedness criteria
         verifyExpandConnectedness(state, leafID)
+
+        // Add move to state history
+        if (state.backtracking) {
+            state.moveHistory.add(TableauxMove(MoveType.LEMMA, leafID, lemmaID))
+        }
 
         return state
     }
@@ -174,10 +180,10 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
         state.usedBacktracking = true
 
         // Pass undo move to relevant expand and close subfunction
-        when (top.type) {
-            MoveType.CLOSE -> return undoClose(state, top)
-            MoveType.EXPAND -> return undoExpand(state, top)
-
+        return when (top.type) {
+            MoveType.CLOSE -> undoClose(state, top)
+            MoveType.EXPAND -> undoExpand(state, top)
+            MoveType.LEMMA -> undoLemma(state, top)
             else -> throw IllegalMove("Something went wrong. Move not implemented!")
         }
     }
@@ -185,11 +191,11 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     /**
      *  Undo close move
      *  @param state Current prove State
-     *  @param top The last move executed
+     *  @param move The last move executed
      *  @return New state after undoing latest close move
      */
-    private fun undoClose(state: TableauxState, top: TableauxMove): TableauxState {
-        val leafID = top.id1
+    private fun undoClose(state: TableauxState, move: TableauxMove): TableauxState {
+        val leafID = move.id1
         val leaf = state.nodes[leafID]
 
         // revert close reference to null
@@ -208,11 +214,11 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     /**
      *  Undo expand move
      *  @param state Current prove State
-     *  @parm top The last move executed
+     *  @parm move The last move executed
      *  @return New state after undoing latest expand move
      */
-    private fun undoExpand(state: TableauxState, top: TableauxMove): TableauxState {
-        val leafID = top.id1
+    private fun undoExpand(state: TableauxState, move: TableauxMove): TableauxState {
+        val leafID = move.id1
         val leaf = state.nodes[leafID]
         val children = leaf.children
         val nodes = state.nodes
@@ -229,6 +235,9 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
         return state
     }
+
+    // Undoing a lemma expansion is the same as undoing a regular expand move
+    private fun undoLemma(state: TableauxState, move: TableauxMove) = undoExpand(state, move)
 
     /**
      * Checks if a given state represents a valid, closed proof.
