@@ -82,7 +82,7 @@ class TestFirstOrderJson {
     @Test
     fun testStateToJson() {
         val json = instance.parseFormula("\\ex X: R(X)", null)
-        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"kalkulierbar.logic.Constant","spelling":"sk1"}]},"negated":false}]}]},"formula":"\\ex X: R(X)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"22B8CEDC626EBF36DAAA3E50356CD328C075805A0538EA0F91B4C88658D8C465","renderedClauseSet":["R(sk1)"]}"""
+        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"kalkulierbar.logic.Constant","spelling":"sk1"}]},"negated":false}]}]},"formula":"\\ex X: R(X)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()","isLemma":false}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"22B8CEDC626EBF36DAAA3E50356CD328C075805A0538EA0F91B4C88658D8C465","renderedClauseSet":["R(sk1)"]}"""
         assertEquals(expected, json)
     }
 

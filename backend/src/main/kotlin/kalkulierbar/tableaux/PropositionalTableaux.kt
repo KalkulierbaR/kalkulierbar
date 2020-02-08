@@ -131,7 +131,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
         if (lemmaNode.parent == null)
             throw IllegalMove("Root node cannot be used for lemma creation")
 
-        val commonParent: Int = lemmaNode.parent!!
+        val commonParent = lemmaNode.parent
 
         if (!state.nodeIsParentOf(commonParent, leafID))
             throw IllegalMove("Nodes '$leaf' and '$lemmaNode' are not siblings")
