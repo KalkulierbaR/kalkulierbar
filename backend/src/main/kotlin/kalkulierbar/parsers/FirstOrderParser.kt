@@ -48,7 +48,7 @@ class FirstOrderParser : PropositionalParser() {
      * @return FirstOrderTerm representing the term
      */
     fun parseTerm(term: String): FirstOrderTerm {
-        tokens = Tokenizer.tokenize(term)
+        tokens = Tokenizer.tokenize(term, true) // Allow extended identifier chars
         bindQuantifiedVariables = false
         val res = parseTerm()
         if (tokens.isNotEmpty())
