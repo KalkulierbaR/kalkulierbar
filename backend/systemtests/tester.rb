@@ -247,6 +247,17 @@ def tryCloseUncloseable(trq, iterations = 10, verbose = false)
 	end
 end
 
+def tryCloseUncloseableFO(trq, iterations = 10, verbose = false)
+	logMsg "Trying to close unclosable FO proof"
+	formula = "(\\all X: \\all Y: \\all Z: (C(X, Y) & C(Y, Z) -> C(X,Z)) & C(d, l) & C(l, f)) -> C(d, f)"
+	
+	if bogoATP(trq, formula, "UNCONNECTED", true, iterations, verbose, isFO: true)
+		logError "Test failed"
+	else
+		logSuccess "Test successful"
+	end
+end
+
 def tryCloseTrivial(trq, iterations = 7, verbose = false)
 	logMsg "Trying to close a trivial tableaux proof"
 	
@@ -383,6 +394,45 @@ def testUndo(trq, depth = 20, verbose = false)
 	end
 end
 
+def testUndoFO(trq, depth = 20, verbose = false)
+	logMsg "Testing FO backtracking"
+	formula = "(\\all X: \\all Y: \\all Z: (C(X, Y) & C(Y, Z) -> C(X,Z)) & \\all X: \\all Y: (C(X, Y) -> C(Y, X)) & C(d, l) & C(f, l)) -> C(d, f)"
+	history = []
+	success = true
+
+	state = trq.getPostResponse('/fo-tableaux/parse', "formula=#{CGI.escape(formula)}&params={\"type\":\"WEAKLYCONNECTED\",\"regular\":false,\"backtracking\":true,\"manualVarAssign\":false}")
+
+	# Set used flag to true so states are comparable
+	state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":0,\"id2\":0,\"varAssign\":{}}")
+	state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0,\"varAssign\":{}}")
+
+	history.push(state)
+
+	depth.times() {
+		nstate = bogoATPapplyRandomMove(state, trq, isFO: true)
+		break if nstate == false
+		state = nstate
+		history.push(state)
+		logMsg state if verbose
+	}
+
+	(history.length - 1).times() {
+		if state != history[-1]
+			success = false
+			logError "Expected: #{history[-1]}\nGot     : #{state}"
+		end
+		state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0,\"varAssign\":{}}")
+		history.pop
+		logMsg state if verbose
+	}
+
+	if success
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
 trq = TestRequest.new
 
 logMsg("Testing PropositionalTableaux")
@@ -399,6 +449,12 @@ tryCloseRegular(trq)
 tryCloseUncloseable(trq)
 testRegularityRestriction(trq)
 testUndo(trq)
+
+logMsg("Testing PropositionalResolution")
 testResolutionInitialState(trq)
 tryCloseTrivialResolution(trq)
+
+logMsg("Testing FirstOrderTableaux")
 tryCloseTrivialFirstOrder(trq)
+tryCloseUncloseableFO(trq)
+testUndoFO(trq)
