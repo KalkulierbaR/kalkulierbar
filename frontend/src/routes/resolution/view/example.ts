@@ -1,6 +1,6 @@
-import { ResolutionState } from "../../../types/resolution";
+import { PropResolutionState } from "../../../types/resolution";
 
-const example: ResolutionState = {
+const example: PropResolutionState = {
     clauseSet: {
         clauses: [
             {

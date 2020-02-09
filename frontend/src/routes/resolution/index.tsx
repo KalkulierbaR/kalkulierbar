@@ -5,17 +5,24 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Switch from "../../components/switch";
 import { useAppState } from "../../helpers/app-state";
-import { Calculus } from "../../types/app";
+import { Calculus, ResolutionCalculusType } from "../../types/app";
 import { CnfStrategy } from "../../types/tableaux";
 
-const Resolution: preact.FunctionalComponent = () => {
+interface Props {
+    /**
+     * Which calculus to use
+     */
+    calculus: ResolutionCalculusType;
+}
+
+const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const { smallScreen } = useAppState();
     const [cnfStrategy, setStrategy] = useState(CnfStrategy.optimal);
     const [highlightSelectable, setHighlightSelectable] = useState(false);
 
     const params = {
         cnfStrategy,
-        highlightSelectable
+        highlightSelectable,
     };
 
     /**
