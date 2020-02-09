@@ -52,13 +52,13 @@ const App: preact.FunctionalComponent = () => {
         server,
         dispatch,
         onError,
-        removeNotification
+        removeNotification,
     } = useAppState();
     const saveScreenSize = (smallScreen: boolean, hamburger: boolean) =>
         dispatch({
             type: AppStateActionType.UPDATE_SCREEN_SIZE,
             smallScreen,
-            hamburger
+            hamburger,
         });
     const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
 
@@ -85,7 +85,7 @@ const App: preact.FunctionalComponent = () => {
 
         updateScreenSize(saveScreenSize);
         window.addEventListener("resize", () =>
-            updateScreenSize(saveScreenSize)
+            updateScreenSize(saveScreenSize),
         );
     }, []);
 
@@ -97,14 +97,14 @@ const App: preact.FunctionalComponent = () => {
                     <AsyncRoute
                         path="/"
                         getComponent={() =>
-                            import("../routes/home").then(m => m.default)
+                            import("../routes/home").then((m) => m.default)
                         }
                     />
                     <AsyncRoute
                         path={"/" + Calculus.propTableaux}
                         calculus={Calculus.propTableaux}
                         getComponent={() =>
-                            import("../routes/tableaux").then(m => m.default)
+                            import("../routes/tableaux").then((m) => m.default)
                         }
                     />
                     <AsyncRoute
@@ -112,7 +112,7 @@ const App: preact.FunctionalComponent = () => {
                         calculus={Calculus.propTableaux}
                         getComponent={() =>
                             import("../routes/tableaux/view").then(
-                                m => m.default
+                                (m) => m.default,
                             )
                         }
                     />
@@ -120,7 +120,7 @@ const App: preact.FunctionalComponent = () => {
                         path="/fo-tableaux"
                         calculus={Calculus.foTableaux}
                         getComponent={() =>
-                            import("../routes/tableaux").then(m => m.default)
+                            import("../routes/tableaux").then((m) => m.default)
                         }
                     />
                     <AsyncRoute
@@ -128,21 +128,43 @@ const App: preact.FunctionalComponent = () => {
                         calculus={Calculus.foTableaux}
                         getComponent={() =>
                             import("../routes/tableaux/view").then(
-                                m => m.default
+                                (m) => m.default,
                             )
                         }
                     />
                     <AsyncRoute
                         path={"/" + Calculus.propResolution}
+                        calculus={Calculus.propResolution}
                         getComponent={() =>
-                            import("../routes/resolution").then(m => m.default)
+                            import("../routes/resolution").then(
+                                (m) => m.default,
+                            )
                         }
                     />
                     <AsyncRoute
                         path={"/" + Calculus.propResolution + "/view"}
+                        calculus={Calculus.propResolution}
                         getComponent={() =>
                             import("../routes/resolution/view").then(
-                                m => m.default
+                                (m) => m.default,
+                            )
+                        }
+                    />
+                    <AsyncRoute
+                        path={"/" + Calculus.foResolution}
+                        calculus={Calculus.foResolution}
+                        getComponent={() =>
+                            import("../routes/resolution").then(
+                                (m) => m.default,
+                            )
+                        }
+                    />
+                    <AsyncRoute
+                        path={"/" + Calculus.foResolution + "/view"}
+                        calculus={Calculus.foResolution}
+                        getComponent={() =>
+                            import("../routes/resolution/view").then(
+                                (m) => m.default,
                             )
                         }
                     />
