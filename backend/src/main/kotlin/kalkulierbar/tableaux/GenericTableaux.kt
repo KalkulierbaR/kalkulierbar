@@ -147,6 +147,44 @@ interface GenericTableaux<AtomType> {
 
         return CloseMessage(state.root.isClosed, msg)
     }
+
+    fun getLemma(state: GenericTableauxState<AtomType>, leafID: Int, lemmaID: Int): Atom<AtomType> {
+        // Verify that subtree root for lemma creation exists
+        if (lemmaID >= state.nodes.size || lemmaID < 0)
+            throw IllegalMove("Node with ID $lemmaID does not exist")
+            // Verify that subtree root for lemma creation exists
+        if (leafID >= state.nodes.size || leafID < 0)
+            throw IllegalMove("Node with ID $leafID does not exist")
+
+        val leaf = state.nodes[leafID]
+        val lemmaNode = state.nodes[lemmaID]
+
+        if (!leaf.isLeaf)
+            throw IllegalMove("Node '$leaf' is not a leaf")
+
+        if (leaf.isClosed)
+            throw IllegalMove("Leaf '$leaf' is already closed")
+
+        if (!lemmaNode.isClosed)
+            throw IllegalMove("Node '$lemmaNode' is not the root of a closed subtableaux")
+
+        if (lemmaNode.parent == null)
+            throw IllegalMove("Root node cannot be used for lemma creation")
+
+        val commonParent: Int = lemmaNode.parent!!
+
+        if (!state.nodeIsParentOf(commonParent, leafID))
+            throw IllegalMove("Nodes '$leaf' and '$lemmaNode' are not siblings")
+
+        val atom = lemmaNode.toAtom().not()
+
+        // Verify compliance with regularity criteria
+        // TODO this assumes FO lemmas will not be preprocessed like regular clause expansions
+        // I have no idea if that is actually the case
+        verifyExpandRegularity(state, leafID, Clause(mutableListOf(atom)), applyPreprocessing = false)
+
+        return atom
+    }
 }
 
 /**

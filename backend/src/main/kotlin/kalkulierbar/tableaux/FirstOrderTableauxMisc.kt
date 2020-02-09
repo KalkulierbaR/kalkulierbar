@@ -68,9 +68,6 @@ class FoTableauxState(
      * @param clause Clause to be expanded
      * @return List of Atoms to be expanded with variables renamed to be fresh
      */
-    // TODO: Does this actually ensure the required level of freshness?
-    // Would it cause problems if I could instantiate 'Xv1' with 'Xv2', then expand again, causing
-    // another Xv2 to be generated? Does this scenario have to be avoided?
     override fun clauseExpandPreprocessing(clause: Clause<Relation>): List<Atom<Relation>> {
         val suffixAppender = VariableSuffixAppend("_${expansionCounter + 1}")
         val atomList = mutableListOf<Atom<Relation>>()
@@ -140,14 +137,14 @@ class FoTableauxState(
 class FoTableauxNode(
     override val parent: Int?,
     val relation: Relation,
-    override val negated: Boolean
+    override val negated: Boolean,
+    override val isLemma: Boolean = false
 ) : GenericTableauxNode<Relation> {
 
     override var isClosed = false
     override var closeRef: Int? = null
     override val children = mutableListOf<Int>()
     override var spelling = relation.toString()
-    override val isLemma = false
 
     override val literalStem
         get() = "${relation.spelling}${relation.arguments.size}"
@@ -156,7 +153,7 @@ class FoTableauxNode(
         return if (negated) "!$relation" else "$relation"
     }
 
-    override fun toAtom() = Atom(relation, negated)
+    override fun toAtom() = Atom(relation.clone(), negated)
 
     fun render() {
         spelling = relation.toString()
@@ -196,5 +193,5 @@ data class FoTableauxParam(
 )
 
 enum class FoMoveType {
-    EXPAND, CLOSE, AUTOCLOSE, UNDO
+    EXPAND, CLOSE, AUTOCLOSE, LEMMA, UNDO
 }
