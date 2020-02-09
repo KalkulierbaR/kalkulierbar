@@ -55,7 +55,11 @@ const App: preact.FunctionalComponent = () => {
         removeNotification
     } = useAppState();
     const saveScreenSize = (smallScreen: boolean, hamburger: boolean) =>
-        dispatch({ type: AppStateActionType.UPDATE_SCREEN_SIZE, smallScreen, hamburger });
+        dispatch({
+            type: AppStateActionType.UPDATE_SCREEN_SIZE,
+            smallScreen,
+            hamburger
+        });
     const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
 
     /**
@@ -89,7 +93,7 @@ const App: preact.FunctionalComponent = () => {
         <div id="app">
             <Header currentUrl={currentUrl} />
             <main class={style.main}>
-                <Router onChange={onChangeRoute} >
+                <Router onChange={onChangeRoute}>
                     <AsyncRoute
                         path="/"
                         getComponent={() =>
@@ -131,15 +135,13 @@ const App: preact.FunctionalComponent = () => {
                     <AsyncRoute
                         path={"/" + Calculus.propResolution}
                         getComponent={() =>
-                            import("../routes/prop-resolution").then(
-                                m => m.default
-                            )
+                            import("../routes/resolution").then(m => m.default)
                         }
                     />
                     <AsyncRoute
                         path={"/" + Calculus.propResolution + "/view"}
                         getComponent={() =>
-                            import("../routes/prop-resolution/view").then(
+                            import("../routes/resolution/view").then(
                                 m => m.default
                             )
                         }
