@@ -61,6 +61,5 @@ export interface FOResolutionState {
 }
 
 export interface FOResolutionParams {
-    cnfStrategy: CnfStrategy;
     highlightSelectable: boolean;
 }

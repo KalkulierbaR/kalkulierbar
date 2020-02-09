@@ -20,10 +20,14 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [cnfStrategy, setStrategy] = useState(CnfStrategy.optimal);
     const [highlightSelectable, setHighlightSelectable] = useState(false);
 
-    const params = {
-        cnfStrategy,
-        highlightSelectable,
-    };
+    const fo = calculus === Calculus.foResolution;
+
+    const params = fo
+        ? { highlightSelectable }
+        : {
+              cnfStrategy,
+              highlightSelectable,
+          };
 
     /**
      * Handle force naive strategy switch setting
@@ -36,7 +40,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     return (
         <Fragment>
-            <Format />
+            <Format foLogic={fo} />
             <FormulaInput calculus={Calculus.propResolution} params={params} />
             <div class="card">
                 <h3>Parameters</h3>
@@ -49,11 +53,16 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         />
                         <HintIcon hint="When you select a clause, all valid resolution partners will be highlighted." />
                         <br />
-                        <Switch
-                            label="Naive CNF transformation"
-                            onChange={strategySelect}
-                        />
-                        <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
+                        {!fo && (
+                            <Fragment>
+                                <Switch
+                                    label="Naive CNF transformation"
+                                    onChange={strategySelect}
+                                />
+
+                                <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
+                            </Fragment>
+                        )}
                     </div>
                 </div>
             </div>
