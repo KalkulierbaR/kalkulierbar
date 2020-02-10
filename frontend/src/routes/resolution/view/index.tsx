@@ -10,7 +10,7 @@ import ShowIcon from "../../../components/icons/show";
 import ResolutionCircle from "../../../components/resolution/circle";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
-import {Calculus} from "../../../types/app";
+import { Calculus } from "../../../types/app";
 import { CandidateClause } from "../../../types/clause";
 import exampleState from "./example";
 import * as style from "./style.scss";
@@ -23,13 +23,13 @@ import * as style from "./style.scss";
  */
 const groupCandidates = (
     clauses: CandidateClause[],
-    selectedClauseId: number
+    selectedClauseId: number,
 ) => {
     const notCandidates = clauses.filter(
-        c => c.candidateLiterals.length === 0 && c.index !== selectedClauseId
+        (c) => c.candidateLiterals.length === 0 && c.index !== selectedClauseId,
     );
     const candidates = clauses.filter(
-        c => c.candidateLiterals.length !== 0 && c.index !== selectedClauseId
+        (c) => c.candidateLiterals.length !== 0 && c.index !== selectedClauseId,
     );
 
     const cs = candidates.length;
@@ -83,7 +83,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
         [Calculus.propResolution]: cState,
         onError,
         onChange,
-        onSuccess
+        onSuccess,
     } = useAppState();
     let state = cState;
 
@@ -95,7 +95,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
     }
 
     const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
-        undefined
+        undefined,
     );
 
     const selectedClauseId =
@@ -116,7 +116,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 newCandidateClauses[index] = {
                     atoms: clause.atoms,
                     candidateLiterals: [],
-                    index
+                    index,
                 };
             });
         } else {
@@ -126,8 +126,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             // Filter for possible resolve candidates
             state!.clauseSet.clauses.forEach((clause, index) => {
                 const literals: string[] = [];
-                selectedClause.atoms.forEach(atom1 => {
-                    clause.atoms.forEach(atom2 => {
+                selectedClause.atoms.forEach((atom1) => {
+                    clause.atoms.forEach((atom2) => {
                         if (
                             atom1.lit === atom2.lit &&
                             atom1.negated !== atom2.negated
@@ -139,7 +139,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 newCandidateClauses[index] = {
                     atoms: clause.atoms,
                     candidateLiterals: literals,
-                    index
+                    index,
                 };
             });
 
@@ -165,7 +165,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             setSelectedClauses(undefined);
         } else {
             const candidateClause = candidateClauses.find(
-                c => c.index === newClauseId
+                (c) => c.index === newClauseId,
             )!;
             let resolventLiteral: string | null;
             if (candidateClause.candidateLiterals.length > 1) {
@@ -174,7 +174,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 return;
             }
 
-            resolventLiteral = candidateClause.candidateLiterals.length === 0 ? null : candidateClause.candidateLiterals[0];
+            resolventLiteral =
+                candidateClause.candidateLiterals.length === 0
+                    ? null
+                    : candidateClause.candidateLiterals[0];
 
             // Send resolve move to backend
             sendMove(
@@ -185,10 +188,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                     type: "res-resolve",
                     c1: selectedClauseId,
                     c2: newClauseId,
-                    literal: resolventLiteral
+                    literal: resolventLiteral,
                 },
                 onChange,
-                onError
+                onError,
             );
             // Reset selection
             setSelectedClauses(undefined);
@@ -208,10 +211,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             state!,
             {
                 type: "res-hide",
-                c1: clauseId
+                c1: clauseId,
             },
             onChange,
-            onError
+            onError,
         );
         // Reset selection
         setSelectedClauses(undefined);
@@ -228,10 +231,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             Calculus.propResolution,
             state!,
             {
-                type: "res-show"
+                type: "res-show",
             },
             onChange,
-            onError
+            onError,
         );
         // Reset selection
         setSelectedClauses(undefined);
@@ -257,14 +260,16 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                         icon={<HideIcon />}
                         onClick={() => hideClause(selectedClauseId)}
                     />
-                ) : undefined}
+                ) : (
+                    undefined
+                )}
                 <FAB
                     mini={true}
                     extended={true}
                     label="Show all"
                     showIconAtEnd={true}
                     icon={<ShowIcon />}
-                    onClick={() => showHiddenClauses()}
+                    onClick={showHiddenClauses}
                 />
                 <FAB
                     mini={true}
@@ -286,7 +291,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                             onError,
                             onSuccess,
                             Calculus.propResolution,
-                            state
+                            state,
                         )
                     }
                 />
@@ -299,7 +304,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 {selectedClauses &&
                     selectedClauses.length === 2 &&
                     candidateClauses[selectedClauses[1]].candidateLiterals.map(
-                        l => (
+                        (l) => (
                             <p
                                 class={style.listItem}
                                 onClick={() => {
@@ -311,17 +316,17 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                                             type: "res-resolve",
                                             c1: selectedClauseId!,
                                             c2: selectedClauses[1],
-                                            literal: l
+                                            literal: l,
                                         },
                                         onChange,
-                                        onError
+                                        onError,
                                     );
                                     setSelectedClauses(undefined);
                                 }}
                             >
                                 {l}
                             </p>
-                        )
+                        ),
                     )}
             </Dialog>
         </Fragment>
