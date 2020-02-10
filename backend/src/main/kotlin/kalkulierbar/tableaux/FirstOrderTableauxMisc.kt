@@ -132,6 +132,7 @@ class FoTableauxState(
  * @param parent ID of the parent node in the proof tree
  * @param spelling Name of the variable the node represents
  * @param negated True if the variable is negated, false otherwise
+ * @param isLemma Marks the node as created using a Lemma rule instantiation
  */
 @Serializable
 class FoTableauxNode(
@@ -163,6 +164,9 @@ class FoTableauxNode(
      * Pack the node into a well-defined, unambiguous string representation
      * Used to calculate checksums over state objects as JSON representation
      * might differ slightly between clients, encodings, etc
+     * Note: isLemma is only relevant to the visual representation of the proof,
+     *       not the proof correctness or structure itself. It is thus deliberately
+     *       not included in the node hash.
      * @return Canonical node representations
      */
     fun getHash(): String {

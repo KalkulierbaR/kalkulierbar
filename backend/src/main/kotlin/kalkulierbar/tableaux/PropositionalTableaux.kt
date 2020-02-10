@@ -107,6 +107,14 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
         return state
     }
 
+    /**
+     * Appends the negation of a closed node on a leaf (lemma rule)
+     * provided the chosen leaf is on a sibling-branch of the closed node
+     * @param state Current proof state to apply the move on
+     * @param leafID ID of the leaf to append the lemma to
+     * @param lemmaID ID of the proof tree node to create a lemma from
+     * @return new proof state with lemma applied
+     */
     private fun applyMoveUseLemma(state: TableauxState, leafID: Int, lemmaID: Int): TableauxState {
         // Get lemma atom and verify all preconditions
         val atom = getLemma(state, leafID, lemmaID)

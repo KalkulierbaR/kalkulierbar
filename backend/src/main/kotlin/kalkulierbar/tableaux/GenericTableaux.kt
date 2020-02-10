@@ -148,6 +148,21 @@ interface GenericTableaux<AtomType> {
         return CloseMessage(state.root.isClosed, msg)
     }
 
+    /**
+     * Ensures that conditions for a lemma rule application are met
+     * and determines the atom that should be appended as part of the lemma rule
+     * If a precondition is not met, an explaining exception will be thrown
+     * Conditions include:
+     *  - Both leafID and lemmaID reference existing nodes
+     *  - The references leaf is an open leaf, the referenced node is closed
+     *  - The referenced leaf and node are siblings (the ancestry of the node is included in the ancestry of the leaf)
+     *  - Appending the lemma would not violate regularity restrictions
+     *
+     * @param state State to apply lemma move in
+     * @param leafID Node to append created lemma on
+     * @param lemmaID Node to create lemma from
+     * @return Atom representing the lemma node to be appended to the leaf
+     */
     fun getLemma(state: GenericTableauxState<AtomType>, leafID: Int, lemmaID: Int): Atom<AtomType> {
         // Verify that subtree root for lemma creation exists
         if (lemmaID >= state.nodes.size || lemmaID < 0)

@@ -30,7 +30,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     }
 
     override fun applyMoveOnState(state: FoTableauxState, move: FoTableauxMove): FoTableauxState {
-        // Pass expand, close, undo moves to relevant subfunction
+        // Pass moves to relevant subfunction
         return when (move.type) {
             FoMoveType.AUTOCLOSE -> applyAutoCloseBranch(state, move.id1, move.id2)
             FoMoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2, move.getVarAssignTerms())
@@ -164,6 +164,14 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         return state
     }
 
+    /**
+     * Appends the negation of a closed node on a leaf (lemma rule)
+     * provided the chosen leaf is on a sibling-branch of the closed node
+     * @param state Current proof state to apply the move on
+     * @param leafID ID of the leaf to append the lemma to
+     * @param lemmaID ID of the proof tree node to create a lemma from
+     * @return new proof state with lemma applied
+     */
     private fun applyMoveUseLemma(state: FoTableauxState, leafID: Int, lemmaID: Int): FoTableauxState {
         // Get lemma atom and verify all preconditions
         val atom = getLemma(state, leafID, lemmaID)
