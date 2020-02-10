@@ -1,8 +1,14 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
+import ControlFAB from "../../../components/control-fab";
 import Dialog from "../../../components/dialog";
+import FAB from "../../../components/fab";
+import CenterIcon from "../../../components/icons/center";
+import CheckCircleIcon from "../../../components/icons/check-circle";
+import HideIcon from "../../../components/icons/hide";
+import ShowIcon from "../../../components/icons/show";
 import ResolutionCircle from "../../../components/resolution/circle";
-import { sendMove } from "../../../helpers/api";
+import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import {Calculus} from "../../../types/app";
 import { CandidateClause } from "../../../types/clause";
@@ -76,7 +82,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
         server,
         [Calculus.propResolution]: cState,
         onError,
-        onChange
+        onChange,
+        onSuccess
     } = useAppState();
     let state = cState;
 
@@ -146,8 +153,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
     const candidateClauses = getCandidateClauses();
 
     /**
-     * The function to call, when the user selects a clause
-     * @param {number} newClauseId - The id of the clause, which was clicked on
+     * The function to call when the user selects a clause
+     * @param {number} newClauseId - The id of the clause that was clicked on
      * @returns {void}
      */
     const selectClauseCallback = (newClauseId: number) => {
@@ -175,9 +182,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 Calculus.propResolution,
                 state!,
                 {
+                    type: "res-resolve",
                     c1: selectedClauseId,
                     c2: newClauseId,
-                    spelling: resolventLiteral
+                    literal: resolventLiteral
                 },
                 onChange,
                 onError
@@ -185,6 +193,48 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
             // Reset selection
             setSelectedClauses(undefined);
         }
+    };
+
+    /**
+     * The function to call when the user hides a clause
+     * @param {number} clauseId - The id of the clause to hide
+     * @returns {void}
+     */
+    const hideClause = (clauseId: number) => {
+        // Send hide move to backend
+        sendMove(
+            server,
+            Calculus.propResolution,
+            state!,
+            {
+                type: "res-hide",
+                c1: clauseId
+            },
+            onChange,
+            onError
+        );
+        // Reset selection
+        setSelectedClauses(undefined);
+    };
+
+    /**
+     * The function to call when the user wants to re-show hidden clauses
+     * @returns {void}
+     */
+    const showHiddenClauses = () => {
+        // Send show move to backend
+        sendMove(
+            server,
+            Calculus.propResolution,
+            state!,
+            {
+                type: "res-show"
+            },
+            onChange,
+            onError
+        );
+        // Reset selection
+        setSelectedClauses(undefined);
     };
 
     return (
@@ -197,6 +247,50 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 highlightSelectable={state.highlightSelectable}
                 newestNode={state.newestNode}
             />
+            <ControlFAB>
+                {selectedClauseId !== undefined ? (
+                    <FAB
+                        mini={true}
+                        extended={true}
+                        label="Hide clause"
+                        showIconAtEnd={true}
+                        icon={<HideIcon />}
+                        onClick={() => hideClause(selectedClauseId)}
+                    />
+                ) : undefined}
+                <FAB
+                    mini={true}
+                    extended={true}
+                    label="Show all"
+                    showIconAtEnd={true}
+                    icon={<ShowIcon />}
+                    onClick={() => showHiddenClauses()}
+                />
+                <FAB
+                    mini={true}
+                    extended={true}
+                    label="Center"
+                    showIconAtEnd={true}
+                    icon={<CenterIcon />}
+                    onClick={() => dispatchEvent(new CustomEvent("center"))}
+                />
+                <FAB
+                    icon={<CheckCircleIcon />}
+                    label="Check"
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() =>
+                        checkClose(
+                            server,
+                            onError,
+                            onSuccess,
+                            Calculus.propResolution,
+                            state
+                        )
+                    }
+                />
+            </ControlFAB>
             <Dialog
                 open={showDialog}
                 label="Choose Literal"
@@ -214,9 +308,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                                         Calculus.propResolution,
                                         state!,
                                         {
+                                            type: "res-resolve",
                                             c1: selectedClauseId!,
                                             c2: selectedClauses[1],
-                                            spelling: l
+                                            literal: l
                                         },
                                         onChange,
                                         onError
