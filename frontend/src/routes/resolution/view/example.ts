@@ -1,46 +1,82 @@
-import { PropResolutionState } from "../../../types/resolution";
+import {
+    FOResolutionState,
+    PropResolutionState,
+} from "../../../types/resolution";
 
-const example: PropResolutionState = {
+export const propExample: PropResolutionState = {
     clauseSet: {
         clauses: [
             {
                 atoms: [
                     { lit: "a", negated: false },
                     { lit: "b", negated: true },
-                    { lit: "c", negated: false }
-                ]
+                    { lit: "c", negated: false },
+                ],
             },
             {
                 atoms: [
                     { lit: "c", negated: true },
-                    { lit: "ad", negated: true }
-                ]
+                    { lit: "a", negated: true },
+                    { lit: "d", negated: true },
+                ],
             },
             {
                 atoms: [
                     { lit: "d", negated: false },
-                    { lit: "d", negated: false }
-                ]
+                    { lit: "c", negated: false },
+                ],
             },
             {
                 atoms: [
                     { lit: "b", negated: true },
-                    { lit: "a", negated: false }
-                ]
+                    { lit: "a", negated: false },
+                ],
             },
             { atoms: [{ lit: "a", negated: true }] },
             {
                 atoms: [
                     { lit: "b", negated: false },
-                    { lit: "c", negated: false }
-                ]
+                    { lit: "c", negated: false },
+                ],
             },
-            { atoms: [{ lit: "c", negated: true }] }
-        ]
+            { atoms: [{ lit: "c", negated: true }] },
+        ],
     },
-    highlightSelectable: true,
+    highlightSelectable: false,
     newestNode: -1,
-    seal: "CE5D43AB2B2794CF8B842BF036E07231576A205B5E7B2E373F7723C209F0C107"
+    hiddenClauses: { clauses: [] },
+    seal: "778287DD65F50BCE5C2E67758FFD0B079820CCC0D5FC1F5A79A2108D875958E8",
 };
 
-export default example;
+export const foExample: FOResolutionState = {
+    clauseSet: {
+        clauses: [
+            {
+                atoms: [
+                    {
+                        lit: {
+                            spelling: "R",
+                            arguments: [
+                                {
+                                    type: "Function",
+                                    spelling: "f",
+                                    arguments: [
+                                        {
+                                            type: "QuantifiedVariable",
+                                            spelling: "X",
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        negated: true,
+                    },
+                ],
+            },
+        ],
+    },
+    highlightSelectable: false,
+    newestNode: -1,
+    hiddenClauses: { clauses: [] },
+    seal: "EE642BDA392ED4A7F1748F7C924CD838E4AB3A94A7957B2036A7AC6F8825FCBE",
+};

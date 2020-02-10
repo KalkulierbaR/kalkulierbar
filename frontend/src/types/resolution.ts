@@ -4,6 +4,7 @@ import { CnfStrategy, VarAssign } from "./tableaux";
 export interface PropResolutionState {
     seal: string;
     clauseSet: ClauseSet;
+    hiddenClauses: ClauseSet;
     highlightSelectable: boolean;
     newestNode: number;
 }
@@ -57,6 +58,7 @@ export interface FOResolutionState {
     seal: string;
     clauseSet: FOClauseSet;
     highlightSelectable: boolean;
+    hiddenClauses: ClauseSet;
     newestNode: number;
 }
 

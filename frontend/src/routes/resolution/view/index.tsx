@@ -12,7 +12,7 @@ import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { Calculus } from "../../../types/app";
 import { CandidateClause } from "../../../types/clause";
-import exampleState from "./example";
+import { propExample as propExampleState } from "./example";
 import * as style from "./style.scss";
 
 /**
@@ -90,8 +90,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
-        onChange(Calculus.propResolution, exampleState);
-        state = exampleState;
+        onChange(Calculus.propResolution, propExampleState);
+        state = propExampleState;
     }
 
     const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
