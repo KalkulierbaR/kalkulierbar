@@ -47,6 +47,12 @@ export interface TableauxUndoMove {
     id2: number;
 }
 
+export interface TableauxLemmaMove {
+    type: "LEMMA";
+    id1: number;
+    id2: number;
+}
+
 export type TableauxMove =
     | TableauxExpandMove
     | TableauxCloseMove

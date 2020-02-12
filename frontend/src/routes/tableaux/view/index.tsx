@@ -29,7 +29,8 @@ import {
     nextOpenLeaf,
     sendBacktrack,
     sendClose,
-    sendExtend
+    sendExtend,
+    sendLemma
 } from "../../../helpers/tableaux";
 import { FOArgument, FOArgumentType } from "../../../types/clause";
 import foExampleState from "./fo-example";
@@ -145,10 +146,28 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             const selectedNodeIsLeaf = selectedNode.children.length === 0;
 
             if (
+                // Don't select two leafs or two nodes at the same time
                 (selectedNodeIsLeaf && newNodeIsLeaf) ||
                 (!selectedNodeIsLeaf && !newNodeIsLeaf)
             ) {
                 setSelectedNodeId(newNode.id);
+            } else if (
+                // Leaf and a closed Node are selected => Try Lemma move
+                (!selectedNodeIsLeaf && selectedNode.isClosed && newNodeIsLeaf) ||
+                (selectedNodeIsLeaf && newNode.isClosed && !newNodeIsLeaf)
+            ) {
+                const leafId = (newNodeIsLeaf ? newNode.id : selectedNodeId);
+                const lemmaId = (!newNodeIsLeaf ? newNode.id : selectedNodeId);
+
+                sendLemma(
+                    calculus,
+                    server,
+                    state!,
+                    onChange,
+                    onError,
+                    leafId,
+                    lemmaId
+                );
             } else if (calculus === Calculus.propTableaux) {
                 // Now we have a leaf and a predecessor => Try close move
                 // If we can't do it, let server handle it

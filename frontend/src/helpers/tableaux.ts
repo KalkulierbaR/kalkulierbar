@@ -132,6 +132,7 @@ export const sendExtend = (
     clause: number
 ) => {
     if (calculus === Calculus.propTableaux && instanceOfPropTableauxState(state)) {
+
         sendMove(
             server,
             calculus,
@@ -141,11 +142,56 @@ export const sendExtend = (
             onError
         );
     } else if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
+
         sendMove(
             server,
             calculus,
             state,
             { type: "EXPAND", id1: leaf, id2: clause, varAssign: {} },
+            stateChanger,
+            onError
+        );
+    }
+};
+
+
+/**
+ * Wrapper to send move request
+ * @param {TableauxCalculusType} calculus - The calculus to do the move on
+ * @param {string} server - URL of the server
+ * @param {PropTableauxState} state - The current State
+ * @param {AppStateUpdater} stateChanger - The state update function
+ * @param {Function} onError - Error handler
+ * @param {number} leaf - The selected leaf
+ * @param {number} lemma - The selected Node to be used as lemma
+ * @returns {Promise<void>} - Promise that resolves after the request has been handled
+ */
+export const sendLemma = (
+    calculus: TableauxCalculusType,
+    server: string,
+    state: PropTableauxState | FOTableauxState,
+    stateChanger: AppStateUpdater,
+    onError: (msg: string) => void,
+    leaf: number,
+    lemma: number
+) => {
+    if (calculus === Calculus.propTableaux && instanceOfPropTableauxState(state)) {
+
+        sendMove(
+            server,
+            calculus,
+            state,
+            { type: "LEMMA", id1: leaf, id2: lemma },
+            stateChanger,
+            onError
+        );
+    } else if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
+
+        sendMove(
+            server,
+            calculus,
+            state,
+            { type: "LEMMA", id1: leaf, id2: lemma, varAssign: {} },
             stateChanger,
             onError
         );
