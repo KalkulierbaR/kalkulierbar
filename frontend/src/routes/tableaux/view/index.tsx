@@ -168,6 +168,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     leafId,
                     lemmaId
                 );
+                setSelectedNodeId(undefined);
             } else if (calculus === Calculus.propTableaux) {
                 // Now we have a leaf and a predecessor => Try close move
                 // If we can't do it, let server handle it

@@ -56,7 +56,8 @@ export interface TableauxLemmaMove {
 export type TableauxMove =
     | TableauxExpandMove
     | TableauxCloseMove
-    | TableauxUndoMove;
+    | TableauxUndoMove
+    | TableauxLemmaMove;
 
 export enum TableauxType {
     unconnected = "UNCONNECTED",
