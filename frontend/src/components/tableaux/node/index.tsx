@@ -38,9 +38,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const handleClick = () => {
-        if (!node.data.isClosed) {
-            selectNodeCallback(node.data);
-        }
+        selectNodeCallback(node.data);
     };
 
     return (
