@@ -233,5 +233,17 @@ data class MoveInstantiate(val c1: Int, val varAssign: Map<String, String>) : Re
 data class MoveHide(val c1: Int) : ResolutionMove()
 
 @Serializable
+@SerialName("res-factorize")
+data class MoveFactorize(val c1: Int, val varAssign: Map<String, String>?) : ResolutionMove() {
+    fun getVarAssignTerms() = varAssign?.mapValues {
+        try {
+            FirstOrderParser.parseTerm(it.value)
+        } catch (e: InvalidFormulaFormat) {
+            throw InvalidFormulaFormat("Could not parse term '${it.value}': ${e.message}")
+        }
+    }
+}
+
+@Serializable
 @SerialName("res-show")
 class MoveShow : ResolutionMove()

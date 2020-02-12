@@ -30,9 +30,40 @@ class PropositionalResolution : GenericResolution<String>, JSONCalculus<Resoluti
             is MoveResolve -> resolve(state, move.c1, move.c2, move.literal)
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
+            is MoveFactorize -> factorize(state, move.c1)
             else -> throw IllegalMove("Unknown move")
         }
         return state
+    }
+
+    /**
+     * Applies the factorize move
+     * @param state The state to apply the move on
+     * @param clauseID Id of clause to apply the move on
+     */
+    @Suppress("ThrowsCount")
+    fun factorize(state: ResolutionState, clauseID: Int) {
+        val clauses = state.clauseSet.clauses
+
+        // verify that clause id is valid
+        if (clauseID < 0 || clauseID >= clauses.size)
+            throw IllegalMove("There is no clause with id $clauseID")
+        if (clauses.size == 1)
+            throw IllegalMove("Can not factorize clause with 1 element")
+
+        val oldClause = clauses[clauseID]
+        // Copy old clause and factorize
+        val newClause = oldClause.clone()
+        newClause.factorize()
+
+        // Throw message for no possible factorisation
+        if (oldClause == newClause)
+            throw IllegalMove("Nothing to factorize")
+
+        // Add old clause to hidden clauses and remove from ClauseSet
+        hide(state, clauseID)
+        // Add new factorized clause to old index
+        clauses.add(clauseID, newClause)
     }
 
     override fun checkCloseOnState(state: ResolutionState) = getCloseMessage(state)

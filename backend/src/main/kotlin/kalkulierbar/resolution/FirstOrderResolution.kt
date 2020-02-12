@@ -37,6 +37,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
             is MoveInstantiate -> instantiate(state, move.c1, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
+            is MoveFactorize -> factorize(state, move.c1, move.getVarAssignTerms())
             else -> throw IllegalMove("Unknown move type")
         }
 
@@ -112,6 +113,42 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         // Add new clause to state and update newestNode pointer
         state.clauseSet.add(newClause)
         state.newestNode = state.clauseSet.clauses.size - 1
+    }
+
+    /**
+     * Applies the factorize move
+     * @param state The state to apply the move on
+     * @param clauseID Id of clause to apply the move on
+     * @param varAssign variable Assignment to unify Atoms of clause
+     */
+    fun factorize(state: FoResolutionState, clauseID: Int, varAssign: Map<String, FirstOrderTerm>?) {
+        val clauses = state.clauseSet.clauses
+
+        // verify that clause id is valid
+        if (clauseID < 0 || clauseID >= clauses.size)
+            throw IllegalMove("There is no clause with id $clauseID")
+        if (clauses.size == 1)
+            throw IllegalMove("Can not factorize clause with 1 element")
+
+        val oldClause = clauses[clauseID]
+
+        // Instantiate Clause with given var Assignment
+        if (varAssign != null)
+            instantiate(state, clauseID, varAssign)
+        // TODO Auto instanziierung?
+
+        // Copy old clause and factorize
+        val newClause = oldClause.clone()
+        newClause.factorize()
+
+        // Throw message for no possible factorisation
+        if (oldClause == newClause)
+            throw IllegalMove("Nothing to factorize")
+
+        // Add old clause to hidden clauses and remove from ClauseSet
+        hide(state, clauseID)
+        // Add new factorized clause to old index
+        clauses.add(clauseID, newClause)
     }
 
     @Suppress("TooGenericExceptionCaught")
