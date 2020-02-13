@@ -55,9 +55,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
     >(undefined);
-    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
-        undefined
-    );
+    const [selectedNodeId, setSelectedNodeId] = useState<
+        number | undefined
+    >(undefined);
     const [closeMoveSecondNodeId, setCloseMoveSecondNodeId] = useState<
         number | undefined
     >(undefined);
@@ -168,6 +168,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             ) {
                 // Prepare dialog for automatic/manual unification
                 setCloseMoveSecondNodeId(newNode.id);
+                console.log("Node "+ closeMoveSecondNodeId +" ist als zweites selectiert worden solte aber: "+ newNode.id);
                 const vars: string[] = [];
                 const checkArgumentForVar = (argument: FOArgument) => {
                     if (argument.type === FOArgumentType.quantifiedVariable) {
@@ -199,8 +200,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const submitVarAssign = (auto: boolean, varAssign: VarAssign = {}) => {
         setShowVarAssignDialog(false);
         if (
-            selectedNodeId === undefined ||
-            closeMoveSecondNodeId === undefined
+            selectedNodeId === undefined /* ||
+            closeMoveSecondNodeId === undefined */
         ) {
             throw new Error(
                 "Close move went wrong, since selected nodes could not be identified."
