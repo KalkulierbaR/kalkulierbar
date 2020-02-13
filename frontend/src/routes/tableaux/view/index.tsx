@@ -66,6 +66,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showClauseDialog, setShowClauseDialog] = useState(false);
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+    const [isLemmaMove, toggleLemmaMove] = useState(false);
 
     const clauseOptions = () => {
         let options: string[] = [];
@@ -154,8 +155,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setSelectedNodeId(newNode.id);
             } else if (
                 // Leaf and a closed Node are selected => Try Lemma move
-                (!selectedNodeIsLeaf && selectedNode.isClosed && newNodeIsLeaf) ||
-                (selectedNodeIsLeaf && newNode.isClosed && !newNodeIsLeaf)
+                (!selectedNodeIsLeaf && selectedNode.isClosed && newNodeIsLeaf && isLemmaMove) ||
+                (selectedNodeIsLeaf && newNode.isClosed && !newNodeIsLeaf && isLemmaMove)
             ) {
                 const leafId = (newNodeIsLeaf ? newNode.id : selectedNodeId);
                 const lemmaId = (!newNodeIsLeaf ? newNode.id : selectedNodeId);
@@ -169,6 +170,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     leafId,
                     lemmaId
                 );
+                toggleLemmaMove(false);
                 setSelectedNodeId(undefined);
             } else if (calculus === Calculus.propTableaux) {
                 // Now we have a leaf and a predecessor => Try close move
