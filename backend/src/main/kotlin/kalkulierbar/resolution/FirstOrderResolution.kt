@@ -94,6 +94,26 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         clauseID: Int,
         varAssign: Map<String, FirstOrderTerm>
     ) {
+        val newClause = instantiateReturn(state, clauseID, varAssign)
+
+        // Add new clause to state and update newestNode pointer
+        state.clauseSet.add(newClause)
+        state.newestNode = state.clauseSet.clauses.size - 1
+    }
+
+    /**
+     * Create a new clause by applying a variable instantiation on an existing clause
+     * @param state Current proof state
+     * @param clauseID ID of the clause to use for instantiation
+     * @param varAssign Map of Variables and terms they are instantiated with
+     * @return Instantiated clause
+     */
+    private fun instantiateReturn (
+        state: FoResolutionState,
+        clauseID: Int,
+        varAssign: Map<String, FirstOrderTerm>
+    ) : Clause<Relation> {
+
         if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
 
@@ -109,10 +129,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
             val newAtom = Atom<Relation>(newRelation, it.negated)
             newClause.add(newAtom)
         }
-
-        // Add new clause to state and update newestNode pointer
-        state.clauseSet.add(newClause)
-        state.newestNode = state.clauseSet.clauses.size - 1
+        return newClause
     }
 
     /**
@@ -121,7 +138,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
      * @param clauseID Id of clause to apply the move on
      * @param varAssign variable Assignment to unify Atoms of clause
      */
-    fun factorize(state: FoResolutionState, clauseID: Int, varAssign: Map<String, FirstOrderTerm>?) {
+    fun factorize(state: FoResolutionState, clauseID: Int) {
         val clauses = state.clauseSet.clauses
 
         // verify that clause id is valid
@@ -130,26 +147,39 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         if (clauses.size == 1)
             throw IllegalMove("Can not factorize clause with 1 element")
 
-        val oldClause = clauses[clauseID]
+        val atoms = clauses[clauseID].atoms
+        val mgu = mutableMapOf<String, FirstOrderTerm>()
 
-        // Instantiate Clause with given var Assignment
-        if (varAssign != null)
-            instantiate(state, clauseID, varAssign)
-        // TODO Auto instanziierung?
+        // Automatically search for unification
+        for (i in atoms.indices) {
+            for (j in atoms.indices) {
+                if (i != j) {
+                    try {
+                        val tempMgu = Unification.unify(atoms[i].lit, atoms[j].lit)
+                        mgu.putAll(tempMgu)
+                    } catch (e: UnificationImpossible) {
+
+                    }
+                }
+            }
+        }
+
+        var newClause = clauses[clauseID].clone()
+        hide(state, clauseID)
+        clauses.add(clauseID, newClause)
 
         // Copy old clause and factorize
-        val newClause = oldClause.clone()
-        newClause.factorize()
+        clauses[clauseID] = instantiateReturn(state, clauseID, mgu)
+        clauses[clauseID].factorize()
 
-        // Throw message for no possible factorisation
-        if (oldClause == newClause)
-            throw IllegalMove("Nothing to factorize")
-
+        /*
         // Add old clause to hidden clauses and remove from ClauseSet
         hide(state, clauseID)
         // Add new factorized clause to old index
         clauses.add(clauseID, newClause)
+    */
     }
+
 
     @Suppress("TooGenericExceptionCaught")
     override fun jsonToState(json: String): FoResolutionState {
