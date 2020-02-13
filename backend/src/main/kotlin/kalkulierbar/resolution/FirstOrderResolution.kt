@@ -19,7 +19,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
+class FirstOrderResolution :
+        GenericResolution<Relation>,
+        JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
     override val identifier = "fo-resolution"
 
     private val serializer = Json(context = resolutionMoveModule + FoTermModule)
@@ -37,7 +39,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
             is MoveInstantiate -> instantiate(state, move.c1, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
-            is MoveFactorize -> factorize(state, move.c1, move.getVarAssignTerms())
+            is MoveFactorize -> factorize(state, move.c1, move.a1, move.a2)
             else -> throw IllegalMove("Unknown move type")
         }
 
@@ -108,11 +110,11 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
      * @param varAssign Map of Variables and terms they are instantiated with
      * @return Instantiated clause
      */
-    private fun instantiateReturn (
+    private fun instantiateReturn(
         state: FoResolutionState,
         clauseID: Int,
         varAssign: Map<String, FirstOrderTerm>
-    ) : Clause<Relation> {
+    ): Clause<Relation> {
 
         if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
@@ -136,9 +138,11 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
      * Applies the factorize move
      * @param state The state to apply the move on
      * @param clauseID Id of clause to apply the move on
-     * @param varAssign variable Assignment to unify Atoms of clause
+     * @param a1 ID of first literal for unification
+     * @param a2 ID of second literal for unification
      */
-    fun factorize(state: FoResolutionState, clauseID: Int) {
+    @Suppress("ThrowsCount")
+    fun factorize(state: FoResolutionState, clauseID: Int, a1: Int?, a2: Int?) {
         val clauses = state.clauseSet.clauses
 
         // verify that clause id is valid
@@ -147,39 +151,51 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         if (clauses.size == 1)
             throw IllegalMove("Can not factorize clause with 1 element")
 
-        val atoms = clauses[clauseID].atoms
-        val mgu = mutableMapOf<String, FirstOrderTerm>()
+        // unify, instantiate and factorize
+        val mgu = unifySingleClause(clauses[clauseID], a1, a2)
+        val newClause = instantiateReturn(state, clauseID, mgu)
+        newClause.factorize()
 
-        // Automatically search for unification
-        for (i in atoms.indices) {
-            for (j in atoms.indices) {
-                if (i != j) {
-                    try {
-                        val tempMgu = Unification.unify(atoms[i].lit, atoms[j].lit)
-                        mgu.putAll(tempMgu)
-                    } catch (e: UnificationImpossible) {
+        // newClause remains the same size -> Nothing to factorize
+        if (newClause.atoms.size == clauses[clauseID].atoms.size)
+            throw IllegalMove("Nothing to factorize")
 
-                    }
-                }
-            }
-        }
-
-        var newClause = clauses[clauseID].clone()
+        // Hide old clause and add new factorized clause
         hide(state, clauseID)
-        clauses.add(clauseID, newClause)
-
-        // Copy old clause and factorize
-        clauses[clauseID] = instantiateReturn(state, clauseID, mgu)
-        clauses[clauseID].factorize()
-
-        /*
-        // Add old clause to hidden clauses and remove from ClauseSet
-        hide(state, clauseID)
-        // Add new factorized clause to old index
-        clauses.add(clauseID, newClause)
-    */
+        clauses.add(newClause)
+        state.newestNode = clauses.size - 1
     }
 
+    /**
+     * Unifies two Literals of a clause so that unification on whole clause can be used
+     * @param clause clause to unify
+     * @param a1 first literal to apply unification
+     * @param a2 second literal to apply unification
+     * @return Mapping to unify whole clause
+     */
+    @Suppress("ThrowsCount")
+    private fun unifySingleClause(clause: Clause<Relation>, a1: Int?, a2: Int?): Map<String, FirstOrderTerm> {
+        val atoms = clause.atoms
+        // verify that atom ids are valid
+        if (a1 == null || a2 == null)
+            throw IllegalMove("Invalid Atom IDs")
+        if (a1 < 0 || a1 >= atoms.size)
+            throw IllegalMove("There is no atom with id $a1")
+        if (a2 < 0 || a2 >= atoms.size)
+            throw IllegalMove("There is no atom with id $a2")
+
+        val literal1 = atoms[a1].lit
+        val literal2 = atoms[a2].lit
+        val mgu: Map<String, FirstOrderTerm>
+
+        // Get unifier for chosen Atoms
+        try {
+            mgu = Unification.unify(literal1, literal2)
+        } catch (e: UnificationImpossible) {
+            throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
+        }
+        return mgu
+    }
 
     @Suppress("TooGenericExceptionCaught")
     override fun jsonToState(json: String): FoResolutionState {

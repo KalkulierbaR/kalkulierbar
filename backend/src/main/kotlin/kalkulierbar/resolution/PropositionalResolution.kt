@@ -11,7 +11,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class PropositionalResolution : GenericResolution<String>, JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
+class PropositionalResolution :
+        GenericResolution<String>,
+        JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
     override val identifier = "prop-resolution"
 
     private val serializer = Json(context = resolutionMoveModule)
@@ -60,10 +62,10 @@ class PropositionalResolution : GenericResolution<String>, JSONCalculus<Resoluti
         if (oldClause == newClause)
             throw IllegalMove("Nothing to factorize")
 
-        // Add old clause to hidden clauses and remove from ClauseSet
+        // Hide old and add new clause
         hide(state, clauseID)
-        // Add new factorized clause to old index
-        clauses.add(clauseID, newClause)
+        clauses.add(newClause)
+        state.newestNode = clauses.size - 1
     }
 
     override fun checkCloseOnState(state: ResolutionState) = getCloseMessage(state)
