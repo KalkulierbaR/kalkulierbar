@@ -196,7 +196,8 @@ interface GenericTableaux<AtomType> {
         // Verify compliance with regularity criteria
         // TODO this assumes FO lemmas will not be preprocessed like regular clause expansions
         // I have no idea if that is actually the case
-        verifyExpandRegularity(state, leafID, Clause(mutableListOf(atom)), applyPreprocessing = false)
+        if(state.regular)
+            verifyExpandRegularity(state, leafID, Clause(mutableListOf(atom)), applyPreprocessing = false)
 
         return atom
     }
