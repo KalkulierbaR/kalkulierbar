@@ -18,6 +18,7 @@ import AddIcon from "../../../components/icons/add";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
+import LemmaIcon from "../../../components/icons/lemma";
 import UndoIcon from "../../../components/icons/undo";
 import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
@@ -427,6 +428,16 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             showIconAtEnd={true}
                             onClick={() => {
                                 setShowClauseDialog(!showClauseDialog);
+                            }}
+                        />
+                        <FAB
+                            icon={<LemmaIcon />}
+                            label="Lemma"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                toggleLemmaMove(!isLemmaMove);
                             }}
                         />
                     </Fragment>
