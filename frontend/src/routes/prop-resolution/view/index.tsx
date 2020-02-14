@@ -83,7 +83,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
         [Calculus.propResolution]: cState,
         onError,
         onChange,
-        onSuccess
+        onSuccess,
+        smallScreen
     } = useAppState();
     let state = cState;
 
@@ -244,10 +245,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                 clauses={candidateClauses}
                 selectClauseCallback={selectClauseCallback}
                 selectedClauseId={selectedClauseId}
-                highlightSelectable={state.highlightSelectable}
-                newestNode={state.newestNode}
+                highlightSelectable={state!.highlightSelectable}
+                newestNode={state!.newestNode}
             />
-            <ControlFAB>
+            <ControlFAB alwaysOpen={!smallScreen}>
                 {selectedClauseId !== undefined ? (
                     <FAB
                         mini={true}
