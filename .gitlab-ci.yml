@@ -22,7 +22,7 @@ gradle:
   before_script:
     - cd backend
   script:
-    - gradle build --no-deamon
+    - gradle build --no-daemon
   after_script:
     - cd ..
 
@@ -52,7 +52,7 @@ deploy-api:
     - gem install dpl
     - cd backend
   script:
-    - gradle build --no-deamon
+    - gradle build --no-daemon
     - dpl --provider=heroku --app=$HEROKU_APP_BACKEND --api-key=$HEROKU_API_KEY --skip-cleanup
   after_script:
     - cd ..
