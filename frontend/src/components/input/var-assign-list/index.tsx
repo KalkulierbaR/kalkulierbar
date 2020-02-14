@@ -66,7 +66,8 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const onKeyDown = (e: KeyboardEvent) => {
-        if (e.keyCode === 13) {
+        if (e.keyCode === 13 && e.ctrlKey) {
+            // Submit manual varAssign when hitting (enter + ctrlKey)
             e.stopPropagation();
             submitVarAssign();
         }
