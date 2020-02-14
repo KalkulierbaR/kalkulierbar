@@ -83,6 +83,9 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                         required={manualVarAssign}
                         inline={true}
                         onKeyDown={onKeyDown}
+                        type="url"
+                        autoComplete={false}
+                        autoCapitalize={false}
                     />
                 </p>
             ))}
