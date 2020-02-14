@@ -60,7 +60,7 @@ class TestFirstOrderJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonStateEmpty() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"kalkulierbar.logic.QuantifiedVariable","spelling":"X"}]},"negated":false}]},{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"kalkulierbar.logic.Constant","spelling":"c"}]},"negated":true}]}]},"formula":"\\all X: R(X) & !R(c)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"47E0E51B486CDF0FEB644B195CFBCB08E61C2556BD67D84B86B08CB658055ACB","renderedClauseSet":["R(X)","!R(c)"]}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"QuantifiedVariable","spelling":"X"}]},"negated":false}]},{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"Constant","spelling":"c"}]},"negated":true}]}]},"formula":"\\all X: R(X) & !R(c)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"47E0E51B486CDF0FEB644B195CFBCB08E61C2556BD67D84B86B08CB658055ACB","renderedClauseSet":["R(X)","!R(c)"]}"""
         val state = instance.jsonToState(json)
         val hash = "fotableaux|\\all X: R(X) & !R(c)|0|UNCONNECTED|false|false|false|false|{R(X)}, {!R(c)}|[true();p;null;-;o;()]|[]"
         assertEquals(hash, state.getHash())
@@ -69,7 +69,7 @@ class TestFirstOrderJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonStateModification() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"kalkulierbar.logic.QuantifiedVariable","spelling":"X"}]},"negated":false}]},{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"kalkulierbar.logic.Constant","spelling":"q"}]},"negated":true}]}]},"formula":"\\all X: R(X) & !R(c)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"47E0E51B486CDF0FEB644B195CFBCB08E61C2556BD67D84B86B08CB658055ACB","renderedClauseSet":["R(X)","!R(c)"]}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"QuantifiedVariable","spelling":"X"}]},"negated":false}]},{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"Constant","spelling":"q"}]},"negated":true}]}]},"formula":"\\all X: R(X) & !R(c)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"47E0E51B486CDF0FEB644B195CFBCB08E61C2556BD67D84B86B08CB658055ACB","renderedClauseSet":["R(X)","!R(c)"]}"""
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
@@ -82,7 +82,7 @@ class TestFirstOrderJson {
     @Test
     fun testStateToJson() {
         val json = instance.parseFormula("\\ex X: R(X)", null)
-        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"kalkulierbar.logic.Constant","spelling":"sk1"}]},"negated":false}]}]},"formula":"\\ex X: R(X)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"22B8CEDC626EBF36DAAA3E50356CD328C075805A0538EA0F91B4C88658D8C465","renderedClauseSet":["R(sk1)"]}"""
+        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"Constant","spelling":"sk1"}]},"negated":false}]}]},"formula":"\\ex X: R(X)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"22B8CEDC626EBF36DAAA3E50356CD328C075805A0538EA0F91B4C88658D8C465","renderedClauseSet":["R(sk1)"]}"""
         assertEquals(expected, json)
     }
 
