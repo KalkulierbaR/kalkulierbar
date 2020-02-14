@@ -14,8 +14,6 @@ yarn:
     - yarn build
   after_script:
     - cd ..
-  only:
-    - master
 
 #Backend: gradle build
 gradle:
@@ -24,11 +22,9 @@ gradle:
   before_script:
     - cd backend
   script:
-    - gradle build
+    - gradle build --no-deamon
   after_script:
     - cd ..
-  only:
-    - master
 
 deploy:
   type: deploy
@@ -44,8 +40,7 @@ deploy:
   after_script:
     - cd ..
   only:
-#    - tags
-    - master
+    - tags
 
 deploy-api:
   type: deploy
@@ -57,7 +52,7 @@ deploy-api:
     - gem install dpl
     - cd backend
   script:
-    - gradle build
+    - gradle build --no-deamon
     - dpl --provider=heroku --app=$HEROKU_APP_BACKEND --api-key=$HEROKU_API_KEY --skip-cleanup
   after_script:
     - cd ..
