@@ -110,11 +110,11 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
      */
     const onKeyDown = (e: KeyboardEvent) => {
         if (e.keyCode === 13 && !e.ctrlKey) {
-            // Prevent submit when hitting enter
+            // Prevent submit when only hitting enter without ctrlKey
             e.stopPropagation();
         }
         if (e.keyCode === 13 && e.ctrlKey) {
-            // Trigger submit when using ctrlKey
+            // Trigger submit when hitting (enter + ctrlKey)
             // TODO: This should be done via event, don't know why it doesn't work
             onSubmit(e);
         }
