@@ -16,18 +16,24 @@ export interface Clause<L = string> {
 /**
  * Clause sets are sets of Clauses
  */
-export interface ClauseSet<L=string> {
+export interface ClauseSet<L = string> {
     clauses: Array<Clause<L>>;
+}
+
+export interface BaseCandidateClause<L> {
+    clause: Clause<L>;
+    index: number;
+    candidateLiterals: number[];
 }
 
 /**
  * CandidateClause is a clause that is a candidate for a proof operation
  */
-export interface CandidateClause<L=string> extends Clause<L> {
-    atoms: Array<Atom<L>>;
-    index: number;
-    candidateLiterals: L[];
-}
+export type PropCandidateClause = BaseCandidateClause<string>;
+
+export type FOCandidateClause = BaseCandidateClause<FOLiteral>;
+
+export type CandidateClause = PropCandidateClause | FOCandidateClause;
 
 /**
  * A literal in FO
@@ -40,17 +46,17 @@ export interface FOLiteral {
 /**
  * The FOAtom object received from the backend
  */
-export type FOAtom = Atom<FOLiteral>
+export type FOAtom = Atom<FOLiteral>;
 
 /**
  * FOClause is a list of FOAtoms
  */
-export type FOClause = Clause<FOLiteral>
+export type FOClause = Clause<FOLiteral>;
 
 /**
  * Clause sets are sets of Clauses
  */
-export type FOClauseSet = ClauseSet<FOLiteral>
+export type FOClauseSet = ClauseSet<FOLiteral>;
 
 /**
  * An argument in FO
