@@ -259,14 +259,16 @@ const ResolutionView: preact.FunctionalComponent<Props> = () => {
                         onClick={() => hideClause(selectedClauseId)}
                     />
                 ) : undefined}
-                <FAB
-                    mini={true}
-                    extended={true}
-                    label="Show all"
-                    showIconAtEnd={true}
-                    icon={<ShowIcon />}
-                    onClick={() => showHiddenClauses()}
-                />
+                {state!.hiddenClauses.clauses.length > 0 ? (
+                    <FAB
+                        mini={true}
+                        extended={true}
+                        label="Show all"
+                        showIconAtEnd={true}
+                        icon={<ShowIcon />}
+                        onClick={() => showHiddenClauses()}
+                    />
+                ) : undefined}
                 <FAB
                     mini={true}
                     extended={true}
