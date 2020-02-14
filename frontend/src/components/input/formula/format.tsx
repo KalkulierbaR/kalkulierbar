@@ -1,4 +1,7 @@
 import { Fragment, h } from "preact";
+import { useCallback, useState } from "preact/hooks";
+import { classMap } from "../../../helpers/class-map";
+import ChevronRightIcon from "../../icons/chevron-right";
 import * as style from "./style.scss";
 
 interface Props {
@@ -8,38 +11,32 @@ interface Props {
     foLogic?: boolean;
 }
 
-const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
-    <div class="card">
-        <h3>Format</h3>
+const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
+    const [collapsed, setCollapsed] = useState(true);
+
+    const toggleCollapsed = useCallback(() => setCollapsed(!collapsed), [
+        collapsed
+    ]);
+
+    const content = (
+        <div class={style.formatContent}>
         <ul>
             {foLogic ? ( // Todo: Styling
                 <li>
                     <p>
-                        <b>First Order Formulas</b>
+                        <b>FO Formula</b>
                     </p>
                     <p>
-                        <ul>
-                            <li>
-                                All constants (identifiers with a lowercase or numeric first character) are terms.
-                            </li>
-                            <li>
-                                All variables (identifiers with an uppercase first character) are terms.
-                            </li>
-                            <li>
-                                Given n terms t1 to tn, all functions f(t1, t2, ... tn) - where f is an identifier with
-                                a lowercase or numeric first character - are terms.
-                            </li>
-                            <li>
-                                An atomic formula is a relation with one or more terms as arguments, written as R(t1,
-                                t2, ... tn) where R is an identifier with an uppercase first character. Please note that
-                                relations with the same name but different numbers of arguments may exist.
-                            </li>
-                        </ul>
+                        Use names starting in an uppercase letter for variables and relations, names starting with a lowercase letter or a number for constants and functions.<br/>
+                        Quantifiers can be used like this:{" "}
+                        <code class={style.padRight}>
+                            {"\\all X: R(f(X, a)) & \\ex Y: !R(f(Y, a))"}
+                        </code>
                     </p>
                     <p>
                         <table>
                             <tr>
-                                <th>Operation</th>
+                                <th>Operator</th>
                                 <th>Symbol</th>
                                 <th>Example</th>
                             </tr>
@@ -55,13 +52,13 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                             </tr>
                             <tr>
                                 <td>Universal quantifiers</td>
-                                <td>\all X</td>
-                                <td>\all X: (R(X) & Q(X))</td>
+                                <td><code>\all X:</code> or <code>/all X:</code></td>
+                                <td><code>\all X: (R(X) & Q(X))</code></td>
                             </tr>
                             <tr>
                                 <td>Existential quantifiers</td>
-                                <td>\ex X</td>
-                                <td>\ex X: (R(X) & Q(X))</td>
+                                <td><code>\ex X:</code> or <code>/ex X:</code></td>
+                                <td><code>\ex X: (R(X) & Q(X))</code></td>
                             </tr>
                             <tr>
                                 <td>Binary And</td>
@@ -80,48 +77,49 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
                             </tr>
                             <tr>
                                 <td>Equivalence</td>
-                                <td><code>{"<=> or <->"}</code></td>
+                                <td><code>{"<=>"}</code> or <code>{"<->"}</code></td>
                                 <td><code>{"right <=> !left"}</code></td>
                             </tr>
                         </table>
                     </p>
                     <p>
-                        Operator precedence is equal to the order of the table above.
+                        Unbound variables are not allowed. Quantifier scopes are as small as possible, following the usual conventions for first-order logic.
                     </p>
                 </li>
             ) : (
                 <Fragment>
                     <li>
                         <p>
-                            <b>Clause Sets</b>
+                            <b>Clause Set</b>
                         </p>
                         <p>
                             <code class={style.padRight}>
-                                {"{{a, ¬c}, {b}}"}
+                                {"{{a, ¬b}, {¬a}, {b}}"}
                             </code>
                             needs to be entered as{" "}
-                            <code class={style.padLeft}>a,!c;b</code>
+                            <code class={style.padLeft}>a,!b;!a;b</code>
                         </p>
                         <p>
-                            Use a semicolon or linebreak to signal a new clause.
+                            Separate variables with commas, use a semicolon or linebreak to signal a new clause. Whitespace is ignored.
                         </p>
                     </li>
                     <br />
                     <li>
                         <p>
-                            <b>Propositional Formulas</b>
+                            <b>Propositional Formula</b>
                         </p>
                         <p>
+                            Use the usual ascii-notation like in this example:{" "}
                             <code class={style.padRight}>
-                                {"!a -> ( a & b <=> a | b)"}
+                                {"!(a -> b) & (c <=> d | e) & !a"}
                             </code>
-                            is a valid input.
+
                         </p>
                         <p>
                             <code class={style.padRight}>{"<=>"}</code>
                             and
                             <code class={style.padLeft}>{"<->"}</code> are
-                            synonymous.
+                            synonymous, operator precedence follows the conventions for propositional logic. Whitespace is ignored.
                         </p>
                     </li>
                 </Fragment>
@@ -129,5 +127,26 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => (
         </ul>
     </div>
 );
+
+    return (
+        <div class={`card ${style.noPad}`}>
+            <div class={style.formatHeader} onClick={toggleCollapsed}>
+                <button
+                    class={classMap({
+                        [style.btnIcon]: true,
+                        [style.expand]: !collapsed
+                    })}
+                >
+                    <ChevronRightIcon
+                        size={32}
+                        fill="var(--kbar-primary-text-color)"
+                    />
+                </button>
+                <h3 class={style.formatHeading}>Format</h3>
+            </div>
+            {!collapsed && content}
+        </div>
+    );
+};
 
 export default Format;

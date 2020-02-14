@@ -46,6 +46,7 @@ export interface AppState {
     server: string;
     notification?: Notification;
     smallScreen: boolean;
+    hamburger: boolean;
     theme: Theme;
     savedFormulas: Formulas;
     "prop-tableaux"?: PropTableauxState;
@@ -70,7 +71,7 @@ interface AppStateActionBase {
 }
 
 export enum AppStateActionType {
-    SET_SMALL_SCREEN,
+    UPDATE_SCREEN_SIZE,
     ADD_NOTIFICATION,
     REMOVE_NOTIFICATION,
     UPDATE_CALCULUS_STATE,
@@ -79,9 +80,10 @@ export enum AppStateActionType {
     UPDATE_SAVED_FORMULA
 }
 
-export interface SetSmallScreen extends AppStateActionBase {
-    type: AppStateActionType.SET_SMALL_SCREEN;
-    value: boolean;
+export interface UpdateScreenSize extends AppStateActionBase {
+    type: AppStateActionType.UPDATE_SCREEN_SIZE;
+    smallScreen: boolean;
+    hamburger: boolean;
 }
 
 export interface AddNotification extends AppStateActionBase {
@@ -117,7 +119,7 @@ export interface UpdateSavedFormula<C extends CalculusType = CalculusType> exten
 }
 
 export type AppStateAction =
-    | SetSmallScreen
+    | UpdateScreenSize
     | AddNotification
     | RemoveNotification
     | UpdateCalculusState
