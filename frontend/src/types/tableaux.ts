@@ -8,6 +8,7 @@ export interface TableauxNode {
     closeRef: number | null;
     children: number[];
     relation?: FORelation;
+    isLemma?: boolean;
 }
 
 export type TableauxTreeLayoutNode = TableauxNode & { id: number };

@@ -55,6 +55,7 @@ const foExample: FOTableauxState = {
         "parent": null,
         "relation": {"spelling": "true", "arguments": []},
         "negated": false,
+        "isLemma": false,
         "isClosed": false,
         "closeRef": null,
         "children": [1, 2],
@@ -70,6 +71,7 @@ const foExample: FOTableauxState = {
             }]
         },
         "negated": false,
+        "isLemma": false,
         "isClosed": false,
         "closeRef": null,
         "children": [3],
@@ -85,6 +87,7 @@ const foExample: FOTableauxState = {
             }]
         },
         "negated": true,
+        "isLemma": false,
         "isClosed": false,
         "closeRef": null,
         "children": [],
@@ -96,14 +99,15 @@ const foExample: FOTableauxState = {
             "arguments": [{
                 "type": "kalkulierbar.logic.Function",
                 "spelling": "f",
-                "arguments": [{"type": "kalkulierbar.logic.QuantifiedVariable", "spelling": "Xv2"}]
+                "arguments": [{"type": "kalkulierbar.logic.QuantifiedVariable", "spelling": "X_2"}]
             }]
         },
         "negated": true,
+        "isLemma": false,
         "isClosed": false,
         "closeRef": null,
         "children": [],
-        "spelling": "R(f(Xv2))"
+        "spelling": "R(f(X_2))"
     }],
     "moveHistory": [{"type": "EXPAND", "id1": 0, "id2": 1, "varAssign": {}}, {
         "type": "EXPAND",
@@ -113,7 +117,7 @@ const foExample: FOTableauxState = {
     }],
     "usedBacktracking": false,
     "expansionCounter": 2,
-    "seal": "D51F2D4BDAC3353CF6A55515C9058AEFDC51ED19F2E1921DB936D366B0CE51F8",
+    "seal": "D9CBFCD29C08A89041652FE3A8276DFEDE29D994E59A21AA99D4A553415E9F58",
     "renderedClauseSet": ["!R(f(X))", "R(f(a)), !R(f(b))", "R(f(Xv1))"]
 };
 
