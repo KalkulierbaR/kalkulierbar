@@ -20,31 +20,45 @@ interface Props {
      * The function to call, when the user selects this node
      */
     selectNodeCallback: (node: TableauxTreeLayoutNode) => void;
+    /**
+     * Contains the Information, that potential Lemma nodes are selectable
+     */
+    lemmaNodesSelectable: boolean;
 }
 
 // Component representing a single Node of a TableauxTree
 const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     node,
     selected,
-    selectNodeCallback
+    selectNodeCallback,
+    lemmaNodesSelectable
 }) => {
     const textRef = createRef<SVGTextElement>();
 
     // The nodes name which is displayed
     const name = `${node.data.negated ? "¬" : ""}${node.data.spelling}`;
 
+    // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
+    const nodeIsClickable = ((lemmaNodesSelectable && !(node.data.children.length === 0)) ||
+        (!lemmaNodesSelectable && !node.data.isClosed));
     /**
      * Handle the onClick event of the node
      * @returns {void}
      */
     const handleClick = () => {
-        selectNodeCallback(node.data);
+        if(nodeIsClickable){
+            selectNodeCallback(node.data);
+        }
     };
 
     return (
         <g
             onClick={handleClick}
-            class={node.data.isClosed ? style.nodeClosed : style.node}
+            class={classMap({
+                [style.node]: true,
+                [style.nodeClosed]: node.data.isClosed,
+                [style.nodeClickable]: nodeIsClickable
+            })}
         >
             <Rectangle
                 elementRef={textRef}

@@ -66,6 +66,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showClauseDialog, setShowClauseDialog] = useState(false);
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+    const [isLemmaMove, toggleLemmaMove] = useState(false);
 
     const clauseOptions = () => {
         let options: string[] = [];
@@ -154,12 +155,13 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setSelectedNodeId(newNode.id);
             } else if (
                 // Leaf and a closed Node are selected => Try Lemma move
-                (!selectedNodeIsLeaf && selectedNode.isClosed && newNodeIsLeaf) ||
-                (selectedNodeIsLeaf && newNode.isClosed && !newNodeIsLeaf)
+                (!selectedNodeIsLeaf && selectedNode.isClosed && newNodeIsLeaf && isLemmaMove) ||
+                (selectedNodeIsLeaf && newNode.isClosed && !newNodeIsLeaf && isLemmaMove)
             ) {
                 const leafId = (newNodeIsLeaf ? newNode.id : selectedNodeId);
                 const lemmaId = (!newNodeIsLeaf ? newNode.id : selectedNodeId);
 
+                toggleLemmaMove(false);
                 sendLemma(
                     calculus,
                     server,
@@ -304,6 +306,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={selectNodeCallback}
+                    lemmaNodesSelectable={isLemmaMove}
                 />
             </div>
 
@@ -407,6 +410,19 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 }}
                             />
                         ) : undefined}
+                        {isLemmaMove ? (
+                            // sollte nicht vorkommen ansonsten kann man hier den Lemma move beenden, solte er noch fehlerhaft aktiv sein.
+                            <FAB
+                                icon={<LemmaIcon />}
+                                label="turn Lemma move off"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    toggleLemmaMove(false);
+                                }}
+                            />
+                        ) : undefined}
                     </Fragment>
                 ) : (
                     <Fragment>
@@ -430,6 +446,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 setShowClauseDialog(!showClauseDialog);
                             }}
                         />
+                        {(state!.nodes.filter(node => node.isClosed).length > 0) ? (
                         <FAB
                             icon={<LemmaIcon />}
                             label="Lemma"
@@ -440,6 +457,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 toggleLemmaMove(!isLemmaMove);
                             }}
                         />
+                        ) : undefined}
                     </Fragment>
                 )}
             </ControlFAB>
