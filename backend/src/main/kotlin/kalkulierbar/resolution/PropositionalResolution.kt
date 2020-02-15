@@ -43,7 +43,6 @@ class PropositionalResolution :
      * @param state The state to apply the move on
      * @param clauseID Id of clause to apply the move on
      */
-    @Suppress("ThrowsCount")
     fun factorize(state: ResolutionState, clauseID: Int) {
         val clauses = state.clauseSet.clauses
 
