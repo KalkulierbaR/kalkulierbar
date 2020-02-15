@@ -87,6 +87,11 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
 
             // Send resolve move to backend
             if (resolventLiteral !== null) {
+                const l1 = getFOCandidateClauses(
+                    state!.clauseSet,
+                    state!.highlightSelectable,
+                    selectedClauseId,
+                )[0].index;
                 sendMove(
                     server,
                     Calculus.foResolution,
@@ -95,7 +100,7 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
                         type: "res-resolveunify",
                         c1: selectedClauseId,
                         c2: newClauseId,
-                        l1: 0,
+                        l1,
                         l2: resolventLiteral,
                     },
                     onChange,
@@ -137,7 +142,9 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
                             setSelectedClauses(undefined);
                         }}
                     />
-                ) : undefined}
+                ) : (
+                    undefined
+                )}
                 <FAB
                     mini={true}
                     extended={true}
@@ -198,7 +205,11 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
                                             c1: selectedClauseId!,
                                             c2: selectedClauses[1],
                                             l1: l,
-                                            l2: 0,
+                                            l2: getFOCandidateClauses(
+                                                state!.clauseSet,
+                                                state!.highlightSelectable,
+                                                selectedClauses[1],
+                                            )[0].index,
                                         },
                                         onChange,
                                         onError,
