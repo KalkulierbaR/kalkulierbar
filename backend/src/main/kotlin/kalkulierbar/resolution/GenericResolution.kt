@@ -234,7 +234,7 @@ data class MoveHide(val c1: Int) : ResolutionMove()
 
 @Serializable
 @SerialName("res-factorize")
-data class MoveFactorize(val c1: Int, val a1: Int?, val a2: Int?) : ResolutionMove()
+data class MoveFactorize(val c1: Int, val a1: Int = -1, val a2: Int = -1) : ResolutionMove()
 
 @Serializable
 @SerialName("res-show")

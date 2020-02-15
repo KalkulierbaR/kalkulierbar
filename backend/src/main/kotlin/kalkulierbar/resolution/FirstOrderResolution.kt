@@ -141,44 +141,40 @@ class FirstOrderResolution :
      * @param a1 ID of first literal for unification
      * @param a2 ID of second literal for unification
      */
-    @Suppress("ThrowsCount")
-    fun factorize(state: FoResolutionState, clauseID: Int, a1: Int?, a2: Int?) {
+    fun factorize(state: FoResolutionState, clauseID: Int, a1: Int, a2: Int) {
         val clauses = state.clauseSet.clauses
 
-        // verify that clause id is valid
+        // Verify that clause id is valid
         if (clauseID < 0 || clauseID >= clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
-        if (clauses.size == 1)
-            throw IllegalMove("Can not factorize clause with 1 element")
 
-        // unify, instantiate and factorize
+        // Unify the selected atoms
         val mgu = unifySingleClause(clauses[clauseID], a1, a2)
         val newClause = instantiateReturn(state, clauseID, mgu)
-        newClause.factorize()
+        // If the unification succeeded, a1 and a2 are now equal
+        // so we can just remove the second one
+        newClause.atoms.removeAt(a2)
 
-        // newClause remains the same size -> Nothing to factorize
-        if (newClause.atoms.size == clauses[clauseID].atoms.size)
-            throw IllegalMove("Nothing to factorize")
-
-        // Hide old clause and add new factorized clause
-        hide(state, clauseID)
-        clauses.add(newClause)
-        state.newestNode = clauses.size - 1
+        // Hide old and add new clause in its place
+        val oldClause = clauses.removeAt(clauseID)
+        state.hiddenClauses.add(oldClause)
+        clauses.add(clauseID, newClause)
+        state.newestNode = clauseID
     }
 
     /**
-     * Unifies two Literals of a clause so that unification on whole clause can be used
+     * Unifies two literals of a clause so that unification on whole clause can be used
      * @param clause clause to unify
      * @param a1 first literal to apply unification
      * @param a2 second literal to apply unification
      * @return Mapping to unify whole clause
      */
     @Suppress("ThrowsCount")
-    private fun unifySingleClause(clause: Clause<Relation>, a1: Int?, a2: Int?): Map<String, FirstOrderTerm> {
+    private fun unifySingleClause(clause: Clause<Relation>, a1: Int, a2: Int): Map<String, FirstOrderTerm> {
         val atoms = clause.atoms
-        // verify that atom ids are valid
-        if (a1 == null || a2 == null)
-            throw IllegalMove("Invalid Atom IDs")
+        // Verify that atom ids are valid
+        if (a1 == a2)
+            throw IllegalMove("Cannot unify an atom with itself")
         if (a1 < 0 || a1 >= atoms.size)
             throw IllegalMove("There is no atom with id $a1")
         if (a2 < 0 || a2 >= atoms.size)
