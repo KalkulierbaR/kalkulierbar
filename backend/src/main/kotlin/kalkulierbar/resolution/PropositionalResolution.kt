@@ -47,11 +47,9 @@ class PropositionalResolution :
     fun factorize(state: ResolutionState, clauseID: Int) {
         val clauses = state.clauseSet.clauses
 
-        // verify that clause id is valid
+        // Verify that clause id is valid
         if (clauseID < 0 || clauseID >= clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
-        if (clauses.size == 1)
-            throw IllegalMove("Can not factorize clause with 1 element")
 
         val oldClause = clauses[clauseID]
         // Copy old clause and factorize
@@ -59,13 +57,14 @@ class PropositionalResolution :
         newClause.factorize()
 
         // Throw message for no possible factorisation
-        if (oldClause == newClause)
+        if (oldClause.atoms.size == newClause.atoms.size)
             throw IllegalMove("Nothing to factorize")
 
         // Hide old and add new clause
-        hide(state, clauseID)
-        clauses.add(newClause)
-        state.newestNode = clauses.size - 1
+        clauses.removeAt(clauseID)
+        state.hiddenClauses.add(oldClause)
+        clauses.add(clauseID, newClause)
+        state.newestNode = clauseID
     }
 
     override fun checkCloseOnState(state: ResolutionState) = getCloseMessage(state)
