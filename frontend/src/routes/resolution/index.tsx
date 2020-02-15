@@ -41,7 +41,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format foLogic={fo} />
-            <FormulaInput calculus={Calculus.propResolution} params={params} />
+            <FormulaInput calculus={calculus} params={params} />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
