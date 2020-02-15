@@ -3,7 +3,6 @@ import {
     ClauseSet,
     FOCandidateClause,
     FOClauseSet,
-    FOLiteral,
     PropCandidateClause,
 } from "../types/clause";
 import { FOResolutionState, PropResolutionState } from "../types/resolution";
@@ -204,6 +203,10 @@ export const sendResolveUnify = (
  * The function to call when the user hides a clause
  * @param {number} clauseId - The id of the clause to hide
  * @param {ResolutionCalculusType} calculus - Current calculus
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
  * @returns {void}
  */
 export const hideClause = <
@@ -230,6 +233,10 @@ export const hideClause = <
 /**
  * The function to call when the user wants to re-show hidden clauses
  * @param {ResolutionCalculusType} calculus - Current calculus
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
  * @returns {void}
  */
 export const showHiddenClauses = <

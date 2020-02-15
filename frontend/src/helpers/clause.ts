@@ -3,8 +3,6 @@ import {
     Clause,
     ClauseSet,
     FOArgument,
-    FOAtom,
-    FOClause,
     FOLiteral,
 } from "../types/clause";
 import { maxBy } from "./max-by";
@@ -53,5 +51,5 @@ export const clauseSetToStringArray = (clauseSet: ClauseSet) =>
  * @returns {Clause} - The longest clause
  */
 export const maxLengthClause = (
-    clauses: readonly Array<Clause<string | FOLiteral>>,
+    clauses: Array<Clause<string | FOLiteral>>,
 ) => maxBy(clauses, (c) => clauseToString(c).length);

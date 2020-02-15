@@ -146,7 +146,7 @@ const App: preact.FunctionalComponent = () => {
                         calculus={Calculus.propResolution}
                         getComponent={() =>
                             import("../routes/resolution/view").then(
-                                (m) => m.default,
+                                (m) => m.PropResolutionView,
                             )
                         }
                     />
@@ -164,7 +164,7 @@ const App: preact.FunctionalComponent = () => {
                         calculus={Calculus.foResolution}
                         getComponent={() =>
                             import("../routes/resolution/view").then(
-                                (m) => m.default,
+                                (m) => m.PropResolutionView,
                             )
                         }
                     />

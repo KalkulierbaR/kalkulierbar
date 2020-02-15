@@ -136,9 +136,7 @@ const PropResolutionView: preact.FunctionalComponent<Props> = () => {
                             setSelectedClauses(undefined);
                         }}
                     />
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 <FAB
                     mini={true}
                     extended={true}

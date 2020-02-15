@@ -78,9 +78,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                 <Btn onClick={() => secondSubmitEvent(true)}>
                     {secondSubmitLabel}
                 </Btn>
-            ) : (
-                ""
-            )}
+            ) : undefined}
         </div>
     );
 };

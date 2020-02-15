@@ -8,7 +8,7 @@ import { maxLengthClause } from "../clause";
  * @returns {Layout<Clause>} - The circle layout of the clauses
  */
 export const circleLayout = (
-    clauses: readonly Array<Clause<string | FOLiteral>>,
+    clauses: Array<Clause<string | FOLiteral>>,
 ): Layout<Clause<string | FOLiteral>> => {
     if (clauses.length === 0) {
         return { width: 0, height: 0, data: [] };
