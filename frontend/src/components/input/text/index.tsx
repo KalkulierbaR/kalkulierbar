@@ -14,6 +14,7 @@ interface Props {
     value?: string;
     required?: boolean;
     inline?: boolean;
+    autoCapitalize?: boolean;
 }
 
 const TextInput: preact.FunctionalComponent<Props> = ({
@@ -25,6 +26,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
     onKeyDown,
     required,
     inline = false,
+    autoCapitalize= false,
     ...props
 }) => {
     const input = useRef<HTMLInputElement>();
@@ -66,6 +68,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
                     }}
                     onKeyDown={onKeyDown}
                     required={required}
+                    autocapitalize={autoCapitalize ? undefined : "off"}
                 />
                 {submitButton}
             </div>

@@ -70,7 +70,7 @@ class TestUndoFO {
     fun testUndo2() {
         var state = statesManual[2]
 
-        val map = mapOf("Bv2" to "Av1", "Av2" to "Av1")
+        val map = mapOf("B_2" to "A_1", "A_2" to "A_1")
 
         // {!R(A), R(A)}, {!R(A), !R(B)}, {!R(A), !R(B)}, {!R(A), !R(A)}
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
@@ -85,16 +85,16 @@ class TestUndoFO {
         var nodes = state.nodes
 
         // Spelling of nodes remain same
-        assertEquals(nodes[2].spelling, "R(Av1)")
-        assertEquals(nodes[3].spelling, "R(Av2)")
-        assertEquals(nodes[4].spelling, "R(Bv2)")
+        assertEquals(nodes[2].spelling, "R(A_1)")
+        assertEquals(nodes[3].spelling, "R(A_2)")
+        assertEquals(nodes[4].spelling, "R(B_2)")
 
         nodes = state.nodes
 
         // Check spelling after undo
-        assertEquals(nodes[2].spelling, "R(Av1)")
-        assertEquals(nodes[3].spelling, "R(Av2)")
-        assertEquals(nodes[4].spelling, "R(Bv2)")
+        assertEquals(nodes[2].spelling, "R(A_1)")
+        assertEquals(nodes[3].spelling, "R(A_2)")
+        assertEquals(nodes[4].spelling, "R(B_2)")
 
         assertEquals(nodes[2].isClosed, false)
         assertEquals(nodes[3].isClosed, false)
