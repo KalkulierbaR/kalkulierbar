@@ -1,16 +1,7 @@
 import { h } from "preact";
-
-import { CandidateClause } from "../../../types/clause";
-
 import { useMemo } from "preact/hooks";
-import { checkClose } from "../../../helpers/api";
-import { useAppState } from "../../../helpers/app-state";
 import { circleLayout } from "../../../helpers/layout/resolution";
-import {Calculus} from "../../../types/app";
-import ControlFAB from "../../control-fab";
-import FAB from "../../fab";
-import CenterIcon from "../../icons/center";
-import CheckCircleIcon from "../../icons/check-circle";
+import { CandidateClause } from "../../../types/clause";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
@@ -43,19 +34,12 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     selectClauseCallback,
     selectedClauseId,
     highlightSelectable,
-    newestNode
+    newestNode,
 }) => {
-    const {
-        server,
-        onError,
-        onSuccess,
-        [Calculus.propResolution]: state,
-        smallScreen
-    } = useAppState();
-
-    const { width, height, data } = useMemo(() => circleLayout(clauses), [
-        clauses
-    ]);
+    const { width, height, data } = useMemo(
+        () => circleLayout(clauses.map((c) => c.clause)),
+        [clauses],
+    );
 
     return (
         <div class={`card ${style.noPad}`}>
@@ -67,7 +51,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
                 preserveAspectRatio="xMidyMid meet"
             >
-                {transform => (
+                {(transform) => (
                     <g
                         transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
@@ -92,32 +76,6 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     </g>
                 )}
             </Zoomable>
-            <ControlFAB alwaysOpen={!smallScreen}>
-                <FAB
-                    mini={true}
-                    extended={true}
-                    label="Center"
-                    showIconAtEnd={true}
-                    icon={<CenterIcon />}
-                    onClick={() => dispatchEvent(new CustomEvent("center"))}
-                />
-                <FAB
-                    icon={<CheckCircleIcon />}
-                    label="Check"
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() =>
-                        checkClose(
-                            server,
-                            onError,
-                            onSuccess,
-                            Calculus.propResolution,
-                            state
-                        )
-                    }
-                />
-            </ControlFAB>
         </div>
     );
 };

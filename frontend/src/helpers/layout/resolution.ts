@@ -1,4 +1,4 @@
-import { Clause } from "../../types/clause";
+import { Clause, FOLiteral } from "../../types/clause";
 import { Layout } from "../../types/layout";
 import { maxLengthClause } from "../clause";
 
@@ -7,7 +7,9 @@ import { maxLengthClause } from "../clause";
  * @param {Clause[]} clauses - The clauses to display in a circle
  * @returns {Layout<Clause>} - The circle layout of the clauses
  */
-export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
+export const circleLayout = (
+    clauses: Array<Clause<string | FOLiteral>>,
+): Layout<Clause<string | FOLiteral>> => {
     if (clauses.length === 0) {
         return { width: 0, height: 0, data: [] };
     }
@@ -37,7 +39,7 @@ export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
             1.2 *
             Math.max(
                 height / Math.sin(angle),
-                width / Math.sin(angle)
+                width / Math.sin(angle),
                 // (width * Math.tan((Math.PI - angle) / 2)) / Math.sin(angle)
             );
     }
@@ -51,7 +53,7 @@ export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
         data: clauses.map((c, i) => ({
             data: c,
             x: r * Math.cos(angle * i - Math.PI / 2),
-            y: r * Math.sin(angle * i - Math.PI / 2) + 14
-        }))
+            y: r * Math.sin(angle * i - Math.PI / 2) + 14,
+        })),
     };
 };
