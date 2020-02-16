@@ -7,11 +7,21 @@ import {
 } from "../types/clause";
 import { maxBy } from "./max-by";
 
+/**
+ * Parse a First Order argument to a string
+ * @param {FOArgument} arg - The FO argument to parse
+ * @returns {string} - The string representation
+ */
 export const FOArgumentToString = (arg: FOArgument): string =>
     arg.arguments
         ? `${arg.spelling}(${arg.arguments.map(FOArgumentToString).join(", ")})`
         : arg.spelling;
 
+/**
+ * Parse a First Order literal to a string
+ * @param {FOLiteral} lit - The FO literal to parse
+ * @returns {string} - The string representation
+ */
 export const FOLitToString = (lit: FOLiteral): string =>
     `${lit.spelling}(${lit.arguments.map(FOArgumentToString).join(", ")})`;
 

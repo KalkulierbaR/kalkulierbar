@@ -120,6 +120,13 @@ export const getPropCandidateClauses = (
     return newCandidateClauses;
 };
 
+/**
+ * Creates an array of candidate clauses based on if a clause is selected
+ * @param {FOClauseSet} clauseSet - The clause set to work on
+ * @param {boolean} highlightSelectable - Whether highlighting is enabled
+ * @param {number} selectedClauseId - The selected clause
+ * @returns {FOCandidateClause[]} - The new candidate clauses
+ */
 export const getFOCandidateClauses = (
     clauseSet: FOClauseSet,
     highlightSelectable: boolean,
