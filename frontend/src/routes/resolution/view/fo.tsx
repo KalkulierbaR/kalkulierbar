@@ -133,7 +133,7 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
                         onClick={() => {
                             hideClause(
                                 selectedClauseId,
-                                Calculus.propResolution,
+                                Calculus.foResolution,
                                 {
                                     ...apiInfo,
                                     state,
@@ -152,7 +152,7 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
                     showIconAtEnd={true}
                     icon={<ShowIcon />}
                     onClick={() => {
-                        showHiddenClauses(Calculus.propResolution, {
+                        showHiddenClauses(Calculus.foResolution, {
                             ...apiInfo,
                             state,
                         });
