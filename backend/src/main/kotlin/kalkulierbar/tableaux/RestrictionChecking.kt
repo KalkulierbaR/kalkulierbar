@@ -136,7 +136,7 @@ private fun <AtomType> checkConnectedSubtree(
 fun <AtomType> checkRegularity(state: GenericTableauxState<AtomType>): Boolean {
     val startNodes = state.root.children // root is excluded from connectedness criteria
 
-    return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, mutableListOf()) }
+    return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, listOf()) }
 }
 
 /**
@@ -150,7 +150,7 @@ fun <AtomType> checkRegularity(state: GenericTableauxState<AtomType>): Boolean {
 private fun <AtomType> checkRegularitySubtree(
     state: GenericTableauxState<AtomType>,
     root: Int,
-    lst: MutableList<Atom<AtomType>>
+    lst: List<Atom<AtomType>>
 ): Boolean {
     val node = state.nodes[root]
 
@@ -159,8 +159,10 @@ private fun <AtomType> checkRegularitySubtree(
         return false
 
     // Add node spelling to list of predecessors
-    lst.add(node.toAtom())
+    val lstCopy = mutableListOf<Atom<AtomType>>()
+    lstCopy.addAll(lst)
+    lstCopy.add(node.toAtom())
 
     // Check children for double vars in path and their children respectively
-    return node.children.none { !checkRegularitySubtree(state, it, lst) }
+    return node.children.none { !checkRegularitySubtree(state, it, lstCopy) }
 }

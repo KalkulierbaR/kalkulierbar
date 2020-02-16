@@ -6,6 +6,7 @@ export interface ResolutionState {
     clauseSet: ClauseSet;
     highlightSelectable: boolean;
     newestNode: number;
+    hiddenClauses: ClauseSet;
 }
 
 export interface ResolutionMoveResolve {
