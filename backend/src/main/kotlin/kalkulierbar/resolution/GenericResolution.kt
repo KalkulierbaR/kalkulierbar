@@ -176,6 +176,12 @@ interface GenericResolution<AtomType> {
         return Clause(atoms.distinct().toMutableList())
     }
 
+    /**
+     * Check if the literals of two atoms are syntactical equal
+     * @param a First atom
+     * @param b Second atom
+     * @return Boolean
+     */
     fun literalsAreEqual(a: AtomType, b: AtomType): Boolean {
         val eq: Boolean
         // Use syntactic equality for literal comparison if defined
