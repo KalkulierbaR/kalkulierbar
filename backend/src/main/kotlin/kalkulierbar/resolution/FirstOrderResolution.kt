@@ -83,6 +83,8 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         // amounts of clutter in the hidden clause set
         state.clauseSet.clauses.removeAt(instance2)
         state.clauseSet.clauses.removeAt(instance1)
+
+        state.newestNode = state.clauseSet.clauses.size - 1
     }
 
     /**

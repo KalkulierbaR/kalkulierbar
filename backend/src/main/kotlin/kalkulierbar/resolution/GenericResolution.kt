@@ -33,7 +33,7 @@ interface GenericResolution<AtomType> {
      * @param clause2 ID of the second clause to use for resolution
      * @param literal Literal present in both clauses to use for resolution
      */
-    @Suppress("ThrowsCount")
+    @Suppress("ThrowsCount", "ComplexMethod")
     fun resolve(state: GenericResolutionState<AtomType>, clause1: Int, clause2: Int, literal: AtomType?, insertAtEnd: Boolean = false) {
         val clauses = state.clauseSet.clauses
 
