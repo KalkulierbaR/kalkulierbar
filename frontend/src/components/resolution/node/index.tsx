@@ -39,7 +39,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
     selectCallback,
     coordinates,
     clause,
-    isNew
+    isNew,
 }) => {
     const textRef = createRef<SVGTextElement>();
 
@@ -65,7 +65,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
                     [style.noTextHighlight]: true
                 })}
             >
-                {clauseToString(clause)}
+                {clauseToString(clause.clause)}
             </text>
         </g>
     );
