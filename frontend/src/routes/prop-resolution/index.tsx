@@ -5,7 +5,7 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Switch from "../../components/switch";
 import { useAppState } from "../../helpers/app-state";
-import {Calculus} from "../../types/app";
+import { Calculus } from "../../types/app";
 import { CnfStrategy } from "../../types/tableaux";
 
 const Resolution: preact.FunctionalComponent = () => {
@@ -29,6 +29,7 @@ const Resolution: preact.FunctionalComponent = () => {
 
     return (
         <Fragment>
+            <Format />
             <FormulaInput calculus={Calculus.propResolution} params={params} />
             <div class="card">
                 <h3>Parameters</h3>
@@ -49,7 +50,6 @@ const Resolution: preact.FunctionalComponent = () => {
                     </div>
                 </div>
             </div>
-            <Format />
         </Fragment>
     );
 };

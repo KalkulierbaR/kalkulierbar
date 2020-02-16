@@ -79,10 +79,15 @@ class FirstOrderResolution :
         val instance2 = state.clauseSet.clauses.size - 1
         val literal = state.clauseSet.clauses[instance1].atoms[c1lit].lit
 
-        resolve(state, instance1, instance2, literal)
-        // TODO these indices arent always correct (also set newest node pointer)
-        // hide(state, instance2)
-        // hide(state, instance1)
+        resolve(state, instance1, instance2, literal, true)
+
+        // We'll remove the clause instances used for resolution here
+        // Technically, we could leave them in an hide them, but this causes unnecessary
+        // amounts of clutter in the hidden clause set
+        state.clauseSet.clauses.removeAt(instance2)
+        state.clauseSet.clauses.removeAt(instance1)
+
+        state.newestNode = state.clauseSet.clauses.size - 1
     }
 
     /**

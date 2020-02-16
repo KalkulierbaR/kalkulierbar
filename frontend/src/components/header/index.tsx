@@ -1,4 +1,4 @@
-import { Fragment, h } from "preact";
+import {Fragment, h} from "preact";
 import {Link} from "preact-router";
 import {useCallback, useState} from "preact/hooks";
 import { useAppState } from "../../helpers/app-state";
@@ -15,19 +15,24 @@ import ThemeLight from "../icons/theme-light";
 import TextInput from "../input/text";
 import * as style from "./style.scss";
 
-const Header: preact.FunctionalComponent = () => {
-    const { smallScreen } = useAppState();
+interface HeaderProps {
+    currentUrl: string;
+}
+
+const Header: preact.FunctionalComponent<HeaderProps> = ({currentUrl}) => {
+    const { hamburger } = useAppState();
     const [open, setOpen] = useState(false);
     const toggle = useCallback(() => setOpen(!open), [open]);
     const setClosed = useCallback(() => setOpen(false), [open]);
 
-    const right = smallScreen ? (
+    const right = hamburger ? (
         <Hamburger open={open} onClick={toggle} />
     ) : (
         <Fragment>
             <Nav
-                smallScreen={false}
+                hamburger={false}
                 onLinkClick={setClosed}
+                currentUrl={currentUrl}
             />
             <Btn class={style.settingsBtn} onClick={toggle} >
                 <SettingsIcon />
@@ -50,10 +55,11 @@ const Header: preact.FunctionalComponent = () => {
             <Drawer
                 open={open}
                 onLinkClick={setClosed}
+                currentUrl={currentUrl}
             />
             <Dialog
                 class={style.dialog}
-                open={!smallScreen && open}
+                open={!hamburger && open}
                 label="Settings"
                 onClose={setClosed}
             >
@@ -83,34 +89,39 @@ const Hamburger: preact.FunctionalComponent<HamburgerProps> = ({
 );
 
 interface NavProps {
-    smallScreen: boolean;
+    hamburger: boolean;
     onLinkClick: CallableFunction;
+    currentUrl: string;
 }
 
 const Nav: preact.FunctionalComponent<NavProps> = ({
-    smallScreen,
-    onLinkClick
+    hamburger,
+    onLinkClick,
+    currentUrl,
 }) => (
         <nav
             class={classMap({
                 [style.nav]: true,
-                [style.hamburgerLink]: smallScreen
+                [style.hamburgerLink]: hamburger
             })}
         >
             <Link
-                onClick={() => onLinkClick()}
-                href={"/" + Calculus.propTableaux}
-            >
-                Propositional Tableaux
-            </Link>
+                    onClick={() => onLinkClick()}
+                    class={currentUrl.includes(Calculus.propTableaux) ? style.current : undefined}
+                    href={"/" + Calculus.propTableaux}
+                >
+                    Propositional Tableaux
+                </Link>
+                <Link
+                    onClick={() => onLinkClick()}
+                    class={currentUrl.includes(Calculus.foTableaux) ? style.current : undefined}
+                    href={"/" + Calculus.foTableaux}
+                >
+                    FO Tableaux
+                </Link>
             <Link
                 onClick={() => onLinkClick()}
-                href={"/" + Calculus.foTableaux}
-            >
-                First Order Tableaux
-            </Link>
-            <Link
-                onClick={() => onLinkClick()}
+                class={currentUrl.includes(Calculus.propResolution) ? style.current : undefined}
                 href={"/" + Calculus.propResolution}
             >
                 Propositional Resolution
@@ -234,18 +245,21 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
 interface DrawerProps {
     open: boolean;
     onLinkClick: CallableFunction;
+    currentUrl: string;
 }
 
 const Drawer: preact.FunctionalComponent<DrawerProps> = ({
     open,
     onLinkClick,
+    currentUrl,
 }) => (
     <div class={classMap({ [style.drawer]: true, [style.open]: open })}>
         <div class={style.inner}>
             <h3>Calculi</h3>
             <Nav
-                smallScreen={true}
+                hamburger={true}
                 onLinkClick={onLinkClick}
+                currentUrl={currentUrl}
             />
             <h3>Settings</h3>
             <Settings />

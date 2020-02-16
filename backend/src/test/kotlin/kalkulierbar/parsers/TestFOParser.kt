@@ -38,7 +38,10 @@ class TestFOParser {
             "\\ex Xyz: P(Xyz)" to "(∃Xyz: P(Xyz))",
             "!\\ex X: (P(X) <-> !P(X))" to "!(∃X: (P(X) <=> !P(X)))",
             "!(\\ex X: (P(X) <-> !P(X)))" to "!(∃X: (P(X) <=> !P(X)))",
-            "\\ex Xyz: P(Xyz) & \\all X: P(X)" to "((∃Xyz: P(Xyz)) ∧ (∀X: P(X)))"
+            "\\ex Xyz: P(Xyz) & \\all X: P(X)" to "((∃Xyz: P(Xyz)) ∧ (∀X: P(X)))",
+            "!/ex X: (P(X) <-> !P(X))" to "!(∃X: (P(X) <=> !P(X)))",
+            "!(/ex X: (P(X) <-> !P(X)))" to "!(∃X: (P(X) <=> !P(X)))",
+            "/ex Xyz: P(Xyz) & /all X: P(X)" to "((∃Xyz: P(Xyz)) ∧ (∀X: P(X)))"
     )
 
     @Test
