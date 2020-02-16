@@ -148,18 +148,13 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             const selectedNodeIsLeaf = selectedNode.children.length === 0;
 
             if (
-                // Don't select two leafs or two nodes at the same time
-                (selectedNodeIsLeaf && newNodeIsLeaf) ||
-                (!selectedNodeIsLeaf && !newNodeIsLeaf)
+                // Open leaf and a closed Node are selected => Try Lemma move
+                isLemmaMove &&
+                (selectedNodeIsLeaf && !selectedNode.isClosed || newNodeIsLeaf && !newNode.isClosed) &&
+                (selectedNode.isClosed || newNode.isClosed)
             ) {
-                setSelectedNodeId(newNode.id);
-            } else if (
-                // Leaf and a closed Node are selected => Try Lemma move
-                (!selectedNodeIsLeaf && selectedNode.isClosed && newNodeIsLeaf && isLemmaMove) ||
-                (selectedNodeIsLeaf && newNode.isClosed && !newNodeIsLeaf && isLemmaMove)
-            ) {
-                const leafId = (newNodeIsLeaf ? newNode.id : selectedNodeId);
-                const lemmaId = (!newNodeIsLeaf ? newNode.id : selectedNodeId);
+                const leafId = (newNode.isClosed ? selectedNodeId : newNode.id);
+                const lemmaId = (newNode.isClosed ? newNode.id : selectedNodeId);
 
                 toggleLemmaMove(false);
                 sendLemma(
@@ -172,6 +167,12 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     lemmaId
                 );
                 setSelectedNodeId(undefined);
+            } else if (
+                // Don't select two leafs or two nodes at the same time
+                (selectedNodeIsLeaf && newNodeIsLeaf) ||
+                (!selectedNodeIsLeaf && !newNodeIsLeaf)
+            ) {
+                setSelectedNodeId(newNode.id);
             } else if (calculus === Calculus.propTableaux) {
                 // Now we have a leaf and a predecessor => Try close move
                 // If we can't do it, let server handle it
