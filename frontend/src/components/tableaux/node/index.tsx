@@ -56,16 +56,17 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             onClick={handleClick}
             class={classMap({
                 [style.node]: true,
-                [style.nodeClosed]: node.data.isClosed,
+                [style.nodeClosed]: node.data.isClosed && !lemmaNodesSelectable,
                 [style.nodeClickable]: nodeIsClickable
             })}
         >
             <Rectangle
                 elementRef={textRef}
-                disabled={node.data.isClosed}
+                disabled={node.data.isClosed && !lemmaNodesSelectable}
                 selected={selected}
                 class={classMap({
-                    [style.nodeLemma]: node.data.isLemma === undefined ? false : node.data.isLemma
+                    [style.nodeLemma]: node.data.isLemma === undefined ? false : node.data.isLemma,
+                    [style.nodeSelectLemma]: node.data.isClosed && lemmaNodesSelectable
                 })}
             />
             <text
@@ -73,7 +74,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                 text-anchor="middle"
                 class={classMap({
                     [style.textSelected]: selected,
-                    [style.textClosed]: node.data.isClosed
+                    [style.textClosed]: node.data.isClosed && !lemmaNodesSelectable
                 })}
                 x={node.x}
                 y={node.y}
