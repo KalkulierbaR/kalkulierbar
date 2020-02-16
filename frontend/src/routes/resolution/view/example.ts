@@ -65,6 +65,36 @@ export const foExample: FOResolutionState = {
                                             type: "QuantifiedVariable",
                                             spelling: "X",
                                         },
+                                        {
+                                            type: "Constant",
+                                            spelling: "a",
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        negated: false,
+                    },
+                ],
+            },
+            {
+                atoms: [
+                    {
+                        lit: {
+                            spelling: "R",
+                            arguments: [
+                                {
+                                    type: "Function",
+                                    spelling: "f",
+                                    arguments: [
+                                        {
+                                            type: "Constant",
+                                            spelling: "sk1",
+                                        },
+                                        {
+                                            type: "Constant",
+                                            spelling: "a",
+                                        },
                                     ],
                                 },
                             ],
@@ -78,5 +108,5 @@ export const foExample: FOResolutionState = {
     highlightSelectable: false,
     newestNode: -1,
     hiddenClauses: { clauses: [] },
-    seal: "EE642BDA392ED4A7F1748F7C924CD838E4AB3A94A7957B2036A7AC6F8825FCBE",
+    seal: "C72A4B283924D3AE37E2D08BF5E0C31A032FA19FDE1007CD8EED6412EB11F722",
 };

@@ -11,7 +11,7 @@ import Snackbar from "./snackbar";
 import * as style from "./style.scss";
 
 const SMALL_SCREEN_THRESHOLD = 700;
-const HAMBURGER_THRESHOLD = 1060;
+const HAMBURGER_THRESHOLD = 1200;
 
 /**
  * Check if server is online

@@ -15,7 +15,7 @@ interface Props {
     /**
      * The function to call, when the user submits the list
      */
-    submitVarAssignCallback: (auto: boolean, va?: VarAssign) => void;
+    submitVarAssignCallback: (autoAssign: boolean, varAssign?: VarAssign) => void;
     /**
      * Label for the submit button
      */
@@ -27,7 +27,7 @@ interface Props {
     /**
      * The function to call, when the user clicks the second submit button
      */
-    secondSubmitEvent?: (auto: boolean, va?: VarAssign) => void;
+    secondSubmitEvent?: (autoAssign: boolean, varAssign?: VarAssign) => void;
     /**
      * Additional className for the element
      */
@@ -60,6 +60,19 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
         submitVarAssignCallback(false, varAssign);
     };
 
+    /**
+     * Handle the KeyDown event of the input fields
+     * @param {KeyboardEvent} e - The keyboard event
+     * @returns {void}
+     */
+    const onKeyDown = (e: KeyboardEvent) => {
+        if (e.keyCode === 13 && e.ctrlKey) {
+            // Submit manual varAssign when hitting (enter + ctrlKey)
+            e.stopPropagation();
+            submitVarAssign();
+        }
+    };
+
     return (
         <div class={`card ${className}`}>
             {vars.map(variable => (
@@ -69,6 +82,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                         label={variable + " := "}
                         required={manualVarAssign}
                         inline={true}
+                        onKeyDown={onKeyDown}
                     />
                 </p>
             ))}

@@ -52,12 +52,12 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
                             </tr>
                             <tr>
                                 <td>Universal quantifiers</td>
-                                <td><code>\all X</code></td>
+                                <td><code>\all X:</code> or <code>/all X:</code></td>
                                 <td><code>\all X: (R(X) & Q(X))</code></td>
                             </tr>
                             <tr>
                                 <td>Existential quantifiers</td>
-                                <td><code>\ex X</code></td>
+                                <td><code>\ex X:</code> or <code>/ex X:</code></td>
                                 <td><code>\ex X: (R(X) & Q(X))</code></td>
                             </tr>
                             <tr>
@@ -77,7 +77,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
                             </tr>
                             <tr>
                                 <td>Equivalence</td>
-                                <td><code>{"<=> or <->"}</code></td>
+                                <td><code>{"<=>"}</code> or <code>{"<->"}</code></td>
                                 <td><code>{"right <=> !left"}</code></td>
                             </tr>
                         </table>
