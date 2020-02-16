@@ -39,7 +39,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     const name = `${node.data.negated ? "¬" : ""}${node.data.spelling}`;
 
     // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
-    const nodeIsClickable = ((lemmaNodesSelectable && !(node.data.children.length === 0)) ||
+    const nodeIsClickable = ((lemmaNodesSelectable && node.data.isClosed) ||
         (!lemmaNodesSelectable && !node.data.isClosed));
     /**
      * Handle the onClick event of the node
@@ -64,6 +64,9 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                 elementRef={textRef}
                 disabled={node.data.isClosed}
                 selected={selected}
+                class={classMap({
+                    [style.nodeLemma]: node.data.isLemma === undefined ? false : node.data.isLemma
+                })}
             />
             <text
                 ref={textRef}
