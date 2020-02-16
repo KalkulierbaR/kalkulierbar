@@ -20,6 +20,7 @@ const INIT_APP_STATE: AppState = {
     hamburger: false,
     savedFormulas: {
         [Calculus.propResolution]: "",
+        [Calculus.foResolution]: "",
         [Calculus.propTableaux]: "",
         [Calculus.foTableaux]: ""
     },

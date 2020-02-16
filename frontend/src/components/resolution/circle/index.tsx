@@ -34,12 +34,12 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     selectClauseCallback,
     selectedClauseId,
     highlightSelectable,
-    newestNode
+    newestNode,
 }) => {
-
-    const { width, height, data } = useMemo(() => circleLayout(clauses), [
-        clauses
-    ]);
+    const { width, height, data } = useMemo(
+        () => circleLayout(clauses.map((c) => c.clause)),
+        [clauses],
+    );
 
     return (
         <div class={`card ${style.noPad}`}>
@@ -51,7 +51,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
                 preserveAspectRatio="xMidyMid meet"
             >
-                {transform => (
+                {(transform) => (
                     <g
                         transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
