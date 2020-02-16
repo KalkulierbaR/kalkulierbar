@@ -106,25 +106,32 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
             })}
         >
             <Link
-                    onClick={() => onLinkClick()}
-                    class={currentUrl.includes(Calculus.propTableaux) ? style.current : undefined}
-                    href={"/" + Calculus.propTableaux}
-                >
-                    Propositional Tableaux
-                </Link>
-                <Link
-                    onClick={() => onLinkClick()}
-                    class={currentUrl.includes(Calculus.foTableaux) ? style.current : undefined}
-                    href={"/" + Calculus.foTableaux}
-                >
-                    FO Tableaux
-                </Link>
+                onClick={() => onLinkClick()}
+                class={currentUrl.includes(Calculus.propTableaux) ? style.current : undefined}
+                href={"/" + Calculus.propTableaux}
+            >
+                Propositional Tableaux
+            </Link>
+            <Link
+                onClick={() => onLinkClick()}
+                class={currentUrl.includes(Calculus.foTableaux) ? style.current : undefined}
+                href={"/" + Calculus.foTableaux}
+            >
+                FO Tableaux
+            </Link>
             <Link
                 onClick={() => onLinkClick()}
                 class={currentUrl.includes(Calculus.propResolution) ? style.current : undefined}
                 href={"/" + Calculus.propResolution}
             >
                 Propositional Resolution
+            </Link>
+            <Link
+                onClick={() => onLinkClick()}
+                class={currentUrl.includes(Calculus.foResolution) ? style.current : undefined}
+                href={"/" + Calculus.foResolution}
+            >
+                FO Resolution
             </Link>
         </nav>
 );
