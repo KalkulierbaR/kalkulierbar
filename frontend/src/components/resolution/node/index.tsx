@@ -62,6 +62,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
                 class={classMap({
                     [style.textClosed]: disabled,
                     [style.textSelected]: selected,
+                    [style.noTextHighlight]: true
                 })}
             >
                 {clauseToString(clause.clause)}

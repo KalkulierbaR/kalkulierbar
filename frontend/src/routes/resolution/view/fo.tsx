@@ -31,6 +31,7 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
         onError,
         onChange,
         onSuccess,
+        smallScreen,
     } = useAppState();
 
     let state = cState;
@@ -123,7 +124,7 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
                 highlightSelectable={state.highlightSelectable}
                 newestNode={state.newestNode}
             />
-            <ControlFAB>
+            <ControlFAB alwaysOpen={!smallScreen}>
                 {selectedClauseId !== undefined ? (
                     <FAB
                         mini={true}
@@ -146,20 +147,22 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
                 ) : (
                     undefined
                 )}
-                <FAB
-                    mini={true}
-                    extended={true}
-                    label="Show all"
-                    showIconAtEnd={true}
-                    icon={<ShowIcon />}
-                    onClick={() => {
-                        showHiddenClauses(Calculus.foResolution, {
-                            ...apiInfo,
-                            state,
-                        });
-                        setSelectedClauses(undefined);
-                    }}
-                />
+                {state!.hiddenClauses.clauses.length > 0 ? (
+                    <FAB
+                        mini={true}
+                        extended={true}
+                        label="Show all"
+                        showIconAtEnd={true}
+                        icon={<ShowIcon />}
+                        onClick={() => {
+                            showHiddenClauses(Calculus.foResolution, {
+                                ...apiInfo,
+                                state,
+                            });
+                            setSelectedClauses(undefined);
+                        }}
+                    />
+                ) : undefined}
                 <FAB
                     mini={true}
                     extended={true}
