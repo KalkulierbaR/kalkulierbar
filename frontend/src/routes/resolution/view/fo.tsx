@@ -10,6 +10,7 @@ import ShowIcon from "../../../components/icons/show";
 import ResolutionCircle from "../../../components/resolution/circle";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
+import { clauseToString } from "../../../helpers/clause";
 import {
     getFOCandidateClauses,
     hideClause,
@@ -217,7 +218,7 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
                                     setSelectedClauses(undefined);
                                 }}
                             >
-                                {l}
+                                {clauseToString(candidateClauses[l].clause)}
                             </p>
                         ),
                     )}
