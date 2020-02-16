@@ -144,9 +144,7 @@ const FOResolutionView: preact.FunctionalComponent<Props> = () => {
                             setSelectedClauses(undefined);
                         }}
                     />
-                ) : (
-                    undefined
-                )}
+                ) : undefined }
                 {state!.hiddenClauses.clauses.length > 0 ? (
                     <FAB
                         mini={true}
