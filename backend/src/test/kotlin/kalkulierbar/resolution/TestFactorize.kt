@@ -16,20 +16,6 @@ class TestFactorize {
     val fo = FirstOrderResolution()
 
     @Test
-    fun testClauseFactorize() {
-        val a = Clause<String>(mutableListOf(Atom("a"), Atom("b"), Atom("a"), Atom("b"), Atom("a")))
-        val b = Clause<String>(mutableListOf(Atom("a"), Atom("b"), Atom("c"), Atom("a"), Atom("c")))
-        val c = Clause<String>(mutableListOf(Atom("a"), Atom("a"), Atom("a"), Atom("a"), Atom("a")))
-        a.factorize()
-        b.factorize()
-        c.factorize()
-
-        assertEquals("{a, b}", a.toString())
-        assertEquals("{a, b, c}", a.toString())
-        assertEquals("{a}", c.toString())
-    }
-
-    @Test
     fun testInvalidClause() {
         val state = prop.parseFormulaToState("a;!a", null)
         assertFailsWith<IllegalMove> {

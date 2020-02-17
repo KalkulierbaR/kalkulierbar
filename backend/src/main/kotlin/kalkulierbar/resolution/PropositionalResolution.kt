@@ -53,7 +53,7 @@ class PropositionalResolution :
         val oldClause = clauses[clauseID]
         // Copy old clause and factorize
         val newClause = oldClause.clone()
-        newClause.factorize()
+        newClause.atoms = newClause.atoms.distinct().toMutableList()
 
         // Throw message for no possible factorisation
         if (oldClause.atoms.size == newClause.atoms.size)
