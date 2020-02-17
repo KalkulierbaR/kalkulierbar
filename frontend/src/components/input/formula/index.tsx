@@ -138,6 +138,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         const text = textareaValue.replace(suggestionsRegEx, " " + suggestions[suggestion] + " ").replace(/(^\s)/, "");
         setTextareaValue(text);
         textArea.focus();
+        toggleShowSuggestion(false);
     }
 
     return (
