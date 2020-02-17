@@ -78,6 +78,7 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
 ) => {
     const url = `${server}/${calculus}/move`;
     try {
+        // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
             headers: {
                 "Content-Type": "text/plain"

@@ -8,10 +8,11 @@ import CheckCircleIcon from "../../../components/icons/check-circle";
 import FactoriseIcon from "../../../components/icons/factorise";
 import HideIcon from "../../../components/icons/hide";
 import ShowIcon from "../../../components/icons/show";
+import OptionList from "../../../components/input/option-list";
 import ResolutionCircle from "../../../components/resolution/circle";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
-import { FOLitToString } from "../../../helpers/clause";
+import {atomToString, FOLitToString} from "../../../helpers/clause";
 import {
     getFOCandidateClauses, getPropCandidateClauses,
     hideClause,
@@ -19,12 +20,12 @@ import {
 } from "../../../helpers/resolution";
 import {Calculus, ResolutionCalculusType} from "../../../types/app";
 import {
+    Atom, FOAtom,
     FOCandidateClause, instanceOfStringClause,
     PropCandidateClause
 } from "../../../types/clause";
 import {instanceOfFOResolutionState, instanceOfPropResolutionState} from "../../../types/resolution";
 import {foExample, propExample} from "./example";
-import * as style from "./style.scss";
 
 interface Props {
     /**
@@ -60,21 +61,27 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     }
 
     const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
-        undefined,
+        undefined
+    );
+    const [showFactoriseDialog, setShowFactoriseDialog] = useState(
+        false
+    );
+    const [selectedFactorizeOption, setSelectedFactorizeOption] = useState<number|undefined>(
+        undefined
     );
 
     const selectedClauseId =
         selectedClauses === undefined ? undefined : selectedClauses[0];
 
-    const selectedClauseAtomsLengthEqual = (length: number) => {
-        return selectedClauseId === undefined ? false : state!.clauseSet.clauses[selectedClauseId].atoms.length === length;
-    };
+    const selectedClauseAtomsLengthEqual = (length: number) =>
+        selectedClauseId === undefined ? false :
+            state!.clauseSet.clauses[selectedClauseId].atoms.length === length;
 
-    const selectedClauseAtomsLengthGreater = (length: number) => {
-        return selectedClauseId === undefined ? false : state!.clauseSet.clauses[selectedClauseId].atoms.length > length;
-    };
+    const selectedClauseAtomsLengthGreater = (length: number) =>
+        selectedClauseId === undefined ? false :
+            state!.clauseSet.clauses[selectedClauseId].atoms.length > length;
 
-    const showDialog = selectedClauses && selectedClauses.length === 2;
+    const showLiteralDialog = selectedClauses && selectedClauses.length === 2;
 
     let candidateClauses : PropCandidateClause[] | FOCandidateClause[] = [];
     if (isProp && instanceOfPropResolutionState(state)){
@@ -127,6 +134,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 if(resolventLiteralId != null) {
                     // Send resolve move to backend
                     if (instanceOfStringClause(candidateClause!.clause) && isProp && instanceOfPropResolutionState(state)) {
+                        const literal = candidateClause!.clause.atoms[
+                                candidateClause!.candidateLiterals[0]
+                            ].lit;
                         sendMove(
                             server,
                             calculus,
@@ -135,19 +145,12 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 type: "res-resolve",
                                 c1: selectedClauseId,
                                 c2: newClauseId,
-                                literal: candidateClause!.clause.atoms[
-                                    candidateClause!.candidateLiterals[0]
-                                    ].lit,
+                                literal,
                             },
                             onChange,
                             onError,
                         );
                     } else if (isFO && instanceOfFOResolutionState(state)) {
-                        const l1 = getFOCandidateClauses(
-                            state!.clauseSet,
-                            state!.highlightSelectable,
-                            selectedClauseId,
-                        )[0].index;
                         sendMove(
                             server,
                             calculus,
@@ -156,7 +159,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 type: "res-resolveunify",
                                 c1: selectedClauseId,
                                 c2: newClauseId,
-                                l1,
+                                l1: candidateClauses[0].index,
                                 l2: resolventLiteralId,
                             },
                             onChange,
@@ -166,6 +169,98 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 }
             }
             // Reset selection
+            setSelectedClauses(undefined);
+        }
+    };
+
+    const literalOptions = () => {
+        const options: string[] = [];
+        if (selectedClauses && selectedClauses.length === 2){
+            candidateClauses[selectedClauses[1]].candidateLiterals.map(
+                (atomIndex) => {
+                    const literal = candidateClauses[
+                            selectedClauses[1]
+                        ].clause.atoms[atomIndex].lit;
+
+                    options.push(typeof literal === "string" ? literal : FOLitToString(literal));
+                }
+            )
+        }
+        return options;
+    };
+
+    const selectLiteralOption = (optionIndex: number) => {
+        if(selectedClauses && selectedClauses.length === 2) {
+            if (isProp && instanceOfPropResolutionState(state)) {
+                sendMove(
+                    server,
+                    calculus,
+                    state!,
+                    {
+                        type: "res-resolve",
+                        c1: selectedClauseId!,
+                        c2: selectedClauses[1],
+                        literal: literalOptions()[optionIndex],
+                    },
+                    onChange,
+                    onError,
+                );
+            } else if (isFO && instanceOfFOResolutionState(state)) {
+                sendMove(
+                    server,
+                    calculus,
+                    state!,
+                    {
+                        type: "res-resolveunify",
+                        c1: selectedClauseId!,
+                        c2: selectedClauses[1],
+                        l1: optionIndex,
+                        l2: candidateClauses[selectedClauses[1]].index,
+                    },
+                    onChange,
+                    onError,
+                );
+            }
+        }
+        setSelectedClauses(undefined);
+    };
+
+    const factorizeOptions = () => {
+        let options: string[] = [];
+        if(state !== undefined && selectedClauseId !== undefined) {
+            if (isProp && instanceOfPropResolutionState(state)) {
+                console.log(state.clauseSet.clauses[selectedClauseId].atoms);
+                options = state.clauseSet.clauses[selectedClauseId].atoms.map((atom: Atom) => atomToString(atom));
+            } else if (isFO && instanceOfFOResolutionState(state)) {
+                options = state.clauseSet.clauses[selectedClauseId].atoms.map((atom: FOAtom) => atomToString(atom));
+            }
+        }
+        return options;
+    };
+
+    const selectFactorizeOption = (optionIndex: number) => {
+        if(selectedFactorizeOption === undefined){
+            setSelectedFactorizeOption(optionIndex);
+        }
+        else if(optionIndex === selectedFactorizeOption){
+            // Same option was selected again -> deselect it
+            setSelectedFactorizeOption(undefined);
+        }
+        else {
+            sendMove(
+                server,
+                calculus,
+                state!,
+                {
+                    type: "res-factorize",
+                    c1: selectedClauseId!,
+                    a1: selectedFactorizeOption,
+                    a2: optionIndex,
+                },
+                onChange,
+                onError,
+            );
+            setShowFactoriseDialog(false);
             setSelectedClauses(undefined);
         }
     };
@@ -223,10 +318,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                             onChange,
                                             onError,
                                         );
+                                        return;
                                     }
-                                    else {
-
-                                    }
+                                    setShowFactoriseDialog(true);
                                 }}
                             />
                         : undefined}
@@ -264,75 +358,35 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     showIconAtEnd={true}
                     onClick={() =>
                         checkClose(
-                            server,
-                            onError,
-                            onSuccess,
-                            calculus,
-                            state,
+                        server,
+                        onError,
+                        onSuccess,
+                        calculus,
+                        state,
                         )
                     }
                 />
             </ControlFAB>
             <Dialog
-                open={showDialog}
+                open={showLiteralDialog}
                 label="Choose Literal"
                 onClose={() => setSelectedClauses([selectedClauses![0]])}
             >
-                {selectedClauses &&
-                selectedClauses.length === 2 &&
-                candidateClauses[selectedClauses[1]].candidateLiterals.map(
-                    (atomIndex) => {
-                        const literal = candidateClauses[
-                            selectedClauses[1]
-                            ].clause.atoms[atomIndex].lit;
-                        
-                        return (
-                            <p
-                                key={atomIndex}
-                                class={style.listItem}
-                                onClick={() => {
-                                    if (typeof literal === "string" && isProp && instanceOfPropResolutionState(state)) {
-                                        sendMove(
-                                            server,
-                                            calculus,
-                                            state!,
-                                            {
-                                                type: "res-resolve",
-                                                c1: selectedClauseId!,
-                                                c2: selectedClauses[1],
-                                                literal,
-                                            },
-                                            onChange,
-                                            onError,
-                                        );
-                                    } else if (isFO && instanceOfFOResolutionState(state)) {
-                                        sendMove(
-                                            server,
-                                            calculus,
-                                            state!,
-                                            {
-                                                type: "res-resolveunify",
-                                                c1: selectedClauseId!,
-                                                c2: selectedClauses[1],
-                                                l1: atomIndex,
-                                                l2: getFOCandidateClauses(
-                                                    state!.clauseSet,
-                                                    state!.highlightSelectable,
-                                                    selectedClauses[1],
-                                                )[0].index,
-                                            },
-                                            onChange,
-                                            onError,
-                                        );
-                                    }
-                                    setSelectedClauses(undefined);
-                                }}
-                            >
-                                {typeof literal === "string" ? literal : FOLitToString(literal)}
-                            </p>
-                        )
-                    },
-                )}
+                <OptionList
+                    options={literalOptions()}
+                    selectOptionCallback={selectLiteralOption}
+                />
+            </Dialog>
+            <Dialog
+                open={showFactoriseDialog}
+                label="Choose 2 atoms to factorize"
+                onClose={() => setShowFactoriseDialog(false)}
+            >
+                <OptionList
+                    options={factorizeOptions()}
+                    selectedOptionId={selectedFactorizeOption}
+                    selectOptionCallback={selectFactorizeOption}
+                />
             </Dialog>
         </Fragment>
     );

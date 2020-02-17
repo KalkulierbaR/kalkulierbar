@@ -297,7 +297,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             >
                 <OptionList
                     options={clauseOptions()}
-                    selectedOptionId={undefined}
                     selectOptionCallback={(id: number) => {
                         setShowClauseDialog(false);
                         selectClauseCallback(id);
