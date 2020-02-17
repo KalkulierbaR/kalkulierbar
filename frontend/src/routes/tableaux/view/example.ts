@@ -57,9 +57,9 @@ export const foExample: FOTableauxState = {
                 "lit": {
                     "spelling": "R",
                     "arguments": [{
-                        "type": "kalkulierbar.logic.Function",
+                        "type": "Function",
                         "spelling": "f",
-                        "arguments": [{"type": "kalkulierbar.logic.QuantifiedVariable", "spelling": "X"}]
+                        "arguments": [{"type": "QuantifiedVariable", "spelling": "X"}]
                     }]
                 }, "negated": true
             }]
@@ -68,18 +68,18 @@ export const foExample: FOTableauxState = {
                 "lit": {
                     "spelling": "R",
                     "arguments": [{
-                        "type": "kalkulierbar.logic.Function",
+                        "type": "Function",
                         "spelling": "f",
-                        "arguments": [{"type": "kalkulierbar.logic.Constant", "spelling": "a"}]
+                        "arguments": [{"type": "Constant", "spelling": "a"}]
                     }]
                 }, "negated": false
             }, {
                 "lit": {
                     "spelling": "R",
                     "arguments": [{
-                        "type": "kalkulierbar.logic.Function",
+                        "type": "Function",
                         "spelling": "f",
-                        "arguments": [{"type": "kalkulierbar.logic.Constant", "spelling": "b"}]
+                        "arguments": [{"type": "Constant", "spelling": "b"}]
                     }]
                 }, "negated": true
             }]
@@ -88,9 +88,9 @@ export const foExample: FOTableauxState = {
                 "lit": {
                     "spelling": "R",
                     "arguments": [{
-                        "type": "kalkulierbar.logic.Function",
+                        "type": "Function",
                         "spelling": "f",
-                        "arguments": [{"type": "kalkulierbar.logic.QuantifiedVariable", "spelling": "Xv1"}]
+                        "arguments": [{"type": "QuantifiedVariable", "spelling": "Xv1"}]
                     }]
                 }, "negated": false
             }]
@@ -113,11 +113,7 @@ export const foExample: FOTableauxState = {
         "parent": 0,
         "relation": {
             "spelling": "R",
-            "arguments": [{
-                "type": "kalkulierbar.logic.Function",
-                "spelling": "f",
-                "arguments": [{"type": "kalkulierbar.logic.Constant", "spelling": "a"}]
-            }]
+            "arguments": [{"type": "Function", "spelling": "f", "arguments": [{"type": "Constant", "spelling": "a"}]}]
         },
         "negated": false,
         "isClosed": false,
@@ -128,11 +124,7 @@ export const foExample: FOTableauxState = {
         "parent": 0,
         "relation": {
             "spelling": "R",
-            "arguments": [{
-                "type": "kalkulierbar.logic.Function",
-                "spelling": "f",
-                "arguments": [{"type": "kalkulierbar.logic.Constant", "spelling": "b"}]
-            }]
+            "arguments": [{"type": "Function", "spelling": "f", "arguments": [{"type": "Constant", "spelling": "b"}]}]
         },
         "negated": true,
         "isClosed": false,
@@ -144,16 +136,16 @@ export const foExample: FOTableauxState = {
         "relation": {
             "spelling": "R",
             "arguments": [{
-                "type": "kalkulierbar.logic.Function",
+                "type": "Function",
                 "spelling": "f",
-                "arguments": [{"type": "kalkulierbar.logic.QuantifiedVariable", "spelling": "Xv2"}]
+                "arguments": [{"type": "QuantifiedVariable", "spelling": "X_2"}]
             }]
         },
         "negated": true,
         "isClosed": false,
         "closeRef": null,
         "children": [],
-        "spelling": "R(f(Xv2))"
+        "spelling": "R(f(X_2))"
     }],
     "moveHistory": [{"type": "EXPAND", "id1": 0, "id2": 1, "varAssign": {}}, {
         "type": "EXPAND",
@@ -163,6 +155,6 @@ export const foExample: FOTableauxState = {
     }],
     "usedBacktracking": false,
     "expansionCounter": 2,
-    "seal": "D51F2D4BDAC3353CF6A55515C9058AEFDC51ED19F2E1921DB936D366B0CE51F8",
+    "seal": "D9CBFCD29C08A89041652FE3A8276DFEDE29D994E59A21AA99D4A553415E9F58",
     "renderedClauseSet": ["!R(f(X))", "R(f(a)), !R(f(b))", "R(f(Xv1))"]
 };
