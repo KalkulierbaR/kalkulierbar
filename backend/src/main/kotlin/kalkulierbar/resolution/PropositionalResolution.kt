@@ -11,7 +11,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class PropositionalResolution : GenericResolution<String>, JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
+class PropositionalResolution : GenericResolution<String>,
+        JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
     override val identifier = "prop-resolution"
 
     private val serializer = Json(context = resolutionMoveModule)
@@ -30,6 +31,7 @@ class PropositionalResolution : GenericResolution<String>, JSONCalculus<Resoluti
             is MoveResolve -> resolve(state, move.c1, move.c2, move.literal)
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
+            is MoveHyper -> hyper(state, move.mainID, move.sidePremisses)
             else -> throw IllegalMove("Unknown move")
         }
         return state
