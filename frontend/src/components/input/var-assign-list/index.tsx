@@ -1,4 +1,5 @@
-import { h } from "preact";
+import {h} from "preact";
+import {useState} from "preact/hooks";
 import { VarAssign } from "../../../types/tableaux";
 import Btn from "../../btn";
 import TextInput from "../text";
@@ -44,6 +45,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
     className
 }) => {
     const varAssign: VarAssign = {};
+    const [focusedInputElement, setFocusedInputElement] = useState<string>(vars[0]);
 
     /**
      * Submit the manual variable assignment by the user
@@ -66,29 +68,46 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const onKeyDown = (e: KeyboardEvent) => {
+        e.stopPropagation();
         if (e.keyCode === 13 && e.ctrlKey) {
             // Submit manual varAssign when hitting (enter + ctrlKey)
-            e.stopPropagation();
             submitVarAssign();
+        }else if (e.keyCode === 13){
+            const focusedElementIndex = vars.indexOf(focusedInputElement);
+            console.log(focusedElementIndex);
+            if (focusedElementIndex === (vars.length - 1)){
+                submitVarAssign();
+            }else{
+                const nextInput = document.getElementById(vars[focusedElementIndex + 1]) as HTMLInputElement;
+                nextInput.focus();
+            }
         }
+    };
+
+    const onFocus = (e: FocusEvent) => {
+        const target = e.target as HTMLInputElement;
+        setFocusedInputElement(target.id);
+        target.focus();
     };
 
     return (
         <div class={`card ${className}`}>
-            {vars.map(variable => (
-                <p>
-                    <TextInput
-                        id={variable}
-                        label={variable + " := "}
-                        required={manualVarAssign}
-                        inline={true}
-                        onKeyDown={onKeyDown}
-                        type="url"
-                        autoComplete={false}
-                        autoCapitalize={false}
-                    />
-                </p>
-            ))}
+            {vars.map((variable, index) =>
+                    <p key={variable}>
+                        <TextInput
+                            id={variable}
+                            label={variable + " := "}
+                            required={manualVarAssign}
+                            inline={true}
+                            onKeyDown={onKeyDown}
+                            onFocus={onFocus}
+                            type="url"
+                            autoComplete={false}
+                            autoCapitalize={false}
+                            autoFocus= {index === 0}
+                        />
+                    </p>
+            )}
             <Btn onClick={submitVarAssign}>{submitLabel}</Btn>
 
             {!manualVarAssign && secondSubmitLabel && secondSubmitEvent ? (
