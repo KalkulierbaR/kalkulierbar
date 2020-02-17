@@ -49,64 +49,57 @@ export const propExample: PropResolutionState = {
 };
 
 export const foExample: FOResolutionState = {
-    clauseSet: {
-        clauses: [
-            {
-                atoms: [
-                    {
-                        lit: {
-                            spelling: "R",
-                            arguments: [
-                                {
-                                    type: "Function",
-                                    spelling: "f",
-                                    arguments: [
-                                        {
-                                            type: "QuantifiedVariable",
-                                            spelling: "X",
-                                        },
-                                        {
-                                            type: "Constant",
-                                            spelling: "a",
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                        negated: false,
-                    },
-                ],
-            },
-            {
-                atoms: [
-                    {
-                        lit: {
-                            spelling: "R",
-                            arguments: [
-                                {
-                                    type: "Function",
-                                    spelling: "f",
-                                    arguments: [
-                                        {
-                                            type: "Constant",
-                                            spelling: "sk1",
-                                        },
-                                        {
-                                            type: "Constant",
-                                            spelling: "a",
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                        negated: true,
-                    },
-                ],
-            },
-        ],
+    "clauseSet": {
+        "clauses": [{
+            "atoms": [{
+                "lit": {
+                    "spelling": "R",
+                    "arguments": [{
+                        "type": "Function",
+                        "spelling": "f",
+                        "arguments": [{"type": "QuantifiedVariable", "spelling": "X"}, {
+                            "type": "Constant",
+                            "spelling": "a"
+                        }]
+                    }]
+                }, "negated": false
+            }]
+        }, {
+            "atoms": [{
+                "lit": {
+                    "spelling": "R",
+                    "arguments": [{
+                        "type": "Function",
+                        "spelling": "f",
+                        "arguments": [{"type": "Constant", "spelling": "sk1"}, {"type": "Constant", "spelling": "a"}]
+                    }]
+                }, "negated": true
+            }]
+        }, {
+            "atoms": [{
+                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "b"}]},
+                "negated": false
+            }, {"lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "b"}]}, "negated": false}]
+        }, {
+            "atoms": [{
+                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "b"}]},
+                "negated": true
+            }]
+        }, {
+            "atoms": [{
+                "lit": {
+                    "spelling": "R",
+                    "arguments": [{
+                        "type": "Function",
+                        "spelling": "f",
+                        "arguments": [{"type": "Constant", "spelling": "c"}, {"type": "Constant", "spelling": "a"}]
+                    }]
+                }, "negated": false
+            }]
+        }]
     },
-    highlightSelectable: false,
-    newestNode: -1,
-    hiddenClauses: { clauses: [] },
-    seal: "C72A4B283924D3AE37E2D08BF5E0C31A032FA19FDE1007CD8EED6412EB11F722",
+    "highlightSelectable": false,
+    "newestNode": -1,
+    "hiddenClauses": {"clauses": []},
+    "seal": "6BD93982990DDA79E1BBBF5506C30B3577F070FC7AE1255D75E817DE3FF90CBE"
 };

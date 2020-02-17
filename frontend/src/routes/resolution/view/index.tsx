@@ -167,6 +167,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         );
                     }
                 }
+                else {
+                    onError("These clauses can't be resolved.");
+                }
             }
             // Reset selection
             setSelectedClauses(undefined);
@@ -380,7 +383,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             <Dialog
                 open={showFactoriseDialog}
                 label="Choose 2 atoms to factorize"
-                onClose={() => setShowFactoriseDialog(false)}
+                onClose={() => {
+                    setShowFactoriseDialog(false);
+                    setSelectedFactorizeOption(undefined);
+                }}
             >
                 <OptionList
                     options={factorizeOptions()}
