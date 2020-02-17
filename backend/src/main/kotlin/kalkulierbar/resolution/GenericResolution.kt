@@ -54,16 +54,7 @@ interface GenericResolution<AtomType> {
             resCandidates = getAutoResolutionCandidates(c1, c2)
         } else {
             // Filter clauses for atoms with correct literal
-            val atomsInC1 = c1.atoms.filter { literalsAreEqual(it.lit, literal) }
-            val atomsInC2 = c2.atoms.filter { literalsAreEqual(it.lit, literal) }
-            if (atomsInC1.isEmpty())
-                throw IllegalMove("Clause '$c1' does not contain atom '$literal'")
-            if (atomsInC2.isEmpty())
-                throw IllegalMove("Clause '$c2' does not contain atom '$literal'")
-
-            val msg = "Clauses '$c1' and '$c2' do not contain atom '$literal' in both positive and negated form"
-            resCandidates = findResCandidates(atomsInC1, atomsInC2)
-                    ?: throw IllegalMove(msg)
+            resCandidates = filterClause(c1, c2, literal)
         }
 
         val (a1, a2) = resCandidates
@@ -72,6 +63,116 @@ interface GenericResolution<AtomType> {
         state.newestNode = clause2
 
         clauses.add(state.newestNode, buildClause(c1, a1, c2, a2))
+    }
+
+    /**
+     * Filters two clauses by a given literal and returns the belonging atoms from each clause
+     * @param c1 First clause to search for
+     * @param c2 Second clause to search for
+     * @param literal Literal to search for
+     * @return The pair of atoms (a1, a2) so that a1 is in c1 and a2 in c2 while a1 and b2 share the same literal
+     */
+    @Suppress("ThrowsCount")
+    fun filterClause(
+        c1: Clause<AtomType>,
+        c2: Clause<AtomType>,
+        literal: AtomType
+    ): Pair<Atom<AtomType>, Atom<AtomType>> {
+        // Filter clauses for atoms with correct literal
+        val atomsInC1 = c1.atoms.filter { literalsAreEqual(it.lit, literal) }
+        val atomsInC2 = c2.atoms.filter { literalsAreEqual(it.lit, literal) }
+        if (atomsInC1.isEmpty())
+            throw IllegalMove("Clause '$c1' does not contain atom '$literal'")
+        if (atomsInC2.isEmpty())
+            throw IllegalMove("Clause '$c2' does not contain atom '$literal'")
+
+        val msg = "Clauses '$c1' and '$c2' do not contain atom '$literal' in both positive and negated form"
+        val resCandidates = findResCandidates(atomsInC1, atomsInC2)
+                ?: throw IllegalMove(msg)
+        return resCandidates
+    }
+
+    /**
+     * Creates a new clause in which all side premisses are resolved with the main premiss
+     * while paying attention to resolving one atom in each side premiss with the main premiss.
+     * Adds the result to the clause set
+     * @param state Current proof state
+     * @param mainID ID of main premiss clause
+     * @param sidePremisses List (sidePremissID, atomID in sidePremiss) of selected atoms for hyperresolution
+     */
+    open fun hyper(state: GenericResolutionState<AtomType>, mainID: Int, sidePremisses: List<Pair<Int, Int>>) {
+        // Checks for correct clauseID and IDs in Map
+        checkHyperID(state, mainID, sidePremisses)
+
+        val clauses = state.clauseSet.clauses
+        val mainPremiss = clauses[mainID]
+        var newClause = mainPremiss.clone()
+        var i = 0
+        // Resolves each side premiss with main premiss
+        for ((clauseID, atomID) in sidePremisses) {
+            val sidePremiss = clauses[clauseID]
+            val atom = sidePremiss.atoms[atomID]
+
+            // Check for only one negative atom in side premiss
+            checkNegativeCount(sidePremiss, 1)
+
+            // Filters main and side premiss for given literal
+            val (mainAtom, sideAtom) = filterClause(mainPremiss, sidePremiss, atom.lit)
+            // Check that atom in side premiss is negative and atom in main premiss is positive
+            if (!mainAtom.negated || sideAtom.negated)
+                throw IllegalMove("Literal $mainAtom in main premiss has to be negative, " +
+                        "while its resolving partner in side premiss nr.$i with id $atomID has to be positive")
+
+            // resolves each side premiss into main premiss and reuses it for next iteration
+            newClause = buildClause(mainPremiss, mainAtom, newClause, sideAtom)
+
+            i += 1
+        }
+        // Check there are no negative atoms anymore
+        checkNegativeCount(newClause, 0)
+
+        // Add resolved clause to clause set
+        clauses.add(newClause)
+        state.newestNode = clauses.size - 1
+    }
+
+    /**
+     * Checks all IDs for a hyper resolution to be correct
+     * @param state Current proof state
+     * @param clauseID ID of main premiss
+     * @param atoms List (sidePremissID, atomID in sidePremiss) of selected atoms for hyperresolution
+     */
+    @Suppress("ThrowsCount")
+    fun checkHyperID(state: GenericResolutionState<AtomType>, clauseID: Int, atoms: List<Pair<Int, Int>>) {
+        val clauses = state.clauseSet.clauses
+
+        // check for correct clause id
+        if (clauseID < 0 || clauseID >= clauses.size)
+            throw IllegalMove("There is no clause with id $clauseID")
+
+        for (clause in clauses) {
+            // Check Pair for correct clause ID and correct atom ID in belonging clause
+            for ((cID, aID) in atoms) {
+                if (cID < 0 || cID >= clauses.size)
+                    throw IllegalMove("There is no clause with id $cID")
+                if (aID < 0 || aID >= cID)
+                    throw IllegalMove("There is no atom with id $aID in clause with id $cID")
+            }
+        }
+    }
+
+    /**
+     * Checks a clause for a certain number of negative literals
+     * @param clause Clause to check for
+     * @param number The number of literals to be negative
+     */
+    fun checkNegativeCount(clause: Clause<AtomType>, number: Int) {
+        val filtered = clause.atoms.filter { it.negated }
+
+        // There should only be 'number' elements in
+        if (filtered.size != number)
+            throw IllegalMove("There are ${filtered.size} negative literals in clause $clause " +
+                    "but $number are allowed")
     }
 
     /**
@@ -235,3 +336,7 @@ data class MoveHide(val c1: Int) : ResolutionMove()
 @Serializable
 @SerialName("res-show")
 class MoveShow : ResolutionMove()
+
+@Serializable
+@SerialName("res-hyper")
+data class MoveHyper(val mainID: Int, val sidePremisses: List<Pair<Int, Int>>) : ResolutionMove()
