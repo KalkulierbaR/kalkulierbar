@@ -1,8 +1,10 @@
 import {h} from "preact";
 import { route } from "preact-router";
+import {useState} from "preact/hooks";
 import { useAppState } from "../../../helpers/app-state";
 import { AppStateActionType, CalculusType, Params } from "../../../types/app";
 import Btn from "../../btn";
+import OptionList from "../option-list";
 import * as style from "./style.scss";
 
 declare module "preact" {
@@ -54,6 +56,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     } = useAppState();
     const url = `${server}/${calculus}/parse`;
 
+    const [showSuggestion, toggleShowSuggestion] = useState(false);
+
     const setUserInput = (input: string) =>
         dispatch({
             type: AppStateActionType.UPDATE_SAVED_FORMULA,
@@ -91,6 +95,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         }
     };
 
+    const suggestionsRegEx = /(\s|^)[\\/](a|al|e)?$/;
+
     /**
      * Handle the Input event of the textarea
      * @param {Event} event - The event triggered by input
@@ -101,6 +107,10 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         target.style.height = 'inherit';
         target.style.height = `${target.scrollHeight + 4}px`;
         setUserInput(target.value);
+
+        const text = target.value;
+        console.log(text);
+        toggleShowSuggestion(suggestionsRegEx.test(text));
     };
 
     /**
@@ -120,6 +130,11 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         }
     };
 
+    const suggestions = ["\\all","\\ex"];
+    const selectSuggestion = (suggestion: number) => {
+        console.log(suggestions[suggestion]);
+    }
+
     return (
         <div class="card">
             <h3>Please enter a formula:</h3>
@@ -130,6 +145,11 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     value={savedFormulas[calculus]}
                     onInput={onInput}
                     autocapitalize="off"
+                />
+                <OptionList
+                    options={suggestions}
+                    selectOptionCallback={selectSuggestion}
+                    className={showSuggestion ? undefined : style.hide}
                 />
                 <Btn
                     type="submit"
