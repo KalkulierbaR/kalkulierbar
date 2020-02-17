@@ -1,5 +1,5 @@
 import { ClauseSet, FOClauseSet } from "./clause";
-import {CnfStrategy, VarAssign} from "./tableaux";
+import { CnfStrategy, VarAssign } from "./tableaux";
 
 export interface PropResolutionState {
     seal: string;
@@ -45,15 +45,24 @@ export interface ResolutionShowMove {
     type: "res-show";
 }
 
+export interface ResolutionFactoriseMove {
+    type: "res-factorize";
+    c1: number;
+    a1: number;
+    a2: number;
+}
+
 export type PropResolutionMove =
     | ResolutionResolveMove
     | ResolutionHideMove
-    | ResolutionShowMove;
+    | ResolutionShowMove
+    | ResolutionFactoriseMove;
 
 export type FOResolutionMove =
     | PropResolutionMove
     | ResolutionResolveUnifyMove
-    | ResolutionInstantiateMove;
+    | ResolutionInstantiateMove
+    | ResolutionFactoriseMove;
 
 export interface PropResolutionParams {
     cnfStrategy: CnfStrategy;

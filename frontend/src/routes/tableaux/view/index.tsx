@@ -32,8 +32,7 @@ import {
     sendExtend
 } from "../../../helpers/tableaux";
 import { FOArgument, FOArgumentType } from "../../../types/clause";
-import foExampleState from "./fo-example";
-import propExampleState from "./prop-example";
+import { foExample, propExample } from "./example";
 
 interface Props {
     /**
@@ -249,10 +248,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         // Default state for easy testing
         switch (calculus) {
             case Calculus.propTableaux:
-                state = propExampleState;
+                state = propExample;
                 break;
             case Calculus.foTableaux:
-                state = foExampleState;
+                state = foExample;
                 break;
         }
         onChange(calculus, state);

@@ -70,6 +70,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const selectedClauseId =
         selectedClauses === undefined ? undefined : selectedClauses[0];
 
+    const selectedClauseAtomsGreaterEqual = (lengthGreaterEqual: number) => {
+        return selectedClauseId === undefined ? false : state!.clauseSet.clauses[selectedClauseId].atoms.length >= lengthGreaterEqual;
+    };
+
     const showDialog = selectedClauses && selectedClauses.length === 2;
 
     let candidateClauses : PropCandidateClause[] | FOCandidateClause[] = [];
@@ -197,15 +201,29 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 setSelectedClauses(undefined);
                             }}
                         />
-                        {state!.clauseSet.clauses[selectedClauseId].atoms.length > 1 ?
+                        {selectedClauseAtomsGreaterEqual(1) ?
                             <FAB
                                 mini={true}
                                 extended={true}
-                                label="Factorise"
+                                label="Factorize"
                                 showIconAtEnd={true}
                                 icon={<FactoriseIcon />}
                                 onClick={() => {
-
+                                    if (selectedClauseAtomsGreaterEqual(2)){
+                                        sendMove(
+                                            server,
+                                            calculus,
+                                            state!,
+                                            {
+                                                type: "res-factorize",
+                                                c1: selectedClauseId,
+                                                a1: 0,
+                                                a2: 1,
+                                            },
+                                            onChange,
+                                            onError,
+                                        );
+                                    }
                                 }}
                             />
                         : undefined}
