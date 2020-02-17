@@ -1,8 +1,6 @@
 package kalkulierbar.tests.resolution
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.clause.Atom
-import kalkulierbar.clause.Clause
 import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.MoveFactorize
 import kalkulierbar.resolution.PropositionalResolution
