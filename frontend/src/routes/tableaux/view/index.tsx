@@ -216,6 +216,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setShowVarAssignDialog(true);
             }
         }
+        toggleLemmaMove(false);
     };
 
     /**
@@ -461,7 +462,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 setShowClauseDialog(!showClauseDialog);
                             }}
                         />
-                        {(state!.nodes.filter(node => node.isClosed).length > 0) ? (
+                        {(state!.nodes.filter(node => node.isClosed).length > 0 &&
+                            !isLemmaMove &&
+                            state!.nodes[selectedNodeId].children.length === 0) ? (
                         <FAB
                             icon={<LemmaIcon />}
                             label="Lemma"
@@ -472,6 +475,19 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 toggleLemmaMove(!isLemmaMove);
                             }}
                         />
+                        ) : undefined}
+                        {(state!.nodes.filter(node => node.isClosed).length > 0 && isLemmaMove) ? (
+                            <FAB
+                                icon={<LemmaIcon />}
+                                label="Lemma off"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    toggleLemmaMove(!isLemmaMove);
+                                }}
+                                active={true}
+                            />
                         ) : undefined}
                     </Fragment>
                 )}

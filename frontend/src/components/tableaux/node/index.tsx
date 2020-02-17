@@ -40,7 +40,9 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
 
     // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
     const nodeIsClickable = ((lemmaNodesSelectable && node.data.isClosed) ||
-        (!lemmaNodesSelectable && !node.data.isClosed));
+        (!lemmaNodesSelectable && !node.data.isClosed) ||
+        (lemmaNodesSelectable && selected)
+    );
     /**
      * Handle the onClick event of the node
      * @returns {void}
