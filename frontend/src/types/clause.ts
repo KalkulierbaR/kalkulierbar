@@ -13,6 +13,12 @@ export interface Clause<L = string> {
     atoms: Array<Atom<L>>;
 }
 
+export function instanceOfStringClause(
+    object: any
+): object is Clause<string> {
+    return "atoms" in object;
+}
+
 /**
  * Clause sets are sets of Clauses
  */

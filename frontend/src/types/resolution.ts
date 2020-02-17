@@ -1,5 +1,5 @@
 import { ClauseSet, FOClauseSet } from "./clause";
-import { CnfStrategy, VarAssign } from "./tableaux";
+import {CnfStrategy, VarAssign} from "./tableaux";
 
 export interface PropResolutionState {
     seal: string;
@@ -7,6 +7,12 @@ export interface PropResolutionState {
     hiddenClauses: ClauseSet;
     highlightSelectable: boolean;
     newestNode: number;
+}
+
+export function instanceOfPropResolutionState(
+    object: any
+): object is PropResolutionState {
+    return "clauseSet" in object;
 }
 
 export interface ResolutionResolveMove {
@@ -58,8 +64,14 @@ export interface FOResolutionState {
     seal: string;
     clauseSet: FOClauseSet;
     highlightSelectable: boolean;
-    hiddenClauses: ClauseSet;
+    hiddenClauses: FOClauseSet;
     newestNode: number;
+}
+
+export function instanceOfFOResolutionState(
+    object: any
+): object is FOResolutionState {
+    return "clauseSet" in object;
 }
 
 export interface FOResolutionParams {
