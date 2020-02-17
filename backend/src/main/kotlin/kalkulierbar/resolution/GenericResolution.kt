@@ -100,40 +100,76 @@ interface GenericResolution<AtomType> {
      * @param mainID ID of main premiss clause
      * @param sidePremisses List (sidePremissID, atomID in sidePremiss) of selected atoms for hyperresolution
      */
-    open fun hyper(state: GenericResolutionState<AtomType>, mainID: Int, sidePremisses: List<Pair<Int, Int>>) {
+    fun hyper(
+        state: GenericResolutionState<AtomType>,
+        mainID: Int,
+        sidePremisses: List<Pair<Int, Int>>,
+        isFO: Boolean = false
+    ) {
         // Checks for correct clauseID and IDs in Map
         checkHyperID(state, mainID, sidePremisses)
 
+        if (sidePremisses.isEmpty())
+            throw IllegalMove("Please select side premisses for hyper resolution")
+
         val clauses = state.clauseSet.clauses
-        val mainPremiss = clauses[mainID]
-        var newClause = mainPremiss.clone()
-        var i = 0
+        var mainPremiss = clauses[mainID].clone()
+
         // Resolves each side premiss with main premiss
-        for ((clauseID, atomID) in sidePremisses) {
+        for (i in sidePremisses.indices) {
+            val (clauseID, atomID) = sidePremisses[i]
             val sidePremiss = clauses[clauseID]
             val atom = sidePremiss.atoms[atomID]
 
             // Check for only one negative atom in side premiss
             checkNegativeCount(sidePremiss, 1)
 
-            // Filters main and side premiss for given literal
-            val (mainAtom, sideAtom) = filterClause(mainPremiss, sidePremiss, atom.lit)
-            // Check that atom in side premiss is negative and atom in main premiss is positive
-            if (!mainAtom.negated || sideAtom.negated)
-                throw IllegalMove("Literal $mainAtom in main premiss has to be negative, " +
-                        "while its resolving partner in side premiss nr.$i with id $atomID has to be positive")
-
-            // resolves each side premiss into main premiss and reuses it for next iteration
-            newClause = buildClause(mainPremiss, mainAtom, newClause, sideAtom)
-
-            i += 1
+            // Resolve side premiss into main premiss ever iteration
+            mainPremiss = resolveSidePremiss(mainPremiss, sidePremiss, atomID, isFO)
         }
+
         // Check there are no negative atoms anymore
-        checkNegativeCount(newClause, 0)
+        checkNegativeCount(mainPremiss, 0)
 
         // Add resolved clause to clause set
-        clauses.add(newClause)
-        state.newestNode = clauses.size - 1
+        state.clauseSet.clauses.add(mainPremiss)
+        state.newestNode = state.clauseSet.clauses.size - 1
+    }
+
+    /**
+     * Resolves a main premiss with a side premisse with respect to a literal
+     * @param mainPremiss The main premiss to resolve
+     * @param sidePremiss The side premiss to resolve
+     * @param atomID ID of atom to pay respect
+     * @param isFO true iff used in First Order Resolution
+     * @return A clause which contains all atoms from main and side premiss
+     *         except the one matching the literal of atomID
+     */
+    fun resolveSidePremiss(
+        mainPremiss: Clause<AtomType>,
+        sidePremiss: Clause<AtomType>,
+        atomID: Int,
+        isFO: Boolean
+    ): Clause<AtomType> {
+        // Get resolution candidate
+        val resCandidates: Pair<Atom<AtomType>, Atom<AtomType>>
+        resCandidates = if (isFO) {
+            getAutoResolutionCandidates(mainPremiss, sidePremiss)
+        } else {
+            // Filters main and side premiss for given literal
+            filterClause(mainPremiss, sidePremiss, sidePremiss.atoms[atomID].lit)
+        }
+        // mainAtom = atom matching lit in mainPremiss
+        // sideAtom = atom matching lit in current sidePremiss
+        val (mainAtom, sideAtom) = resCandidates
+
+        // Check that atom in side premiss is negative and atom in main premiss is positive
+        if (!mainAtom.negated || sideAtom.negated)
+            throw IllegalMove("Literal $mainAtom in main premiss has to be negative, " +
+                    "while its resolving partner in side premiss $sidePremiss with id $atomID has to be positive")
+
+        // resolves each side premiss into main premiss and reuses it for next iteration
+        return buildClause(mainPremiss, mainAtom, mainPremiss, sideAtom)
     }
 
     /**

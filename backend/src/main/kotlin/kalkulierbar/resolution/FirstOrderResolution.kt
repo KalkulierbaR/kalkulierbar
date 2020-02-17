@@ -37,6 +37,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
             is MoveInstantiate -> instantiate(state, move.c1, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
+            is MoveHyper -> hyper(state, move.mainID, move.sidePremisses, true)
             else -> throw IllegalMove("Unknown move type")
         }
 
