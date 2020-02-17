@@ -57,6 +57,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     const url = `${server}/${calculus}/parse`;
 
     const [showSuggestion, toggleShowSuggestion] = useState(false);
+    const [textareaValue, setTextareaValue] = useState<string>(savedFormulas[calculus]);
+    const [textArea, setTextArea] = useState<HTMLTextAreaElement>();
 
     const setUserInput = (input: string) =>
         dispatch({
@@ -95,7 +97,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         }
     };
 
-    const suggestionsRegEx = /(\s|^)[\\/](a|al|e)?$/;
+    const suggestionsRegEx = /((\s|^)[\\/])?(a|al|e)?$/;
 
     /**
      * Handle the Input event of the textarea
@@ -109,7 +111,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         setUserInput(target.value);
 
         const text = target.value;
-        console.log(text);
+        setTextareaValue(text);
+        setTextArea(target);
         toggleShowSuggestion(suggestionsRegEx.test(text));
     };
 
@@ -132,7 +135,9 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
 
     const suggestions = ["\\all","\\ex"];
     const selectSuggestion = (suggestion: number) => {
-        console.log(suggestions[suggestion]);
+        const text = textareaValue.replace(suggestionsRegEx, " " + suggestions[suggestion] + " ").replace(/(^\s)/, "");
+        setTextareaValue(text);
+        textArea.focus();
     }
 
     return (
@@ -142,9 +147,10 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 <textarea
                     name="formula"
                     class={style.input}
-                    value={savedFormulas[calculus]}
+                    value={textareaValue}
                     onInput={onInput}
                     autocapitalize="off"
+                    autofocus={true}
                 />
                 <OptionList
                     options={suggestions}
