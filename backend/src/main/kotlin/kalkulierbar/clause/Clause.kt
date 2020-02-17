@@ -20,6 +20,8 @@ class Clause<AtomType>(var atoms: MutableList<Atom<AtomType>> = mutableListOf())
         return newClause
     }
 
+    fun isPositive() = atoms.all { !it.negated }
+
     override fun toString(): String {
         return "{${atoms.joinToString(", ")}}"
     }

@@ -100,6 +100,7 @@ interface GenericResolution<AtomType> {
      * @param mainID ID of main premiss clause
      * @param sidePremisses List (sidePremissID, atomID in sidePremiss) of selected atoms for hyperresolution
      */
+    @Suppress("ThrowsCount")
     fun hyper(
         state: GenericResolutionState<AtomType>,
         mainID: Int,
@@ -121,14 +122,16 @@ interface GenericResolution<AtomType> {
             val sidePremiss = clauses[clauseID]
 
             // Check for only one negative atom in side premiss
-            checkNegativeCount(sidePremiss, 1)
+            if (!sidePremiss.isPositive())
+                throw IllegalMove("Side premiss $sidePremiss is not positive")
 
             // Resolve side premiss into main premiss ever iteration
             mainPremiss = resolveSidePremiss(mainPremiss, sidePremiss, atomID, isFO)
         }
 
         // Check there are no negative atoms anymore
-        checkNegativeCount(mainPremiss, 0)
+        if (!mainPremiss.isPositive())
+            throw IllegalMove("Resulting clause $mainPremiss is not positive")
 
         // Add resolved clause to clause set
         clauses.add(mainPremiss)
@@ -194,23 +197,6 @@ interface GenericResolution<AtomType> {
             val clause = clauses[cID]
             if (aID < 0 || aID >= clause.atoms.size)
                 throw IllegalMove("There is no atom with id $aID in clause $clause")
-        }
-    }
-
-    /**
-     * Checks a clause for a certain number of negative literals
-     * @param clause Clause to check for
-     * @param number The number of negative literals
-     */
-    fun checkNegativeCount(clause: Clause<AtomType>, number: Int) {
-        val negative = clause.atoms.filter { it.negated }
-
-        // There should be exactly 'number' negative atoms
-        if (negative.size != number) {
-            val isare1 = if (negative.size == 1) "is" else "are"
-            val isare2 = if (number == 1) "is" else "are"
-            throw IllegalMove("There $isare1 ${negative.size} negative literals in clause $clause " +
-                    "but only $number $isare2 allowed")
         }
     }
 
