@@ -1,4 +1,4 @@
-$hamburgerBreakpoint: 1060px;
+$hamburgerBreakpoint: 1200px;
 
 .header {
     position: fixed;
@@ -82,7 +82,7 @@ $hamburgerBreakpoint: 1060px;
         }
     }
 
-    @media (min-width: 1060px) {
+    @media (min-width: 1200px) {
         display: block;
     }
 }

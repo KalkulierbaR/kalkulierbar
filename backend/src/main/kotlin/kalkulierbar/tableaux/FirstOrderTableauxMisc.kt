@@ -1,5 +1,6 @@
 package kalkulierbar.tableaux
 
+import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.UnificationImpossible
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
@@ -185,7 +186,13 @@ data class FoTableauxMove(
     val id2: Int,
     val varAssign: Map<String, String> = mapOf()
 ) {
-    fun getVarAssignTerms() = varAssign.mapValues { FirstOrderParser.parseTerm(it.value) }
+    fun getVarAssignTerms() = varAssign.mapValues {
+        try {
+            FirstOrderParser.parseTerm(it.value)
+        } catch (e: InvalidFormulaFormat) {
+            throw InvalidFormulaFormat("Could not parse term '${it.value}': ${e.message}")
+        }
+    }
 }
 
 @Serializable
