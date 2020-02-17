@@ -170,7 +170,7 @@ interface GenericResolution<AtomType> {
                     "while its resolving partner '$sideAtom' in side premiss $sidePremiss has to be positive")
 
         // Resolve mainPremiss and sidePremiss
-        return buildClause(mainPremiss, mainAtom, mainPremiss, sideAtom)
+        return buildClause(mainPremiss, mainAtom, sidePremiss, sideAtom)
     }
 
     /**
