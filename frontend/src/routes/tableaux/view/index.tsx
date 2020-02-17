@@ -50,7 +50,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         onChange,
         onSuccess
     } = useAppState();
+
     let state = cState;
+    const isProp = calculus === Calculus.propTableaux;
+    const isFO = calculus === Calculus.foTableaux;
+
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
     >(undefined);
@@ -66,13 +70,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const clauseOptions = () => {
         let options: string[] = [];
-        if (
-            calculus === Calculus.propTableaux &&
-            instanceOfPropTableauxState(state)
-        ) {
+        if (isProp && instanceOfPropTableauxState(state)) {
             options = clauseSetToStringArray(state!.clauseSet);
         }
-        if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
+        if (isFO && instanceOfFOTableauxState(state)) {
             options = state!.renderedClauseSet;
         }
         return options;
@@ -148,7 +149,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 (!selectedNodeIsLeaf && !newNodeIsLeaf)
             ) {
                 setSelectedNodeId(newNode.id);
-            } else if (calculus === Calculus.propTableaux) {
+            } else if (isProp) {
                 // Now we have a leaf and a predecessor => Try close move
                 // If we can't do it, let server handle it
                 sendClose(
@@ -161,10 +162,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     newNodeIsLeaf ? selectedNodeId : newNode.id
                 );
                 setSelectedNodeId(undefined);
-            } else if (
-                calculus === Calculus.foTableaux &&
-                instanceOfFOTableauxState(state)
-            ) {
+            } else if (isFO && instanceOfFOTableauxState(state)) {
                 // Prepare dialog for automatic/manual unification
                 setVarAssignSecondNodeId(newNode.id);
                 const vars: string[] = [];
@@ -246,14 +244,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
-        switch (calculus) {
-            case Calculus.propTableaux:
-                state = propExample;
-                break;
-            case Calculus.foTableaux:
-                state = foExample;
-                break;
-        }
+        state = isProp ? propExample : isFO ? foExample : undefined;
         onChange(calculus, state);
     }
 
@@ -314,7 +305,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             </Dialog>
 
-            {calculus === Calculus.foTableaux && instanceOfFOTableauxState(state) ? (
+            {isFO && instanceOfFOTableauxState(state) ? (
                 <Dialog
                     open={showVarAssignDialog}
                     label="Choose variable assignments or leave them blank"
