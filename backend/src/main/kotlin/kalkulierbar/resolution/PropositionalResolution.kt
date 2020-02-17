@@ -31,7 +31,7 @@ class PropositionalResolution : GenericResolution<String>,
             is MoveResolve -> resolve(state, move.c1, move.c2, move.literal)
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
-            is MoveHyper -> hyper(state, move.mainID, move.sidePremisses)
+            is MoveHyper -> hyper(state, move.mainID, move.sidePremisses, isFO = false)
             else -> throw IllegalMove("Unknown move")
         }
         return state

@@ -119,7 +119,6 @@ interface GenericResolution<AtomType> {
         for (i in sidePremisses.indices) {
             val (clauseID, atomID) = sidePremisses[i]
             val sidePremiss = clauses[clauseID]
-            val atom = sidePremiss.atoms[atomID]
 
             // Check for only one negative atom in side premiss
             checkNegativeCount(sidePremiss, 1)
@@ -132,15 +131,15 @@ interface GenericResolution<AtomType> {
         checkNegativeCount(mainPremiss, 0)
 
         // Add resolved clause to clause set
-        state.clauseSet.clauses.add(mainPremiss)
-        state.newestNode = state.clauseSet.clauses.size - 1
+        clauses.add(mainPremiss)
+        state.newestNode = clauses.size - 1
     }
 
     /**
-     * Resolves a main premiss with a side premisse with respect to a literal
+     * Resolves a main premiss with a side premiss with respect to a literal
      * @param mainPremiss The main premiss to resolve
      * @param sidePremiss The side premiss to resolve
-     * @param atomID ID of atom to pay respect
+     * @param atomID ID of atom to use for resolution
      * @param isFO true iff used in First Order Resolution
      * @return A clause which contains all atoms from main and side premiss
      *         except the one matching the literal of atomID
@@ -153,6 +152,8 @@ interface GenericResolution<AtomType> {
     ): Clause<AtomType> {
         // Get resolution candidate
         val resCandidates: Pair<Atom<AtomType>, Atom<AtomType>>
+
+        // TODO: clean this up
         resCandidates = if (isFO) {
             getAutoResolutionCandidates(mainPremiss, sidePremiss)
         } else {
@@ -165,15 +166,15 @@ interface GenericResolution<AtomType> {
 
         // Check that atom in side premiss is negative and atom in main premiss is positive
         if (!mainAtom.negated || sideAtom.negated)
-            throw IllegalMove("Literal $mainAtom in main premiss has to be negative, " +
-                    "while its resolving partner in side premiss $sidePremiss with id $atomID has to be positive")
+            throw IllegalMove("Literal '$mainAtom' in main premiss has to be negative, " +
+                    "while its resolving partner '$sideAtom' in side premiss $sidePremiss has to be positive")
 
-        // resolves each side premiss into main premiss and reuses it for next iteration
+        // Resolve mainPremiss and sidePremiss
         return buildClause(mainPremiss, mainAtom, mainPremiss, sideAtom)
     }
 
     /**
-     * Checks all IDs for a hyper resolution to be correct
+     * Checks that all IDs for a hyper resolution are valid
      * @param state Current proof state
      * @param clauseID ID of main premiss
      * @param atoms List (sidePremissID, atomID in sidePremiss) of selected atoms for hyperresolution
@@ -182,33 +183,35 @@ interface GenericResolution<AtomType> {
     fun checkHyperID(state: GenericResolutionState<AtomType>, clauseID: Int, atoms: List<Pair<Int, Int>>) {
         val clauses = state.clauseSet.clauses
 
-        // check for correct clause id
+        // Check for valid clause id
         if (clauseID < 0 || clauseID >= clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
 
-        for (clause in clauses) {
-            // Check Pair for correct clause ID and correct atom ID in belonging clause
-            for ((cID, aID) in atoms) {
-                if (cID < 0 || cID >= clauses.size)
-                    throw IllegalMove("There is no clause with id $cID")
-                if (aID < 0 || aID >= cID)
-                    throw IllegalMove("There is no atom with id $aID in clause with id $cID")
-            }
+        // Check that (clause, atom) pairs are valid
+        for ((cID, aID) in atoms) {
+            if (cID < 0 || cID >= clauses.size)
+                throw IllegalMove("There is no clause with id $cID")
+            val clause = clauses[cID]
+            if (aID < 0 || aID >= clause.atoms.size)
+                throw IllegalMove("There is no atom with id $aID in clause $clause")
         }
     }
 
     /**
      * Checks a clause for a certain number of negative literals
      * @param clause Clause to check for
-     * @param number The number of literals to be negative
+     * @param number The number of negative literals
      */
     fun checkNegativeCount(clause: Clause<AtomType>, number: Int) {
-        val filtered = clause.atoms.filter { it.negated }
+        val negative = clause.atoms.filter { it.negated }
 
-        // There should only be 'number' elements in
-        if (filtered.size != number)
-            throw IllegalMove("There are ${filtered.size} negative literals in clause $clause " +
-                    "but $number are allowed")
+        // There should be exactly 'number' negative atoms
+        if (negative.size != number) {
+            val isare1 = if (negative.size == 1) "is" else "are"
+            val isare2 = if (number == 1) "is" else "are"
+            throw IllegalMove("There $isare1 ${negative.size} negative literals in clause $clause " +
+                    "but only $number $isare2 allowed")
+        }
     }
 
     /**
@@ -339,6 +342,7 @@ val resolutionMoveModule = SerializersModule {
         MoveInstantiate::class with MoveInstantiate.serializer()
         MoveHide::class with MoveHide.serializer()
         MoveShow::class with MoveShow.serializer()
+        MoveHyper::class with MoveHyper.serializer()
     }
 }
 
