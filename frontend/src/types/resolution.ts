@@ -5,8 +5,14 @@ export interface PropResolutionState {
     seal: string;
     clauseSet: ClauseSet;
     hiddenClauses: ClauseSet;
-    highlightSelectable: boolean;
+    visualHelp: VisualHelp;
     newestNode: number;
+}
+
+export enum VisualHelp {
+    none = "NONE",
+    highlight = "HIGHLIGHT",
+    rearrange = "REARRANGE",
 }
 
 export function instanceOfPropResolutionState(
@@ -66,13 +72,13 @@ export type FOResolutionMove =
 
 export interface PropResolutionParams {
     cnfStrategy: CnfStrategy;
-    highlightSelectable: boolean;
+    visualHelp: VisualHelp;
 }
 
 export interface FOResolutionState {
     seal: string;
     clauseSet: FOClauseSet;
-    highlightSelectable: boolean;
+    visualHelp: VisualHelp;
     hiddenClauses: FOClauseSet;
     newestNode: number;
 }
@@ -84,5 +90,5 @@ export function instanceOfFOResolutionState(
 }
 
 export interface FOResolutionParams {
-    highlightSelectable: boolean;
+    visualHelp: VisualHelp;
 }

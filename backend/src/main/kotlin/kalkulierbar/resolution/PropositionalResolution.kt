@@ -24,7 +24,7 @@ class PropositionalResolution :
         else
             FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
 
-        return ResolutionState(parsed, params?.highlightSelectable ?: false)
+        return ResolutionState(parsed, params?.visualHelp ?: VisualHelp.NONE)
     }
 
     override fun applyMoveOnState(state: ResolutionState, move: ResolutionMove): ResolutionState {
@@ -118,7 +118,7 @@ class PropositionalResolution :
 @Serializable
 class ResolutionState(
     override val clauseSet: ClauseSet<String>,
-    override val highlightSelectable: Boolean
+    override val visualHelp: VisualHelp
 ) : GenericResolutionState<String>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<String>()
@@ -126,9 +126,9 @@ class ResolutionState(
     override var seal = ""
 
     override fun getHash(): String {
-        return "resolutionstate|$clauseSet|$hiddenClauses|$highlightSelectable|$newestNode"
+        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode"
     }
 }
 
 @Serializable
-data class ResolutionParam(val cnfStrategy: CnfStrategy, val highlightSelectable: Boolean)
+data class ResolutionParam(val cnfStrategy: CnfStrategy, val visualHelp: VisualHelp)

@@ -30,7 +30,7 @@ class FirstOrderResolution :
         val parsed = FirstOrderParser.parse(formula)
         val clauses = FirstOrderCNF.transform(parsed)
 
-        return FoResolutionState(clauses, params?.highlightSelectable ?: false)
+        return FoResolutionState(clauses, params?.visualHelp ?: VisualHelp.NONE)
     }
 
     override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
@@ -248,7 +248,7 @@ class FirstOrderResolution :
 @Serializable
 class FoResolutionState(
     override val clauseSet: ClauseSet<Relation>,
-    override val highlightSelectable: Boolean
+    override val visualHelp: VisualHelp
 ) : GenericResolutionState<Relation>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<Relation>()
@@ -256,9 +256,9 @@ class FoResolutionState(
     override var seal = ""
 
     override fun getHash(): String {
-        return "resolutionstate|$clauseSet|$hiddenClauses|$highlightSelectable|$newestNode"
+        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode"
     }
 }
 
 @Serializable
-data class FoResolutionParam(val highlightSelectable: Boolean)
+data class FoResolutionParam(val visualHelp: VisualHelp)

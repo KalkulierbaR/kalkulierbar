@@ -1,65 +1,53 @@
-import {
-    FOResolutionState,
-    PropResolutionState,
-} from "../../../types/resolution";
+import {FOResolutionState, PropResolutionState, VisualHelp,} from "../../../types/resolution";
 
 export const propExample: PropResolutionState = {
-    clauseSet: {
-        clauses: [
-            {
-                atoms: [
-                    { lit: "a", negated: false },
-                    { lit: "b", negated: true },
-                    { lit: "c", negated: false },
-                ],
-            },
-            {
-                atoms: [
-                    { lit: "c", negated: true },
-                    { lit: "a", negated: true },
-                    { lit: "d", negated: true },
-                ],
-            },
-            {
-                atoms: [
-                    { lit: "d", negated: false },
-                    { lit: "c", negated: false },
-                ],
-            },
-            {
-                atoms: [
-                    { lit: "b", negated: true },
-                    { lit: "a", negated: false },
-                ],
-            },
-            { atoms: [{ lit: "a", negated: true }] },
-            {
-                atoms: [
-                    { lit: "b", negated: false },
-                    { lit: "c", negated: false },
-                ],
-            },
-            { atoms: [{ lit: "c", negated: true }] },
-        ],
+    "clauseSet": {
+        "clauses": [{
+            "atoms": [{
+                "lit": "a",
+                "negated": false
+            }, {"lit": "b", "negated": false}, {"lit": "c", "negated": false}]
+        }, {
+            "atoms": [{"lit": "c", "negated": true}, {"lit": "a", "negated": false}, {
+                "lit": "a",
+                "negated": false
+            }, {"lit": "d", "negated": true}]
+        }, {"atoms": [{"lit": "d", "negated": false}, {"lit": "d", "negated": false}]}, {
+            "atoms": [{
+                "lit": "b",
+                "negated": true
+            }, {"lit": "a", "negated": false}]
+        }, {"atoms": [{"lit": "a", "negated": true}]}, {
+            "atoms": [{
+                "lit": "c",
+                "negated": false
+            }]
+        }, {"atoms": [{"lit": "b", "negated": false}]}]
     },
-    highlightSelectable: false,
-    newestNode: -1,
-    hiddenClauses: { clauses: [] },
-    seal: "778287DD65F50BCE5C2E67758FFD0B079820CCC0D5FC1F5A79A2108D875958E8",
+    "visualHelp": VisualHelp.highlight,
+    "newestNode": -1,
+    "hiddenClauses": {"clauses": []},
+    "seal": "6D15F02BA4433745D2FFDDF4E215D5667E84ABA89B3E0DF1FD2D6375DA032EDF"
 };
 
+// Used formula: R(a) & /all X: R(f(b, X)) & (!R(f(b, a)) | !R(f(b, a))) & (!R(a) | !R(a) | !R(a)) & /ex Y: Q(Y) & !Q(c)
 export const foExample: FOResolutionState = {
     "clauseSet": {
         "clauses": [{
+            "atoms": [{
+                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "a"}]},
+                "negated": false
+            }]
+        }, {
             "atoms": [{
                 "lit": {
                     "spelling": "R",
                     "arguments": [{
                         "type": "Function",
                         "spelling": "f",
-                        "arguments": [{"type": "QuantifiedVariable", "spelling": "X"}, {
-                            "type": "Constant",
-                            "spelling": "a"
+                        "arguments": [{"type": "Constant", "spelling": "b"}, {
+                            "type": "QuantifiedVariable",
+                            "spelling": "X"
                         }]
                     }]
                 }, "negated": false
@@ -71,35 +59,41 @@ export const foExample: FOResolutionState = {
                     "arguments": [{
                         "type": "Function",
                         "spelling": "f",
-                        "arguments": [{"type": "Constant", "spelling": "sk1"}, {"type": "Constant", "spelling": "a"}]
+                        "arguments": [{"type": "Constant", "spelling": "b"}, {"type": "Constant", "spelling": "a"}]
                     }]
                 }, "negated": true
-            }]
-        }, {
-            "atoms": [{
-                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "b"}]},
-                "negated": false
-            }, {"lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "b"}]}, "negated": false}]
-        }, {
-            "atoms": [{
-                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "b"}]},
-                "negated": true
-            }]
-        }, {
-            "atoms": [{
+            }, {
                 "lit": {
                     "spelling": "R",
                     "arguments": [{
                         "type": "Function",
                         "spelling": "f",
-                        "arguments": [{"type": "Constant", "spelling": "c"}, {"type": "Constant", "spelling": "a"}]
+                        "arguments": [{"type": "Constant", "spelling": "b"}, {"type": "Constant", "spelling": "a"}]
                     }]
-                }, "negated": false
+                }, "negated": true
+            }]
+        }, {
+            "atoms": [{
+                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "a"}]},
+                "negated": true
+            }, {
+                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "a"}]},
+                "negated": true
+            }, {"lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "a"}]}, "negated": true}]
+        }, {
+            "atoms": [{
+                "lit": {"spelling": "Q", "arguments": [{"type": "Constant", "spelling": "sk1"}]},
+                "negated": false
+            }]
+        }, {
+            "atoms": [{
+                "lit": {"spelling": "Q", "arguments": [{"type": "Constant", "spelling": "c"}]},
+                "negated": true
             }]
         }]
     },
-    "highlightSelectable": false,
+    "visualHelp": VisualHelp.highlight,
     "newestNode": -1,
     "hiddenClauses": {"clauses": []},
-    "seal": "6BD93982990DDA79E1BBBF5506C30B3577F070FC7AE1255D75E817DE3FF90CBE"
+    "seal": "07547B594BC20F191A937653302959C8A076EB88D09608EEAB4352564A4045BA"
 };

@@ -48,7 +48,6 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
      */
     const handleTabTypeSelect = (e: Event) => {
         const target = e.target as HTMLInputElement;
-
         setTabType(target.id as TableauxType);
     };
 
@@ -116,7 +115,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     <div class="radios">
                         <Radio
                             id={TableauxType.unconnected}
-                            group="connected"
+                            group="tableauxType"
                             label="Unconnected"
                             checked={tabType === TableauxType.unconnected}
                             onSelect={handleTabTypeSelect}
@@ -125,7 +124,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         <br />
                         <Radio
                             id={TableauxType.weak}
-                            group="connected"
+                            group="tableauxType"
                             label="Weakly Connected"
                             checked={tabType === TableauxType.weak}
                             onSelect={handleTabTypeSelect}
@@ -134,7 +133,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         <br />
                         <Radio
                             id={TableauxType.strong}
-                            group="connected"
+                            group="tableauxType"
                             label="Strongly Connected"
                             checked={tabType === TableauxType.strong}
                             onSelect={handleTabTypeSelect}

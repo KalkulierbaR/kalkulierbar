@@ -190,8 +190,12 @@ interface GenericResolution<AtomType> {
 interface GenericResolutionState<AtomType> {
     val clauseSet: ClauseSet<AtomType>
     val hiddenClauses: ClauseSet<AtomType>
-    val highlightSelectable: Boolean
+    val visualHelp: VisualHelp
     var newestNode: Int
+}
+
+enum class VisualHelp {
+    NONE, HIGHLIGHT, REARRANGE
 }
 
 // Context object for FO term serialization

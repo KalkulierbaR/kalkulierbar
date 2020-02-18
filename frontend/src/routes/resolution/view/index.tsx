@@ -87,14 +87,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     if (isProp && instanceOfPropResolutionState(state)){
         candidateClauses = getPropCandidateClauses(
             state.clauseSet,
-            state.highlightSelectable,
+            state.visualHelp,
             selectedClauseId,
         );
     }
     else if (isFO && instanceOfFOResolutionState(state)){
         candidateClauses = getFOCandidateClauses(
             state.clauseSet,
-            state.highlightSelectable,
+            state.visualHelp,
             selectedClauseId,
         );
     }
@@ -209,6 +209,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     onError,
                 );
             } else if (isFO && instanceOfFOResolutionState(state)) {
+                // TODO rework to send correct atom ids
                 sendMove(
                     server,
                     calculus,
@@ -264,6 +265,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 onError,
             );
             setShowFactoriseDialog(false);
+            setSelectedFactorizeOption(undefined);
             setSelectedClauses(undefined);
         }
     };
@@ -275,7 +277,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 clauses={candidateClauses}
                 selectClauseCallback={selectClauseCallback}
                 selectedClauseId={selectedClauseId}
-                highlightSelectable={state!.highlightSelectable}
+                visualHelp={state!.visualHelp}
                 newestNode={state!.newestNode}
             />
             <ControlFAB alwaysOpen={!smallScreen}>
@@ -321,6 +323,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                             onChange,
                                             onError,
                                         );
+                                        setSelectedClauses(undefined);
                                         return;
                                     }
                                     setShowFactoriseDialog(true);

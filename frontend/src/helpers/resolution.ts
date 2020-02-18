@@ -1,12 +1,7 @@
-import { APIInformation, AppState, ResolutionCalculusType } from "../types/app";
-import {
-    ClauseSet,
-    FOCandidateClause,
-    FOClauseSet,
-    PropCandidateClause,
-} from "../types/clause";
-import { FOResolutionState, PropResolutionState } from "../types/resolution";
-import { sendMove } from "./api";
+import {APIInformation, AppState, ResolutionCalculusType} from "../types/app";
+import {ClauseSet, FOCandidateClause, FOClauseSet, PropCandidateClause,} from "../types/clause";
+import {FOResolutionState, PropResolutionState, VisualHelp} from "../types/resolution";
+import {sendMove} from "./api";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
@@ -69,13 +64,13 @@ export const groupCandidates = (
 /**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
- * @param {boolean} highlightSelectable - Whether to highlight nodes
+ * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
  * @param {number} selectedClauseId - Currently selected clause
  * @returns {PropCandidateClause[]} - The new candidate clauses
  */
 export const getPropCandidateClauses = (
     clauseSet: ClauseSet,
-    highlightSelectable: boolean,
+    visualHelp: VisualHelp,
     selectedClauseId?: number,
 ) => {
     const newCandidateClauses: PropCandidateClause[] = [];
@@ -113,7 +108,7 @@ export const getPropCandidateClauses = (
             };
         });
 
-        if (highlightSelectable) {
+        if (visualHelp === VisualHelp.rearrange) {
             groupCandidates(newCandidateClauses, selectedClauseId);
         }
     }
@@ -123,13 +118,13 @@ export const getPropCandidateClauses = (
 /**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {FOClauseSet} clauseSet - The clause set to work on
- * @param {boolean} highlightSelectable - Whether highlighting is enabled
+ * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
  * @param {number} selectedClauseId - The selected clause
  * @returns {FOCandidateClause[]} - The new candidate clauses
  */
 export const getFOCandidateClauses = (
     clauseSet: FOClauseSet,
-    highlightSelectable: boolean,
+    visualHelp: VisualHelp,
     selectedClauseId?: number,
 ) => {
     const newCandidateClauses: FOCandidateClause[] = [];
@@ -168,7 +163,7 @@ export const getFOCandidateClauses = (
             };
         });
 
-        if (highlightSelectable) {
+        if (visualHelp === VisualHelp.rearrange) {
             // groupCandidates(newCandidateClauses, selectedClauseId);
         }
     }
