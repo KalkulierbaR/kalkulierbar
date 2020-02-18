@@ -14,8 +14,11 @@ import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { atomToString, FOLitToString } from "../../../helpers/clause";
 import {
+    addHyperSidePremiss,
     getFOCandidateClauses,
+    getFOHyperCandidates,
     getPropCandidateClauses,
+    getPropHyperCandidates,
     hideClause,
     showHiddenClauses,
 } from "../../../helpers/resolution";
@@ -28,6 +31,7 @@ import {
     PropCandidateClause,
 } from "../../../types/clause";
 import {
+    HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
 } from "../../../types/resolution";
@@ -66,12 +70,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     }
     const apiInfo = { onChange, onError, server };
 
-    const [hyperRes, setHyperRes] = useState(false);
+    const [hyperRes, setHyperRes] = useState<HyperResolutionMove | undefined>(
+        undefined,
+    );
 
     const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
         undefined,
     );
-    const [showFactoriseDialog, setShowFactorizeDialog] = useState(false);
+    const [showFactorizeDialog, setShowFactorizeDialog] = useState(false);
     const [selectedFactorizeOption, setSelectedFactorizeOption] = useState<
         number | undefined
     >(undefined);
@@ -115,6 +121,28 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const selectClauseCallback = (newClauseId: number) => {
         if (selectedClauseId === undefined) {
             setSelectedClauses([newClauseId]);
+        } else if (hyperRes) {
+            // Update hyper-res move with new clause
+
+            let candidates: number[] = [];
+
+            if (instanceOfPropResState(state, calculus)) {
+                const mainClause = state!.clauseSet.clauses[hyperRes.mainID];
+                const selectedClause = state!.clauseSet.clauses[newClauseId];
+                candidates = getPropHyperCandidates(mainClause, selectedClause);
+            } else if (instanceOfFOResState(state, calculus)) {
+                const mainClause = state!.clauseSet.clauses[hyperRes.mainID];
+                const selectedClause = state!.clauseSet.clauses[newClauseId];
+                candidates = getFOHyperCandidates(mainClause, selectedClause);
+            }
+            if (candidates.length === 1) {
+                setHyperRes(
+                    addHyperSidePremiss(hyperRes, newClauseId, candidates[0]),
+                );
+            } else if (candidates.length > 1) {
+                setSelectedClauses([selectedClauses![0], newClauseId]);
+            }
+            // Ignore when no candidates found
         } else if (newClauseId === selectedClauseId) {
             // The same clause was selected again => reset selection
             setSelectedClauses(undefined);
@@ -206,11 +234,25 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 },
             );
         }
+
         return options;
     };
 
     const selectLiteralOption = (optionIndex: number) => {
         if (selectedClauses && selectedClauses.length === 2) {
+            // If we are in "hyper-mode" just update the move
+            if (hyperRes) {
+                setHyperRes(
+                    addHyperSidePremiss(
+                        hyperRes,
+                        selectedClauses[1],
+                        optionIndex,
+                    ),
+                );
+
+                setSelectedClauses([selectedClauses[0]]);
+                return;
+            }
             if (instanceOfPropResState(state, calculus)) {
                 sendMove(
                     server,
@@ -307,7 +349,24 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             label="Hyper Resolution"
                             showIconAtEnd={true}
                             icon={<HideIcon />}
-                            onClick={() => {}}
+                            onClick={() => {
+                                if (hyperRes) {
+                                    sendMove(
+                                        server,
+                                        calculus,
+                                        state,
+                                        hyperRes,
+                                        onChange,
+                                        onError,
+                                    );
+                                    return;
+                                }
+                                setHyperRes({
+                                    type: "res-hyper",
+                                    mainID: selectedClauseId,
+                                    sidePremisses: [],
+                                });
+                            }}
                         />
                         <FAB
                             mini={true}
@@ -424,7 +483,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             </Dialog>
             <Dialog
-                open={showFactoriseDialog}
+                open={showFactorizeDialog}
                 label="Choose 2 atoms to factorize"
                 onClose={() => {
                     setShowFactorizeDialog(false);

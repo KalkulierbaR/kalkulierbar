@@ -1,7 +1,19 @@
-import {APIInformation, AppState, ResolutionCalculusType} from "../types/app";
-import {ClauseSet, FOCandidateClause, FOClauseSet, PropCandidateClause,} from "../types/clause";
-import {FOResolutionState, PropResolutionState, VisualHelp} from "../types/resolution";
-import {sendMove} from "./api";
+import { APIInformation, AppState, ResolutionCalculusType } from "../types/app";
+import {
+    Clause,
+    ClauseSet,
+    FOCandidateClause,
+    FOClause,
+    FOClauseSet,
+    PropCandidateClause,
+} from "../types/clause";
+import {
+    FOResolutionState,
+    HyperResolutionMove,
+    PropResolutionState,
+    VisualHelp,
+} from "../types/resolution";
+import { sendMove } from "./api";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
@@ -60,6 +72,47 @@ export const groupCandidates = (
         }
     }
 };
+
+export const getPropHyperCandidates = (c1: Clause, c2: Clause) => {
+    const lits: number[] = [];
+    for (const l1 of c1.atoms) {
+        for (let i = 0; i < c2.atoms.length; i++) {
+            const l2 = c2.atoms[i];
+            if (l1.lit === l2.lit && l1.negated && !l2.negated) {
+                lits.push(i);
+            }
+        }
+    }
+    return lits;
+};
+
+export const getFOHyperCandidates = (c1: FOClause, c2: FOClause) => {
+    const lits: number[] = [];
+    for (const l1 of c1.atoms) {
+        for (let i = 0; i < c2.atoms.length; i++) {
+            const l2 = c2.atoms[i];
+            if (
+                l1.negated &&
+                !l2.negated &&
+                l1.lit.spelling === l2.lit.spelling &&
+                l1.lit.arguments.length === l2.lit.arguments.length
+            ) {
+                lits.push(i);
+            }
+        }
+    }
+    return lits;
+};
+
+export const addHyperSidePremiss = (hyperRes: HyperResolutionMove, clauseId: number, litId: number) => ({...hyperRes,
+                    sidePremisses: [
+                        ...hyperRes.sidePremisses,
+                        {
+                            first: clauseId,
+                            second: litId,
+                        },
+                    ],
+                })
 
 /**
  * Creates an array of candidate clauses based on if a clause is selected
