@@ -1,5 +1,6 @@
-import { ClauseSet, FOClauseSet } from "./clause";
-import { CnfStrategy, VarAssign } from "./tableaux";
+import {Calculus, ResolutionCalculusType} from "./app";
+import {ClauseSet, FOClauseSet} from "./clause";
+import {CnfStrategy, VarAssign} from "./tableaux";
 
 export interface PropResolutionState {
     seal: string;
@@ -15,10 +16,11 @@ export enum VisualHelp {
     rearrange = "REARRANGE",
 }
 
-export function instanceOfPropResolutionState(
-    object: any
+export function instanceOfPropResState(
+    object: any,
+    calculus: ResolutionCalculusType,
 ): object is PropResolutionState {
-    return "clauseSet" in object;
+    return "clauseSet" in object && calculus === Calculus.propResolution;
 }
 
 export interface ResolutionResolveMove {
@@ -83,10 +85,11 @@ export interface FOResolutionState {
     newestNode: number;
 }
 
-export function instanceOfFOResolutionState(
-    object: any
+export function instanceOfFOResState(
+    object: any,
+    calculus: ResolutionCalculusType,
 ): object is FOResolutionState {
-    return "clauseSet" in object;
+    return "clauseSet" in object && calculus === Calculus.foResolution;
 }
 
 export interface FOResolutionParams {

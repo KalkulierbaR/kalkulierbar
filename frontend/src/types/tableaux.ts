@@ -1,3 +1,4 @@
+import {Calculus, TableauxCalculusType} from "./app";
 import { ClauseSet, FOArgument, FOClauseSet } from "./clause";
 
 export interface TableauxNode {
@@ -23,10 +24,11 @@ export interface PropTableauxState {
     usedBacktracking: boolean;
 }
 
-export function instanceOfPropTableauxState(
-    object: any
+export function instanceOfPropTabState(
+    object: any,
+    calculus: TableauxCalculusType,
 ): object is PropTableauxState {
-    return "clauseSet" in object;
+    return "clauseSet" in object && calculus === Calculus.propTableaux;
 }
 
 export interface TableauxExpandMove {
@@ -94,10 +96,11 @@ export interface FOTableauxState {
     renderedClauseSet: string[];
 }
 
-export function instanceOfFOTableauxState(
-    object: any
+export function instanceOfFOTabState(
+    object: any,
+    calculus: TableauxCalculusType,
 ): object is FOTableauxState {
-    return "formula" in object;
+    return "formula" in object && calculus === Calculus.foTableaux;
 }
 
 export interface VarAssign {

@@ -24,7 +24,7 @@ import {
     FOCandidateClause, instanceOfStringClause,
     PropCandidateClause
 } from "../../../types/clause";
-import {instanceOfFOResolutionState, instanceOfPropResolutionState} from "../../../types/resolution";
+import {instanceOfFOResState, instanceOfPropResState} from "../../../types/resolution";
 import {foExample, propExample} from "./example";
 
 interface Props {
@@ -48,17 +48,15 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     } = useAppState();
 
     let state = cState;
-    const isProp = calculus === Calculus.propResolution;
-    const isFO = calculus === Calculus.foResolution;
-
-    const apiInfo = { onChange, onError, server };
-
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
-        state = isProp ? propExample : isFO ? foExample : undefined;
+        state = calculus === Calculus.propResolution ? propExample :
+            calculus === Calculus.foResolution ? foExample :
+                undefined;
         onChange(calculus, state);
     }
+    const apiInfo = { onChange, onError, server };
 
     const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
         undefined
@@ -84,14 +82,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const showLiteralDialog = selectedClauses && selectedClauses.length === 2;
 
     let candidateClauses : PropCandidateClause[] | FOCandidateClause[] = [];
-    if (isProp && instanceOfPropResolutionState(state)){
+    if (instanceOfPropResState(state, calculus)){
         candidateClauses = getPropCandidateClauses(
             state.clauseSet,
             state.visualHelp,
             selectedClauseId,
         );
     }
-    else if (isFO && instanceOfFOResolutionState(state)){
+    else if (instanceOfFOResState(state, calculus)){
         candidateClauses = getFOCandidateClauses(
             state.clauseSet,
             state.visualHelp,
@@ -133,7 +131,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
                 if(resolventLiteralId != null) {
                     // Send resolve move to backend
-                    if (instanceOfStringClause(candidateClause!.clause) && isProp && instanceOfPropResolutionState(state)) {
+                    if (instanceOfStringClause(candidateClause!.clause) && instanceOfPropResState(state, calculus)) {
                         const literal = candidateClause!.clause.atoms[
                                 candidateClause!.candidateLiterals[0]
                             ].lit;
@@ -150,7 +148,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             onChange,
                             onError,
                         );
-                    } else if (isFO && instanceOfFOResolutionState(state)) {
+                    } else if (instanceOfFOResState(state, calculus)) {
                         sendMove(
                             server,
                             calculus,
@@ -194,7 +192,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const selectLiteralOption = (optionIndex: number) => {
         if(selectedClauses && selectedClauses.length === 2) {
-            if (isProp && instanceOfPropResolutionState(state)) {
+            if (instanceOfPropResState(state, calculus)) {
                 sendMove(
                     server,
                     calculus,
@@ -208,7 +206,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     onChange,
                     onError,
                 );
-            } else if (isFO && instanceOfFOResolutionState(state)) {
+            } else if (instanceOfFOResState(state, calculus)) {
                 // TODO rework to send correct atom ids
                 sendMove(
                     server,
@@ -232,10 +230,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const factorizeOptions = () => {
         let options: string[] = [];
         if(state !== undefined && selectedClauseId !== undefined) {
-            if (isProp && instanceOfPropResolutionState(state)) {
-                console.log(state.clauseSet.clauses[selectedClauseId].atoms);
+            if (instanceOfPropResState(state, calculus)) {
                 options = state.clauseSet.clauses[selectedClauseId].atoms.map((atom: Atom) => atomToString(atom));
-            } else if (isFO && instanceOfFOResolutionState(state)) {
+            } else if (instanceOfFOResState(state, calculus)) {
                 options = state.clauseSet.clauses[selectedClauseId].atoms.map((atom: FOAtom) => atomToString(atom));
             }
         }
