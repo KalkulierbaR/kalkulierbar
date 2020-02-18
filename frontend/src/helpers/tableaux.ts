@@ -1,8 +1,8 @@
-import {AppStateUpdater, Calculus, TableauxCalculusType} from "../types/app";
+import {AppStateUpdater, TableauxCalculusType} from "../types/app";
 import {
     FOTableauxState,
-    instanceOfFOTableauxState,
-    instanceOfPropTableauxState,
+    instanceOfFOTabState,
+    instanceOfPropTabState,
     PropTableauxState,
     TableauxNode,
     VarAssign
@@ -48,7 +48,7 @@ export const sendClose = (
     varAssignments?: VarAssign,
     autoClose?: boolean
 ) => {
-    if (calculus === Calculus.propTableaux && instanceOfPropTableauxState(state)) {
+    if (instanceOfPropTabState(state, calculus)) {
         sendMove(
             server,
             calculus,
@@ -57,7 +57,7 @@ export const sendClose = (
             stateChanger,
             onError
         );
-    } else if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
+    } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
             server,
             calculus,
@@ -90,7 +90,7 @@ export const sendBacktrack = (
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void
 ) => {
-    if (calculus === Calculus.propTableaux && instanceOfPropTableauxState(state)) {
+    if (instanceOfPropTabState(state, calculus)) {
         sendMove(
             server,
             calculus,
@@ -99,7 +99,7 @@ export const sendBacktrack = (
             stateChanger,
             onError
         );
-    } else if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
+    } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
             server,
             calculus,
@@ -131,7 +131,7 @@ export const sendExtend = (
     leaf: number,
     clause: number
 ) => {
-    if (calculus === Calculus.propTableaux && instanceOfPropTableauxState(state)) {
+    if (instanceOfPropTabState(state, calculus)) {
         sendMove(
             server,
             calculus,
@@ -140,7 +140,7 @@ export const sendExtend = (
             stateChanger,
             onError
         );
-    } else if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
+    } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
             server,
             calculus,

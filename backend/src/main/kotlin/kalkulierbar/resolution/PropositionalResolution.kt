@@ -23,7 +23,7 @@ class PropositionalResolution : GenericResolution<String>,
         else
             FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
 
-        return ResolutionState(parsed, params?.highlightSelectable ?: false)
+        return ResolutionState(parsed, params?.visualHelp ?: VisualHelp.NONE)
     }
 
     override fun applyMoveOnState(state: ResolutionState, move: ResolutionMove): ResolutionState {
@@ -32,9 +32,38 @@ class PropositionalResolution : GenericResolution<String>,
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
             is MoveHyper -> hyper(state, move.mainID, move.sidePremisses, isFO = false)
+            is MoveFactorize -> factorize(state, move.c1)
             else -> throw IllegalMove("Unknown move")
         }
         return state
+    }
+
+    /**
+     * Applies the factorize move
+     * @param state The state to apply the move on
+     * @param clauseID Id of clause to apply the move on
+     */
+    fun factorize(state: ResolutionState, clauseID: Int) {
+        val clauses = state.clauseSet.clauses
+
+        // Verify that clause id is valid
+        if (clauseID < 0 || clauseID >= clauses.size)
+            throw IllegalMove("There is no clause with id $clauseID")
+
+        val oldClause = clauses[clauseID]
+        // Copy old clause and factorize
+        val newClause = oldClause.clone()
+        newClause.atoms = newClause.atoms.distinct().toMutableList()
+
+        // Throw message for no possible factorisation
+        if (oldClause.atoms.size == newClause.atoms.size)
+            throw IllegalMove("Nothing to factorize")
+
+        // Hide old and add new clause
+        clauses.removeAt(clauseID)
+        state.hiddenClauses.add(oldClause)
+        clauses.add(clauseID, newClause)
+        state.newestNode = clauseID
     }
 
     override fun checkCloseOnState(state: ResolutionState) = getCloseMessage(state)
@@ -89,7 +118,7 @@ class PropositionalResolution : GenericResolution<String>,
 @Serializable
 class ResolutionState(
     override val clauseSet: ClauseSet<String>,
-    override val highlightSelectable: Boolean
+    override val visualHelp: VisualHelp
 ) : GenericResolutionState<String>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<String>()
@@ -97,9 +126,9 @@ class ResolutionState(
     override var seal = ""
 
     override fun getHash(): String {
-        return "resolutionstate|$clauseSet|$hiddenClauses|$highlightSelectable|$newestNode"
+        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode"
     }
 }
 
 @Serializable
-data class ResolutionParam(val cnfStrategy: CnfStrategy, val highlightSelectable: Boolean)
+data class ResolutionParam(val cnfStrategy: CnfStrategy, val visualHelp: VisualHelp)

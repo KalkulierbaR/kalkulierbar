@@ -10,6 +10,7 @@ import kalkulierbar.resolution.MoveResolve
 import kalkulierbar.resolution.MoveShow
 import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.resolution.ResolutionParam
+import kalkulierbar.resolution.VisualHelp
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -26,15 +27,15 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonParamValid() {
-        val json = "{\"cnfStrategy\": \"TSEYTIN\", \"highlightSelectable\": true}"
+        val json = "{\"cnfStrategy\": \"TSEYTIN\", \"visualHelp\": \"NONE\"}"
         val param = instance.jsonToParam(json)
-        assertEquals(ResolutionParam(CnfStrategy.TSEYTIN, true), param)
+        assertEquals(ResolutionParam(CnfStrategy.TSEYTIN, VisualHelp.NONE), param)
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonParamCorrupt() {
-        val json = "{\"cnfStrategy\": true, \"highlightSelectable\": true}"
+        val json = "{\"cnfStrategy\": true, \"visualHelp\": \"NONE\"}"
         assertFailsWith<JsonParseException> {
             instance.jsonToParam(json)
         }
@@ -43,15 +44,15 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonFoParamValid() {
-        val json = "{\"highlightSelectable\": true}"
+        val json = "{\"visualHelp\": \"NONE\"}"
         val param = foInstance.jsonToParam(json)
-        assertEquals(FoResolutionParam(true), param)
+        assertEquals(FoResolutionParam(VisualHelp.NONE), param)
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonFoParamCorrupt() {
-        val json = "{\"highlightSelectable\": \"maybe\"}"
+        val json = "{\"visualHelp\": \"maybe\"}"
         assertFailsWith<JsonParseException> {
             foInstance.jsonToParam(json)
         }
@@ -127,16 +128,16 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonState() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E0C05A7FA9314F20A57557E5F0E5C080263A94A1F1B7C1A25AE47FA86DB9F2A3"}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"visualHelp":"NONE","newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"C8BB7816176F4DDFE33206C21D4466380D798276E649D48DDA1DD80D48CE9273"}"""
         val state = instance.jsonToState(json)
 
-        assertEquals("resolutionstate|{a, b, c}, {!b, d}, {!c}||false|-1", state.getHash())
+        assertEquals("resolutionstate|{a, b, c}, {!b, d}, {!c}||NONE|-1", state.getHash())
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonStateCorrupt() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"anegated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E0C05A7FA9314F20A57557E5F0E5C080263A94A1F1B7C1A25AE47FA86DB9F2A3"}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"anegated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"visualHelp":"NONE","newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"C8BB7816176F4DDFE33206C21D4466380D798276E649D48DDA1DD80D48CE9273"}"""
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
@@ -145,7 +146,7 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonStateMissingField() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E0C05A7FA9314F20A57557E5F0E5C080263A94A1F1B7C1A25AE47FA86DB9F2A3"}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{negated":false},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"visualHelp":"NONE","newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"C8BB7816176F4DDFE33206C21D4466380D798276E649D48DDA1DD80D48CE9273"}"""
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
@@ -154,7 +155,7 @@ class TestResolutionJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonStateModify() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"highlightSelectable":false,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E0C05A7FA9314F20A57557E5F0E5C080263A94A1F1B7C1A25AE47FA86DB9F2A3"}"""
+        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},{"lit":"b","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"b","negated":true},{"lit":"d","negated":false}]},{"atoms":[{"lit":"c","negated":true}]}]},"visualHelp":"NONE","newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"C8BB7816176F4DDFE33206C21D4466380D798276E649D48DDA1DD80D48CE9273"}"""
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
@@ -166,8 +167,8 @@ class TestResolutionJson {
 
     @Test
     fun testStateToJson() {
-        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false}]},{"atoms":[{"lit":"a","negated":true}]}]},"highlightSelectable":true,"newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"E4B7A88793E5897F47811DB24F7C16DC87E6C9280CA873C293A28D824DB1BA22"}"""
-        val param = "{\"cnfStrategy\": \"NAIVE\", \"highlightSelectable\": true}"
+        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false}]},{"atoms":[{"lit":"a","negated":true}]}]},"visualHelp":"NONE","newestNode":-1,"hiddenClauses":{"clauses":[]},"seal":"C0C4AC36F24D4CE8C65D8108D2E2493D451F005BF5AC1BD00D8E153969952A36"}"""
+        val param = "{\"cnfStrategy\": \"NAIVE\", \"visualHelp\": \"NONE\"}"
         val got = instance.parseFormula("a;!a", param)
         assertEquals(expected, got)
     }

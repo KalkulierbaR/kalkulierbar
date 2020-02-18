@@ -13,6 +13,12 @@ export interface Clause<L = string> {
     atoms: Array<Atom<L>>;
 }
 
+export function instanceOfStringClause(
+    object: any
+): object is Clause<string> {
+    return "atoms" in object;
+}
+
 /**
  * Clause sets are sets of Clauses
  */
@@ -68,7 +74,7 @@ export interface FOArgument {
 }
 
 export enum FOArgumentType {
-    quantifiedVariable = "kalkulierbar.logic.QuantifiedVariable",
-    constant = "kalkulierbar.logic.Constant",
-    function = "kalkulierbar.logic.Function",
+    quantifiedVariable = "QuantifiedVariable",
+    constant = "Constant",
+    function = "Function",
 }
