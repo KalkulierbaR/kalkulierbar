@@ -1,5 +1,5 @@
-import { Fragment, h } from "preact";
-import { useState } from "preact/hooks";
+import {Fragment, h} from "preact";
+import {useState} from "preact/hooks";
 import ControlFAB from "../../../components/control-fab";
 import Dialog from "../../../components/dialog";
 import FAB from "../../../components/fab";
@@ -10,14 +10,10 @@ import HideIcon from "../../../components/icons/hide";
 import ShowIcon from "../../../components/icons/show";
 import OptionList from "../../../components/input/option-list";
 import ResolutionCircle from "../../../components/resolution/circle";
-import { checkClose, sendMove } from "../../../helpers/api";
-import { useAppState } from "../../../helpers/app-state";
-import { atomToString } from "../../../helpers/clause";
-import {
-    getCandidateClauses,
-    hideClause,
-    showHiddenClauses,
-} from "../../../helpers/resolution";
+import {checkClose, sendMove} from "../../../helpers/api";
+import {useAppState} from "../../../helpers/app-state";
+import {atomToString} from "../../../helpers/clause";
+import {getCandidateClauses, hideClause, showHiddenClauses,} from "../../../helpers/resolution";
 import {Calculus, ResolutionCalculusType} from "../../../types/app";
 import {
     Atom,
@@ -68,6 +64,12 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         false
     );
     const [selectedFactorizeOption, setSelectedFactorizeOption] = useState<number|undefined>(
+        undefined
+    );
+    const [selectedClauseAtomOption, setSelectedClauseAtomOption] = useState<number|undefined>(
+        undefined
+    );
+    const [candidateClauseAtomOption, setCandidateClauseAtomOption] = useState<number|undefined>(
         undefined
     );
 
@@ -232,31 +234,86 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     };
 
     const atomOptions = () => {
-        const options: string[] = [];
+        const options: string[][] = [[],[]];
         if (selectedClauses && selectedClauses.length === 2) {
             const candidateClause = getCandidateClause(selectedClauses[1]);
             if(candidateClause != null) {
+                let allCandidateClauseAtomIndices: number[] = [];
                 candidateClause.candidateAtomMap.forEach((candidateClauseAtomIndices: number[], selectedClauseAtomIndex: number) => {
-                    const selectedClauseAtom = atomToString(
+                    options[0][selectedClauseAtomIndex] = atomToString(
                         state!.clauseSet.clauses[selectedClauses[0]].atoms[selectedClauseAtomIndex]
                     );
-                    candidateClauseAtomIndices.forEach((candidateClauseAtomIndex: number) => {
-                        const candidateClauseAtom = atomToString(
-                            state!.clauseSet.clauses[selectedClauses[1]].atoms[candidateClauseAtomIndex]
-                        );
-                        const newOption = selectedClauseAtom +
-                            "\xa0\xa0\xa0\xa0\xa0and\xa0\xa0\xa0\xa0\xa0" +
-                            candidateClauseAtom;
-                        options.push(newOption);
-                    });
+                    allCandidateClauseAtomIndices = allCandidateClauseAtomIndices.concat(candidateClauseAtomIndices);
+                });
+                const uniqueCandidateClauseAtomIndices = Array.from(new Set(allCandidateClauseAtomIndices));
+                uniqueCandidateClauseAtomIndices.forEach((candidateClauseAtomIndex: number) => {
+                    options[1][candidateClauseAtomIndex] = atomToString(
+                        state!.clauseSet.clauses[selectedClauses[1]].atoms[candidateClauseAtomIndex]
+                    );
                 });
             }
         }
         return options;
     };
 
-    const selectAtomOption = (optionIndex: number) => {
-        // TODO Julius implements
+    const selectSelectedClauseAtomOption = (optionIndex: number) => {
+        if (!selectedClauses || selectedClauses.length !== 2) {
+            return;
+        }
+        if (selectedClauseAtomOption === optionIndex) {
+            setSelectedClauseAtomOption(undefined);
+        } else if (candidateClauseAtomOption === undefined) {
+            setSelectedClauseAtomOption(optionIndex);
+        } else {
+            sendMove(
+                server,
+                calculus,
+                state!,
+                {
+                    type: "res-resolveunify",
+                    c1: selectedClauses[0],
+                    c2: selectedClauses[1],
+                    l1: optionIndex,
+                    l2: candidateClauseAtomOption,
+                },
+                onChange,
+                onError,
+            );
+            onCloseAtomDialog();
+        }
+    };
+
+    const selectCandidateAtomOption = (optionIndex: number) => {
+        if (!selectedClauses || selectedClauses.length !== 2) {
+            return;
+        }
+        if (candidateClauseAtomOption === optionIndex) {
+            setCandidateClauseAtomOption(undefined);
+        } else if (selectedClauseAtomOption === undefined) {
+            setCandidateClauseAtomOption(optionIndex);
+        } else {
+            sendMove(
+                server,
+                calculus,
+                state!,
+                {
+                    type: "res-resolveunify",
+                    c1: selectedClauses[0],
+                    c2: selectedClauses[1],
+                    l1: selectedClauseAtomOption,
+                    l2: optionIndex,
+                },
+                onChange,
+                onError,
+            );
+            onCloseAtomDialog();
+        }
+    };
+
+    const onCloseAtomDialog = () => {
+        setCandidateClauseAtomOption(undefined);
+        setSelectedClauseAtomOption(undefined);
+        setSelectedClauses(undefined);
     };
 
     const factorizeOptions = () => {
@@ -431,12 +488,19 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 instanceOfFOResState(state, calculus) ?
                     <Dialog
                         open={showResolveDialog}
-                        label="Which atoms do you want to resolve?"
-                        onClose={() => setSelectedClauses([selectedClauses![0]])}
+                        label="Choose 2 atoms to resolve"
+                        onClose={onCloseAtomDialog}
                     >
                         <OptionList
-                            options={atomOptions()}
-                            selectOptionCallback={selectAtomOption}
+                            options={atomOptions()[0]}
+                            selectedOptionId={selectedClauseAtomOption}
+                            selectOptionCallback={selectSelectedClauseAtomOption}
+                        />
+                        <hr/>
+                        <OptionList
+                            options={atomOptions()[1]}
+                            selectedOptionId={candidateClauseAtomOption}
+                            selectOptionCallback={selectCandidateAtomOption}
                         />
                     </Dialog> :
                     undefined
