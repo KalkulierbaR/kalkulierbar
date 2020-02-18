@@ -29,7 +29,15 @@ Expand moves are encoded as `{"type":"EXPAND","id1":<ID of leaf to expand on>,"i
 
 The close rule can be applied to a leaf node in the proof tree if and only if a node with the same variable name (`spelling`) and opposite `negated` value exists on the path from the leaf node to the tree root. This is usually visualized by connecting the root node to the corresponding node used for closure.
 
-Close moves are encoded as `{"type":"CLOSE","id1":<ID of leaf to close>,"id2":<ID of node to close with>}`.
+Close moves are encoded as `{"type":"CLOSE","id1":<ID of leaf to close>,"id2":<ID of node to close with>}`.  
+
+### Lemma
+
+Using the lemma creation rule, a proven assumption can be expanded at specific locations in a proof. Every node in the proof tree whose children contain no open leaves (i.e. the nodes `isClosed` is `true`) represents a valid proof of the unsatisfyability of that node (lemma node), given all the assumptions above the node in the proof tree. Therefore, we can assume that the negation of the lemma node holds in all branches of the tree that share the same predecessors. The lemma rule formalizes this by expanding the negation of the lemma node at a leaf that is a transitive child of the lemma node's immediate parent node.  
+
+Lemma rule applications are encoded as `{"type":"LEMMA","id1":<ID of leaf to expand lemma on>,"id2":<ID of node to create lemma from>`.  
+
+Nodes created using a lemma rule instantiation will have the `isLemma` attribute set to `true` to indicate their origin.
 
 ## Closing a Proof
 

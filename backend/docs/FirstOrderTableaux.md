@@ -42,6 +42,14 @@ The unifying variable assignment can be computed automatically as well. The auto
 
 Automatic close moves are encoded as `{"type":"AUTOCLOSE","id1":<ID of leaf to close>,"id2":<ID of node to close with>,"varAssign":{}}`.
 
+### Lemma
+
+Using the lemma creation rule, a proven assumption can be expanded at specific locations in a proof. Every node in the proof tree whose children contain no open leaves (i.e. the nodes `isClosed` is `true`) represents a valid proof of the unsatisfyability of that node (lemma node), given all the assumptions above the node in the proof tree. Therefore, we can assume that the negation of the lemma node holds in all branches of the tree that share the same predecessors. The lemma rule formalizes this by expanding the negation of the lemma node at a leaf that is a transitive child of the lemma node's immediate parent node.  
+
+Lemma rule applications are encoded as `{"type":"LEMMA","id1":<ID of leaf to expand lemma on>,"id2":<ID of node to create lemma from>, "varAssign":{}}`.  
+
+Nodes created using a lemma rule instantiation will have the `isLemma` attribute set to `true` to indicate their origin.
+
 ## Closing a Proof
 
 A proof can be closed if and only if every leaf of the proof tree has been closed by applying the `close` move on that leaf. A closed proof shows that the clause set used is unsatisfiable.
