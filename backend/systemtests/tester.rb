@@ -433,6 +433,30 @@ def testUndoFO(trq, depth = 20, verbose = false)
 	end
 end
 
+def testLemma(trq, iterations = 5, verbose = true)
+	logMsg "Testing proof with Lemma applications"
+	formula = "a,a,a,a,a,a,d; !a,b,c,d; !b; !c,b; !d,c;"
+
+	state = trq.getPostResponse('/prop-tableaux/parse', "formula=#{CGI.escape(formula)}&params={\"type\":\"STRONGLYCONNECTED\",\"regular\":false,\"backtracking\":true}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":0,\"id2\":2}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":1,\"id2\":3}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"CLOSE\",\"id1\":3,\"id2\":1}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":2,\"id2\":4}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"CLOSE\",\"id1\":5,\"id2\":2}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":4,\"id2\":0}")
+
+	16.times() {
+		state = bogoATPapplyRandomMove(state, trq)
+	}
+
+	if trq.post("/prop-tableaux/close", "state=#{CGI.escape(state)}", /.*"closed":true.*/, 200)
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
+
 trq = TestRequest.new
 
 logMsg("Testing PropositionalTableaux")
@@ -449,6 +473,7 @@ tryCloseRegular(trq)
 tryCloseUncloseable(trq)
 testRegularityRestriction(trq)
 testUndo(trq)
+testLemma(trq)
 
 logMsg("Testing PropositionalResolution")
 testResolutionInitialState(trq)
