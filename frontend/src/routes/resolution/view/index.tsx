@@ -306,7 +306,21 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 showIconAtEnd={true}
                                 icon={<FactoriseIcon />}
                                 onClick={() => {
-                                    if (selectedClauseAtomsLengthEqual(2)) {
+                                    if (instanceOfPropResState(state, calculus)){
+                                        sendMove(
+                                            server,
+                                            calculus,
+                                            state!,
+                                            {
+                                                type: "res-factorize",
+                                                c1: selectedClauseId,
+                                            },
+                                            onChange,
+                                            onError,
+                                        );
+                                        setSelectedClauses(undefined);
+                                    }
+                                    else if (selectedClauseAtomsLengthEqual(2)) {
                                         sendMove(
                                             server,
                                             calculus,
@@ -321,9 +335,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                             onError,
                                         );
                                         setSelectedClauses(undefined);
-                                        return;
                                     }
-                                    setShowFactoriseDialog(true);
+                                    else{
+                                        setShowFactoriseDialog(true);
+                                    }
                                 }}
                             />
                         : undefined}
