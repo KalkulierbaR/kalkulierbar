@@ -106,7 +106,7 @@ class TestResolutionMove {
     fun testValid() {
         var state = instance.parseFormulaToState("!c,a,b;c,a,b", null)
         state = instance.applyMoveOnState(state, MoveResolve(1, 0, "c"))
-        assertEquals("resolutionstate|{a, b}, {!c, a, b}, {c, a, b}||false|0", state.getHash())
+        assertEquals("resolutionstate|{a, b}, {!c, a, b}, {c, a, b}||NONE|0", state.getHash())
     }
 
     @Test
