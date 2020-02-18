@@ -7,6 +7,7 @@ import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import FactorizeIcon from "../../../components/icons/factorize";
 import HideIcon from "../../../components/icons/hide";
+import HyperIcon from "../../../components/icons/hyper";
 import ShowIcon from "../../../components/icons/show";
 import OptionList from "../../../components/input/option-list";
 import ResolutionCircle from "../../../components/resolution/circle";
@@ -348,7 +349,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             extended={true}
                             label="Hyper Resolution"
                             showIconAtEnd={true}
-                            icon={<HideIcon />}
+                            icon={<HyperIcon />}
                             onClick={() => {
                                 if (hyperRes) {
                                     sendMove(
