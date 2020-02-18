@@ -90,6 +90,15 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         calculus,
         selectedClauseId,
     );
+    const getCandidateClause = (searchIndex: number) => {
+        const candidateClauseHits = candidateClauses.filter(
+            (c) => c.index === searchIndex
+        );
+        if(candidateClauseHits.length === 1){
+            return candidateClauseHits[0];
+        }
+        return null;
+    };
 
     /**
      * The function to call when the user selects a clause
@@ -103,11 +112,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             // The same clause was selected again => reset selection
             setSelectedClauses(undefined);
         } else {
-            const candidateClauseHits = candidateClauses.filter(
-                (c) => c.index === newClauseId
-            );
-            if(candidateClauseHits.length === 1) {
-                const candidateClause = candidateClauseHits[0];
+            const candidateClause = getCandidateClause(newClauseId);
+            if(candidateClause != null) {
                 const candidateAtomCount = getCandidateCount(candidateClause!);
                 if(candidateAtomCount === 0){
                     onError("These clauses can't be resolved.");
@@ -170,14 +176,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const literalOptions = (candidateClause?: PropCandidateClause) => {
         const options: string[] = [];
         if (candidateClause === undefined && selectedClauses && selectedClauses.length === 2) {
-            const newCandidateClauses = candidateClauses[selectedClauses[1]];
-            if (instanceOfPropCandidateClause(newCandidateClauses, calculus)){
-                candidateClause = newCandidateClauses;
+            const newCandidateClause = candidateClauses[selectedClauses[1]];
+            if (instanceOfPropCandidateClause(newCandidateClause, calculus)){
+                candidateClause = newCandidateClause;
             }
         }
         if(candidateClause !== undefined){
-            candidateClause.candidateAtomMap.forEach((atomIndices) =>
-                atomIndices.forEach((atomIndex) => {
+            candidateClause.candidateAtomMap.forEach((selectedClauseAtomIndices) =>
+                selectedClauseAtomIndices.forEach((atomIndex) => {
                     const newOption: string = candidateClause!.clause.atoms[atomIndex].lit;
                     if (!options.includes(newOption)){
                         options.push(newOption);
@@ -227,8 +233,26 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const atomOptions = () => {
         const options: string[] = [];
-        // TODO Julius implements
-        return [];
+        if (selectedClauses && selectedClauses.length === 2) {
+            const candidateClause = getCandidateClause(selectedClauses[1]);
+            if(candidateClause != null) {
+                candidateClause.candidateAtomMap.forEach((candidateClauseAtomIndices: number[], selectedClauseAtomIndex: number) => {
+                    const selectedClauseAtom = atomToString(
+                        state!.clauseSet.clauses[selectedClauses[0]].atoms[selectedClauseAtomIndex]
+                    );
+                    candidateClauseAtomIndices.forEach((candidateClauseAtomIndex: number) => {
+                        const candidateClauseAtom = atomToString(
+                            state!.clauseSet.clauses[selectedClauses[1]].atoms[candidateClauseAtomIndex]
+                        );
+                        const newOption = selectedClauseAtom +
+                            "\xa0\xa0\xa0\xa0\xa0and\xa0\xa0\xa0\xa0\xa0" +
+                            candidateClauseAtom;
+                        options.push(newOption);
+                    });
+                });
+            }
+        }
+        return options;
     };
 
     const selectAtomOption = (optionIndex: number) => {
@@ -407,7 +431,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 instanceOfFOResState(state, calculus) ?
                     <Dialog
                         open={showResolveDialog}
-                        label="Choose the atoms to resolve"
+                        label="Which atoms do you want to resolve?"
                         onClose={() => setSelectedClauses([selectedClauses![0]])}
                     >
                         <OptionList
