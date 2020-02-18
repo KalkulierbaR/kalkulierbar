@@ -53,12 +53,12 @@ export interface ResolutionShowMove {
     type: "res-show";
 }
 
-export interface PropResolutionFactoriseMove {
+export interface PropResolutionFactorizeMove {
     type: "res-factorize";
     c1: number;
 }
 
-export interface FOResolutionFactoriseMove {
+export interface FOResolutionFactorizeMove {
     type: "res-factorize";
     c1: number;
     a1: number;
@@ -72,13 +72,13 @@ export type BaseResolutionMove =
 
 export type PropResolutionMove =
     | BaseResolutionMove
-    | PropResolutionFactoriseMove;
+    | PropResolutionFactorizeMove;
 
 export type FOResolutionMove =
     | BaseResolutionMove
     | ResolutionResolveUnifyMove
     | ResolutionInstantiateMove
-    | FOResolutionFactoriseMove;
+    | FOResolutionFactorizeMove;
 
 export interface PropResolutionParams {
     cnfStrategy: CnfStrategy;

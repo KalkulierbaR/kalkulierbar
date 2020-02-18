@@ -13,7 +13,7 @@ interface Props {
 
 const FactoriseIcon: preact.FunctionalComponent<Props> = ({
     size = 24,
-    fill = "#fff"
+    fill = "#fff",
 }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -23,10 +23,10 @@ const FactoriseIcon: preact.FunctionalComponent<Props> = ({
         fill="none"
         stroke={fill}
     >
-        <polyline points="4 14 10 14 10 20"/>
-        <polyline points="20 10 14 10 14 4"/>
-        <line x1="14" y1="10" x2="21" y2="3"/>
-        <line x1="3" y1="21" x2="10" y2="14"/>
+        <polyline points="4 14 10 14 10 20" />
+        <polyline points="20 10 14 10 14 4" />
+        <line x1="14" y1="10" x2="21" y2="3" />
+        <line x1="3" y1="21" x2="10" y2="14" />
     </svg>
 );
 
