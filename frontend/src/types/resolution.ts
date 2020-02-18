@@ -1,6 +1,6 @@
-import {Calculus, ResolutionCalculusType} from "./app";
-import {ClauseSet, FOClauseSet} from "./clause";
-import {CnfStrategy, VarAssign} from "./tableaux";
+import { Calculus, ResolutionCalculusType } from "./app";
+import { ClauseSet, FOClauseSet } from "./clause";
+import { CnfStrategy, VarAssign } from "./tableaux";
 
 export interface PropResolutionState {
     seal: string;
@@ -28,6 +28,17 @@ export interface ResolutionResolveMove {
     c1: number;
     c2: number;
     literal: string | null;
+}
+
+export interface KPair<F, S> {
+    first: F;
+    second: S;
+}
+
+export interface HyperResolutionMove {
+    type: "res-hyper";
+    mainID: number;
+    sidePremisses: Array<KPair<number, number>>;
 }
 
 export interface ResolutionResolveUnifyMove {
@@ -68,7 +79,8 @@ export interface FOResolutionFactorizeMove {
 export type BaseResolutionMove =
     | ResolutionResolveMove
     | ResolutionHideMove
-    | ResolutionShowMove;
+    | ResolutionShowMove
+    | HyperResolutionMove;
 
 export type PropResolutionMove =
     | BaseResolutionMove
