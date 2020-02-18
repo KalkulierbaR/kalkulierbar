@@ -5,18 +5,29 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Switch from "../../components/switch";
 import { useAppState } from "../../helpers/app-state";
-import {Calculus} from "../../types/app";
+import { Calculus, ResolutionCalculusType } from "../../types/app";
 import { CnfStrategy } from "../../types/tableaux";
 
-const Resolution: preact.FunctionalComponent = () => {
+interface Props {
+    /**
+     * Which calculus to use
+     */
+    calculus: ResolutionCalculusType;
+}
+
+const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const { smallScreen } = useAppState();
     const [cnfStrategy, setStrategy] = useState(CnfStrategy.optimal);
     const [highlightSelectable, setHighlightSelectable] = useState(false);
 
-    const params = {
-        cnfStrategy,
-        highlightSelectable
-    };
+    const fo = calculus === Calculus.foResolution;
+
+    const params = fo
+        ? { highlightSelectable }
+        : {
+              cnfStrategy,
+              highlightSelectable,
+          };
 
     /**
      * Handle force naive strategy switch setting
@@ -29,7 +40,8 @@ const Resolution: preact.FunctionalComponent = () => {
 
     return (
         <Fragment>
-            <FormulaInput calculus={Calculus.propResolution} params={params} />
+            <Format foLogic={fo} />
+            <FormulaInput calculus={calculus} params={params} />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
@@ -41,15 +53,19 @@ const Resolution: preact.FunctionalComponent = () => {
                         />
                         <HintIcon hint="When you select a clause, all valid resolution partners will be highlighted." />
                         <br />
-                        <Switch
-                            label="Naive CNF transformation"
-                            onChange={strategySelect}
-                        />
-                        <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
+                        {!fo && (
+                            <Fragment>
+                                <Switch
+                                    label="Naive CNF transformation"
+                                    onChange={strategySelect}
+                                />
+
+                                <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
+                            </Fragment>
+                        )}
                     </div>
                 </div>
             </div>
-            <Format />
         </Fragment>
     );
 };

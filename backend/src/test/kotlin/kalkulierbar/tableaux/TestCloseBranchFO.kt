@@ -37,7 +37,7 @@ class TestCloseBranchFO {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 2))
 
         assertFailsWith<IllegalMove> {
-            val move = FoTableauxMove(FoMoveType.CLOSE, 3, 1, mapOf("Xv1" to "c"))
+            val move = FoTableauxMove(FoMoveType.CLOSE, 3, 1, mapOf("X_1" to "c"))
             instance.applyMoveOnState(state, move)
         }
     }
@@ -60,7 +60,7 @@ class TestCloseBranchFO {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1))
 
-        val incorrect = mapOf("Xv1" to "sk2", "Wv2" to "sk1(c)") // Should be sk1(sk2)
+        val incorrect = mapOf("X_1" to "sk2", "W_2" to "sk1(c)") // Should be sk1(sk2)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 2, 1, incorrect))
@@ -74,7 +74,7 @@ class TestCloseBranchFO {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1))
 
-        val correct = mapOf("Xv1" to "sk2", "Wv2" to "sk1(sk2)")
+        val correct = mapOf("X_1" to "sk2", "W_2" to "sk1(sk2)")
 
         instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 2, 1, correct))
         val msg = instance.checkCloseOnState(state)
@@ -89,7 +89,7 @@ class TestCloseBranchFO {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 1))
 
-        val map = mapOf("Bv2" to "Bv1", "Av2" to "Bv1")
+        val map = mapOf("B_2" to "B_1", "A_2" to "B_1")
 
         // Without mapping
         assertFailsWith<IllegalMove> {

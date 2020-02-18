@@ -39,7 +39,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
     selectCallback,
     coordinates,
     clause,
-    isNew
+    isNew,
 }) => {
     const textRef = createRef<SVGTextElement>();
 
@@ -52,7 +52,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
                 elementRef={textRef}
                 disabled={disabled}
                 selected={selected}
-                class={isNew ? style.nodeNew : undefined}
+                class={isNew && !selected ? style.nodeNew : undefined}
             />
             <text
                 x={coordinates[0]}
@@ -61,10 +61,11 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
                 ref={textRef}
                 class={classMap({
                     [style.textClosed]: disabled,
-                    [style.textSelected]: selected
+                    [style.textSelected]: selected,
+                    [style.noTextHighlight]: true
                 })}
             >
-                {clauseToString(clause)}
+                {clauseToString(clause.clause)}
             </text>
         </g>
     );
