@@ -61,7 +61,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                                 [VisualHelp.highlight, VisualHelp.rearrange].includes(visualHelp) &&
                                 selectedClauseId !== undefined &&
                                 selectedClauseId !== index &&
-                                clauses[index].candidateLiterals.length === 0;
+                                clauses[index].candidateAtomMap.size === 0;
                             return (
                                 <ResolutionNode
                                     key={index}
