@@ -83,6 +83,21 @@ class TestFOLemma {
     }
 
     @Test
+    fun testValid4() {
+        var state = autoStates[1]
+        // {!R(A), R(A)}, {!R(A), !R(B)}, {!R(A), !R(B), !R(A)}
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 2))
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1))
+
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 3, 2))
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 4, 2))
+        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 5, 2))
+
+        instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, 6, 2))
+    }
+
+    @Test
     fun testInvalid() {
         var state = autoStates[1]
         // {!R(A), R(A)}, {!R(A), !R(B)}, {!R(A), !R(B), !R(A)}
@@ -94,14 +109,14 @@ class TestFOLemma {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 4, 2))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 5, 2))
 
-        /*assertFailsWith<IllegalMove> {
-            state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, 6, 2))
-        }*/
         assertFailsWith<IllegalMove> {
-            state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, 0, 2))
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, -1, 2))
         }
         assertFailsWith<IllegalMove> {
-            state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, 5, 3))
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, 0, 2))
+        }
+        assertFailsWith<IllegalMove> {
+            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, 5, 3))
         }
         assertEquals(8, state.nodes.size)
     }
