@@ -25,7 +25,7 @@ class TestFOResolveUnify {
     private val invalid3 = "\\all X: R(f(X, c), X) & !\\ex Y: R(f(a,c), b)"
 
     private fun testFormula(formula: String, move: ResolutionMove, expected: String? = null) {
-        val state = inst.parseFormulaToState(formula, null);
+        val state = inst.parseFormulaToState(formula, null)
 
         if (expected == null) {
             assertFailsWith<IllegalMove> {
