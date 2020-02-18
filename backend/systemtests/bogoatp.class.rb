@@ -62,10 +62,29 @@ def bogoATP(trq, formula, connectedness = "UNCONNECTED", regular = false, iterat
 
 		rqcount += 1
 
-		# Try expanding a leaf
+		# Try appending a lemma
+		closed = parsed['nodes'].each_with_index.filter{ |n,i| n['isClosed'] && n["children"].length > 0}.map { |x,i| i }.shuffle
 		leaves = parsed['nodes'].each_with_index.filter{ |n,i| n['children'].length == 0 && !n['isClosed'] }.map { |x,i| i }.shuffle
-		clauses = (0...parsed['clauseSet']['clauses'].length).to_a.shuffle
 		breakFlag = false
+		leaves.each { |l|
+			closed.each { |c|
+				newstate = trq.getPostResponse("/#{calculus}/move", "state=#{CGI.escape(state)}&move=#{genLemmaMove(l,c,isFO)}", false, true)
+				rqcount += 1
+				if newstate != nil
+					logMsg "Created lemma from #{c.to_s} at node #{l.to_s}" if verbose or true
+					state = newstate
+					moves += 1
+					breakFlag = true
+					break
+				end
+			}
+			break if breakFlag
+		}
+
+		parsed = JSON.parse(state)
+
+		# Try expanding a leaf
+		clauses = (0...parsed['clauseSet']['clauses'].length).to_a.shuffle
 		leaves.each { |l|
 			clauses.each { |c|
 				newstate = trq.getPostResponse("/#{calculus}/move", "state=#{CGI.escape(state)}&move=#{genExpandMove(l,c,isFO)}", false, true)
@@ -98,12 +117,21 @@ def bogoATPapplyRandomMove(state, trq, isFO: false)
 	parsed = JSON.parse(state)
 
 	leaves = parsed['nodes'].each_with_index.filter{ |n,i| n['children'].length == 0 && !n['isClosed'] }.map { |x,i| i }.shuffle
+	closed = parsed['nodes'].each_with_index.filter{ |n,i| n['isClosed'] && n["children"].length > 0}.map { |x,i| i }.shuffle
 	clauses = (0...parsed['clauseSet']['clauses'].length).to_a.shuffle
 
 	# Try closing a leaf
 	leaves.each{ |i|
 		parsed['nodes'].length.times() { |j|
 			newstate = trq.getPostResponse("/#{calculus}/move", "state=#{CGI.escape(state)}&move=#{genCloseMove(i,j,isFO)}", false, true)
+			return newstate unless newstate == nil
+		}
+	}
+
+	# Try appending a lemma
+	leaves.each { |l|
+		closed.each { |c|
+			newstate = trq.getPostResponse("/#{calculus}/move", "state=#{CGI.escape(state)}&move=#{genLemmaMove(l,c,isFO)}", false, true)
 			return newstate unless newstate == nil
 		}
 	}
@@ -132,5 +160,13 @@ def genCloseMove(id1, id2, isFO = false)
 		"{type:\"AUTOCLOSE\",id1:#{id1.to_s},id2:#{id2.to_s},varAssign:{}}"
 	else
 		"{type:\"CLOSE\",id1:#{id1.to_s},id2:#{id2.to_s}}"
+	end
+end
+
+def genLemmaMove(id1, id2, isFO = false)
+	if isFO
+		"{type:\"LEMMA\",id1:#{id1.to_s},id2:#{id2.to_s},varAssign:{}}"
+	else
+		"{type:\"LEMMA\",id1:#{id1.to_s},id2:#{id2.to_s}}"
 	end
 end
