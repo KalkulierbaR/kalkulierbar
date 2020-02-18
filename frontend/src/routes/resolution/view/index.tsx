@@ -20,8 +20,11 @@ import {
 } from "../../../helpers/resolution";
 import {Calculus, ResolutionCalculusType} from "../../../types/app";
 import {
-    Atom, CandidateClause, FOAtom,
-    FOCandidateClause, getCandidateCount, instanceOfPropCandidateClause,
+    Atom,
+    CandidateClause,
+    FOAtom,
+    getCandidateCount,
+    instanceOfPropCandidateClause,
     PropCandidateClause
 } from "../../../types/clause";
 import {instanceOfFOResState, instanceOfPropResState} from "../../../types/resolution";
@@ -79,7 +82,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         selectedClauseId === undefined ? false :
             state!.clauseSet.clauses[selectedClauseId].atoms.length > length;
 
-    const showLiteralDialog = selectedClauses && selectedClauses.length === 2;
+    const showResolveDialog = selectedClauses && selectedClauses.length === 2;
 
     const candidateClauses : CandidateClause[] = getCandidateClauses(
         state!.clauseSet,
@@ -100,21 +103,16 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             // The same clause was selected again => reset selection
             setSelectedClauses(undefined);
         } else {
-            let candidateClause : PropCandidateClause | FOCandidateClause;
-            let foundCandidate = false;
-            candidateClauses.forEach((clause: PropCandidateClause | FOCandidateClause) => {
-                if(!foundCandidate && clause.index === newClauseId){
-                    candidateClause = clause;
-                    foundCandidate = true;
-                }
-            });
-            if(foundCandidate) {
-                console.log(candidateClause!.candidateAtomMap);
+            const candidateClauseHits = candidateClauses.filter(
+                (c) => c.index === newClauseId
+            );
+            if(candidateClauseHits.length === 1) {
+                const candidateClause = candidateClauseHits[0];
                 const candidateAtomCount = getCandidateCount(candidateClause!);
                 if(candidateAtomCount === 0){
                     onError("These clauses can't be resolved.");
                 }
-                else if (instanceOfPropCandidateClause(candidateClause!, calculus)) {
+                else if (instanceOfPropCandidateClause(candidateClause, calculus)) {
                     const options = literalOptions(candidateClause);
                     if(options.length === 1) {
                         // Send resolve move to backend
@@ -137,10 +135,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         return;
                     }
                 } else if (candidateAtomCount === 1 && instanceOfFOResState(state, calculus)) {
-                    const resolventAtomIndex = candidateClause!.candidateAtomMap.values().next().value[0];
-                    console.log("resolventAtomIndex: " + resolventAtomIndex);
-                    const selectedClauseAtomIndex = candidateClause!.candidateAtomMap.keys().next().value;
-                    console.log("selectedClauseAtomIndex: " + selectedClauseAtomIndex);
+                    const resolventAtomIndex = candidateClause.candidateAtomMap.values().next().value[0];
+                    const selectedClauseAtomIndex = candidateClause.candidateAtomMap.keys().next().value;
                     // Send resolve move to backend
                     sendMove(
                         server,
@@ -164,6 +160,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 }
                 // Reset selection
                 setSelectedClauses(undefined);
+            }
+            else {
+                throw new Error("Candidate clause could not be identified with newClauseId"); // Debug error
             }
         }
     };
@@ -224,6 +223,16 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             }
         }
         setSelectedClauses(undefined);
+    };
+
+    const atomOptions = () => {
+        const options: string[] = [];
+        // TODO Julius implements
+        return [];
+    };
+
+    const selectAtomOption = (optionIndex: number) => {
+        // TODO Julius implements
     };
 
     const factorizeOptions = () => {
@@ -386,7 +395,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             </ControlFAB>
             {instanceOfPropResState(state, calculus) ?
                 <Dialog
-                    open={showLiteralDialog}
+                    open={showResolveDialog}
                     label="Choose a literal to resolve"
                     onClose={() => setSelectedClauses([selectedClauses![0]])}
                 >
@@ -397,13 +406,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 </Dialog> :
                 instanceOfFOResState(state, calculus) ?
                     <Dialog
-                        open={showLiteralDialog}
-                        label="Choose 2 atoms to resolve"
+                        open={showResolveDialog}
+                        label="Choose the atoms to resolve"
                         onClose={() => setSelectedClauses([selectedClauses![0]])}
                     >
                         <OptionList
-                            options={literalOptions()}
-                            selectOptionCallback={selectLiteralOption}
+                            options={atomOptions()}
+                            selectOptionCallback={selectAtomOption}
                         />
                     </Dialog> :
                     undefined
