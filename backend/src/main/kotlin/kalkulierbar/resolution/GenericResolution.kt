@@ -173,7 +173,7 @@ interface GenericResolution<AtomType> {
     ): Clause<AtomType> {
         val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
                 c2.atoms.filter { it != a2 }.toMutableList()
-        return Clause(atoms.distinct().toMutableList())
+        return Clause(atoms.toMutableList())
     }
 
     fun literalsAreEqual(a: AtomType, b: AtomType): Boolean {
