@@ -16,11 +16,13 @@ The `clauses` list holds the user-supplied clauses, each clause having a list of
 
 ## Rule Specification
 
-The first-order resolution calculus has two rules: _resolution_ and _instantiation_.  
+Just as in the propositional case, the first-order resolution calculus has only one main rule: _resolution_.
 
-The resolution rule takes two different clauses in the `clauses` list and a literal that is contained in both clauses and adds a new clause to the clause set. The literal has to be negated in one clause (we will call this `a-`) and not negated in the other (`a+`). The new clause is the union of the first clause minus `a-` and the other clause minus `a+`. The selected clauses themselves are not changed.
+The resolution rule takes two different clauses in the `clauses` with one literal selected in each clause and creates new 'virtual' clauses by applying the most general unifier of the two selected atoms. These virtual clauses are then resolved as in the propositional case using the common unified atom. The resulting clause containing all the atoms from both clauses except for the selected atoms is added to the clause set. The virtual clauses are discarded, the original clauses remain unchanged. For the rule to be applicable, the two selected atoms have to have a most general unifier. Analogous to the propositional case, the selected atoms must be of opposing polarity as well.
 
-Resolution moves are encoded as `{"type": "res-resolve", "c1": <ID of first clause>, "c2": <ID of second clause>, "literal": <Spelling of the literal>}`. The id of a clause is defined as its position in the `clauses` list. If the literal is set to `null`, a suitable literal will be determined automatically.
+First-order resolution moves are encoded as `{"type": "res-resolveunify", "c1": <ID of first clause>, "c2": <ID of second clause>, "l1": <Index of the selected literal in c1>, "l2": <Index of the selected literal in c2>}`. The id of a clause is defined as its position in the `clauses` list.
+
+For now, an additional instantiation rule is implemented allowing the user to create copies of clauses with a specific instantiation applied.  
 
 The instantiation rule adds a new clause to the clause set by applying a variable instantiation on an existing clause. For example, the clause `{R(X)}` can be instantiated using the variable mapping `X => f(c)` to add the new clause `{R(f(c))}` to the clause set. Variables for which no instantiation is specified remain unchanged. The original clause is not changed by the instantiation.  
 

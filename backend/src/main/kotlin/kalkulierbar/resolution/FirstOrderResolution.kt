@@ -46,6 +46,14 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
     override fun checkCloseOnState(state: FoResolutionState) = getCloseMessage(state)
 
     @Suppress("ThrowsCount")
+    /**
+     * Resolve two clauses by unifying two literals
+     * @param state Current proof state
+     * @param c1 Id of first clause
+     * @param c2 Id of second clause
+     * @param c1lit The literal to unify of the first clause
+     * @param c2lit The literal to unify of the second clause
+     */
     private fun resolveUnify(state: FoResolutionState, c1: Int, c2: Int, c1lit: Int, c2lit: Int) {
         if (c1 < 0 || c1 >= state.clauseSet.clauses.size)
             throw IllegalMove("There is no clause with id $c1")
@@ -76,10 +84,15 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         val instance2 = state.clauseSet.clauses.size - 1
         val literal = state.clauseSet.clauses[instance1].atoms[c1lit].lit
 
-        resolve(state, instance1, instance2, literal)
-        // TODO these indices arent always correct (also set newest node pointer)
-        // hide(state, instance2)
-        // hide(state, instance1)
+        resolve(state, instance1, instance2, literal, true)
+
+        // We'll remove the clause instances used for resolution here
+        // Technically, we could leave them in an hide them, but this causes unnecessary
+        // amounts of clutter in the hidden clause set
+        state.clauseSet.clauses.removeAt(instance2)
+        state.clauseSet.clauses.removeAt(instance1)
+
+        state.newestNode = state.clauseSet.clauses.size - 1
     }
 
     /**
