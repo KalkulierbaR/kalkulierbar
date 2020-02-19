@@ -35,7 +35,6 @@ import {
     PropCandidateClause,
 } from "../../../types/clause";
 import {
-    HyperMap,
     HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
