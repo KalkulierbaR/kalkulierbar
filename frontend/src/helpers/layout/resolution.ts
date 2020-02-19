@@ -9,9 +9,9 @@ import { maxLengthClause } from "../clause";
  */
 export const circleLayout = (
     clauses: Array<Clause<string | FOLiteral>>,
-): Layout<Clause<string | FOLiteral>> => {
+): Layout<Clause<string | FOLiteral>> & { radius: number } => {
     if (clauses.length === 0) {
-        return { width: 0, height: 0, data: [] };
+        return { width: 0, height: 0, data: [], radius: 0 };
     }
 
     // Guess clause width by the length of the longest string
@@ -19,7 +19,12 @@ export const circleLayout = (
 
     // Special case: 1 clause
     if (clauses.length === 1) {
-        return { width, height: 50, data: [{ data: clauses[0], x: 0, y: 0 }] };
+        return {
+            width,
+            height: 50,
+            data: [{ data: clauses[0], x: 0, y: 0 }],
+            radius: 0,
+        };
     }
 
     // The angle between each clause
@@ -55,5 +60,6 @@ export const circleLayout = (
             x: r * Math.cos(angle * i - Math.PI / 2),
             y: r * Math.sin(angle * i - Math.PI / 2) + 14,
         })),
+        radius: r,
     };
 };
