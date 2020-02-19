@@ -426,9 +426,22 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 setShowClauseDialog(!showClauseDialog);
                             }}
                         />
-                        {(state!.nodes.filter(node => node.isClosed).length > 0 &&
-                            !lemmaMode &&
-                            state!.nodes[selectedNodeId].children.length === 0) ? (
+                        {lemmaMode ? (
+                            <FAB
+                                icon={<LemmaIcon fill="#000" />}
+                                label="Lemma"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    setLemmaMode(!lemmaMode);
+                                }}
+                                active={true}
+                            />
+                        ) : (
+                            state!.nodes[selectedNodeId].children.length === 0 &&
+                            state!.nodes.filter(node => node.isClosed).length > 0
+                        ) ? (
                             <FAB
                                 icon={<LemmaIcon />}
                                 label="Lemma"
@@ -438,19 +451,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 onClick={() => {
                                     setLemmaMode(!lemmaMode);
                                 }}
-                            />
-                        ) : undefined}
-                        {lemmaMode ? (
-                            <FAB
-                                icon={<LemmaIcon />}
-                                label="Lemma off"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    setLemmaMode(!lemmaMode);
-                                }}
-                                active={true}
                             />
                         ) : undefined}
                     </Fragment>
