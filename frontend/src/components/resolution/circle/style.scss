@@ -23,3 +23,9 @@
 .svg {
     display: block;
 }
+
+.circle {
+    fill: none;
+    stroke: var(--kbar-accent-color);
+    stroke-width: 2px;
+}
