@@ -1,6 +1,8 @@
 import { Clause, FOLiteral } from "../../types/clause";
 import { Layout } from "../../types/layout";
-import { maxLengthClause } from "../clause";
+import { clauseToString } from "../clause";
+import { maxBy } from "../max-by";
+import { estimateSVGTextWidth } from "../text-width";
 
 /**
  * Calculate the circle layout to avoid overlapping or cutting of clauses
@@ -15,7 +17,8 @@ export const circleLayout = (
     }
 
     // Guess clause width by the length of the longest string
-    const width = maxLengthClause(clauses) * 11;
+    const width =
+        maxBy(clauses, (c) => estimateSVGTextWidth(clauseToString(c))) + 56;
 
     // Special case: 1 clause
     if (clauses.length === 1) {
