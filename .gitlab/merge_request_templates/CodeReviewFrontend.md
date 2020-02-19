@@ -10,6 +10,8 @@
 
 * [ ] Typen / Interfaces sind sinnvoll definiert
 
+* [ ] Im UI wurden nur globale Farbvariablen benutzt
+
 * [ ] Manuelle Tests sind erfolgreich  
 (Grundlegende Interaktionen auf min. einem Desktop- und einem Mobilgerät testen)
 

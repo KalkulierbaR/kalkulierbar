@@ -250,7 +250,7 @@ end
 def tryCloseUncloseableFO(trq, iterations = 10, verbose = false)
 	logMsg "Trying to close unclosable FO proof"
 	formula = "(\\all X: \\all Y: \\all Z: (C(X, Y) & C(Y, Z) -> C(X,Z)) & C(d, l) & C(l, f)) -> C(d, f)"
-	
+
 	if bogoATP(trq, formula, "UNCONNECTED", true, iterations, verbose, isFO: true)
 		logError "Test failed"
 	else
@@ -394,6 +394,38 @@ def testUndo(trq, depth = 20, verbose = false)
 	end
 end
 
+def testFactorize(trq, iterations = 20, verbose = false)
+	logMsg "Testing propositional factorization"
+	success = true
+
+	iterations.times() {
+		c = (["d"] + ["a"]*rand(5) + ["b"]*rand(5) + ["c"]*rand(5)).shuffle
+		formula = c.join(",")
+		state = trq.getPostResponse('/prop-resolution/parse', "formula=#{formula}")
+		state = trq.getPostResponse('/prop-resolution/move', "state=#{state}&move={\"type\": \"res-factorize\", \"c1\": 0}")
+
+		if state == nil and c.length != c.uniq.length
+			success = false
+			logMsg "Factorization failed despite redundancies in clause #{formula}"
+		elsif state != nil and c.length == c.uniq.length
+			success = false
+			logMsg "Factorization succeded despite no duplicates in clause #{formula}"
+		elsif state != nil
+			factorized = JSON.parse(state)["clauseSet"]["clauses"][0]["atoms"].map{|a| a["lit"]}
+			if factorized != c.uniq
+				success = false
+				logMsg "Expected factorized clause #{c.uniq.join(",")} but got #{factorized.join(",")}"
+			end
+		end
+	}
+
+	if success
+		logSuccess "Test successful - sent #{iterations*2} requests"
+	else
+		logError "Test failed"
+	end
+end
+
 def testUndoFO(trq, depth = 20, verbose = false)
 	logMsg "Testing FO backtracking"
 	formula = "(\\all X: \\all Y: \\all Z: (C(X, Y) & C(Y, Z) -> C(X,Z)) & \\all X: \\all Y: (C(X, Y) -> C(Y, X)) & C(d, l) & C(f, l)) -> C(d, f)"
@@ -456,7 +488,6 @@ def testLemma(trq, iterations = 5, verbose = true)
 	end
 end
 
-
 trq = TestRequest.new
 
 logMsg("Testing PropositionalTableaux")
@@ -478,8 +509,10 @@ testLemma(trq)
 logMsg("Testing PropositionalResolution")
 testResolutionInitialState(trq)
 tryCloseTrivialResolution(trq)
+testFactorize(trq)
 
 logMsg("Testing FirstOrderTableaux")
 tryCloseTrivialFirstOrder(trq)
 tryCloseUncloseableFO(trq)
 testUndoFO(trq)
+

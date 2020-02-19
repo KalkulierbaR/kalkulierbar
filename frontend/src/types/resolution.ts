@@ -1,12 +1,26 @@
-import { ClauseSet, FOClauseSet } from "./clause";
-import { CnfStrategy, VarAssign } from "./tableaux";
+import {Calculus, ResolutionCalculusType} from "./app";
+import {ClauseSet, FOClauseSet} from "./clause";
+import {CnfStrategy, VarAssign} from "./tableaux";
 
 export interface PropResolutionState {
     seal: string;
     clauseSet: ClauseSet;
     hiddenClauses: ClauseSet;
-    highlightSelectable: boolean;
+    visualHelp: VisualHelp;
     newestNode: number;
+}
+
+export enum VisualHelp {
+    none = "NONE",
+    highlight = "HIGHLIGHT",
+    rearrange = "REARRANGE",
+}
+
+export function instanceOfPropResState(
+    object: any,
+    calculus: ResolutionCalculusType,
+): object is PropResolutionState {
+    return "clauseSet" in object && calculus === Calculus.propResolution;
 }
 
 export interface ResolutionResolveMove {
@@ -39,29 +53,53 @@ export interface ResolutionShowMove {
     type: "res-show";
 }
 
-export type PropResolutionMove =
+export interface PropResolutionFactoriseMove {
+    type: "res-factorize";
+    c1: number;
+}
+
+export interface FOResolutionFactoriseMove {
+    type: "res-factorize";
+    c1: number;
+    a1: number;
+    a2: number;
+}
+
+export type BaseResolutionMove =
     | ResolutionResolveMove
     | ResolutionHideMove
     | ResolutionShowMove;
 
+export type PropResolutionMove =
+    | BaseResolutionMove
+    | PropResolutionFactoriseMove;
+
 export type FOResolutionMove =
-    | PropResolutionMove
+    | BaseResolutionMove
     | ResolutionResolveUnifyMove
-    | ResolutionInstantiateMove;
+    | ResolutionInstantiateMove
+    | FOResolutionFactoriseMove;
 
 export interface PropResolutionParams {
     cnfStrategy: CnfStrategy;
-    highlightSelectable: boolean;
+    visualHelp: VisualHelp;
 }
 
 export interface FOResolutionState {
     seal: string;
     clauseSet: FOClauseSet;
-    highlightSelectable: boolean;
-    hiddenClauses: ClauseSet;
+    visualHelp: VisualHelp;
+    hiddenClauses: FOClauseSet;
     newestNode: number;
 }
 
+export function instanceOfFOResState(
+    object: any,
+    calculus: ResolutionCalculusType,
+): object is FOResolutionState {
+    return "clauseSet" in object && calculus === Calculus.foResolution;
+}
+
 export interface FOResolutionParams {
-    highlightSelectable: boolean;
+    visualHelp: VisualHelp;
 }

@@ -2,8 +2,8 @@ import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import {Calculus, TableauxCalculusType} from "../../../types/app";
 import {
-    instanceOfFOTableauxState,
-    instanceOfPropTableauxState,
+    instanceOfFOTabState,
+    instanceOfPropTabState,
     SelectNodeOptions,
     TableauxTreeLayoutNode,
     VarAssign
@@ -34,8 +34,7 @@ import {
     sendLemma
 } from "../../../helpers/tableaux";
 import { FOArgument, FOArgumentType } from "../../../types/clause";
-import foExampleState from "./fo-example";
-import propExampleState from "./prop-example";
+import { foExample, propExample } from "./example";
 
 interface Props {
     /**
@@ -53,7 +52,18 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         onChange,
         onSuccess
     } = useAppState();
+
     let state = cState;
+    if (!state) {
+        // return <p>Keine Daten vorhanden</p>;
+        // Default state for easy testing
+        state = calculus === Calculus.propTableaux ? propExample :
+            calculus === Calculus.foTableaux ? foExample :
+                undefined;
+        onChange(calculus, state);
+    }
+    const clauseOptions =  state !== undefined ? clauseSetToStringArray(state!.clauseSet) : [];
+
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
     >(undefined);
@@ -67,24 +77,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
     const [lemmaMode, setLemmaMode] = useState(false);
-
-    /**
-     * Return clause options
-     * @returns {string[]} - Array of clause options
-     */
-    const clauseOptions = () => {
-        let options: string[] = [];
-        if (
-            calculus === Calculus.propTableaux &&
-            instanceOfPropTableauxState(state)
-        ) {
-            options = clauseSetToStringArray(state!.clauseSet);
-        }
-        if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
-            options = state!.renderedClauseSet;
-        }
-        return options;
-    };
 
     /**
      * The function to call, when the user selects a clause
@@ -175,7 +167,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 (!selectedNodeIsLeaf && !newNodeIsLeaf)
             ) {
                 setSelectedNodeId(newNode.id);
-            } else if (calculus === Calculus.propTableaux) {
+            } else if (instanceOfPropTabState(state, calculus)) {
                 // Now we have a leaf and a predecessor => Try close move
                 // If we can't do it, let server handle it
                 sendClose(
@@ -188,10 +180,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     newNodeIsLeaf ? selectedNodeId : newNode.id
                 );
                 setSelectedNodeId(undefined);
-            } else if (
-                calculus === Calculus.foTableaux &&
-                instanceOfFOTableauxState(state)
-            ) {
+            } else if (instanceOfFOTabState(state, calculus)) {
                 // Prepare dialog for automatic/manual unification
                 setVarAssignSecondNodeId(newNode.id);
                 const vars: string[] = [];
@@ -272,20 +261,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         setShowVarAssignDialog(false);
     };
 
-    if (!state) {
-        // return <p>Keine Daten vorhanden</p>;
-        // Default state for easy testing
-        switch (calculus) {
-            case Calculus.propTableaux:
-                state = propExampleState;
-                break;
-            case Calculus.foTableaux:
-                state = foExampleState;
-                break;
-        }
-        onChange(calculus, state);
-    }
-
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             // Only handle Crtl+z
@@ -312,7 +287,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 {!smallScreen && (
                     <div>
                         <OptionList
-                            options={clauseOptions()}
+                            options={clauseOptions}
                             selectedOptionId={selectedClauseId}
                             selectOptionCallback={selectClauseCallback}
                         />
@@ -335,8 +310,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 onClose={() => setShowClauseDialog(false)}
             >
                 <OptionList
-                    options={clauseOptions()}
-                    selectedOptionId={undefined}
+                    options={clauseOptions}
                     selectOptionCallback={(id: number) => {
                         setShowClauseDialog(false);
                         selectClauseCallback(id);
@@ -344,7 +318,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             </Dialog>
 
-            {calculus === Calculus.foTableaux && instanceOfFOTableauxState(state) ? (
+            {instanceOfFOTabState(state, calculus) ? (
                 <Dialog
                     open={showVarAssignDialog}
                     label="Choose variable assignments or leave them blank"
