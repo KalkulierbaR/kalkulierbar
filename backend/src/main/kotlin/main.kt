@@ -5,6 +5,7 @@ import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.KBAR_DEFAULT_PORT
 import kalkulierbar.KalkulierbarException
+import kalkulierbar.dpll.PropositionalDPLL
 import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.tableaux.FirstOrderTableaux
@@ -17,7 +18,8 @@ val endpoints: Set<Calculus> = setOf<Calculus>(
         PropositionalTableaux(),
         PropositionalResolution(),
         FirstOrderTableaux(),
-        FirstOrderResolution()
+        FirstOrderResolution(),
+        PropositionalDPLL()
     )
 
 fun main(args: Array<String>) {
