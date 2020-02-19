@@ -178,7 +178,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
 
         // Add lemma atom to leaf
         // NOTE: We explicitly do not apply clause preprocessing for Lemma expansions
-        val newLeaf = FoTableauxNode(leafID, atom.lit, atom.negated, isLemma = true)
+        val newLeaf = FoTableauxNode(leafID, atom.lit, atom.negated, lemmaID)
         state.nodes.add(newLeaf)
         state.nodes[leafID].children.add(state.nodes.size - 1)
 

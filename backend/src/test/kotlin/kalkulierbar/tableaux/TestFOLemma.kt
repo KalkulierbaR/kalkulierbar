@@ -43,7 +43,7 @@ class TestFOLemma {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 6, 2, map))
 
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, 1, 2))
-        assertEquals(true, state.nodes[7].isLemma)
+        assertEquals(2, state.nodes[7].lemmaSource)
         assertEquals(true, state.nodes[7].negated)
     }
 
@@ -59,7 +59,7 @@ class TestFOLemma {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, 2))
 
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, 1, 2))
-        assertEquals(true, state.nodes[7].isLemma)
+        assertEquals(2, state.nodes[7].lemmaSource)
         assertEquals(true, state.nodes[7].negated)
     }
 
@@ -75,7 +75,7 @@ class TestFOLemma {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 5, 2))
 
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.LEMMA, 1, 2))
-        assertEquals(true, state.nodes[6].isLemma)
+        assertEquals(2, state.nodes[6].lemmaSource)
         assertEquals(true, state.nodes[6].negated)
 
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 6, 0))

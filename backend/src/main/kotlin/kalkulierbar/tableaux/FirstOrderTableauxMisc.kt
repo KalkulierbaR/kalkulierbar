@@ -140,7 +140,7 @@ class FoTableauxNode(
     override val parent: Int?,
     val relation: Relation,
     override val negated: Boolean,
-    override val isLemma: Boolean = false
+    override val lemmaSource: Int? = null
 ) : GenericTableauxNode<Relation> {
 
     override var isClosed = false
