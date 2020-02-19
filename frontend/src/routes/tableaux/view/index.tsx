@@ -66,8 +66,12 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showClauseDialog, setShowClauseDialog] = useState(false);
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
-    const [isLemmaMove, toggleLemmaMove] = useState(false);
+    const [lemmaMode, setLemmaMode] = useState(false);
 
+    /**
+     * Return clause options
+     * @returns {string[]} - Array of clause options
+     */
     const clauseOptions = () => {
         let options: string[] = [];
         if (
@@ -148,25 +152,23 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             const selectedNodeIsLeaf = selectedNode.children.length === 0;
 
             if (
-                // Open leaf and a closed Node are selected => Try Lemma move
-                isLemmaMove &&
-                (selectedNodeIsLeaf && !selectedNode.isClosed || newNodeIsLeaf && !newNode.isClosed) &&
-                (selectedNode.isClosed || newNode.isClosed)
+                lemmaMode &&
+                selectedNodeIsLeaf &&
+                !selectedNode.isClosed &&
+                newNode.isClosed
             ) {
-                const leafId = (newNode.isClosed ? selectedNodeId : newNode.id);
-                const lemmaId = (newNode.isClosed ? newNode.id : selectedNodeId);
-
-                toggleLemmaMove(false);
+                // Open leaf and a closed Node are selected => Try Lemma move
                 sendLemma(
                     calculus,
                     server,
                     state!,
                     onChange,
                     onError,
-                    leafId,
-                    lemmaId
+                    selectedNodeId,
+                    newNode.id
                 );
                 setSelectedNodeId(undefined);
+                setLemmaMode(false);
             } else if (
                 // Don't select two leafs or two nodes at the same time
                 (selectedNodeIsLeaf && newNodeIsLeaf) ||
@@ -216,7 +218,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setShowVarAssignDialog(true);
             }
         }
-        toggleLemmaMove(false);
+        setLemmaMode(false);
     };
 
     /**
@@ -231,6 +233,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             selectedNodeId === undefined ||
             varAssignSecondNodeId === undefined
         ) {
+            // Error for debugging
             throw new Error(
                 "Close move went wrong, since selected nodes could not be identified."
             );
@@ -322,7 +325,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={selectNodeCallback}
-                    lemmaNodesSelectable={isLemmaMove}
+                    lemmaNodesSelectable={lemmaMode}
                 />
             </div>
 
@@ -426,19 +429,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 }}
                             />
                         ) : undefined}
-                        {isLemmaMove ? (
-                            // sollte nicht vorkommen ansonsten kann man hier den Lemma move beenden, solte er noch fehlerhaft aktiv sein.
-                            <FAB
-                                icon={<LemmaIcon />}
-                                label="turn Lemma move off"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    toggleLemmaMove(false);
-                                }}
-                            />
-                        ) : undefined}
                     </Fragment>
                 ) : (
                     <Fragment>
@@ -463,20 +453,20 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             }}
                         />
                         {(state!.nodes.filter(node => node.isClosed).length > 0 &&
-                            !isLemmaMove &&
+                            !lemmaMode &&
                             state!.nodes[selectedNodeId].children.length === 0) ? (
-                        <FAB
-                            icon={<LemmaIcon />}
-                            label="Lemma"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                toggleLemmaMove(!isLemmaMove);
-                            }}
-                        />
+                            <FAB
+                                icon={<LemmaIcon />}
+                                label="Lemma"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    setLemmaMode(!lemmaMode);
+                                }}
+                            />
                         ) : undefined}
-                        {(state!.nodes.filter(node => node.isClosed).length > 0 && isLemmaMove) ? (
+                        {lemmaMode ? (
                             <FAB
                                 icon={<LemmaIcon />}
                                 label="Lemma off"
@@ -484,7 +474,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 extended={true}
                                 showIconAtEnd={true}
                                 onClick={() => {
-                                    toggleLemmaMove(!isLemmaMove);
+                                    setLemmaMode(!lemmaMode);
                                 }}
                                 active={true}
                             />
