@@ -10,6 +10,7 @@ export interface TableauxNode {
     closeRef: number | null;
     children: number[];
     relation?: FORelation;
+    lemmaSource?: number;
 }
 
 export type TableauxTreeLayoutNode = TableauxNode & { id: number };
@@ -50,10 +51,17 @@ export interface TableauxUndoMove {
     id2: number;
 }
 
+export interface TableauxLemmaMove {
+    type: "LEMMA";
+    id1: number;
+    id2: number;
+}
+
 export type TableauxMove =
     | TableauxExpandMove
     | TableauxCloseMove
-    | TableauxUndoMove;
+    | TableauxUndoMove
+    | TableauxLemmaMove;
 
 export enum TableauxType {
     unconnected = "UNCONNECTED",

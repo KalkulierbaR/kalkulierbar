@@ -62,7 +62,7 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Synt
 
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
 
-    override fun clone(): LogicNode {
+    override fun clone(): Relation {
         val args = arguments.map { it.clone() }
         return Relation(spelling, args)
     }

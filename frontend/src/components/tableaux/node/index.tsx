@@ -20,25 +20,35 @@ interface Props {
      * The function to call, when the user selects this node
      */
     selectNodeCallback: (node: TableauxTreeLayoutNode) => void;
+    /**
+     * Contains the Information, that potential Lemma nodes are selectable
+     */
+    lemmaNodesSelectable: boolean;
 }
 
 // Component representing a single Node of a TableauxTree
 const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     node,
     selected,
-    selectNodeCallback
+    selectNodeCallback,
+    lemmaNodesSelectable
 }) => {
     const textRef = createRef<SVGTextElement>();
 
     // The nodes name which is displayed
     const name = `${node.data.negated ? "¬" : ""}${node.data.spelling}`;
 
+    // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
+    const nodeIsClickable = ((lemmaNodesSelectable && node.data.isClosed) ||
+        (!lemmaNodesSelectable && !node.data.isClosed) ||
+        (lemmaNodesSelectable && selected)
+    );
     /**
      * Handle the onClick event of the node
      * @returns {void}
      */
     const handleClick = () => {
-        if (!node.data.isClosed) {
+        if(nodeIsClickable){
             selectNodeCallback(node.data);
         }
     };
@@ -46,19 +56,27 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     return (
         <g
             onClick={handleClick}
-            class={node.data.isClosed ? style.nodeClosed : style.node}
+            class={classMap({
+                [style.node]: true,
+                [style.nodeClosed]: node.data.isClosed && !lemmaNodesSelectable,
+                [style.nodeClickable]: nodeIsClickable
+            })}
         >
             <Rectangle
                 elementRef={textRef}
-                disabled={node.data.isClosed}
+                disabled={node.data.isClosed && !lemmaNodesSelectable}
                 selected={selected}
+                class={classMap({
+                    [style.nodeLemma]: node.data.lemmaSource != null,
+                    [style.nodeSelectLemma]: node.data.isClosed && lemmaNodesSelectable
+                })}
             />
             <text
                 ref={textRef}
                 text-anchor="middle"
                 class={classMap({
                     [style.textSelected]: selected,
-                    [style.textClosed]: node.data.isClosed
+                    [style.textClosed]: node.data.isClosed && !lemmaNodesSelectable
                 })}
                 x={node.x}
                 y={node.y}

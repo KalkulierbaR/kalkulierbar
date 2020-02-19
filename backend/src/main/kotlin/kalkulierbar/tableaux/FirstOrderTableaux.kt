@@ -30,11 +30,12 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     }
 
     override fun applyMoveOnState(state: FoTableauxState, move: FoTableauxMove): FoTableauxState {
-        // Pass expand, close, undo moves to relevant subfunction
+        // Pass moves to relevant subfunction
         return when (move.type) {
             FoMoveType.AUTOCLOSE -> applyAutoCloseBranch(state, move.id1, move.id2)
             FoMoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2, move.getVarAssignTerms())
             FoMoveType.EXPAND -> applyMoveExpandLeaf(state, move.id1, move.id2)
+            FoMoveType.LEMMA -> applyMoveUseLemma(state, move.id1, move.id2)
             FoMoveType.UNDO -> applyMoveUndo(state)
         }
     }
@@ -159,6 +160,35 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             state.moveHistory.add(FoTableauxMove(FoMoveType.EXPAND, leafID, clauseID))
 
         state.expansionCounter += 1
+
+        return state
+    }
+
+    /**
+     * Appends the negation of a closed node on a leaf (lemma rule)
+     * provided the chosen leaf is on a sibling-branch of the closed node
+     * @param state Current proof state to apply the move on
+     * @param leafID ID of the leaf to append the lemma to
+     * @param lemmaID ID of the proof tree node to create a lemma from
+     * @return new proof state with lemma applied
+     */
+    private fun applyMoveUseLemma(state: FoTableauxState, leafID: Int, lemmaID: Int): FoTableauxState {
+        // Get lemma atom and verify all preconditions
+        val atom = getLemma(state, leafID, lemmaID)
+
+        // Add lemma atom to leaf
+        // NOTE: We explicitly do not apply clause preprocessing for Lemma expansions
+        val newLeaf = FoTableauxNode(leafID, atom.lit, atom.negated, lemmaID)
+        state.nodes.add(newLeaf)
+        state.nodes[leafID].children.add(state.nodes.size - 1)
+
+        // Verify compliance with connectedness criteria
+        verifyExpandConnectedness(state, leafID)
+
+        // Add move to state history
+        if (state.backtracking) {
+            state.moveHistory.add(FoTableauxMove(FoMoveType.LEMMA, leafID, lemmaID, mapOf()))
+        }
 
         return state
     }

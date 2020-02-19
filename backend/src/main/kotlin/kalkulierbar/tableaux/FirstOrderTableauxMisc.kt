@@ -69,9 +69,6 @@ class FoTableauxState(
      * @param clause Clause to be expanded
      * @return List of Atoms to be expanded with variables renamed to be fresh
      */
-    // TODO: Does this actually ensure the required level of freshness?
-    // Would it cause problems if I could instantiate 'Xv1' with 'Xv2', then expand again, causing
-    // another Xv2 to be generated? Does this scenario have to be avoided?
     override fun clauseExpandPreprocessing(clause: Clause<Relation>): List<Atom<Relation>> {
         val suffixAppender = VariableSuffixAppend("_${expansionCounter + 1}")
         val atomList = mutableListOf<Atom<Relation>>()
@@ -136,12 +133,14 @@ class FoTableauxState(
  * @param parent ID of the parent node in the proof tree
  * @param spelling Name of the variable the node represents
  * @param negated True if the variable is negated, false otherwise
+ * @param isLemma Marks the node as created using a Lemma rule instantiation
  */
 @Serializable
 class FoTableauxNode(
     override val parent: Int?,
     val relation: Relation,
-    override val negated: Boolean
+    override val negated: Boolean,
+    override val lemmaSource: Int? = null
 ) : GenericTableauxNode<Relation> {
 
     override var isClosed = false
@@ -156,7 +155,7 @@ class FoTableauxNode(
         return if (negated) "!$relation" else "$relation"
     }
 
-    override fun toAtom() = Atom(relation, negated)
+    override fun toAtom() = Atom(relation.clone(), negated)
 
     fun render() {
         spelling = relation.toString()
@@ -166,6 +165,9 @@ class FoTableauxNode(
      * Pack the node into a well-defined, unambiguous string representation
      * Used to calculate checksums over state objects as JSON representation
      * might differ slightly between clients, encodings, etc
+     * Note: isLemma is only relevant to the visual representation of the proof,
+     *       not the proof correctness or structure itself. It is thus deliberately
+     *       not included in the node hash.
      * @return Canonical node representations
      */
     fun getHash(): String {
@@ -202,5 +204,5 @@ data class FoTableauxParam(
 )
 
 enum class FoMoveType {
-    EXPAND, CLOSE, AUTOCLOSE, UNDO
+    EXPAND, CLOSE, AUTOCLOSE, LEMMA, UNDO
 }

@@ -61,7 +61,6 @@ class PropositionalResolution : GenericResolution<String>,
 
         // Hide old and add new clause
         clauses.removeAt(clauseID)
-        state.hiddenClauses.add(oldClause)
         clauses.add(clauseID, newClause)
         state.newestNode = clauseID
     }

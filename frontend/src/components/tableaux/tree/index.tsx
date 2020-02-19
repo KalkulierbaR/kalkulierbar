@@ -33,6 +33,10 @@ interface Props {
      * Informs the element that the screen is small.
      */
     smallScreen: boolean;
+    /**
+     * Hands the Information over, that potential Lemma nodes are selectable
+     */
+    lemmaNodesSelectable: boolean;
 }
 
 /**
@@ -102,7 +106,8 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
 const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
     selectNodeCallback,
-    selectedNodeId
+    selectedNodeId,
+    lemmaNodesSelectable
 }) => {
     const { data, height: treeHeight, width: treeWidth, links } = treeLayout(
         nodes
@@ -161,6 +166,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     selectNodeCallback={selectNodeCallback}
                                     node={n}
                                     selected={n.data.id === selectedNodeId}
+                                    lemmaNodesSelectable={lemmaNodesSelectable}
                                 />
                             ))}
                         </g>
