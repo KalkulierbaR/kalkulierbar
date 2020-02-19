@@ -92,11 +92,8 @@ class TestFactorize {
     fun testFactorizeMoveProp() {
         var state = prop.parseFormulaToState("a;a,b,c,a,b,c", null)
         state = prop.applyMoveOnState(state, MoveFactorize(1))
-
-        assertEquals(1, state.hiddenClauses.clauses.size)
         assertEquals(2, state.clauseSet.clauses.size)
         assertEquals("{a, b, c}", state.clauseSet.clauses[1].toString())
-        assertEquals("{a, b, c, a, b, c}", state.hiddenClauses.clauses[0].toString())
     }
 
     @Test
