@@ -94,7 +94,7 @@ class TableauxNode(
     override val parent: Int?,
     override val spelling: String,
     override val negated: Boolean,
-    override val isLemma: Boolean = false
+    override val lemmaSource: Int? = null
 ) : GenericTableauxNode<String> {
 
     override var isClosed = false

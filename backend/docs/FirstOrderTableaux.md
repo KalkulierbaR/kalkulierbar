@@ -48,7 +48,7 @@ Using the lemma creation rule, a proven assumption can be expanded at specific l
 
 Lemma rule applications are encoded as `{"type":"LEMMA","id1":<ID of leaf to expand lemma on>,"id2":<ID of node to create lemma from>, "varAssign":{}}`.  
 
-Nodes created using a lemma rule instantiation will have the `isLemma` attribute set to `true` to indicate their origin.
+Nodes created using a lemma rule instantiation will have the `lemmaSource` attribute set to the ID of the node they were created from to indicate their origin. For all other nodes, `lemmaSource` is `null`.
 
 ## Closing a Proof
 

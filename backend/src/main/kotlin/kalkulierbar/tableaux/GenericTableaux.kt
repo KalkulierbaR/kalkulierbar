@@ -256,7 +256,7 @@ interface GenericTableauxNode<AtomType> {
     var isClosed: Boolean
     var closeRef: Int?
     val children: MutableList<Int>
-    val isLemma: Boolean
+    val lemmaSource: Int?
     val isLeaf
         get() = children.size == 0
 

@@ -38,7 +38,7 @@ class TestLemma {
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 5, 4))
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 2, 1))
 
-        assertEquals(true, state.nodes[6].isLemma)
+        assertEquals(1, state.nodes[6].lemmaSource)
         assertEquals(true, state.nodes[6].negated)
 
         instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 2))
@@ -56,7 +56,7 @@ class TestLemma {
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 5, 2))
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 3, 2))
 
-        assertEquals(true, state.nodes[6].isLemma)
+        assertEquals(2, state.nodes[6].lemmaSource)
         assertEquals(true, state.nodes[6].negated)
 
         instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 3))
@@ -75,7 +75,7 @@ class TestLemma {
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 5, 3))
         state = instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 2, 1))
 
-        assertEquals(true, state.nodes[6].isLemma)
+        assertEquals(1, state.nodes[6].lemmaSource)
         assertEquals(false, state.nodes[6].negated)
     }
 

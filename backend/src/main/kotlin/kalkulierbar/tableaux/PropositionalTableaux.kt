@@ -120,7 +120,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
         val atom = getLemma(state, leafID, lemmaID)
 
         // Add lemma atom to leaf
-        val newLeaf = TableauxNode(leafID, atom.lit, atom.negated, isLemma = true)
+        val newLeaf = TableauxNode(leafID, atom.lit, atom.negated, lemmaID)
         state.nodes.add(newLeaf)
         state.nodes[leafID].children.add(state.nodes.size - 1)
 

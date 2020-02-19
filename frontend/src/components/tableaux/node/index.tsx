@@ -67,7 +67,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                 disabled={node.data.isClosed && !lemmaNodesSelectable}
                 selected={selected}
                 class={classMap({
-                    [style.nodeLemma]: node.data.isLemma === undefined ? false : node.data.isLemma,
+                    [style.nodeLemma]: node.data.lemmaSource != null,
                     [style.nodeSelectLemma]: node.data.isClosed && lemmaNodesSelectable
                 })}
             />
