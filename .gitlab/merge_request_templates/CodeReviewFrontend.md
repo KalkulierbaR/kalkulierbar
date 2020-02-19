@@ -12,6 +12,10 @@
 
 * [ ] Im UI wurden nur globale Farbvariablen benutzt
 
+* [ ] Tooltips für Eingabemöglichkeiten sind vorhanden
+
+* [ ] Interface ist auch mit eingeschränkter Farbwahrnehmung nutzbar
+
 * [ ] Manuelle Tests sind erfolgreich  
 (Grundlegende Interaktionen auf min. einem Desktop- und einem Mobilgerät testen)
 
