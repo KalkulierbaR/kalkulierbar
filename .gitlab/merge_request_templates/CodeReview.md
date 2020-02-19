@@ -35,6 +35,8 @@ Mögliche Probleme: -
 
 * [ ] Typen / Interfaces sind sinnvoll definiert
 
+* [ ] Im UI wurden nur globale Farbvariablen benutzt
+
 * [ ] Tooltips für Eingabemöglichkeiten sind vorhanden
 
 * [ ] Interface ist auch mit eingeschränkter Farbwahrnehmung nutzbar

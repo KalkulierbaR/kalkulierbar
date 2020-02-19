@@ -2,8 +2,8 @@ import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import {Calculus, TableauxCalculusType} from "../../../types/app";
 import {
-    instanceOfFOTableauxState,
-    instanceOfPropTableauxState,
+    instanceOfFOTabState,
+    instanceOfPropTabState,
     SelectNodeOptions,
     TableauxTreeLayoutNode,
     VarAssign
@@ -18,6 +18,7 @@ import AddIcon from "../../../components/icons/add";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
+import LemmaIcon from "../../../components/icons/lemma";
 import UndoIcon from "../../../components/icons/undo";
 import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
@@ -29,11 +30,11 @@ import {
     nextOpenLeaf,
     sendBacktrack,
     sendClose,
-    sendExtend
+    sendExtend,
+    sendLemma
 } from "../../../helpers/tableaux";
 import { FOArgument, FOArgumentType } from "../../../types/clause";
-import foExampleState from "./fo-example";
-import propExampleState from "./prop-example";
+import { foExample, propExample } from "./example";
 
 interface Props {
     /**
@@ -51,33 +52,31 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         onChange,
         onSuccess
     } = useAppState();
+
     let state = cState;
+    if (!state) {
+        // return <p>Keine Daten vorhanden</p>;
+        // Default state for easy testing
+        state = calculus === Calculus.propTableaux ? propExample :
+            calculus === Calculus.foTableaux ? foExample :
+                undefined;
+        onChange(calculus, state);
+    }
+    const clauseOptions =  state !== undefined ? clauseSetToStringArray(state!.clauseSet) : [];
+
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
     >(undefined);
-    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
-        undefined
-    );
-    const [closeMoveSecondNodeId, setCloseMoveSecondNodeId] = useState<
+    const [selectedNodeId, setSelectedNodeId] = useState<
+        number | undefined
+    >(undefined);
+    const [varAssignSecondNodeId, setVarAssignSecondNodeId] = useState<
         number | undefined
     >(undefined);
     const [showClauseDialog, setShowClauseDialog] = useState(false);
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
-
-    const clauseOptions = () => {
-        let options: string[] = [];
-        if (
-            calculus === Calculus.propTableaux &&
-            instanceOfPropTableauxState(state)
-        ) {
-            options = clauseSetToStringArray(state!.clauseSet);
-        }
-        if (calculus === Calculus.foTableaux && instanceOfFOTableauxState(state)) {
-            options = state!.renderedClauseSet;
-        }
-        return options;
-    };
+    const [lemmaMode, setLemmaMode] = useState(false);
 
     /**
      * The function to call, when the user selects a clause
@@ -145,11 +144,30 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             const selectedNodeIsLeaf = selectedNode.children.length === 0;
 
             if (
+                lemmaMode &&
+                selectedNodeIsLeaf &&
+                !selectedNode.isClosed &&
+                newNode.isClosed
+            ) {
+                // Open leaf and a closed Node are selected => Try Lemma move
+                sendLemma(
+                    calculus,
+                    server,
+                    state!,
+                    onChange,
+                    onError,
+                    selectedNodeId,
+                    newNode.id
+                );
+                setSelectedNodeId(undefined);
+                setLemmaMode(false);
+            } else if (
+                // Don't select two leafs or two nodes at the same time
                 (selectedNodeIsLeaf && newNodeIsLeaf) ||
                 (!selectedNodeIsLeaf && !newNodeIsLeaf)
             ) {
                 setSelectedNodeId(newNode.id);
-            } else if (calculus === Calculus.propTableaux) {
+            } else if (instanceOfPropTabState(state, calculus)) {
                 // Now we have a leaf and a predecessor => Try close move
                 // If we can't do it, let server handle it
                 sendClose(
@@ -162,12 +180,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     newNodeIsLeaf ? selectedNodeId : newNode.id
                 );
                 setSelectedNodeId(undefined);
-            } else if (
-                calculus === Calculus.foTableaux &&
-                instanceOfFOTableauxState(state)
-            ) {
+            } else if (instanceOfFOTabState(state, calculus)) {
                 // Prepare dialog for automatic/manual unification
-                setCloseMoveSecondNodeId(newNode.id);
+                setVarAssignSecondNodeId(newNode.id);
                 const vars: string[] = [];
                 const checkArgumentForVar = (argument: FOArgument) => {
                     if (argument.type === FOArgumentType.quantifiedVariable) {
@@ -180,41 +195,56 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 selectedNode.relation!.arguments.forEach(checkArgumentForVar);
                 newNode.relation!.arguments.forEach(checkArgumentForVar);
                 if (vars.length <= 0) {
-                    submitVarAssign(false);
+                    if (selectedNodeIsLeaf) {
+                        submitVarAssignWithNodeIds(false, {}, selectedNodeId, newNode.id);
+                    }
+                    else {
+                        submitVarAssignWithNodeIds(false, {}, newNode.id, selectedNodeId);
+                    }
                     return;
                 }
                 setVarsToAssign(vars);
                 setShowVarAssignDialog(true);
             }
         }
+        setLemmaMode(false);
     };
 
     /**
      * Submit a close move containing variable assignment rules
      * in the FO Tableaux calculus
-     * @param {boolean} auto - Automatically assign variables if this is set to true
+     * @param {boolean} autoAssign - Automatically assign variables if this is set to true
      * @param {VarAssign} varAssign - Variable assignments by the user
      * @returns {void | Error} - Error if the two nodes for the close move can't be identified
      */
-    const submitVarAssign = (auto: boolean, varAssign: VarAssign = {}) => {
-        setShowVarAssignDialog(false);
+    const submitVarAssign = (autoAssign: boolean, varAssign: VarAssign = {}) => {
         if (
             selectedNodeId === undefined ||
-            closeMoveSecondNodeId === undefined
+            varAssignSecondNodeId === undefined
         ) {
+            // Error for debugging
             throw new Error(
                 "Close move went wrong, since selected nodes could not be identified."
             );
         }
-        const selectedNode = state!.nodes[selectedNodeId];
-        const leafNodeId =
-            selectedNode.children.length === 0
-                ? selectedNodeId
-                : closeMoveSecondNodeId;
-        const predNodeId =
-            selectedNode.children.length === 0
-                ? closeMoveSecondNodeId
-                : selectedNodeId;
+        if (state!.nodes[selectedNodeId].children.length === 0) {
+            submitVarAssignWithNodeIds(autoAssign, varAssign, selectedNodeId, varAssignSecondNodeId);
+        }
+        else {
+            submitVarAssignWithNodeIds(autoAssign, varAssign, varAssignSecondNodeId, selectedNodeId);
+        }
+    };
+
+    /**
+     * Submit a close move containing variable assignment rules
+     * in the FO Tableaux calculus
+     * @param {boolean} autoAssign - Automatically assign variables if this is set to true
+     * @param {VarAssign} varAssign - Variable assignments by the user
+     * @param {number} leafNodeId - The id of the leaf node
+     * @param {number} predNodeId - The id of the leaf's predecessor
+     * @returns {void}
+     */
+    const submitVarAssignWithNodeIds = (autoAssign: boolean, varAssign: VarAssign, leafNodeId: number, predNodeId: number) => {
         sendClose(
             calculus,
             server,
@@ -224,25 +254,12 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             leafNodeId,
             predNodeId,
             varAssign,
-            auto
+            autoAssign
         );
         setSelectedNodeId(undefined);
-        setCloseMoveSecondNodeId(undefined);
+        setVarAssignSecondNodeId(undefined);
+        setShowVarAssignDialog(false);
     };
-
-    if (!state) {
-        // return <p>Keine Daten vorhanden</p>;
-        // Default state for easy testing
-        switch (calculus) {
-            case Calculus.propTableaux:
-                state = propExampleState;
-                break;
-            case Calculus.foTableaux:
-                state = foExampleState;
-                break;
-        }
-        onChange(calculus, state);
-    }
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -270,7 +287,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 {!smallScreen && (
                     <div>
                         <OptionList
-                            options={clauseOptions()}
+                            options={clauseOptions}
                             selectedOptionId={selectedClauseId}
                             selectOptionCallback={selectClauseCallback}
                         />
@@ -283,6 +300,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={selectNodeCallback}
+                    lemmaNodesSelectable={lemmaMode}
                 />
             </div>
 
@@ -292,8 +310,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 onClose={() => setShowClauseDialog(false)}
             >
                 <OptionList
-                    options={clauseOptions()}
-                    selectedOptionId={undefined}
+                    options={clauseOptions}
                     selectOptionCallback={(id: number) => {
                         setShowClauseDialog(false);
                         selectClauseCallback(id);
@@ -301,7 +318,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             </Dialog>
 
-            {calculus === Calculus.foTableaux && instanceOfFOTableauxState(state) ? (
+            {instanceOfFOTabState(state, calculus) ? (
                 <Dialog
                     open={showVarAssignDialog}
                     label="Choose variable assignments or leave them blank"
@@ -409,6 +426,33 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 setShowClauseDialog(!showClauseDialog);
                             }}
                         />
+                        {lemmaMode ? (
+                            <FAB
+                                icon={<LemmaIcon fill="#000" />}
+                                label="Lemma"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    setLemmaMode(!lemmaMode);
+                                }}
+                                active={true}
+                            />
+                        ) : (
+                            state!.nodes[selectedNodeId].children.length === 0 &&
+                            state!.nodes.filter(node => node.isClosed).length > 0
+                        ) ? (
+                            <FAB
+                                icon={<LemmaIcon />}
+                                label="Lemma"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    setLemmaMode(!lemmaMode);
+                                }}
+                            />
+                        ) : undefined}
                     </Fragment>
                 )}
             </ControlFAB>

@@ -23,7 +23,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
     elementRef,
     disabled,
     selected,
-    class: className = ""
+    class: className = "",
 }) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
@@ -46,7 +46,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
                 [style.active]: !disabled,
                 [style.disabled]: disabled,
                 [style.selected]: selected,
-                [className]: className
+                [className]: className,
             })}
             x={dims.x}
             y={dims.y}

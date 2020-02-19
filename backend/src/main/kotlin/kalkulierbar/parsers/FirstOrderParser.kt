@@ -24,6 +24,8 @@ class FirstOrderParser : PropositionalParser() {
         fun parse(formula: String) = instance.parse(formula)
 
         fun parseTerm(term: String) = instance.parseTerm(term)
+
+        fun parseRelation(relation: String) = instance.parseRelation(relation)
     }
 
     // List of quantifier scopes for correct variable binding
@@ -48,9 +50,24 @@ class FirstOrderParser : PropositionalParser() {
      * @return FirstOrderTerm representing the term
      */
     fun parseTerm(term: String): FirstOrderTerm {
-        tokens = Tokenizer.tokenize(term)
+        tokens = Tokenizer.tokenize(term, extended = true) // Allow extended identifier chars
         bindQuantifiedVariables = false
         val res = parseTerm()
+        if (tokens.isNotEmpty())
+            throw InvalidFormulaFormat("Expected end of term but got ${gotMsg()}")
+
+        return res
+    }
+
+    /**
+     * Parses a relation / an atomic formula
+     * @param relation input relation
+     * @return Relation node representing the relation
+     */
+    fun parseRelation(relation: String): Relation {
+        tokens = Tokenizer.tokenize(relation)
+        bindQuantifiedVariables = false
+        val res = parseAtomic()
         if (tokens.isNotEmpty())
             throw InvalidFormulaFormat("Expected end of term but got ${gotMsg()}")
 
@@ -138,7 +155,7 @@ class FirstOrderParser : PropositionalParser() {
      * Parses an atomic formula / a relation
      * @return LogicNode representing the parsed Relation
      */
-    private fun parseAtomic(): LogicNode {
+    private fun parseAtomic(): Relation {
         if (!nextTokenIs(TokenType.CAPID))
             throw InvalidFormulaFormat("Expected relation identifier but got ${gotMsg()}")
 

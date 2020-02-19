@@ -1,16 +1,8 @@
 import { h } from "preact";
-
-import { CandidateClause } from "../../../types/clause";
-
 import { useMemo } from "preact/hooks";
-import { checkClose } from "../../../helpers/api";
-import { useAppState } from "../../../helpers/app-state";
 import { circleLayout } from "../../../helpers/layout/resolution";
-import {Calculus} from "../../../types/app";
-import ControlFAB from "../../control-fab";
-import FAB from "../../fab";
-import CenterIcon from "../../icons/center";
-import CheckCircleIcon from "../../icons/check-circle";
+import { CandidateClause } from "../../../types/clause";
+import { VisualHelp } from "../../../types/resolution";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
@@ -29,9 +21,9 @@ interface Props {
      */
     selectedClauseId: number | undefined;
     /**
-     * Whether to highlight valid resolution partners
+     * Whether to help the user visually to find resolution partners
      */
-    highlightSelectable: boolean;
+    visualHelp: VisualHelp;
     /**
      * Whether to highlight the newest node
      */
@@ -42,20 +34,13 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
     selectClauseCallback,
     selectedClauseId,
-    highlightSelectable,
-    newestNode
+    visualHelp,
+    newestNode,
 }) => {
-    const {
-        server,
-        onError,
-        onSuccess,
-        [Calculus.propResolution]: state,
-        smallScreen
-    } = useAppState();
-
-    const { width, height, data } = useMemo(() => circleLayout(clauses), [
-        clauses
-    ]);
+    const { width, height, data, radius } = useMemo(
+        () => circleLayout(clauses.map((c) => c.clause)),
+        [clauses],
+    );
 
     return (
         <div class={`card ${style.noPad}`}>
@@ -67,16 +52,20 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
                 preserveAspectRatio="xMidyMid meet"
             >
-                {transform => (
+                {(transform) => (
                     <g
                         transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
+                        <circle class={style.circle} cx="0" cy="0" r={radius} />
                         {data.map(({ x, y }, index) => {
                             const disabled =
-                                highlightSelectable &&
+                                [
+                                    VisualHelp.highlight,
+                                    VisualHelp.rearrange,
+                                ].includes(visualHelp) &&
                                 selectedClauseId !== undefined &&
                                 selectedClauseId !== index &&
-                                clauses[index].candidateLiterals.length === 0;
+                                clauses[index].candidateAtomMap.size === 0;
                             return (
                                 <ResolutionNode
                                     key={index}
@@ -92,32 +81,6 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     </g>
                 )}
             </Zoomable>
-            <ControlFAB alwaysOpen={!smallScreen}>
-                <FAB
-                    mini={true}
-                    extended={true}
-                    label="Center"
-                    showIconAtEnd={true}
-                    icon={<CenterIcon />}
-                    onClick={() => dispatchEvent(new CustomEvent("center"))}
-                />
-                <FAB
-                    icon={<CheckCircleIcon />}
-                    label="Check"
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() =>
-                        checkClose(
-                            server,
-                            onError,
-                            onSuccess,
-                            Calculus.propResolution,
-                            state
-                        )
-                    }
-                />
-            </ControlFAB>
         </div>
     );
 };

@@ -1,7 +1,10 @@
 import {
-    ResolutionMove,
-    ResolutionParams,
-    ResolutionState
+    FOResolutionMove,
+    FOResolutionParams,
+    FOResolutionState,
+    PropResolutionMove,
+    PropResolutionParams,
+    PropResolutionState,
 } from "./resolution";
 import {
     FOTableauxMove,
@@ -9,27 +12,39 @@ import {
     FOTableauxState,
     PropTableauxParams,
     PropTableauxState,
-    TableauxMove
+    TableauxMove,
 } from "./tableaux";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
-export type CalculusType = TableauxCalculusType | "prop-resolution";
+export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
+export type PropCalculusType =  "prop-tableaux" | "prop-resolution";
+export type FOCalculusType =  "fo-tableaux" | "fo-resolution";
+export type CalculusType = TableauxCalculusType | ResolutionCalculusType;
 
 export enum Calculus {
     propTableaux = "prop-tableaux",
     foTableaux = "fo-tableaux",
     propResolution = "prop-resolution",
+    foResolution = "fo-resolution",
 }
+
+export const PropCalculus: Calculus[] = [Calculus.propTableaux, Calculus.propResolution];
+export const FOCalculus: Calculus[] = [Calculus.foTableaux, Calculus.foResolution];
+export const TableauxCalculus: Calculus[] = [Calculus.propTableaux, Calculus.foTableaux];
+export const ResolutionCalculus: Calculus[] = [Calculus.propResolution, Calculus.foResolution];
+
 export interface Move {
     "prop-tableaux": TableauxMove;
-    "prop-resolution": ResolutionMove;
+    "prop-resolution": PropResolutionMove;
     "fo-tableaux": FOTableauxMove;
+    "fo-resolution": FOResolutionMove;
 }
 
 export interface Params {
     "prop-tableaux": PropTableauxParams;
-    "prop-resolution": ResolutionParams;
+    "prop-resolution": PropResolutionParams;
     "fo-tableaux": FOTableauxParams;
+    "fo-resolution": FOResolutionParams;
 }
 
 export type Formulas = Record<Calculus, string>;
@@ -37,7 +52,7 @@ export type Formulas = Record<Calculus, string>;
 export enum Theme {
     dark = "dark",
     light = "light",
-    auto = "auto"
+    auto = "auto",
 }
 
 export interface AppState {
@@ -48,8 +63,9 @@ export interface AppState {
     theme: Theme;
     savedFormulas: Formulas;
     "prop-tableaux"?: PropTableauxState;
-    "prop-resolution"?: ResolutionState;
+    "prop-resolution"?: PropResolutionState;
     "fo-tableaux"?: FOTableauxState;
+    "fo-resolution"?: FOResolutionState;
 }
 
 export interface DerivedAppState extends AppState {
@@ -59,7 +75,7 @@ export interface DerivedAppState extends AppState {
     removeNotification: () => void;
     onChange: <C extends CalculusType = CalculusType>(
         calculus: C,
-        state: AppState[C]
+        state: AppState[C],
     ) => void;
     dispatch: (a: AppStateAction) => void;
 }
@@ -75,7 +91,7 @@ export enum AppStateActionType {
     UPDATE_CALCULUS_STATE,
     SET_THEME,
     SET_SERVER,
-    UPDATE_SAVED_FORMULA
+    UPDATE_SAVED_FORMULA,
 }
 
 export interface UpdateScreenSize extends AppStateActionBase {
@@ -110,7 +126,8 @@ export interface SetServer extends AppStateActionBase {
     value: string;
 }
 
-export interface UpdateSavedFormula<C extends CalculusType = CalculusType> extends AppStateActionBase {
+export interface UpdateSavedFormula<C extends CalculusType = CalculusType>
+    extends AppStateActionBase {
     type: AppStateActionType.UPDATE_SAVED_FORMULA;
     calculus: C;
     value: string;
@@ -127,13 +144,13 @@ export type AppStateAction =
 
 export type AppStateUpdater = <C extends CalculusType = CalculusType>(
     id: C,
-    newState: AppState[C]
+    newState: AppState[C],
 ) => void;
 
 export enum NotificationType {
     Error,
     Success,
-    None
+    None,
 }
 
 export interface Notification {
@@ -144,4 +161,11 @@ export interface Notification {
 export interface CheckCloseResponse {
     closed: boolean;
     msg: string;
+}
+
+export interface APIInformation<S> {
+    server: string;
+    state: S;
+    onChange: AppStateUpdater;
+    onError: (msg: string) => void;
 }

@@ -10,8 +10,9 @@ import kalkulierbar.clause.Clause
  * @param state current state object
  * @param leafID ID of the leaf to be expanded
  * @param clause Clause object to be used for expansion
+ * @param applyPreprocessing Whether to simulate expansion clause preprocessing or not
  */
-fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, leafID: Int, clause: Clause<AtomType>) {
+fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, leafID: Int, clause: Clause<AtomType>, applyPreprocessing: Boolean = true) {
     // Create list of predecessor
     val leaf = state.nodes[leafID]
     val lst = mutableListOf(leaf.toAtom())
@@ -27,7 +28,10 @@ fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, lea
         predecessor = state.nodes[predecessor.parent!!]
     }
 
-    for (atom in state.clauseExpandPreprocessing(clause)) {
+    // Apply expand preprocessing unless specified otherwise
+    val processedClause = if (applyPreprocessing) state.clauseExpandPreprocessing(clause) else clause.atoms
+
+    for (atom in processedClause) {
         if (lst.contains(atom))
             throw IllegalMove("Expanding this clause would introduce a duplicate" +
                 "node '$atom' on the branch, making the tree irregular")
@@ -136,7 +140,7 @@ private fun <AtomType> checkConnectedSubtree(
 fun <AtomType> checkRegularity(state: GenericTableauxState<AtomType>): Boolean {
     val startNodes = state.root.children // root is excluded from connectedness criteria
 
-    return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, mutableListOf()) }
+    return startNodes.fold(true) { acc, id -> acc && checkRegularitySubtree(state, id, listOf()) }
 }
 
 /**
@@ -150,7 +154,7 @@ fun <AtomType> checkRegularity(state: GenericTableauxState<AtomType>): Boolean {
 private fun <AtomType> checkRegularitySubtree(
     state: GenericTableauxState<AtomType>,
     root: Int,
-    lst: MutableList<Atom<AtomType>>
+    lst: List<Atom<AtomType>>
 ): Boolean {
     val node = state.nodes[root]
 
@@ -159,8 +163,10 @@ private fun <AtomType> checkRegularitySubtree(
         return false
 
     // Add node spelling to list of predecessors
-    lst.add(node.toAtom())
+    val lstCopy = mutableListOf<Atom<AtomType>>()
+    lstCopy.addAll(lst)
+    lstCopy.add(node.toAtom())
 
     // Check children for double vars in path and their children respectively
-    return node.children.none { !checkRegularitySubtree(state, it, lst) }
+    return node.children.none { !checkRegularitySubtree(state, it, lstCopy) }
 }
