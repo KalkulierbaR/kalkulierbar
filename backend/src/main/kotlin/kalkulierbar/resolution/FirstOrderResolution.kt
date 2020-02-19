@@ -19,7 +19,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
+class FirstOrderResolution :
+        GenericResolution<Relation>,
+        JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
     override val identifier = "fo-resolution"
 
     private val serializer = Json(context = resolutionMoveModule + FoTermModule)
@@ -28,7 +30,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         val parsed = FirstOrderParser.parse(formula)
         val clauses = FirstOrderCNF.transform(parsed)
 
-        return FoResolutionState(clauses, params?.highlightSelectable ?: false)
+        return FoResolutionState(clauses, params?.visualHelp ?: VisualHelp.NONE)
     }
 
     override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
@@ -37,6 +39,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
             is MoveInstantiate -> instantiate(state, move.c1, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
+            is MoveFactorize -> factorize(state, move.c1, move.a1, move.a2)
             else -> throw IllegalMove("Unknown move type")
         }
 
@@ -106,6 +109,26 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
         clauseID: Int,
         varAssign: Map<String, FirstOrderTerm>
     ) {
+        val newClause = instantiateReturn(state, clauseID, varAssign)
+
+        // Add new clause to state and update newestNode pointer
+        state.clauseSet.add(newClause)
+        state.newestNode = state.clauseSet.clauses.size - 1
+    }
+
+    /**
+     * Create a new clause by applying a variable instantiation on an existing clause
+     * @param state Current proof state
+     * @param clauseID ID of the clause to use for instantiation
+     * @param varAssign Map of Variables and terms they are instantiated with
+     * @return Instantiated clause
+     */
+    private fun instantiateReturn(
+        state: FoResolutionState,
+        clauseID: Int,
+        varAssign: Map<String, FirstOrderTerm>
+    ): Clause<Relation> {
+
         if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
 
@@ -121,10 +144,66 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
             val newAtom = Atom<Relation>(newRelation, it.negated)
             newClause.add(newAtom)
         }
+        return newClause
+    }
 
-        // Add new clause to state and update newestNode pointer
-        state.clauseSet.add(newClause)
-        state.newestNode = state.clauseSet.clauses.size - 1
+    /**
+     * Applies the factorize move
+     * @param state The state to apply the move on
+     * @param clauseID Id of clause to apply the move on
+     * @param a1 ID of first literal for unification
+     * @param a2 ID of second literal for unification
+     */
+    fun factorize(state: FoResolutionState, clauseID: Int, a1: Int, a2: Int) {
+        val clauses = state.clauseSet.clauses
+
+        // Verify that clause id is valid
+        if (clauseID < 0 || clauseID >= clauses.size)
+            throw IllegalMove("There is no clause with id $clauseID")
+
+        // Unify the selected atoms
+        val mgu = unifySingleClause(clauses[clauseID], a1, a2)
+        val newClause = instantiateReturn(state, clauseID, mgu)
+        // If the unification succeeded, a1 and a2 are now equal
+        // so we can just remove the second one
+        newClause.atoms.removeAt(a2)
+
+        // Hide old and add new clause in its place
+        val oldClause = clauses.removeAt(clauseID)
+        state.hiddenClauses.add(oldClause)
+        clauses.add(clauseID, newClause)
+        state.newestNode = clauseID
+    }
+
+    /**
+     * Unifies two literals of a clause so that unification on whole clause can be used
+     * @param clause clause to unify
+     * @param a1 first literal to apply unification
+     * @param a2 second literal to apply unification
+     * @return Mapping to unify whole clause
+     */
+    @Suppress("ThrowsCount")
+    private fun unifySingleClause(clause: Clause<Relation>, a1: Int, a2: Int): Map<String, FirstOrderTerm> {
+        val atoms = clause.atoms
+        // Verify that atom ids are valid
+        if (a1 == a2)
+            throw IllegalMove("Cannot unify an atom with itself")
+        if (a1 < 0 || a1 >= atoms.size)
+            throw IllegalMove("There is no atom with id $a1")
+        if (a2 < 0 || a2 >= atoms.size)
+            throw IllegalMove("There is no atom with id $a2")
+
+        val literal1 = atoms[a1].lit
+        val literal2 = atoms[a2].lit
+        val mgu: Map<String, FirstOrderTerm>
+
+        // Get unifier for chosen Atoms
+        try {
+            mgu = Unification.unify(literal1, literal2)
+        } catch (e: UnificationImpossible) {
+            throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
+        }
+        return mgu
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -177,7 +256,7 @@ class FirstOrderResolution : GenericResolution<Relation>, JSONCalculus<FoResolut
 @Serializable
 class FoResolutionState(
     override val clauseSet: ClauseSet<Relation>,
-    override val highlightSelectable: Boolean
+    override val visualHelp: VisualHelp
 ) : GenericResolutionState<Relation>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<Relation>()
@@ -185,9 +264,9 @@ class FoResolutionState(
     override var seal = ""
 
     override fun getHash(): String {
-        return "resolutionstate|$clauseSet|$hiddenClauses|$highlightSelectable|$newestNode"
+        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode"
     }
 }
 
 @Serializable
-data class FoResolutionParam(val highlightSelectable: Boolean)
+data class FoResolutionParam(val visualHelp: VisualHelp)

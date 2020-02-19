@@ -17,6 +17,8 @@ import {
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
+export type PropCalculusType =  "prop-tableaux" | "prop-resolution";
+export type FOCalculusType =  "fo-tableaux" | "fo-resolution";
 export type CalculusType = TableauxCalculusType | ResolutionCalculusType;
 
 export enum Calculus {
@@ -25,6 +27,12 @@ export enum Calculus {
     propResolution = "prop-resolution",
     foResolution = "fo-resolution",
 }
+
+export const PropCalculus: Calculus[] = [Calculus.propTableaux, Calculus.propResolution];
+export const FOCalculus: Calculus[] = [Calculus.foTableaux, Calculus.foResolution];
+export const TableauxCalculus: Calculus[] = [Calculus.propTableaux, Calculus.foTableaux];
+export const ResolutionCalculus: Calculus[] = [Calculus.propResolution, Calculus.foResolution];
+
 export interface Move {
     "prop-tableaux": TableauxMove;
     "prop-resolution": PropResolutionMove;

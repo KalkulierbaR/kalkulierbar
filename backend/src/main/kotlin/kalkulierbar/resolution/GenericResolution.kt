@@ -173,7 +173,7 @@ interface GenericResolution<AtomType> {
     ): Clause<AtomType> {
         val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
                 c2.atoms.filter { it != a2 }.toMutableList()
-        return Clause(atoms.distinct().toMutableList())
+        return Clause(atoms.toMutableList())
     }
 
     /**
@@ -196,8 +196,12 @@ interface GenericResolution<AtomType> {
 interface GenericResolutionState<AtomType> {
     val clauseSet: ClauseSet<AtomType>
     val hiddenClauses: ClauseSet<AtomType>
-    val highlightSelectable: Boolean
+    val visualHelp: VisualHelp
     var newestNode: Int
+}
+
+enum class VisualHelp {
+    NONE, HIGHLIGHT, REARRANGE
 }
 
 // Context object for FO term serialization
@@ -209,6 +213,7 @@ val resolutionMoveModule = SerializersModule {
         MoveInstantiate::class with MoveInstantiate.serializer()
         MoveHide::class with MoveHide.serializer()
         MoveShow::class with MoveShow.serializer()
+        MoveFactorize::class with MoveFactorize.serializer()
     }
 }
 
@@ -242,3 +247,7 @@ data class MoveHide(val c1: Int) : ResolutionMove()
 @Serializable
 @SerialName("res-show")
 class MoveShow : ResolutionMove()
+
+@Serializable
+@SerialName("res-factorize")
+data class MoveFactorize(val c1: Int, val a1: Int = -1, val a2: Int = -1) : ResolutionMove()
