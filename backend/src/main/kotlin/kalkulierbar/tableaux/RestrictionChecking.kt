@@ -10,8 +10,9 @@ import kalkulierbar.clause.Clause
  * @param state current state object
  * @param leafID ID of the leaf to be expanded
  * @param clause Clause object to be used for expansion
+ * @param applyPreprocessing Whether to simulate expansion clause preprocessing or not
  */
-fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, leafID: Int, clause: Clause<AtomType>) {
+fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, leafID: Int, clause: Clause<AtomType>, applyPreprocessing: Boolean = true) {
     // Create list of predecessor
     val leaf = state.nodes[leafID]
     val lst = mutableListOf(leaf.toAtom())
@@ -27,7 +28,10 @@ fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, lea
         predecessor = state.nodes[predecessor.parent!!]
     }
 
-    for (atom in state.clauseExpandPreprocessing(clause)) {
+    // Apply expand preprocessing unless specified otherwise
+    val processedClause = if (applyPreprocessing) state.clauseExpandPreprocessing(clause) else clause.atoms
+
+    for (atom in processedClause) {
         if (lst.contains(atom))
             throw IllegalMove("Expanding this clause would introduce a duplicate" +
                 "node '$atom' on the branch, making the tree irregular")

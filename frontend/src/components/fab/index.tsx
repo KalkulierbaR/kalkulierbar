@@ -39,6 +39,10 @@ interface Props {
      * Additional className for styling
      */
     class?: string;
+    /**
+     * Additional className for styling
+     */
+    active?: boolean;
 }
 
 const FAB: preact.FunctionalComponent<Props> = ({
@@ -49,11 +53,13 @@ const FAB: preact.FunctionalComponent<Props> = ({
     icon,
     showIconAtEnd = false,
     onClick,
-    class: className
+    class: className,
+    active = false
 }) => {
     const classes = classMap({
         [style.mini]: mini,
-        [style.extended]: extended
+        [style.extended]: extended,
+        [style.active]: active
     });
 
     const labelEl = extended ? <span class={style.label}>{label}</span> : null;
