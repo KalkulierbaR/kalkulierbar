@@ -73,46 +73,57 @@ export const groupCandidates = (
     }
 };
 
-export const getPropHyperCandidates = (c1: Clause, c2: Clause) => {
-    const lits: number[] = [];
-    for (const l1 of c1.atoms) {
-        for (let i = 0; i < c2.atoms.length; i++) {
-            const l2 = c2.atoms[i];
+export const getPropHyperCandidates = (
+    c1: Clause,
+    c2: Clause,
+): Array<[number, number]> => {
+    const lits: Array<[number, number]> = [];
+    for (let i1 = 0; i1 < c1.atoms.length; i1++) {
+        const l1 = c1.atoms[i1];
+        for (let i2 = 0; i2 < c2.atoms.length; i2++) {
+            const l2 = c2.atoms[i2];
             if (l1.lit === l2.lit && l1.negated && !l2.negated) {
-                lits.push(i);
+                lits.push([i1, i2]);
             }
         }
     }
     return lits;
 };
 
-export const getFOHyperCandidates = (c1: FOClause, c2: FOClause) => {
-    const lits: number[] = [];
-    for (const l1 of c1.atoms) {
-        for (let i = 0; i < c2.atoms.length; i++) {
-            const l2 = c2.atoms[i];
+export const getFOHyperCandidates = (
+    c1: FOClause,
+    c2: FOClause,
+): Array<[number, number]> => {
+    const lits: Array<[number, number]> = [];
+    for (let i1 = 0; i1 < c1.atoms.length; i1++) {
+        const l1 = c1.atoms[i1];
+        for (let i2 = 0; i2 < c2.atoms.length; i2++) {
+            const l2 = c2.atoms[i2];
             if (
                 l1.negated &&
                 !l2.negated &&
                 l1.lit.spelling === l2.lit.spelling &&
                 l1.lit.arguments.length === l2.lit.arguments.length
             ) {
-                lits.push(i);
+                lits.push([i1, i2]);
             }
         }
     }
     return lits;
 };
 
-export const addHyperSidePremiss = (hyperRes: HyperResolutionMove, clauseId: number, litId: number) => ({...hyperRes,
-                    sidePremisses: [
-                        ...hyperRes.sidePremisses,
-                        {
-                            first: clauseId,
-                            second: litId,
-                        },
-                    ],
-                })
+export const addHyperSidePremiss = (
+    hyperRes: HyperResolutionMove,
+    mainLitId: number,
+    clauseId: number,
+    litId: number,
+): HyperResolutionMove => ({
+    ...hyperRes,
+    sidePremisses: {
+        ...hyperRes.sidePremisses,
+        [mainLitId]: { first: clauseId, second: litId },
+    },
+});
 
 /**
  * Creates an array of candidate clauses based on if a clause is selected

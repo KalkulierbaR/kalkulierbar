@@ -125,7 +125,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         } else if (hyperRes) {
             // Update hyper-res move with new clause
 
-            let candidates: number[] = [];
+            let candidates: Array<[number, number]> = [];
 
             if (instanceOfPropResState(state, calculus)) {
                 const mainClause = state!.clauseSet.clauses[hyperRes.mainID];
@@ -137,8 +137,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 candidates = getFOHyperCandidates(mainClause, selectedClause);
             }
             if (candidates.length === 1) {
+                const [mainLitId, litId] = candidates[0];
                 setHyperRes(
-                    addHyperSidePremiss(hyperRes, newClauseId, candidates[0]),
+                    addHyperSidePremiss(
+                        hyperRes,
+                        mainLitId,
+                        newClauseId,
+                        litId,
+                    ),
                 );
             } else if (candidates.length > 1) {
                 setSelectedClauses([selectedClauses![0], newClauseId]);
@@ -246,6 +252,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setHyperRes(
                     addHyperSidePremiss(
                         hyperRes,
+                        0,
                         selectedClauses[1],
                         optionIndex,
                     ),
@@ -365,7 +372,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 setHyperRes({
                                     type: "res-hyper",
                                     mainID: selectedClauseId,
-                                    sidePremisses: [],
+                                    sidePremisses: {},
                                 });
                             }}
                         />
