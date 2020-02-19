@@ -41,7 +41,7 @@ class TestLemma {
         assertEquals(true, state.nodes[6].isLemma)
         assertEquals(true, state.nodes[6].negated)
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 2))
+        instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 2))
     }
 
     @Test
@@ -59,7 +59,7 @@ class TestLemma {
         assertEquals(true, state.nodes[6].isLemma)
         assertEquals(true, state.nodes[6].negated)
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 3))
+        instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 3))
     }
 
     @Test
