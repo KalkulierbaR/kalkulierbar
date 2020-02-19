@@ -28,3 +28,8 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
+
+.semi-selected {
+    stroke: var(--kbar-accent-color);
+    stroke-width: 4px;
+}

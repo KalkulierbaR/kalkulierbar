@@ -130,6 +130,43 @@ export const addHyperSidePremiss = (
     },
 });
 
+export const removeHyperSidePremiss = (
+    hyperRes: HyperResolutionMove,
+    mainLitId: number,
+): HyperResolutionMove => {
+    delete hyperRes.sidePremisses[mainLitId];
+    return {
+        ...hyperRes,
+        sidePremisses: {
+            ...hyperRes.sidePremisses,
+        },
+    };
+};
+
+export const findHyperSidePremiss = (
+    hyperRes: HyperResolutionMove,
+    id: number,
+): number => {
+    for (const mId in hyperRes.sidePremisses) {
+        if (hyperRes.sidePremisses[mId].first === id) {
+            return parseInt(mId);
+        }
+    }
+    return -1;
+};
+
+export const getHyperClauseIds = (hyperRes: HyperResolutionMove): number[] => {
+    const ids: number[] = [];
+
+    for (const mId in hyperRes.sidePremisses) {
+        if (mId !== undefined) {
+            ids.push(hyperRes.sidePremisses[mId].first);
+        }
+    }
+
+    return ids;
+};
+
 /**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set

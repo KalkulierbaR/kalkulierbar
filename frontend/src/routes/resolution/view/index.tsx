@@ -16,10 +16,13 @@ import { useAppState } from "../../../helpers/app-state";
 import { atomToString } from "../../../helpers/clause";
 import {
     addHyperSidePremiss,
+    findHyperSidePremiss,
     getCandidateClauses,
     getFOHyperCandidates,
+    getHyperClauseIds,
     getPropHyperCandidates,
     hideClause,
+    removeHyperSidePremiss,
     showHiddenClauses,
 } from "../../../helpers/resolution";
 import { Calculus, ResolutionCalculusType } from "../../../types/app";
@@ -32,6 +35,7 @@ import {
     PropCandidateClause,
 } from "../../../types/clause";
 import {
+    HyperMap,
     HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
@@ -135,7 +139,17 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const selectClauseCallback = (newClauseId: number) => {
         if (selectedClauseId === undefined) {
             setSelectedClauses([newClauseId]);
+        } else if (newClauseId === selectedClauseId) {
+            // The same clause was selected again => reset selection
+            setSelectedClauses(undefined);
+            setHyperRes(undefined);
         } else if (hyperRes) {
+            const sidePremissId = findHyperSidePremiss(hyperRes, newClauseId);
+            if (sidePremissId !== -1) {
+                setHyperRes(removeHyperSidePremiss(hyperRes, sidePremissId));
+                return;
+            }
+
             // Update hyper-res move with new clause
 
             let candidates: Array<[number, number]> = [];
@@ -163,9 +177,6 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setSelectedClauses([selectedClauses![0], newClauseId]);
             }
             // Ignore when no candidates found
-        } else if (newClauseId === selectedClauseId) {
-            // The same clause was selected again => reset selection
-            setSelectedClauses(undefined);
         } else {
             const candidateClause = getCandidateClause(newClauseId);
             if (candidateClause != null) {
@@ -462,6 +473,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         }
     };
 
+    const semiSelected = hyperRes ? getHyperClauseIds(hyperRes) : [];
+
     return (
         <Fragment>
             <h2>Resolution View</h2>
@@ -471,6 +484,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 selectedClauseId={selectedClauseId}
                 visualHelp={state!.visualHelp}
                 newestNode={state!.newestNode}
+                semiSelected={semiSelected}
             />
             <ControlFAB alwaysOpen={!smallScreen}>
                 {selectedClauseId !== undefined ? (
@@ -480,17 +494,15 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             extended={true}
                             label="Hyper Resolution"
                             showIconAtEnd={true}
-                            icon={<HyperIcon />}
+                            icon={
+                                <HyperIcon
+                                    fill={hyperRes ? "#000" : undefined}
+                                />
+                            }
+                            active={!!hyperRes}
                             onClick={() => {
                                 if (hyperRes) {
-                                    sendMove(
-                                        server,
-                                        calculus,
-                                        state,
-                                        hyperRes,
-                                        onChange,
-                                        onError,
-                                    );
+                                    setHyperRes(undefined);
                                     return;
                                 }
                                 setHyperRes({

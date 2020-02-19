@@ -31,6 +31,10 @@ interface Props {
      * Boolean representing if the node is the newest resolvent
      */
     isNew: boolean;
+    /**
+     * Whether the node should be highlighted as secondary
+     */
+    semiSelected: boolean;
 }
 
 const ResolutionNode: preact.FunctionalComponent<Props> = ({
@@ -40,6 +44,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
     coordinates,
     clause,
     isNew,
+    semiSelected,
 }) => {
     const textRef = createRef<SVGTextElement>();
 
@@ -52,7 +57,10 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
                 elementRef={textRef}
                 disabled={disabled}
                 selected={selected}
-                class={isNew && !selected ? style.nodeNew : undefined}
+                class={classMap({
+                    [style.nodeNew]: isNew && !selected,
+                    [style.semiSelected]: semiSelected,
+                })}
             />
             <text
                 x={coordinates[0]}
@@ -62,7 +70,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
                 class={classMap({
                     [style.textClosed]: disabled,
                     [style.textSelected]: selected,
-                    [style.noTextHighlight]: true
+                    [style.noTextHighlight]: true,
                 })}
             >
                 {clauseToString(clause.clause)}
