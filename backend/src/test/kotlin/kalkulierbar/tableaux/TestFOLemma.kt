@@ -79,7 +79,7 @@ class TestFOLemma {
         assertEquals(true, state.nodes[6].negated)
 
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 6, 0))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 8, 6))
+        instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 8, 6))
     }
 
     @Test

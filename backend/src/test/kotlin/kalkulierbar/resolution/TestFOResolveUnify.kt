@@ -39,12 +39,12 @@ class TestFOResolveUnify {
 
     @Test
     fun testValid() {
-        testFormula(valid1, MoveResolveUnify(0, 1, 0, 0), "resolutionstate|{R(f(X, c), X)}, {!R(f(a, c), a)}, {}||false|2")
-        testFormula(valid2, MoveResolveUnify(0, 1, 0, 0), "resolutionstate|{R(f(X, c), X)}, {!R(f(Y, c), Y)}, {}||false|2")
-        testFormula(valid3, MoveResolveUnify(0, 1, 0, 0), "resolutionstate|{R(f(X, c), X)}, {!R(f(sk1, c), sk1)}, {}||false|2")
-        testFormula(valid4, MoveResolveUnify(0, 1, 0, 0), "resolutionstate|{!R(a)}, {R(X)}, {!R(f(g(h(a))))}, {}||false|3")
-        testFormula(valid4, MoveResolveUnify(2, 1, 0, 0), "resolutionstate|{!R(a)}, {R(X)}, {!R(f(g(h(a))))}, {}||false|3")
-        testFormula(valid5, MoveResolveUnify(2, 1, 1, 0), "resolutionstate|{!R(a), R(c)}, {R(X)}, {T(a), !R(f(g(h(a))))}, {T(a)}||false|3")
+        testFormula(valid1, MoveResolveUnify(0, 1, 0, 0), "resolutionstate|{R(f(X, c), X)}, {!R(f(a, c), a)}, {}||NONE|2")
+        testFormula(valid2, MoveResolveUnify(0, 1, 0, 0), "resolutionstate|{R(f(X, c), X)}, {!R(f(Y, c), Y)}, {}||NONE|2")
+        testFormula(valid3, MoveResolveUnify(0, 1, 0, 0), "resolutionstate|{R(f(X, c), X)}, {!R(f(sk1, c), sk1)}, {}||NONE|2")
+        testFormula(valid4, MoveResolveUnify(0, 1, 0, 0), "resolutionstate|{!R(a)}, {R(X)}, {!R(f(g(h(a))))}, {}||NONE|3")
+        testFormula(valid4, MoveResolveUnify(2, 1, 0, 0), "resolutionstate|{!R(a)}, {R(X)}, {!R(f(g(h(a))))}, {}||NONE|3")
+        testFormula(valid5, MoveResolveUnify(2, 1, 1, 0), "resolutionstate|{!R(a), R(c)}, {R(X)}, {T(a), !R(f(g(h(a))))}, {T(a)}||NONE|3")
     }
 
     @Test
