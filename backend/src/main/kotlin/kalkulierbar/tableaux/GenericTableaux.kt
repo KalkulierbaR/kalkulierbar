@@ -188,13 +188,14 @@ interface GenericTableaux<AtomType> {
 
         val commonParent: Int = lemmaNode.parent!!
 
+        // ATTENTION: Muss vielleicht abgeändert werden
         if (!state.nodeIsParentOf(commonParent, leafID))
             throw IllegalMove("Nodes '$leaf' and '$lemmaNode' are not siblings")
 
         val atom = lemmaNode.toAtom().not()
 
         // Verify compliance with regularity criteria
-        // TODO this assumes FO lemmas will not be preprocessed like regular clause expansions
+        // TODO: this assumes FO lemmas will not be preprocessed like regular clause expansions
         // I have no idea if that is actually the case
         if (state.regular)
             verifyExpandRegularity(state, leafID, Clause(mutableListOf(atom)), applyPreprocessing = false)
