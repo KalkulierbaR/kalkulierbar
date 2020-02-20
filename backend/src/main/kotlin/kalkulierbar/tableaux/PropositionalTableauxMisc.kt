@@ -93,7 +93,8 @@ class TableauxState(
 class TableauxNode(
     override val parent: Int?,
     override val spelling: String,
-    override val negated: Boolean
+    override val negated: Boolean,
+    override val lemmaSource: Int? = null
 ) : GenericTableauxNode<String> {
 
     override var isClosed = false
@@ -153,5 +154,5 @@ enum class TableauxType {
 }
 
 enum class MoveType {
-    EXPAND, CLOSE, UNDO
+    EXPAND, CLOSE, LEMMA, UNDO
 }

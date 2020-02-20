@@ -52,7 +52,7 @@ export const clauseToString = (clause: Clause<string | FOLiteral>) => {
  * @param {ClauseSet} clauseSet - A set of clauses
  * @returns {string[]} - The clauses as string array
  */
-export const clauseSetToStringArray = (clauseSet: ClauseSet) =>
+export const clauseSetToStringArray = (clauseSet: ClauseSet<string | FOLiteral>) =>
     clauseSet.clauses.map(clauseToString);
 
 /**

@@ -2,6 +2,7 @@ import { h } from "preact";
 import { useMemo } from "preact/hooks";
 import { circleLayout } from "../../../helpers/layout/resolution";
 import { CandidateClause } from "../../../types/clause";
+import { VisualHelp } from "../../../types/resolution";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
@@ -20,9 +21,9 @@ interface Props {
      */
     selectedClauseId: number | undefined;
     /**
-     * Whether to highlight valid resolution partners
+     * Whether to help the user visually to find resolution partners
      */
-    highlightSelectable: boolean;
+    visualHelp: VisualHelp;
     /**
      * Whether to highlight the newest node
      */
@@ -33,10 +34,10 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     clauses,
     selectClauseCallback,
     selectedClauseId,
-    highlightSelectable,
+    visualHelp,
     newestNode,
 }) => {
-    const { width, height, data } = useMemo(
+    const { width, height, data, radius } = useMemo(
         () => circleLayout(clauses.map((c) => c.clause)),
         [clauses],
     );
@@ -55,12 +56,16 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     <g
                         transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
+                        <circle class={style.circle} cx="0" cy="0" r={radius} />
                         {data.map(({ x, y }, index) => {
                             const disabled =
-                                highlightSelectable &&
+                                [
+                                    VisualHelp.highlight,
+                                    VisualHelp.rearrange,
+                                ].includes(visualHelp) &&
                                 selectedClauseId !== undefined &&
                                 selectedClauseId !== index &&
-                                clauses[index].candidateLiterals.length === 0;
+                                clauses[index].candidateAtomMap.size === 0;
                             return (
                                 <ResolutionNode
                                     key={index}

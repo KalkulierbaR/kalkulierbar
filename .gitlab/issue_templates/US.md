@@ -1,9 +1,3 @@
----
-name: User Story Template
-about: Template for User Stories
-title: US
----
-
 | Field                | Content |
 | -------------------- | ------- |
 | ID                   |         |

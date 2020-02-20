@@ -1,28 +1,33 @@
-import { APIInformation, AppState, ResolutionCalculusType } from "../types/app";
+import {APIInformation, AppState, ResolutionCalculusType} from "../types/app";
 import {
+    CandidateClause,
     ClauseSet,
-    FOCandidateClause,
-    FOClauseSet,
-    PropCandidateClause,
+    FOLiteral,
+    instanceOfFOAtom,
+    instanceOfFOClause,
+    instanceOfFOClauseSet,
+    instanceOfPropAtom,
+    instanceOfPropClause,
+    instanceOfPropClauseSet,
 } from "../types/clause";
-import { FOResolutionState, PropResolutionState } from "../types/resolution";
-import { sendMove } from "./api";
+import {FOResolutionState, PropResolutionState, VisualHelp} from "../types/resolution";
+import {sendMove} from "./api";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
- * @param {Array<PropCandidateClause>} clauses - the clauses to group
+ * @param {Array<CandidateClause>} clauses - the clauses to group
  * @param {number} selectedClauseId - the currently selected group. We will group based on this
  * @returns {void} - nothing
  */
 export const groupCandidates = (
-    clauses: PropCandidateClause[],
+    clauses: CandidateClause[],
     selectedClauseId: number,
 ) => {
     const notCandidates = clauses.filter(
-        (c) => c.candidateLiterals.length === 0 && c.index !== selectedClauseId,
+        (c) => c.candidateAtomMap.size === 0 && c.index !== selectedClauseId,
     );
     const candidates = clauses.filter(
-        (c) => c.candidateLiterals.length !== 0 && c.index !== selectedClauseId,
+        (c) => c.candidateAtomMap.size !== 0 && c.index !== selectedClauseId,
     );
 
     const cs = candidates.length;
@@ -69,107 +74,86 @@ export const groupCandidates = (
 /**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
- * @param {boolean} highlightSelectable - Whether to highlight nodes
+ * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
+ * @param {ResolutionCalculusType} calculus - The current calculus type
  * @param {number} selectedClauseId - Currently selected clause
- * @returns {PropCandidateClause[]} - The new candidate clauses
+ * @returns {CandidateClause[]} - The new candidate clauses
  */
-export const getPropCandidateClauses = (
-    clauseSet: ClauseSet,
-    highlightSelectable: boolean,
+export const getCandidateClauses = (
+    clauseSet: ClauseSet<string | FOLiteral>,
+    visualHelp: VisualHelp,
+    calculus: ResolutionCalculusType,
     selectedClauseId?: number,
 ) => {
-    const newCandidateClauses: PropCandidateClause[] = [];
+    const newCandidateClauses: CandidateClause[] = [];
 
     if (selectedClauseId === undefined) {
         // Create default candidates
-        clauseSet.clauses.forEach((clause, index) => {
-            newCandidateClauses[index] = {
-                clause,
-                candidateLiterals: [],
-                index,
-            };
-        });
-    } else {
-        // Get selected clause
-        const selectedClause = clauseSet.clauses[selectedClauseId];
-
-        // Filter for possible resolve candidates
-        clauseSet.clauses.forEach((clause, index) => {
-            const literals: number[] = [];
-            selectedClause.atoms.forEach((atom1) => {
-                clause.atoms.forEach((atom2, atomIndex) => {
-                    if (
-                        atom1.lit === atom2.lit &&
-                        atom1.negated !== atom2.negated
-                    ) {
-                        literals.push(atomIndex);
-                    }
-                });
+        if (instanceOfPropClauseSet(clauseSet, calculus)) {
+            clauseSet.clauses.forEach((clause, clauseIndex) => {
+                newCandidateClauses[clauseIndex] = {
+                    clause,
+                    candidateAtomMap: new Map<number, number[]>(),
+                    index: clauseIndex,
+                };
             });
-            newCandidateClauses[index] = {
-                clause,
-                candidateLiterals: literals,
-                index,
-            };
-        });
-
-        if (highlightSelectable) {
-            groupCandidates(newCandidateClauses, selectedClauseId);
         }
-    }
-    return newCandidateClauses;
-};
-
-/**
- * Creates an array of candidate clauses based on if a clause is selected
- * @param {FOClauseSet} clauseSet - The clause set to work on
- * @param {boolean} highlightSelectable - Whether highlighting is enabled
- * @param {number} selectedClauseId - The selected clause
- * @returns {FOCandidateClause[]} - The new candidate clauses
- */
-export const getFOCandidateClauses = (
-    clauseSet: FOClauseSet,
-    highlightSelectable: boolean,
-    selectedClauseId?: number,
-) => {
-    const newCandidateClauses: FOCandidateClause[] = [];
-    if (selectedClauseId === undefined) {
-        // Create default candidates
-        clauseSet.clauses.forEach((clause, index) => {
-            newCandidateClauses[index] = {
-                clause,
-                candidateLiterals: [],
-                index,
-            };
-        });
+        else if (instanceOfFOClauseSet(clauseSet, calculus)){
+            clauseSet.clauses.forEach((clause, clauseIndex) => {
+                newCandidateClauses[clauseIndex] = {
+                    clause,
+                    candidateAtomMap: new Map<number, number[]>(),
+                    index: clauseIndex,
+                };
+            });
+        }
     } else {
         // Get selected clause
         const selectedClause = clauseSet.clauses[selectedClauseId];
 
         // Filter for possible resolve candidates
-        clauseSet.clauses.forEach((clause, index) => {
-            const literals: number[] = [];
-            selectedClause.atoms.forEach((atom1) => {
-                clause.atoms.forEach((atom2, atomIndex) => {
+        clauseSet.clauses.forEach((clause, clauseIndex) => {
+            const candidateAtomMap: Map<number, number[]> = new Map<number, number[]>();
+            selectedClause.atoms.forEach((atom1, atom1Index) => {
+                const resolventAtomIndices: number[] = [];
+                clause.atoms.forEach((atom2, atom2Index) => {
                     if (
-                        atom1.negated !== atom2.negated &&
-                        atom1.lit.spelling === atom2.lit.spelling &&
-                        atom1.lit.arguments.length ===
-                            atom2.lit.arguments.length
+                        atom1.negated !== atom2.negated && (
+                            (instanceOfPropAtom(atom1, calculus) &&
+                                instanceOfPropAtom(atom2, calculus) &&
+                                atom1.lit === atom2.lit)
+                            ||
+                            (instanceOfFOAtom(atom1, calculus) &&
+                                instanceOfFOAtom(atom2, calculus) &&
+                                atom1.lit.spelling === atom2.lit.spelling &&
+                                atom1.lit.arguments.length === atom2.lit.arguments.length)
+                        )
                     ) {
-                        literals.push(atomIndex);
+                            resolventAtomIndices.push(atom2Index);
                     }
                 });
+                if(resolventAtomIndices.length > 0){
+                    candidateAtomMap.set(atom1Index, resolventAtomIndices);
+                }
             });
-            newCandidateClauses[index] = {
-                clause,
-                candidateLiterals: literals,
-                index,
-            };
+            if (instanceOfPropClauseSet(clauseSet, calculus) && instanceOfPropClause(clause, calculus)) {
+                newCandidateClauses[clauseIndex] = {
+                    clause,
+                    candidateAtomMap,
+                    index: clauseIndex,
+                };
+            }
+            else if (instanceOfFOClauseSet(clauseSet, calculus) && instanceOfFOClause(clause, calculus)){
+                newCandidateClauses[clauseIndex] = {
+                    clause,
+                    candidateAtomMap,
+                    index: clauseIndex,
+                };
+            }
         });
 
-        if (highlightSelectable) {
-            // groupCandidates(newCandidateClauses, selectedClauseId);
+        if (visualHelp === VisualHelp.rearrange) {
+            groupCandidates(newCandidateClauses, selectedClauseId);
         }
     }
     return newCandidateClauses;
