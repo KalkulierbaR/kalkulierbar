@@ -108,12 +108,12 @@ interface GenericResolution<AtomType> {
     @Suppress("ThrowsCount")
     fun checkHyperID(state: GenericResolutionState<AtomType>, clauseID: Int, atomMap: Map<Int, Pair<Int, Int>>) {
         val clauses = state.clauseSet.clauses
-        val mainPremiss = clauses[clauseID].atoms
 
         // Check for valid clause id
         if (clauseID < 0 || clauseID >= clauses.size)
             throw IllegalMove("There is no (main premiss) clause with id $clauseID")
 
+        val mainPremiss = clauses[clauseID].atoms
         // Check that (mainAtomID -> (sideClauseID, atomID)) map elements are correct
         for ((mAtomID, pair) in atomMap) {
             val (sClauseID, sAtomID) = pair

@@ -18,27 +18,31 @@ class TestHyperResolution {
         val state = prop.parseFormulaToState("a,!b,!c,!d; b,e; c,f; d,g,h", null)
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(-1, listOf()))
+            prop.applyMoveOnState(state, MoveHyper(-1, mapOf()))
         }
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(4, listOf()))
+            prop.applyMoveOnState(state, MoveHyper(4, mapOf()))
         }
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(-1, 0))))
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf(0 to Pair(-1, 0))))
         }
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(4, 0))))
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf(0 to Pair(4, 0))))
         }
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(1, -1))))
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf(0 to Pair(1, -1))))
         }
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(1, 2))))
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf(0 to Pair(1, 2))))
+        }
+
+        assertFailsWith<IllegalMove> {
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf(-1 to Pair(1, 0))))
         }
     }
 
@@ -47,7 +51,7 @@ class TestHyperResolution {
         val state = prop.parseFormulaToState("a,!b,!c,!d; b,e; c,f; d,g,h", null)
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(0, listOf()))
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf()))
         }
     }
 
@@ -56,11 +60,11 @@ class TestHyperResolution {
         val state = prop.parseFormulaToState("a,!b,!c,!d; b,e,!f; c; d", null)
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(1, 0))))
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf(1 to Pair(1, 0))))
         }
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(2, 0), Pair(1, 0), Pair(3, 0))))
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf(2 to Pair(2, 0), 1 to Pair(1, 0), 3 to Pair(3, 0))))
         }
     }
 
@@ -69,7 +73,7 @@ class TestHyperResolution {
         val state = prop.parseFormulaToState("a,!b,c,!d; b,e,f; !c; d", null)
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(2, 0), Pair(1, 0), Pair(3, 0))))
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf(2 to Pair(2, 0), 1 to Pair(1, 0), 3 to Pair(3, 0))))
         }
     }
 
@@ -78,14 +82,14 @@ class TestHyperResolution {
         val state = prop.parseFormulaToState("a,!b,!c,!d; b,e; c;", null)
 
         assertFailsWith<IllegalMove> {
-            prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(2, 0), Pair(1, 0))))
+            prop.applyMoveOnState(state, MoveHyper(0, mapOf(2 to Pair(2, 0), 1 to Pair(1, 0))))
         }
     }
 
     @Test
     fun testValidA() {
         var state = prop.parseFormulaToState("a,!b,!c,!d; b,e; c,f; g,d,h", null)
-        state = prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(2, 0), Pair(1, 0), Pair(3, 1))))
+        state = prop.applyMoveOnState(state, MoveHyper(0, mapOf(2 to Pair(2, 0), 1 to Pair(1, 0), 3 to Pair(3, 1))))
 
         assertEquals("{a, !b, !c, !d}, {b, e}, {c, f}, {g, d, h}, {a, f, e, g, h}", state.clauseSet.toString())
     }
@@ -93,7 +97,7 @@ class TestHyperResolution {
     @Test
     fun testValidB() {
         var state = prop.parseFormulaToState("a,!b,c,d; e,f,b,g", null)
-        state = prop.applyMoveOnState(state, MoveHyper(0, listOf(Pair(1, 2))))
+        state = prop.applyMoveOnState(state, MoveHyper(0, mapOf(1 to Pair(1, 2))))
 
         assertEquals("{a, !b, c, d}, {e, f, b, g}, {a, c, d, e, f, g}", state.clauseSet.toString())
     }
