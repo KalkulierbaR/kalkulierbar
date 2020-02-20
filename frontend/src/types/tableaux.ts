@@ -1,5 +1,6 @@
-import {Calculus, TableauxCalculusType} from "./app";
+import { Calculus, TableauxCalculusType } from "./app";
 import { ClauseSet, FOArgument, FOClauseSet } from "./clause";
+import { KStringMap } from "./kotlin";
 
 export interface TableauxNode {
     parent: number | null;
@@ -9,6 +10,7 @@ export interface TableauxNode {
     closeRef: number | null;
     children: number[];
     relation?: FORelation;
+    lemmaSource?: number;
 }
 
 export type TableauxTreeLayoutNode = TableauxNode & { id: number };
@@ -49,21 +51,28 @@ export interface TableauxUndoMove {
     id2: number;
 }
 
+export interface TableauxLemmaMove {
+    type: "LEMMA";
+    id1: number;
+    id2: number;
+}
+
 export type TableauxMove =
     | TableauxExpandMove
     | TableauxCloseMove
-    | TableauxUndoMove;
+    | TableauxUndoMove
+    | TableauxLemmaMove;
 
 export enum TableauxType {
     unconnected = "UNCONNECTED",
     weak = "WEAKLYCONNECTED",
-    strong = "STRONGLYCONNECTED"
+    strong = "STRONGLYCONNECTED",
 }
 
 export enum CnfStrategy {
     optimal = "OPTIMAL",
     naive = "NAIVE",
-    tseytin = "TSEYTIN"
+    tseytin = "TSEYTIN",
 }
 
 export interface PropTableauxParams {
@@ -103,9 +112,7 @@ export function instanceOfFOTabState(
     return "formula" in object && calculus === Calculus.foTableaux;
 }
 
-export interface VarAssign {
-    [key: string]: string;
-}
+export type VarAssign = KStringMap<string>;
 
 export type FOTableauxMove = TableauxMove & { varAssign: VarAssign };
 

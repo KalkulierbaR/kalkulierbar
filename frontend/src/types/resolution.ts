@@ -1,5 +1,6 @@
 import { Calculus, ResolutionCalculusType } from "./app";
 import { ClauseSet, FOClauseSet } from "./clause";
+import { KNumMap, KPair } from "./kotlin";
 import { CnfStrategy, VarAssign } from "./tableaux";
 
 export interface PropResolutionState {
@@ -30,15 +31,12 @@ export interface ResolutionResolveMove {
     literal: string | null;
 }
 
-export interface KPair<F, S> {
-    first: F;
-    second: S;
-}
+export type HyperMap = KNumMap<KPair<number, number>>;
 
 export interface HyperResolutionMove {
     type: "res-hyper";
     mainID: number;
-    sidePremisses: Array<KPair<number, number>>;
+    sidePremisses: HyperMap;
 }
 
 export interface ResolutionResolveUnifyMove {

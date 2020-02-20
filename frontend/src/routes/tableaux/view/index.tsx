@@ -18,6 +18,7 @@ import AddIcon from "../../../components/icons/add";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
+import LemmaIcon from "../../../components/icons/lemma";
 import UndoIcon from "../../../components/icons/undo";
 import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
@@ -29,7 +30,8 @@ import {
     nextOpenLeaf,
     sendBacktrack,
     sendClose,
-    sendExtend
+    sendExtend,
+    sendLemma
 } from "../../../helpers/tableaux";
 import { FOArgument, FOArgumentType } from "../../../types/clause";
 import { foExample, propExample } from "./example";
@@ -74,6 +76,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showClauseDialog, setShowClauseDialog] = useState(false);
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+    const [lemmaMode, setLemmaMode] = useState(false);
 
     /**
      * The function to call, when the user selects a clause
@@ -141,6 +144,25 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             const selectedNodeIsLeaf = selectedNode.children.length === 0;
 
             if (
+                lemmaMode &&
+                selectedNodeIsLeaf &&
+                !selectedNode.isClosed &&
+                newNode.isClosed
+            ) {
+                // Open leaf and a closed Node are selected => Try Lemma move
+                sendLemma(
+                    calculus,
+                    server,
+                    state!,
+                    onChange,
+                    onError,
+                    selectedNodeId,
+                    newNode.id
+                );
+                setSelectedNodeId(undefined);
+                setLemmaMode(false);
+            } else if (
+                // Don't select two leafs or two nodes at the same time
                 (selectedNodeIsLeaf && newNodeIsLeaf) ||
                 (!selectedNodeIsLeaf && !newNodeIsLeaf)
             ) {
@@ -185,6 +207,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setShowVarAssignDialog(true);
             }
         }
+        setLemmaMode(false);
     };
 
     /**
@@ -199,6 +222,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             selectedNodeId === undefined ||
             varAssignSecondNodeId === undefined
         ) {
+            // Error for debugging
             throw new Error(
                 "Close move went wrong, since selected nodes could not be identified."
             );
@@ -276,6 +300,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={selectNodeCallback}
+                    lemmaNodesSelectable={lemmaMode}
                 />
             </div>
 
@@ -401,6 +426,33 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 setShowClauseDialog(!showClauseDialog);
                             }}
                         />
+                        {lemmaMode ? (
+                            <FAB
+                                icon={<LemmaIcon fill="#000" />}
+                                label="Lemma"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    setLemmaMode(!lemmaMode);
+                                }}
+                                active={true}
+                            />
+                        ) : (
+                            state!.nodes[selectedNodeId].children.length === 0 &&
+                            state!.nodes.filter(node => node.isClosed).length > 0
+                        ) ? (
+                            <FAB
+                                icon={<LemmaIcon />}
+                                label="Lemma"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    setLemmaMode(!lemmaMode);
+                                }}
+                            />
+                        ) : undefined}
                     </Fragment>
                 )}
             </ControlFAB>

@@ -50,6 +50,14 @@ class FirstOrderResolution :
     override fun checkCloseOnState(state: FoResolutionState) = getCloseMessage(state)
 
     @Suppress("ThrowsCount")
+    /**
+     * Resolve two clauses by unifying two literals
+     * @param state Current proof state
+     * @param c1 Id of first clause
+     * @param c2 Id of second clause
+     * @param c1lit The literal to unify of the first clause
+     * @param c2lit The literal to unify of the second clause
+     */
     private fun resolveUnify(state: FoResolutionState, c1: Int, c2: Int, c1lit: Int, c2lit: Int) {
         if (c1 < 0 || c1 >= state.clauseSet.clauses.size)
             throw IllegalMove("There is no clause with id $c1")

@@ -1,11 +1,16 @@
 import { APIInformation, AppState, ResolutionCalculusType } from "../types/app";
 import {
+    CandidateClause,
     Clause,
     ClauseSet,
-    FOCandidateClause,
     FOClause,
-    FOClauseSet,
-    PropCandidateClause,
+    FOLiteral,
+    instanceOfFOAtom,
+    instanceOfFOClause,
+    instanceOfFOClauseSet,
+    instanceOfPropAtom,
+    instanceOfPropClause,
+    instanceOfPropClauseSet,
 } from "../types/clause";
 import {
     FOResolutionState,
@@ -17,19 +22,19 @@ import { sendMove } from "./api";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
- * @param {Array<PropCandidateClause>} clauses - the clauses to group
+ * @param {Array<CandidateClause>} clauses - the clauses to group
  * @param {number} selectedClauseId - the currently selected group. We will group based on this
  * @returns {void} - nothing
  */
 export const groupCandidates = (
-    clauses: PropCandidateClause[],
+    clauses: CandidateClause[],
     selectedClauseId: number,
 ) => {
     const notCandidates = clauses.filter(
-        (c) => c.candidateLiterals.length === 0 && c.index !== selectedClauseId,
+        (c) => c.candidateAtomMap.size === 0 && c.index !== selectedClauseId,
     );
     const candidates = clauses.filter(
-        (c) => c.candidateLiterals.length !== 0 && c.index !== selectedClauseId,
+        (c) => c.candidateAtomMap.size !== 0 && c.index !== selectedClauseId,
     );
 
     const cs = candidates.length;
@@ -73,151 +78,184 @@ export const groupCandidates = (
     }
 };
 
-export const getPropHyperCandidates = (c1: Clause, c2: Clause) => {
-    const lits: number[] = [];
-    for (const l1 of c1.atoms) {
-        for (let i = 0; i < c2.atoms.length; i++) {
-            const l2 = c2.atoms[i];
+export const getPropHyperCandidates = (
+    c1: Clause,
+    c2: Clause,
+): Array<[number, number]> => {
+    const lits: Array<[number, number]> = [];
+    for (let i1 = 0; i1 < c1.atoms.length; i1++) {
+        const l1 = c1.atoms[i1];
+        for (let i2 = 0; i2 < c2.atoms.length; i2++) {
+            const l2 = c2.atoms[i2];
             if (l1.lit === l2.lit && l1.negated && !l2.negated) {
-                lits.push(i);
+                lits.push([i1, i2]);
             }
         }
     }
     return lits;
 };
 
-export const getFOHyperCandidates = (c1: FOClause, c2: FOClause) => {
-    const lits: number[] = [];
-    for (const l1 of c1.atoms) {
-        for (let i = 0; i < c2.atoms.length; i++) {
-            const l2 = c2.atoms[i];
+export const getFOHyperCandidates = (
+    c1: FOClause,
+    c2: FOClause,
+): Array<[number, number]> => {
+    const lits: Array<[number, number]> = [];
+    for (let i1 = 0; i1 < c1.atoms.length; i1++) {
+        const l1 = c1.atoms[i1];
+        for (let i2 = 0; i2 < c2.atoms.length; i2++) {
+            const l2 = c2.atoms[i2];
             if (
                 l1.negated &&
                 !l2.negated &&
                 l1.lit.spelling === l2.lit.spelling &&
                 l1.lit.arguments.length === l2.lit.arguments.length
             ) {
-                lits.push(i);
+                lits.push([i1, i2]);
             }
         }
     }
     return lits;
 };
 
-export const addHyperSidePremiss = (hyperRes: HyperResolutionMove, clauseId: number, litId: number) => ({...hyperRes,
-                    sidePremisses: [
-                        ...hyperRes.sidePremisses,
-                        {
-                            first: clauseId,
-                            second: litId,
-                        },
-                    ],
-                })
+export const addHyperSidePremiss = (
+    hyperRes: HyperResolutionMove,
+    mainLitId: number,
+    clauseId: number,
+    litId: number,
+): HyperResolutionMove => ({
+    ...hyperRes,
+    sidePremisses: {
+        ...hyperRes.sidePremisses,
+        [mainLitId]: { first: clauseId, second: litId },
+    },
+});
+
+export const removeHyperSidePremiss = (
+    hyperRes: HyperResolutionMove,
+    mainLitId: number,
+): HyperResolutionMove => {
+    delete hyperRes.sidePremisses[mainLitId];
+    return {
+        ...hyperRes,
+        sidePremisses: {
+            ...hyperRes.sidePremisses,
+        },
+    };
+};
+
+export const findHyperSidePremiss = (
+    hyperRes: HyperResolutionMove,
+    id: number,
+): number => {
+    for (const mId in hyperRes.sidePremisses) {
+        if (hyperRes.sidePremisses[mId].first === id) {
+            return parseInt(mId);
+        }
+    }
+    return -1;
+};
+
+export const getHyperClauseIds = (hyperRes: HyperResolutionMove): number[] => {
+    const ids: number[] = [];
+
+    for (const mId in hyperRes.sidePremisses) {
+        if (mId !== undefined) {
+            ids.push(hyperRes.sidePremisses[mId].first);
+        }
+    }
+
+    return ids;
+};
 
 /**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
  * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
+ * @param {ResolutionCalculusType} calculus - The current calculus type
  * @param {number} selectedClauseId - Currently selected clause
- * @returns {PropCandidateClause[]} - The new candidate clauses
+ * @returns {CandidateClause[]} - The new candidate clauses
  */
-export const getPropCandidateClauses = (
-    clauseSet: ClauseSet,
+export const getCandidateClauses = (
+    clauseSet: ClauseSet<string | FOLiteral>,
     visualHelp: VisualHelp,
+    calculus: ResolutionCalculusType,
     selectedClauseId?: number,
 ) => {
-    const newCandidateClauses: PropCandidateClause[] = [];
+    const newCandidateClauses: CandidateClause[] = [];
 
     if (selectedClauseId === undefined) {
         // Create default candidates
-        clauseSet.clauses.forEach((clause, index) => {
-            newCandidateClauses[index] = {
-                clause,
-                candidateLiterals: [],
-                index,
-            };
-        });
+        if (instanceOfPropClauseSet(clauseSet, calculus)) {
+            clauseSet.clauses.forEach((clause, clauseIndex) => {
+                newCandidateClauses[clauseIndex] = {
+                    clause,
+                    candidateAtomMap: new Map<number, number[]>(),
+                    index: clauseIndex,
+                };
+            });
+        } else if (instanceOfFOClauseSet(clauseSet, calculus)) {
+            clauseSet.clauses.forEach((clause, clauseIndex) => {
+                newCandidateClauses[clauseIndex] = {
+                    clause,
+                    candidateAtomMap: new Map<number, number[]>(),
+                    index: clauseIndex,
+                };
+            });
+        }
     } else {
         // Get selected clause
         const selectedClause = clauseSet.clauses[selectedClauseId];
 
         // Filter for possible resolve candidates
-        clauseSet.clauses.forEach((clause, index) => {
-            const literals: number[] = [];
-            selectedClause.atoms.forEach((atom1) => {
-                clause.atoms.forEach((atom2, atomIndex) => {
+        clauseSet.clauses.forEach((clause, clauseIndex) => {
+            const candidateAtomMap: Map<number, number[]> = new Map<
+                number,
+                number[]
+            >();
+            selectedClause.atoms.forEach((atom1, atom1Index) => {
+                const resolventAtomIndices: number[] = [];
+                clause.atoms.forEach((atom2, atom2Index) => {
                     if (
-                        atom1.lit === atom2.lit &&
-                        atom1.negated !== atom2.negated
+                        atom1.negated !== atom2.negated &&
+                        ((instanceOfPropAtom(atom1, calculus) &&
+                            instanceOfPropAtom(atom2, calculus) &&
+                            atom1.lit === atom2.lit) ||
+                            (instanceOfFOAtom(atom1, calculus) &&
+                                instanceOfFOAtom(atom2, calculus) &&
+                                atom1.lit.spelling === atom2.lit.spelling &&
+                                atom1.lit.arguments.length ===
+                                    atom2.lit.arguments.length))
                     ) {
-                        literals.push(atomIndex);
+                        resolventAtomIndices.push(atom2Index);
                     }
                 });
+                if (resolventAtomIndices.length > 0) {
+                    candidateAtomMap.set(atom1Index, resolventAtomIndices);
+                }
             });
-            newCandidateClauses[index] = {
-                clause,
-                candidateLiterals: literals,
-                index,
-            };
+            if (
+                instanceOfPropClauseSet(clauseSet, calculus) &&
+                instanceOfPropClause(clause, calculus)
+            ) {
+                newCandidateClauses[clauseIndex] = {
+                    clause,
+                    candidateAtomMap,
+                    index: clauseIndex,
+                };
+            } else if (
+                instanceOfFOClauseSet(clauseSet, calculus) &&
+                instanceOfFOClause(clause, calculus)
+            ) {
+                newCandidateClauses[clauseIndex] = {
+                    clause,
+                    candidateAtomMap,
+                    index: clauseIndex,
+                };
+            }
         });
 
         if (visualHelp === VisualHelp.rearrange) {
             groupCandidates(newCandidateClauses, selectedClauseId);
-        }
-    }
-    return newCandidateClauses;
-};
-
-/**
- * Creates an array of candidate clauses based on if a clause is selected
- * @param {FOClauseSet} clauseSet - The clause set to work on
- * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
- * @param {number} selectedClauseId - The selected clause
- * @returns {FOCandidateClause[]} - The new candidate clauses
- */
-export const getFOCandidateClauses = (
-    clauseSet: FOClauseSet,
-    visualHelp: VisualHelp,
-    selectedClauseId?: number,
-) => {
-    const newCandidateClauses: FOCandidateClause[] = [];
-    if (selectedClauseId === undefined) {
-        // Create default candidates
-        clauseSet.clauses.forEach((clause, index) => {
-            newCandidateClauses[index] = {
-                clause,
-                candidateLiterals: [],
-                index,
-            };
-        });
-    } else {
-        // Get selected clause
-        const selectedClause = clauseSet.clauses[selectedClauseId];
-
-        // Filter for possible resolve candidates
-        clauseSet.clauses.forEach((clause, index) => {
-            const literals: number[] = [];
-            selectedClause.atoms.forEach((atom1) => {
-                clause.atoms.forEach((atom2, atomIndex) => {
-                    if (
-                        atom1.negated !== atom2.negated &&
-                        atom1.lit.spelling === atom2.lit.spelling &&
-                        atom1.lit.arguments.length ===
-                            atom2.lit.arguments.length
-                    ) {
-                        literals.push(atomIndex);
-                    }
-                });
-            });
-            newCandidateClauses[index] = {
-                clause,
-                candidateLiterals: literals,
-                index,
-            };
-        });
-
-        if (visualHelp === VisualHelp.rearrange) {
-            // groupCandidates(newCandidateClauses, selectedClauseId);
         }
     }
     return newCandidateClauses;
