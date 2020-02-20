@@ -97,7 +97,9 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         }
     };
 
-    const suggestionsRegEx = /((\s|^)[\\/])?(a|al|e)?$/;
+    // todo: optimise RegEx
+    //
+    const suggestionsRegEx = /(?<!([\\/])(all|ex)\s*)(?<=([A-Z]+:\s*)|((?<!:\s*)))((\s*|^)[\\/]?(a|al|e)?$)/;
 
     /**
      * Handle the Input event of the textarea
