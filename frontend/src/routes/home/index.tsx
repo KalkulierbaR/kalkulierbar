@@ -1,4 +1,5 @@
 import { h, VNode } from "preact";
+import { circle } from "../../components/resolution/circle/style.scss";
 import { Calculus } from "../../types/app";
 import * as style from "./style.scss";
 
@@ -238,72 +239,73 @@ const ROUTES: Route[] = [
         name: "Propositional Resolution",
         image: (
             <g transform="translate(0 0) scale(1)">
+                <circle class={circle} cx="0" cy="0" r="204.13606202731324" />
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="-47.68718719482422"
-                        y="-180.8850860595703"
-                        width="95.3743667602539"
-                        height="35.563446044921875"
+                        x="-40.234375"
+                        y="-215.640625"
+                        width="80.46875"
+                        height="34.890625"
                         rx="4"
                     />
                     <text
-                        x="1.0338121520583616e-14"
-                        y="-154.8343370150711"
+                        x="1.2499728747614736e-14"
+                        y="-190.13606202731324"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        a, ¬b, c
+                        a, b, c
                     </text>
                 </g>
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="70.2972183227539"
-                        y="-117.31724548339844"
-                        width="123.40556335449219"
-                        height="35.563446044921875"
+                        x="92.5"
+                        y="-138.78125"
+                        width="134.203125"
+                        height="34.890625"
                         rx="4"
                     />
                     <text
-                        x="132"
-                        y="-91.26648733247731"
+                        x="159.6"
+                        y="-113.27675286563166"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        ¬c, ¬a, ¬d
+                        ¬c, a, a, ¬d
                     </text>
                 </g>
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="137.26095581054688"
-                        y="25.51841926574707"
-                        width="54.680702209472656"
-                        height="35.563446044921875"
+                        x="171.3125"
+                        y="33.921875"
+                        width="55.40625"
+                        height="34.875"
                         rx="4"
                     />
                     <text
-                        x="164.60130769070565"
-                        y="51.569174356488766"
+                        x="199.01794475330775"
+                        y="59.424547176481866"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        d, c
+                        d, d
                     </text>
                 </g>
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="38.23394012451172"
-                        y="140.06373596191406"
-                        width="70.22481536865234"
-                        height="35.563446044921875"
+                        x="54"
+                        y="172.421875"
+                        width="69.734375"
+                        height="34.875"
                         rx="4"
                     />
                     <text
-                        x="73.254473435533"
-                        y="166.11448148352412"
+                        x="88.57131788114445"
+                        y="197.92023670280642"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
@@ -313,15 +315,15 @@ const ROUTES: Route[] = [
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="-94.93596649169922"
-                        y="140.06373596191406"
-                        width="43.5467414855957"
-                        height="35.563446044921875"
+                        x="-110.015625"
+                        y="172.421875"
+                        width="43.484375"
+                        height="34.875"
                         rx="4"
                     />
                     <text
-                        x="-73.25447343553299"
-                        y="166.11448148352412"
+                        x="-88.57131788114444"
+                        y="197.92023670280642"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
@@ -331,161 +333,162 @@ const ROUTES: Route[] = [
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="-191.941650390625"
-                        y="25.51841926574707"
-                        width="54.680702209472656"
-                        height="35.563446044921875"
+                        x="-213"
+                        y="33.921875"
+                        width="27.953125"
+                        height="34.875"
                         rx="4"
                     />
                     <text
-                        x="-164.60130769070565"
-                        y="51.56917435648878"
+                        x="-199.01794475330775"
+                        y="59.424547176481894"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        b, c
+                        c
                     </text>
                 </g>
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="-153.0091094970703"
-                        y="-117.31724548339844"
-                        width="42.01822280883789"
-                        height="35.563446044921875"
+                        x="-174.171875"
+                        y="-138.78125"
+                        width="29.140625"
+                        height="34.890625"
                         rx="4"
                     />
                     <text
-                        x="-132.00000000000003"
-                        y="-91.2664873324773"
+                        x="-159.60000000000002"
+                        y="-113.27675286563164"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        ¬c
+                        b
                     </text>
                 </g>
             </g>
         ),
         viewBox:
-            "-240.71777071657823 -203.21777071657823 481.43554143315646 406.43554143315646",
+            "-291.0496682300446 -242.04966823004457 582.0993364600891 484.09933646008915",
     },
     {
         href: Calculus.propResolution,
         name: "First Order Resolution",
         image: (
             <g transform="translate(0 0) scale(1)">
+                <circle class={circle} cx="0" cy="0" r="285.44197308735096" />
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="-98.65703582763672"
-                        y="-316.5934143066406"
-                        width="197.31407165527344"
-                        height="34.973060607910156"
+                        x="-31.3125"
+                        y="-297.515625"
+                        width="62.625"
+                        height="34.984375"
                         rx="4"
                     />
                     <text
-                        x="1.866612420155836e-14"
-                        y="-290.8409421321224"
+                        x="1.7478279934186463e-14"
+                        y="-271.44197308735096"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        R(f(a, X)), P(sk1)
+                        R(a)
                     </text>
                 </g>
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="168.99737548828125"
-                        y="-164.17294311523438"
-                        width="190.0052490234375"
-                        height="34.973060607910156"
+                        x="190.140625"
+                        y="-154.796875"
+                        width="114.109375"
+                        height="34.984375"
                         rx="4"
                     />
                     <text
-                        x="264"
-                        y="-138.4204710660612"
+                        x="247.19999999999996"
+                        y="-128.72098654367548"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        R(f(a, X)), ¬P(Y)
+                        R(f(b, X))
                     </text>
                 </g>
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="156.54771423339844"
-                        y="140.66799926757812"
-                        width="214.90457153320312"
-                        height="34.973060607910156"
+                        x="123.109375"
+                        y="130.640625"
+                        width="248.1875"
+                        height="35"
                         rx="4"
                     />
                     <text
-                        x="264"
-                        y="166.42047106606114"
+                        x="247.2"
+                        y="156.72098654367542"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        R(f(a, X)), ¬R(Y, a)
+                        ¬R(f(b, a)), ¬R(f(b, a))
                     </text>
                 </g>
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="-99.9911880493164"
-                        y="293.0884704589844"
-                        width="199.9823760986328"
-                        height="34.973060607910156"
+                        x="-111.828125"
+                        y="273.359375"
+                        width="223.65625"
+                        height="35"
                         rx="4"
                     />
                     <text
-                        x="1.866612420155836e-14"
-                        y="318.8409421321224"
+                        x="1.7478279934186463e-14"
+                        y="299.44197308735096"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        R(f(a, X)), R(a, c)
+                        ¬R(a), ¬R(a), ¬R(a)
                     </text>
                 </g>
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="-349.9898376464844"
-                        y="140.66799926757812"
-                        width="171.9796905517578"
-                        height="34.973060607910156"
+                        x="-291.578125"
+                        y="130.640625"
+                        width="88.765625"
+                        height="35"
                         rx="4"
                     />
                     <text
-                        x="-263.99999999999994"
-                        y="166.4204710660613"
+                        x="-247.19999999999993"
+                        y="156.72098654367556"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        R(f(a, X)), P(c)
+                        Q(sk1)
                     </text>
                 </g>
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
-                        x="-357.66845703125"
-                        y="-164.17294311523438"
-                        width="187.33694458007812"
-                        height="34.973060607910156"
+                        x="-285.859375"
+                        y="-154.796875"
+                        width="77.328125"
+                        height="34.984375"
                         rx="4"
                     />
                     <text
-                        x="-264.0000000000001"
-                        y="-138.420471066061"
+                        x="-247.2000000000001"
+                        y="-128.7209865436753"
                         text-anchor="middle"
                         class=" _3enLjHr0Txl6vJWbFb6BQM"
                     >
-                        R(f(a, X)), ¬P(b)
+                        ¬Q(c)
                     </text>
                 </g>
             </g>
         ),
         viewBox:
-            "-445.32503634533464 -352.82503634533464 890.6500726906693 705.6500726906693",
+            "-416.9861703960861 -331.4861703960861 833.9723407921722 662.9723407921722",
     },
 ];
 
