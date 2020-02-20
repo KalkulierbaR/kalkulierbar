@@ -3,15 +3,12 @@ package kalkulierbar.resolution
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
-import kalkulierbar.clause.Atom
-import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.CnfStrategy
 import kalkulierbar.parsers.FlexibleClauseSetParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.plus
 
 class PropositionalResolution : GenericResolution<String>,
         JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
@@ -77,9 +74,9 @@ class PropositionalResolution : GenericResolution<String>,
      */
     @Suppress("ThrowsCount")
     fun hyper(
-            state: GenericResolutionState<String>,
-            mainID: Int,
-            atomMap: Map<Int, Pair<Int, Int>>
+        state: GenericResolutionState<String>,
+        mainID: Int,
+        atomMap: Map<Int, Pair<Int, Int>>
     ) {
         // Checks for correct clauseID and IDs in Map
         checkHyperID(state, mainID, atomMap)

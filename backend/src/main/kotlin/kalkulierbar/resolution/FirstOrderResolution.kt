@@ -19,6 +19,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
+@Suppress("TooManyFunctions")
 class FirstOrderResolution :
         GenericResolution<Relation>,
         JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
@@ -186,9 +187,9 @@ class FirstOrderResolution :
      */
     @Suppress("ThrowsCount")
     fun hyper(
-            state: FoResolutionState,
-            mainID: Int,
-            atomMap: Map<Int, Pair<Int, Int>>
+        state: FoResolutionState,
+        mainID: Int,
+        atomMap: Map<Int, Pair<Int, Int>>
     ) {
         // Checks for correct clauseID and IDs in Map
         checkHyperID(state, mainID, atomMap)
@@ -231,10 +232,10 @@ class FirstOrderResolution :
      *         except the one matching the literals of mAtomID and sAtomID.
      */
     fun resolveSidePremiss(
-            mainPremiss: Clause<Relation>,
-            mAtomID: Int,
-            sidePremiss: Clause<Relation>,
-            sAtomID: Int
+        mainPremiss: Clause<Relation>,
+        mAtomID: Int,
+        sidePremiss: Clause<Relation>,
+        sAtomID: Int
     ): Clause<Relation> {
         val mAtom = mainPremiss.atoms[mAtomID]
         val sAtom = sidePremiss.atoms[sAtomID]
