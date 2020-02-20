@@ -94,110 +94,31 @@ interface GenericResolution<AtomType> {
     }
 
     /**
-     * Creates a new clause in which all side premisses are resolved with the main premiss
-     * while paying attention to resolving one atom in each side premiss with the main premiss.
-     * Adds the result to the clause set
-     * @param state Current proof state
-     * @param mainID ID of main premiss clause
-     * @param sidePremisses List (sidePremissID, atomID in sidePremiss) of selected atoms for hyperresolution
-     */
-    @Suppress("ThrowsCount")
-    fun hyper(
-        state: GenericResolutionState<AtomType>,
-        mainID: Int,
-        sidePremisses: List<Pair<Int, Int>>,
-        isFO: Boolean = false
-    ) {
-        // Checks for correct clauseID and IDs in Map
-        checkHyperID(state, mainID, sidePremisses)
-
-        if (sidePremisses.isEmpty())
-            throw IllegalMove("Please select side premisses for hyper resolution")
-
-        val clauses = state.clauseSet.clauses
-        var mainPremiss = clauses[mainID].clone()
-
-        // Resolves each side premiss with main premiss
-        for (i in sidePremisses.indices) {
-            val (clauseID, atomID) = sidePremisses[i]
-            val sidePremiss = clauses[clauseID]
-
-            // Check for only one negative atom in side premiss
-            if (!sidePremiss.isPositive())
-                throw IllegalMove("Side premiss $sidePremiss is not positive")
-
-            // Resolve side premiss into main premiss ever iteration
-            mainPremiss = resolveSidePremiss(mainPremiss, sidePremiss, atomID, isFO)
-        }
-
-        // Check there are no negative atoms anymore
-        if (!mainPremiss.isPositive())
-            throw IllegalMove("Resulting clause $mainPremiss is not positive")
-
-        // Add resolved clause to clause set
-        clauses.add(mainPremiss)
-        state.newestNode = clauses.size - 1
-    }
-
-    /**
-     * Resolves a main premiss with a side premiss with respect to a literal
-     * @param mainPremiss The main premiss to resolve
-     * @param sidePremiss The side premiss to resolve
-     * @param atomID ID of atom to use for resolution
-     * @param isFO true iff used in First Order Resolution
-     * @return A clause which contains all atoms from main and side premiss
-     *         except the one matching the literal of atomID
-     */
-    fun resolveSidePremiss(
-        mainPremiss: Clause<AtomType>,
-        sidePremiss: Clause<AtomType>,
-        atomID: Int,
-        isFO: Boolean
-    ): Clause<AtomType> {
-        // Get resolution candidate
-        val resCandidates: Pair<Atom<AtomType>, Atom<AtomType>>
-
-        // TODO: clean this up
-        resCandidates = if (isFO) {
-            getAutoResolutionCandidates(mainPremiss, sidePremiss)
-        } else {
-            // Filters main and side premiss for given literal
-            filterClause(mainPremiss, sidePremiss, sidePremiss.atoms[atomID].lit)
-        }
-        // mainAtom = atom matching lit in mainPremiss
-        // sideAtom = atom matching lit in current sidePremiss
-        val (mainAtom, sideAtom) = resCandidates
-
-        // Check that atom in side premiss is negative and atom in main premiss is positive
-        if (!mainAtom.negated || sideAtom.negated)
-            throw IllegalMove("Literal '$mainAtom' in main premiss has to be negative, " +
-                    "while its resolving partner '$sideAtom' in side premiss $sidePremiss has to be positive")
-
-        // Resolve mainPremiss and sidePremiss
-        return buildClause(mainPremiss, mainAtom, sidePremiss, sideAtom)
-    }
-
-    /**
      * Checks that all IDs for a hyper resolution are valid
      * @param state Current proof state
      * @param clauseID ID of main premiss
-     * @param atoms List (sidePremissID, atomID in sidePremiss) of selected atoms for hyperresolution
+     * @param atomMap Maps an atom of the main premiss to an atom of a side premiss
      */
     @Suppress("ThrowsCount")
-    fun checkHyperID(state: GenericResolutionState<AtomType>, clauseID: Int, atoms: List<Pair<Int, Int>>) {
+    fun checkHyperID(state: GenericResolutionState<AtomType>, clauseID: Int, atomMap: Map<Int, Pair<Int, Int>>) {
         val clauses = state.clauseSet.clauses
+        val mainPremiss = clauses[clauseID].atoms
 
         // Check for valid clause id
         if (clauseID < 0 || clauseID >= clauses.size)
-            throw IllegalMove("There is no clause with id $clauseID")
+            throw IllegalMove("There is no (main premiss) clause with id $clauseID")
 
-        // Check that (clause, atom) pairs are valid
-        for ((cID, aID) in atoms) {
-            if (cID < 0 || cID >= clauses.size)
-                throw IllegalMove("There is no clause with id $cID")
-            val clause = clauses[cID]
-            if (aID < 0 || aID >= clause.atoms.size)
-                throw IllegalMove("There is no atom with id $aID in clause $clause")
+        // Check that (mainAtomID -> (sideClauseID, atomID)) map elements are correct
+        for ((mAtomID, pair) in atomMap) {
+            val (sClauseID, sAtomID) = pair
+
+            if (mAtomID < 0 || mAtomID >= mainPremiss.size)
+                throw IllegalMove("There is no atom with id $mAtomID in (main premiss) clause ${clauses[clauseID]}")
+            if (sClauseID < 0 || sClauseID >= clauses.size)
+                throw IllegalMove("There is no (side premiss) clause with id $sClauseID")
+            val clause = clauses[sClauseID].atoms
+            if (sAtomID < 0 || sAtomID >= clause.size)
+                throw IllegalMove("There is no atom with id $sAtomID in (side premiss) clause $clause")
         }
     }
 
@@ -371,7 +292,7 @@ class MoveShow : ResolutionMove()
 
 @Serializable
 @SerialName("res-hyper")
-data class MoveHyper(val mainID: Int, val sidePremisses: List<Pair<Int, Int>>) : ResolutionMove()
+data class MoveHyper(val mainID: Int, val atomMap: Map<Int, Pair<Int, Int>>) : ResolutionMove()
 
 @Serializable
 @SerialName("res-factorize")
