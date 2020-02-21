@@ -1,11 +1,5 @@
-.list-item {
-    padding: 8px;
-    cursor: pointer;
-    background-color: #00000000;
-    transition: background-color 0.2s ease-in;
-    margin: 0;
-
-    &:hover {
-        background-color: rgb(218, 218, 218);
-    }
+.hyper-fab {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
 }

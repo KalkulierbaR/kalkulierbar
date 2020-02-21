@@ -36,7 +36,7 @@ export type HyperMap = KNumMap<KPair<number, number>>;
 export interface HyperResolutionMove {
     type: "res-hyper";
     mainID: number;
-    sidePremisses: HyperMap;
+    atomMap: HyperMap;
 }
 
 export interface ResolutionResolveUnifyMove {

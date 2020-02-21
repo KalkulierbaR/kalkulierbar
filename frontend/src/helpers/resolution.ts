@@ -1,5 +1,6 @@
 import { APIInformation, AppState, ResolutionCalculusType } from "../types/app";
 import {
+    Atom,
     CandidateClause,
     Clause,
     ClauseSet,
@@ -124,8 +125,8 @@ export const addHyperSidePremiss = (
     litId: number,
 ): HyperResolutionMove => ({
     ...hyperRes,
-    sidePremisses: {
-        ...hyperRes.sidePremisses,
+    atomMap: {
+        ...hyperRes.atomMap,
         [mainLitId]: { first: clauseId, second: litId },
     },
 });
@@ -134,11 +135,11 @@ export const removeHyperSidePremiss = (
     hyperRes: HyperResolutionMove,
     mainLitId: number,
 ): HyperResolutionMove => {
-    delete hyperRes.sidePremisses[mainLitId];
+    delete hyperRes.atomMap[mainLitId];
     return {
         ...hyperRes,
-        sidePremisses: {
-            ...hyperRes.sidePremisses,
+        atomMap: {
+            ...hyperRes.atomMap,
         },
     };
 };
@@ -147,8 +148,8 @@ export const findHyperSidePremiss = (
     hyperRes: HyperResolutionMove,
     id: number,
 ): number => {
-    for (const mId in hyperRes.sidePremisses) {
-        if (hyperRes.sidePremisses[mId].first === id) {
+    for (const mId in hyperRes.atomMap) {
+        if (hyperRes.atomMap[mId].first === id) {
             return parseInt(mId);
         }
     }
@@ -158,13 +159,34 @@ export const findHyperSidePremiss = (
 export const getHyperClauseIds = (hyperRes: HyperResolutionMove): number[] => {
     const ids: number[] = [];
 
-    for (const mId in hyperRes.sidePremisses) {
+    for (const mId in hyperRes.atomMap) {
         if (mId !== undefined) {
-            ids.push(hyperRes.sidePremisses[mId].first);
+            ids.push(hyperRes.atomMap[mId].first);
         }
     }
 
     return ids;
+};
+
+export const findOptimalMainLit = (
+    hyperRes: HyperResolutionMove,
+    main: Clause,
+    lit: string,
+) => {
+    const candidates = main.atoms
+        .map((a, i): [Atom, number] => [a, i])
+        .filter(([a]) => a.negated && a.lit === lit)
+        .map(([_, i]) => i);
+
+    if (candidates.length === 1) {
+        return candidates[0];
+    }
+    for (const c of candidates) {
+        if (!(c in hyperRes.atomMap)) {
+            return c;
+        }
+    }
+    return candidates[0];
 };
 
 /**

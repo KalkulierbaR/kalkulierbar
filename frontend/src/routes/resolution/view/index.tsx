@@ -8,6 +8,7 @@ import CheckCircleIcon from "../../../components/icons/check-circle";
 import FactorizeIcon from "../../../components/icons/factorize";
 import HideIcon from "../../../components/icons/hide";
 import HyperIcon from "../../../components/icons/hyper";
+import SendIcon from "../../../components/icons/send";
 import ShowIcon from "../../../components/icons/show";
 import OptionList from "../../../components/input/option-list";
 import ResolutionCircle from "../../../components/resolution/circle";
@@ -17,6 +18,7 @@ import { atomToString } from "../../../helpers/clause";
 import {
     addHyperSidePremiss,
     findHyperSidePremiss,
+    findOptimalMainLit,
     getCandidateClauses,
     getFOHyperCandidates,
     getHyperClauseIds,
@@ -29,6 +31,8 @@ import { Calculus, ResolutionCalculusType } from "../../../types/app";
 import {
     Atom,
     CandidateClause,
+    Clause,
+    ClauseSet,
     FOAtom,
     getCandidateCount,
     instanceOfPropCandidateClause,
@@ -40,6 +44,8 @@ import {
     instanceOfPropResState,
 } from "../../../types/resolution";
 import { foExample, propExample } from "./example";
+
+import * as style from "./style.scss";
 
 interface Props {
     /**
@@ -280,6 +286,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         return options;
     };
 
+    console.log(hyperRes);
+
     /**
      * Handler for the selection of a literal option in the propositional resolve dialog
      * @param {number} optionIndex - The option's index which was selected
@@ -287,6 +295,26 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
      */
     const selectLiteralOption = (optionIndex: number) => {
         if (selectedClauses && selectedClauses.length === 2) {
+            if (hyperRes) {
+                setHyperRes(
+                    addHyperSidePremiss(
+                        hyperRes,
+                        findOptimalMainLit(
+                            hyperRes,
+                            state!.clauseSet.clauses[
+                                selectedClauses[0]
+                            ] as Clause,
+                            (state!.clauseSet.clauses[
+                                selectedClauses[1]
+                            ] as Clause).atoms[optionIndex].lit,
+                        ),
+                        selectedClauses[1],
+                        optionIndex,
+                    ),
+                );
+                setSelectedClauses([selectedClauses[0]]);
+                return;
+            }
             sendMove(
                 server,
                 calculus,
@@ -507,7 +535,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 setHyperRes({
                                     type: "res-hyper",
                                     mainID: selectedClauseId,
-                                    sidePremisses: {},
+                                    atomMap: {},
                                 });
                             }}
                         />
@@ -661,6 +689,27 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     selectOptionCallback={selectFactorizeOption}
                 />
             </Dialog>
+            {hyperRes && hyperRes.atomMap && (
+                <FAB
+                    class={style.hyperFab}
+                    label="Send"
+                    icon={<SendIcon />}
+                    extended={true}
+                    mini={true}
+                    onClick={() => {
+                        sendMove(
+                            server,
+                            calculus,
+                            state,
+                            hyperRes,
+                            onChange,
+                            onError,
+                        );
+                        setHyperRes(undefined);
+                        setSelectedClauses(undefined);
+                    }}
+                />
+            )}
         </Fragment>
     );
 };
