@@ -21,6 +21,11 @@ class Clause<AtomType>(var atoms: MutableList<Atom<AtomType>> = mutableListOf())
         return newClause
     }
 
+    fun isEmpty() = atoms.isEmpty()
+
+    val size: Int
+        get() = atoms.size
+
     override fun toString(): String {
         return "{${atoms.joinToString(", ")}}"
     }
