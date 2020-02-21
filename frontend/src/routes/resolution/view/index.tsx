@@ -388,6 +388,16 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             setSelectedClauseAtomOption(undefined);
         } else if (candidateClauseAtomOption === undefined) {
             setSelectedClauseAtomOption(optionIndex);
+        } else if (hyperRes) {
+            setHyperRes(
+                addHyperSidePremiss(
+                    hyperRes,
+                    optionIndex,
+                    selectedClauses[1],
+                    candidateClauseAtomOption,
+                ),
+            );
+            onCloseAtomDialog();
         } else {
             sendMove(
                 server,
@@ -420,6 +430,16 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             setCandidateClauseAtomOption(undefined);
         } else if (selectedClauseAtomOption === undefined) {
             setCandidateClauseAtomOption(optionIndex);
+        } else if (hyperRes) {
+            setHyperRes(
+                addHyperSidePremiss(
+                    hyperRes,
+                    selectedClauseAtomOption,
+                    selectedClauses[1],
+                    optionIndex,
+                ),
+            );
+            onCloseAtomDialog();
         } else {
             sendMove(
                 server,
