@@ -466,7 +466,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const onCloseAtomDialog = () => {
         setCandidateClauseAtomOption(undefined);
         setSelectedClauseAtomOption(undefined);
-        setSelectedClauses(undefined);
+        if (!hyperRes) { setSelectedClauses(undefined); }
+        else { setSelectedClauses(selectedClauses && [selectedClauses[0]]); }
     };
 
     /**
