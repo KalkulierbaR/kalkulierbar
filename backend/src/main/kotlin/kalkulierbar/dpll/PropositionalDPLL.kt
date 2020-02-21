@@ -205,16 +205,21 @@ class DPLLState(val clauseSet: ClauseSet<String>) : ProtectedState() {
     fun pruneBranch(id: Int) {
         // Collect all transitive children of the node
         // (not deleting anything yet to keep index structures intact)
-        val worklist = mutableListOf<Int>()
-        worklist.addAll(tree[id].children)
+        val queue = mutableListOf<Int>()
+        val toDelete = mutableListOf<Int>()
+        queue.addAll(tree[id].children)
 
-        while (worklist.isNotEmpty()) {
-            val node = tree[worklist.removeAt(0)]
-            worklist.addAll(node.children)
+        while (queue.isNotEmpty()) {
+            val index = queue.removeAt(0)
+            val node = tree[index]
+            queue.addAll(node.children)
+            toDelete.add(index)
         }
 
         // Remove each identified child, keeping parent references but not children references
-        worklist.forEach {
+        // We remove items from the largest index to the smallest to keep the indices of the other
+        // items in the list consistent
+        toDelete.sorted().asReversed().forEach {
             removeNodeInconsistent(it)
         }
 
