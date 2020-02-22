@@ -32,7 +32,6 @@ import {
     Atom,
     CandidateClause,
     Clause,
-    ClauseSet,
     FOAtom,
     getCandidateCount,
     instanceOfPropCandidateClause,
@@ -466,8 +465,11 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const onCloseAtomDialog = () => {
         setCandidateClauseAtomOption(undefined);
         setSelectedClauseAtomOption(undefined);
-        if (!hyperRes) { setSelectedClauses(undefined); }
-        else { setSelectedClauses(selectedClauses && [selectedClauses[0]]); }
+        if (!hyperRes) {
+            setSelectedClauses(undefined);
+        } else {
+            setSelectedClauses(selectedClauses && [selectedClauses[0]]);
+        }
     };
 
     /**
