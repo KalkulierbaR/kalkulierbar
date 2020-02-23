@@ -34,6 +34,7 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
             is MovePropagate -> propagate(state, move.branch, move.baseClause, move.propClause, move.propAtom)
             is MoveSplit -> split(state, move.branch, move.literal)
             is MovePrune -> prune(state, move.branch)
+            is MoveModelCheck -> checkModel(state, move.branch, move.interpretation)
             else -> throw IllegalMove("Unknown move")
         }
         return state
@@ -136,6 +137,31 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
             throw IllegalMove("Cannot prune annotation '${state.tree[node.children[0]]}'")
 
         state.pruneBranch(branchID)
+    }
+
+    @Suppress("ThrowsCount")
+    private fun checkModel(state: DPLLState, branchID: Int, interpretation: Map<String, Boolean>) {
+        if (branchID < 0 || branchID >= state.tree.size)
+            throw IllegalMove("Branch with ID $branchID does not exist")
+
+        val branch = state.tree[branchID]
+
+        if (branch.type != NodeType.MODEL)
+            throw IllegalMove("Node '$branch' is not a model node")
+
+        val clauseSet = state.getClauseSet(branchID)
+
+        // Check that the mapping satisfies every clause
+        clauseSet.clauses.forEach {
+            val atoms = it.atoms
+            // Check if any atom in the clause is satisfied by the interpretation
+            // (-> the atom's negated value is the opposite of the interp. truth value)
+            if (!atoms.any { !it.negated == interpretation[it.lit] })
+                throw IllegalMove("The given interpretation does not satisfy any atom of clause $it")
+        }
+
+        // yeah i'll think of something smarter here eventually
+        branch.label += " (checked)"
     }
 
     override fun checkCloseOnState(state: DPLLState): CloseMessage {
@@ -277,16 +303,20 @@ class DPLLState(val clauseSet: ClauseSet<String>) : ProtectedState() {
     }
 
     override var seal = ""
-    override fun getHash() = "itsalltrue"
+    override fun getHash() = "pdpll|$clauseSet|${tree.map{it.getHash()}}"
 }
 
 @Serializable
-class TreeNode(var parent: Int?, val type: NodeType, val label: String, val diff: CsDiff) {
+class TreeNode(var parent: Int?, val type: NodeType, var label: String, val diff: CsDiff) {
     val children = mutableListOf<Int>()
     val isLeaf
         get() = children.size == 0
     val isAnnotation
         get() = (type == NodeType.MODEL || type == NodeType.CLOSED)
+
+    fun getHash(): String {
+        return "($parent|$children|$type|$label|$diff)"
+    }
 }
 
 enum class NodeType {
@@ -321,4 +351,4 @@ data class MovePrune(val branch: Int) : DPLLMove()
 
 @Serializable
 @SerialName("dpll-modelcheck")
-data class MoveModelCheck(val branch: Int, val interpretation: Map<String, Boolean>)
+data class MoveModelCheck(val branch: Int, val interpretation: Map<String, Boolean>) : DPLLMove()

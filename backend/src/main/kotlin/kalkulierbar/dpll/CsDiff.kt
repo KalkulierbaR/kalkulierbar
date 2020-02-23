@@ -27,6 +27,8 @@ abstract class CsDiff {
 @SerialName("cd-identity")
 class Identity : CsDiff() {
     override fun apply(cs: ClauseSet<String>) = cs
+
+    override fun toString() = "identity"
 }
 
 @Serializable
@@ -37,6 +39,8 @@ class RemoveClause(val id: Int) : CsDiff() {
         new.clauses.removeAt(id)
         return new
     }
+
+    override fun toString() = "remove-$id"
 }
 
 @Serializable
@@ -47,6 +51,8 @@ class AddClause(val clause: Clause<String>) : CsDiff() {
         new.add(clause)
         return new
     }
+
+    override fun toString() = "add-$clause"
 }
 
 @Serializable
@@ -57,4 +63,6 @@ class RemoveAtom(val cid: Int, val aid: Int) : CsDiff() {
         new.clauses[cid].atoms.removeAt(aid)
         return new
     }
+
+    override fun toString() = "remove-$cid-$aid"
 }
