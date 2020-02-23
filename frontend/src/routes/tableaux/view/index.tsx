@@ -77,6 +77,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
     const [lemmaMode, setLemmaMode] = useState(false);
+    const [highlightLemmaSource, setHighlightLemmaSource] = useState(false);
 
     /**
      * The function to call, when the user selects a clause
@@ -117,10 +118,17 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         { ignoreClause = false }: SelectNodeOptions = {}
     ) => {
         const newNodeIsLeaf = newNode.children.length === 0;
+        // highlight Lemma source
+        if(newNode.lemmaSource != null ){
+            setHighlightLemmaSource(true);
+        }else{
+            setHighlightLemmaSource(false);
+        }
 
         if (newNode.id === selectedNodeId) {
             // The same node was selected again => deselect it
             setSelectedNodeId(undefined);
+            setHighlightLemmaSource(false);
         } else if (selectedNodeId === undefined) {
             setSelectedNodeId(newNode.id);
             if (ignoreClause) {
@@ -301,6 +309,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={selectNodeCallback}
                     lemmaNodesSelectable={lemmaMode}
+                    highlightLemmaSource={highlightLemmaSource}
                 />
             </div>
 

@@ -36,7 +36,12 @@ interface Props {
     /**
      * Hands the Information over, that potential Lemma nodes are selectable
      */
-    lemmaNodesSelectable: boolean;
+    lemmaNodesSelectable?: boolean;
+    /**
+     * Whether the link to a LemmaSource exists and can be highlighted
+     */
+    highlightLemmaSource?: boolean;
+
 }
 
 /**
@@ -107,11 +112,19 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
     selectNodeCallback,
     selectedNodeId,
-    lemmaNodesSelectable
+    lemmaNodesSelectable = false,
+    highlightLemmaSource = false
 }) => {
     const { data, height: treeHeight, width: treeWidth, links } = treeLayout(
         nodes
     );
+
+    let lemma = data[0];
+    let lemmaSource = data[0];
+    if(highlightLemmaSource){
+        lemma = data.find(l => (l.data.id === selectedNodeId)) as LayoutItem<TableauxTreeLayoutNode>;
+        lemmaSource = data.find(l => l.data.id === lemma.data.lemmaSource) as LayoutItem<TableauxTreeLayoutNode>;
+    }
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
@@ -160,7 +173,18 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     y2={l.target[1] - 16}
                                 />
                             ))}
-                            {/* Third render nodes -> renders above all previous elements */
+                            {/* Third render lemma links*/
+                            highlightLemmaSource ? (
+                                <line
+                                    class={style.lemmaLink}
+                                    x1={lemma.x}
+                                    y1={lemma.y + 6}
+                                    x2={lemmaSource.x}
+                                    y2={lemmaSource.y - 16}
+                                />
+                                ) : undefined
+                            }
+                            {/* Fourth render nodes -> renders above all previous elements */
                             data.map(n => (
                                 <TableauxTreeNode
                                     selectNodeCallback={selectNodeCallback}
