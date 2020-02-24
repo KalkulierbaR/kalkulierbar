@@ -44,17 +44,6 @@ interface Props {
 
 }
 
-/**
- *
- * @param {Array<LayoutItem<TableauxTreeLayoutNode>>} nodes - The nodes we iterate over
- * @param {number} id - Id of the ancestor
- * @returns {TableauxTreeLayoutNode} - The ancestor
- */
-const getNodeById = (
-    nodes: Array<LayoutItem<TableauxTreeLayoutNode>>,
-    id: number
-) => nodes.find(n => n.data.id === id)!;
-
 interface ClosingEdgeProps {
     leaf: LayoutItem<TableauxTreeLayoutNode>;
     pred: LayoutItem<TableauxTreeLayoutNode>;
@@ -122,14 +111,14 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     let lemma = data[0];
     let lemmaSource = data[0];
     if(highlightLemmaSource){
-        lemma = data.find(l => (l.data.id === selectedNodeId)) as LayoutItem<TableauxTreeLayoutNode>;
-        lemmaSource = data.find(l => l.data.id === lemma.data.lemmaSource) as LayoutItem<TableauxTreeLayoutNode>;
+        lemma = data[selectedNodeId!] as LayoutItem<TableauxTreeLayoutNode>;
+        lemmaSource = data[lemma.data.lemmaSource!] as LayoutItem<TableauxTreeLayoutNode>;
     }
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
 
-        const node = getNodeById(data, n);
+        const node = data[n];
 
         selectNodeCallback(node.data, { ignoreClause: true });
 
