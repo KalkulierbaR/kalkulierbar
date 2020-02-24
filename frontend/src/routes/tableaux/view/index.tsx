@@ -10,7 +10,6 @@ import {
 } from "../../../types/tableaux";
 import * as style from "./style.scss";
 
-import CheckCloseBtn from "../../../components/check-close";
 import ControlFAB from "../../../components/control-fab";
 import Dialog from "../../../components/dialog";
 import FAB from "../../../components/fab";
@@ -291,7 +290,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             selectedOptionId={selectedClauseId}
                             selectOptionCallback={selectClauseCallback}
                         />
-                        <CheckCloseBtn calculus={calculus} />
                     </div>
                 )}
 
