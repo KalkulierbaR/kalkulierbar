@@ -1,8 +1,8 @@
-import {h} from "preact";
-import { route } from "preact-router";
+import {createRef, h} from "preact";
+import {route} from "preact-router";
 import {useState} from "preact/hooks";
-import { useAppState } from "../../../helpers/app-state";
-import { AppStateActionType, CalculusType, Params } from "../../../types/app";
+import {useAppState} from "../../../helpers/app-state";
+import {AppStateActionType, CalculusType, Params} from "../../../types/app";
 import Btn from "../../btn";
 import OptionList from "../option-list";
 import * as style from "./style.scss";
@@ -54,18 +54,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         savedFormulas,
         dispatch
     } = useAppState();
-    const url = `${server}/${calculus}/parse`;
 
-    const [showSuggestion, toggleShowSuggestion] = useState(false);
-    const [textareaValue, setTextareaValue] = useState<string>(savedFormulas[calculus]);
-    const [textArea, setTextArea] = useState<HTMLTextAreaElement>();
-
-    const setUserInput = (input: string) =>
-        dispatch({
-            type: AppStateActionType.UPDATE_SAVED_FORMULA,
-            calculus,
-            value: input
-        });
+    const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
 
     /**
      * Handle the Submit event of the form
@@ -74,6 +64,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
      */
     const onSubmit = async (event: Event) => {
         event.preventDefault();
+        const url = `${server}/${calculus}/parse`;
 
         try {
             const response = await fetch(url, {
@@ -97,9 +88,16 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         }
     };
 
-    // todo: optimise RegEx
-    //
-    const suggestionsRegEx = /(?<!([\\/])(all|ex)\s*)(?<=([A-Z]+:\s*)|((?<!:\s*)))((\s*|^)[\\/]?(a|al|e)?$)/;
+    const textAreaRef = createRef<HTMLTextAreaElement>();
+    const suggestionsRegEx = /[\\/](a|al|all|e|ex)?$/;
+    const regExMatches = suggestionsRegEx.exec(textareaValue);
+    const suggestions = ["\\all","\\ex", "/all", "/ex", "\\all X:", "\\ex X:",  "/all X:", "/ex X:"].filter(
+        option => {
+            if (regExMatches != null && regExMatches.length > 0){
+                return option.includes(regExMatches[0]);
+            }
+            return false;
+        });
 
     /**
      * Handle the Input event of the textarea
@@ -110,12 +108,13 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         const target: HTMLTextAreaElement = event.target as HTMLTextAreaElement;
         target.style.height = 'inherit';
         target.style.height = `${target.scrollHeight + 4}px`;
-        setUserInput(target.value);
 
-        const text = target.value;
-        setTextareaValue(text);
-        setTextArea(target);
-        toggleShowSuggestion(suggestionsRegEx.test(text));
+        setTextareaValue(target.value);
+        dispatch({
+            type: AppStateActionType.UPDATE_SAVED_FORMULA,
+            calculus,
+            value: target.value
+        });
     };
 
     /**
@@ -130,39 +129,42 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         }
         if (e.keyCode === 13 && e.ctrlKey) {
             // Trigger submit when hitting (enter + ctrlKey)
-            // TODO: This should be done via event, don't know why it doesn't work
             onSubmit(e);
         }
     };
 
-    const suggestions = ["\\all","\\ex"];
-    const selectSuggestion = (suggestion: number) => {
-        const text = textareaValue.replace(suggestionsRegEx, " " + suggestions[suggestion] + " ").replace(/(^\s)/, "");
-        setTextareaValue(text);
-        textArea.focus();
-        toggleShowSuggestion(false);
-    }
+    const selectSuggestion = (optionId: number) => {
+        if (textAreaRef.current === null || textAreaRef.current === undefined) {
+            return;
+        }
+        setTextareaValue(textareaValue.replace(
+            suggestionsRegEx,
+            suggestions[optionId] + " "
+        ));
+        textAreaRef.current.focus();
+    };
 
     return (
         <div class="card">
             <h3>Please enter a formula:</h3>
             <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
                 <textarea
+                    ref={textAreaRef}
                     name="formula"
                     class={style.input}
                     value={textareaValue}
                     onInput={onInput}
-                    autocapitalize="off"
+                    spellcheck={false}
                     autofocus={true}
                 />
                 <OptionList
                     options={suggestions}
                     selectOptionCallback={selectSuggestion}
-                    className={showSuggestion ? undefined : style.hide}
+                    className={suggestions.length > 0 ? undefined : style.hide}
                 />
                 <Btn
                     type="submit"
-                    disabled={savedFormulas[calculus].length === 0}
+                    disabled={textareaValue.length === 0}
                 >
                     Start proof
                 </Btn>
