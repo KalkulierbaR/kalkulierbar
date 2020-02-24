@@ -23,6 +23,9 @@ abstract class CsDiff {
     abstract fun apply(cs: ClauseSet<String>): ClauseSet<String>
 }
 
+/**
+ * Clause set diff operation representing no change
+ */
 @Serializable
 @SerialName("cd-identity")
 class Identity : CsDiff() {
@@ -31,6 +34,9 @@ class Identity : CsDiff() {
     override fun toString() = "identity"
 }
 
+/**
+ * Clause set diff operation representing removal of a clause
+ */
 @Serializable
 @SerialName("cd-delclause")
 class RemoveClause(val id: Int) : CsDiff() {
@@ -43,6 +49,9 @@ class RemoveClause(val id: Int) : CsDiff() {
     override fun toString() = "remove-$id"
 }
 
+/**
+ * Clause set diff operation representing addition of a clause
+ */
 @Serializable
 @SerialName("cd-addclause")
 class AddClause(val clause: Clause<String>) : CsDiff() {
@@ -55,6 +64,9 @@ class AddClause(val clause: Clause<String>) : CsDiff() {
     override fun toString() = "add-$clause"
 }
 
+/**
+ * Clause set diff operation representing removal of an atom from a clause
+ */
 @Serializable
 @SerialName("cd-delatom")
 class RemoveAtom(val cid: Int, val aid: Int) : CsDiff() {

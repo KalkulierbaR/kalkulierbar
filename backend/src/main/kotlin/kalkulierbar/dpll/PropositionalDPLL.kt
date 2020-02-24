@@ -6,13 +6,8 @@ import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
-import kalkulierbar.clause.ClauseSet
 import kalkulierbar.parsers.FlexibleClauseSetParser
-import kalkulierbar.tamperprotect.ProtectedState
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 
 class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
@@ -40,11 +35,22 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         return state
     }
 
+    /**
+     * Applies a propagation rule on a leaf node of the proof tree
+     * This can either be removing a clause known to be satisfied
+     * or removing an atom from a clause that is known to be false
+     * @param state State the rule is to be applied in
+     * @param branchID Node of the proof tree the rule is to be applied on
+     * @param baseID ID of the clause to be used for propagation (single-atom clause)
+     * @param propID ID of the clause that will be simplified by the rule
+     * @param atomID Index of the atom used for propagation in the propID clause
+     */
     @Suppress("ThrowsCount", "ComplexMethod")
     private fun propagate(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID: Int) {
+
+        // Check branch validity
         if (branchID < 0 || branchID >= state.tree.size)
             throw IllegalMove("Branch with ID $branchID does not exist")
-
         val branch = state.tree[branchID]
         if (!branch.isLeaf)
             throw IllegalMove("ID $branchID does not reference a leaf")
@@ -54,6 +60,7 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         val clauseSet = state.getClauseSet(branchID)
         val clauses = clauseSet.clauses
 
+        // Check baseID, propID, atomID validity
         if (baseID < 0 || baseID >= clauses.size)
             throw IllegalMove("Clause set $clauses has no clause with ID $baseID")
         if (propID < 0 || propID >= clauses.size)
@@ -88,6 +95,7 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         // Add proper annotations if the node created by propagation is closed or represents a model
         val newClauses = diff.apply(clauseSet).clauses
 
+        // A node is considered closed if the clause set associated with it contains an empty clause
         if (newClauses.any { it.isEmpty() }) {
             state.tree.add(TreeNode(propNodeID, NodeType.CLOSED, "closed", Identity()))
             propNode.children.add(state.tree.size - 1)
@@ -103,6 +111,12 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         }
     }
 
+    /**
+     * Applies a case distinction / split rule on a branch in the proof tree
+     * @param state Proof state to apply the rule in
+     * @param branchID The leaf node in the tree to apply the rule on
+     * @param literal The variable to use for case distinction
+     */
     @Suppress("ThrowsCount")
     private fun split(state: DPLLState, branchID: Int, literal: String) {
         if (branchID < 0 || branchID >= state.tree.size)
@@ -126,6 +140,13 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         branch.children.add(state.tree.size - 1)
     }
 
+    /**
+     * Applies a prune rule on the proof tree
+     * This removes all child nodes of a selected node, effectively resetting part
+     * of the proof tree
+     * @param state State to apply the rule in
+     * @branchID ID of the node whose children will be pruned
+     */
     private fun prune(state: DPLLState, branchID: Int) {
         if (branchID < 0 || branchID >= state.tree.size)
             throw IllegalMove("Branch with ID $branchID does not exist")
@@ -139,6 +160,12 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         state.pruneBranch(branchID)
     }
 
+    /**
+     * Checks if a given variable interpretation satisfies the clause set associated with a node
+     * @param state State to apply the check in
+     * @param branchID ID of a model node for which the interpretation should be checked
+     * @param interpretation A map assigning truth values to variables
+     */
     @Suppress("ThrowsCount")
     private fun checkModel(state: DPLLState, branchID: Int, interpretation: Map<String, Boolean>) {
         if (branchID < 0 || branchID >= state.tree.size)
@@ -216,139 +243,3 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
 
     override fun jsonToParam(json: String) = Unit
 }
-
-@Serializable
-class DPLLState(val clauseSet: ClauseSet<String>) : ProtectedState() {
-    val tree = mutableListOf<TreeNode>()
-
-    /**
-     * Remove all children of a node from the proof tree
-     * This requires some index shifting magic due to the list representation
-     * of the tree, but I figure it's still better than figuring out a way to
-     * serialize doubly-linked trees and define IDs on that
-     * @param id ID of the node whose children are to be pruned
-     */
-    fun pruneBranch(id: Int) {
-        // Collect all transitive children of the node
-        // (not deleting anything yet to keep index structures intact)
-        val queue = mutableListOf<Int>()
-        val toDelete = mutableListOf<Int>()
-        queue.addAll(tree[id].children)
-
-        while (queue.isNotEmpty()) {
-            val index = queue.removeAt(0)
-            val node = tree[index]
-            queue.addAll(node.children)
-            toDelete.add(index)
-        }
-
-        // Remove each identified child, keeping parent references but not children references
-        // We remove items from the largest index to the smallest to keep the indices of the other
-        // items in the list consistent
-        toDelete.sorted().asReversed().forEach {
-            removeNodeInconsistent(it)
-        }
-
-        // Re-compute children references
-        rebuildChildRefs()
-    }
-
-    /**
-     * Removes a node from the proof tree, keeping parent references intact
-     * NOTE: This will most likely leave the children references in an INCONSISTENT state
-     *       Use rebuildChildRefs() to ensure valid children references
-     * @param id ID of the node to remove
-     */
-    private fun removeNodeInconsistent(id: Int) {
-        tree.removeAt(id)
-        tree.forEach {
-            if (it.parent != null && it.parent!! > id)
-                it.parent = it.parent!! - 1
-        }
-    }
-
-    /**
-     * Rebuilds children references in the entire proof tree from parent references
-     */
-    private fun rebuildChildRefs() {
-        tree.forEach { it.children.clear() }
-
-        for (i in tree.indices) {
-            if (tree[i].parent != null)
-                tree[tree[i].parent!!].children.add(i)
-        }
-    }
-
-    /**
-     * Applies the clause set deltas stored in the proof tree to 'check out'
-     * the full clause set of a node in the tree
-     * @param branch ID of the node/branch whose clause set should be computed
-     * @return Full clause set associated with the given node
-     */
-    fun getClauseSet(branch: Int): ClauseSet<String> {
-        var node = tree[branch]
-        val diffs = mutableListOf<CsDiff>()
-        var res = clauseSet
-
-        while (node.parent != null) {
-            diffs.add(node.diff)
-            node = tree[node.parent!!]
-        }
-
-        diffs.asReversed().forEach {
-            res = it.apply(res)
-        }
-
-        return res
-    }
-
-    override var seal = ""
-    override fun getHash() = "pdpll|$clauseSet|${tree.map{it.getHash()}}"
-}
-
-@Serializable
-class TreeNode(var parent: Int?, val type: NodeType, var label: String, val diff: CsDiff) {
-    val children = mutableListOf<Int>()
-    val isLeaf
-        get() = children.size == 0
-    val isAnnotation
-        get() = (type == NodeType.MODEL || type == NodeType.CLOSED)
-
-    fun getHash(): String {
-        return "($parent|$children|$type|$label|$diff)"
-    }
-}
-
-enum class NodeType {
-    ROOT, PROP, SPLIT, MODEL, CLOSED
-}
-
-// Context object for move serialization
-// Tells kotlinx.serialize about child types of DPLLMove
-val dpllMoveModule = SerializersModule {
-    polymorphic(DPLLMove::class) {
-        MoveSplit::class with MoveSplit.serializer()
-        MovePropagate::class with MovePropagate.serializer()
-        MovePrune::class with MovePrune.serializer()
-        MoveModelCheck::class with MoveModelCheck.serializer()
-    }
-}
-
-@Serializable
-abstract class DPLLMove
-
-@Serializable
-@SerialName("dpll-split")
-data class MoveSplit(val branch: Int, val literal: String) : DPLLMove()
-
-@Serializable
-@SerialName("dpll-prop")
-data class MovePropagate(val branch: Int, val baseClause: Int, val propClause: Int, val propAtom: Int) : DPLLMove()
-
-@Serializable
-@SerialName("dpll-prune")
-data class MovePrune(val branch: Int) : DPLLMove()
-
-@Serializable
-@SerialName("dpll-modelcheck")
-data class MoveModelCheck(val branch: Int, val interpretation: Map<String, Boolean>) : DPLLMove()
