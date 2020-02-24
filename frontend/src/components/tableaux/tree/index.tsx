@@ -113,22 +113,25 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
 
     /**
      * Returns a line to the lemma source if one exists
-     * @param {LayoutItem<TableauxTreeLayoutNode>} n - The layout node to check for the lemma source
      * @returns {SVGLineElement | undefined} - The SVG line
      */
-    const lineToLemmaSource = (n: LayoutItem<TableauxTreeLayoutNode>) => {
-        if (n.data.id === selectedNodeId && n.data.lemmaSource !== undefined) {
-            const lemmaSource = data.find(k => k.data.id === n.data.lemmaSource);
-            if(lemmaSource !== undefined){
-                return (
-                    <line
-                        class={style.lemmaLink}
-                        x1={n.x}
-                        y1={n.y + 6}
-                        x2={lemmaSource.x}
-                        y2={lemmaSource.y - 16}
-                    />
-                );
+    const lineToLemmaSource = () => {
+        if(selectedNodeId !== undefined) {
+            const lemmaTarget = data.find(n => n.data.id === selectedNodeId);
+
+            if (lemmaTarget && lemmaTarget.data.lemmaSource !== undefined) {
+                const lemmaSource = data.find(n => n.data.id === lemmaTarget.data.lemmaSource);
+                if (lemmaSource !== undefined) {
+                    return (
+                        <line
+                            class={style.lemmaLink}
+                            x1={lemmaTarget.x}
+                            y1={lemmaTarget.y + 6}
+                            x2={lemmaSource.x}
+                            y2={lemmaSource.y - 16}
+                        />
+                    );
+                }
             }
         }
         return;
@@ -150,16 +153,16 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                         transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
                         <g>
-                            {/* First render ClosingEdges -> keep order to avoid overlapping */
+                            {/* #1 render ClosingEdges -> keep order to avoid overlapping */
                             data.map(n =>
                                 n.data.closeRef !== null ? (
                                     <ClosingEdge
                                         leaf={n}
                                         pred={data[n.data.closeRef]}
                                     />
-                                ) : lineToLemmaSource(n)
+                                ) : undefined
                             )}
-                            {/* Second render links between nodes */
+                            {/* #2 render links between nodes */
                             links.map(l => (
                                 <line
                                     class={style.link}
@@ -169,7 +172,10 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     y2={l.target[1] - 16}
                                 />
                             ))}
-                            {/* Third render nodes -> renders above all previous elements */
+                            {/* #3 render lemma line if it exists */
+                                lineToLemmaSource()
+                            }
+                            {/* #4 render nodes -> renders above all previous elements */
                             data.map(n => (
                                 <TableauxTreeNode
                                     selectNodeCallback={selectNodeCallback}
