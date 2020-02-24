@@ -102,9 +102,10 @@ class TreeNode(var parent: Int?, val type: NodeType, var label: String, val diff
         get() = children.size == 0
     val isAnnotation
         get() = (type == NodeType.MODEL || type == NodeType.CLOSED)
+    var modelVerified: Boolean? = null
 
     fun getHash(): String {
-        return "($parent|$children|$type|$label|$diff)"
+        return "($parent|$children|$type|$label|$diff|$modelVerified)"
     }
 }
 

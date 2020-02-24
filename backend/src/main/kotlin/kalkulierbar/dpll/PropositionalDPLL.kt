@@ -187,7 +187,7 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
                 throw IllegalMove("The given interpretation does not satisfy any atom of clause $it")
         }
 
-        // yeah i'll think of something smarter here eventually
+        branch.modelVerified = true
         branch.label += " (checked)"
     }
 
