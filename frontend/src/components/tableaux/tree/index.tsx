@@ -37,11 +37,6 @@ interface Props {
      * Hands the Information over, that potential Lemma nodes are selectable
      */
     lemmaNodesSelectable?: boolean;
-    /**
-     * Whether the link to a LemmaSource exists and can be highlighted
-     */
-    highlightLemmaSource?: boolean;
-
 }
 
 interface ClosingEdgeProps {
@@ -102,29 +97,41 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     selectNodeCallback,
     selectedNodeId,
     lemmaNodesSelectable = false,
-    highlightLemmaSource = false
 }) => {
     const { data, height: treeHeight, width: treeWidth, links } = treeLayout(
         nodes
     );
 
-    let lemma = data[0];
-    let lemmaSource = data[0];
-    if(highlightLemmaSource){
-        lemma = data[selectedNodeId!] as LayoutItem<TableauxTreeLayoutNode>;
-        lemmaSource = data[lemma.data.lemmaSource!] as LayoutItem<TableauxTreeLayoutNode>;
-    }
-
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
-
         const node = data[n];
-
         selectNodeCallback(node.data, { ignoreClause: true });
 
         const { x, y } = node as any;
-
         return [treeWidth / 2 - x, treeHeight / 2 - y];
+    };
+
+    /**
+     * Returns a line to the lemma source if one exists
+     * @param {LayoutItem<TableauxTreeLayoutNode>} n - The layout node to check for the lemma source
+     * @returns {SVGLineElement | undefined} - The SVG line
+     */
+    const lineToLemmaSource = (n: LayoutItem<TableauxTreeLayoutNode>) => {
+        if (n.data.id === selectedNodeId && n.data.lemmaSource !== undefined) {
+            const lemmaSource = data.find(k => k.data.id === n.data.lemmaSource);
+            if(lemmaSource !== undefined){
+                return (
+                    <line
+                        class={style.lemmaLink}
+                        x1={n.x}
+                        y1={n.y + 6}
+                        x2={lemmaSource.x}
+                        y2={lemmaSource.y - 16}
+                    />
+                );
+            }
+        }
+        return;
     };
 
     return (
@@ -150,7 +157,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                         leaf={n}
                                         pred={data[n.data.closeRef]}
                                     />
-                                ) : null
+                                ) : lineToLemmaSource(n)
                             )}
                             {/* Second render links between nodes */
                             links.map(l => (
@@ -162,18 +169,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     y2={l.target[1] - 16}
                                 />
                             ))}
-                            {/* Third render lemma links*/
-                            highlightLemmaSource ? (
-                                <line
-                                    class={style.lemmaLink}
-                                    x1={lemma.x}
-                                    y1={lemma.y + 6}
-                                    x2={lemmaSource.x}
-                                    y2={lemmaSource.y - 16}
-                                />
-                                ) : undefined
-                            }
-                            {/* Fourth render nodes -> renders above all previous elements */
+                            {/* Third render nodes -> renders above all previous elements */
                             data.map(n => (
                                 <TableauxTreeNode
                                     selectNodeCallback={selectNodeCallback}
