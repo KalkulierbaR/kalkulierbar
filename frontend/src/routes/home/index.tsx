@@ -372,7 +372,7 @@ const ROUTES: Route[] = [
             "-291.0496682300446 -242.04966823004457 582.0993364600891 484.09933646008915",
     },
     {
-        href: Calculus.propResolution,
+        href: Calculus.foResolution,
         name: "First Order Resolution",
         image: (
             <g transform="translate(0 0) scale(1)">
