@@ -10,7 +10,6 @@ import {
 } from "../../../types/tableaux";
 import * as style from "./style.scss";
 
-import CheckCloseBtn from "../../../components/check-close";
 import ControlFAB from "../../../components/control-fab";
 import Dialog from "../../../components/dialog";
 import FAB from "../../../components/fab";
@@ -263,7 +262,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            // Only handle Crtl+z
+            // Only handle (Crtl + Z)
             if (!e.ctrlKey || e.shiftKey || e.metaKey || e.keyCode !== 90) {
                 return;
             }
@@ -291,7 +290,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             selectedOptionId={selectedClauseId}
                             selectOptionCallback={selectClauseCallback}
                         />
-                        <CheckCloseBtn calculus={calculus} />
                     </div>
                 )}
 
@@ -326,7 +324,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 >
                     <VarAssignList
                         vars={varsToAssign}
-                        manualVarAssign={state.manualVarAssign}
+                        manualVarAssignOnly={state.manualVarAssign}
                         submitVarAssignCallback={submitVarAssign}
                         submitLabel="Assign variables"
                         secondSubmitEvent={submitVarAssign}

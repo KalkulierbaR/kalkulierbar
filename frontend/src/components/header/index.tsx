@@ -207,6 +207,8 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                 label={showLabel ? "Server" : undefined}
                 onChange={setServer}
                 value={server}
+                type="url"
+                autoComplete={true}
                 onKeyDown={handleEnter}
                 submitButton={
                     <FAB
