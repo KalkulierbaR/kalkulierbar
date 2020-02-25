@@ -2,7 +2,7 @@ import {createRef, h} from "preact";
 import {route} from "preact-router";
 import {useState} from "preact/hooks";
 import {useAppState} from "../../../helpers/app-state";
-import {AppStateActionType, CalculusType, Params} from "../../../types/app";
+import {AppStateActionType, CalculusType, FOCalculus, Params} from "../../../types/app";
 import Btn from "../../btn";
 import OptionList from "../option-list";
 import * as style from "./style.scss";
@@ -91,6 +91,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     const textAreaRef = createRef<HTMLTextAreaElement>();
     const suggestionsRegEx = /[\\/](a|al|all|e|ex)?$/;
     const regExMatches = suggestionsRegEx.exec(textareaValue);
+
+    // Filter the suggestion based on the users input
     const suggestions = ["\\all","\\ex", "/all", "/ex", "\\all X:", "\\ex X:",  "/all X:", "/ex X:"].filter(
         option => {
             if (regExMatches != null && regExMatches.length > 0){
@@ -133,13 +135,18 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         }
     };
 
-    const selectSuggestion = (optionId: number) => {
+    /**
+     * Handle the selection of a suggestion
+     * @param {number} optionIndex - The index of the selected option
+     * @returns {void}
+     */
+    const selectSuggestion = (optionIndex: number) => {
         if (textAreaRef.current === null || textAreaRef.current === undefined) {
             return;
         }
         setTextareaValue(textareaValue.replace(
             suggestionsRegEx,
-            suggestions[optionId] + " "
+            suggestions[optionIndex] + " "
         ));
         textAreaRef.current.focus();
     };
@@ -154,14 +161,20 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     class={style.input}
                     value={textareaValue}
                     onInput={onInput}
-                    spellcheck={false}
                     autofocus={true}
+                    spellcheck={false}
+                    autocomplete="nope"
+                    autocapitalize="off"
+                    autocorrect="off"
                 />
-                <OptionList
-                    options={suggestions}
-                    selectOptionCallback={selectSuggestion}
-                    className={suggestions.length > 0 ? undefined : style.hide}
-                />
+                {
+                    FOCalculus.includes(calculus) ?
+                        <OptionList
+                            options={suggestions}
+                            selectOptionCallback={selectSuggestion}
+                            className={suggestions.length > 0 ? undefined : style.hide}
+                        /> : undefined
+                }
                 <Btn
                     type="submit"
                     disabled={textareaValue.length === 0}

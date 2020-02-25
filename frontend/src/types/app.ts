@@ -28,10 +28,10 @@ export enum Calculus {
     foResolution = "fo-resolution",
 }
 
-export const PropCalculus: Calculus[] = [Calculus.propTableaux, Calculus.propResolution];
-export const FOCalculus: Calculus[] = [Calculus.foTableaux, Calculus.foResolution];
-export const TableauxCalculus: Calculus[] = [Calculus.propTableaux, Calculus.foTableaux];
-export const ResolutionCalculus: Calculus[] = [Calculus.propResolution, Calculus.foResolution];
+export const PropCalculus: CalculusType[] = [Calculus.propTableaux, Calculus.propResolution];
+export const FOCalculus: CalculusType[] = [Calculus.foTableaux, Calculus.foResolution];
+export const TableauxCalculus: CalculusType[] = [Calculus.propTableaux, Calculus.foTableaux];
+export const ResolutionCalculus: CalculusType[] = [Calculus.propResolution, Calculus.foResolution];
 
 export interface Move {
     "prop-tableaux": TableauxMove;

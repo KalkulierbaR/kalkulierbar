@@ -20,6 +20,7 @@ interface Props {
     autoCapitalize?: boolean;
     type?: string;
     autoFocus?: boolean;
+    spellcheck?: boolean;
 }
 
 const TextInput: preact.FunctionalComponent<Props> = ({
@@ -37,6 +38,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
     autoCapitalize = false,
     type = "text",
     autoFocus = false,
+    spellcheck = false,
     ...props
 }) => {
     const input = useRef<HTMLInputElement>();
@@ -79,11 +81,12 @@ const TextInput: preact.FunctionalComponent<Props> = ({
                     onKeyDown={onKeyDown}
                     onFocus={onFocus}
                     required={required}
-                    autocomplete={autoComplete ? "on" : "off"}
+                    autocomplete={autoComplete ? "on" : "nope"}
                     autocorrect={autoCorrect ? "on" : "off"}
                     autocapitalize={autoCapitalize ? undefined : "off"}
                     type={type}
                     autofocus={autoFocus ? true : undefined}
+                    spellcheck={spellcheck}
                 />
                 {submitButton}
             </div>

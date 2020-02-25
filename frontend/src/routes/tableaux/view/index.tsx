@@ -262,7 +262,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            // Only handle Crtl+z
+            // Only handle (Crtl + Z)
             if (!e.ctrlKey || e.shiftKey || e.metaKey || e.keyCode !== 90) {
                 return;
             }
@@ -324,7 +324,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 >
                     <VarAssignList
                         vars={varsToAssign}
-                        manualVarAssign={state.manualVarAssign}
+                        manualVarAssignOnly={state.manualVarAssign}
                         submitVarAssignCallback={submitVarAssign}
                         submitLabel="Assign variables"
                         secondSubmitEvent={submitVarAssign}

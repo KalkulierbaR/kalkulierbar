@@ -12,7 +12,7 @@ interface Props {
     /**
      * Whether all variable assignments need to be provided by the user
      */
-    manualVarAssign: boolean;
+    manualVarAssignOnly: boolean;
     /**
      * The function to call, when the user submits the list
      */
@@ -37,7 +37,7 @@ interface Props {
 
 const VarAssignList: preact.FunctionalComponent<Props> = ({
     vars,
-    manualVarAssign,
+    manualVarAssignOnly,
     submitVarAssignCallback,
     submitLabel,
     secondSubmitLabel,
@@ -51,7 +51,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
      * Submit the manual variable assignment by the user
      * @returns {void}
      */
-    const submitVarAssign = () => {
+    const submitManualVarAssign = () => {
         vars.forEach(variable => {
             const textInput = document.getElementById(variable);
             if (!(textInput && textInput instanceof HTMLInputElement && textInput.value)) {
@@ -71,13 +71,13 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
         e.stopPropagation();
         if (e.keyCode === 13 && e.ctrlKey) {
             // Submit manual varAssign when hitting (enter + ctrlKey)
-            submitVarAssign();
+            submitManualVarAssign();
         }else if (e.keyCode === 13){
+            // Select next input or submit manual varAssign when hitting (enter)
             const focusedElementIndex = vars.indexOf(focusedInputElement);
-            console.log(focusedElementIndex);
             if (focusedElementIndex === (vars.length - 1)){
-                submitVarAssign();
-            }else{
+                submitManualVarAssign();
+            } else{
                 const nextInput = document.getElementById(vars[focusedElementIndex + 1]) as HTMLInputElement;
                 nextInput.focus();
             }
@@ -97,20 +97,17 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                         <TextInput
                             id={variable}
                             label={variable + " := "}
-                            required={manualVarAssign}
+                            required={manualVarAssignOnly}
                             inline={true}
                             onKeyDown={onKeyDown}
                             onFocus={onFocus}
-                            type="url"
-                            autoComplete={false}
-                            autoCapitalize={false}
                             autoFocus= {index === 0}
                         />
                     </p>
             )}
-            <Btn onClick={submitVarAssign}>{submitLabel}</Btn>
+            <Btn onClick={submitManualVarAssign}>{submitLabel}</Btn>
 
-            {!manualVarAssign && secondSubmitLabel && secondSubmitEvent ? (
+            {!manualVarAssignOnly && secondSubmitLabel && secondSubmitEvent ? (
                 <Btn onClick={() => secondSubmitEvent(true)}>
                     {secondSubmitLabel}
                 </Btn>
