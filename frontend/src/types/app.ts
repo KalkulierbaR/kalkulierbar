@@ -1,3 +1,4 @@
+import { DPLLMove } from "./dpll";
 import {
     FOResolutionMove,
     FOResolutionParams,
@@ -54,7 +55,7 @@ export interface Move {
     "prop-resolution": PropResolutionMove;
     "fo-tableaux": FOTableauxMove;
     "fo-resolution": FOResolutionMove;
-    dpll: any;
+    dpll: DPLLMove;
 }
 
 export interface Params {
