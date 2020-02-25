@@ -58,7 +58,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
                 disabled={disabled}
                 selected={selected}
                 class={classMap({
-                    [style.nodeNew]: isNew && !selected,
+                    [style.nodeNew]: isNew && !selected && !disabled,
                     [style.semiSelected]: semiSelected,
                 })}
             />
