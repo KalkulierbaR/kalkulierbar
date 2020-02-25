@@ -184,14 +184,17 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         } else {
             const candidateClause = getCandidateClause(newClauseId);
             if (candidateClause != null) {
-                const candidateAtomCount = getCandidateCount(candidateClause!);
+                const candidateAtomCount = getCandidateCount(candidateClause);
                 if (candidateAtomCount === 0) {
                     onError("These clauses can't be resolved.");
                 } else if (
                     instanceOfPropCandidateClause(candidateClause, calculus)
                 ) {
                     const options = literalOptions(candidateClause);
-                    if (options.length === 1) {
+                    // Count is determined manually since not all indices might be set
+                    let optionsCount = 0;
+                    options.forEach(() => optionsCount++);
+                    if (optionsCount === 1) {
                         // Send resolve move to backend
                         sendMove(
                             server,
@@ -201,7 +204,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 type: "res-resolve",
                                 c1: selectedClauseId,
                                 c2: newClauseId,
-                                literal: options[0],
+                                literal: options.pop()!,
                             },
                             onChange,
                             onError,
@@ -276,7 +279,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             atomIndex
                         ].lit;
                         if (!options.includes(newOption)) {
-                            options.push(newOption);
+                            options[atomIndex] = newOption;
                         }
                     }),
             );
@@ -622,13 +625,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                     }
                                 }}
                             />
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                     </Fragment>
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 {state!.hiddenClauses.clauses.length > 0 ? (
                     <FAB
                         mini={true}
@@ -644,9 +643,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             setSelectedClauses(undefined);
                         }}
                     />
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 <FAB
                     mini={true}
                     extended={true}
@@ -695,9 +692,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         selectOptionCallback={selectCandidateAtomOption}
                     />
                 </Dialog>
-            ) : (
-                undefined
-            )}
+            ) : undefined}
             <Dialog
                 open={showFactorizeDialog}
                 label="Choose 2 atoms to factorize"
