@@ -731,7 +731,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     label="Send"
                     icon={<SendIcon />}
                     extended={true}
-                    mini={true}
+                    mini={smallScreen}
                     onClick={() => {
                         sendMove(
                             server,

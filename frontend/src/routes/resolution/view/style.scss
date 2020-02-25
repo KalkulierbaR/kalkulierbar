@@ -2,4 +2,8 @@
     position: fixed;
     bottom: 16px;
     left: 16px;
+
+    @media (min-width: 700px) {
+        left: 30%;
+    }
 }
