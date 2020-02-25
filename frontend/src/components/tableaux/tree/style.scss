@@ -1,6 +1,12 @@
 .link {
     fill: none;
-    stroke: rgb(218, 218, 218);
+    stroke: var(--kbar-8dp-color);
+    stroke-width: 2px;
+}
+
+.lemmaLink {
+    fill: none;
+    stroke: var(--kbar-accent-2-color);
     stroke-width: 2px;
 }
 
