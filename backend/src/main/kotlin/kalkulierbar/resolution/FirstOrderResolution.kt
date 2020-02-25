@@ -36,7 +36,6 @@ class FirstOrderResolution :
     override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
         when (move) {
             is MoveResolveUnify -> resolveUnify(state, move.c1, move.c2, move.l1, move.l2)
-            is MoveInstantiate -> instantiate(state, move.c1, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
             is MoveFactorize -> factorize(state, move.c1, move.a1, move.a2)
