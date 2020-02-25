@@ -90,12 +90,20 @@ export const getPropHyperCandidates = (
     c2: Clause,
 ): Array<[number, number]> => {
     const lits: Array<[number, number]> = [];
+    const strings: string[] = [];
+
     for (let i1 = 0; i1 < c1.atoms.length; i1++) {
         const l1 = c1.atoms[i1];
         for (let i2 = 0; i2 < c2.atoms.length; i2++) {
             const l2 = c2.atoms[i2];
-            if (l1.lit === l2.lit && l1.negated && !l2.negated) {
+            if (
+                l1.lit === l2.lit &&
+                l1.negated &&
+                !l2.negated &&
+                !strings.includes(l2.lit)
+            ) {
                 lits.push([i1, i2]);
+                strings.push(l2.lit);
             }
         }
     }
