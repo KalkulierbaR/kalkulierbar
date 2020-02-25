@@ -1,10 +1,21 @@
 import { ClauseSet } from "./clause";
 
 export interface DPLLTreeNode {
+    parent: number | null;
+    type: DPLLNodeType;
+    label: string;
     children: number[];
     isLeaf: boolean;
     isAnnotation: boolean;
     modelVerified?: boolean;
+}
+
+export enum DPLLNodeType {
+    ROOT = "ROOT",
+    PROP = "PROP",
+    SPLIT = "SPLIT",
+    MODEL = "MODEL",
+    CLOSED = "CLOSED",
 }
 
 export interface DPLLState {
