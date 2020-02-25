@@ -23,6 +23,7 @@ import {
     getFOHyperCandidates,
     getHyperClauseIds,
     getPropHyperCandidates,
+    getSelectable,
     hideClause,
     removeHyperSidePremiss,
     showHiddenClauses,
@@ -526,6 +527,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         }
     };
 
+    const selectable = getSelectable(
+        candidateClauses,
+        hyperRes,
+        selectedClauseId,
+        selectedClauseId !== undefined
+            ? state!.clauseSet.clauses[selectedClauseId]
+            : undefined,
+    );
     const semiSelected = hyperRes ? getHyperClauseIds(hyperRes) : [];
 
     return (
@@ -538,6 +547,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 visualHelp={state!.visualHelp}
                 newestNode={state!.newestNode}
                 semiSelected={semiSelected}
+                selectable={selectable}
             />
             <ControlFAB alwaysOpen={!smallScreen}>
                 {selectedClauseId !== undefined ? (
@@ -625,9 +635,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                     }
                                 }}
                             />
-                        ) : undefined}
+                        ) : (
+                            undefined
+                        )}
                     </Fragment>
-                ) : undefined}
+                ) : (
+                    undefined
+                )}
                 {state!.hiddenClauses.clauses.length > 0 ? (
                     <FAB
                         mini={true}
@@ -643,7 +657,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             setSelectedClauses(undefined);
                         }}
                     />
-                ) : undefined}
+                ) : (
+                    undefined
+                )}
                 <FAB
                     mini={true}
                     extended={true}
@@ -692,7 +708,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         selectOptionCallback={selectCandidateAtomOption}
                     />
                 </Dialog>
-            ) : undefined}
+            ) : (
+                undefined
+            )}
             <Dialog
                 open={showFactorizeDialog}
                 label="Choose 2 atoms to factorize"

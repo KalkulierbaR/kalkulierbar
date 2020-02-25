@@ -189,6 +189,37 @@ export const findOptimalMainLit = (
     return candidates[0];
 };
 
+export const getSelectable = (
+    candidateClauses: CandidateClause[],
+    hyperRes: HyperResolutionMove | undefined,
+    selectedClauseId: number | undefined,
+    selectedClause: Clause<string | FOLiteral> | undefined,
+): number[] => {
+    if (selectedClauseId === undefined || selectedClause === undefined) {
+        return candidateClauses.map((c) => c.index);
+    }
+    if (hyperRes) {
+        const cs = candidateClauses.filter((c) => c.candidateAtomMap.size);
+        const selectable: number[] = [];
+
+        for (const c of cs) {
+            let validKeys = 0;
+            for (const k of c.candidateAtomMap.keys()) {
+                if (selectedClause.atoms[k].negated) {
+                    validKeys++;
+                }
+            }
+            if (validKeys) {
+                selectable.push(c.index);
+            }
+        }
+        return selectable;
+    }
+    return candidateClauses
+        .filter((c) => c.candidateAtomMap.size)
+        .map((c) => c.index);
+};
+
 /**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
