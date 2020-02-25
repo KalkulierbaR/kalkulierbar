@@ -14,6 +14,7 @@ import OptionList from "../../../components/input/option-list";
 import ResolutionCircle from "../../../components/resolution/circle";
 import { checkClose, sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
+import {stringArrayToStringMap} from "../../../helpers/array-to-map";
 import { atomToString } from "../../../helpers/clause";
 import {
     addHyperSidePremiss,
@@ -44,7 +45,6 @@ import {
     instanceOfPropResState,
 } from "../../../types/resolution";
 import { foExample, propExample } from "./example";
-
 import * as style from "./style.scss";
 
 interface Props {
@@ -192,10 +192,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     instanceOfPropCandidateClause(candidateClause, calculus)
                 ) {
                     const options = literalOptions(candidateClause);
-                    // Count is determined manually since not all indices might be set
-                    let optionsCount = 0;
-                    options.forEach(() => optionsCount++);
-                    if (optionsCount === 1) {
+                    if (options.size === 1) {
                         // Send resolve move to backend
                         sendMove(
                             server,
@@ -205,7 +202,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 type: "res-resolve",
                                 c1: selectedClauseId,
                                 c2: newClauseId,
-                                literal: options.pop()!,
+                                literal: options.entries().next().value,
                             },
                             onChange,
                             onError,
@@ -258,7 +255,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     /**
      * Get literal options for the propositional resolve move
      * @param {PropCandidateClause | undefined} candidateClause - The candidateClause to get options for
-     * @returns {string[]} - The literal options
+     * @returns {Map<string,number>} - The literal options
      */
     const literalOptions = (candidateClause?: PropCandidateClause) => {
         const options: string[] = [];
@@ -286,17 +283,17 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             );
         }
 
-        return options;
+        return stringArrayToStringMap(options);
     };
 
     console.log(hyperRes);
 
     /**
      * Handler for the selection of a literal option in the propositional resolve dialog
-     * @param {number} optionIndex - The option's index which was selected
+     * @param {[number, string]} keyValuePair - The key value pair of the selected option
      * @returns {void}
      */
-    const selectLiteralOption = (optionIndex: number) => {
+    const selectLiteralOption = (keyValuePair: [number, string]) => {
         if (selectedClauses && selectedClauses.length === 2) {
             if (hyperRes) {
                 setHyperRes(
@@ -309,10 +306,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             ] as Clause,
                             (state!.clauseSet.clauses[
                                 selectedClauses[1]
-                            ] as Clause).atoms[optionIndex].lit,
+                            ] as Clause).atoms[keyValuePair[0]].lit,
                         ),
                         selectedClauses[1],
-                        optionIndex,
+                        keyValuePair[0],
                     ),
                 );
                 setSelectedClauses([selectedClauses[0]]);
@@ -326,7 +323,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     type: "res-resolve",
                     c1: selectedClauses[0],
                     c2: selectedClauses[1],
-                    literal: literalOptions()[optionIndex],
+                    literal: keyValuePair[1],
                 },
                 onChange,
                 onError,
@@ -341,36 +338,33 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
      *                   and options[1] containing candidateClause's atoms
      */
     const atomOptions = () => {
-        const options: string[][] = [[], []];
+        const options = [new Map<number, string>(), new Map<number, string>()];
         if (selectedClauses && selectedClauses.length === 2) {
             const candidateClause = getCandidateClause(selectedClauses[1]);
             if (candidateClause != null) {
-                let allCandidateClauseAtomIndices: number[] = [];
+                const uniqueCandidateClauseAtomIndices = new Set<number>();
                 candidateClause.candidateAtomMap.forEach(
                     (
-                        candidateClauseAtomIndices: number[],
+                        candidateAtomIndices: number[],
                         selectedClauseAtomIndex: number,
                     ) => {
-                        options[0][selectedClauseAtomIndex] = atomToString(
+                        options[0].set(selectedClauseAtomIndex, atomToString(
                             state!.clauseSet.clauses[selectedClauses[0]].atoms[
                                 selectedClauseAtomIndex
                             ],
-                        );
-                        allCandidateClauseAtomIndices = allCandidateClauseAtomIndices.concat(
-                            candidateClauseAtomIndices,
+                        ));
+                        candidateAtomIndices.forEach(
+                            candidateAtomIndex => uniqueCandidateClauseAtomIndices.add(candidateAtomIndex)
                         );
                     },
                 );
-                const uniqueCandidateClauseAtomIndices = Array.from(
-                    new Set(allCandidateClauseAtomIndices),
-                );
                 uniqueCandidateClauseAtomIndices.forEach(
                     (candidateClauseAtomIndex: number) => {
-                        options[1][candidateClauseAtomIndex] = atomToString(
+                        options[1].set(candidateClauseAtomIndex, atomToString(
                             state!.clauseSet.clauses[selectedClauses[1]].atoms[
                                 candidateClauseAtomIndex
                             ],
-                        );
+                        ));
                     },
                 );
             }
@@ -380,22 +374,22 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     /**
      * Handler for the selection of an atomOption in the FO resolve dialog (selectedClause's atoms section)
-     * @param {number} optionIndex - The option's index which was selected
+     * @param {[number, string]} optionKeyValuePair - The key value pair of the selected option
      * @returns {void}
      */
-    const selectSelectedClauseAtomOption = (optionIndex: number) => {
+    const selectSelectedClauseAtomOption = (optionKeyValuePair: [number, string]) => {
         if (!selectedClauses || selectedClauses.length !== 2) {
             return;
         }
-        if (selectedClauseAtomOption === optionIndex) {
+        if (selectedClauseAtomOption === optionKeyValuePair[0]) {
             setSelectedClauseAtomOption(undefined);
         } else if (candidateClauseAtomOption === undefined) {
-            setSelectedClauseAtomOption(optionIndex);
+            setSelectedClauseAtomOption(optionKeyValuePair[0]);
         } else if (hyperRes) {
             setHyperRes(
                 addHyperSidePremiss(
                     hyperRes,
-                    optionIndex,
+                    optionKeyValuePair[0],
                     selectedClauses[1],
                     candidateClauseAtomOption,
                 ),
@@ -410,7 +404,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     type: "res-resolveunify",
                     c1: selectedClauses[0],
                     c2: selectedClauses[1],
-                    l1: optionIndex,
+                    l1: optionKeyValuePair[0],
                     l2: candidateClauseAtomOption,
                 },
                 onChange,
@@ -422,24 +416,25 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     /**
      * Handler for the selection of an atomOption in the FO resolve dialog (candidateClause's atoms section)
-     * @param {number} optionIndex - The option's index which was selected
+     * @param {[number, string]} optionKeyValuePair - The key value pair of the selected option
      * @returns {void}
      */
-    const selectCandidateAtomOption = (optionIndex: number) => {
+    const selectCandidateAtomOption = (optionKeyValuePair: [number, string]) => {
+        const atomIndex = optionKeyValuePair[0];
         if (!selectedClauses || selectedClauses.length !== 2) {
             return;
         }
-        if (candidateClauseAtomOption === optionIndex) {
+        if (candidateClauseAtomOption === atomIndex) {
             setCandidateClauseAtomOption(undefined);
         } else if (selectedClauseAtomOption === undefined) {
-            setCandidateClauseAtomOption(optionIndex);
+            setCandidateClauseAtomOption(atomIndex);
         } else if (hyperRes) {
             setHyperRes(
                 addHyperSidePremiss(
                     hyperRes,
                     selectedClauseAtomOption,
                     selectedClauses[1],
-                    optionIndex,
+                    atomIndex,
                 ),
             );
             onCloseAtomDialog();
@@ -453,7 +448,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     c1: selectedClauses[0],
                     c2: selectedClauses[1],
                     l1: selectedClauseAtomOption,
-                    l2: optionIndex,
+                    l2: atomIndex,
                 },
                 onChange,
                 onError,
@@ -478,19 +473,23 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     /**
      * Get factorize options for the factorize dialog
-     * @returns {string[]} - The factorize options
+     * @returns {Map<string,number>} - The factorize options
      */
     const factorizeOptions = () => {
-        let options: string[] = [];
+        let options = new Map<number, string>();
         if (state !== undefined && selectedClauseId !== undefined) {
             if (instanceOfPropResState(state, calculus)) {
-                options = state.clauseSet.clauses[
-                    selectedClauseId
-                ].atoms.map((atom: Atom) => atomToString(atom));
+                options = stringArrayToStringMap(
+                    state.clauseSet.clauses[selectedClauseId].atoms.map(
+                        (atom: Atom) => atomToString(atom)
+                    )
+                );
             } else if (instanceOfFOResState(state, calculus)) {
-                options = state.clauseSet.clauses[
-                    selectedClauseId
-                ].atoms.map((atom: FOAtom) => atomToString(atom));
+                options = stringArrayToStringMap(
+                    state.clauseSet.clauses[selectedClauseId].atoms.map(
+                        (atom: FOAtom) => atomToString(atom)
+                    )
+                );
             }
         }
         return options;
@@ -498,13 +497,15 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     /**
      * Handler for the selection of an factorizeOption in the FO factorize dialog
-     * @param {number} optionIndex - The option's index which was selected
+     * @param {[number, string]} optionKeyValuePair - The key value pair of the selected option
      * @returns {void}
      */
-    const selectFactorizeOption = (optionIndex: number) => {
+    const selectFactorizeOption = (optionKeyValuePair: [number, string]) => {
+        const atomIndex = optionKeyValuePair[0];
+
         if (selectedFactorizeOption === undefined) {
-            setSelectedFactorizeOption(optionIndex);
-        } else if (optionIndex === selectedFactorizeOption) {
+            setSelectedFactorizeOption(atomIndex);
+        } else if (atomIndex === selectedFactorizeOption) {
             // Same option was selected again -> deselect it
             setSelectedFactorizeOption(undefined);
         } else {
@@ -516,7 +517,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     type: "res-factorize",
                     c1: selectedClauseId!,
                     a1: selectedFactorizeOption,
-                    a2: optionIndex,
+                    a2: atomIndex,
                 },
                 onChange,
                 onError,
@@ -635,13 +636,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                     }
                                 }}
                             />
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                     </Fragment>
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 {state!.hiddenClauses.clauses.length > 0 ? (
                     <FAB
                         mini={true}
@@ -657,9 +654,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             setSelectedClauses(undefined);
                         }}
                     />
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 <FAB
                     mini={true}
                     extended={true}
@@ -708,9 +703,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         selectOptionCallback={selectCandidateAtomOption}
                     />
                 </Dialog>
-            ) : (
-                undefined
-            )}
+            ) : undefined}
             <Dialog
                 open={showFactorizeDialog}
                 label="Choose 2 atoms to factorize"

@@ -24,7 +24,7 @@ import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import { checkClose } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
-import { clauseSetToStringArray } from "../../../helpers/clause";
+import { clauseSetToStringMap } from "../../../helpers/clause";
 import {
     nextOpenLeaf,
     sendBacktrack,
@@ -61,7 +61,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 undefined;
         onChange(calculus, state);
     }
-    const clauseOptions =  state !== undefined ? clauseSetToStringArray(state!.clauseSet) : [];
+    const clauseOptions =  state !== undefined ? clauseSetToStringMap(state!.clauseSet) : new Map<number, string>();
 
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
@@ -288,7 +288,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         <OptionList
                             options={clauseOptions}
                             selectedOptionId={selectedClauseId}
-                            selectOptionCallback={selectClauseCallback}
+                            selectOptionCallback={(keyValuePair =>
+                                selectClauseCallback(keyValuePair[0]))
+                            }
                         />
                     </div>
                 )}
@@ -309,9 +311,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             >
                 <OptionList
                     options={clauseOptions}
-                    selectOptionCallback={(id: number) => {
+                    selectOptionCallback={(keyValuePair) => {
                         setShowClauseDialog(false);
-                        selectClauseCallback(id);
+                        selectClauseCallback(keyValuePair[0]);
                     }}
                 />
             </Dialog>

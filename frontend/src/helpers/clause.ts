@@ -5,6 +5,7 @@ import {
     FOArgument,
     FOLiteral,
 } from "../types/clause";
+import {stringArrayToStringMap} from "./array-to-map";
 import { maxBy } from "./max-by";
 
 /**
@@ -54,6 +55,14 @@ export const clauseToString = (clause: Clause<string | FOLiteral>) => {
  */
 export const clauseSetToStringArray = (clauseSet: ClauseSet<string | FOLiteral>) =>
     clauseSet.clauses.map(clauseToString);
+
+/**
+ * Transforms a clause set to a string map
+ * @param {ClauseSet} clauseSet - A set of clauses
+ * @returns {Map<number, string>} - The clauses as string map
+ */
+export const clauseSetToStringMap = (clauseSet: ClauseSet<string | FOLiteral>) =>
+    stringArrayToStringMap(clauseSetToStringArray(clauseSet));
 
 /**
  * Determine the longest clause
