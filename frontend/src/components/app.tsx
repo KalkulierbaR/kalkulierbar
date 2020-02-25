@@ -168,6 +168,18 @@ const App: preact.FunctionalComponent = () => {
                             )
                         }
                     />
+                    <AsyncRoute
+                        path={"/" + Calculus.dpll}
+                        getComponent={() =>
+                            import("../routes/dpll").then((m) => m.default)
+                        }
+                    />
+                    <AsyncRoute
+                        path={"/" + Calculus.dpll + "/view"}
+                        getComponent={() =>
+                            import("../routes/dpll/view").then((m) => m.default)
+                        }
+                    />
                 </Router>
             </main>
             <div class={style.notifications}>

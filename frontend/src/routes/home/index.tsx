@@ -490,6 +490,18 @@ const ROUTES: Route[] = [
         viewBox:
             "-416.9861703960861 -331.4861703960861 833.9723407921722 662.9723407921722",
     },
+    {
+        href: Calculus.dpll,
+        name: "DPLL",
+        viewBox: "0 100 100",
+        image: (
+            <g>
+                <text fill="#fff" x="180" y="120" text-anchor="middle">
+                    Placeholder
+                </text>
+            </g>
+        ),
+    },
 ];
 
 interface CalculusItemProps {
