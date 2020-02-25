@@ -79,6 +79,12 @@ export const groupCandidates = (
     }
 };
 
+/**
+ * Gets a list of possible literal combination for prop. hyper-res
+ * @param {Clause} c1 - Main hyper-res clause
+ * @param {Clause} c2 - Possible side premiss
+ * @returns {Array<[number, number]>} - List of lit combinations
+ */
 export const getPropHyperCandidates = (
     c1: Clause,
     c2: Clause,
@@ -96,6 +102,12 @@ export const getPropHyperCandidates = (
     return lits;
 };
 
+/**
+ * Gets a list of possible literal combination for FO hyper-res
+ * @param {FOClause} c1 - Main hyper-res clause
+ * @param {FOClause} c2 - Possible side premiss
+ * @returns {Array<[number, number]>} - List of lit combinations
+ */
 export const getFOHyperCandidates = (
     c1: FOClause,
     c2: FOClause,
@@ -118,6 +130,14 @@ export const getFOHyperCandidates = (
     return lits;
 };
 
+/**
+ * Adds a side premiss to the hyper-res move
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @param {number} mainLitId - Id of the literal in the main clause
+ * @param {number} clauseId - Id of the new side premiss clause
+ * @param {number} litId - Id of the lit in the side premiss
+ * @returns {HyperResolutionMove} - Resulting move
+ */
 export const addHyperSidePremiss = (
     hyperRes: HyperResolutionMove,
     mainLitId: number,
@@ -131,6 +151,12 @@ export const addHyperSidePremiss = (
     },
 });
 
+/**
+ * Removes a side premiss from the hyper-res move
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @param {number} mainLitId - Id of the literal in the main clause to remove
+ * @returns {HyperResolutionMove} - Resulting move
+ */
 export const removeHyperSidePremiss = (
     hyperRes: HyperResolutionMove,
     mainLitId: number,
@@ -144,6 +170,12 @@ export const removeHyperSidePremiss = (
     };
 };
 
+/**
+ * Finds the id of the main lit for which a side premiss with the clause of id `ìd` exists in `hyperRes`
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @param {number} id - The number of the side premiss
+ * @returns {number} - The id of the main lit (-1 if not found)
+ */
 export const findHyperSidePremiss = (
     hyperRes: HyperResolutionMove,
     id: number,
@@ -156,6 +188,11 @@ export const findHyperSidePremiss = (
     return -1;
 };
 
+/**
+ * Gets the ids of clauses that are side premisses
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @returns {number[]} - The ids of the side premisses
+ */
 export const getHyperClauseIds = (hyperRes: HyperResolutionMove): number[] => {
     const ids: number[] = [];
 
@@ -168,6 +205,13 @@ export const getHyperClauseIds = (hyperRes: HyperResolutionMove): number[] => {
     return ids;
 };
 
+/**
+ * Finds the id of the optimal lit in main
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @param {Clause} main - Main clause
+ * @param {string} lit - The literal for resolution
+ * @returns {number} - The id of the optimal main lit
+ */
 export const findOptimalMainLit = (
     hyperRes: HyperResolutionMove,
     main: Clause,
@@ -189,6 +233,14 @@ export const findOptimalMainLit = (
     return candidates[0];
 };
 
+/**
+ * Gets the selectable clauses based on the current selection
+ * @param {CandidateClause[]} candidateClauses - Current candidate clauses
+ * @param {HyperResolutionMove | undefined} hyperRes - Current hyper res move
+ * @param {number | undefined} selectedClauseId - Id of the current clause
+ * @param {Clause<string | FOLiteral> | undefined} selectedClause - Current clause
+ * @returns {number[]} - ids of currently selectable clauses
+ */
 export const getSelectable = (
     candidateClauses: CandidateClause[],
     hyperRes: HyperResolutionMove | undefined,
