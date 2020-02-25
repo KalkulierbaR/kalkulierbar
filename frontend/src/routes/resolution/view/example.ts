@@ -94,6 +94,7 @@ export const foExample: FOResolutionState = {
     },
     "visualHelp": VisualHelp.highlight,
     "newestNode": -1,
+    "clauseCounter": 6,
     "hiddenClauses": {"clauses": []},
-    "seal": "07547B594BC20F191A937653302959C8A076EB88D09608EEAB4352564A4045BA"
+    "seal": "81FD197BAF96FF0FD408B5768415F453515518C95A497935D677DFBCE3A70D0F"
 };
