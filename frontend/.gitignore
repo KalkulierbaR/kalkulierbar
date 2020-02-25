@@ -1,7 +1,7 @@
 node_modules
 /build
-/*.log
 *.lock
+/*.log
 package-lock.json
 *.css.d.ts
 *.scss.d.ts

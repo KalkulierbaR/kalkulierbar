@@ -1,3 +1,4 @@
+import {Calculus, TableauxCalculusType} from "./app";
 import { ClauseSet, FOArgument, FOClauseSet } from "./clause";
 
 export interface TableauxNode {
@@ -8,6 +9,7 @@ export interface TableauxNode {
     closeRef: number | null;
     children: number[];
     relation?: FORelation;
+    lemmaSource?: number;
 }
 
 export type TableauxTreeLayoutNode = TableauxNode & { id: number };
@@ -23,10 +25,11 @@ export interface PropTableauxState {
     usedBacktracking: boolean;
 }
 
-export function instanceOfPropTableauxState(
-    object: any
+export function instanceOfPropTabState(
+    object: any,
+    calculus: TableauxCalculusType,
 ): object is PropTableauxState {
-    return "clauseSet" in object;
+    return "clauseSet" in object && calculus === Calculus.propTableaux;
 }
 
 export interface TableauxExpandMove {
@@ -47,10 +50,17 @@ export interface TableauxUndoMove {
     id2: number;
 }
 
+export interface TableauxLemmaMove {
+    type: "LEMMA";
+    id1: number;
+    id2: number;
+}
+
 export type TableauxMove =
     | TableauxExpandMove
     | TableauxCloseMove
-    | TableauxUndoMove;
+    | TableauxUndoMove
+    | TableauxLemmaMove;
 
 export enum TableauxType {
     unconnected = "UNCONNECTED",
@@ -94,10 +104,11 @@ export interface FOTableauxState {
     renderedClauseSet: string[];
 }
 
-export function instanceOfFOTableauxState(
-    object: any
+export function instanceOfFOTabState(
+    object: any,
+    calculus: TableauxCalculusType,
 ): object is FOTableauxState {
-    return "formula" in object;
+    return "formula" in object && calculus === Calculus.foTableaux;
 }
 
 export interface VarAssign {

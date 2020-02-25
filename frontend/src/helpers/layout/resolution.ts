@@ -1,23 +1,33 @@
-import { Clause } from "../../types/clause";
+import { Clause, FOLiteral } from "../../types/clause";
 import { Layout } from "../../types/layout";
-import { maxLengthClause } from "../clause";
+import { clauseToString } from "../clause";
+import { maxBy } from "../max-by";
+import { estimateSVGTextWidth } from "../text-width";
 
 /**
  * Calculate the circle layout to avoid overlapping or cutting of clauses
  * @param {Clause[]} clauses - The clauses to display in a circle
  * @returns {Layout<Clause>} - The circle layout of the clauses
  */
-export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
+export const circleLayout = (
+    clauses: Array<Clause<string | FOLiteral>>,
+): Layout<Clause<string | FOLiteral>> & { radius: number } => {
     if (clauses.length === 0) {
-        return { width: 0, height: 0, data: [] };
+        return { width: 0, height: 0, data: [], radius: 0 };
     }
 
     // Guess clause width by the length of the longest string
-    const width = maxLengthClause(clauses) * 11;
+    const width =
+        maxBy(clauses, (c) => estimateSVGTextWidth(clauseToString(c))) + 56;
 
     // Special case: 1 clause
     if (clauses.length === 1) {
-        return { width, height: 50, data: [{ data: clauses[0], x: 0, y: 0 }] };
+        return {
+            width,
+            height: 50,
+            data: [{ data: clauses[0], x: 0, y: 0 }],
+            radius: 0,
+        };
     }
 
     // The angle between each clause
@@ -37,7 +47,7 @@ export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
             1.2 *
             Math.max(
                 height / Math.sin(angle),
-                width / Math.sin(angle)
+                width / Math.sin(angle),
                 // (width * Math.tan((Math.PI - angle) / 2)) / Math.sin(angle)
             );
     }
@@ -51,7 +61,8 @@ export const circleLayout = (clauses: readonly Clause[]): Layout<Clause> => {
         data: clauses.map((c, i) => ({
             data: c,
             x: r * Math.cos(angle * i - Math.PI / 2),
-            y: r * Math.sin(angle * i - Math.PI / 2) + 14
-        }))
+            y: r * Math.sin(angle * i - Math.PI / 2) + 14,
+        })),
+        radius: r,
     };
 };

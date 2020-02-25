@@ -247,6 +247,17 @@ def tryCloseUncloseable(trq, iterations = 10, verbose = false)
 	end
 end
 
+def tryCloseUncloseableFO(trq, iterations = 10, verbose = false)
+	logMsg "Trying to close unclosable FO proof"
+	formula = "(\\all X: \\all Y: \\all Z: (C(X, Y) & C(Y, Z) -> C(X,Z)) & C(d, l) & C(l, f)) -> C(d, f)"
+
+	if bogoATP(trq, formula, "UNCONNECTED", true, iterations, verbose, isFO: true)
+		logError "Test failed"
+	else
+		logSuccess "Test successful"
+	end
+end
+
 def tryCloseTrivial(trq, iterations = 7, verbose = false)
 	logMsg "Trying to close a trivial tableaux proof"
 	
@@ -383,6 +394,100 @@ def testUndo(trq, depth = 20, verbose = false)
 	end
 end
 
+def testFactorize(trq, iterations = 20, verbose = false)
+	logMsg "Testing propositional factorization"
+	success = true
+
+	iterations.times() {
+		c = (["d"] + ["a"]*rand(5) + ["b"]*rand(5) + ["c"]*rand(5)).shuffle
+		formula = c.join(",")
+		state = trq.getPostResponse('/prop-resolution/parse', "formula=#{formula}")
+		state = trq.getPostResponse('/prop-resolution/move', "state=#{state}&move={\"type\": \"res-factorize\", \"c1\": 0}")
+
+		if state == nil and c.length != c.uniq.length
+			success = false
+			logMsg "Factorization failed despite redundancies in clause #{formula}"
+		elsif state != nil and c.length == c.uniq.length
+			success = false
+			logMsg "Factorization succeded despite no duplicates in clause #{formula}"
+		elsif state != nil
+			factorized = JSON.parse(state)["clauseSet"]["clauses"][0]["atoms"].map{|a| a["lit"]}
+			if factorized != c.uniq
+				success = false
+				logMsg "Expected factorized clause #{c.uniq.join(",")} but got #{factorized.join(",")}"
+			end
+		end
+	}
+
+	if success
+		logSuccess "Test successful - sent #{iterations*2} requests"
+	else
+		logError "Test failed"
+	end
+end
+
+def testUndoFO(trq, depth = 20, verbose = false)
+	logMsg "Testing FO backtracking"
+	formula = "(\\all X: \\all Y: \\all Z: (C(X, Y) & C(Y, Z) -> C(X,Z)) & \\all X: \\all Y: (C(X, Y) -> C(Y, X)) & C(d, l) & C(f, l)) -> C(d, f)"
+	history = []
+	success = true
+
+	state = trq.getPostResponse('/fo-tableaux/parse', "formula=#{CGI.escape(formula)}&params={\"type\":\"WEAKLYCONNECTED\",\"regular\":false,\"backtracking\":true,\"manualVarAssign\":false}")
+
+	# Set used flag to true so states are comparable
+	state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":0,\"id2\":0,\"varAssign\":{}}")
+	state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0,\"varAssign\":{}}")
+
+	history.push(state)
+
+	depth.times() {
+		nstate = bogoATPapplyRandomMove(state, trq, isFO: true)
+		break if nstate == false
+		state = nstate
+		history.push(state)
+		logMsg state if verbose
+	}
+
+	(history.length - 1).times() {
+		if state != history[-1]
+			success = false
+			logError "Expected: #{history[-1]}\nGot     : #{state}"
+		end
+		state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0,\"varAssign\":{}}")
+		history.pop
+		logMsg state if verbose
+	}
+
+	if success
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
+def testLemma(trq, iterations = 5, verbose = true)
+	logMsg "Testing proof with Lemma applications"
+	formula = "a,a,a,a,a,a,d; !a,b,c,d; !b; !c,b; !d,c;"
+
+	state = trq.getPostResponse('/prop-tableaux/parse', "formula=#{CGI.escape(formula)}&params={\"type\":\"STRONGLYCONNECTED\",\"regular\":false,\"backtracking\":true}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":0,\"id2\":2}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":1,\"id2\":3}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"CLOSE\",\"id1\":3,\"id2\":1}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":2,\"id2\":4}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"CLOSE\",\"id1\":5,\"id2\":2}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":4,\"id2\":0}")
+
+	16.times() {
+		state = bogoATPapplyRandomMove(state, trq)
+	}
+
+	if trq.post("/prop-tableaux/close", "state=#{CGI.escape(state)}", /.*"closed":true.*/, 200)
+		logSuccess "Test successful"
+	else
+		logError "Test failed"
+	end
+end
+
 trq = TestRequest.new
 
 logMsg("Testing PropositionalTableaux")
@@ -399,6 +504,15 @@ tryCloseRegular(trq)
 tryCloseUncloseable(trq)
 testRegularityRestriction(trq)
 testUndo(trq)
+testLemma(trq)
+
+logMsg("Testing PropositionalResolution")
 testResolutionInitialState(trq)
 tryCloseTrivialResolution(trq)
+testFactorize(trq)
+
+logMsg("Testing FirstOrderTableaux")
 tryCloseTrivialFirstOrder(trq)
+tryCloseUncloseableFO(trq)
+testUndoFO(trq)
+

@@ -1,24 +1,56 @@
 /* Styles for the home component */
 
-.calculus-list {
+.calculus-grid {
     list-style: none;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-flow: row;
+    gap: 16px;
 }
 
-.calculus-list-item::before {
-    content: "\2022";
-    color: var(--kbar-accent-color);
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
+.calculus-item {
+    border-radius: 5px;
+    background-color: var(--kbar-3dp-color);
+    box-shadow: var(--kbar-shadow-3dp);
+    cursor: pointer;
+    transition: transform 0.2s ease-in;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+
+    &-title {
+        padding: 8px;
+        text-align: center;
+        margin: 0;
+    }
+
+    &-image {
+        height: 200px;
+        display: block;
+        width: 100%;
+    }
 }
 
 .home a {
     text-decoration: none;
     color: var(--kbar-link-color);
+    opacity: 0.8;
+    transition: opacity 0.2s ease-in;
 
     &:hover,
     &:focus {
-        opacity: 0.8;
+        opacity: 1;
     }
+}
+
+.rect {
+    fill: #d4bcff;
+}
+
+.link {
+    fill: none;
+    stroke: rgb(218, 218, 218);
+    stroke-width: 2px;
 }
