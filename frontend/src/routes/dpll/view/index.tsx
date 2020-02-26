@@ -13,6 +13,7 @@ import OptionList from "../../../components/input/option-list";
 import { classMap } from "../../../helpers/class-map";
 import { atomToString, clauseSetToStringArray } from "../../../helpers/clause";
 import {
+    calculateClauseSet,
     getAllLits,
     sendProp,
     sendPrune,
@@ -50,6 +51,8 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
 
     const state = cState || dpllExampleState;
 
+    const clauseSet = calculateClauseSet(state, selectedNode);
+
     const handleNodeSelect = (newNode: number) => {
         if (newNode === selectedNode) {
             return;
@@ -72,12 +75,14 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
     const propOptions: string[] =
         selectedClauses === undefined || selectedClauses.length < 2
             ? []
-            : state.clauseSet.clauses[selectedClauses[1]!].atoms.map((a) =>
+            : clauseSet.clauses[selectedClauses[1]!].atoms.map((a) =>
                   atomToString(a),
               );
 
     const handlePropLitSelect = (lId: number) => {
-        if (selectedClauses === undefined || selectedClauses.length < 2) { return; }
+        if (selectedClauses === undefined || selectedClauses.length < 2) {
+            return;
+        }
         sendProp(
             server,
             state,
@@ -91,7 +96,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         setSelectedClauses(undefined);
     };
 
-    const allLits = showSplitDialog ? getAllLits(state.clauseSet) : [];
+    const allLits = showSplitDialog ? getAllLits(clauseSet) : [];
 
     const handleSplitLitSelect = (id: number) => {
         sendSplit(server, state, selectedNode, allLits[id], onChange, onError);
@@ -109,7 +114,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
             >
                 <div class={style.list}>
                     <OptionList
-                        options={clauseSetToStringArray(state.clauseSet)}
+                        options={clauseSetToStringArray(clauseSet)}
                         selectOptionCallback={handleClauseSelect}
                         selectedOptionId={selectedClauses?.[0]}
                     />

@@ -1,6 +1,11 @@
 import { AppStateUpdater } from "../types/app";
 import { ClauseSet } from "../types/clause";
-import { DPLLState, DPLLTreeLayoutNode, DPLLTreeNode } from "../types/dpll";
+import {
+    DPLLCsDiff,
+    DPLLState,
+    DPLLTreeLayoutNode,
+    DPLLTreeNode,
+} from "../types/dpll";
 import { Tree } from "../types/tree";
 import { sendMove } from "./api";
 import { tree, treeLayout } from "./layout/tree";
@@ -91,4 +96,35 @@ export const getAllLits = (cs: ClauseSet) => {
     }
 
     return [...lits];
+};
+
+const applyCsDiff = (cs: ClauseSet, diff: DPLLCsDiff): ClauseSet => {
+    switch (diff.type) {
+        case "cd-identity":
+            return cs;
+        case "cd-addclause":
+            return { clauses: [...cs.clauses, diff.clause] };
+        case "cd-delclause":
+            return { clauses: cs.clauses.filter((_, i) => i !== diff.id) };
+        case "cd-delatom": {
+            const clauses = [...cs.clauses];
+
+            clauses[diff.cid] = {
+                atoms: clauses[diff.cid].atoms.filter((_, i) => i !== diff.aid),
+            };
+
+            return { clauses };
+        }
+    }
+};
+
+export const calculateClauseSet = (
+    state: DPLLState,
+    branch: number,
+): ClauseSet => {
+    const node = state.tree[branch];
+    if (node.parent === null) {
+        return state.clauseSet;
+    }
+    return applyCsDiff(calculateClauseSet(state, node.parent), node.diff);
 };
