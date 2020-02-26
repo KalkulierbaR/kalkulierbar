@@ -8,9 +8,15 @@ import * as style from "./style.scss";
 
 interface Props {
     nodes: DPLLTreeNode[];
+    selectedNode: number | undefined;
+    onSelect: (nr: number) => void;
 }
 
-const DPLLTree: preact.FunctionalComponent<Props> = ({ nodes }) => {
+const DPLLTree: preact.FunctionalComponent<Props> = ({
+    nodes,
+    selectedNode,
+    onSelect,
+}) => {
     const { data, height, width, links } = dpllTreeLayout(nodes);
 
     return (
@@ -39,8 +45,8 @@ const DPLLTree: preact.FunctionalComponent<Props> = ({ nodes }) => {
                         {data.map((d) => (
                             <DPLLNode
                                 node={d}
-                                selected={false}
-                                selectNodeCallback={() => {}}
+                                selected={d.data.id === selectedNode}
+                                selectNodeCallback={() => onSelect(d.data.id)}
                             />
                         ))}
                     </g>

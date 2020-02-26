@@ -6,8 +6,9 @@ import { useCallback, useState } from "preact/hooks";
 import ControlFAB from "../../../components/control-fab";
 import FAB from "../../../components/fab";
 import SwitchIcon from "../../../components/icons/switch";
+import OptionList from "../../../components/input/option-list";
 import { classMap } from "../../../helpers/class-map";
-import { clauseToString } from "../../../helpers/clause";
+import { clauseSetToStringArray } from "../../../helpers/clause";
 import dpllExampleState from "./example";
 import * as style from "./style.scss";
 
@@ -18,11 +19,23 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
 
     const [showTree, setShowTree] = useState(false);
 
+    const [selectedNode, setSelectedNode] = useState<number | undefined>(
+        undefined,
+    );
+
     const toggleShowTree = useCallback(() => setShowTree(!showTree), [
         showTree,
     ]);
 
     const state = cState || dpllExampleState;
+
+    const handleNodeSelect = (newNode: number) => {
+        if (newNode === selectedNode) {
+            setSelectedNode(undefined);
+            return;
+        }
+        setSelectedNode(newNode);
+    };
 
     return (
         <Fragment>
@@ -34,14 +47,17 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 })}
             >
                 <div class={style.list}>
-                    <div class="card">
-                        {state.clauseSet.clauses.map((c) => (
-                            <p>{clauseToString(c)}</p>
-                        ))}
-                    </div>
+                    <OptionList
+                        options={clauseSetToStringArray(state.clauseSet)}
+                        selectOptionCallback={(id) => console.log(id)}
+                    />
                 </div>
                 <div class={style.tree}>
-                    <DPLLTree nodes={state.tree} />
+                    <DPLLTree
+                        nodes={state.tree}
+                        selectedNode={selectedNode}
+                        onSelect={handleNodeSelect}
+                    />
                 </div>
             </div>
             <ControlFAB>

@@ -1,5 +1,5 @@
 import { h } from "preact";
-import {classMap} from "../../../helpers/class-map";
+import { classMap } from "../../../helpers/class-map";
 import * as style from "./style.scss";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
     /**
      * The function to call, when the user selects an option
      */
-    selectOptionCallback: CallableFunction;
+    selectOptionCallback: (index: number) => void;
     /**
      * Additional className for the element
      */
@@ -25,7 +25,7 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     options,
     selectedOptionId,
     selectOptionCallback,
-    className
+    className,
 }) => {
     return (
         <div class={`card ${className}`}>
