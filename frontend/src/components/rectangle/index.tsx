@@ -16,6 +16,9 @@ interface Props {
      * Whether the rectangle has a selected-style
      */
     selected: boolean;
+    /**
+     * Any specific styles
+     */
     class?: string;
 }
 
@@ -38,7 +41,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
         box.height += 8;
         box.y -= 4;
         setDims(box);
-    });
+    }, [elementRef]);
 
     return (
         <rect

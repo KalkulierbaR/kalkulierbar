@@ -1,6 +1,20 @@
 import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
+import Dialog from "../../../components/dialog";
+import OptionList from "../../../components/input/option-list";
+import VarAssignList from "../../../components/input/var-assign-list";
+import TableauxFAB from "../../../components/tableaux/fab";
+import TableauxTreeView from "../../../components/tableaux/tree";
+import { useAppState } from "../../../helpers/app-state";
+import { clauseSetToStringMap } from "../../../helpers/clause";
+import {
+    sendBacktrack,
+    sendClose,
+    sendExtend,
+    sendLemma
+} from "../../../helpers/tableaux";
 import {Calculus, TableauxCalculusType} from "../../../types/app";
+import { FOArgument, FOArgumentType } from "../../../types/clause";
 import {
     instanceOfFOTabState,
     instanceOfPropTabState,
@@ -8,32 +22,8 @@ import {
     TableauxTreeLayoutNode,
     VarAssign
 } from "../../../types/tableaux";
-import * as style from "./style.scss";
-
-import ControlFAB from "../../../components/control-fab";
-import Dialog from "../../../components/dialog";
-import FAB from "../../../components/fab";
-import AddIcon from "../../../components/icons/add";
-import CenterIcon from "../../../components/icons/center";
-import CheckCircleIcon from "../../../components/icons/check-circle";
-import ExploreIcon from "../../../components/icons/explore";
-import LemmaIcon from "../../../components/icons/lemma";
-import UndoIcon from "../../../components/icons/undo";
-import OptionList from "../../../components/input/option-list";
-import VarAssignList from "../../../components/input/var-assign-list";
-import TableauxTreeView from "../../../components/tableaux/tree";
-import { checkClose } from "../../../helpers/api";
-import { useAppState } from "../../../helpers/app-state";
-import { clauseSetToStringMap } from "../../../helpers/clause";
-import {
-    nextOpenLeaf,
-    sendBacktrack,
-    sendClose,
-    sendExtend,
-    sendLemma
-} from "../../../helpers/tableaux";
-import { FOArgument, FOArgumentType } from "../../../types/clause";
 import { foExample, propExample } from "./example";
+import * as style from "./style.scss";
 
 interface Props {
     /**
@@ -48,20 +38,17 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         [calculus]: cState,
         smallScreen,
         onError,
-        onChange,
-        onSuccess
+        onChange
     } = useAppState();
 
     let state = cState;
     if (!state) {
         // return <p>Keine Daten vorhanden</p>;
         // Default state for easy testing
-        state = calculus === Calculus.propTableaux ? propExample :
-            calculus === Calculus.foTableaux ? foExample :
-                undefined;
+        state = calculus === Calculus.propTableaux ? propExample : foExample;
         onChange(calculus, state);
     }
-    const clauseOptions =  state !== undefined ? clauseSetToStringMap(state!.clauseSet) : new Map<number, string>();
+    const clauseOptions =  clauseSetToStringMap(state.clauseSet);
 
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
@@ -296,7 +283,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 )}
 
                 <TableauxTreeView
-                    nodes={state!.nodes}
+                    nodes={state.nodes}
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={selectNodeCallback}
@@ -335,127 +322,14 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 </Dialog>
             ) : undefined}
 
-            <ControlFAB alwaysOpen={!smallScreen}>
-                {selectedNodeId === undefined ? (
-                    <Fragment>
-                        {state!.nodes.filter(node => !node.isClosed).length >
-                        0 ? (
-                            <FAB
-                                icon={<ExploreIcon />}
-                                label="Next Leaf"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    const node = nextOpenLeaf(state!.nodes);
-                                    if (node === undefined) {
-                                        return;
-                                    }
-                                    dispatchEvent(
-                                        new CustomEvent("go-to", {
-                                            detail: { node }
-                                        })
-                                    );
-                                }}
-                            />
-                        ) : undefined}
-                        <FAB
-                            icon={<CenterIcon />}
-                            label="Center"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                dispatchEvent(new CustomEvent("center"));
-                            }}
-                        />
-                        <FAB
-                            icon={<CheckCircleIcon />}
-                            label="Check"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() =>
-                                checkClose(
-                                    server,
-                                    onError,
-                                    onSuccess,
-                                    calculus,
-                                    state
-                                )
-                            }
-                        />
-                        {state!.backtracking ? (
-                            <FAB
-                                icon={<UndoIcon />}
-                                label="Undo"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    sendBacktrack(
-                                        calculus,
-                                        server,
-                                        state!,
-                                        onChange,
-                                        onError
-                                    );
-                                }}
-                            />
-                        ) : undefined}
-                    </Fragment>
-                ) : (
-                    <Fragment>
-                        <FAB
-                            icon={<CenterIcon />}
-                            label="Center"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                dispatchEvent(new CustomEvent("center"));
-                            }}
-                        />
-                        <FAB
-                            icon={<AddIcon />}
-                            label="Expand"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                setShowClauseDialog(!showClauseDialog);
-                            }}
-                        />
-                        {lemmaMode ? (
-                            <FAB
-                                icon={<LemmaIcon fill="#000" />}
-                                label="Lemma"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    setLemmaMode(!lemmaMode);
-                                }}
-                                active={true}
-                            />
-                        ) : (
-                            state!.nodes[selectedNodeId].children.length === 0 &&
-                            state!.nodes.filter(node => node.isClosed).length > 0
-                        ) ? (
-                            <FAB
-                                icon={<LemmaIcon />}
-                                label="Lemma"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    setLemmaMode(!lemmaMode);
-                                }}
-                            />
-                        ) : undefined}
-                    </Fragment>
-                )}
-            </ControlFAB>
+            <TableauxFAB
+                calculus={calculus}
+                state={state}
+                selectedNodeId={selectedNodeId}
+                expandCallback={() => setShowClauseDialog(!showClauseDialog)}
+                lemmaMode={lemmaMode}
+                lemmaCallback={() => setLemmaMode(!lemmaMode)}
+            />
         </Fragment>
     );
 };
