@@ -15,7 +15,7 @@ import {
 } from "../types/clause";
 import {
     FOResolutionState,
-    HyperResolutionMove,
+    HyperResolutionMove, instanceOfFOResState, instanceOfPropResState,
     PropResolutionState,
     VisualHelp,
 } from "../types/resolution";
@@ -462,4 +462,55 @@ export const showHiddenClauses = <
         onChange,
         onError,
     );
+};
+
+/**
+ * The function to call when the user wants to factorize a clause
+ * @param {number} selectedClauseId - The id of the selected clause
+ * @param {Set<number>} atoms - The atom indices
+ * @param {ResolutionCalculusType} calculus - Current calculus
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @returns {void}
+ */
+export const sendFactorize = <
+    C extends ResolutionCalculusType = ResolutionCalculusType
+>(
+    selectedClauseId: number,
+    atoms: Set<number>,
+    calculus: ResolutionCalculusType,
+    { server, state, onChange, onError }: APIInformation<AppState[C]>,
+) => {
+    if (
+        instanceOfPropResState(state, calculus)
+    ) {
+        sendMove(
+            server,
+            calculus,
+            state!,
+            {
+                type: "res-factorize",
+                c1: selectedClauseId,
+            },
+            onChange,
+            onError,
+        );
+    } else if (
+        instanceOfFOResState(state, calculus)
+    ) {
+        sendMove(
+            server,
+            calculus,
+            state!,
+            {
+                type: "res-factorize",
+                c1: selectedClauseId,
+                atoms: Array.from(atoms),
+            },
+            onChange,
+            onError,
+        );
+    }
 };

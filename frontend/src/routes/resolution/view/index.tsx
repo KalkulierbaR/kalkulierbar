@@ -1,18 +1,13 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import ControlFAB from "../../../components/control-fab";
+import Btn from "../../../components/btn";
 import Dialog from "../../../components/dialog";
 import FAB from "../../../components/fab";
-import CenterIcon from "../../../components/icons/center";
-import CheckCircleIcon from "../../../components/icons/check-circle";
-import FactorizeIcon from "../../../components/icons/factorize";
-import HideIcon from "../../../components/icons/hide";
-import HyperIcon from "../../../components/icons/hyper";
 import SendIcon from "../../../components/icons/send";
-import ShowIcon from "../../../components/icons/show";
 import OptionList from "../../../components/input/option-list";
 import ResolutionCircle from "../../../components/resolution/circle";
-import { checkClose, sendMove } from "../../../helpers/api";
+import ResolutionFAB from "../../../components/resolution/fab";
+import { sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import {stringArrayToStringMap} from "../../../helpers/array-to-map";
 import { atomToString } from "../../../helpers/clause";
@@ -26,8 +21,7 @@ import {
     getPropHyperCandidates,
     getSelectable,
     hideClause,
-    removeHyperSidePremiss,
-    showHiddenClauses,
+    removeHyperSidePremiss, sendFactorize, showHiddenClauses,
 } from "../../../helpers/resolution";
 import { Calculus, ResolutionCalculusType } from "../../../types/app";
 import {
@@ -62,9 +56,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         [calculus]: cState,
         onError,
         onChange,
-        onSuccess,
         smallScreen,
     } = useAppState();
+    const apiInfo = { onChange, onError, server };
 
     let state = cState;
     if (!state) {
@@ -78,7 +72,6 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 : undefined;
         onChange(calculus, state);
     }
-    const apiInfo = { onChange, onError, server };
 
     const [hyperRes, setHyperRes] = useState<HyperResolutionMove | undefined>(
         undefined,
@@ -87,10 +80,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
         undefined,
     );
+
     const [showFactorizeDialog, setShowFactorizeDialog] = useState(false);
-    const [selectedFactorizeOption, setSelectedFactorizeOption] = useState<
-        number | undefined
-    >(undefined);
+    const [factorizeAtomIndices, setFactorizeAtomIndices] = useState(new Set<number>());
+
     const [selectedClauseAtomOption, setSelectedClauseAtomOption] = useState<
         number | undefined
     >(undefined);
@@ -101,17 +94,6 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const selectedClauseId =
         selectedClauses === undefined ? undefined : selectedClauses[0];
 
-    const selectedClauseAtomsLengthEqual = (length: number) =>
-        selectedClauseId === undefined
-            ? false
-            : state!.clauseSet.clauses[selectedClauseId].atoms.length ===
-              length;
-
-    const selectedClauseAtomsLengthGreater = (length: number) =>
-        selectedClauseId === undefined
-            ? false
-            : state!.clauseSet.clauses[selectedClauseId].atoms.length > length;
-
     const showResolveDialog = selectedClauses && selectedClauses.length === 2;
 
     const candidateClauses: CandidateClause[] = getCandidateClauses(
@@ -120,6 +102,12 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         calculus,
         selectedClauseId,
     );
+
+    const selectedClauseAtomsEqual = (length: number) =>
+        selectedClauseId === undefined
+            ? false
+            : state!.clauseSet.clauses[selectedClauseId].atoms.length ===
+            length;
 
     /**
      * Get a candidate clause matching the index property
@@ -202,7 +190,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 type: "res-resolve",
                                 c1: selectedClauseId,
                                 c2: newClauseId,
-                                literal: options.entries().next().value,
+                                literal: options.entries().next().value[1],
                             },
                             onChange,
                             onError,
@@ -503,29 +491,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const selectFactorizeOption = (optionKeyValuePair: [number, string]) => {
         const atomIndex = optionKeyValuePair[0];
 
-        if (selectedFactorizeOption === undefined) {
-            setSelectedFactorizeOption(atomIndex);
-        } else if (atomIndex === selectedFactorizeOption) {
+        const newSet = new Set(factorizeAtomIndices);
+        if (newSet.has(atomIndex)) {
             // Same option was selected again -> deselect it
-            setSelectedFactorizeOption(undefined);
+            newSet.delete(atomIndex);
         } else {
-            sendMove(
-                server,
-                calculus,
-                state!,
-                {
-                    type: "res-factorize",
-                    c1: selectedClauseId!,
-                    a1: selectedFactorizeOption,
-                    a2: atomIndex,
-                },
-                onChange,
-                onError,
-            );
-            setShowFactorizeDialog(false);
-            setSelectedFactorizeOption(undefined);
-            setSelectedClauses(undefined);
+            newSet.add(atomIndex);
         }
+        setFactorizeAtomIndices(newSet);
     };
 
     const selectable = getSelectable(
@@ -550,130 +523,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 semiSelected={semiSelected}
                 selectable={selectable}
             />
-            <ControlFAB alwaysOpen={!smallScreen}>
-                {selectedClauseId !== undefined ? (
-                    <Fragment>
-                        <FAB
-                            mini={true}
-                            extended={true}
-                            label="Hyper Resolution"
-                            showIconAtEnd={true}
-                            icon={
-                                <HyperIcon
-                                    fill={hyperRes ? "#000" : undefined}
-                                />
-                            }
-                            active={!!hyperRes}
-                            onClick={() => {
-                                if (hyperRes) {
-                                    setHyperRes(undefined);
-                                    return;
-                                }
-                                setHyperRes({
-                                    type: "res-hyper",
-                                    mainID: selectedClauseId,
-                                    atomMap: {},
-                                });
-                            }}
-                        />
-                        <FAB
-                            mini={true}
-                            extended={true}
-                            label="Hide clause"
-                            showIconAtEnd={true}
-                            icon={<HideIcon />}
-                            onClick={() => {
-                                hideClause(selectedClauseId, calculus, {
-                                    ...apiInfo,
-                                    state,
-                                });
-                                setSelectedClauses(undefined);
-                            }}
-                        />
 
-                        {selectedClauseAtomsLengthGreater(0) ? (
-                            <FAB
-                                mini={true}
-                                extended={true}
-                                label="Factorize"
-                                showIconAtEnd={true}
-                                icon={<FactorizeIcon />}
-                                onClick={() => {
-                                    if (
-                                        instanceOfPropResState(state, calculus)
-                                    ) {
-                                        sendMove(
-                                            server,
-                                            calculus,
-                                            state!,
-                                            {
-                                                type: "res-factorize",
-                                                c1: selectedClauseId,
-                                            },
-                                            onChange,
-                                            onError,
-                                        );
-                                        setSelectedClauses(undefined);
-                                    } else if (
-                                        selectedClauseAtomsLengthEqual(2)
-                                    ) {
-                                        sendMove(
-                                            server,
-                                            calculus,
-                                            state!,
-                                            {
-                                                type: "res-factorize",
-                                                c1: selectedClauseId,
-                                                a1: 0,
-                                                a2: 1,
-                                            },
-                                            onChange,
-                                            onError,
-                                        );
-                                        setSelectedClauses(undefined);
-                                    } else {
-                                        setShowFactorizeDialog(true);
-                                    }
-                                }}
-                            />
-                        ) : undefined}
-                    </Fragment>
-                ) : undefined}
-                {state!.hiddenClauses.clauses.length > 0 ? (
-                    <FAB
-                        mini={true}
-                        extended={true}
-                        label="Show all"
-                        showIconAtEnd={true}
-                        icon={<ShowIcon />}
-                        onClick={() => {
-                            showHiddenClauses(calculus, {
-                                ...apiInfo,
-                                state,
-                            });
-                            setSelectedClauses(undefined);
-                        }}
-                    />
-                ) : undefined}
-                <FAB
-                    mini={true}
-                    extended={true}
-                    label="Center"
-                    showIconAtEnd={true}
-                    icon={<CenterIcon />}
-                    onClick={() => dispatchEvent(new CustomEvent("center"))}
-                />
-                <FAB
-                    icon={<CheckCircleIcon />}
-                    label="Check"
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() =>
-                        checkClose(server, onError, onSuccess, calculus, state)
-                    }
-                />
-            </ControlFAB>
             {instanceOfPropResState(state, calculus) ? (
                 <Dialog
                     open={showResolveDialog}
@@ -693,31 +543,100 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 >
                     <OptionList
                         options={atomOptions()[0]}
-                        selectedOptionId={selectedClauseAtomOption}
+                        selectedOptionIds={selectedClauseAtomOption !== undefined ?
+                            [selectedClauseAtomOption] : undefined
+                        }
                         selectOptionCallback={selectSelectedClauseAtomOption}
                     />
                     <hr />
                     <OptionList
                         options={atomOptions()[1]}
-                        selectedOptionId={candidateClauseAtomOption}
+                        selectedOptionIds={candidateClauseAtomOption !== undefined ?
+                            [candidateClauseAtomOption] : undefined
+                        }
                         selectOptionCallback={selectCandidateAtomOption}
                     />
                 </Dialog>
             ) : undefined}
+            
+            <ResolutionFAB 
+                calculus={calculus} 
+                state={state!} 
+                selectedClauseId={selectedClauseId}
+                hyperRes={hyperRes}
+                hyperResCallback={() => {
+                    hideClause(selectedClauseId!, calculus, {
+                        ...apiInfo,
+                        state,
+                    });
+                    setSelectedClauses(undefined);}
+                }
+                hideCallback={() => {
+                        hideClause(selectedClauseId!, calculus, {
+                            ...apiInfo,
+                            state,
+                        });
+                        setSelectedClauses(undefined);
+                    }
+                }
+                showCallback={() => {
+                    showHiddenClauses(calculus, {
+                        ...apiInfo,
+                        state,
+                    });
+                    setSelectedClauses(undefined);
+                }}
+                factorizeCallback={() => {
+                    if (
+                        ! instanceOfPropResState(state, calculus) &&
+                        ! selectedClauseAtomsEqual(2)
+                    ) {
+                        setShowFactorizeDialog(true);
+                        return;
+                    }
+                    sendFactorize(
+                        selectedClauseId!,
+                        factorizeAtomIndices,
+                        calculus,
+                        {...apiInfo, state},
+                    );
+                    setSelectedClauses(undefined);
+                }}
+            />
+
             <Dialog
                 open={showFactorizeDialog}
                 label="Choose 2 atoms to factorize"
                 onClose={() => {
                     setShowFactorizeDialog(false);
-                    setSelectedFactorizeOption(undefined);
+                    factorizeAtomIndices.clear();
                 }}
             >
                 <OptionList
                     options={factorizeOptions()}
-                    selectedOptionId={selectedFactorizeOption}
+                    selectedOptionIds={Array.from(factorizeAtomIndices)}
                     selectOptionCallback={selectFactorizeOption}
                 />
+                <Btn
+                    onClick={() => {
+                        sendFactorize(
+                            selectedClauseId!,
+                            factorizeAtomIndices,
+                            calculus,
+                            {
+                                ...apiInfo,
+                                state,
+                            },
+                        );
+                        setShowFactorizeDialog(false);
+                        factorizeAtomIndices.clear();
+                        setSelectedClauses(undefined);
+                    }}
+                >
+                    Factorize
+                </Btn>
             </Dialog>
+
             {hyperRes && hyperRes.atomMap && (
                 <FAB
                     class={style.hyperFab}

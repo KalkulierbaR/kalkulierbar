@@ -70,8 +70,7 @@ export interface PropResolutionFactorizeMove {
 export interface FOResolutionFactorizeMove {
     type: "res-factorize";
     c1: number;
-    a1: number;
-    a2: number;
+    atoms: number[];
 }
 
 export type BaseResolutionMove =

@@ -10,7 +10,7 @@ interface Props {
     /**
      * The selected option to have a unique background style
      */
-    selectedOptionId?: number;
+    selectedOptionIds?: number[];
     /**
      * The function to call, when the user selects an option
      */
@@ -23,23 +23,26 @@ interface Props {
 
 const OptionList: preact.FunctionalComponent<Props> = ({
     options,
-    selectedOptionId,
+    selectedOptionIds = [],
     selectOptionCallback,
     className
-}) => (
+}) => {
+    console.log(selectedOptionIds);
+    return(
         <div class={`card ${className}`}>
             {Array.from(options).map((keyValuePair: [number, string]) =>(
                 <p
                     onClick={() => selectOptionCallback(keyValuePair)}
                     class={classMap({
                         [style.option]: true,
-                        [style.optionSelected]: keyValuePair[0] === selectedOptionId,
+                        [style.optionSelected]: selectedOptionIds.includes(keyValuePair[0]),
                     })}
                 >
                     {keyValuePair[1]}
                 </p>
             ))}
         </div>
-    );
+    )
+};
 
 export default OptionList;
