@@ -151,32 +151,30 @@ class FirstOrderResolution :
      * @param clauseID Id of clause to apply the move on
      * @param atoms List of IDs of literals for unification (The literals should be equal)
      */
-    fun factorize(state: FoResolutionState, clauseID: Int, atoms: List<Int>) {
+    private fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
         val clauses = state.clauseSet.clauses
 
         // Verify that clause id is valid
         if (clauseID < 0 || clauseID >= clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
-        if (atoms.size < 2)
+        if (atomIDs.size < 2)
             throw IllegalMove("Please select more than 1 atom to factorize")
-        // Verification of correct ID in atoms -> instantiateReturn
-
+        // Verification of correct ID in atoms -> unifySingleClause
+        
         var newClause = clauses[clauseID].clone()
-        // If unification succeeds then all doubled are equal
-        // -> If Unify(a, b) and Unify(b, c) succeed => a, b, c have same topology
-        for (i in atoms.indices) {
-            if (i < atoms.size - 1) {
-                // Unify the selected atoms
-                val mgu = unifySingleClause(clauses[clauseID], atoms[i], atoms[i + 1])
-                val newClause = instantiateReturn(newClause, mgu)
+        // Unify doubled atoms and remove all except one
+        for (i in atomIDs.indices) {
+            if (i < atomIDs.size - 1) {
+                // Unify the selected atoms and instantiate clause
+                val mgu = unifySingleClause(clauses[clauseID], atomIDs[i], atomIDs[i + 1])
+                newClause = instantiateReturn(newClause, mgu)
+                // Change every unified atom to placeholder (except last) -> later remove all placeholder
+                // -> One Atom remains
+                newClause.atoms[atomIDs[i]] = Atom<Relation>(Relation("%placeholder%", mutableListOf()), false)
             }
         }
-        // Delete doubled atoms except 1 entry
-        for (i in atoms.indices) {
-            if (i < atoms.size - 1) {
-                newClause.atoms.removeAt(atoms[i])
-            }
-        }
+        // Remove placeholder atoms
+        newClause.atoms.removeIf { it.lit.spelling == "%placeholder%" }
 
         // Remove old and add new clause
         clauses.removeAt(clauseID)
