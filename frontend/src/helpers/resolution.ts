@@ -1,4 +1,4 @@
-import { APIInformation, AppState, ResolutionCalculusType } from "../types/app";
+import {APIInformation, AppState, Calculus, ResolutionCalculusType} from "../types/app";
 import {
     Atom,
     CandidateClause,
@@ -189,7 +189,7 @@ export const findHyperSidePremiss = (
     id: number,
 ): number => {
     for (const mId in hyperRes.atomMap) {
-        if (hyperRes.atomMap[mId].first === id) {
+        if (hyperRes.atomMap.hasOwnProperty(mId) && hyperRes.atomMap[mId].first === id) {
             return parseInt(mId);
         }
     }
@@ -205,7 +205,7 @@ export const getHyperClauseIds = (hyperRes: HyperResolutionMove): number[] => {
     const ids: number[] = [];
 
     for (const mId in hyperRes.atomMap) {
-        if (mId !== undefined) {
+        if (hyperRes.atomMap.hasOwnProperty(mId) && mId !== undefined) {
             ids.push(hyperRes.atomMap[mId].first);
         }
     }
@@ -374,21 +374,44 @@ export const getCandidateClauses = (
     return newCandidateClauses;
 };
 
+/**
+ * The function to call when the user hides a clause
+ * @param {number} c1 - The id of the first clause
+ * @param {number} c2 - The id of the second clause
+ * @param {string} literal - The literal to resolve
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @returns {void}
+ */
 export const sendResolve = (
     c1: number,
     c2: number,
-    literal: string | null,
+    literal: string,
     { server, state, onChange, onError }: APIInformation<PropResolutionState>,
 ) =>
     sendMove(
         server,
-        "prop-resolution",
+        Calculus.propResolution,
         state,
         { type: "res-resolve", c1, c2, literal },
         onChange,
         onError,
     );
 
+/**
+ * The function to call when the user hides a clause
+ * @param {number} c1 - The id of the first clause
+ * @param {number} c2 - The id of the second clause
+ * @param {number} l1 - The id of the first atom
+ * @param {number} l2 - The id of the second atom
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @returns {void}
+ */
 export const sendResolveUnify = (
     c1: number,
     c2: number,
@@ -398,7 +421,7 @@ export const sendResolveUnify = (
 ) =>
     sendMove(
         server,
-        "fo-resolution",
+        Calculus.foResolution,
         state,
         { type: "res-resolveunify", c1, c2, l1, l2 },
         onChange,

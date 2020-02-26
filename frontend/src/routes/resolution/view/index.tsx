@@ -21,7 +21,7 @@ import {
     getPropHyperCandidates,
     getSelectable,
     hideClause,
-    removeHyperSidePremiss, sendFactorize, showHiddenClauses,
+    removeHyperSidePremiss, sendFactorize, sendResolve, sendResolveUnify, showHiddenClauses,
 } from "../../../helpers/resolution";
 import { Calculus, ResolutionCalculusType } from "../../../types/app";
 import {
@@ -177,23 +177,16 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 if (candidateAtomCount === 0) {
                     onError("These clauses can't be resolved.");
                 } else if (
-                    instanceOfPropCandidateClause(candidateClause, calculus)
+                    instanceOfPropCandidateClause(candidateClause, calculus) &&
+                    instanceOfPropResState(state, calculus)
                 ) {
                     const options = literalOptions(candidateClause);
                     if (options.size === 1) {
-                        // Send resolve move to backend
-                        sendMove(
-                            server,
-                            calculus,
-                            state!,
-                            {
-                                type: "res-resolve",
-                                c1: selectedClauseId,
-                                c2: newClauseId,
-                                literal: options.entries().next().value[1],
-                            },
-                            onChange,
-                            onError,
+                        sendResolve(
+                            selectedClauseId,
+                            newClauseId,
+                            options.entries().next().value[1],
+                            {...apiInfo, state},
                         );
                     } else {
                         // Show dialog for literal selection
@@ -210,20 +203,12 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     const selectedClauseAtomIndex = candidateClause.candidateAtomMap
                         .keys()
                         .next().value;
-                    // Send resolve move to backend
-                    sendMove(
-                        server,
-                        calculus,
-                        state!,
-                        {
-                            type: "res-resolveunify",
-                            c1: selectedClauseId,
-                            c2: newClauseId,
-                            l1: selectedClauseAtomIndex,
-                            l2: resolventAtomIndex,
-                        },
-                        onChange,
-                        onError,
+                    sendResolveUnify(
+                        selectedClauseId,
+                        newClauseId,
+                        selectedClauseAtomIndex,
+                        resolventAtomIndex,
+                        {...apiInfo, state},
                     );
                 } else {
                     // Show dialog for literal selection
@@ -282,7 +267,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
      * @returns {void}
      */
     const selectLiteralOption = (keyValuePair: [number, string]) => {
-        if (selectedClauses && selectedClauses.length === 2) {
+        if (selectedClauses && selectedClauses.length === 2 && instanceOfPropResState(state, calculus)) {
             if (hyperRes) {
                 setHyperRes(
                     addHyperSidePremiss(
@@ -303,18 +288,11 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setSelectedClauses([selectedClauses[0]]);
                 return;
             }
-            sendMove(
-                server,
-                calculus,
-                state!,
-                {
-                    type: "res-resolve",
-                    c1: selectedClauses[0],
-                    c2: selectedClauses[1],
-                    literal: keyValuePair[1],
-                },
-                onChange,
-                onError,
+            sendResolve(
+                selectedClauses[0],
+                selectedClauses[1],
+                keyValuePair[1],
+                {...apiInfo, state},
             );
         }
         setSelectedClauses(undefined);
@@ -383,20 +361,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 ),
             );
             onCloseAtomDialog();
-        } else {
-            sendMove(
-                server,
-                calculus,
-                state!,
-                {
-                    type: "res-resolveunify",
-                    c1: selectedClauses[0],
-                    c2: selectedClauses[1],
-                    l1: optionKeyValuePair[0],
-                    l2: candidateClauseAtomOption,
-                },
-                onChange,
-                onError,
+        } else if (instanceOfFOResState(state, calculus)) {
+            sendResolveUnify(
+                selectedClauses[0],
+                selectedClauses[1],
+                optionKeyValuePair[0],
+                candidateClauseAtomOption,
+                {...apiInfo, state},
             );
             onCloseAtomDialog();
         }
@@ -426,20 +397,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 ),
             );
             onCloseAtomDialog();
-        } else {
-            sendMove(
-                server,
-                calculus,
-                state!,
-                {
-                    type: "res-resolveunify",
-                    c1: selectedClauses[0],
-                    c2: selectedClauses[1],
-                    l1: selectedClauseAtomOption,
-                    l2: atomIndex,
-                },
-                onChange,
-                onError,
+        } else if (instanceOfFOResState(state, calculus)) {
+            sendResolveUnify(
+                selectedClauses[0],
+                selectedClauses[1],
+                selectedClauseAtomOption,
+                atomIndex,
+                {...apiInfo, state},
             );
             onCloseAtomDialog();
         }
@@ -565,25 +529,23 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 selectedClauseId={selectedClauseId}
                 hyperRes={hyperRes}
                 hyperResCallback={() => {
-                    hideClause(selectedClauseId!, calculus, {
-                        ...apiInfo,
-                        state,
+                    if (hyperRes) {
+                        setHyperRes(undefined);
+                        return;
+                    }
+                    setHyperRes({
+                        type: "res-hyper",
+                        mainID: selectedClauseId!,
+                        atomMap: {},
                     });
-                    setSelectedClauses(undefined);}
-                }
+                }}
                 hideCallback={() => {
-                        hideClause(selectedClauseId!, calculus, {
-                            ...apiInfo,
-                            state,
-                        });
+                        hideClause(selectedClauseId!, calculus, {...apiInfo, state,});
                         setSelectedClauses(undefined);
                     }
                 }
                 showCallback={() => {
-                    showHiddenClauses(calculus, {
-                        ...apiInfo,
-                        state,
-                    });
+                    showHiddenClauses(calculus, {...apiInfo, state,});
                     setSelectedClauses(undefined);
                 }}
                 factorizeCallback={() => {
@@ -623,10 +585,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             selectedClauseId!,
                             factorizeAtomIndices,
                             calculus,
-                            {
-                                ...apiInfo,
-                                state,
-                            },
+                            {...apiInfo, state},
                         );
                         setShowFactorizeDialog(false);
                         factorizeAtomIndices.clear();

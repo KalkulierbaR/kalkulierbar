@@ -27,7 +27,6 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     selectOptionCallback,
     className
 }) => {
-    console.log(selectedOptionIds);
     return(
         <div class={`card ${className}`}>
             {Array.from(options).map((keyValuePair: [number, string]) =>(
