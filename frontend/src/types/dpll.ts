@@ -51,13 +51,13 @@ export interface DPLLState {
     seal: string;
 }
 
-export interface DPLLSplit {
+export interface DPLLSplitMove {
     type: "dpll-split";
     branch: number;
     literal: string;
 }
 
-export interface DPLLProp {
+export interface DPLLPropMove {
     type: "dpll-prop";
     branch: number;
     baseClause: number;
@@ -65,15 +65,19 @@ export interface DPLLProp {
     propAtom: number;
 }
 
-export interface DPLLPrune {
+export interface DPLLPruneMove {
     type: "dpll-prune";
     branch: number;
 }
 
-export interface DPLLModelCheck {
+export interface DPLLModelCheckMove {
     type: "dpll-modelcheck";
     branch: number;
     interpretation: Record<string, boolean>;
 }
 
-export type DPLLMove = DPLLSplit | DPLLProp | DPLLPrune | DPLLModelCheck;
+export type DPLLMove =
+    | DPLLSplitMove
+    | DPLLPropMove
+    | DPLLPruneMove
+    | DPLLModelCheckMove;

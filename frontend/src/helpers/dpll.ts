@@ -1,4 +1,5 @@
 import { AppStateUpdater } from "../types/app";
+import { ClauseSet } from "../types/clause";
 import { DPLLState, DPLLTreeLayoutNode, DPLLTreeNode } from "../types/dpll";
 import { Tree } from "../types/tree";
 import { sendMove } from "./api";
@@ -25,6 +26,26 @@ const dpllNodesToTree = (
     );
 };
 
+export const sendProp = (
+    server: string,
+    state: DPLLState,
+    branch: number,
+    baseClause: number,
+    propClause: number,
+    propAtom: number,
+    onChange: AppStateUpdater,
+    onError: (msg: string) => void,
+) => {
+    sendMove(
+        server,
+        "dpll",
+        state,
+        { type: "dpll-prop", branch, baseClause, propClause, propAtom },
+        onChange,
+        onError,
+    );
+};
+
 export const sendPrune = (
     server: string,
     state: DPLLState,
@@ -40,4 +61,34 @@ export const sendPrune = (
         onChange,
         onError,
     );
+};
+
+export const sendSplit = (
+    server: string,
+    state: DPLLState,
+    branch: number,
+    literal: string,
+    onChange: AppStateUpdater,
+    onError: (msg: string) => void,
+) => {
+    sendMove(
+        server,
+        "dpll",
+        state,
+        { type: "dpll-split", branch, literal },
+        onChange,
+        onError,
+    );
+};
+
+export const getAllLits = (cs: ClauseSet) => {
+    const lits = new Set<string>();
+
+    for (const c of cs.clauses) {
+        for (const l of c.atoms) {
+            lits.add(l.lit);
+        }
+    }
+
+    return [...lits];
 };
