@@ -1,5 +1,5 @@
 import {
-    Atom,
+    Atom, CandidateClause,
     Clause,
     ClauseSet,
     FOArgument,
@@ -72,3 +72,19 @@ export const clauseSetToStringMap = (clauseSet: ClauseSet<string | FOLiteral>) =
 export const maxLengthClause = (
     clauses: Array<Clause<string | FOLiteral>>,
 ) => maxBy(clauses, (c) => clauseToString(c).length);
+
+/**
+ * Get a candidate clause matching the index property
+ * @param {number} searchIndex - The index to search for
+ * @param {CandidateClause[]} candidateClauses - The candidates to search in
+ * @returns {CandidateClause | null} - The candidate clause matching the index
+ */
+export const getCandidateClause = (searchIndex: number, candidateClauses: CandidateClause[]) => {
+    const candidateClauseHits = candidateClauses.filter(
+        (c) => c.index === searchIndex,
+    );
+    if (candidateClauseHits.length === 1) {
+        return candidateClauseHits[0];
+    }
+    return null;
+};
