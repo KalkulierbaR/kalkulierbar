@@ -1,4 +1,4 @@
-import { DPLLMove } from "./dpll";
+import { DPLLMove, DPLLState } from "./dpll";
 import {
     FOResolutionMove,
     FOResolutionParams,
@@ -85,7 +85,7 @@ export interface AppState {
     "prop-resolution"?: PropResolutionState;
     "fo-tableaux"?: FOTableauxState;
     "fo-resolution"?: FOResolutionState;
-    dpll?: any;
+    dpll?: DPLLState;
 }
 
 export interface DerivedAppState extends AppState {
