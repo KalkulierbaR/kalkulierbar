@@ -10,6 +10,8 @@ export interface DPLLTreeNode {
     modelVerified?: boolean;
 }
 
+export type DPLLTreeLayoutNode = DPLLTreeNode & { id: number };
+
 export enum DPLLNodeType {
     ROOT = "ROOT",
     PROP = "PROP",
