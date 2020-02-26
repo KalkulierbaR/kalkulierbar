@@ -1,12 +1,9 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import FAB from "../../../components/fab";
-import SendIcon from "../../../components/icons/send";
 import ResolutionCircle from "../../../components/resolution/circle";
 import ResolutionFactorizeDialog from "../../../components/resolution/dialog/factorize";
 import ResolutionResolveDialog from "../../../components/resolution/dialog/resolve";
 import ResolutionFAB from "../../../components/resolution/fab";
-import { sendMove } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import {stringArrayToStringMap} from "../../../helpers/array-to-map";
 import {getCandidateClause} from "../../../helpers/clause";
@@ -18,8 +15,9 @@ import {
     getHyperClauseIds,
     getPropHyperCandidates,
     getSelectable,
-    hideClause,
-    removeHyperSidePremiss, sendFactorize, sendResolve, sendResolveUnify, showHiddenClauses,
+    removeHyperSidePremiss,
+    sendResolve,
+    sendResolveUnify,
 } from "../../../helpers/resolution";
 import { Calculus, ResolutionCalculusType } from "../../../types/app";
 import {
@@ -34,7 +32,6 @@ import {
     instanceOfPropResState,
 } from "../../../types/resolution";
 import { foExample, propExample } from "./example";
-import * as style from "./style.scss";
 
 interface Props {
     /**
@@ -49,7 +46,6 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         [calculus]: cState,
         onError,
         onChange,
-        smallScreen,
     } = useAppState();
     const apiInfo = { onChange, onError, server };
 
@@ -77,17 +73,11 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const showResolveDialog = selectedClauses !== undefined && selectedClauses.length === 2;
 
     const candidateClauses: CandidateClause[] = getCandidateClauses(
-        state!.clauseSet,
-        state!.visualHelp,
+        state.clauseSet,
+        state.visualHelp,
         calculus,
         selectedClauseId,
     );
-
-    const selectedClauseAtomsEqual = (length: number) =>
-        selectedClauseId === undefined
-            ? false
-            : state!.clauseSet.clauses[selectedClauseId].atoms.length ===
-            length;
 
     /**
      * The function to call when the user selects a clause
@@ -228,7 +218,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         hyperRes,
         selectedClauseId,
         selectedClauseId !== undefined
-            ? state!.clauseSet.clauses[selectedClauseId]
+            ? state.clauseSet.clauses[selectedClauseId]
             : undefined,
     );
     const semiSelected = hyperRes ? getHyperClauseIds(hyperRes) : [];
@@ -240,95 +230,41 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 clauses={candidateClauses}
                 selectClauseCallback={selectClauseCallback}
                 selectedClauseId={selectedClauseId}
-                visualHelp={state!.visualHelp}
-                newestNode={state!.newestNode}
+                visualHelp={state.visualHelp}
+                newestNode={state.newestNode}
                 semiSelected={semiSelected}
                 selectable={selectable}
             />
             
             <ResolutionFAB 
                 calculus={calculus} 
-                state={state!} 
+                state={state}
                 selectedClauseId={selectedClauseId}
+                setSelectedClauses={setSelectedClauses}
                 hyperRes={hyperRes}
-                hyperResCallback={() => {
-                    if (hyperRes) {
-                        setHyperRes(undefined);
-                        return;
-                    }
-                    setHyperRes({
-                        type: "res-hyper",
-                        mainID: selectedClauseId!,
-                        atomMap: {},
-                    });
-                }}
-                hideCallback={() => {
-                        hideClause(selectedClauseId!, calculus, {...apiInfo, state,});
-                        setSelectedClauses(undefined);
-                    }
-                }
-                showCallback={() => {
-                    showHiddenClauses(calculus, {...apiInfo, state,});
-                    setSelectedClauses(undefined);
-                }}
-                factorizeCallback={() => {
-                    if (
-                        ! instanceOfPropResState(state, calculus) &&
-                        ! selectedClauseAtomsEqual(2)
-                    ) {
-                        setShowFactorizeDialog(true);
-                        return;
-                    }
-                    sendFactorize(
-                        selectedClauseId!,
-                        new Set<number>([0,1]),
-                        calculus,
-                        {...apiInfo, state},
-                    );
-                    setSelectedClauses(undefined);
-                }}
+                setHyperRes={setHyperRes}
+                setShowFactorizeDialog={setShowFactorizeDialog}
             />
 
-            {hyperRes && hyperRes.atomMap && (
-                <FAB
-                    class={style.hyperFab}
-                    label="Send"
-                    icon={<SendIcon />}
-                    extended={true}
-                    mini={smallScreen}
-                    onClick={() => {
-                        sendMove(
-                            server,
-                            calculus,
-                            state,
-                            hyperRes,
-                            onChange,
-                            onError,
-                        );
-                        setHyperRes(undefined);
-                        setSelectedClauses(undefined);
-                    }}
-                />
-            )}
-
             <ResolutionResolveDialog
+                showDialog={showResolveDialog}
                 calculus={calculus}
                 state={state}
                 selectedClauses={selectedClauses}
-                setHyperRes={setHyperRes}
                 setSelectedClauses={setSelectedClauses}
+                hyperRes={hyperRes}
+                setHyperRes={setHyperRes}
                 candidateClauses={candidateClauses}
-                showDialog={showResolveDialog}
                 propOptions={literalOptions()}
             />
 
             <ResolutionFactorizeDialog 
                 showDialog={showFactorizeDialog}
+                setShowDialog={setShowFactorizeDialog}
                 calculus={calculus} 
                 state={state} 
                 selectedClauses={selectedClauses}
                 setSelectedClauses={setSelectedClauses} 
-                setShowFactorizeDialog={setShowFactorizeDialog}
             />
         </Fragment>
     );

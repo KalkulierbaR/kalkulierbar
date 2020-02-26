@@ -28,6 +28,10 @@ interface Props {
      */
     showDialog: boolean;
     /**
+     * Set the visibility of the dialog
+     */
+    setShowDialog: (b: boolean) => void;
+    /**
      * Which calculus to use
      */
     calculus: ResolutionCalculusType;
@@ -35,14 +39,19 @@ interface Props {
      * The current calculus state
      */
     state: PropResolutionState | FOResolutionState;
+    /**
+     * The currently selected clauses
+     */
     selectedClauses: SelectedClauses;
+    /**
+     * Set selected clauses
+     */
     setSelectedClauses: (clauses: SelectedClauses) => void;
-    setShowFactorizeDialog: (b: boolean) => void;
 }
 
 const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
     showDialog,
-    setShowFactorizeDialog,
+    setShowDialog,
     calculus,
     state,
     selectedClauses,
@@ -104,7 +113,7 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
             open={showDialog}
             label="Choose atoms to factorize"
             onClose={() => {
-                setShowFactorizeDialog(false);
+                setShowDialog(false);
                 factorizeAtomIndices.clear();
             }}
         >
@@ -121,7 +130,7 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
                         calculus,
                         {...apiInfo, state},
                     );
-                    setShowFactorizeDialog(false);
+                    setShowDialog(false);
                     factorizeAtomIndices.clear();
                     setSelectedClauses(undefined);
                 }}

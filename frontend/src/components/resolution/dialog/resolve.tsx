@@ -30,10 +30,25 @@ interface Props {
      * The current calculus state
      */
     state: PropResolutionState | FOResolutionState;
+    /**
+     * The currently selected clauses
+     */
     selectedClauses: SelectedClauses;
+    /**
+     * Set selected clauses
+     */
     setSelectedClauses: (clauses: SelectedClauses) => void;
+    /**
+     * The Hyper Resolution Move if one is given
+     */
     hyperRes?: HyperResolutionMove;
+    /**
+     * Set the Hyper Resolution Move
+     */
     setHyperRes: (move: HyperResolutionMove | undefined) => void;
+    /**
+     * Candidate clauses for resolving
+     */
     candidateClauses: CandidateClause[];
     /**
      * Options for the propositional dialog
@@ -228,7 +243,8 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
         }
     };
 
-    return (instanceOfPropResState(state, calculus) ? (
+    return (
+        instanceOfPropResState(state, calculus) ? (
             <Dialog
                 open={showDialog}
                 label="Choose a literal to resolve"
