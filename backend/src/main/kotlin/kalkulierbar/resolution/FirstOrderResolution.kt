@@ -41,7 +41,7 @@ class FirstOrderResolution :
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
             is MoveHyper -> hyper(state, move.mainID, move.atomMap)
-            is MoveFactorize -> factorize(state, move.c1, move.a1, move.a2)
+            is MoveFactorize -> factorize(state, move.c1, move.atoms)
             else -> throw IllegalMove("Unknown move type")
         }
 
@@ -111,7 +111,11 @@ class FirstOrderResolution :
         clauseID: Int,
         varAssign: Map<String, FirstOrderTerm>
     ) {
-        val newClause = instantiateReturn(state, clauseID, varAssign)
+        if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
+            throw IllegalMove("There is no clause with id $clauseID")
+
+        val baseClause = state.clauseSet.clauses[clauseID]
+        val newClause = instantiateReturn(baseClause, varAssign)
 
         // Add new clause to state and update newestNode pointer
         state.clauseSet.add(newClause)
@@ -120,23 +124,15 @@ class FirstOrderResolution :
 
     /**
      * Create a new clause by applying a variable instantiation on an existing clause
-     * @param state Current proof state
-     * @param clauseID ID of the clause to use for instantiation
+     * @param baseClause the clause to use for instantiation
      * @param varAssign Map of Variables and terms they are instantiated with
      * @return Instantiated clause
      */
     private fun instantiateReturn(
-        state: FoResolutionState,
-        clauseID: Int,
+        baseClause: Clause<Relation>,
         varAssign: Map<String, FirstOrderTerm>
     ): Clause<Relation> {
-
-        if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
-            throw IllegalMove("There is no clause with id $clauseID")
-
-        val baseClause = state.clauseSet.clauses[clauseID]
         val newClause = Clause<Relation>()
-
         val instantiator = VariableInstantiator(varAssign)
 
         // Build the new clause by cloning atoms from the base clause and applying instantiation
@@ -153,26 +149,37 @@ class FirstOrderResolution :
      * Applies the factorize move
      * @param state The state to apply the move on
      * @param clauseID Id of clause to apply the move on
-     * @param a1 ID of first literal for unification
-     * @param a2 ID of second literal for unification
+     * @param atoms List of IDs of literals for unification (The literals should be equal)
      */
-    fun factorize(state: FoResolutionState, clauseID: Int, a1: Int, a2: Int) {
+    fun factorize(state: FoResolutionState, clauseID: Int, atoms: List<Int>) {
         val clauses = state.clauseSet.clauses
 
         // Verify that clause id is valid
         if (clauseID < 0 || clauseID >= clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
+        if (atoms.size < 2)
+            throw IllegalMove("Please select more than 1 atom to factorize")
+        // Verification of correct ID in atoms -> instantiateReturn
 
-        // Unify the selected atoms
-        val mgu = unifySingleClause(clauses[clauseID], a1, a2)
-        val newClause = instantiateReturn(state, clauseID, mgu)
-        // If the unification succeeded, a1 and a2 are now equal
-        // so we can just remove the second one
-        newClause.atoms.removeAt(a2)
+        var newClause = clauses[clauseID].clone()
+        // If unification succeeds then all doubled are equal
+        // -> If Unify(a, b) and Unify(b, c) succeed => a, b, c have same topology
+        for (i in atoms.indices) {
+            if (i < atoms.size - 1) {
+                // Unify the selected atoms
+                val mgu = unifySingleClause(clauses[clauseID], atoms[i], atoms[i + 1])
+                val newClause = instantiateReturn(newClause, mgu)
+            }
+        }
+        // Delete doubled atoms except 1 entry
+        for (i in atoms.indices) {
+            if (i < atoms.size - 1) {
+                newClause.atoms.removeAt(atoms[i])
+            }
+        }
 
-        // Hide old and add new clause in its place
-        val oldClause = clauses.removeAt(clauseID)
-        state.hiddenClauses.add(oldClause)
+        // Remove old and add new clause
+        clauses.removeAt(clauseID)
         clauses.add(clauseID, newClause)
         state.newestNode = clauseID
     }

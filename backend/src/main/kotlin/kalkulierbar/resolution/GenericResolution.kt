@@ -308,4 +308,4 @@ data class MoveHyper(val mainID: Int, val atomMap: Map<Int, Pair<Int, Int>>) : R
 
 @Serializable
 @SerialName("res-factorize")
-data class MoveFactorize(val c1: Int, val a1: Int = -1, val a2: Int = -1) : ResolutionMove()
+data class MoveFactorize(val c1: Int, val atoms: List<Int>) : ResolutionMove()
