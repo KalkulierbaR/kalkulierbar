@@ -17,6 +17,14 @@ class ClauseSet<AtomType>(var clauses: MutableList<Clause<AtomType>> = mutableLi
 
     fun unite(cs: ClauseSet<AtomType>) = addAll(cs.clauses)
 
+    fun clone(): ClauseSet<AtomType> {
+        val newCS = ClauseSet<AtomType>()
+        for (c in clauses) {
+            newCS.add(c.clone())
+        }
+        return newCS
+    }
+
     override fun toString(): String {
         return clauses.joinToString(", ")
     }
