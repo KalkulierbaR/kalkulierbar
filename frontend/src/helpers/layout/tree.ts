@@ -1,8 +1,6 @@
 import { Layout, LayoutItem } from "../../types/layout";
-import { TableauxNode, TableauxTreeLayoutNode } from "../../types/tableaux";
 import { LeftSiblingList, Link, Tree } from "../../types/tree";
 import { maxBy } from "../max-by";
-import { estimateSVGTextWidth } from "../text-width";
 
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
 // https://doi.org/10.1002/spe.2213
@@ -12,7 +10,7 @@ export const tree = <T>(
     height: number,
     y: number,
     data: T,
-    children: Array<Tree<T>>
+    children: Array<Tree<T>>,
 ): Tree<T> => ({
     width,
     height,
@@ -25,37 +23,21 @@ export const tree = <T>(
     modsEl: 0,
     modsEr: 0,
     data,
-    treeHeight: maxBy(children, c => c.treeHeight) + height,
-    children
+    treeHeight: maxBy(children, (c) => c.treeHeight) + height,
+    children,
 });
 
-export const treeLayout = (
-    nodes: TableauxNode[]
-): Layout<TableauxTreeLayoutNode> & { links: Link[] } => {
-    const root = tabNodeToTree(nodes);
+export const treeLayout = <N, T extends { id: number }>(
+    nodes: N[],
+    nodesToTree: (nodes: N[]) => Tree<T>,
+): Layout<T> & { links: Link[] } => {
+    const root = nodesToTree(nodes);
     layout(root);
-    // console.log(root);
+
     const data = treeToLayoutItem(root);
     const width = treeWidth(root);
     const links = getLinks(root);
     return { width, height: root.treeHeight, data, links };
-};
-
-const tabNodeToTree = (
-    nodes: TableauxNode[],
-    n: TableauxNode = nodes[0],
-    i: number = 0,
-    y: number = 16
-): Tree<TableauxTreeLayoutNode> => {
-    const width =
-        estimateSVGTextWidth(`${n.negated ? "¬" : ""}${n.spelling}`) + 56;
-    return tree(
-        width,
-        72,
-        y,
-        { ...n, id: i },
-        n.children.map(c => tabNodeToTree(nodes, nodes[c], c, y + 72))
-    );
 };
 
 const preOrderTraverseTree = <T>(t: Tree<T>, f: (t: Tree<T>) => void) => {
@@ -65,10 +47,10 @@ const preOrderTraverseTree = <T>(t: Tree<T>, f: (t: Tree<T>) => void) => {
     }
 };
 
-const treeToLayoutItem = (
-    t: Tree<TableauxTreeLayoutNode>
-): Array<LayoutItem<TableauxTreeLayoutNode>> => {
-    const items: Array<LayoutItem<TableauxTreeLayoutNode>> = [];
+const treeToLayoutItem = <T extends { id: number }>(
+    t: Tree<T>,
+): Array<LayoutItem<T>> => {
+    const items: Array<LayoutItem<T>> = [];
 
     preOrderTraverseTree(t, ({ x, y, data }) => {
         items[data.id] = { x, y, data };
@@ -78,15 +60,15 @@ const treeToLayoutItem = (
 };
 
 const getLinks = <T>(t: Tree<T>): Link[] => {
-    const links: Link[] = t.children.map(c => ({
+    const links: Link[] = t.children.map((c) => ({
         source: [t.x, t.y],
-        target: [c.x, c.y]
+        target: [c.x, c.y],
     }));
 
-    return links.concat(...t.children.map(c => getLinks(c)));
+    return links.concat(...t.children.map((c) => getLinks(c)));
 };
 
-const layout = <T>(t: Tree<T>) => {
+export const layout = <T>(t: Tree<T>) => {
     firstWalk(t);
     secondWalk(t, 0);
 };
@@ -194,7 +176,7 @@ const setLeftThread = <T>(
     t: Tree<T>,
     i: number,
     cl: Tree<T>,
-    modSumCl: number
+    modSumCl: number,
 ) => {
     const li = t.children[0].extremeLeft!;
     li.tl = cl;
@@ -209,7 +191,7 @@ const setRightThread = <T>(
     t: Tree<T>,
     i: number,
     sr: Tree<T>,
-    modSumSr: number
+    modSumSr: number,
 ) => {
     const ri = t.children[i].extremeRight!;
     ri.tr = sr;
@@ -244,7 +226,7 @@ const distributeExtra = <T>(
     t: Tree<T>,
     i: number,
     si: number,
-    dist: number
+    dist: number,
 ) => {
     if (si === i - 1) {
         return;
@@ -269,13 +251,13 @@ const addChildSpacing = <T>(t: Tree<T>) => {
 const iyl = (
     lowY: number,
     idx: number,
-    next?: LeftSiblingList
+    next?: LeftSiblingList,
 ): LeftSiblingList => ({ lowY, idx, next });
 
 const updateIYL = (
     minY: number,
     i: number,
-    ih?: LeftSiblingList
+    ih?: LeftSiblingList,
 ): LeftSiblingList => {
     while (ih && minY >= ih.lowY) {
         ih = ih.next;

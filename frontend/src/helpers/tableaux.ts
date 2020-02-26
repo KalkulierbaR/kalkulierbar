@@ -1,13 +1,18 @@
-import {AppStateUpdater, TableauxCalculusType} from "../types/app";
+import { AppStateUpdater, TableauxCalculusType } from "../types/app";
+import { Layout } from "../types/layout";
 import {
     FOTableauxState,
     instanceOfFOTabState,
     instanceOfPropTabState,
     PropTableauxState,
     TableauxNode,
-    VarAssign
+    TableauxTreeLayoutNode,
+    VarAssign,
 } from "../types/tableaux";
+import { Link, Tree } from "../types/tree";
 import { sendMove } from "./api";
+import { tree, treeLayout } from "./layout/tree";
+import { estimateSVGTextWidth } from "./text-width";
 
 /**
  * Finds the first open leaf and returns its id.
@@ -46,7 +51,7 @@ export const sendClose = (
     leaf: number,
     pred: number,
     varAssignments?: VarAssign,
-    autoClose?: boolean
+    autoClose?: boolean,
 ) => {
     if (instanceOfPropTabState(state, calculus)) {
         sendMove(
@@ -55,7 +60,7 @@ export const sendClose = (
             state,
             { type: "CLOSE", id1: leaf, id2: pred },
             stateChanger,
-            onError
+            onError,
         );
     } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
@@ -66,10 +71,10 @@ export const sendClose = (
                 type: autoClose ? "AUTOCLOSE" : "CLOSE",
                 id1: leaf,
                 id2: pred,
-                varAssign: varAssignments!
+                varAssign: varAssignments!,
             },
             stateChanger,
-            onError
+            onError,
         );
     }
 };
@@ -88,7 +93,7 @@ export const sendBacktrack = (
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void
+    onError: (msg: string) => void,
 ) => {
     if (instanceOfPropTabState(state, calculus)) {
         sendMove(
@@ -97,7 +102,7 @@ export const sendBacktrack = (
             state,
             { type: "UNDO", id1: -1, id2: -1 },
             stateChanger,
-            onError
+            onError,
         );
     } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
@@ -106,7 +111,7 @@ export const sendBacktrack = (
             state,
             { type: "UNDO", id1: -1, id2: -1, varAssign: {} },
             stateChanger,
-            onError
+            onError,
         );
     }
 };
@@ -129,7 +134,7 @@ export const sendExtend = (
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
     leaf: number,
-    clause: number
+    clause: number,
 ) => {
     if (instanceOfPropTabState(state, calculus)) {
         sendMove(
@@ -138,7 +143,7 @@ export const sendExtend = (
             state,
             { type: "EXPAND", id1: leaf, id2: clause },
             stateChanger,
-            onError
+            onError,
         );
     } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
@@ -147,11 +152,10 @@ export const sendExtend = (
             state,
             { type: "EXPAND", id1: leaf, id2: clause, varAssign: {} },
             stateChanger,
-            onError
+            onError,
         );
     }
 };
-
 
 /**
  * Wrapper to send move request
@@ -171,7 +175,7 @@ export const sendLemma = (
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
     leaf: number,
-    lemma: number
+    lemma: number,
 ) => {
     if (instanceOfPropTabState(state, calculus)) {
         sendMove(
@@ -180,7 +184,7 @@ export const sendLemma = (
             state,
             { type: "LEMMA", id1: leaf, id2: lemma },
             stateChanger,
-            onError
+            onError,
         );
     } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
@@ -189,7 +193,30 @@ export const sendLemma = (
             state,
             { type: "LEMMA", id1: leaf, id2: lemma, varAssign: {} },
             stateChanger,
-            onError
+            onError,
         );
     }
+};
+
+export const tableauxTreeLayout = (
+    nodes: TableauxNode[],
+): Layout<TableauxTreeLayoutNode> & { links: Link[] } => {
+    return treeLayout(nodes, tabNodeToTree);
+};
+
+const tabNodeToTree = (
+    nodes: TableauxNode[],
+    n: TableauxNode = nodes[0],
+    i: number = 0,
+    y: number = 16,
+): Tree<TableauxTreeLayoutNode> => {
+    const width =
+        estimateSVGTextWidth(`${n.negated ? "¬" : ""}${n.spelling}`) + 56;
+    return tree(
+        width,
+        72,
+        y,
+        { ...n, id: i },
+        n.children.map((c) => tabNodeToTree(nodes, nodes[c], c, y + 72)),
+    );
 };
