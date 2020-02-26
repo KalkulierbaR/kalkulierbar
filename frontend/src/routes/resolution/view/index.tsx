@@ -596,7 +596,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     }
                     sendFactorize(
                         selectedClauseId!,
-                        factorizeAtomIndices,
+                        new Set<number>([0,1]),
                         calculus,
                         {...apiInfo, state},
                     );
@@ -606,7 +606,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
             <Dialog
                 open={showFactorizeDialog}
-                label="Choose 2 atoms to factorize"
+                label="Choose atoms to factorize"
                 onClose={() => {
                     setShowFactorizeDialog(false);
                     factorizeAtomIndices.clear();

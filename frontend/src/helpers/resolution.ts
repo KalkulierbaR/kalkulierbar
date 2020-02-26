@@ -15,7 +15,7 @@ import {
 } from "../types/clause";
 import {
     FOResolutionState,
-    HyperResolutionMove, instanceOfFOResState, instanceOfPropResState,
+    HyperResolutionMove,
     PropResolutionState,
     VisualHelp,
 } from "../types/resolution";
@@ -483,34 +483,16 @@ export const sendFactorize = <
     calculus: ResolutionCalculusType,
     { server, state, onChange, onError }: APIInformation<AppState[C]>,
 ) => {
-    if (
-        instanceOfPropResState(state, calculus)
-    ) {
-        sendMove(
-            server,
-            calculus,
-            state!,
-            {
-                type: "res-factorize",
-                c1: selectedClauseId,
-            },
-            onChange,
-            onError,
-        );
-    } else if (
-        instanceOfFOResState(state, calculus)
-    ) {
-        sendMove(
-            server,
-            calculus,
-            state!,
-            {
-                type: "res-factorize",
-                c1: selectedClauseId,
-                atoms: Array.from(atoms),
-            },
-            onChange,
-            onError,
-        );
-    }
+    sendMove(
+        server,
+        calculus,
+        state!,
+        {
+            type: "res-factorize",
+            c1: selectedClauseId,
+            atoms: Array.from(atoms),
+        },
+        onChange,
+        onError,
+    );
 };

@@ -1,13 +1,12 @@
 package kalkulierbar.tests.regression
 
-import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.MoveHyper
+import kalkulierbar.resolution.PropositionalResolution
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestIssue67 {
-
     @Test
     fun testProp() {
         val prop = PropositionalResolution()
