@@ -1,5 +1,7 @@
-import { DPLLTreeLayoutNode, DPLLTreeNode } from "../types/dpll";
+import { AppStateUpdater } from "../types/app";
+import { DPLLState, DPLLTreeLayoutNode, DPLLTreeNode } from "../types/dpll";
 import { Tree } from "../types/tree";
+import { sendMove } from "./api";
 import { tree, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
 
@@ -20,5 +22,22 @@ const dpllNodesToTree = (
         y,
         { ...n, id: i },
         n.children.map((c) => dpllNodesToTree(nodes, nodes[c], c, y + 72)),
+    );
+};
+
+export const sendPrune = (
+    server: string,
+    state: DPLLState,
+    branch: number,
+    onChange: AppStateUpdater,
+    onError: (msg: string) => void,
+) => {
+    sendMove(
+        server,
+        "dpll",
+        state,
+        { type: "dpll-prune", branch },
+        onChange,
+        onError,
     );
 };
