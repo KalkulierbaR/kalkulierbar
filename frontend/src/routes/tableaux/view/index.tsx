@@ -64,6 +64,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
     const [lemmaMode, setLemmaMode] = useState(false);
 
+    const selectedNode = selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
+    const selectedNodeIsLeaf = selectedNode !== undefined && selectedNode.children.length === 0;
+
     /**
      * The function to call, when the user selects a clause
      * @param {number} newClauseId - The id of the clause, which was clicked on
@@ -125,85 +128,74 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setSelectedNodeId(undefined);
                 setSelectedClauseId(undefined);
             }
-        } else {
-            const selectedNode = state!.nodes[selectedNodeId];
-            const selectedNodeIsLeaf = selectedNode.children.length === 0;
-
-            if (
-                lemmaMode &&
-                selectedNodeIsLeaf &&
-                !selectedNode.isClosed &&
-                newNode.isClosed
-            ) {
-                // Open leaf and a closed Node are selected => Try Lemma move
-                sendLemma(
-                    calculus,
-                    server,
-                    state!,
-                    onChange,
-                    onError,
-                    selectedNodeId,
-                    newNode.id
-                );
-                setSelectedNodeId(undefined);
-                setLemmaMode(false);
-            } else if (
-                // Don't select two leafs or two nodes at the same time
-                (selectedNodeIsLeaf && newNodeIsLeaf) ||
-                (!selectedNodeIsLeaf && !newNodeIsLeaf)
-            ) {
-                setSelectedNodeId(newNode.id);
-            } else if (instanceOfPropTabState(state, calculus)) {
-                // Now we have a leaf and a predecessor => Try close move
-                // If we can't do it, let server handle it
-                sendClose(
-                    calculus,
-                    server,
-                    state!,
-                    onChange,
-                    onError,
-                    newNodeIsLeaf ? newNode.id : selectedNodeId,
-                    newNodeIsLeaf ? selectedNodeId : newNode.id
-                );
-                setSelectedNodeId(undefined);
-            } else if (instanceOfFOTabState(state, calculus)) {
-                // Prepare dialog for automatic/manual unification
-                setVarAssignSecondNodeId(newNode.id);
-                const vars: string[] = [];
-                const checkArgumentForVar = (argument: FOArgument) => {
-                    if (argument.type === FOArgumentType.quantifiedVariable) {
-                        vars.push(argument.spelling);
-                    }
-                    if(argument.arguments) {
-                        argument.arguments.forEach(checkArgumentForVar);
-                    }
-                };
-                selectedNode.relation!.arguments.forEach(checkArgumentForVar);
-                newNode.relation!.arguments.forEach(checkArgumentForVar);
-                if (vars.length <= 0) {
-                    if (selectedNodeIsLeaf) {
-                        submitVarAssignWithNodeIds(false, {}, selectedNodeId, newNode.id);
-                    }
-                    else {
-                        submitVarAssignWithNodeIds(false, {}, newNode.id, selectedNodeId);
-                    }
-                    return;
+        } else if (
+            lemmaMode &&
+            selectedNodeIsLeaf &&
+            ! selectedNode!.isClosed &&
+            newNode.isClosed
+        ) {
+            // Open leaf and a closed Node are selected => Try Lemma move
+            sendLemma(
+                calculus,
+                server,
+                state!,
+                onChange,
+                onError,
+                selectedNodeId,
+                newNode.id
+            );
+            setSelectedNodeId(undefined);
+            setLemmaMode(false);
+        } else if (
+            // Don't select two leafs or two nodes at the same time
+            (selectedNodeIsLeaf && newNodeIsLeaf) ||
+            (!selectedNodeIsLeaf && !newNodeIsLeaf)
+        ) {
+            setSelectedNodeId(newNode.id);
+        } else if (instanceOfPropTabState(state, calculus)) {
+            // Now we have a leaf and a predecessor => Try close move
+            // If we can't do it, let server handle it
+            sendClose(
+                calculus,
+                server,
+                state!,
+                onChange,
+                onError,
+                newNodeIsLeaf ? newNode.id : selectedNodeId,
+                newNodeIsLeaf ? selectedNodeId : newNode.id
+            );
+            setSelectedNodeId(undefined);
+        } else if (instanceOfFOTabState(state, calculus)) {
+            // Prepare dialog for automatic/manual unification
+            setVarAssignSecondNodeId(newNode.id);
+            const vars: string[] = [];
+            const checkArgumentForVar = (argument: FOArgument) => {
+                if (argument.type === FOArgumentType.quantifiedVariable) {
+                    vars.push(argument.spelling);
                 }
-                setVarsToAssign(vars);
-                setShowVarAssignDialog(true);
+                if(argument.arguments) {
+                    argument.arguments.forEach(checkArgumentForVar);
+                }
+            };
+            selectedNode!.relation!.arguments.forEach(checkArgumentForVar);
+            newNode.relation!.arguments.forEach(checkArgumentForVar);
+            if (vars.length <= 0) {
+                sendFOClose(false, {});
+                return;
             }
+            setVarsToAssign(vars);
+            setShowVarAssignDialog(true);
         }
         setLemmaMode(false);
     };
 
     /**
-     * Submit a close move containing variable assignment rules
-     * in the FO Tableaux calculus
+     * FO Tableaux: Submit a close move containing variable assignment rules
      * @param {boolean} autoAssign - Automatically assign variables if this is set to true
      * @param {VarAssign} varAssign - Variable assignments by the user
      * @returns {void | Error} - Error if the two nodes for the close move can't be identified
      */
-    const submitVarAssign = (autoAssign: boolean, varAssign: VarAssign = {}) => {
+    const sendFOClose = (autoAssign: boolean, varAssign: VarAssign = {}) => {
         if (
             selectedNodeId === undefined ||
             varAssignSecondNodeId === undefined
@@ -213,38 +205,24 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 "Close move went wrong, since selected nodes could not be identified."
             );
         }
-        if (state!.nodes[selectedNodeId].children.length === 0) {
-            submitVarAssignWithNodeIds(autoAssign, varAssign, selectedNodeId, varAssignSecondNodeId);
-        }
-        else {
-            submitVarAssignWithNodeIds(autoAssign, varAssign, varAssignSecondNodeId, selectedNodeId);
-        }
-    };
-
-    /**
-     * Submit a close move containing variable assignment rules
-     * in the FO Tableaux calculus
-     * @param {boolean} autoAssign - Automatically assign variables if this is set to true
-     * @param {VarAssign} varAssign - Variable assignments by the user
-     * @param {number} leafNodeId - The id of the leaf node
-     * @param {number} predNodeId - The id of the leaf's predecessor
-     * @returns {void}
-     */
-    const submitVarAssignWithNodeIds = (autoAssign: boolean, varAssign: VarAssign, leafNodeId: number, predNodeId: number) => {
+        const leaf = selectedNodeIsLeaf ? selectedNodeId : varAssignSecondNodeId;
+        const pred = selectedNodeIsLeaf ? varAssignSecondNodeId : selectedNodeId;
         sendClose(
             calculus,
             server,
             state!,
             onChange,
             onError,
-            leafNodeId,
-            predNodeId,
+            leaf,
+            pred,
+            autoAssign,
             varAssign,
-            autoAssign
+            () => {
+                setSelectedNodeId(undefined);
+                setVarAssignSecondNodeId(undefined);
+                setShowVarAssignDialog(false);
+            }
         );
-        setSelectedNodeId(undefined);
-        setVarAssignSecondNodeId(undefined);
-        setShowVarAssignDialog(false);
     };
 
     useEffect(() => {
@@ -314,9 +292,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     <VarAssignList
                         vars={varsToAssign}
                         manualVarAssignOnly={state.manualVarAssign}
-                        submitVarAssignCallback={submitVarAssign}
+                        submitVarAssignCallback={sendFOClose}
                         submitLabel="Assign variables"
-                        secondSubmitEvent={submitVarAssign}
+                        secondSubmitEvent={sendFOClose}
                         secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog>
