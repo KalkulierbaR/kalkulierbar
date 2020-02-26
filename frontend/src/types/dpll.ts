@@ -37,7 +37,7 @@ export type DPLLCsDiff =
 
 export type DPLLTreeLayoutNode = DPLLTreeNode & { id: number };
 
-export const enum DPLLNodeType {
+export enum DPLLNodeType {
     ROOT = "ROOT",
     PROP = "PROP",
     SPLIT = "SPLIT",
