@@ -37,7 +37,11 @@ const DPLLTree: preact.FunctionalComponent<Props> = ({ nodes }) => {
                             />
                         ))}
                         {data.map((d) => (
-                            <DPLLNode node={d} />
+                            <DPLLNode
+                                node={d}
+                                selected={false}
+                                selectNodeCallback={() => {}}
+                            />
                         ))}
                     </g>
                 )}
