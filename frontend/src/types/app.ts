@@ -63,7 +63,7 @@ export interface Params {
     "prop-resolution": PropResolutionParams;
     "fo-tableaux": FOTableauxParams;
     "fo-resolution": FOResolutionParams;
-    dpll: any;
+    dpll: null;
 }
 
 export type Formulas = Record<Calculus, string>;
