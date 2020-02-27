@@ -85,6 +85,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 selectedClauses[0],
                 newClause,
                 candidates[0],
+                setSelectedNode,
                 onChange,
                 onError,
             );
@@ -110,6 +111,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
             selectedClauses[0],
             selectedClauses[1]!,
             lId,
+            setSelectedNode,
             onChange,
             onError,
         );

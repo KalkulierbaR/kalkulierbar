@@ -38,6 +38,7 @@ export const sendProp = (
     baseClause: number,
     propClause: number,
     propAtom: number,
+    setNode: (node: number) => void,
     onChange: AppStateUpdater,
     onError: (msg: string) => void,
 ) => {
@@ -48,7 +49,11 @@ export const sendProp = (
         { type: "dpll-prop", branch, baseClause, propClause, propAtom },
         onChange,
         onError,
-    );
+    ).then((s) => {
+        if (s) {
+            setNode(s.tree.length - 1);
+        }
+    });
 };
 
 export const sendPrune = (
