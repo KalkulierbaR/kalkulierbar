@@ -1,5 +1,5 @@
 .tree {
-    display: none;
+    visibility: hidden;
 }
 
 .list {
@@ -15,7 +15,7 @@
         }
 
         .tree {
-            display: block;
+            visibility: unset;
         }
     }
 
@@ -29,7 +29,7 @@
         }
 
         .tree {
-            display: block;
+            visibility: unset;
         }
     }
 }
