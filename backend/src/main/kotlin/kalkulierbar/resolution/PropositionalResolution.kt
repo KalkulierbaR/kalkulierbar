@@ -9,10 +9,8 @@ import kalkulierbar.parsers.FlexibleClauseSetParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.plus
 
-class PropositionalResolution :
-        GenericResolution<String>,
+class PropositionalResolution : GenericResolution<String>,
         JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
     override val identifier = "prop-resolution"
 
@@ -32,6 +30,7 @@ class PropositionalResolution :
             is MoveResolve -> resolve(state, move.c1, move.c2, move.literal)
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
+            is MoveHyper -> hyper(state, move.mainID, move.atomMap)
             is MoveFactorize -> factorize(state, move.c1)
             else -> throw IllegalMove("Unknown move")
         }
@@ -63,6 +62,57 @@ class PropositionalResolution :
         clauses.removeAt(clauseID)
         clauses.add(clauseID, newClause)
         state.newestNode = clauseID
+    }
+
+    /**
+     * Creates a new clause in which all side premisses are resolved with the main premiss
+     * while paying attention to resolving one atom in each side premiss with the main premiss.
+     * Adds the result to the clause set
+     * @param state Current proof state
+     * @param mainID ID of main premiss clause
+     * @param atomMap Maps an atom of the main premiss to an atom of a side premiss
+     */
+    @Suppress("ThrowsCount")
+    fun hyper(
+        state: GenericResolutionState<String>,
+        mainID: Int,
+        atomMap: Map<Int, Pair<Int, Int>>
+    ) {
+        // Checks for correct clauseID and IDs in Map
+        checkHyperID(state, mainID, atomMap)
+
+        if (atomMap.isEmpty())
+            throw IllegalMove("Please select side premisses for hyper resolution")
+
+        val clauses = state.clauseSet.clauses
+        var mainPremiss = clauses[mainID].clone()
+
+        // Resolves each side premiss with main premiss
+        for ((mAtomID, pair) in atomMap) {
+            val (sClauseID, sAtomID) = pair
+            val sidePremiss = clauses[sClauseID]
+
+            // Check side premiss for positiveness
+            if (!sidePremiss.isPositive())
+                throw IllegalMove("Side premiss $sidePremiss is not positive")
+
+            val mainAtom = clauses[mainID].atoms[mAtomID]
+            val sideAtom = sidePremiss.atoms[sAtomID]
+            // Check that atom in main premiss is negative
+            if (!mainAtom.negated)
+                throw IllegalMove("Literal '$mainAtom' in main premiss has to be negative, ")
+
+            // Resolve mainPremiss and sidePremiss
+            mainPremiss = buildClause(mainPremiss, mainAtom, sidePremiss, sideAtom)
+        }
+
+        // Check there are no negative atoms anymore
+        if (!mainPremiss.isPositive())
+            throw IllegalMove("Resulting clause $mainPremiss is not positive")
+
+        // Add resolved clause to clause set
+        clauses.add(mainPremiss)
+        state.newestNode = clauses.size - 1
     }
 
     override fun checkCloseOnState(state: ResolutionState) = getCloseMessage(state)

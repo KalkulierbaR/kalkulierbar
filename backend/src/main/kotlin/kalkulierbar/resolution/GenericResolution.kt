@@ -34,7 +34,13 @@ interface GenericResolution<AtomType> {
      * @param literal Literal present in both clauses to use for resolution
      */
     @Suppress("ThrowsCount", "ComplexMethod")
-    fun resolve(state: GenericResolutionState<AtomType>, clause1: Int, clause2: Int, literal: AtomType?, insertAtEnd: Boolean = false) {
+    fun resolve(
+        state: GenericResolutionState<AtomType>,
+        clause1: Int,
+        clause2: Int,
+        literal: AtomType?,
+        insertAtEnd: Boolean = false
+    ) {
         val clauses = state.clauseSet.clauses
 
         // Verify that the clause ids are valid
@@ -54,16 +60,7 @@ interface GenericResolution<AtomType> {
             resCandidates = getAutoResolutionCandidates(c1, c2)
         } else {
             // Filter clauses for atoms with correct literal
-            val atomsInC1 = c1.atoms.filter { literalsAreEqual(it.lit, literal) }
-            val atomsInC2 = c2.atoms.filter { literalsAreEqual(it.lit, literal) }
-            if (atomsInC1.isEmpty())
-                throw IllegalMove("Clause '$c1' does not contain atom '$literal'")
-            if (atomsInC2.isEmpty())
-                throw IllegalMove("Clause '$c2' does not contain atom '$literal'")
-
-            val msg = "Clauses '$c1' and '$c2' do not contain atom '$literal' in both positive and negated form"
-            resCandidates = findResCandidates(atomsInC1, atomsInC2)
-                    ?: throw IllegalMove(msg)
+            resCandidates = filterClause(c1, c2, literal)
         }
 
         val (a1, a2) = resCandidates
@@ -73,6 +70,62 @@ interface GenericResolution<AtomType> {
         state.newestNode = if (insertAtEnd) clauses.size else clause2
 
         clauses.add(state.newestNode, buildClause(c1, a1, c2, a2))
+    }
+
+    /**
+     * Filters two clauses by a given literal and returns the belonging atoms from each clause
+     * @param c1 First clause to search for
+     * @param c2 Second clause to search for
+     * @param literal Literal to search for
+     * @return The pair of atoms (a1, a2) so that a1 is in c1 and a2 in c2 while a1 and b2 share the same literal
+     */
+    @Suppress("ThrowsCount")
+    fun filterClause(
+        c1: Clause<AtomType>,
+        c2: Clause<AtomType>,
+        literal: AtomType
+    ): Pair<Atom<AtomType>, Atom<AtomType>> {
+        // Filter clauses for atoms with correct literal
+        val atomsInC1 = c1.atoms.filter { literalsAreEqual(it.lit, literal) }
+        val atomsInC2 = c2.atoms.filter { literalsAreEqual(it.lit, literal) }
+        if (atomsInC1.isEmpty())
+            throw IllegalMove("Clause '$c1' does not contain atom '$literal'")
+        if (atomsInC2.isEmpty())
+            throw IllegalMove("Clause '$c2' does not contain atom '$literal'")
+
+        val msg = "Clauses '$c1' and '$c2' do not contain atom '$literal' in both positive and negated form"
+        val resCandidates = findResCandidates(atomsInC1, atomsInC2)
+                ?: throw IllegalMove(msg)
+        return resCandidates
+    }
+
+    /**
+     * Checks that all IDs for a hyper resolution are valid
+     * @param state Current proof state
+     * @param clauseID ID of main premiss
+     * @param atomMap Maps an atom of the main premiss to an atom of a side premiss
+     */
+    @Suppress("ThrowsCount")
+    fun checkHyperID(state: GenericResolutionState<AtomType>, clauseID: Int, atomMap: Map<Int, Pair<Int, Int>>) {
+        val clauses = state.clauseSet.clauses
+
+        // Check for valid clause id
+        if (clauseID < 0 || clauseID >= clauses.size)
+            throw IllegalMove("There is no (main premiss) clause with id $clauseID")
+
+        val mainPremiss = clauses[clauseID].atoms
+        // Check that (mainAtomID -> (sideClauseID, atomID)) map elements are correct
+        for ((mAtomID, pair) in atomMap) {
+            val (sClauseID, sAtomID) = pair
+
+            if (mAtomID < 0 || mAtomID >= mainPremiss.size)
+                throw IllegalMove("There is no atom with id $mAtomID in (main premiss) clause ${clauses[clauseID]}")
+            if (sClauseID < 0 || sClauseID >= clauses.size)
+                throw IllegalMove("There is no (side premiss) clause with id $sClauseID")
+            val clause = clauses[sClauseID].atoms
+            if (sAtomID < 0 || sAtomID >= clause.size)
+                throw IllegalMove("There is no atom with id $sAtomID in (side premiss) clause $clause")
+        }
     }
 
     /**
@@ -213,6 +266,7 @@ val resolutionMoveModule = SerializersModule {
         MoveInstantiate::class with MoveInstantiate.serializer()
         MoveHide::class with MoveHide.serializer()
         MoveShow::class with MoveShow.serializer()
+        MoveHyper::class with MoveHyper.serializer()
         MoveFactorize::class with MoveFactorize.serializer()
     }
 }
@@ -249,5 +303,9 @@ data class MoveHide(val c1: Int) : ResolutionMove()
 class MoveShow : ResolutionMove()
 
 @Serializable
+@SerialName("res-hyper")
+data class MoveHyper(val mainID: Int, val atomMap: Map<Int, Pair<Int, Int>>) : ResolutionMove()
+
+@Serializable
 @SerialName("res-factorize")
-data class MoveFactorize(val c1: Int, val a1: Int = -1, val a2: Int = -1) : ResolutionMove()
+data class MoveFactorize(val c1: Int, val atoms: List<Int>) : ResolutionMove()

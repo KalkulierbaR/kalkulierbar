@@ -135,3 +135,5 @@ export enum FOArgumentType {
     constant = "Constant",
     function = "Function",
 }
+
+export type SelectedClauses = undefined | [number] | [number, number];
