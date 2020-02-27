@@ -26,12 +26,11 @@ import {
     sendPrune,
     sendSplit,
 } from "../../../helpers/dpll";
+import {SelectedClauses} from "../../../types/clause";
 import dpllExampleState from "./example";
 import * as style from "./style.scss";
 
 interface Props {}
-
-type SelectedClauses = undefined | [number] | [number, number];
 
 const DPLLView: preact.FunctionalComponent<Props> = () => {
     const {
