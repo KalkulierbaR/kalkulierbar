@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { getAllLits, sendModelCheck } from "../../../helpers/dpll";
+import { getAllLits } from "../../../helpers/dpll";
 import { ClauseSet } from "../../../types/clause";
 import Btn from "../../btn";
 import Dialog from "../../dialog";
