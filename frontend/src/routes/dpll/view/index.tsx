@@ -5,6 +5,7 @@ import { useAppState } from "../../../helpers/app-state";
 import { useCallback, useState } from "preact/hooks";
 import ControlFAB from "../../../components/control-fab";
 import Dialog from "../../../components/dialog";
+import DPLLControlFAB from "../../../components/dpll/fab";
 import DPLLModelInput from "../../../components/dpll/model";
 import FAB from "../../../components/fab";
 import CheckCircleIcon from "../../../components/icons/check-circle";
@@ -205,55 +206,13 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 }}
                 open={showModelDialog}
             />
-            <ControlFAB alwaysOpen={!smallScreen}>
-                {smallScreen && (
-                    <FAB
-                        label={showTree ? "Clause View" : "Tree View"}
-                        icon={<SwitchIcon />}
-                        mini={true}
-                        extended={true}
-                        onClick={toggleShowTree}
-                    />
-                )}
-                {state.tree[branch].type === DPLLNodeType.MODEL && (
-                    <FAB
-                        icon={null}
-                        label="Model Check"
-                        mini={true}
-                        extended={true}
-                        showIconAtEnd={true}
-                        onClick={() => setShowModelDialog(true)}
-                    />
-                )}
-                <FAB
-                    icon={<CheckCircleIcon />}
-                    label="Check"
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() =>
-                        checkClose(server, onError, onSuccess, "dpll", state)
-                    }
-                />
-                <FAB
-                    label="Prune"
-                    icon={<DeleteIcon />}
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() =>
-                        sendPrune(server, state, branch, onChange, onError)
-                    }
-                />
-                <FAB
-                    label="Split"
-                    icon={<SplitIcon />}
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() => setShowSplitDialog(true)}
-                />
-            </ControlFAB>
+            <DPLLControlFAB
+                state={state}
+                branch={branch}
+                toggleShowTree={toggleShowTree}
+                setShowModelDialog={setShowModelDialog}
+                setShowSplitDialog={setShowSplitDialog}
+            />
         </Fragment>
     );
 };
