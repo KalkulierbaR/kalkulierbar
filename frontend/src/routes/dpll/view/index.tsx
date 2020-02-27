@@ -208,7 +208,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
             <ControlFAB alwaysOpen={!smallScreen}>
                 {smallScreen && (
                     <FAB
-                        label="Switch"
+                        label={showTree ? "Clause View" : "Tree View"}
                         icon={<SwitchIcon />}
                         mini={true}
                         extended={true}
