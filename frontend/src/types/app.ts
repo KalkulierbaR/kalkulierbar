@@ -36,6 +36,7 @@ export enum Calculus {
 export const PropCalculus: CalculusType[] = [
     Calculus.propTableaux,
     Calculus.propResolution,
+    Calculus.dpll,
 ];
 export const FOCalculus: CalculusType[] = [
     Calculus.foTableaux,
