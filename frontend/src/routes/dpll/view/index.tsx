@@ -5,6 +5,7 @@ import { useAppState } from "../../../helpers/app-state";
 import { useCallback, useState } from "preact/hooks";
 import ControlFAB from "../../../components/control-fab";
 import Dialog from "../../../components/dialog";
+import DPLLModelInput from "../../../components/dpll/model";
 import FAB from "../../../components/fab";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import DeleteIcon from "../../../components/icons/delete";
@@ -12,21 +13,20 @@ import SplitIcon from "../../../components/icons/split";
 import SwitchIcon from "../../../components/icons/switch";
 import OptionList from "../../../components/input/option-list";
 import { checkClose } from "../../../helpers/api";
-import {stringArrayToStringMap} from "../../../helpers/array-to-map";
+import { stringArrayToStringMap } from "../../../helpers/array-to-map";
 import { classMap } from "../../../helpers/class-map";
-import {
-    atomToString,
-    clauseSetToStringMap
-} from "../../../helpers/clause";
+import { atomToString, clauseSetToStringMap } from "../../../helpers/clause";
 import {
     calculateClauseSet,
     getAllLits,
     getPropCandidates,
+    sendModelCheck,
     sendProp,
     sendPrune,
     sendSplit,
 } from "../../../helpers/dpll";
-import {SelectedClauses} from "../../../types/clause";
+import { SelectedClauses } from "../../../types/clause";
+import { DPLLNodeType } from "../../../types/dpll";
 import dpllExampleState from "./example";
 import * as style from "./style.scss";
 
@@ -47,24 +47,27 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         showTree,
     ]);
 
-    const [selectedNode, setSelectedNode] = useState<number>(0);
+    const [branch, setBranch] = useState<number>(0);
 
     const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
         undefined,
     );
 
-    const showPropDialog = selectedClauses !== undefined && selectedClauses.length === 2;
+    const showPropDialog =
+        selectedClauses !== undefined && selectedClauses.length === 2;
     const [showSplitDialog, setShowSplitDialog] = useState(false);
+
+    const [showModelDialog, setShowModelDialog] = useState(false);
 
     const state = cState || dpllExampleState;
 
-    const clauseSet = calculateClauseSet(state, selectedNode);
+    const clauseSet = calculateClauseSet(state, branch);
 
     const handleNodeSelect = (newNode: number) => {
-        if (newNode === selectedNode) {
+        if (newNode === branch) {
             return;
         }
-        setSelectedNode(newNode);
+        setBranch(newNode);
     };
 
     const handleClauseSelect = (keyValuePair: [number, string]) => {
@@ -85,11 +88,11 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
             sendProp(
                 server,
                 state,
-                selectedNode,
+                branch,
                 selectedClauses[0],
                 newClauseId,
                 candidates[0],
-                setSelectedNode,
+                setBranch,
                 onChange,
                 onError,
             );
@@ -99,8 +102,13 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         setSelectedClauses([selectedClauses[0], newClauseId]);
     };
 
-    const propOptions = selectedClauses !== undefined && selectedClauses.length > 1 ?
-            stringArrayToStringMap(clauseSet.clauses[selectedClauses[1]!].atoms.map(atomToString))
+    const propOptions =
+        selectedClauses !== undefined && selectedClauses.length > 1
+            ? stringArrayToStringMap(
+                  clauseSet.clauses[selectedClauses[1]!].atoms.map(
+                      atomToString,
+                  ),
+              )
             : new Map<number, string>();
 
     const handlePropLitSelect = (keyValuePair: [number, string]) => {
@@ -110,11 +118,11 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         sendProp(
             server,
             state,
-            selectedNode,
+            branch,
             selectedClauses[0],
             selectedClauses[1]!,
             keyValuePair[0],
-            setSelectedNode,
+            setBranch,
             onChange,
             onError,
         );
@@ -127,10 +135,10 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         sendSplit(
             server,
             state,
-            selectedNode,
+            branch,
             allLits[keyValuePair[0]],
             onChange,
-            onError
+            onError,
         );
         setShowSplitDialog(false);
     };
@@ -154,7 +162,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 <div class={style.tree}>
                     <DPLLTree
                         nodes={state.tree}
-                        selectedNode={selectedNode}
+                        selectedNode={branch}
                         onSelect={handleNodeSelect}
                     />
                 </div>
@@ -179,6 +187,24 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                     selectOptionCallback={handleSplitLitSelect}
                 />
             </Dialog>
+            <DPLLModelInput
+                clauseSet={clauseSet}
+                onClose={() => {
+                    setShowModelDialog(false);
+                }}
+                onSend={(interpretation) => {
+                    sendModelCheck(
+                        server,
+                        state,
+                        branch,
+                        interpretation,
+                        onChange,
+                        onError,
+                    );
+                    setShowModelDialog(false);
+                }}
+                open={showModelDialog}
+            />
             <ControlFAB alwaysOpen={!smallScreen}>
                 {smallScreen && (
                     <FAB
@@ -187,6 +213,16 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                         mini={true}
                         extended={true}
                         onClick={toggleShowTree}
+                    />
+                )}
+                {state.tree[branch].type === DPLLNodeType.MODEL && (
+                    <FAB
+                        icon={null}
+                        label="Model Check"
+                        mini={true}
+                        extended={true}
+                        showIconAtEnd={true}
+                        onClick={() => setShowModelDialog(true)}
                     />
                 )}
                 <FAB
@@ -206,13 +242,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                     extended={true}
                     showIconAtEnd={true}
                     onClick={() =>
-                        sendPrune(
-                            server,
-                            state,
-                            selectedNode,
-                            onChange,
-                            onError,
-                        )
+                        sendPrune(server, state, branch, onChange, onError)
                     }
                 />
                 <FAB
