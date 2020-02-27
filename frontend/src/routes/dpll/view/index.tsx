@@ -3,45 +3,27 @@ import DPLLTree from "../../../components/dpll/tree";
 import { useAppState } from "../../../helpers/app-state";
 
 import { useCallback, useState } from "preact/hooks";
-import ControlFAB from "../../../components/control-fab";
-import Dialog from "../../../components/dialog";
+import DPLLPropLitDialog from "../../../components/dpll/dialog/prop";
+import DPLLSplitDialog from "../../../components/dpll/dialog/split";
 import DPLLControlFAB from "../../../components/dpll/fab";
 import DPLLModelInput from "../../../components/dpll/model";
-import FAB from "../../../components/fab";
-import CheckCircleIcon from "../../../components/icons/check-circle";
-import DeleteIcon from "../../../components/icons/delete";
-import SplitIcon from "../../../components/icons/split";
-import SwitchIcon from "../../../components/icons/switch";
 import OptionList from "../../../components/input/option-list";
-import { checkClose } from "../../../helpers/api";
-import { stringArrayToStringMap } from "../../../helpers/array-to-map";
 import { classMap } from "../../../helpers/class-map";
-import { atomToString, clauseSetToStringMap } from "../../../helpers/clause";
+import { clauseSetToStringMap } from "../../../helpers/clause";
 import {
     calculateClauseSet,
-    getAllLits,
     getPropCandidates,
     sendModelCheck,
     sendProp,
-    sendPrune,
-    sendSplit,
 } from "../../../helpers/dpll";
 import { SelectedClauses } from "../../../types/clause";
-import { DPLLNodeType } from "../../../types/dpll";
 import dpllExampleState from "./example";
 import * as style from "./style.scss";
 
 interface Props {}
 
 const DPLLView: preact.FunctionalComponent<Props> = () => {
-    const {
-        dpll: cState,
-        smallScreen,
-        server,
-        onChange,
-        onError,
-        onSuccess,
-    } = useAppState();
+    const { dpll: cState, server, onChange, onError } = useAppState();
 
     const [showTree, setShowTree] = useState(false);
     const toggleShowTree = useCallback(() => setShowTree(!showTree), [
@@ -103,47 +85,6 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         setSelectedClauses([selectedClauses[0], newClauseId]);
     };
 
-    const propOptions =
-        selectedClauses !== undefined && selectedClauses.length > 1
-            ? stringArrayToStringMap(
-                  clauseSet.clauses[selectedClauses[1]!].atoms.map(
-                      atomToString,
-                  ),
-              )
-            : new Map<number, string>();
-
-    const handlePropLitSelect = (keyValuePair: [number, string]) => {
-        if (selectedClauses === undefined || selectedClauses.length < 2) {
-            return;
-        }
-        sendProp(
-            server,
-            state,
-            branch,
-            selectedClauses[0],
-            selectedClauses[1]!,
-            keyValuePair[0],
-            setBranch,
-            onChange,
-            onError,
-        );
-        setSelectedClauses(undefined);
-    };
-
-    const allLits = showSplitDialog ? getAllLits(clauseSet) : [];
-
-    const handleSplitLitSelect = (keyValuePair: [number, string]) => {
-        sendSplit(
-            server,
-            state,
-            branch,
-            allLits[keyValuePair[0]],
-            onChange,
-            onError,
-        );
-        setShowSplitDialog(false);
-    };
-
     return (
         <Fragment>
             <h2>DPLL View</h2>
@@ -168,26 +109,22 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                     />
                 </div>
             </div>
-            <Dialog
-                label="Choose Literal"
+            <DPLLPropLitDialog
                 open={showPropDialog}
-                onClose={() => setSelectedClauses([selectedClauses![0]])}
-            >
-                <OptionList
-                    options={propOptions}
-                    selectOptionCallback={handlePropLitSelect}
-                />
-            </Dialog>
-            <Dialog
-                label="Select Literal"
+                state={state}
+                clauseSet={clauseSet}
+                branch={branch}
+                setBranch={setBranch}
+                selectedClauses={selectedClauses}
+                setSelectedClauses={setSelectedClauses}
+            />
+            <DPLLSplitDialog
+                state={state}
+                branch={branch}
                 open={showSplitDialog}
-                onClose={() => setShowSplitDialog(false)}
-            >
-                <OptionList
-                    options={stringArrayToStringMap(allLits)}
-                    selectOptionCallback={handleSplitLitSelect}
-                />
-            </Dialog>
+                setOpen={setShowSplitDialog}
+                clauseSet={clauseSet}
+            />
             <DPLLModelInput
                 clauseSet={clauseSet}
                 onClose={() => {
