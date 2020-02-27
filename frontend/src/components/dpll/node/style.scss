@@ -1,5 +1,9 @@
 .node {
     cursor: pointer;
+
+    &--annotated {
+        fill: var(--kbar-accent-2-color);
+    }
 }
 
 .text {

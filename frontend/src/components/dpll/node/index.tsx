@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useRef } from "preact/hooks";
 import { classMap } from "../../../helpers/class-map";
-import { DPLLTreeLayoutNode } from "../../../types/dpll";
+import { DPLLNodeType, DPLLTreeLayoutNode } from "../../../types/dpll";
 import { LayoutItem } from "../../../types/layout";
 import Rectangle from "../../rectangle";
 
@@ -29,9 +29,16 @@ const DPLLNode: preact.FunctionalComponent<Props> = ({
 }) => {
     const textRef = useRef<SVGTextElement>();
 
+    const isAnnotation =
+        node.data.type === DPLLNodeType.MODEL ||
+        node.data.type === DPLLNodeType.CLOSED;
+
     return (
         <g class={style.node} onClick={() => selectNodeCallback(node.data)}>
             <Rectangle
+                class={classMap({
+                    [style.nodeAnnotated]: isAnnotation,
+                })}
                 elementRef={textRef}
                 disabled={false}
                 selected={selected}
@@ -39,7 +46,7 @@ const DPLLNode: preact.FunctionalComponent<Props> = ({
             <text
                 class={classMap({
                     [style.text]: true,
-                    [style.textSelected]: selected,
+                    [style.textSelected]: !isAnnotation && selected,
                 })}
                 ref={textRef}
                 text-anchor="middle"
