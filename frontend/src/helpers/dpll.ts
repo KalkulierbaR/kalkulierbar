@@ -1,5 +1,5 @@
 import { AppStateUpdater } from "../types/app";
-import { ClauseSet } from "../types/clause";
+import { Clause, ClauseSet } from "../types/clause";
 import {
     DPLLCsDiff,
     DPLLState,
@@ -127,4 +127,26 @@ export const calculateClauseSet = (
         return state.clauseSet;
     }
     return applyCsDiff(calculateClauseSet(state, node.parent), node.diff);
+};
+
+export const getPropCandidates = (
+    baseClause: Clause,
+    propClause: Clause,
+): number[] => {
+    // If we have an incompatible clause, let the server handle it
+    if (baseClause.atoms.length > 1 || baseClause.atoms.length === 0) {
+        return propClause.atoms.map((_, i) => i);
+    }
+    const baseAtom = baseClause.atoms[0];
+
+    const candidates: number[] = [];
+
+    for (let i = 0; i < propClause.atoms.length; i++) {
+        const a = propClause.atoms[i];
+        if (a.lit === baseAtom.lit && a.negated !== baseAtom.negated) {
+            candidates.push(i);
+        }
+    }
+
+    return candidates;
 };

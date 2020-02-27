@@ -6,15 +6,18 @@ import { useCallback, useState } from "preact/hooks";
 import ControlFAB from "../../../components/control-fab";
 import Dialog from "../../../components/dialog";
 import FAB from "../../../components/fab";
+import CheckCircleIcon from "../../../components/icons/check-circle";
 import DeleteIcon from "../../../components/icons/delete";
 import SplitIcon from "../../../components/icons/split";
 import SwitchIcon from "../../../components/icons/switch";
 import OptionList from "../../../components/input/option-list";
+import { checkClose } from "../../../helpers/api";
 import { classMap } from "../../../helpers/class-map";
 import { atomToString, clauseSetToStringArray } from "../../../helpers/clause";
 import {
     calculateClauseSet,
     getAllLits,
+    getPropCandidates,
     sendProp,
     sendPrune,
     sendSplit,
@@ -33,6 +36,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         server,
         onChange,
         onError,
+        onSuccess,
     } = useAppState();
 
     const [showTree, setShowTree] = useState(false);
@@ -66,6 +70,24 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
             return;
         }
         if (selectedClauses[0] === newClause) {
+            setSelectedClauses(undefined);
+            return;
+        }
+        const candidates = getPropCandidates(
+            clauseSet.clauses[selectedClauses[0]],
+            clauseSet.clauses[newClause],
+        );
+        if (candidates.length === 1) {
+            sendProp(
+                server,
+                state,
+                selectedNode,
+                selectedClauses[0],
+                newClause,
+                candidates[0],
+                onChange,
+                onError,
+            );
             setSelectedClauses(undefined);
             return;
         }
@@ -158,10 +180,21 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                     />
                 )}
                 <FAB
+                    icon={<CheckCircleIcon />}
+                    label="Check"
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() =>
+                        checkClose(server, onError, onSuccess, "dpll", state)
+                    }
+                />
+                <FAB
                     label="Prune"
                     icon={<DeleteIcon />}
                     mini={true}
                     extended={true}
+                    showIconAtEnd={true}
                     onClick={() =>
                         sendPrune(
                             server,
@@ -177,6 +210,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                     icon={<SplitIcon />}
                     mini={true}
                     extended={true}
+                    showIconAtEnd={true}
                     onClick={() => setShowSplitDialog(true)}
                 />
             </ControlFAB>
