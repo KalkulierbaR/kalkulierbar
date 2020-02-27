@@ -2,7 +2,6 @@ import { h } from "preact";
 import { checkClose } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
 import { sendPrune } from "../../../helpers/dpll";
-import { showTree } from "../../../routes/dpll/view/style.scss";
 import { DPLLNodeType, DPLLState } from "../../../types/dpll";
 import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
@@ -14,6 +13,7 @@ import SwitchIcon from "../../icons/switch";
 interface Props {
     state: DPLLState;
     branch: number;
+    showTree: boolean;
     toggleShowTree: () => void;
     setShowModelDialog: (v: boolean) => void;
     setShowSplitDialog: (v: boolean) => void;
@@ -22,6 +22,7 @@ interface Props {
 const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
     state,
     branch,
+    showTree,
     toggleShowTree,
     setShowModelDialog,
     setShowSplitDialog,

@@ -146,6 +146,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
             <DPLLControlFAB
                 state={state}
                 branch={branch}
+                showTree={showTree}
                 toggleShowTree={toggleShowTree}
                 setShowModelDialog={setShowModelDialog}
                 setShowSplitDialog={setShowSplitDialog}
