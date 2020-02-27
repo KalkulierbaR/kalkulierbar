@@ -1,5 +1,5 @@
 import { AppStateUpdater } from "../types/app";
-import { Clause, ClauseSet } from "../types/clause";
+import { Atom, Clause, ClauseSet } from "../types/clause";
 import {
     DPLLCsDiff,
     DPLLState,
@@ -129,6 +129,9 @@ export const calculateClauseSet = (
     return applyCsDiff(calculateClauseSet(state, node.parent), node.diff);
 };
 
+export const propCompatible = (a1: Atom) => (a2: Atom) =>
+    a1.lit === a2.lit && a1.negated !== a2.negated;
+
 export const getPropCandidates = (
     baseClause: Clause,
     propClause: Clause,
@@ -143,7 +146,7 @@ export const getPropCandidates = (
 
     for (let i = 0; i < propClause.atoms.length; i++) {
         const a = propClause.atoms[i];
-        if (a.lit === baseAtom.lit && a.negated !== baseAtom.negated) {
+        if (propCompatible(baseAtom)(a)) {
             candidates.push(i);
         }
     }

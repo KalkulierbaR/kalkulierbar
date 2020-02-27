@@ -97,9 +97,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
     const propOptions: string[] =
         selectedClauses === undefined || selectedClauses.length < 2
             ? []
-            : clauseSet.clauses[selectedClauses[1]!].atoms.map((a) =>
-                  atomToString(a),
-              );
+            : clauseSet.clauses[selectedClauses[1]!].atoms.map(atomToString);
 
     const handlePropLitSelect = (lId: number) => {
         if (selectedClauses === undefined || selectedClauses.length < 2) {
