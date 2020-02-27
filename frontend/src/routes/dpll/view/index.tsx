@@ -12,8 +12,12 @@ import SplitIcon from "../../../components/icons/split";
 import SwitchIcon from "../../../components/icons/switch";
 import OptionList from "../../../components/input/option-list";
 import { checkClose } from "../../../helpers/api";
+import {stringArrayToStringMap} from "../../../helpers/array-to-map";
 import { classMap } from "../../../helpers/class-map";
-import { atomToString, clauseSetToStringArray } from "../../../helpers/clause";
+import {
+    atomToString,
+    clauseSetToStringMap
+} from "../../../helpers/clause";
 import {
     calculateClauseSet,
     getAllLits,
@@ -50,7 +54,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         undefined,
     );
 
-    const showPropDialog = selectedClauses?.length === 2;
+    const showPropDialog = selectedClauses !== undefined && selectedClauses.length === 2;
     const [showSplitDialog, setShowSplitDialog] = useState(false);
 
     const state = cState || dpllExampleState;
@@ -64,18 +68,19 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         setSelectedNode(newNode);
     };
 
-    const handleClauseSelect = (newClause: number) => {
+    const handleClauseSelect = (keyValuePair: [number, string]) => {
+        const newClauseId = keyValuePair[0];
         if (selectedClauses === undefined) {
-            setSelectedClauses([newClause]);
+            setSelectedClauses([newClauseId]);
             return;
         }
-        if (selectedClauses[0] === newClause) {
+        if (selectedClauses[0] === newClauseId) {
             setSelectedClauses(undefined);
             return;
         }
         const candidates = getPropCandidates(
             clauseSet.clauses[selectedClauses[0]],
-            clauseSet.clauses[newClause],
+            clauseSet.clauses[newClauseId],
         );
         if (candidates.length === 1) {
             sendProp(
@@ -83,7 +88,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 state,
                 selectedNode,
                 selectedClauses[0],
-                newClause,
+                newClauseId,
                 candidates[0],
                 setSelectedNode,
                 onChange,
@@ -92,15 +97,14 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
             setSelectedClauses(undefined);
             return;
         }
-        setSelectedClauses([selectedClauses[0], newClause]);
+        setSelectedClauses([selectedClauses[0], newClauseId]);
     };
 
-    const propOptions: string[] =
-        selectedClauses === undefined || selectedClauses.length < 2
-            ? []
-            : clauseSet.clauses[selectedClauses[1]!].atoms.map(atomToString);
+    const propOptions = selectedClauses !== undefined && selectedClauses.length > 1 ?
+            stringArrayToStringMap(clauseSet.clauses[selectedClauses[1]!].atoms.map(atomToString))
+            : new Map<number, string>();
 
-    const handlePropLitSelect = (lId: number) => {
+    const handlePropLitSelect = (keyValuePair: [number, string]) => {
         if (selectedClauses === undefined || selectedClauses.length < 2) {
             return;
         }
@@ -110,7 +114,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
             selectedNode,
             selectedClauses[0],
             selectedClauses[1]!,
-            lId,
+            keyValuePair[0],
             setSelectedNode,
             onChange,
             onError,
@@ -120,8 +124,15 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
 
     const allLits = showSplitDialog ? getAllLits(clauseSet) : [];
 
-    const handleSplitLitSelect = (id: number) => {
-        sendSplit(server, state, selectedNode, allLits[id], onChange, onError);
+    const handleSplitLitSelect = (keyValuePair: [number, string]) => {
+        sendSplit(
+            server,
+            state,
+            selectedNode,
+            allLits[keyValuePair[0]],
+            onChange,
+            onError
+        );
         setShowSplitDialog(false);
     };
 
@@ -136,9 +147,9 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
             >
                 <div class={style.list}>
                     <OptionList
-                        options={clauseSetToStringArray(clauseSet)}
+                        options={clauseSetToStringMap(clauseSet)}
                         selectOptionCallback={handleClauseSelect}
-                        selectedOptionId={selectedClauses?.[0]}
+                        selectedOptionIds={selectedClauses}
                     />
                 </div>
                 <div class={style.tree}>
@@ -165,7 +176,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 onClose={() => setShowSplitDialog(false)}
             >
                 <OptionList
-                    options={allLits}
+                    options={stringArrayToStringMap(allLits)}
                     selectOptionCallback={handleSplitLitSelect}
                 />
             </Dialog>
