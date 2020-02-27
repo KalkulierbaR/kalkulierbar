@@ -91,6 +91,7 @@ export interface FOResolutionState {
     visualHelp: VisualHelp;
     hiddenClauses: FOClauseSet;
     newestNode: number;
+    clauseCounter: number;
 }
 
 export function instanceOfFOResState(
