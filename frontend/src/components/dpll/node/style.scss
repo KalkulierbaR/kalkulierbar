@@ -1,0 +1,11 @@
+.node {
+    cursor: pointer;
+}
+
+.text {
+    user-select: none;
+
+    &--selected {
+        fill: #fff;
+    }
+}
