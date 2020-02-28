@@ -100,8 +100,8 @@ class TestFactorize {
     fun testFactorizeMoveFo() {
         var fostate = fo.parseFormulaToState("\\all X: (Q(z) | R(X,c) | R(f(c),c) | Q(y))", null)
         fostate = fo.applyMoveOnState(fostate, MoveFactorize(0, mutableListOf(1, 2)))
-        assertEquals(1, fostate.clauseSet.clauses.size)
-        assertEquals("{Q(z), R(f(c), c), Q(y)}", fostate.clauseSet.clauses[0].toString())
+        assertEquals(2, fostate.clauseSet.clauses.size)
+        assertEquals("{Q(z), R(f(c), c), Q(y)}", fostate.clauseSet.clauses[1].toString())
     }
 
     @Test
@@ -112,6 +112,23 @@ class TestFactorize {
 
         var fostate = fo.parseFormulaToState("Q(a) & (R(z) | R(z)) & Q(b) & Q(c)", null)
         fostate = fo.applyMoveOnState(fostate, MoveFactorize(1, mutableListOf(0, 1)))
-        assertEquals("{R(z)}", fostate.clauseSet.clauses[1].toString())
+        assertEquals("{R(z)}", fostate.clauseSet.clauses[4].toString())
+        assertEquals("{R(z), R(z)}", fostate.clauseSet.clauses[1].toString())
+    }
+
+    @Test
+    fun testFactorizeMultiple() {
+        var state = fo.parseFormulaToState("/all X: (Q(X) | Q(f(c)) | Q(f(X)))", null)
+        state = fo.applyMoveOnState(state, MoveFactorize(0, mutableListOf(0, 1, 2)))
+        assertEquals("{Q(f(c))}", state.clauseSet.clauses[1].toString())
+    }
+
+    @Test
+    fun testFactorizeMultipleInvalid() {
+        var state = fo.parseFormulaToState("/all X: (Q(X) | Q(g(c)) | Q(f(X)))", null)
+
+        assertFailsWith<IllegalMove> {
+            fo.applyMoveOnState(state, MoveFactorize(0, mutableListOf(0, 1, 2)))
+        }
     }
 }
