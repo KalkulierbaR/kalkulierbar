@@ -67,6 +67,8 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
             throw IllegalMove("Clause set $clauses has no clause with ID $propID")
         if (atomID < 0 || atomID >= clauses[propID].size)
             throw IllegalMove("Clause ${clauses[propID]} has no atom with ID $atomID")
+        if (baseID == propID)
+            throw IllegalMove("Base and propagation clauses have to be different")
 
         val base = clauses[baseID]
         if (base.size != 1)
