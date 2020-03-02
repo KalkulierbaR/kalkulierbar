@@ -160,7 +160,7 @@ class FirstOrderResolution :
         if (atomIDs.size < 2)
             throw IllegalMove("Please select more than 1 atom to factorize")
         // Verification of correct ID in atoms -> unifySingleClause
-        
+
         var newClause = clauses[clauseID].clone()
         // Unify doubled atoms and remove all except one
         for (i in atomIDs.indices) {
@@ -203,6 +203,7 @@ class FirstOrderResolution :
             throw IllegalMove("Please select side premisses for hyper resolution")
 
         val clauses = state.clauseSet.clauses
+        val oldMainPremiss = clauses[mainID].clone()
         var mainPremiss = clauses[mainID].clone()
 
         // Resolves each side premiss with main premiss
@@ -214,8 +215,13 @@ class FirstOrderResolution :
             if (!sidePremiss.isPositive())
                 throw IllegalMove("Side premiss $sidePremiss is not positive")
 
-            // Resolve side premiss into main premiss ever iteration
-            mainPremiss = resolveSidePremiss(mainPremiss, mAtomID, sidePremiss, sAtomID)
+            // Resolve side premiss into main premiss every iteration
+            mainPremiss = resolveSidePremiss(
+                    mainPremiss,
+                    oldMainPremiss.atoms[mAtomID],
+                    sidePremiss,
+                    sidePremiss.atoms[sAtomID]
+            )
         }
 
         // Check there are no negative atoms anymore
@@ -230,20 +236,18 @@ class FirstOrderResolution :
     /**
      * Resolves a main premiss with a side premiss with respect to a literal
      * @param mainPremiss The main premiss to resolve
-     * @param mAtomID ID of atom in main Premiss
+     * @param mAtom atom in main Premiss
      * @param sidePremiss The side premiss to resolve
-     * @param sAtomID ID of atom in side premiss
+     * @param sAtom atom in side premiss
      * @return A instantiated clause which contains all atoms from main and side premiss
      *         except the one matching the literals of mAtomID and sAtomID.
      */
-    fun resolveSidePremiss(
+    private fun resolveSidePremiss(
         mainPremiss: Clause<Relation>,
-        mAtomID: Int,
+        mAtom: Atom<Relation>,
         sidePremiss: Clause<Relation>,
-        sAtomID: Int
+        sAtom: Atom<Relation>
     ): Clause<Relation> {
-        val mAtom = mainPremiss.atoms[mAtomID]
-        val sAtom = sidePremiss.atoms[sAtomID]
         val literal1 = mAtom.lit
         val literal2 = sAtom.lit
         val mgu: Map<String, FirstOrderTerm>
@@ -259,7 +263,6 @@ class FirstOrderResolution :
             throw IllegalMove("Could not unify '$literal1' of clause $mainPremiss and " +
                     "'$literal2' of clause $sidePremiss: ${e.message}")
         }
-
         // Resolve mainPremiss with side premiss by given atom
         val mainResolveSide = buildClause(mainPremiss, mAtom, sidePremiss, sAtom)
 
