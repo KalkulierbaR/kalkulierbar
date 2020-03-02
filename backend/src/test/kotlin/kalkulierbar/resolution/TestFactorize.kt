@@ -102,6 +102,7 @@ class TestFactorize {
         fostate = fo.applyMoveOnState(fostate, MoveFactorize(0, mutableListOf(1, 2)))
         assertEquals(1, fostate.clauseSet.clauses.size)
         assertEquals("{Q(z), R(f(c), c), Q(y)}", fostate.clauseSet.clauses[0].toString())
+        assertEquals("{Q(z), R(X_1, c), R(f(c), c), Q(y)}", fostate.hiddenClauses.clauses[0].toString())
     }
 
     @Test

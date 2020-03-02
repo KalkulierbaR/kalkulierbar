@@ -13,6 +13,8 @@ import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
 import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
+import kalkulierbar.logic.transform.VariableSuffixAppend
+import kalkulierbar.logic.transform.VariableSuffixStripper
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
@@ -31,13 +33,17 @@ class FirstOrderResolution :
         val parsed = FirstOrderParser.parse(formula)
         val clauses = FirstOrderCNF.transform(parsed)
 
-        return FoResolutionState(clauses, params?.visualHelp ?: VisualHelp.NONE)
+        val state = FoResolutionState(clauses, params?.visualHelp ?: VisualHelp.NONE)
+
+        // Distinguish variables in each clause by appending suffixes
+        state.initSuffix()
+
+        return state
     }
 
     override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
         when (move) {
             is MoveResolveUnify -> resolveUnify(state, move.c1, move.c2, move.l1, move.l2)
-            is MoveInstantiate -> instantiate(state, move.c1, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
             is MoveHyper -> hyper(state, move.mainID, move.atomMap)
@@ -97,6 +103,7 @@ class FirstOrderResolution :
         state.clauseSet.clauses.removeAt(instance2)
         state.clauseSet.clauses.removeAt(instance1)
 
+        state.setSuffix(state.clauseSet.clauses.size - 1) // Re-name variables
         state.newestNode = state.clauseSet.clauses.size - 1
     }
 
@@ -179,6 +186,7 @@ class FirstOrderResolution :
         // Remove old and add new clause
         clauses.removeAt(clauseID)
         clauses.add(clauseID, newClause)
+        state.setSuffix(clauseID) // Re-name variables
         state.newestNode = clauseID
     }
 
@@ -363,11 +371,36 @@ class FoResolutionState(
 ) : GenericResolutionState<Relation>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<Relation>()
+    var clauseCounter = 0
 
     override var seal = ""
 
     override fun getHash(): String {
-        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode"
+        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode|$clauseCounter"
+    }
+
+    /**
+     * Append a unique suffix to the quantified variables in a clause
+     * Overwrites existing suffixes
+     * @param clauseID ID of the clause to process
+     */
+    fun setSuffix(clauseID: Int) {
+        clauseCounter++
+        val clause = clauseSet.clauses[clauseID]
+        val stripper = VariableSuffixStripper("_")
+        val appender = VariableSuffixAppend("_$clauseCounter")
+
+        for (atom in clause.atoms) {
+            atom.lit.arguments = atom.lit.arguments.map { it.accept(stripper).accept(appender) }
+        }
+    }
+
+    /**
+     * Append initial suffixes to all clauses
+     */
+    fun initSuffix() {
+        for (i in clauseSet.clauses.indices)
+            setSuffix(i)
     }
 }
 
