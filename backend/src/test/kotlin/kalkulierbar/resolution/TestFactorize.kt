@@ -104,7 +104,7 @@ class TestFactorize {
         assertEquals(1, fostate.hiddenClauses.clauses.size)
         assertEquals(1, fostate.clauseSet.clauses.size)
         assertEquals("{Q(z), R(f(c), c), Q(y)}", fostate.clauseSet.clauses[0].toString())
-        assertEquals("{Q(z), R(X, c), R(f(c), c), Q(y)}", fostate.hiddenClauses.clauses[0].toString())
+        assertEquals("{Q(z), R(X_1, c), R(f(c), c), Q(y)}", fostate.hiddenClauses.clauses[0].toString())
     }
 
     @Test
