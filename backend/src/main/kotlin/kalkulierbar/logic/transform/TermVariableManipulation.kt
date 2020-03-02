@@ -96,6 +96,43 @@ class VariableSuffixAppend(val suffix: String) : FirstOrderTermVisitor<FirstOrde
     }
 }
 
+/**
+ * Strips a suffix from variable names
+ * @param marker String marking the beginning of the suffix
+ *        Everything after the first occurrence of this string will be removed
+ *        (including the marker itself)
+ */
+class VariableSuffixStripper(val marker: String) : FirstOrderTermVisitor<FirstOrderTerm>() {
+
+    /**
+     * Remove a suffix from a Variable
+     * @param node Variable encountered
+     * @return Variable with suffix removed
+     */
+    override fun visit(node: QuantifiedVariable): FirstOrderTerm {
+        node.spelling = node.spelling.split(marker)[0]
+        return node
+    }
+
+    /**
+     * Constants do not change
+     * @param node Constant encountered
+     * @return unchanged constant
+     */
+    override fun visit(node: Constant) = node
+
+    /**
+     * Remove the suffix from variables in function arguments
+     * @param node Function encountered
+     * @return Function with contained Variables transformed
+     */
+    override fun visit(node: Function): FirstOrderTerm {
+        node.arguments = node.arguments.map { it.accept(this) }
+
+        return node
+    }
+}
+
 class TermContainsVariable(val variable: String) : FirstOrderTermVisitor<Boolean>() {
 
     companion object {

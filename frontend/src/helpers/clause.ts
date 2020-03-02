@@ -1,10 +1,11 @@
 import {
-    Atom,
+    Atom, CandidateClause,
     Clause,
     ClauseSet,
     FOArgument,
     FOLiteral,
 } from "../types/clause";
+import {stringArrayToStringMap} from "./array-to-map";
 import { maxBy } from "./max-by";
 
 /**
@@ -56,6 +57,14 @@ export const clauseSetToStringArray = (clauseSet: ClauseSet<string | FOLiteral>)
     clauseSet.clauses.map(clauseToString);
 
 /**
+ * Transforms a clause set to a string map
+ * @param {ClauseSet} clauseSet - A set of clauses
+ * @returns {Map<number, string>} - The clauses as string map
+ */
+export const clauseSetToStringMap = (clauseSet: ClauseSet<string | FOLiteral>) =>
+    stringArrayToStringMap(clauseSetToStringArray(clauseSet));
+
+/**
  * Determine the longest clause
  * @param {Clause[]} clauses - The clauses
  * @returns {Clause} - The longest clause
@@ -63,3 +72,19 @@ export const clauseSetToStringArray = (clauseSet: ClauseSet<string | FOLiteral>)
 export const maxLengthClause = (
     clauses: Array<Clause<string | FOLiteral>>,
 ) => maxBy(clauses, (c) => clauseToString(c).length);
+
+/**
+ * Get a candidate clause matching the index property
+ * @param {number} searchIndex - The index to search for
+ * @param {CandidateClause[]} candidateClauses - The candidates to search in
+ * @returns {CandidateClause | null} - The candidate clause matching the index
+ */
+export const getCandidateClause = (searchIndex: number, candidateClauses: CandidateClause[]) => {
+    const candidateClauseHits = candidateClauses.filter(
+        (c) => c.index === searchIndex,
+    );
+    if (candidateClauseHits.length === 1) {
+        return candidateClauseHits[0];
+    }
+    return null;
+};

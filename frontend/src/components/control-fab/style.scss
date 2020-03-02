@@ -1,3 +1,5 @@
+$offset: 260px;
+
 .control {
     position: fixed;
     z-index: 2;
@@ -12,7 +14,7 @@
     justify-content: space-evenly;
     position: absolute;
     bottom: 48px;
-    right: -200px;
+    right: -$offset;
     pointer-events: none;
     padding: 0;
 
@@ -20,7 +22,7 @@
         pointer-events: unset;
 
         > * {
-            transform: translateX(-200px);
+            transform: translateX(-$offset);
         }
     }
 

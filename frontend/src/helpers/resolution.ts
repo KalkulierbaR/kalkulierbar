@@ -1,7 +1,10 @@
-import {APIInformation, AppState, ResolutionCalculusType} from "../types/app";
+import {APIInformation, AppState, Calculus, ResolutionCalculusType} from "../types/app";
 import {
+    Atom,
     CandidateClause,
+    Clause,
     ClauseSet,
+    FOClause,
     FOLiteral,
     instanceOfFOAtom,
     instanceOfFOClause,
@@ -10,8 +13,13 @@ import {
     instanceOfPropClause,
     instanceOfPropClauseSet,
 } from "../types/clause";
-import {FOResolutionState, PropResolutionState, VisualHelp} from "../types/resolution";
-import {sendMove} from "./api";
+import {
+    FOResolutionState,
+    HyperResolutionMove,
+    PropResolutionState,
+    VisualHelp,
+} from "../types/resolution";
+import { sendMove } from "./api";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
@@ -72,6 +80,207 @@ export const groupCandidates = (
 };
 
 /**
+ * Gets a list of possible literal combination for prop. hyper-res
+ * @param {Clause} c1 - Main hyper-res clause
+ * @param {Clause} c2 - Possible side premiss
+ * @returns {Array<[number, number]>} - List of lit combinations
+ */
+export const getPropHyperCandidates = (
+    c1: Clause,
+    c2: Clause,
+): Array<[number, number]> => {
+    const lits: Array<[number, number]> = [];
+    const strings: string[] = [];
+
+    for (let i1 = 0; i1 < c1.atoms.length; i1++) {
+        const l1 = c1.atoms[i1];
+        for (let i2 = 0; i2 < c2.atoms.length; i2++) {
+            const l2 = c2.atoms[i2];
+            if (
+                l1.lit === l2.lit &&
+                l1.negated &&
+                !l2.negated &&
+                !strings.includes(l2.lit)
+            ) {
+                lits.push([i1, i2]);
+                strings.push(l2.lit);
+            }
+        }
+    }
+    return lits;
+};
+
+/**
+ * Gets a list of possible literal combination for FO hyper-res
+ * @param {FOClause} c1 - Main hyper-res clause
+ * @param {FOClause} c2 - Possible side premiss
+ * @returns {Array<[number, number]>} - List of lit combinations
+ */
+export const getFOHyperCandidates = (
+    c1: FOClause,
+    c2: FOClause,
+): Array<[number, number]> => {
+    const lits: Array<[number, number]> = [];
+    for (let i1 = 0; i1 < c1.atoms.length; i1++) {
+        const l1 = c1.atoms[i1];
+        for (let i2 = 0; i2 < c2.atoms.length; i2++) {
+            const l2 = c2.atoms[i2];
+            if (
+                l1.negated &&
+                !l2.negated &&
+                l1.lit.spelling === l2.lit.spelling &&
+                l1.lit.arguments.length === l2.lit.arguments.length
+            ) {
+                lits.push([i1, i2]);
+            }
+        }
+    }
+    return lits;
+};
+
+/**
+ * Adds a side premiss to the hyper-res move
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @param {number} mainLitId - Id of the literal in the main clause
+ * @param {number} clauseId - Id of the new side premiss clause
+ * @param {number} litId - Id of the lit in the side premiss
+ * @returns {HyperResolutionMove} - Resulting move
+ */
+export const addHyperSidePremiss = (
+    hyperRes: HyperResolutionMove,
+    mainLitId: number,
+    clauseId: number,
+    litId: number,
+): HyperResolutionMove => ({
+    ...hyperRes,
+    atomMap: {
+        ...hyperRes.atomMap,
+        [mainLitId]: { first: clauseId, second: litId },
+    },
+});
+
+/**
+ * Removes a side premiss from the hyper-res move
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @param {number} mainLitId - Id of the literal in the main clause to remove
+ * @returns {HyperResolutionMove} - Resulting move
+ */
+export const removeHyperSidePremiss = (
+    hyperRes: HyperResolutionMove,
+    mainLitId: number,
+): HyperResolutionMove => {
+    delete hyperRes.atomMap[mainLitId];
+    return {
+        ...hyperRes,
+        atomMap: {
+            ...hyperRes.atomMap,
+        },
+    };
+};
+
+/**
+ * Finds the id of the main lit for which a side premiss with the clause of id `ìd` exists in `hyperRes`
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @param {number} id - The number of the side premiss
+ * @returns {number} - The id of the main lit (-1 if not found)
+ */
+export const findHyperSidePremiss = (
+    hyperRes: HyperResolutionMove,
+    id: number,
+): number => {
+    for (const mId in hyperRes.atomMap) {
+        if (hyperRes.atomMap.hasOwnProperty(mId) && hyperRes.atomMap[mId].first === id) {
+            return parseInt(mId);
+        }
+    }
+    return -1;
+};
+
+/**
+ * Gets the ids of clauses that are side premisses
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @returns {number[]} - The ids of the side premisses
+ */
+export const getHyperClauseIds = (hyperRes: HyperResolutionMove): number[] => {
+    const ids: number[] = [];
+
+    for (const mId in hyperRes.atomMap) {
+        if (hyperRes.atomMap.hasOwnProperty(mId) && mId !== undefined) {
+            ids.push(hyperRes.atomMap[mId].first);
+        }
+    }
+
+    return ids;
+};
+
+/**
+ * Finds the id of the optimal lit in main
+ * @param {HyperResolutionMove} hyperRes - The Hyper Res move
+ * @param {Clause} main - Main clause
+ * @param {string} lit - The literal for resolution
+ * @returns {number} - The id of the optimal main lit
+ */
+export const findOptimalMainLit = (
+    hyperRes: HyperResolutionMove,
+    main: Clause,
+    lit: string,
+) => {
+    const candidates = main.atoms
+        .map((a, i): [Atom, number] => [a, i])
+        .filter(([a]) => a.negated && a.lit === lit)
+        .map(([_, i]) => i);
+
+    if (candidates.length === 1) {
+        return candidates[0];
+    }
+    for (const c of candidates) {
+        if (!(c in hyperRes.atomMap)) {
+            return c;
+        }
+    }
+    return candidates[0];
+};
+
+/**
+ * Gets the selectable clauses based on the current selection
+ * @param {CandidateClause[]} candidateClauses - Current candidate clauses
+ * @param {HyperResolutionMove | undefined} hyperRes - Current hyper res move
+ * @param {number | undefined} selectedClauseId - Id of the current clause
+ * @param {Clause<string | FOLiteral> | undefined} selectedClause - Current clause
+ * @returns {number[]} - ids of currently selectable clauses
+ */
+export const getSelectable = (
+    candidateClauses: CandidateClause[],
+    hyperRes: HyperResolutionMove | undefined,
+    selectedClauseId: number | undefined,
+    selectedClause: Clause<string | FOLiteral> | undefined,
+): number[] => {
+    if (selectedClauseId === undefined || selectedClause === undefined) {
+        return candidateClauses.map((c) => c.index);
+    }
+    if (hyperRes) {
+        const cs = candidateClauses.filter((c) => c.candidateAtomMap.size);
+        const selectable: number[] = [];
+
+        for (const c of cs) {
+            let validKeys = 0;
+            for (const k of c.candidateAtomMap.keys()) {
+                if (selectedClause.atoms[k].negated) {
+                    validKeys++;
+                }
+            }
+            if (validKeys) {
+                selectable.push(c.index);
+            }
+        }
+        return selectable;
+    }
+    return candidateClauses
+        .filter((c) => c.candidateAtomMap.size)
+        .map((c) => c.index);
+};
+
+/**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
  * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
@@ -97,8 +306,7 @@ export const getCandidateClauses = (
                     index: clauseIndex,
                 };
             });
-        }
-        else if (instanceOfFOClauseSet(clauseSet, calculus)){
+        } else if (instanceOfFOClauseSet(clauseSet, calculus)) {
             clauseSet.clauses.forEach((clause, clauseIndex) => {
                 newCandidateClauses[clauseIndex] = {
                     clause,
@@ -113,37 +321,44 @@ export const getCandidateClauses = (
 
         // Filter for possible resolve candidates
         clauseSet.clauses.forEach((clause, clauseIndex) => {
-            const candidateAtomMap: Map<number, number[]> = new Map<number, number[]>();
+            const candidateAtomMap: Map<number, number[]> = new Map<
+                number,
+                number[]
+            >();
             selectedClause.atoms.forEach((atom1, atom1Index) => {
                 const resolventAtomIndices: number[] = [];
                 clause.atoms.forEach((atom2, atom2Index) => {
                     if (
-                        atom1.negated !== atom2.negated && (
-                            (instanceOfPropAtom(atom1, calculus) &&
-                                instanceOfPropAtom(atom2, calculus) &&
-                                atom1.lit === atom2.lit)
-                            ||
+                        atom1.negated !== atom2.negated &&
+                        ((instanceOfPropAtom(atom1, calculus) &&
+                            instanceOfPropAtom(atom2, calculus) &&
+                            atom1.lit === atom2.lit) ||
                             (instanceOfFOAtom(atom1, calculus) &&
                                 instanceOfFOAtom(atom2, calculus) &&
                                 atom1.lit.spelling === atom2.lit.spelling &&
-                                atom1.lit.arguments.length === atom2.lit.arguments.length)
-                        )
+                                atom1.lit.arguments.length ===
+                                    atom2.lit.arguments.length))
                     ) {
-                            resolventAtomIndices.push(atom2Index);
+                        resolventAtomIndices.push(atom2Index);
                     }
                 });
-                if(resolventAtomIndices.length > 0){
+                if (resolventAtomIndices.length > 0) {
                     candidateAtomMap.set(atom1Index, resolventAtomIndices);
                 }
             });
-            if (instanceOfPropClauseSet(clauseSet, calculus) && instanceOfPropClause(clause, calculus)) {
+            if (
+                instanceOfPropClauseSet(clauseSet, calculus) &&
+                instanceOfPropClause(clause, calculus)
+            ) {
                 newCandidateClauses[clauseIndex] = {
                     clause,
                     candidateAtomMap,
                     index: clauseIndex,
                 };
-            }
-            else if (instanceOfFOClauseSet(clauseSet, calculus) && instanceOfFOClause(clause, calculus)){
+            } else if (
+                instanceOfFOClauseSet(clauseSet, calculus) &&
+                instanceOfFOClause(clause, calculus)
+            ) {
                 newCandidateClauses[clauseIndex] = {
                     clause,
                     candidateAtomMap,
@@ -159,21 +374,44 @@ export const getCandidateClauses = (
     return newCandidateClauses;
 };
 
+/**
+ * The function to call when the user hides a clause
+ * @param {number} c1 - The id of the first clause
+ * @param {number} c2 - The id of the second clause
+ * @param {string} literal - The literal to resolve
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @returns {void}
+ */
 export const sendResolve = (
     c1: number,
     c2: number,
-    literal: string | null,
+    literal: string,
     { server, state, onChange, onError }: APIInformation<PropResolutionState>,
 ) =>
     sendMove(
         server,
-        "prop-resolution",
+        Calculus.propResolution,
         state,
         { type: "res-resolve", c1, c2, literal },
         onChange,
         onError,
     );
 
+/**
+ * The function to call when the user hides a clause
+ * @param {number} c1 - The id of the first clause
+ * @param {number} c2 - The id of the second clause
+ * @param {number} l1 - The id of the first atom
+ * @param {number} l2 - The id of the second atom
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @returns {void}
+ */
 export const sendResolveUnify = (
     c1: number,
     c2: number,
@@ -183,7 +421,7 @@ export const sendResolveUnify = (
 ) =>
     sendMove(
         server,
-        "fo-resolution",
+        Calculus.foResolution,
         state,
         { type: "res-resolveunify", c1, c2, l1, l2 },
         onChange,
@@ -243,6 +481,39 @@ export const showHiddenClauses = <
         state!,
         {
             type: "res-show",
+        },
+        onChange,
+        onError,
+    );
+};
+
+/**
+ * The function to call when the user wants to factorize a clause
+ * @param {number} selectedClauseId - The id of the selected clause
+ * @param {Set<number>} atoms - The atom indices
+ * @param {ResolutionCalculusType} calculus - Current calculus
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @returns {void}
+ */
+export const sendFactorize = <
+    C extends ResolutionCalculusType = ResolutionCalculusType
+>(
+    selectedClauseId: number,
+    atoms: Set<number>,
+    calculus: ResolutionCalculusType,
+    { server, state, onChange, onError }: APIInformation<AppState[C]>,
+) => {
+    sendMove(
+        server,
+        calculus,
+        state!,
+        {
+            type: "res-factorize",
+            c1: selectedClauseId,
+            atoms: Array.from(atoms),
         },
         onChange,
         onError,

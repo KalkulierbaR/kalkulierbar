@@ -33,8 +33,9 @@ export const nextOpenLeaf = (nodes: TableauxNode[]) => {
  * @param {Function} onError - Error handler
  * @param {number} leaf - The selected leaf
  * @param {number} pred - The selected predecessor
- * @param {Map<string, string>} varAssignments - Variable assignments for manual unification
  * @param {boolean} autoClose - The server should decide about the variable assignment
+ * @param {Map<string, string>} varAssignments - Variable assignments for manual unification
+ * @param {CallableFunction} callback - The callback to perform after the move was send
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 export const sendClose = (
@@ -45,8 +46,9 @@ export const sendClose = (
     onError: (msg: string) => void,
     leaf: number,
     pred: number,
+    autoClose?: boolean,
     varAssignments?: VarAssign,
-    autoClose?: boolean
+    callback?: CallableFunction,
 ) => {
     if (instanceOfPropTabState(state, calculus)) {
         sendMove(
@@ -71,6 +73,9 @@ export const sendClose = (
             stateChanger,
             onError
         );
+        if (callback !== undefined){
+            callback();
+        }
     }
 };
 

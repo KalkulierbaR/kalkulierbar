@@ -1,6 +1,7 @@
-import {Calculus, ResolutionCalculusType} from "./app";
-import {ClauseSet, FOClauseSet} from "./clause";
-import {CnfStrategy, VarAssign} from "./tableaux";
+import { Calculus, ResolutionCalculusType } from "./app";
+import { ClauseSet, FOClauseSet } from "./clause";
+import { KNumMap, KPair } from "./kotlin";
+import { CnfStrategy, VarAssign } from "./tableaux";
 
 export interface PropResolutionState {
     seal: string;
@@ -30,6 +31,14 @@ export interface ResolutionResolveMove {
     literal: string | null;
 }
 
+export type HyperMap = KNumMap<KPair<number, number>>;
+
+export interface HyperResolutionMove {
+    type: "res-hyper";
+    mainID: number;
+    atomMap: HyperMap;
+}
+
 export interface ResolutionResolveUnifyMove {
     type: "res-resolveunify";
     c1: number;
@@ -53,32 +62,32 @@ export interface ResolutionShowMove {
     type: "res-show";
 }
 
-export interface PropResolutionFactoriseMove {
+export interface PropResolutionFactorizeMove {
     type: "res-factorize";
     c1: number;
 }
 
-export interface FOResolutionFactoriseMove {
+export interface FOResolutionFactorizeMove {
     type: "res-factorize";
     c1: number;
-    a1: number;
-    a2: number;
+    atoms: number[];
 }
 
 export type BaseResolutionMove =
     | ResolutionResolveMove
     | ResolutionHideMove
-    | ResolutionShowMove;
+    | ResolutionShowMove
+    | HyperResolutionMove;
 
 export type PropResolutionMove =
     | BaseResolutionMove
-    | PropResolutionFactoriseMove;
+    | PropResolutionFactorizeMove;
 
 export type FOResolutionMove =
     | BaseResolutionMove
     | ResolutionResolveUnifyMove
     | ResolutionInstantiateMove
-    | FOResolutionFactoriseMove;
+    | FOResolutionFactorizeMove;
 
 export interface PropResolutionParams {
     cnfStrategy: CnfStrategy;
@@ -91,6 +100,7 @@ export interface FOResolutionState {
     visualHelp: VisualHelp;
     hiddenClauses: FOClauseSet;
     newestNode: number;
+    clauseCounter: number;
 }
 
 export function instanceOfFOResState(
