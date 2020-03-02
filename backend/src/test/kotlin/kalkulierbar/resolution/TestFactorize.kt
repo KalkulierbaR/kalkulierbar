@@ -118,7 +118,7 @@ class TestFactorize {
 
     @Test
     fun testFactorizeMultiple() {
-        var state = fo.parseFormulaToState("/all X: (Q(X) | Q(f(c)) | Q(f(X)))", null)
+        var state = fo.parseFormulaToState("/all X: (Q(f(X)) | Q(f(c)) | Q(f(X)))", null)
         state = fo.applyMoveOnState(state, MoveFactorize(0, mutableListOf(0, 1, 2)))
         assertEquals("{Q(f(c))}", state.clauseSet.clauses[1].toString())
     }

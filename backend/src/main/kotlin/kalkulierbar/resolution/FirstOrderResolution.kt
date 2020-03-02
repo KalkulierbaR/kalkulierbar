@@ -172,9 +172,15 @@ class FirstOrderResolution :
         // Unify doubled atoms and remove all except one
         for (i in atomIDs.indices) {
             if (i < atomIDs.size - 1) {
+                val firstID = atomIDs[i]
+                val secondID = atomIDs[i + 1]
                 // Unify the selected atoms and instantiate clause
-                val mgu = unifySingleClause(clauses[clauseID], atomIDs[i], atomIDs[i + 1])
+                val mgu = unifySingleClause(clauses[clauseID], firstID, secondID)
                 newClause = instantiateReturn(newClause, mgu)
+
+                // Check equality of both atoms
+                if (newClause.atoms[firstID] != newClause.atoms[secondID])
+                    throw IllegalMove("Atom ${firstID + 1} and ${secondID + 1} are not equal after instantiation")
                 // Change every unified atom to placeholder (except last) -> later remove all placeholder
                 // -> One Atom remains
                 newClause.atoms[atomIDs[i]] = Atom<Relation>(Relation("%placeholder%", mutableListOf()), false)
