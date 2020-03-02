@@ -20,6 +20,6 @@ class TestIssue67 {
         val fo = FirstOrderResolution()
         var state = fo.parseFormulaToState("/all X: ((!R(c) | R(f) | !R(X)) & R(c) & R(X))", null)
         state = fo.applyMoveOnState(state, MoveHyper(0, mapOf(0 to Pair(1, 0), 2 to Pair(2, 0))))
-        assertEquals("{!R(c), R(f), !R(X)}, {R(c)}, {R(X)}, {R(f)}", state.clauseSet.toString())
+        assertEquals("{!R(c), R(f), !R(X_1)}, {R(c)}, {R(X_3)}, {R(f)}", state.clauseSet.toString())
     }
 }
