@@ -2,6 +2,7 @@ import {createRef, h} from "preact";
 import {route} from "preact-router";
 import {useState} from "preact/hooks";
 import {useAppState} from "../../../helpers/app-state";
+import {stringArrayToStringMap} from "../../../helpers/array-to-map";
 import {AppStateActionType, CalculusType, FOCalculus, Params} from "../../../types/app";
 import Btn from "../../btn";
 import OptionList from "../option-list";
@@ -93,13 +94,16 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     const regExMatches = suggestionsRegEx.exec(textareaValue);
 
     // Filter the suggestion based on the users input
-    const suggestions = ["\\all","\\ex", "/all", "/ex", "\\all X:", "\\ex X:",  "/all X:", "/ex X:"].filter(
-        option => {
-            if (regExMatches != null && regExMatches.length > 0){
-                return option.includes(regExMatches[0]);
+    const suggestionMap = stringArrayToStringMap(
+        ["\\all","\\ex", "/all", "/ex", "\\all X:", "\\ex X:",  "/all X:", "/ex X:"].filter(
+            option => {
+                if (regExMatches != null && regExMatches.length > 0){
+                    return option.includes(regExMatches[0]);
+                }
+                return false;
             }
-            return false;
-        });
+        )
+    );
 
     /**
      * Handle the Input event of the textarea
@@ -137,16 +141,16 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
 
     /**
      * Handle the selection of a suggestion
-     * @param {number} optionIndex - The index of the selected option
+     * @param {[number, string]} keyValuePair - The key value pair of the selected option
      * @returns {void}
      */
-    const selectSuggestion = (optionIndex: number) => {
+    const selectSuggestion = (keyValuePair: [number, string]) => {
         if (textAreaRef.current === null || textAreaRef.current === undefined) {
             return;
         }
         setTextareaValue(textareaValue.replace(
             suggestionsRegEx,
-            suggestions[optionIndex] + " "
+            keyValuePair[1] + " "
         ));
         textAreaRef.current.focus();
     };
@@ -170,9 +174,9 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 {
                     FOCalculus.includes(calculus) ?
                         <OptionList
-                            options={suggestions}
+                            options={suggestionMap}
                             selectOptionCallback={selectSuggestion}
-                            className={suggestions.length > 0 ? undefined : style.hide}
+                            className={suggestionMap.size > 0 ? undefined : style.hide}
                         /> : undefined
                 }
                 <Btn

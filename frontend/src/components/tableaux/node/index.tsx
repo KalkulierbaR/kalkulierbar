@@ -6,7 +6,6 @@ import { TableauxTreeLayoutNode } from "../../../types/tableaux";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 
-// Properties Interface for the TableauxTreeNode component
 interface Props {
     /**
      * The single tree node to represent
@@ -43,6 +42,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
         (!lemmaNodesSelectable && !node.data.isClosed) ||
         (lemmaNodesSelectable && selected)
     );
+
     /**
      * Handle the onClick event of the node
      * @returns {void}
@@ -67,7 +67,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                 disabled={node.data.isClosed && !lemmaNodesSelectable}
                 selected={selected}
                 class={classMap({
-                    [style.nodeLemma]: node.data.lemmaSource != null && !node.data.isClosed,
+                    [style.nodeLemma]: node.data.lemmaSource != null,
                     [style.nodeSelectLemma]: node.data.isClosed && lemmaNodesSelectable
                 })}
             />
