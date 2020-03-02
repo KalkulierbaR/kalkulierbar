@@ -183,11 +183,10 @@ class FirstOrderResolution :
         // Remove placeholder atoms
         newClause.atoms.removeIf { it.lit.spelling == "%placeholder%" }
 
-        // Remove old and add new clause
-        clauses.removeAt(clauseID)
-        clauses.add(clauseID, newClause)
-        state.setSuffix(clauseID) // Re-name variables
-        state.newestNode = clauseID
+        // Add new clause to clauseSet with adjusted variable-name
+        clauses.add(newClause)
+        state.newestNode = clauses.size - 1
+        state.setSuffix(clauses.size - 1) // Re-name variables
     }
 
     /**
@@ -268,8 +267,8 @@ class FirstOrderResolution :
         try {
             mgu = Unification.unify(literal1, literal2)
         } catch (e: UnificationImpossible) {
-            throw IllegalMove("Could not unify '$literal1' of clause $mainPremiss and " +
-                    "'$literal2' of clause $sidePremiss: ${e.message}")
+            throw IllegalMove("Could not unify '$mAtom' of main premiss with " +
+                    "'$sAtom' of side premiss $sidePremiss: ${e.message}")
         }
         // Resolve mainPremiss with side premiss by given atom
         val mainResolveSide = buildClause(mainPremiss, mAtom, sidePremiss, sAtom)
