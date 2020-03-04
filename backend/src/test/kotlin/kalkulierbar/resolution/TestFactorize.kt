@@ -100,8 +100,10 @@ class TestFactorize {
     fun testFactorizeMoveFo() {
         var fostate = fo.parseFormulaToState("\\all X: (Q(z) | R(X,c) | R(f(c),c) | Q(y))", null)
         fostate = fo.applyMoveOnState(fostate, MoveFactorize(0, mutableListOf(1, 2)))
+
         assertEquals(2, fostate.clauseSet.clauses.size)
         assertEquals("{Q(z), R(f(c), c), Q(y)}", fostate.clauseSet.clauses[1].toString())
+        assertEquals("{Q(z), R(X_1, c), R(f(c), c), Q(y)}", fostate.clauseSet.clauses[0].toString())
     }
 
     @Test
