@@ -180,7 +180,9 @@ class FirstOrderResolution :
 
                 // Check equality of both atoms
                 if (newClause.atoms[firstID] != newClause.atoms[secondID])
-                    throw IllegalMove("Atom ${firstID + 1} and ${secondID + 1} are not equal after instantiation")
+                    throw IllegalMove("Atom '${newClause.atoms[firstID]}' and '${newClause.atoms[secondID]}'" +
+                        " are not equal after instantiation")
+
                 // Change every unified atom to placeholder (except last) -> later remove all placeholder
                 // -> One Atom remains
                 newClause.atoms[atomIDs[i]] = Atom<Relation>(Relation("%placeholder%", mutableListOf()), false)
