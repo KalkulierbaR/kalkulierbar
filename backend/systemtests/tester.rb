@@ -402,7 +402,7 @@ def testFactorize(trq, iterations = 20, verbose = false)
 		c = (["d"] + ["a"]*rand(5) + ["b"]*rand(5) + ["c"]*rand(5)).shuffle
 		formula = c.join(",")
 		state = trq.getPostResponse('/prop-resolution/parse', "formula=#{formula}")
-		state = trq.getPostResponse('/prop-resolution/move', "state=#{state}&move={\"type\": \"res-factorize\", \"c1\": 0}")
+		state = trq.getPostResponse('/prop-resolution/move', "state=#{state}&move={\"type\": \"res-factorize\", \"c1\": 0, \"atoms\":[]}")
 
 		if state == nil and c.length != c.uniq.length
 			success = false

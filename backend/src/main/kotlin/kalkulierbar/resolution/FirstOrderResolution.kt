@@ -172,9 +172,17 @@ class FirstOrderResolution :
         // Unify doubled atoms and remove all except one
         for (i in atomIDs.indices) {
             if (i < atomIDs.size - 1) {
+                val firstID = atomIDs[i]
+                val secondID = atomIDs[i + 1]
                 // Unify the selected atoms and instantiate clause
-                val mgu = unifySingleClause(clauses[clauseID], atomIDs[i], atomIDs[i + 1])
+                val mgu = unifySingleClause(clauses[clauseID], firstID, secondID)
                 newClause = instantiateReturn(newClause, mgu)
+
+                // Check equality of both atoms
+                if (newClause.atoms[firstID] != newClause.atoms[secondID])
+                    throw IllegalMove("Atom '${newClause.atoms[firstID]}' and '${newClause.atoms[secondID]}'" +
+                        " are not equal after instantiation")
+
                 // Change every unified atom to placeholder (except last) -> later remove all placeholder
                 // -> One Atom remains
                 newClause.atoms[atomIDs[i]] = Atom<Relation>(Relation("%placeholder%", mutableListOf()), false)
@@ -183,11 +191,10 @@ class FirstOrderResolution :
         // Remove placeholder atoms
         newClause.atoms.removeIf { it.lit.spelling == "%placeholder%" }
 
-        // Remove old and add new clause
-        clauses.removeAt(clauseID)
-        clauses.add(clauseID, newClause)
-        state.setSuffix(clauseID) // Re-name variables
-        state.newestNode = clauseID
+        // Add new clause to clauseSet with adjusted variable-name
+        clauses.add(newClause)
+        state.newestNode = clauses.size - 1
+        state.setSuffix(clauses.size - 1) // Re-name variables
     }
 
     /**
@@ -268,8 +275,8 @@ class FirstOrderResolution :
         try {
             mgu = Unification.unify(literal1, literal2)
         } catch (e: UnificationImpossible) {
-            throw IllegalMove("Could not unify '$literal1' of clause $mainPremiss and " +
-                    "'$literal2' of clause $sidePremiss: ${e.message}")
+            throw IllegalMove("Could not unify '$mAtom' of main premiss with " +
+                    "'$sAtom' of side premiss $sidePremiss: ${e.message}")
         }
         // Resolve mainPremiss with side premiss by given atom
         val mainResolveSide = buildClause(mainPremiss, mAtom, sidePremiss, sAtom)
