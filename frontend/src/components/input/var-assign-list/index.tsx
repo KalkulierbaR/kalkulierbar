@@ -1,4 +1,5 @@
-import { h } from "preact";
+import {h} from "preact";
+import {useState} from "preact/hooks";
 import { VarAssign } from "../../../types/tableaux";
 import Btn from "../../btn";
 import TextInput from "../text";
@@ -11,7 +12,7 @@ interface Props {
     /**
      * Whether all variable assignments need to be provided by the user
      */
-    manualVarAssign: boolean;
+    manualVarAssignOnly: boolean;
     /**
      * The function to call, when the user submits the list
      */
@@ -36,7 +37,7 @@ interface Props {
 
 const VarAssignList: preact.FunctionalComponent<Props> = ({
     vars,
-    manualVarAssign,
+    manualVarAssignOnly,
     submitVarAssignCallback,
     submitLabel,
     secondSubmitLabel,
@@ -44,12 +45,13 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
     className
 }) => {
     const varAssign: VarAssign = {};
+    const [focusedInputElement, setFocusedInputElement] = useState<string>(vars[0]);
 
     /**
      * Submit the manual variable assignment by the user
      * @returns {void}
      */
-    const submitVarAssign = () => {
+    const submitManualVarAssign = () => {
         vars.forEach(variable => {
             const textInput = document.getElementById(variable);
             if (!(textInput && textInput instanceof HTMLInputElement && textInput.value)) {
@@ -66,29 +68,46 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const onKeyDown = (e: KeyboardEvent) => {
+        e.stopPropagation();
         if (e.keyCode === 13 && e.ctrlKey) {
             // Submit manual varAssign when hitting (enter + ctrlKey)
-            e.stopPropagation();
-            submitVarAssign();
+            submitManualVarAssign();
+        }else if (e.keyCode === 13){
+            // Select next input or submit manual varAssign when hitting (enter)
+            const focusedElementIndex = vars.indexOf(focusedInputElement);
+            if (focusedElementIndex === (vars.length - 1)){
+                submitManualVarAssign();
+            } else{
+                const nextInput = document.getElementById(vars[focusedElementIndex + 1]) as HTMLInputElement;
+                nextInput.focus();
+            }
         }
+    };
+
+    const onFocus = (e: FocusEvent) => {
+        const target = e.target as HTMLInputElement;
+        setFocusedInputElement(target.id);
+        target.focus();
     };
 
     return (
         <div class={`card ${className}`}>
-            {vars.map(variable => (
-                <p>
-                    <TextInput
-                        id={variable}
-                        label={variable + " := "}
-                        required={manualVarAssign}
-                        inline={true}
-                        onKeyDown={onKeyDown}
-                    />
-                </p>
-            ))}
-            <Btn onClick={submitVarAssign}>{submitLabel}</Btn>
+            {vars.map((variable, index) =>
+                    <p key={variable}>
+                        <TextInput
+                            id={variable}
+                            label={variable + " := "}
+                            required={manualVarAssignOnly}
+                            inline={true}
+                            onKeyDown={onKeyDown}
+                            onFocus={onFocus}
+                            autoFocus= {index === 0}
+                        />
+                    </p>
+            )}
+            <Btn onClick={submitManualVarAssign}>{submitLabel}</Btn>
 
-            {!manualVarAssign && secondSubmitLabel && secondSubmitEvent ? (
+            {!manualVarAssignOnly && secondSubmitLabel && secondSubmitEvent ? (
                 <Btn onClick={() => secondSubmitEvent(true)}>
                     {secondSubmitLabel}
                 </Btn>

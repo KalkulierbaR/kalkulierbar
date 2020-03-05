@@ -1,17 +1,17 @@
 package kalkulierbar.tests.dpll
 
 import kalkulierbar.IllegalMove
+import kalkulierbar.dpll.DPLL
 import kalkulierbar.dpll.MovePropagate
 import kalkulierbar.dpll.MoveSplit
 import kalkulierbar.dpll.NodeType
-import kalkulierbar.dpll.PropositionalDPLL
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestSplit {
 
-    val dpll = PropositionalDPLL()
+    val dpll = DPLL()
 
     @Test
     fun testValidSingleClause() {

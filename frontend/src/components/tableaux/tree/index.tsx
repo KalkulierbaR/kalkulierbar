@@ -3,11 +3,11 @@ import { h } from "preact";
 import {
     SelectNodeOptions,
     TableauxNode,
-    TableauxTreeLayoutNode
+    TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
-import { treeLayout } from "../../../helpers/layout/tree";
+import { tableauxTreeLayout } from "../../../helpers/tableaux";
 import { LayoutItem } from "../../../types/layout";
 import Zoomable from "../../zoomable";
 import * as style from "./style.scss";
@@ -27,7 +27,7 @@ interface Props {
      */
     selectNodeCallback: (
         node: TableauxTreeLayoutNode,
-        options?: SelectNodeOptions
+        options?: SelectNodeOptions,
     ) => void;
     /**
      * Informs the element that the screen is small.
@@ -36,19 +36,8 @@ interface Props {
     /**
      * Hands the Information over, that potential Lemma nodes are selectable
      */
-    lemmaNodesSelectable: boolean;
+    lemmaNodesSelectable?: boolean;
 }
-
-/**
- *
- * @param {Array<LayoutItem<TableauxTreeLayoutNode>>} nodes - The nodes we iterate over
- * @param {number} id - Id of the ancestor
- * @returns {TableauxTreeLayoutNode} - The ancestor
- */
-const getNodeById = (
-    nodes: Array<LayoutItem<TableauxTreeLayoutNode>>,
-    id: number
-) => nodes.find(n => n.data.id === id)!;
 
 interface ClosingEdgeProps {
     leaf: LayoutItem<TableauxTreeLayoutNode>;
@@ -58,7 +47,7 @@ interface ClosingEdgeProps {
 // Component to display an edge in a graph
 const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     leaf,
-    pred
+    pred,
 }) => {
     // Calculate coordinates
     const x1 = leaf.x;
@@ -74,17 +63,17 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     // should look like d="M x1 x2 Q xC yC x2 y2"
     const xVektor = x1 - x2;
     const yVektor = y1 - y2;
-    let xControlpoint = x1 - (xVektor / 2);
-    let yControlpoint = y1 - (yVektor / 2);
+    let xControlpoint = x1 - xVektor / 2;
+    let yControlpoint = y1 - yVektor / 2;
     const divisor = 2;
     if (x1 > x2) {
         // child is to the right of the parent
-        xControlpoint = xControlpoint - (-yVektor / divisor);
-        yControlpoint = yControlpoint - (xVektor / divisor);
+        xControlpoint = xControlpoint - -yVektor / divisor;
+        yControlpoint = yControlpoint - xVektor / divisor;
     } else {
         // child is to the left of the parent
-        xControlpoint = xControlpoint - (yVektor / divisor);
-        yControlpoint = yControlpoint - (-xVektor / divisor);
+        xControlpoint = xControlpoint - yVektor / divisor;
+        yControlpoint = yControlpoint - -xVektor / divisor;
     }
 
     const d =
@@ -107,22 +96,50 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
     selectNodeCallback,
     selectedNodeId,
-    lemmaNodesSelectable
+    lemmaNodesSelectable = false,
 }) => {
-    const { data, height: treeHeight, width: treeWidth, links } = treeLayout(
-        nodes
-    );
+    const {
+        data,
+        height: treeHeight,
+        width: treeWidth,
+        links,
+    } = tableauxTreeLayout(nodes);
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
-
-        const node = getNodeById(data, n);
-
+        const node = data[n];
         selectNodeCallback(node.data, { ignoreClause: true });
 
         const { x, y } = node as any;
-
         return [treeWidth / 2 - x, treeHeight / 2 - y];
+    };
+
+    /**
+     * Returns a line to the lemma source if one exists
+     * @returns {SVGLineElement | undefined} - The SVG line
+     */
+    const lineToLemmaSource = () => {
+        if (selectedNodeId !== undefined) {
+            const lemmaTarget = data.find((n) => n.data.id === selectedNodeId);
+
+            if (lemmaTarget && lemmaTarget.data.lemmaSource !== undefined) {
+                const lemmaSource = data.find(
+                    (n) => n.data.id === lemmaTarget.data.lemmaSource,
+                );
+                if (lemmaSource !== undefined) {
+                    return (
+                        <line
+                            class={style.lemmaLink}
+                            x1={lemmaTarget.x}
+                            y1={lemmaTarget.y + 6}
+                            x2={lemmaSource.x}
+                            y2={lemmaSource.y - 16}
+                        />
+                    );
+                }
+            }
+        }
+        return;
     };
 
     return (
@@ -136,22 +153,24 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                 preserveAspectRatio="xMidyMid meet"
                 transformGoTo={transformGoTo}
             >
-                {transform => (
+                {(transform) => (
                     <g
                         transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
                         <g>
-                            {/* First render ClosingEdges -> keep order to avoid overlapping */
-                            data.map(n =>
+                            {/* #1 render ClosingEdges -> keep order to avoid overlapping */
+                            data.map((n) =>
                                 n.data.closeRef !== null ? (
                                     <ClosingEdge
                                         leaf={n}
                                         pred={data[n.data.closeRef]}
                                     />
-                                ) : null
+                                ) : (
+                                    undefined
+                                ),
                             )}
-                            {/* Second render links between nodes */
-                            links.map(l => (
+                            {/* #2 render links between nodes */
+                            links.map((l) => (
                                 <line
                                     class={style.link}
                                     x1={l.source[0]}
@@ -160,8 +179,10 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     y2={l.target[1] - 16}
                                 />
                             ))}
-                            {/* Third render nodes -> renders above all previous elements */
-                            data.map(n => (
+                            {/* #3 render lemma line if it exists */
+                            lineToLemmaSource()}
+                            {/* #4 render nodes -> renders above all previous elements */
+                            data.map((n) => (
                                 <TableauxTreeNode
                                     selectNodeCallback={selectNodeCallback}
                                     node={n}

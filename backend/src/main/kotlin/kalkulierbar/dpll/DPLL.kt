@@ -13,9 +13,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 @Suppress("TooManyFunctions")
-class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
+class DPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
 
-    override val identifier = "prop-dpll"
+    override val identifier = "dpll"
 
     private val serializer = Json(context = dpllMoveModule + clausesetDiffModule)
 

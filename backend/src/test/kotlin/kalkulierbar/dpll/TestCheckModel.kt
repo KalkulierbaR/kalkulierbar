@@ -1,16 +1,16 @@
 package kalkulierbar.tests.dpll
 
 import kalkulierbar.IllegalMove
+import kalkulierbar.dpll.DPLL
 import kalkulierbar.dpll.MoveModelCheck
 import kalkulierbar.dpll.MovePropagate
-import kalkulierbar.dpll.PropositionalDPLL
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestCheckModel {
 
-    val dpll = PropositionalDPLL()
+    val dpll = DPLL()
 
     @Test
     fun testCheckModel1() {
