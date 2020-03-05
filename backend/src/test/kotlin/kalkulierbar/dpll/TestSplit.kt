@@ -42,6 +42,7 @@ class TestSplit {
 
     @Test
     fun testValidSingleAtom() {
+        // TODO: Abändern nach Korrigierung parsing
         var state = dpll.parseFormulaToState("!a;b,c;b", null)
         state = dpll.applyMoveOnState(state, MoveSplit(0, "This does not make any sense"))
         state = dpll.applyMoveOnState(state, MoveSplit(1, "This neither"))
