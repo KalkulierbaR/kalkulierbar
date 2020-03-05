@@ -1,3 +1,4 @@
+import { DPLLMove, DPLLState } from "./dpll";
 import {
     FOResolutionMove,
     FOResolutionParams,
@@ -17,27 +18,45 @@ import {
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
-export type PropCalculusType =  "prop-tableaux" | "prop-resolution";
-export type FOCalculusType =  "fo-tableaux" | "fo-resolution";
-export type CalculusType = TableauxCalculusType | ResolutionCalculusType;
+export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll";
+export type FOCalculusType = "fo-tableaux" | "fo-resolution";
+export type CalculusType =
+    | TableauxCalculusType
+    | ResolutionCalculusType
+    | "dpll";
 
 export enum Calculus {
     propTableaux = "prop-tableaux",
     foTableaux = "fo-tableaux",
     propResolution = "prop-resolution",
     foResolution = "fo-resolution",
+    dpll = "dpll",
 }
 
-export const PropCalculus: CalculusType[] = [Calculus.propTableaux, Calculus.propResolution];
-export const FOCalculus: CalculusType[] = [Calculus.foTableaux, Calculus.foResolution];
-export const TableauxCalculus: CalculusType[] = [Calculus.propTableaux, Calculus.foTableaux];
-export const ResolutionCalculus: CalculusType[] = [Calculus.propResolution, Calculus.foResolution];
+export const PropCalculus: CalculusType[] = [
+    Calculus.propTableaux,
+    Calculus.propResolution,
+    Calculus.dpll,
+];
+export const FOCalculus: CalculusType[] = [
+    Calculus.foTableaux,
+    Calculus.foResolution,
+];
+export const TableauxCalculus: CalculusType[] = [
+    Calculus.propTableaux,
+    Calculus.foTableaux,
+];
+export const ResolutionCalculus: CalculusType[] = [
+    Calculus.propResolution,
+    Calculus.foResolution,
+];
 
 export interface Move {
     "prop-tableaux": TableauxMove;
     "prop-resolution": PropResolutionMove;
     "fo-tableaux": FOTableauxMove;
     "fo-resolution": FOResolutionMove;
+    dpll: DPLLMove;
 }
 
 export interface Params {
@@ -45,6 +64,7 @@ export interface Params {
     "prop-resolution": PropResolutionParams;
     "fo-tableaux": FOTableauxParams;
     "fo-resolution": FOResolutionParams;
+    dpll: null;
 }
 
 export type Formulas = Record<Calculus, string>;
@@ -66,6 +86,7 @@ export interface AppState {
     "prop-resolution"?: PropResolutionState;
     "fo-tableaux"?: FOTableauxState;
     "fo-resolution"?: FOResolutionState;
+    dpll?: DPLLState;
 }
 
 export interface DerivedAppState extends AppState {

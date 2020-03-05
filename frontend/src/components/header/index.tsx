@@ -98,59 +98,38 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
     hamburger,
     onLinkClick,
     currentUrl,
-}) => (
-    <nav
-        class={classMap({
-            [style.nav]: true,
-            [style.hamburgerLink]: hamburger,
-        })}
-    >
-        <Link
-            onClick={() => onLinkClick()}
-            class={
-                currentUrl.includes(Calculus.propTableaux)
-                    ? style.current
-                    : undefined
-            }
-            href={"/" + Calculus.propTableaux}
+}) => {
+    const links = {
+        "Propositional Tableaux": Calculus.propTableaux,
+        "FO Tableaux": Calculus.foTableaux,
+        "Propositional Resolution": Calculus.propResolution,
+        "FO Resolution": Calculus.foResolution,
+        "DPLL": Calculus.dpll,
+    };
+    return(
+        <nav
+            class={classMap({
+                [style.nav]: true,
+                [style.hamburgerLink]: hamburger,
+            })}
         >
-            Propositional Tableaux
-        </Link>
-        <Link
-            onClick={() => onLinkClick()}
-            class={
-                currentUrl.includes(Calculus.foTableaux)
-                    ? style.current
-                    : undefined
-            }
-            href={"/" + Calculus.foTableaux}
-        >
-            FO Tableaux
-        </Link>
-        <Link
-            onClick={() => onLinkClick()}
-            class={
-                currentUrl.includes(Calculus.propResolution)
-                    ? style.current
-                    : undefined
-            }
-            href={"/" + Calculus.propResolution}
-        >
-            Propositional Resolution
-        </Link>
-        <Link
-            onClick={() => onLinkClick()}
-            class={
-                currentUrl.includes(Calculus.foResolution)
-                    ? style.current
-                    : undefined
-            }
-            href={"/" + Calculus.foResolution}
-        >
-            FO Resolution
-        </Link>
-    </nav>
-);
+            {Object.entries(links).map(([linkName, calculus]) =>
+                <Link
+                    key={linkName}
+                    onClick={() => onLinkClick()}
+                    class={
+                        currentUrl.includes(calculus)
+                            ? style.current
+                            : undefined
+                    }
+                    href={"/" + calculus}
+                >
+                    {linkName}
+                </Link>
+            )}
+        </nav>
+    );
+};
 
 const Settings: preact.FunctionalComponent = () => {
     return (
