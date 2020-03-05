@@ -1,10 +1,11 @@
 # Frontend Checkliste für Manuelles Testen
-stand Iteration 7
+stand Iteration 8
 
 ## Bearbeitete Dateien  
 Es wurden Dateien von **...** bearbeitet.
 * [ ]  Tableaux
 * [ ]  Resolution
+* [ ]  DPLL
 * [ ]  components (betreffen alle Kalküle)
 
 
@@ -14,6 +15,7 @@ Alle Verfügbaren Kalkühle sind auswählbar:
 * [ ]  FO-Tableaux
 * [ ]  Prop-Resolution
 * [ ]  FO-Resolution
+* [ ]  DPLL
 
 
 ## Formeleingabe
@@ -24,6 +26,10 @@ Es werden die Richtigen Tooltipps für die angezeigt:
 * [ ]  Regular
 * [ ]  Backtracking
 * [ ]  Naive CNF transformation
+* [ ]  Manual unification
+* [ ]  No visual help
+* [ ]  Highlight resolution partners
+* [ ]  Rearrange resolution partners
 
 Bei **FO-Kalkülen** wird der richtige Formeleingabe Tooltipp gezeigt
 * [ ]  FO-Formeln
