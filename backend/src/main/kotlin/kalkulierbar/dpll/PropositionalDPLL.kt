@@ -178,6 +178,9 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         if (branch.type != NodeType.MODEL)
             throw IllegalMove("Node '$branch' is not a model node")
 
+        if (branch.modelVerified ?: false)
+            throw IllegalMove("This node has already been checked")
+
         val clauseSet = state.getClauseSet(branchID)
 
         // Check that the mapping satisfies every clause
@@ -190,7 +193,7 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         }
 
         branch.modelVerified = true
-        branch.label += " (checked)"
+        branch.label += " ✓"
     }
 
     override fun checkCloseOnState(state: DPLLState): CloseMessage {
