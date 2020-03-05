@@ -6,6 +6,7 @@ import { DPLLNodeType, DPLLState } from "../../../types/dpll";
 import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
 import CheckCircleIcon from "../../icons/check-circle";
+import CheckCircleFilledIcon from "../../icons/check-circle-filled";
 import DeleteIcon from "../../icons/delete";
 import SplitIcon from "../../icons/split";
 import SwitchIcon from "../../icons/switch";
@@ -42,7 +43,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
             )}
             {state.tree[branch].type === DPLLNodeType.MODEL && (
                 <FAB
-                    icon={null}
+                    icon={<CheckCircleFilledIcon />}
                     label="Model Check"
                     mini={true}
                     extended={true}
