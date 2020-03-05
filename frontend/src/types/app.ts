@@ -17,8 +17,8 @@ import {
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
-export type PropCalculusType =  "prop-tableaux" | "prop-resolution";
-export type FOCalculusType =  "fo-tableaux" | "fo-resolution";
+export type PropCalculusType = "prop-tableaux" | "prop-resolution";
+export type FOCalculusType = "fo-tableaux" | "fo-resolution";
 export type CalculusType = TableauxCalculusType | ResolutionCalculusType;
 
 export enum Calculus {
@@ -28,10 +28,22 @@ export enum Calculus {
     foResolution = "fo-resolution",
 }
 
-export const PropCalculus: CalculusType[] = [Calculus.propTableaux, Calculus.propResolution];
-export const FOCalculus: CalculusType[] = [Calculus.foTableaux, Calculus.foResolution];
-export const TableauxCalculus: CalculusType[] = [Calculus.propTableaux, Calculus.foTableaux];
-export const ResolutionCalculus: CalculusType[] = [Calculus.propResolution, Calculus.foResolution];
+export const PropCalculus: CalculusType[] = [
+    Calculus.propTableaux,
+    Calculus.propResolution,
+];
+export const FOCalculus: CalculusType[] = [
+    Calculus.foTableaux,
+    Calculus.foResolution,
+];
+export const TableauxCalculus: CalculusType[] = [
+    Calculus.propTableaux,
+    Calculus.foTableaux,
+];
+export const ResolutionCalculus: CalculusType[] = [
+    Calculus.propResolution,
+    Calculus.foResolution,
+];
 
 export interface Move {
     "prop-tableaux": TableauxMove;
@@ -77,6 +89,7 @@ export interface DerivedAppState extends AppState {
         calculus: C,
         state: AppState[C],
     ) => void;
+    firstVisit: boolean;
     dispatch: (a: AppStateAction) => void;
 }
 
