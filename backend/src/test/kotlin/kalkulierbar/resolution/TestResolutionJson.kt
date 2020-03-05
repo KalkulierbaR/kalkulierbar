@@ -5,8 +5,8 @@ import kalkulierbar.parsers.CnfStrategy
 import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.FoResolutionParam
 import kalkulierbar.resolution.MoveHide
-import kalkulierbar.resolution.MoveInstantiate
 import kalkulierbar.resolution.MoveResolve
+import kalkulierbar.resolution.MoveResolveUnify
 import kalkulierbar.resolution.MoveShow
 import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.resolution.ResolutionParam
@@ -77,9 +77,9 @@ class TestResolutionJson {
         assert(instance.jsonToMove(json) is MoveShow)
         assert(foInstance.jsonToMove(json) is MoveShow)
 
-        json = "{\"type\":\"res-instantiate\", \"c1\": 1, \"varAssign\": {\"X\": \"c\"}}"
-        assertEquals(MoveInstantiate(1, mapOf("X" to "c")), instance.jsonToMove(json))
-        assertEquals(MoveInstantiate(1, mapOf("X" to "c")), foInstance.jsonToMove(json))
+        json = "{\"type\":\"res-resolveunify\", \"c1\": 1, \"c2\": 2, \"l1\": 3, \"l2\": 4}"
+        assertEquals(MoveResolveUnify(1, 2, 3, 4), instance.jsonToMove(json))
+        assertEquals(MoveResolveUnify(1, 2, 3, 4), foInstance.jsonToMove(json))
     }
 
     @Test
