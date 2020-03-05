@@ -3,7 +3,9 @@ import { Fragment, h } from "preact";
 import Switch from "../../components/switch";
 
 import { useState } from "preact/hooks";
+import FAB from "../../components/fab";
 import HintIcon, { Hint } from "../../components/hint";
+import StartIcon from "../../components/icons/start";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
@@ -13,8 +15,10 @@ import {
     CnfStrategy,
     FOTableauxParams,
     PropTableauxParams,
-    TableauxType
+    TableauxType,
 } from "../../types/tableaux";
+
+import * as style from "./style.scss";
 
 interface Props {
     /**
@@ -24,7 +28,7 @@ interface Props {
 }
 
 const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
-    const { smallScreen } = useAppState();
+    const { smallScreen, firstVisit } = useAppState();
 
     const [tabType, setTabType] = useState(TableauxType.unconnected);
     const [regular, setRegular] = useState(false);
@@ -58,7 +62,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 type: tabType,
                 regular,
                 backtracking,
-                cnfStrategy
+                cnfStrategy,
             };
             params = propParams;
             break;
@@ -67,7 +71,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 type: tabType,
                 regular,
                 backtracking,
-                manualVarAssign
+                manualVarAssign,
             };
             params = foParams;
             break;
@@ -160,6 +164,15 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
+            {firstVisit && (
+                <FAB
+                    class={style.tutorialBtn}
+                    icon={<StartIcon />}
+                    showIconAtEnd={true}
+                    extended={true}
+                    label="Start Tutorial"
+                />
+            )}
         </Fragment>
     );
 };

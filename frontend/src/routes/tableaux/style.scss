@@ -1,0 +1,10 @@
+$tut-btn-offset: 120px;
+
+.tutorial-btn {
+    position: fixed;
+    bottom: -$tut-btn-offset;
+    left: 16px;
+    transition: transform 0.2s ease-out;
+    transition-delay: 2s;
+    transform: translateY(-$tut-btn-offset - 16px);
+}
