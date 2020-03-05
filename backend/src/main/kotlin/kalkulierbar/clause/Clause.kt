@@ -21,6 +21,8 @@ class Clause<AtomType>(var atoms: MutableList<Atom<AtomType>> = mutableListOf())
         return newClause
     }
 
+    fun isPositive() = atoms.all { !it.negated }
+
     fun isEmpty() = atoms.isEmpty()
 
     val size: Int

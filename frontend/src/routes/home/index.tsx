@@ -372,7 +372,7 @@ const ROUTES: Route[] = [
             "-291.0496682300446 -242.04966823004457 582.0993364600891 484.09933646008915",
     },
     {
-        href: Calculus.propResolution,
+        href: Calculus.foResolution,
         name: "First Order Resolution",
         image: (
             <g transform="translate(0 0) scale(1)">
@@ -493,12 +493,409 @@ const ROUTES: Route[] = [
     {
         href: Calculus.dpll,
         name: "DPLL",
-        viewBox: "0 100 100",
+        viewBox: "0 -16 385.5 504",
         image: (
-            <g>
-                <text fill="#fff" x="180" y="120" text-anchor="middle">
-                    Placeholder
-                </text>
+            <g transform="translate(0 0) scale(1)">
+                <line
+                    class={style.link}
+                    x1="159.9375"
+                    y1="22"
+                    x2="51.5"
+                    y2="72"
+                />
+                <line
+                    class={style.link}
+                    x1="159.9375"
+                    y1="22"
+                    x2="263.875"
+                    y2="72"
+                />
+                <line class={style.link} x1="51.5" y1="94" x2="51.5" y2="144" />
+                <line
+                    class={style.link}
+                    x1="51.5"
+                    y1="166"
+                    x2="51.5"
+                    y2="216"
+                />
+                <line
+                    class={style.link}
+                    x1="263.875"
+                    y1="94"
+                    x2="189.25"
+                    y2="144"
+                />
+                <line
+                    class={style.link}
+                    x1="263.875"
+                    y1="94"
+                    x2="334"
+                    y2="144"
+                />
+                <line
+                    class={style.link}
+                    x1="189.25"
+                    y1="166"
+                    x2="135.5"
+                    y2="216"
+                />
+                <line
+                    class={style.link}
+                    x1="189.25"
+                    y1="166"
+                    x2="238.5"
+                    y2="216"
+                />
+                <line
+                    class={style.link}
+                    x1="135.5"
+                    y1="238"
+                    x2="135.5"
+                    y2="288"
+                />
+                <line
+                    class={style.link}
+                    x1="135.5"
+                    y1="310"
+                    x2="135.5"
+                    y2="360"
+                />
+                <line
+                    class={style.link}
+                    x1="135.5"
+                    y1="382"
+                    x2="135.5"
+                    y2="432"
+                />
+                <line
+                    class={style.link}
+                    x1="238.5"
+                    y1="238"
+                    x2="238.5"
+                    y2="288"
+                />
+                <line
+                    class={style.link}
+                    x1="238.5"
+                    y1="310"
+                    x2="238.5"
+                    y2="360"
+                />
+                <line
+                    class={style.link}
+                    x1="238.5"
+                    y1="382"
+                    x2="238.5"
+                    y2="432"
+                />
+                <line class={style.link} x1="334" y1="166" x2="334" y2="216" />
+                <line class={style.link} x1="334" y1="238" x2="334" y2="288" />
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="138.25"
+                        y="-2.03125"
+                        width="43.375"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="159.9375"
+                        y="16"
+                    >
+                        true
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="39.15625"
+                        y="69.96875"
+                        width="25.359375"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="51.5"
+                        y="88"
+                    >
+                        a
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="246.859375"
+                        y="69.96875"
+                        width="34.703125"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="263.875"
+                        y="88"
+                    >
+                        ¬a
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="177.234375"
+                        y="141.96875"
+                        width="24.03125"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="189.25"
+                        y="160"
+                    >
+                        c
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="317.3125"
+                        y="141.96875"
+                        width="33.375"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="334"
+                        y="160"
+                    >
+                        ¬c
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="27.8125"
+                        y="141.96875"
+                        width="47.375"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="51.5"
+                        y="160"
+                    >
+                        prop
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rectAccent}
+                        x="20.796875"
+                        y="213.96875"
+                        width="61.40625"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="51.5"
+                        y="232"
+                    >
+                        closed
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="310.3125"
+                        y="213.96875"
+                        width="47.375"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="334"
+                        y="232"
+                    >
+                        prop
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rectAccent}
+                        x="303.296875"
+                        y="285.96875"
+                        width="61.40625"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="334"
+                        y="304"
+                    >
+                        closed
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="123.15625"
+                        y="213.96875"
+                        width="24.6875"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="135.5"
+                        y="232"
+                    >
+                        d
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="221.484375"
+                        y="213.96875"
+                        width="34.03125"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="238.5"
+                        y="232"
+                    >
+                        ¬d
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="214.8125"
+                        y="285.96875"
+                        width="47.375"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="238.5"
+                        y="304"
+                    >
+                        prop
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="214.8125"
+                        y="357.96875"
+                        width="47.375"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="238.5"
+                        y="376"
+                    >
+                        prop
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rectAccent}
+                        x="207.796875"
+                        y="429.96875"
+                        width="61.40625"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="238.5"
+                        y="448"
+                    >
+                        closed
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="111.8125"
+                        y="285.96875"
+                        width="47.375"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="135.5"
+                        y="304"
+                    >
+                        prop
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rect}
+                        x="111.8125"
+                        y="357.96875"
+                        width="47.375"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="135.5"
+                        y="376"
+                    >
+                        prop
+                    </text>
+                </g>
+                <g class="XuCDdED6RE_qaP4tVyDTP">
+                    <rect
+                        class={style.rectAccent}
+                        x="104.796875"
+                        y="429.96875"
+                        width="61.40625"
+                        height="26.046875"
+                        rx="4"
+                    />
+                    <text
+                        class=" _24lb4yn7YUpp8lik_f1zsc"
+                        text-anchor="middle"
+                        x="135.5"
+                        y="448"
+                    >
+                        closed
+                    </text>
+                </g>
             </g>
         ),
     },

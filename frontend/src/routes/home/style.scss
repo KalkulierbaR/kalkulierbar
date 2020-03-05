@@ -47,6 +47,10 @@
 
 .rect {
     fill: #d4bcff;
+
+    &--accent {
+        fill: var(--kbar-accent-2-color);
+    }
 }
 
 .link {

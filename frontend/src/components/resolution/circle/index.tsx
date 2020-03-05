@@ -28,6 +28,14 @@ interface Props {
      * Whether to highlight the newest node
      */
     newestNode: number;
+    /**
+     * List of clause ids that should be selectable
+     */
+    selectable: number[];
+    /**
+     * List of clause ids who should be highlighted, but not as primary
+     */
+    semiSelected: number[];
 }
 
 const ResolutionCircle: preact.FunctionalComponent<Props> = ({
@@ -36,6 +44,8 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     selectedClauseId,
     visualHelp,
     newestNode,
+    semiSelected,
+    selectable,
 }) => {
     const { width, height, data, radius } = useMemo(
         () => circleLayout(clauses.map((c) => c.clause)),
@@ -63,9 +73,8 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                                     VisualHelp.highlight,
                                     VisualHelp.rearrange,
                                 ].includes(visualHelp) &&
-                                selectedClauseId !== undefined &&
                                 selectedClauseId !== index &&
-                                clauses[index].candidateAtomMap.size === 0;
+                                !selectable.includes(index);
                             return (
                                 <ResolutionNode
                                     key={index}
@@ -75,6 +84,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                                     clause={clauses[index]}
                                     selectCallback={selectClauseCallback}
                                     isNew={index === newestNode}
+                                    semiSelected={semiSelected.includes(index)}
                                 />
                             );
                         })}

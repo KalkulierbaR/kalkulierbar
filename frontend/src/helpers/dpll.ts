@@ -1,5 +1,5 @@
 import { AppStateUpdater } from "../types/app";
-import { ClauseSet } from "../types/clause";
+import { Atom, Clause, ClauseSet } from "../types/clause";
 import {
     DPLLCsDiff,
     DPLLState,
@@ -38,9 +38,10 @@ export const sendProp = (
     baseClause: number,
     propClause: number,
     propAtom: number,
+    setNode: (node: number) => void,
     onChange: AppStateUpdater,
     onError: (msg: string) => void,
-) => {
+) =>
     sendMove(
         server,
         "dpll",
@@ -48,8 +49,12 @@ export const sendProp = (
         { type: "dpll-prop", branch, baseClause, propClause, propAtom },
         onChange,
         onError,
-    );
-};
+    ).then((s) => {
+        if (s) {
+            setNode(s.tree.length - 1);
+        }
+        return s;
+    });
 
 export const sendPrune = (
     server: string,
@@ -57,7 +62,7 @@ export const sendPrune = (
     branch: number,
     onChange: AppStateUpdater,
     onError: (msg: string) => void,
-) => {
+) =>
     sendMove(
         server,
         "dpll",
@@ -66,7 +71,6 @@ export const sendPrune = (
         onChange,
         onError,
     );
-};
 
 export const sendSplit = (
     server: string,
@@ -75,7 +79,7 @@ export const sendSplit = (
     literal: string,
     onChange: AppStateUpdater,
     onError: (msg: string) => void,
-) => {
+) =>
     sendMove(
         server,
         "dpll",
@@ -84,7 +88,23 @@ export const sendSplit = (
         onChange,
         onError,
     );
-};
+
+export const sendModelCheck = (
+    server: string,
+    state: DPLLState,
+    branch: number,
+    interpretation: Record<string, boolean>,
+    onChange: AppStateUpdater,
+    onError: (msg: string) => void,
+) =>
+    sendMove(
+        server,
+        "dpll",
+        state,
+        { type: "dpll-modelcheck", branch, interpretation },
+        onChange,
+        onError,
+    );
 
 export const getAllLits = (cs: ClauseSet) => {
     const lits = new Set<string>();
@@ -127,4 +147,29 @@ export const calculateClauseSet = (
         return state.clauseSet;
     }
     return applyCsDiff(calculateClauseSet(state, node.parent), node.diff);
+};
+
+export const propCompatible = (a1: Atom) => (a2: Atom) =>
+    a1.lit === a2.lit && a1.negated !== a2.negated;
+
+export const getPropCandidates = (
+    baseClause: Clause,
+    propClause: Clause,
+): number[] => {
+    // If we have an incompatible clause, let the server handle it
+    if (baseClause.atoms.length > 1 || baseClause.atoms.length === 0) {
+        return propClause.atoms.map((_, i) => i);
+    }
+    const baseAtom = baseClause.atoms[0];
+
+    const candidates: number[] = [];
+
+    for (let i = 0; i < propClause.atoms.length; i++) {
+        const a = propClause.atoms[i];
+        if (propCompatible(baseAtom)(a)) {
+            candidates.push(i);
+        }
+    }
+
+    return candidates;
 };
