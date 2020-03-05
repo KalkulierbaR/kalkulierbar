@@ -3,7 +3,6 @@ package kalkulierbar.tests.dpll
 import kalkulierbar.IllegalMove
 import kalkulierbar.dpll.MoveModelCheck
 import kalkulierbar.dpll.MovePropagate
-import kalkulierbar.dpll.MoveSplit
 import kalkulierbar.dpll.PropositionalDPLL
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,7 +24,7 @@ class TestCheckModel {
         }
 
         state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to true)))
-        assertEquals("model (checked)", state.tree[2].label)
+        assertEquals("model ✓", state.tree[2].label)
         assertEquals(true, state.tree[2].modelVerified)
     }
 
@@ -39,12 +38,12 @@ class TestCheckModel {
         }
 
         state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to false, "b" to true)))
-        assertEquals("model (checked)", state.tree[2].label)
+        assertEquals("model ✓", state.tree[2].label)
         assertEquals(true, state.tree[2].modelVerified)
 
-        state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to false, "b" to true)))
-        assertEquals("model (checked)", state.tree[2].label)
-        assertEquals(true, state.tree[2].modelVerified)
+        assertFailsWith<IllegalMove> { // Doubled check
+            state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to false, "b" to true)))
+        }
     }
 
     @Test

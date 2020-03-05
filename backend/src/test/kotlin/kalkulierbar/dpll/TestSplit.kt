@@ -16,13 +16,13 @@ class TestSplit {
     @Test
     fun testValidSingleClause() {
         var state = dpll.parseFormulaToState("!a,b,c", null)
-        state = dpll.applyMoveOnState(state, MoveSplit(0, "!a"))
+        state = dpll.applyMoveOnState(state, MoveSplit(0, "c"))
 
         assertEquals(3, state.tree.size)
 
         assertEquals("true", state.tree[0].label)
-        assertEquals("!a", state.tree[1].label)
-        assertEquals("¬!a", state.tree[2].label)
+        assertEquals("c", state.tree[1].label)
+        assertEquals("¬c", state.tree[2].label)
 
         assertEquals(NodeType.ROOT, state.tree[0].type)
         assertEquals(NodeType.SPLIT, state.tree[1].type)
@@ -36,24 +36,23 @@ class TestSplit {
         assertEquals(true, state.tree[1].isLeaf)
         assertEquals(true, state.tree[2].isLeaf)
 
-        assertEquals("[{!a, b, c}, {!a}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{!a, b, c}, {!!a}]", state.tree[2].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals("[{!a, b, c}, {c}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals("[{!a, b, c}, {!c}]", state.tree[2].diff.apply(state.clauseSet).clauses.toString())
     }
 
     @Test
     fun testValidSingleAtom() {
-        // TODO: Abändern nach Korrigierung parsing
         var state = dpll.parseFormulaToState("!a;b,c;b", null)
-        state = dpll.applyMoveOnState(state, MoveSplit(0, "This does not make any sense"))
-        state = dpll.applyMoveOnState(state, MoveSplit(1, "This neither"))
+        state = dpll.applyMoveOnState(state, MoveSplit(0, "a"))
+        state = dpll.applyMoveOnState(state, MoveSplit(1, "b"))
 
         assertEquals(5, state.tree.size)
 
         assertEquals("true", state.tree[0].label)
-        assertEquals("This does not make any sense", state.tree[1].label)
-        assertEquals("¬This does not make any sense", state.tree[2].label)
-        assertEquals("This neither", state.tree[3].label)
-        assertEquals("¬This neither", state.tree[4].label)
+        assertEquals("a", state.tree[1].label)
+        assertEquals("¬a", state.tree[2].label)
+        assertEquals("b", state.tree[3].label)
+        assertEquals("¬b", state.tree[4].label)
 
         assertEquals(listOf(1, 2), state.tree[0].children)
         assertEquals(0, state.tree[1].parent)
@@ -68,24 +67,23 @@ class TestSplit {
         assertEquals(true, state.tree[3].isLeaf)
         assertEquals(true, state.tree[4].isLeaf)
 
-        assertEquals("[{!a}, {b, c}, {b}, {This does not make any sense}]",
-                state.tree[1].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{!a}, {b, c}, {b}, {!This does not make any sense}]",
+        assertEquals("[{!a}, {b, c}, {b}, {a}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals("[{!a}, {b, c}, {b}, {!a}]",
                 state.tree[2].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{!a}, {b, c}, {b}, {This neither}]",
+        assertEquals("[{!a}, {b, c}, {b}, {b}]",
                 state.tree[3].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{!a}, {b, c}, {b}, {!This neither}]",
+        assertEquals("[{!a}, {b, c}, {b}, {!b}]",
                 state.tree[4].diff.apply(state.clauseSet).clauses.toString())
     }
 
     @Test
-    fun testValidEmpty() {
+    fun testValidNumber() {
         var state = dpll.parseFormulaToState("a,b,c", null)
-        state = dpll.applyMoveOnState(state, MoveSplit(0, ""))
+        state = dpll.applyMoveOnState(state, MoveSplit(0, "42"))
 
         assertEquals("true", state.tree[0].label)
-        assertEquals("", state.tree[1].label)
-        assertEquals("¬", state.tree[2].label)
+        assertEquals("42", state.tree[1].label)
+        assertEquals("¬42", state.tree[2].label)
 
         assertEquals(NodeType.ROOT, state.tree[0].type)
         assertEquals(NodeType.SPLIT, state.tree[1].type)
@@ -99,8 +97,8 @@ class TestSplit {
         assertEquals(true, state.tree[1].isLeaf)
         assertEquals(true, state.tree[2].isLeaf)
 
-        assertEquals("[{a, b, c}, {}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{a, b, c}, {!}]", state.tree[2].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals("[{a, b, c}, {42}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals("[{a, b, c}, {!42}]", state.tree[2].diff.apply(state.clauseSet).clauses.toString())
     }
 
     @Test
@@ -124,6 +122,16 @@ class TestSplit {
             state = dpll.applyMoveOnState(state, MovePropagate(0, 0, 1, 0))
             // Split Annotation
             state = dpll.applyMoveOnState(state, MoveSplit(2, "b"))
+        }
+        // Wrong parsing
+        assertFailsWith<IllegalMove> {
+            state = dpll.applyMoveOnState(state, MoveSplit(0, ""))
+        }
+        assertFailsWith<IllegalMove> {
+            state = dpll.applyMoveOnState(state, MoveSplit(0, "This is nonsense"))
+        }
+        assertFailsWith<IllegalMove> {
+            state = dpll.applyMoveOnState(state, MoveSplit(0, "HELLO"))
         }
     }
 }

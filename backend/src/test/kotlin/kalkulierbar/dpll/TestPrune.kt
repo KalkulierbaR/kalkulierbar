@@ -1,7 +1,11 @@
 package kalkulierbar.test.dpll
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.dpll.*
+import kalkulierbar.dpll.MoveModelCheck
+import kalkulierbar.dpll.MovePropagate
+import kalkulierbar.dpll.MovePrune
+import kalkulierbar.dpll.MoveSplit
+import kalkulierbar.dpll.PropositionalDPLL
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -48,7 +52,7 @@ class TestPrune {
         var state = dpll.parseFormulaToState("a,b;b,c", null)
         state = dpll.applyMoveOnState(state, MoveSplit(0, "b"))
         assertEquals(3, state.tree.size)
-        assertEquals(listOf(1,2), state.tree[0].children)
+        assertEquals(listOf(1, 2), state.tree[0].children)
         assertEquals(false, state.tree[0].isLeaf)
 
         state = dpll.applyMoveOnState(state, MovePrune(0))
@@ -63,11 +67,11 @@ class TestPrune {
         state = dpll.applyMoveOnState(state, MovePropagate(0, 1, 0, 0))
         state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to true)))
 
-        assertEquals("model (checked)", state.tree[2].label)
+        assertEquals("model ✓", state.tree[2].label)
         assertEquals(true, state.tree[2].modelVerified)
 
         state = dpll.applyMoveOnState(state, MovePrune(2))
-        assertEquals("model (checked)", state.tree[2].label)
+        assertEquals("model ✓", state.tree[2].label)
         assertEquals(true, state.tree[2].modelVerified)
     }
 

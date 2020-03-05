@@ -71,11 +71,10 @@ class TestPropagate {
 
     @Test
     fun testValidClosed() {
-        var state = dpll.parseFormulaToState("a;a;a,b", null)
+        var state = dpll.parseFormulaToState("a;!a;a,b", null)
         state = dpll.applyMoveOnState(state, MovePropagate(0, 0, 1, 0))
 
-        assertEquals(NodeType.CLOSED, state.tree[1].type)
-        assertEquals(NodeType.MODEL, state.tree[2].type)
+        assertEquals(NodeType.CLOSED, state.tree[2].type)
     }
 
     @Test
@@ -112,8 +111,8 @@ class TestPropagate {
             // Same branch twice
             state = dpll.applyMoveOnState(state, MovePropagate(0, 0, 2, 0))
         }
+        var state1 = dpll.parseFormulaToState("a;a,b", null)
         assertFailsWith<IllegalMove> { // Propagate Annotation
-            var state1 = dpll.parseFormulaToState("a;a,b", null)
             state1 = dpll.applyMoveOnState(state, MovePropagate(0, 0, 1, 0))
             state1 = dpll.applyMoveOnState(state, MovePropagate(2, 0, 1, 0))
         }
