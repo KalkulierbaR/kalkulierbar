@@ -171,7 +171,7 @@ class TestHyperResolution {
         var state = fo.parseFormulaToState("/all Y: /all Z: (R(a) | !P(Y) | !Q(Z)) & (Q(f(c)) | R(c)) & P(g)", null)
         state = fo.applyMoveOnState(state, MoveHyper(0, mapOf(1 to Pair(2, 0), 2 to Pair(1, 0))))
 
-        assertEquals("{R(a), !P(Y), !Q(Z)}, {Q(f(c)), R(c)}, {P(g)}, {R(a), R(c)}", state.clauseSet.toString())
+        assertEquals("{R(a), !P(Y_1), !Q(Z_1)}, {Q(f(c)), R(c)}, {P(g)}, {R(a), R(c)}", state.clauseSet.toString())
     }
 
     @Test
@@ -179,6 +179,6 @@ class TestHyperResolution {
         var state = fo.parseFormulaToState("/all X: (R(a) | !R(X) | R(X) | R(d)) & (R(e) | R(f) | R(b) | R(g))", null)
         state = fo.applyMoveOnState(state, MoveHyper(0, mapOf(1 to Pair(1, 2))))
 
-        assertEquals("{R(a), !R(X), R(X), R(d)}, {R(e), R(f), R(b), R(g)}, {R(a), R(b), R(d), R(e), R(f), R(g)}", state.clauseSet.toString())
+        assertEquals("{R(a), !R(X_1), R(X_1), R(d)}, {R(e), R(f), R(b), R(g)}, {R(a), R(b), R(d), R(e), R(f), R(g)}", state.clauseSet.toString())
     }
 }

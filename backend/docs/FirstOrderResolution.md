@@ -22,12 +22,6 @@ The resolution rule takes two different clauses in the `clauses` with one litera
 
 First-order resolution moves are encoded as `{"type": "res-resolveunify", "c1": <ID of first clause>, "c2": <ID of second clause>, "l1": <Index of the selected literal in c1>, "l2": <Index of the selected literal in c2>}`. The id of a clause is defined as its position in the `clauses` list.
 
-For now, an additional instantiation rule is implemented allowing the user to create copies of clauses with a specific instantiation applied.  
-
-The instantiation rule adds a new clause to the clause set by applying a variable instantiation on an existing clause. For example, the clause `{R(X)}` can be instantiated using the variable mapping `X => f(c)` to add the new clause `{R(f(c))}` to the clause set. Variables for which no instantiation is specified remain unchanged. The original clause is not changed by the instantiation.  
-
-Instantiation moves are encoded as `{"type": "res-instantiate", "c1": <ID of clause>, "varAssign":<assignment map>}` where the assignment map is of the form `{"X": "f(a)", "Y": "X"}`.  
-
 To reduce visual clutter, two additional moves that do not directly represent calculus rules are available. To hide a clause from view temporarily, a _hide_ move can be used, encoded as `{"type": "res-hide", "c1": <ID of clause>}`. The corresponding _show_ move re-shows all clauses previously hidden from view, encoded as `{"type": "res-show"}`.
 
 The second important rule of the FO resolution calculus is the factorization rule. Within a clause, two chosen atoms can be unified, creating a new clause with one less atom and potentially changed variable instantiations. The most general unifier for two selected atoms is generated and applied automatically. The factorization move can only be applied if a unifier exists for the two selected atoms. The original clause remains in the clause set but will be hidden by default. The factorized clause will be added to the set in its place.  
