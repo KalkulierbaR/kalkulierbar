@@ -107,6 +107,8 @@ class TreeNode(var parent: Int?, val type: NodeType, var label: String, val diff
     fun getHash(): String {
         return "($parent|$children|$type|$label|$diff|$modelVerified)"
     }
+
+    override fun toString() = label
 }
 
 enum class NodeType {
