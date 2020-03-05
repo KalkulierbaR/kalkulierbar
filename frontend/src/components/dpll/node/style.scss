@@ -3,6 +3,11 @@
 
     &--annotated {
         fill: var(--kbar-accent-2-color);
+
+        &--selected {
+            stroke: var(--kbar-accent-color);
+            stroke-width: 2px;
+        }
     }
 }
 

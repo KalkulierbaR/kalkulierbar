@@ -38,6 +38,7 @@ const DPLLNode: preact.FunctionalComponent<Props> = ({
             <Rectangle
                 class={classMap({
                     [style.nodeAnnotated]: isAnnotation,
+                    [style.nodeAnnotatedSelected]: isAnnotation && selected,
                 })}
                 elementRef={textRef}
                 disabled={false}
