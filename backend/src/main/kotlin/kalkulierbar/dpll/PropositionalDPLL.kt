@@ -7,9 +7,12 @@ import kalkulierbar.JsonParseException
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.parsers.FlexibleClauseSetParser
+import kalkulierbar.parsers.TokenType
+import kalkulierbar.parsers.Tokenizer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
+@Suppress("TooManyFunctions")
 class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
 
     override val identifier = "prop-dpll"
@@ -130,11 +133,23 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         if (branch.isAnnotation)
             throw IllegalMove("Cannot split on annotation '$branch'")
 
+        val tokenized = Tokenizer.tokenize(literal)
+
+        if (tokenized.size != 1)
+            throw IllegalMove("Invalid variable name '$literal'")
+
+        val varToken = tokenized[0]
+
+        if (varToken.type != TokenType.CAPID && varToken.type != TokenType.LOWERID)
+            throw IllegalMove("Invalid variable name '$literal'")
+
+        val lit = varToken.spelling
+
         // Add a case distinction for $literal
-        val trueClause = Clause(mutableListOf(Atom(literal, false)))
-        val falseClause = Clause(mutableListOf(Atom(literal, true)))
-        val nodeTrue = TreeNode(branchID, NodeType.SPLIT, "$literal", AddClause(trueClause))
-        val nodeFalse = TreeNode(branchID, NodeType.SPLIT, "¬$literal", AddClause(falseClause))
+        val trueClause = Clause(mutableListOf(Atom(lit, false)))
+        val falseClause = Clause(mutableListOf(Atom(lit, true)))
+        val nodeTrue = TreeNode(branchID, NodeType.SPLIT, "$lit", AddClause(trueClause))
+        val nodeFalse = TreeNode(branchID, NodeType.SPLIT, "¬$lit", AddClause(falseClause))
 
         state.tree.add(nodeTrue)
         branch.children.add(state.tree.size - 1)
@@ -178,6 +193,9 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         if (branch.type != NodeType.MODEL)
             throw IllegalMove("Node '$branch' is not a model node")
 
+        if (branch.modelVerified ?: false)
+            throw IllegalMove("This node has already been checked")
+
         val clauseSet = state.getClauseSet(branchID)
 
         // Check that the mapping satisfies every clause
@@ -190,7 +208,7 @@ class PropositionalDPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         }
 
         branch.modelVerified = true
-        branch.label += " (checked)"
+        branch.label += " ✓"
     }
 
     override fun checkCloseOnState(state: DPLLState): CloseMessage {
