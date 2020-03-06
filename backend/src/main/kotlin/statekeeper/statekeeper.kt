@@ -23,8 +23,10 @@ class StateKeeper {
 
         init {
             try {
-                if (storage.createNewFile())
+                if (storage.createNewFile()) {
                     state = AppState()
+                    flush()
+                }
                 else
                     state = Json.parse(AppState.serializer(), storage.readText())
             } catch (e: Exception) {
