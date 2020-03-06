@@ -18,7 +18,7 @@ interface GenericResolution<AtomType> {
      * @return CloseMessage containing information about the proof status
      */
     fun getCloseMessage(state: GenericResolutionState<AtomType>): CloseMessage {
-        val hasEmptyClause = state.clauseSet.clauses.any { it.atoms.isEmpty() }
+        val hasEmptyClause = state.clauseSet.clauses.any { it.isEmpty() }
         val msg = if (hasEmptyClause) "The proof is closed" else "The proof is not closed"
         return CloseMessage(hasEmptyClause, msg)
     }
@@ -255,7 +255,7 @@ enum class VisualHelp {
     NONE, HIGHLIGHT, REARRANGE
 }
 
-// Context object for FO term serialization
+// Context object for move serialization
 // Tells kotlinx.serialize about child types of ResolutionMove
 val resolutionMoveModule = SerializersModule {
     polymorphic(ResolutionMove::class) {

@@ -1,0 +1,20 @@
+.node {
+    cursor: pointer;
+
+    &--annotated {
+        fill: var(--kbar-accent-2-color);
+
+        &--selected {
+            stroke: var(--kbar-accent-color);
+            stroke-width: 2px;
+        }
+    }
+}
+
+.text {
+    user-select: none;
+
+    &--selected {
+        fill: #fff;
+    }
+}

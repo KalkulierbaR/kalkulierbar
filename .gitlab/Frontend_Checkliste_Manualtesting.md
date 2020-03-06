@@ -1,10 +1,11 @@
 # Frontend Checkliste für Manuelles Testen
-stand Iteration 7
+stand Iteration 8
 
 ## Bearbeitete Dateien  
 Es wurden Dateien von **...** bearbeitet.
 * [ ]  Tableaux
 * [ ]  Resolution
+* [ ]  DPLL
 * [ ]  components (betreffen alle Kalküle)
 
 
@@ -14,6 +15,7 @@ Alle Verfügbaren Kalkühle sind auswählbar:
 * [ ]  FO-Tableaux
 * [ ]  Prop-Resolution
 * [ ]  FO-Resolution
+* [ ]  DPLL
 
 
 ## Formeleingabe
@@ -24,6 +26,10 @@ Es werden die Richtigen Tooltipps für die angezeigt:
 * [ ]  Regular
 * [ ]  Backtracking
 * [ ]  Naive CNF transformation
+* [ ]  Manual unification
+* [ ]  No visual help
+* [ ]  Highlight resolution partners
+* [ ]  Rearrange resolution partners
 
 Bei **FO-Kalkülen** wird der richtige Formeleingabe Tooltipp gezeigt
 * [ ]  FO-Formeln
@@ -119,6 +125,22 @@ Der Floating Action Button zeigt  **...**
 
 *Darstellung:*
 * [ ]  Die Zoom-Funktion funktioniert
+
+### DPLL
+
+* [ ]  DPLL Test wird richtig angezeigt
+
+![image](/uploads/bfe3bab1c1962d065b4149557a7964b9/image.png)
+
+* [ ]  Nodes lassen sich auswählen und zeigen den aktuellen stand des Klausel satzes
+* [ ]  Beim auswählen von zwei Klauseln öffnet sich der `Choose Literal` Dialog.
+
+*Sowohl bei selectierter als auch nichtselectierter Node:*   
+Der Floating Action Button zeigt  **...**
+* [ ]  `PRUNE`
+* [ ]  Klick auf `PRUNE` setzt den Beweisbaum bis zur selektierten Node zurück.
+* [ ]  `SPLIT`
+* [ ]  Klick auf `SPLIT` öffnet den `Select Literal` Dialog.
 
 ## UI Designe
 * [ ]  ausreichend Kontrast
