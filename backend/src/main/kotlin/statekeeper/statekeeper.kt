@@ -11,6 +11,7 @@ import kotlinx.serialization.json.Json
 import org.komputing.khash.keccak.KeccakParameter
 import org.komputing.khash.keccak.extensions.digestKeccak
 
+@Suppress("TooGenericExceptionCaught")
 class StateKeeper {
     companion object {
 
@@ -36,10 +37,10 @@ class StateKeeper {
 
         @kotlinx.serialization.UnstableDefault
         fun getConfig(): String {
-            val calculiJson = state.enabledCalculi.map { "\"$it\"" }.joinToString(", ")
+            val calculiJson = state.disabledCalculi.map { "\"$it\"" }.joinToString(", ")
             val examplesJson = state.examples.map { Json.stringify(Example.serializer(), it) }.joinToString(", ")
 
-            return """{"calculi": [$calculiJson], "examples": [$examplesJson]}"""
+            return """{"disabled": [$calculiJson], "examples": [$examplesJson]}"""
         }
 
         fun setCalculusState(calculus: String, enableString: String, mac: String): String {
@@ -54,17 +55,24 @@ class StateKeeper {
         @kotlinx.serialization.UnstableDefault
         fun addExample(example: String, mac: String): String {
             val fingerprint = "kbae|$example"
+            val parsedExample: Example
+
             if (!verifyMAC(fingerprint, mac))
                 throw AuthenticationException("Invalid MAC")
 
             try {
-                val parsedExample = Json.parse(Example.serializer(), example)
-                state.examples.add(parsedExample)
-                flush()
+                parsedExample = Json.parse(Example.serializer(), example)
             } catch (e: Exception) {
                 val msg = "Could not parse JSON example: "
                 throw JsonParseException(msg + (e.message ?: "Unknown error"))
             }
+
+            // Since we will be writing this to disk, let's
+            // make sure that the example is somewhat sane
+            checkSanity(parsedExample)
+
+            state.examples.add(parsedExample)
+            flush()
 
             return "true"
         }
@@ -101,12 +109,29 @@ class StateKeeper {
             val json = Json.stringify(AppState.serializer(), state)
             storage.writeText(json)
         }
+
+        @Suppress("ThrowsCount")
+        private fun checkSanity(ex: Example) {
+            if (ex.name.length > EXAMPLE_NAME_SIZE)
+                throw StorageLimitHit("Example name exceeds size limit of $EXAMPLE_NAME_SIZE B")
+            if (ex.description.length > EXAMPLE_DESC_SIZE)
+                throw StorageLimitHit("Example description exceeds size limit of $EXAMPLE_DESC_SIZE B")
+            if (ex.formula.length > EXAMPLE_FORMULA_SIZE)
+                throw StorageLimitHit("Example formula exceeds size limit of $EXAMPLE_FORMULA_SIZE B")
+            if (ex.params.length > EXAMPLE_PARAM_SIZE)
+                throw StorageLimitHit("Example parameters exceed size limit of $EXAMPLE_PARAM_SIZE B")
+            if (ex.calculus.length > EXAMPLE_CALCNAME_SIZE)
+                throw StorageLimitHit("Example calculus name exceeds size limit of $EXAMPLE_CALCNAME_SIZE B")
+
+            if (state.examples.size >= MAX_EXAMPLE_COUNT)
+                throw StorageLimitHit("Maximum number of stored examples ($MAX_EXAMPLE_COUNT) exceeded")
+        }
     }
 }
 
 @Serializable
 data class AppState(
-    val enabledCalculi: MutableList<String> = mutableListOf(),
+    val disabledCalculi: MutableList<String> = mutableListOf(),
     val examples: MutableList<Example> = mutableListOf(),
     val key: String = "WildFlowers/UncomfortableMoons"
 )
@@ -121,3 +146,5 @@ data class Example(
 )
 
 class AuthenticationException(msg: String) : KalkulierbarException(msg)
+
+class StorageLimitHit(msg: String) : KalkulierbarException(msg)
