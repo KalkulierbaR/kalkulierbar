@@ -92,6 +92,7 @@ export interface AppState {
 export interface DerivedAppState extends AppState {
     onError: (msg: string) => void;
     onSuccess: (msg: string) => void;
+    onWarning: (msg: string) => void;
     onMessage: (msg: string, type: NotificationType) => void;
     removeNotification: () => void;
     onChange: <C extends CalculusType = CalculusType>(
@@ -171,6 +172,7 @@ export type AppStateUpdater = <C extends CalculusType = CalculusType>(
 export enum NotificationType {
     Error,
     Success,
+    Warning,
     None,
 }
 
