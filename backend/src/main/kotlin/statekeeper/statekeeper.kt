@@ -93,10 +93,6 @@ class StateKeeper {
         private fun verifyMAC(payload: String, mac: String): Boolean {
             val payloadWithKey = "$payload|$date|$key"
             val calculatedMAC = toHex(payloadWithKey.digestKeccak(parameter = KeccakParameter.SHA3_256))
-
-            println(payloadWithKey)
-            println(calculatedMAC)
-            println(mac.toUpperCase())
             return calculatedMAC == mac.toUpperCase()
         }
 
