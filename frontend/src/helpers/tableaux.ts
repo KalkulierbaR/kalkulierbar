@@ -1,5 +1,5 @@
 import { AppStateUpdater, TableauxCalculusType } from "../types/app";
-import { ArrayLayout, LayoutItem } from "../types/layout";
+import { LayoutItem } from "../types/layout";
 import {
     FOTableauxState,
     instanceOfFOTabState,
@@ -9,15 +9,9 @@ import {
     TableauxTreeLayoutNode,
     VarAssign,
 } from "../types/tableaux";
-import { Link, Tree, TreeLayout } from "../types/tree";
+import { Tree, TreeLayout } from "../types/tree";
 import { sendMove } from "./api";
-import {
-    filterTree,
-    preOrderTraverseTree,
-    tree,
-    treeFind,
-    treeLayout,
-} from "./layout/tree";
+import { filterTree, tree, treeFind, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
 
 /**

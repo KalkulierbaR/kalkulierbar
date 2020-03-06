@@ -30,7 +30,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     node,
     selected,
     selectNodeCallback,
-    lemmaNodesSelectable
+    lemmaNodesSelectable,
 }) => {
     const textRef = createRef<SVGTextElement>();
 
@@ -38,17 +38,17 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     const name = `${node.data.negated ? "¬" : ""}${node.data.spelling}`;
 
     // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
-    const nodeIsClickable = ((lemmaNodesSelectable && node.data.isClosed) ||
+    const nodeIsClickable =
+        (lemmaNodesSelectable && node.data.isClosed) ||
         (!lemmaNodesSelectable && !node.data.isClosed) ||
-        (lemmaNodesSelectable && selected)
-    );
+        (lemmaNodesSelectable && selected);
 
     /**
      * Handle the onClick event of the node
      * @returns {void}
      */
     const handleClick = () => {
-        if(nodeIsClickable){
+        if (nodeIsClickable) {
             selectNodeCallback(node.data);
         }
     };
@@ -59,7 +59,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             class={classMap({
                 [style.node]: true,
                 [style.nodeClosed]: node.data.isClosed && !lemmaNodesSelectable,
-                [style.nodeClickable]: nodeIsClickable
+                [style.nodeClickable]: nodeIsClickable,
             })}
         >
             <Rectangle
@@ -68,7 +68,8 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                 selected={selected}
                 class={classMap({
                     [style.nodeLemma]: node.data.lemmaSource != null,
-                    [style.nodeSelectLemma]: node.data.isClosed && lemmaNodesSelectable
+                    [style.nodeSelectLemma]:
+                        node.data.isClosed && lemmaNodesSelectable,
                 })}
             />
             <text
@@ -76,7 +77,8 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                 text-anchor="middle"
                 class={classMap({
                     [style.textSelected]: selected,
-                    [style.textClosed]: node.data.isClosed && !lemmaNodesSelectable
+                    [style.textClosed]:
+                        node.data.isClosed && !lemmaNodesSelectable,
                 })}
                 x={node.x}
                 y={node.y}

@@ -5,9 +5,8 @@ import {
     TableauxNode,
     TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
-import TableauxTreeNode from "../node";
 
-import { findSubTree, treeFind } from "../../../helpers/layout/tree";
+import { findSubTree } from "../../../helpers/layout/tree";
 import {
     getClosedLeaves,
     getNode,

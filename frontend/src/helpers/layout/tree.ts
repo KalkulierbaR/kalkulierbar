@@ -1,4 +1,4 @@
-import { ArrayLayout, LayoutItem } from "../../types/layout";
+import { LayoutItem } from "../../types/layout";
 import { LeftSiblingList, Link, Tree, TreeLayout } from "../../types/tree";
 import { maxBy } from "../max-by";
 
