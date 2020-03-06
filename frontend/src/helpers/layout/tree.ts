@@ -1,5 +1,5 @@
-import { Layout, LayoutItem } from "../../types/layout";
-import { LeftSiblingList, Link, Tree } from "../../types/tree";
+import { ArrayLayout, LayoutItem } from "../../types/layout";
+import { LeftSiblingList, Link, Tree, TreeLayout } from "../../types/tree";
 import { maxBy } from "../max-by";
 
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
@@ -30,24 +30,60 @@ export const tree = <T>(
 export const treeLayout = <N, T extends { id: number }>(
     nodes: N[],
     nodesToTree: (nodes: N[]) => Tree<T>,
-): Layout<T> & { links: Link[] } => {
+): TreeLayout<T> => {
     const root = nodesToTree(nodes);
     layout(root);
 
-    const data = treeToLayoutItem(root);
     const width = treeWidth(root);
     const links = getLinks(root);
-    return { width, height: root.treeHeight, data, links };
+    return { width, height: root.treeHeight, root, links };
 };
 
-const preOrderTraverseTree = <T>(t: Tree<T>, f: (t: Tree<T>) => void) => {
+export const preOrderTraverseTree = <T>(
+    t: Tree<T>,
+    f: (t: Tree<T>) => void,
+) => {
     f(t);
     for (const c of t.children) {
         preOrderTraverseTree(c, f);
     }
 };
 
-const treeToLayoutItem = <T extends { id: number }>(
+export const treeFind = <T>(t: Tree<T>, p: (t: Tree<T>) => boolean) =>
+    findSubTree(t, p, (c) => c.data);
+
+export const findSubTree = <T, V>(
+    t: Tree<T>,
+    p: (t: Tree<T>) => boolean,
+    c: (t: Tree<T>) => V,
+): V | undefined => {
+    if (p(t)) {
+        return c(t);
+    }
+
+    for (const child of t.children) {
+        const res = findSubTree(child, p, c);
+        if (res !== undefined) {
+            return res;
+        }
+    }
+
+    return;
+};
+
+export const filterTree = <T>(t: Tree<T>, p: (tree: Tree<T>) => boolean) => {
+    const res: Array<Tree<T>> = [];
+
+    preOrderTraverseTree(t, (c) => {
+        if (p(c)) {
+            res.push(c);
+        }
+    });
+
+    return res;
+};
+
+export const treeToLayoutItem = <T extends { id: number }>(
     t: Tree<T>,
 ): Array<LayoutItem<T>> => {
     const items: Array<LayoutItem<T>> = [];

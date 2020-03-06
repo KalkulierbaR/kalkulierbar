@@ -3,6 +3,7 @@ import { dpllTreeLayout } from "../../../helpers/dpll";
 import { DPLLTreeNode } from "../../../types/dpll";
 import Zoomable from "../../zoomable";
 
+import { treeToLayoutItem } from "../../../helpers/layout/tree";
 import DPLLNode from "../node";
 import * as style from "./style.scss";
 
@@ -17,7 +18,9 @@ const DPLLTree: preact.FunctionalComponent<Props> = ({
     selectedNode,
     onSelect,
 }) => {
-    const { data, height, width, links } = dpllTreeLayout(nodes);
+    const { root, height, width, links } = dpllTreeLayout(nodes);
+
+    const data = treeToLayoutItem(root);
 
     return (
         <div class="card">

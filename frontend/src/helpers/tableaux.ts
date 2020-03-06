@@ -1,5 +1,5 @@
 import { AppStateUpdater, TableauxCalculusType } from "../types/app";
-import { Layout } from "../types/layout";
+import { ArrayLayout, LayoutItem } from "../types/layout";
 import {
     FOTableauxState,
     instanceOfFOTabState,
@@ -9,9 +9,15 @@ import {
     TableauxTreeLayoutNode,
     VarAssign,
 } from "../types/tableaux";
-import { Link, Tree } from "../types/tree";
+import { Link, Tree, TreeLayout } from "../types/tree";
 import { sendMove } from "./api";
-import { tree, treeLayout } from "./layout/tree";
+import {
+    filterTree,
+    preOrderTraverseTree,
+    tree,
+    treeFind,
+    treeLayout,
+} from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
 
 /**
@@ -78,7 +84,7 @@ export const sendClose = (
             stateChanger,
             onError,
         );
-        if (callback !== undefined){
+        if (callback !== undefined) {
             callback();
         }
     }
@@ -205,7 +211,7 @@ export const sendLemma = (
 
 export const tableauxTreeLayout = (
     nodes: TableauxNode[],
-): Layout<TableauxTreeLayoutNode> & { links: Link[] } => {
+): TreeLayout<TableauxTreeLayoutNode> => {
     return treeLayout(nodes, tabNodeToTree);
 };
 
@@ -225,3 +231,15 @@ const tabNodeToTree = (
         n.children.map((c) => tabNodeToTree(nodes, nodes[c], c, y + 72)),
     );
 };
+
+export const getNode = (t: Tree<TableauxTreeLayoutNode>, id: number) =>
+    treeFind(t, (s) => s.data.id === id)!;
+
+export const getClosedLeaves = (
+    t: Tree<TableauxTreeLayoutNode>,
+): Array<LayoutItem<TableauxTreeLayoutNode>> =>
+    filterTree(t, (c) => c.data.closeRef !== null).map((c) => ({
+        x: c.x,
+        y: c.y,
+        data: c.data,
+    }));

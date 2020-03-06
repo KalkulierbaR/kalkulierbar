@@ -1,3 +1,4 @@
+import { Layout } from "./layout";
 import { Point } from "./ui";
 
 export interface Tree<T> {
@@ -56,4 +57,9 @@ export interface LeftSiblingList {
     lowY: number;
     idx: number;
     next?: LeftSiblingList;
+}
+
+export interface TreeLayout<T> extends Layout {
+    root: Tree<T>;
+    links: Link[];
 }

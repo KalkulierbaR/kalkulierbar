@@ -7,10 +7,16 @@ import {
 } from "../../../types/tableaux";
 import TableauxTreeNode from "../node";
 
-import { tableauxTreeLayout } from "../../../helpers/tableaux";
+import { findSubTree, treeFind } from "../../../helpers/layout/tree";
+import {
+    getClosedLeaves,
+    getNode,
+    tableauxTreeLayout,
+} from "../../../helpers/tableaux";
 import { LayoutItem } from "../../../types/layout";
 import Zoomable from "../../zoomable";
 import * as style from "./style.scss";
+import SubTree from "./subtree";
 
 // Properties Interface for the TableauxTreeView component
 interface Props {
@@ -99,7 +105,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     lemmaNodesSelectable = false,
 }) => {
     const {
-        data,
+        root,
         height: treeHeight,
         width: treeWidth,
         links,
@@ -107,8 +113,8 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
-        const node = data[n];
-        selectNodeCallback(node.data, { ignoreClause: true });
+        const node = getNode(root, n);
+        selectNodeCallback(node, { ignoreClause: true });
 
         const { x, y } = node as any;
         return [treeWidth / 2 - x, treeHeight / 2 - y];
@@ -120,11 +126,17 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
      */
     const lineToLemmaSource = () => {
         if (selectedNodeId !== undefined) {
-            const lemmaTarget = data.find((n) => n.data.id === selectedNodeId);
+            const lemmaTarget = findSubTree(
+                root,
+                (t) => t.data.id === selectedNodeId,
+                (t) => t,
+            );
 
             if (lemmaTarget && lemmaTarget.data.lemmaSource !== undefined) {
-                const lemmaSource = data.find(
-                    (n) => n.data.id === lemmaTarget.data.lemmaSource,
+                const lemmaSource = findSubTree(
+                    root,
+                    (t) => t.data.id === lemmaTarget.data.lemmaSource,
+                    (t) => t,
                 );
                 if (lemmaSource !== undefined) {
                     return (
@@ -159,16 +171,23 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                     >
                         <g>
                             {/* #1 render ClosingEdges -> keep order to avoid overlapping */
-                            data.map((n) =>
-                                n.data.closeRef !== null ? (
-                                    <ClosingEdge
-                                        leaf={n}
-                                        pred={data[n.data.closeRef]}
-                                    />
-                                ) : (
-                                    undefined
-                                ),
-                            )}
+                            getClosedLeaves(root).map((n) => (
+                                <ClosingEdge
+                                    leaf={n}
+                                    pred={
+                                        findSubTree(
+                                            root,
+                                            (t) =>
+                                                t.data.id === n.data.closeRef!,
+                                            ({ x, y, data }) => ({
+                                                x,
+                                                y,
+                                                data,
+                                            }),
+                                        )!
+                                    }
+                                />
+                            ))}
                             {/* #2 render links between nodes */
                             links.map((l) => (
                                 <line
@@ -181,15 +200,15 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                             ))}
                             {/* #3 render lemma line if it exists */
                             lineToLemmaSource()}
-                            {/* #4 render nodes -> renders above all previous elements */
-                            data.map((n) => (
-                                <TableauxTreeNode
+                            {
+                                /* #4 render nodes -> renders above all previous elements */
+                                <SubTree
+                                    node={root}
+                                    selectedNodeId={selectedNodeId}
                                     selectNodeCallback={selectNodeCallback}
-                                    node={n}
-                                    selected={n.data.id === selectedNodeId}
                                     lemmaNodesSelectable={lemmaNodesSelectable}
                                 />
-                            ))}
+                            }
                         </g>
                     </g>
                 )}
