@@ -7,14 +7,14 @@ import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
 import LemmaIcon from "../../../components/icons/lemma";
 import UndoIcon from "../../../components/icons/undo";
-import { checkClose } from "../../../helpers/api";
-import { useAppState } from "../../../helpers/app-state";
+import { TableauxCalculusType } from "../../../types/app";
+import {FOTableauxState, PropTableauxState} from "../../../types/tableaux";
+import { checkClose } from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
 import {
     nextOpenLeaf,
     sendBacktrack,
-} from "../../../helpers/tableaux";
-import { TableauxCalculusType } from "../../../types/app";
-import {FOTableauxState, PropTableauxState} from "../../../types/tableaux";
+} from "../../../util/tableaux";
 
 interface Props {
     /**

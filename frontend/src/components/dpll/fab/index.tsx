@@ -1,8 +1,8 @@
 import { h } from "preact";
-import { checkClose } from "../../../helpers/api";
-import { useAppState } from "../../../helpers/app-state";
-import { sendPrune } from "../../../helpers/dpll";
 import { DPLLNodeType, DPLLState } from "../../../types/dpll";
+import { checkClose } from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
+import { sendPrune } from "../../../util/dpll";
 import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
 import CheckCircleIcon from "../../icons/check-circle";

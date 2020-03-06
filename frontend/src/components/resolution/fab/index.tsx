@@ -3,9 +3,6 @@ import ControlFAB from "../../../components/control-fab";
 import FAB from "../../../components/fab";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
-import {checkClose, sendMove} from "../../../helpers/api";
-import { useAppState } from "../../../helpers/app-state";
-import {hideClause, sendFactorize, showHiddenClauses} from "../../../helpers/resolution";
 import * as style from "../../../routes/resolution/view/style.scss";
 import {ResolutionCalculusType} from "../../../types/app";
 import {SelectedClauses} from "../../../types/clause";
@@ -14,6 +11,9 @@ import {
     HyperResolutionMove, instanceOfPropResState,
     PropResolutionState
 } from "../../../types/resolution";
+import {checkClose, sendMove} from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
+import {hideClause, sendFactorize, showHiddenClauses} from "../../../util/resolution";
 import FactorizeIcon from "../../icons/factorize";
 import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";

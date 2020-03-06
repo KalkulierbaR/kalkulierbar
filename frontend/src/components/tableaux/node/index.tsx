@@ -1,8 +1,8 @@
 import { createRef, h } from "preact";
 
-import { classMap } from "../../../helpers/class-map";
 import { LayoutItem } from "../../../types/layout";
 import { TableauxTreeLayoutNode } from "../../../types/tableaux";
+import { classMap } from "../../../util/class-map";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 

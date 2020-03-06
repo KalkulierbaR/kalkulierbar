@@ -1,15 +1,13 @@
 import { h } from "preact";
-
+import { LayoutItem } from "../../../types/layout";
 import {
     SelectNodeOptions,
     TableauxNode,
     TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
-import TableauxTreeNode from "../node";
-
-import { tableauxTreeLayout } from "../../../helpers/tableaux";
-import { LayoutItem } from "../../../types/layout";
+import { tableauxTreeLayout } from "../../../util/tableaux";
 import Zoomable from "../../zoomable";
+import TableauxTreeNode from "../node";
 import * as style from "./style.scss";
 
 // Properties Interface for the TableauxTreeView component

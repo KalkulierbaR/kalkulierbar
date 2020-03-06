@@ -9,7 +9,6 @@ import StartIcon from "../../components/icons/start";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
-import { useAppState } from "../../helpers/app-state";
 import { Calculus, TableauxCalculusType } from "../../types/app";
 import {
     CnfStrategy,
@@ -17,6 +16,7 @@ import {
     PropTableauxParams,
     TableauxType,
 } from "../../types/tableaux";
+import { useAppState } from "../../util/app-state";
 
 import * as style from "./style.scss";
 

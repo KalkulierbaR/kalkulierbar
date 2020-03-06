@@ -1,9 +1,9 @@
 import { Fragment, h } from "preact";
 import { Link } from "preact-router";
 import { useCallback, useState } from "preact/hooks";
-import { useAppState } from "../../helpers/app-state";
-import { classMap } from "../../helpers/class-map";
 import { AppStateActionType, Calculus, Theme } from "../../types/app";
+import { useAppState } from "../../util/app-state";
+import { classMap } from "../../util/class-map";
 import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";

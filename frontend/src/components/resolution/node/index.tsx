@@ -1,9 +1,8 @@
 import { createRef, h } from "preact";
-import { classMap } from "../../../helpers/class-map";
-import { clauseToString } from "../../../helpers/clause";
 import { CandidateClause } from "../../../types/clause";
+import { classMap } from "../../../util/class-map";
+import { clauseToString } from "../../../util/clause";
 import Rectangle from "../../rectangle";
-
 import * as style from "./style.scss";
 
 interface Props {
