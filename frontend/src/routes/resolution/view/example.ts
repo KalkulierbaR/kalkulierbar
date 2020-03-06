@@ -30,10 +30,20 @@ export const propExample: PropResolutionState = {
     "seal": "6D15F02BA4433745D2FFDDF4E215D5667E84ABA89B3E0DF1FD2D6375DA032EDF"
 };
 
-// Used formula: R(a) & /all X: R(f(b, X)) & (!R(f(b, a)) | !R(f(b, a))) & (!R(a) | !R(a) | !R(a)) & /ex Y: Q(Y) & !Q(c)
+// Used formula: R(b) & R(c) & R(a) & /all X: R(f(b, X)) & (!R(f(b, a)) | !R(f(b, b))) & (!R(a) | !R(b) | !R(c)) & /all Y: Q(Y) & !Q(c)
 export const foExample: FOResolutionState = {
     "clauseSet": {
         "clauses": [{
+            "atoms": [{
+                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "b"}]},
+                "negated": false
+            }]
+        }, {
+            "atoms": [{
+                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "c"}]},
+                "negated": false
+            }]
+        }, {
             "atoms": [{
                 "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "a"}]},
                 "negated": false
@@ -47,7 +57,7 @@ export const foExample: FOResolutionState = {
                         "spelling": "f",
                         "arguments": [{"type": "Constant", "spelling": "b"}, {
                             "type": "QuantifiedVariable",
-                            "spelling": "X"
+                            "spelling": "X_4"
                         }]
                     }]
                 }, "negated": false
@@ -68,7 +78,7 @@ export const foExample: FOResolutionState = {
                     "arguments": [{
                         "type": "Function",
                         "spelling": "f",
-                        "arguments": [{"type": "Constant", "spelling": "b"}, {"type": "Constant", "spelling": "a"}]
+                        "arguments": [{"type": "Constant", "spelling": "b"}, {"type": "Constant", "spelling": "b"}]
                     }]
                 }, "negated": true
             }]
@@ -77,12 +87,12 @@ export const foExample: FOResolutionState = {
                 "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "a"}]},
                 "negated": true
             }, {
-                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "a"}]},
+                "lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "b"}]},
                 "negated": true
-            }, {"lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "a"}]}, "negated": true}]
+            }, {"lit": {"spelling": "R", "arguments": [{"type": "Constant", "spelling": "c"}]}, "negated": true}]
         }, {
             "atoms": [{
-                "lit": {"spelling": "Q", "arguments": [{"type": "Constant", "spelling": "sk1"}]},
+                "lit": {"spelling": "Q", "arguments": [{"type": "QuantifiedVariable", "spelling": "Y_7"}]},
                 "negated": false
             }]
         }, {
@@ -95,5 +105,6 @@ export const foExample: FOResolutionState = {
     "visualHelp": VisualHelp.highlight,
     "newestNode": -1,
     "hiddenClauses": {"clauses": []},
-    "seal": "07547B594BC20F191A937653302959C8A076EB88D09608EEAB4352564A4045BA"
+    "clauseCounter": 8,
+    "seal": "196976513C2CF3237A499CE786D476733DF97B1199D8C7E26EAB89A210144A7F"
 };

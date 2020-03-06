@@ -3,12 +3,12 @@ import {
     AppStateUpdater,
     CalculusType,
     CheckCloseResponse,
-    Move
+    Move,
 } from "../types/app";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
-    state: AppState[C]
+    state: AppState[C],
 ) => Promise<void>;
 
 /**
@@ -27,23 +27,23 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     onError: (msg: string) => void,
     onSuccess: (msg: string) => void,
     calculus: C,
-    state: AppState[C]
+    state: AppState[C],
 ) => {
     const url = `${server}/${calculus}/close`;
     try {
         const response = await fetch(url, {
             headers: {
-                "Content-Type": "text/plain"
+                "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `state=${encodeURIComponent(JSON.stringify(state))}`
+            body: `state=${encodeURIComponent(JSON.stringify(state))}`,
         });
         if (response.status !== 200) {
             onError(await response.text());
         } else {
             const {
                 closed,
-                msg
+                msg,
             } = (await response.json()) as CheckCloseResponse;
             if (closed) {
                 onSuccess(msg);
@@ -74,25 +74,30 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
     state: AppState[C],
     move: Move[C],
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void
-) => {
+    onError: (msg: string) => void,
+): Promise<AppState[C]> => {
     const url = `${server}/${calculus}/move`;
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
             headers: {
-                "Content-Type": "text/plain"
+                "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `move=${encodeURIComponent(JSON.stringify(move))}&state=${encodeURIComponent(JSON.stringify(state))}`
+            body: `move=${encodeURIComponent(
+                JSON.stringify(move),
+            )}&state=${encodeURIComponent(JSON.stringify(state))}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
-        } else {
+            return state;
+        }  {
             const parsed = await res.json();
             stateChanger(calculus, parsed);
+            return parsed;
         }
     } catch (e) {
         onError((e as Error).message);
+        return state;
     }
 };

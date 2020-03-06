@@ -2,8 +2,8 @@ package kalkulierbar.tests.resolution
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.resolution.MoveHide
-import kalkulierbar.resolution.MoveInstantiate
 import kalkulierbar.resolution.MoveResolve
+import kalkulierbar.resolution.MoveResolveUnify
 import kalkulierbar.resolution.MoveShow
 import kalkulierbar.resolution.PropositionalResolution
 import kotlin.test.Test
@@ -18,7 +18,7 @@ class TestResolutionMove {
     fun testUnsupportedMove() {
         val state = instance.parseFormulaToState("a;!a", null)
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, MoveInstantiate(1, mapOf()))
+            instance.applyMoveOnState(state, MoveResolveUnify(0, 0, 0, 0))
         }
     }
 

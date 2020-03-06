@@ -12,6 +12,7 @@ class Clause<AtomType>(var atoms: MutableList<Atom<AtomType>> = mutableListOf())
         c.forEach { add(it) }
     }
 
+    // TODO: Properly clone atoms
     fun clone(): Clause<AtomType> {
         val newClause = Clause<AtomType>()
         for (c in atoms) {
@@ -19,6 +20,13 @@ class Clause<AtomType>(var atoms: MutableList<Atom<AtomType>> = mutableListOf())
         }
         return newClause
     }
+
+    fun isPositive() = atoms.all { !it.negated }
+
+    fun isEmpty() = atoms.isEmpty()
+
+    val size: Int
+        get() = atoms.size
 
     override fun toString(): String {
         return "{${atoms.joinToString(", ")}}"

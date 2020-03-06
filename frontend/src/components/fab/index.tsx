@@ -40,7 +40,7 @@ interface Props {
      */
     class?: string;
     /**
-     * Additional className for styling
+     * Whether or not the FAB is active
      */
     active?: boolean;
 }
@@ -54,12 +54,12 @@ const FAB: preact.FunctionalComponent<Props> = ({
     showIconAtEnd = false,
     onClick,
     class: className,
-    active = false
+    active = false,
 }) => {
     const classes = classMap({
         [style.mini]: mini,
         [style.extended]: extended,
-        [style.active]: active
+        [style.active]: active,
     });
 
     const labelEl = extended ? <span class={style.label}>{label}</span> : null;

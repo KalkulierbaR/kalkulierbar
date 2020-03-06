@@ -11,7 +11,7 @@ import Snackbar from "./snackbar";
 import * as style from "./style.scss";
 
 const SMALL_SCREEN_THRESHOLD = 700;
-const HAMBURGER_THRESHOLD = 1200;
+const HAMBURGER_THRESHOLD = 1320;
 
 /**
  * Check if server is online
@@ -166,6 +166,18 @@ const App: preact.FunctionalComponent = () => {
                             import("../routes/resolution/view").then(
                                 (m) => m.default,
                             )
+                        }
+                    />
+                    <AsyncRoute
+                        path={"/" + Calculus.dpll}
+                        getComponent={() =>
+                            import("../routes/dpll").then((m) => m.default)
+                        }
+                    />
+                    <AsyncRoute
+                        path={"/" + Calculus.dpll + "/view"}
+                        getComponent={() =>
+                            import("../routes/dpll/view").then((m) => m.default)
                         }
                     />
                 </Router>

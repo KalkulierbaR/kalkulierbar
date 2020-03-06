@@ -1,4 +1,4 @@
-import { ComponentChild, h } from "preact";
+import {ComponentChild, h} from "preact";
 import { useRef, useState } from "preact/hooks";
 
 import {classMap} from "../../../helpers/class-map";
@@ -10,11 +10,17 @@ interface Props {
     submitButton?: ComponentChild;
     onChange?: (value: string) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
+    onFocus?: (event: FocusEvent) => void;
     class?: string;
     value?: string;
     required?: boolean;
     inline?: boolean;
+    autoComplete?: boolean;
+    autoCorrect?: boolean;
     autoCapitalize?: boolean;
+    type?: string;
+    autoFocus?: boolean;
+    spellcheck?: boolean;
 }
 
 const TextInput: preact.FunctionalComponent<Props> = ({
@@ -24,9 +30,15 @@ const TextInput: preact.FunctionalComponent<Props> = ({
     submitButton,
     value,
     onKeyDown,
+    onFocus,
     required,
     inline = false,
-    autoCapitalize= false,
+    autoComplete = false,
+    autoCorrect = false,
+    autoCapitalize = false,
+    type = "text",
+    autoFocus = false,
+    spellcheck = false,
     ...props
 }) => {
     const input = useRef<HTMLInputElement>();
@@ -67,8 +79,14 @@ const TextInput: preact.FunctionalComponent<Props> = ({
                         }
                     }}
                     onKeyDown={onKeyDown}
+                    onFocus={onFocus}
                     required={required}
+                    autocomplete={autoComplete ? "on" : "nope"}
+                    autocorrect={autoCorrect ? "on" : "off"}
                     autocapitalize={autoCapitalize ? undefined : "off"}
+                    type={type}
+                    autofocus={autoFocus ? true : undefined}
+                    spellcheck={spellcheck}
                 />
                 {submitButton}
             </div>

@@ -13,12 +13,15 @@ import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
 import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
+import kalkulierbar.logic.transform.VariableSuffixAppend
+import kalkulierbar.logic.transform.VariableSuffixStripper
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
+@Suppress("TooManyFunctions")
 class FirstOrderResolution :
         GenericResolution<Relation>,
         JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
@@ -30,16 +33,21 @@ class FirstOrderResolution :
         val parsed = FirstOrderParser.parse(formula)
         val clauses = FirstOrderCNF.transform(parsed)
 
-        return FoResolutionState(clauses, params?.visualHelp ?: VisualHelp.NONE)
+        val state = FoResolutionState(clauses, params?.visualHelp ?: VisualHelp.NONE)
+
+        // Distinguish variables in each clause by appending suffixes
+        state.initSuffix()
+
+        return state
     }
 
     override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
         when (move) {
             is MoveResolveUnify -> resolveUnify(state, move.c1, move.c2, move.l1, move.l2)
-            is MoveInstantiate -> instantiate(state, move.c1, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
-            is MoveFactorize -> factorize(state, move.c1, move.a1, move.a2)
+            is MoveHyper -> hyper(state, move.mainID, move.atomMap)
+            is MoveFactorize -> factorize(state, move.c1, move.atoms)
             else -> throw IllegalMove("Unknown move type")
         }
 
@@ -95,6 +103,7 @@ class FirstOrderResolution :
         state.clauseSet.clauses.removeAt(instance2)
         state.clauseSet.clauses.removeAt(instance1)
 
+        state.setSuffix(state.clauseSet.clauses.size - 1) // Re-name variables
         state.newestNode = state.clauseSet.clauses.size - 1
     }
 
@@ -109,7 +118,11 @@ class FirstOrderResolution :
         clauseID: Int,
         varAssign: Map<String, FirstOrderTerm>
     ) {
-        val newClause = instantiateReturn(state, clauseID, varAssign)
+        if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
+            throw IllegalMove("There is no clause with id $clauseID")
+
+        val baseClause = state.clauseSet.clauses[clauseID]
+        val newClause = instantiateReturn(baseClause, varAssign)
 
         // Add new clause to state and update newestNode pointer
         state.clauseSet.add(newClause)
@@ -118,23 +131,15 @@ class FirstOrderResolution :
 
     /**
      * Create a new clause by applying a variable instantiation on an existing clause
-     * @param state Current proof state
-     * @param clauseID ID of the clause to use for instantiation
+     * @param baseClause the clause to use for instantiation
      * @param varAssign Map of Variables and terms they are instantiated with
      * @return Instantiated clause
      */
     private fun instantiateReturn(
-        state: FoResolutionState,
-        clauseID: Int,
+        baseClause: Clause<Relation>,
         varAssign: Map<String, FirstOrderTerm>
     ): Clause<Relation> {
-
-        if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
-            throw IllegalMove("There is no clause with id $clauseID")
-
-        val baseClause = state.clauseSet.clauses[clauseID]
         val newClause = Clause<Relation>()
-
         val instantiator = VariableInstantiator(varAssign)
 
         // Build the new clause by cloning atoms from the base clause and applying instantiation
@@ -151,28 +156,141 @@ class FirstOrderResolution :
      * Applies the factorize move
      * @param state The state to apply the move on
      * @param clauseID Id of clause to apply the move on
-     * @param a1 ID of first literal for unification
-     * @param a2 ID of second literal for unification
+     * @param atoms List of IDs of literals for unification (The literals should be equal)
      */
-    fun factorize(state: FoResolutionState, clauseID: Int, a1: Int, a2: Int) {
+    private fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
         val clauses = state.clauseSet.clauses
 
         // Verify that clause id is valid
         if (clauseID < 0 || clauseID >= clauses.size)
             throw IllegalMove("There is no clause with id $clauseID")
+        if (atomIDs.size < 2)
+            throw IllegalMove("Please select more than 1 atom to factorize")
+        // Verification of correct ID in atoms -> unifySingleClause
 
-        // Unify the selected atoms
-        val mgu = unifySingleClause(clauses[clauseID], a1, a2)
-        val newClause = instantiateReturn(state, clauseID, mgu)
-        // If the unification succeeded, a1 and a2 are now equal
-        // so we can just remove the second one
-        newClause.atoms.removeAt(a2)
+        var newClause = clauses[clauseID].clone()
+        // Unify doubled atoms and remove all except one
+        for (i in atomIDs.indices) {
+            if (i < atomIDs.size - 1) {
+                val firstID = atomIDs[i]
+                val secondID = atomIDs[i + 1]
+                // Unify the selected atoms and instantiate clause
+                val mgu = unifySingleClause(clauses[clauseID], firstID, secondID)
+                newClause = instantiateReturn(newClause, mgu)
 
-        // Hide old and add new clause in its place
-        val oldClause = clauses.removeAt(clauseID)
-        state.hiddenClauses.add(oldClause)
-        clauses.add(clauseID, newClause)
-        state.newestNode = clauseID
+                // Check equality of both atoms
+                if (newClause.atoms[firstID] != newClause.atoms[secondID])
+                    throw IllegalMove("Atom '${newClause.atoms[firstID]}' and '${newClause.atoms[secondID]}'" +
+                        " are not equal after instantiation")
+
+                // Change every unified atom to placeholder (except last) -> later remove all placeholder
+                // -> One Atom remains
+                newClause.atoms[atomIDs[i]] = Atom<Relation>(Relation("%placeholder%", mutableListOf()), false)
+            }
+        }
+        // Remove placeholder atoms
+        newClause.atoms.removeIf { it.lit.spelling == "%placeholder%" }
+
+        // Add new clause to clauseSet with adjusted variable-name
+        clauses.add(newClause)
+        state.newestNode = clauses.size - 1
+        state.setSuffix(clauses.size - 1) // Re-name variables
+    }
+
+    /**
+     * Creates a new clause in which all side premisses are resolved with the main premiss
+     * while paying attention to resolving one atom in each side premiss with the main premiss.
+     * Adds the result to the clause set
+     * @param state Current proof state
+     * @param mainID ID of main premiss clause
+     * @param atomMap Maps an atom of the main premiss to an atom of a side premiss
+     */
+    @Suppress("ThrowsCount")
+    fun hyper(
+        state: FoResolutionState,
+        mainID: Int,
+        atomMap: Map<Int, Pair<Int, Int>>
+    ) {
+        // Checks for correct clauseID and IDs in Map
+        checkHyperID(state, mainID, atomMap)
+
+        if (atomMap.isEmpty())
+            throw IllegalMove("Please select side premisses for hyper resolution")
+
+        val clauses = state.clauseSet.clauses
+        val oldMainPremiss = clauses[mainID].clone()
+        var mainPremiss = clauses[mainID].clone()
+
+        // Resolves each side premiss with main premiss
+        for ((mAtomID, pair) in atomMap) {
+            val (sClauseID, sAtomID) = pair
+            val sidePremiss = clauses[sClauseID]
+
+            // Check side premiss for positiveness
+            if (!sidePremiss.isPositive())
+                throw IllegalMove("Side premiss $sidePremiss is not positive")
+
+            // Resolve side premiss into main premiss every iteration
+            mainPremiss = resolveSidePremiss(
+                    mainPremiss,
+                    oldMainPremiss.atoms[mAtomID],
+                    sidePremiss,
+                    sidePremiss.atoms[sAtomID]
+            )
+        }
+
+        // Check there are no negative atoms anymore
+        if (!mainPremiss.isPositive())
+            throw IllegalMove("Resulting clause $mainPremiss is not positive")
+
+        // Add resolved clause to clause set
+        clauses.add(mainPremiss)
+        state.newestNode = clauses.size - 1
+    }
+
+    /**
+     * Resolves a main premiss with a side premiss with respect to a literal
+     * @param mainPremiss The main premiss to resolve
+     * @param mAtom atom in main Premiss
+     * @param sidePremiss The side premiss to resolve
+     * @param sAtom atom in side premiss
+     * @return A instantiated clause which contains all atoms from main and side premiss
+     *         except the one matching the literals of mAtomID and sAtomID.
+     */
+    private fun resolveSidePremiss(
+        mainPremiss: Clause<Relation>,
+        mAtom: Atom<Relation>,
+        sidePremiss: Clause<Relation>,
+        sAtom: Atom<Relation>
+    ): Clause<Relation> {
+        val literal1 = mAtom.lit
+        val literal2 = sAtom.lit
+        val mgu: Map<String, FirstOrderTerm>
+
+        // Check that atom in main premiss is negative
+        if (!mAtom.negated)
+            throw IllegalMove("Literal '$mAtom' in main premiss has to be negative")
+
+        // Get mgu from unification
+        try {
+            mgu = Unification.unify(literal1, literal2)
+        } catch (e: UnificationImpossible) {
+            throw IllegalMove("Could not unify '$mAtom' of main premiss with " +
+                    "'$sAtom' of side premiss $sidePremiss: ${e.message}")
+        }
+        // Resolve mainPremiss with side premiss by given atom
+        val mainResolveSide = buildClause(mainPremiss, mAtom, sidePremiss, sAtom)
+
+        val newClause = Clause<Relation>()
+        val instantiator = VariableInstantiator(mgu)
+        // Build the new clause by cloning atoms from the base clause and applying instantiation
+        mainResolveSide.atoms.forEach {
+            val relationArgs = it.lit.arguments.map { it.clone().accept(instantiator) }
+            val newRelation = Relation(it.lit.spelling, relationArgs)
+            val newAtom = Atom<Relation>(newRelation, it.negated)
+            newClause.add(newAtom)
+        }
+        return newClause
     }
 
     /**
@@ -260,11 +378,36 @@ class FoResolutionState(
 ) : GenericResolutionState<Relation>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<Relation>()
+    var clauseCounter = 0
 
     override var seal = ""
 
     override fun getHash(): String {
-        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode"
+        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode|$clauseCounter"
+    }
+
+    /**
+     * Append a unique suffix to the quantified variables in a clause
+     * Overwrites existing suffixes
+     * @param clauseID ID of the clause to process
+     */
+    fun setSuffix(clauseID: Int) {
+        clauseCounter++
+        val clause = clauseSet.clauses[clauseID]
+        val stripper = VariableSuffixStripper("_")
+        val appender = VariableSuffixAppend("_$clauseCounter")
+
+        for (atom in clause.atoms) {
+            atom.lit.arguments = atom.lit.arguments.map { it.accept(stripper).accept(appender) }
+        }
+    }
+
+    /**
+     * Append initial suffixes to all clauses
+     */
+    fun initSuffix() {
+        for (i in clauseSet.clauses.indices)
+            setSuffix(i)
     }
 }
 
