@@ -1,3 +1,4 @@
+import { StateUpdater } from "preact/hooks/src";
 import { AppStateUpdater, TableauxCalculusType } from "../types/app";
 import { LayoutItem } from "../types/layout";
 import {
@@ -10,6 +11,7 @@ import {
     VarAssign,
 } from "../types/tableaux";
 import { Tree, TreeLayout } from "../types/tree";
+import { DragTransform } from "../types/ui";
 import { sendMove } from "./api";
 import { filterTree, tree, treeFind, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
@@ -237,3 +239,12 @@ export const getClosedLeaves = (
         y: c.y,
         data: c.data,
     }));
+
+export const updateDragTransform = (
+    setDragTransform: StateUpdater<Record<number, DragTransform>>,
+) => (id: number, dt: DragTransform) => {
+    setDragTransform((prev) => ({
+        ...prev,
+        [id]: dt,
+    }));
+};

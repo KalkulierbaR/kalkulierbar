@@ -6,13 +6,16 @@ import {
     TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
 
+import { useCallback, useState } from "preact/hooks";
 import { findSubTree } from "../../../helpers/layout/tree";
 import {
     getClosedLeaves,
     getNode,
     tableauxTreeLayout,
+    updateDragTransform,
 } from "../../../helpers/tableaux";
 import { LayoutItem } from "../../../types/layout";
+import { DragTransform } from "../../../types/ui";
 import Zoomable from "../../zoomable";
 import * as style from "./style.scss";
 import SubTree from "./subtree";
@@ -110,6 +113,14 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         links,
     } = tableauxTreeLayout(nodes);
 
+    const [dragTransforms, setDragTransforms] = useState<
+        Record<number, DragTransform>
+    >({});
+
+    const onDrag = useCallback(updateDragTransform(setDragTransforms), [
+        setDragTransforms,
+    ]);
+
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
         const node = getNode(root, n);
@@ -202,6 +213,8 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                             {
                                 /* #4 render nodes -> renders above all previous elements */
                                 <SubTree
+                                    dragTransforms={dragTransforms}
+                                    onDrag={onDrag}
                                     node={root}
                                     selectedNodeId={selectedNodeId}
                                     selectNodeCallback={selectNodeCallback}

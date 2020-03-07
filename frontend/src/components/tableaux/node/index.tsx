@@ -1,8 +1,11 @@
 import { createRef, h } from "preact";
 
 import { classMap } from "../../../helpers/class-map";
+import { disableDrag, enableDrag } from "../../../helpers/zoom/drag";
+import { mousePos } from "../../../helpers/zoom/mouse";
 import { LayoutItem } from "../../../types/layout";
 import { TableauxTreeLayoutNode } from "../../../types/tableaux";
+import { DragTransform } from "../../../types/ui";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 
@@ -23,6 +26,8 @@ interface Props {
      * Contains the Information, that potential Lemma nodes are selectable
      */
     lemmaNodesSelectable: boolean;
+    dragTransform: DragTransform;
+    onDrag: (id: number, dt: DragTransform) => void;
 }
 
 // Component representing a single Node of a TableauxTree
@@ -31,6 +36,8 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     selected,
     selectNodeCallback,
     lemmaNodesSelectable,
+    onDrag,
+    dragTransform,
 }) => {
     const textRef = createRef<SVGTextElement>();
 
@@ -53,6 +60,61 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
         }
     };
 
+    const onMouseDown = (ev: MouseEvent) => {
+        if (ev.button) {
+            return;
+        }
+        if (!textRef.current) {
+            return;
+        }
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        const svg = textRef.current.ownerSVGElement!;
+
+        disableDrag();
+
+        const x = ev.clientX;
+        const y = ev.clientY;
+
+        let moved = false;
+
+        const oldDt = dragTransform;
+
+        const p0 = mousePos(svg, ev);
+
+        const onMouseMoved = (e: MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const dx = e.clientX - x;
+            const dy = e.clientY - y;
+
+            if (!moved) {
+                moved = dx * dx + dy * dy > 0;
+            }
+
+            const p = mousePos(svg, e);
+
+            onDrag(node.data.id, {
+                x: oldDt.x + p[0] - p0[0],
+                y: oldDt.y + p[1] - p0[1],
+            });
+        };
+
+        const onMouseUpped = (e: MouseEvent) => {
+            e.stopPropagation();
+            e.preventDefault();
+            enableDrag(moved);
+
+            window.removeEventListener("mousemove", onMouseMoved);
+            window.removeEventListener("mouseup", onMouseUpped);
+        };
+
+        window.addEventListener("mousemove", onMouseMoved);
+        window.addEventListener("mouseup", onMouseUpped);
+    };
+
     return (
         <g
             onClick={handleClick}
@@ -61,6 +123,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                 [style.nodeClosed]: node.data.isClosed && !lemmaNodesSelectable,
                 [style.nodeClickable]: nodeIsClickable,
             })}
+            onMouseDown={onMouseDown}
         >
             <Rectangle
                 elementRef={textRef}
