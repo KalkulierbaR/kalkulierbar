@@ -21,6 +21,8 @@ class StateKeeper {
         private val date
             get() = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())
 
+        private var availableCalculi = listOf<String>()
+
         private val storage = File("kbar-state.json")
         private val state: AppState
 
@@ -37,6 +39,10 @@ class StateKeeper {
             }
         }
 
+        fun importAvailable(calculi: List<String>) {
+            availableCalculi = calculi
+        }
+
         fun getConfig(): String {
             val calculiJson = state.disabledCalculi.map { "\"$it\"" }.joinToString(", ")
             val examplesJson = state.examples.map { serializer.stringify(Example.serializer(), it) }.joinToString(", ")
@@ -49,7 +55,16 @@ class StateKeeper {
             if (!verifyMAC(fingerprint, mac))
                 throw AuthenticationException("Invalid MAC")
 
-            return "Not implemented yet"
+            val enable = (enableString == "true")
+
+            if (enable)
+                state.disabledCalculi.remove(calculus)
+            else if (availableCalculi.contains(calculus))
+                state.disabledCalculi.add(calculus)
+            else
+                throw InvalidRequest("Calculus '$calculus' does not exist")
+
+            return "true"
         }
 
         @Suppress("TooGenericExceptionCaught")
@@ -148,3 +163,5 @@ data class Example(
 class AuthenticationException(msg: String) : KalkulierbarException(msg)
 
 class StorageLimitHit(msg: String) : KalkulierbarException(msg)
+
+class InvalidRequest(msg: String) : KalkulierbarException(msg)

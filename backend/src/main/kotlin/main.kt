@@ -28,6 +28,13 @@ fun main(args: Array<String>) {
     if (endpoints.size != endpoints.map { it.identifier }.distinct().size)
         throw KalkulierbarException("Set of active calculus implementations contains duplicate identifiers")
 
+    // Verify that no calculus is overriding /admin and /config endpoints
+    if (endpoints.any { it.identifier == "admin" || it.identifier == "config" })
+        throw KalkulierbarException("Set of active calculi contains forbidden identifiers \"admin\" or \"config\"")
+
+    // Pass list of available calculi to StateKeeper
+    StateKeeper.importAvailable(endpoints.map { it.identifier })
+
     val port = getEnvPort()
 
     // Only listen globally if cli argument is present
