@@ -8,12 +8,15 @@ import kalkulierbar.JsonParseException
 import kalkulierbar.KalkulierbarException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import org.komputing.khash.keccak.KeccakParameter
 import org.komputing.khash.keccak.extensions.digestKeccak
 
 @Suppress("TooGenericExceptionCaught")
 class StateKeeper {
     companion object {
+
+        private val serializer = Json(JsonConfiguration.Stable)
 
         private val date
             get() = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())
@@ -26,21 +29,17 @@ class StateKeeper {
                 if (storage.createNewFile()) {
                     state = AppState()
                     flush()
-                }
-                else
-                    state = Json.parse(AppState.serializer(), storage.readText())
+                } else
+                    state = serializer.parse(AppState.serializer(), storage.readText())
             } catch (e: Exception) {
                 val msg = "Could not parse stored state: "
                 throw JsonParseException(msg + (e.message ?: "Unknown error"))
             }
         }
 
-        // TODO: Make these things persistent somehow
-
-        @kotlinx.serialization.UnstableDefault
         fun getConfig(): String {
             val calculiJson = state.disabledCalculi.map { "\"$it\"" }.joinToString(", ")
-            val examplesJson = state.examples.map { Json.stringify(Example.serializer(), it) }.joinToString(", ")
+            val examplesJson = state.examples.map { serializer.stringify(Example.serializer(), it) }.joinToString(", ")
 
             return """{"disabled": [$calculiJson], "examples": [$examplesJson]}"""
         }
@@ -54,7 +53,6 @@ class StateKeeper {
         }
 
         @Suppress("TooGenericExceptionCaught")
-        @kotlinx.serialization.UnstableDefault
         fun addExample(example: String, mac: String): String {
             val fingerprint = "kbae|$example"
             val parsedExample: Example
@@ -63,7 +61,7 @@ class StateKeeper {
                 throw AuthenticationException("Invalid MAC")
 
             try {
-                parsedExample = Json.parse(Example.serializer(), example)
+                parsedExample = serializer.parse(Example.serializer(), example)
             } catch (e: Exception) {
                 val msg = "Could not parse JSON example: "
                 throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -108,7 +106,7 @@ class StateKeeper {
         private fun toHex(bytes: ByteArray) = bytes.map { String.format("%02X", it) }.joinToString("")
 
         private fun flush() {
-            val json = Json.stringify(AppState.serializer(), state)
+            val json = serializer.stringify(AppState.serializer(), state)
             storage.writeText(json)
         }
 
@@ -133,9 +131,9 @@ class StateKeeper {
 
 @Serializable
 data class AppState(
+    val key: String = "WildFlowers/UncomfortableMoons",
     val disabledCalculi: MutableList<String> = mutableListOf(),
-    val examples: MutableList<Example> = mutableListOf(),
-    val key: String = "WildFlowers/UncomfortableMoons"
+    val examples: MutableList<Example> = mutableListOf()
 )
 
 @Serializable
