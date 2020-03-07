@@ -26,6 +26,10 @@ class StateKeeper {
         private val storage = File("kbar-state.json")
         private val state: AppState
 
+        /**
+         * Read contents of the state storage file
+         * Creates a default config file if none exists already
+         */
         init {
             try {
                 if (storage.createNewFile()) {
@@ -43,6 +47,11 @@ class StateKeeper {
             availableCalculi = calculi
         }
 
+        /**
+         * Builds a config json object to be sent to the frontend
+         * Containing example formulae and a list of disabled calculi
+         * @return JSON config object
+         */
         fun getConfig(): String {
             val calculiJson = state.disabledCalculi.map { "\"$it\"" }.joinToString(", ")
             val examplesJson = state.examples.map { serializer.stringify(Example.serializer(), it) }.joinToString(", ")
@@ -50,6 +59,17 @@ class StateKeeper {
             return """{"disabled": [$calculiJson], "examples": [$examplesJson]}"""
         }
 
+
+        /**
+         * Enables or disables a calculus
+         * This only affects the configuration object used by frontends to adjust the UI
+         * All backend calculus endpoints will continue to accept requests
+         * @param calculus The identifier of the calculus to enable/disable
+         * @param enableString "true" to enable a calculus, "false" to disable
+         * @param mac Message Authentication Code for this request
+         *            sha3-256("kbsc|$calculus|$enableString|$date|$state.key"), hex-encoded
+         * @return Constant string "true"
+         */
         fun setCalculusState(calculus: String, enableString: String, mac: String): String {
             val fingerprint = "kbsc|$calculus|$enableString"
             if (!verifyMAC(fingerprint, mac))
@@ -67,6 +87,13 @@ class StateKeeper {
             return "true"
         }
 
+        /**
+         * Adds an example formula to the example list
+         * @param example JSON representation of the example to add
+         * @param mac Message Authentication Code for this request
+         *            sha3-256("kbae|$example|$date|$state.key"), hex-encoded
+         * @return Constant string "true"
+         */
         @Suppress("TooGenericExceptionCaught")
         fun addExample(example: String, mac: String): String {
             val fingerprint = "kbae|$example"
@@ -92,6 +119,13 @@ class StateKeeper {
             return "true"
         }
 
+        /**
+         * Removes an example formula from the example list
+         * @param exampleIdString Textual representation of the index of the example to remove
+         * @param mac Message Authentication Code for this request
+         *            sha3-256("kbde|$exampleIdString|$date|$state.key"), hex-encoded
+         * @return Constant string "true"
+         */
         @Suppress("ThrowsCount")
         fun delExample(exampleIdString: String, mac: String): String {
             val fingerprint = "kbde|$exampleIdString"
@@ -112,6 +146,14 @@ class StateKeeper {
             return "true"
         }
 
+        /**
+         * Verfies that a request has a valid Message Authentication Code
+         * MACs are formed by appending the current date and admin key before hashing the payload
+         * This means that requests can be re-played within the same day by an attacker
+         * @param payload String the MAC was computed over, without date and key components
+         * @param mac The received MAC
+         * @return true iff the received MAC is valid for the given payload
+         */
         private fun verifyMAC(payload: String, mac: String): Boolean {
             val payloadWithKey = "$payload|$date|${state.key}"
             val calculatedMAC = toHex(payloadWithKey.digestKeccak(parameter = KeccakParameter.SHA3_256))
@@ -120,11 +162,18 @@ class StateKeeper {
 
         private fun toHex(bytes: ByteArray) = bytes.map { String.format("%02X", it) }.joinToString("")
 
+        /**
+         * Save the current AppState to the state file
+         */
         private fun flush() {
             val json = serializer.stringify(AppState.serializer(), state)
             storage.writeText(json)
         }
 
+        /**
+         * Ensures that a given example meets size limitations
+         * @param ex Example to be added
+         */
         @Suppress("ThrowsCount")
         private fun checkSanity(ex: Example) {
             if (ex.name.length > EXAMPLE_NAME_SIZE)
