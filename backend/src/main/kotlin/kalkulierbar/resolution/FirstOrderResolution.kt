@@ -43,7 +43,8 @@ class FirstOrderResolution :
 
     override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
         when (move) {
-            is MoveResolveUnify -> resolveUnify(state, move.c1, move.c2, move.l1, move.l2)
+            is MoveResolveUnify -> resolve(state, move.c1, move.c2, move.l1, move.l2, null)
+            is MoveResolveCustom -> resolve(state, move.c1, move.c2, move.l1, move.l2, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
             is MoveHyper -> hyper(state, move.mainID, move.atomMap)
@@ -56,39 +57,40 @@ class FirstOrderResolution :
 
     override fun checkCloseOnState(state: FoResolutionState) = getCloseMessage(state)
 
-    @Suppress("ThrowsCount")
+    @Suppress("ThrowsCount", "LongParameterList")
     /**
-     * Resolve two clauses by unifying two literals
+     * Resolve two clauses by unifying two literals by a given variable assignment or automatically
      * @param state Current proof state
      * @param c1 Id of first clause
      * @param c2 Id of second clause
      * @param c1lit The literal to unify of the first clause
      * @param c2lit The literal to unify of the second clause
+     * @param varAssign Variable assignment to be used
      */
-    private fun resolveUnify(state: FoResolutionState, c1: Int, c2: Int, c1lit: Int, c2lit: Int) {
-        if (c1 < 0 || c1 >= state.clauseSet.clauses.size)
-            throw IllegalMove("There is no clause with id $c1")
-        if (c2 < 0 || c2 >= state.clauseSet.clauses.size)
-            throw IllegalMove("There is no clause with id $c1")
+    private fun resolve(
+        state: FoResolutionState,
+        c1: Int,
+        c2: Int,
+        c1lit: Int,
+        c2lit: Int,
+        varAssign: Map<String, FirstOrderTerm>?
+    ) {
+        resolveCheckID(state, c1, c2, c1lit, c2lit)
 
         val clause1 = state.clauseSet.clauses[c1]
         val clause2 = state.clauseSet.clauses[c2]
-
-        if (c1lit < 0 || c1lit >= clause1.atoms.size)
-            throw IllegalMove("Clause $clause1 has no atom with index $c1lit")
-        if (c2lit < 0 || c2lit >= clause2.atoms.size)
-            throw IllegalMove("Clause $clause2 has no atom with index $c2lit")
-
         val literal1 = clause1.atoms[c1lit].lit
         val literal2 = clause2.atoms[c2lit].lit
-        val mgu: Map<String, FirstOrderTerm>
+        var mgu = varAssign
 
-        try {
-            mgu = Unification.unify(literal1, literal2)
-        } catch (e: UnificationImpossible) {
-            throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
+        // Calculate mgu if no varAssign was given
+        if (mgu == null) {
+            try {
+                mgu = Unification.unify(literal1, literal2)
+            } catch (e: UnificationImpossible) {
+                throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
+            }
         }
-
         instantiate(state, c1, mgu)
         val instance1 = state.clauseSet.clauses.size - 1
         instantiate(state, c2, mgu)
@@ -105,6 +107,22 @@ class FirstOrderResolution :
 
         state.setSuffix(state.clauseSet.clauses.size - 1) // Re-name variables
         state.newestNode = state.clauseSet.clauses.size - 1
+    }
+
+    @Suppress("ThrowsCount")
+    private fun resolveCheckID(state: FoResolutionState, c1: Int, c2: Int, c1lit: Int, c2lit: Int) {
+        if (c1 < 0 || c1 >= state.clauseSet.clauses.size)
+            throw IllegalMove("There is no clause with id $c1")
+        if (c2 < 0 || c2 >= state.clauseSet.clauses.size)
+            throw IllegalMove("There is no clause with id $c1")
+
+        val clause1 = state.clauseSet.clauses[c1]
+        val clause2 = state.clauseSet.clauses[c2]
+
+        if (c1lit < 0 || c1lit >= clause1.atoms.size)
+            throw IllegalMove("Clause $clause1 has no atom with index $c1lit")
+        if (c2lit < 0 || c2lit >= clause2.atoms.size)
+            throw IllegalMove("Clause $clause2 has no atom with index $c2lit")
     }
 
     /**
@@ -158,6 +176,7 @@ class FirstOrderResolution :
      * @param clauseID Id of clause to apply the move on
      * @param atoms List of IDs of literals for unification (The literals should be equal)
      */
+    @Suppress("ThrowsCount")
     private fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
         val clauses = state.clauseSet.clauses
 
