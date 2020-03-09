@@ -166,8 +166,6 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
         if (e.changedTouches.length !== 1) {
             return;
         }
-        e.stopPropagation();
-        e.preventDefault();
 
         const svg = textRef.current.ownerSVGElement!;
 
@@ -179,10 +177,28 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             return;
         }
 
+        e.stopPropagation();
+        e.preventDefault();
+
         const dx = (t[0] - touch0[0]) / zoomFactor;
         const dy = (t[1] - touch0[1]) / zoomFactor;
 
         onDrag(node.data.id, { x: oldTouchDt.x + dx, y: oldTouchDt.y + dy });
+    };
+
+    const onTouchEnd = () => {
+        const dx = dragTransform.x - oldTouchDt.x;
+        const dy = dragTransform.y - oldTouchDt.y;
+
+        const moved = dx * dx + dy * dy > 0;
+
+        enableDrag(moved);
+
+        if (!moved) {
+            handleClick();
+        }
+
+        setTouch0(undefined);
     };
 
     return (
@@ -196,6 +212,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             onMouseDown={onMouseDown}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
         >
             <Rectangle
                 elementRef={textRef}
