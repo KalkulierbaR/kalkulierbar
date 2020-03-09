@@ -1,11 +1,13 @@
 import { createRef, h } from "preact";
 
+import { useState } from "preact/hooks";
 import { classMap } from "../../../helpers/class-map";
 import { disableDrag, enableDrag } from "../../../helpers/zoom/drag";
 import { mousePos } from "../../../helpers/zoom/mouse";
+import { touchPos } from "../../../helpers/zoom/touch";
 import { LayoutItem } from "../../../types/layout";
 import { TableauxTreeLayoutNode } from "../../../types/tableaux";
-import { DragTransform } from "../../../types/ui";
+import { DragTransform, Point } from "../../../types/ui";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 
@@ -42,6 +44,9 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     zoomFactor,
 }) => {
     const textRef = createRef<SVGTextElement>();
+
+    const [oldTouchDt, setOldDt] = useState<DragTransform>({ x: 0, y: 0 });
+    const [touch0, setTouch0] = useState<Point | undefined>(undefined);
 
     // The nodes name which is displayed
     const name = `${node.data.negated ? "¬" : ""}${node.data.spelling}`;
@@ -119,6 +124,56 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
         window.addEventListener("mouseup", onMouseUpped);
     };
 
+    const onTouchStart = (e: TouchEvent) => {
+        if (!textRef.current) {
+            return;
+        }
+
+        if (e.touches.length !== 1) {
+            return;
+        }
+
+        e.stopPropagation();
+        e.preventDefault();
+
+        disableDrag();
+
+        const svg = textRef.current.ownerSVGElement!;
+
+        const touch = e.touches[0];
+
+        setOldDt(dragTransform);
+
+        const p0 = touchPos(svg, e.touches, touch.identifier);
+
+        setTouch0(p0!);
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+        if (!textRef.current || !touch0) {
+            return;
+        }
+
+        if (e.changedTouches.length !== 1) {
+            return;
+        }
+        e.stopPropagation();
+        e.preventDefault();
+
+        const svg = textRef.current.ownerSVGElement!;
+
+        const touch = e.changedTouches[0];
+
+        const t = touchPos(svg, e.changedTouches, touch.identifier);
+
+        if (!t) { return; }
+
+        const dx = (t[0] - touch0[0]) / zoomFactor;
+        const dy = (t[1] - touch0[1]) / zoomFactor;
+
+        onDrag(node.data.id, { x: oldTouchDt.x + dx, y: oldTouchDt.y + dy });
+    };
+
     return (
         <g
             onClick={handleClick}
@@ -128,6 +183,8 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                 [style.nodeClickable]: nodeIsClickable,
             })}
             onMouseDown={onMouseDown}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
         >
             <Rectangle
                 elementRef={textRef}
