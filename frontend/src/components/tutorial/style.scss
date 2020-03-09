@@ -1,0 +1,15 @@
+.tut {
+    position: fixed;
+
+    max-width: 200px;
+    box-shadow: var(--kbar-shadow-3dp);
+    background-color: var(--kbar-3dp-color);
+}
+
+.svg {
+    position: absolute;
+    left: 105%;
+    bottom: 20%;
+    width: 60px;
+    height: 30px;
+}

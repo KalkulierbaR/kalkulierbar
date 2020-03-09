@@ -10,7 +10,7 @@ interface Props {
     /**
      * Whether the FAB should start with the opened state
      */
-    alwaysOpen?: boolean
+    alwaysOpen?: boolean;
     /**
      * The components DOM children
      */
@@ -47,7 +47,10 @@ const Menu: preact.FunctionalComponent<MenuProps> = ({
     );
 };
 
-const ControlFAB: preact.FunctionalComponent<Props> = ({ children, alwaysOpen = false }) => {
+const ControlFAB: preact.FunctionalComponent<Props> = ({
+    children,
+    alwaysOpen = false,
+}) => {
     const [show, setShow] = useState(alwaysOpen);
 
     const SIZE = 32;
