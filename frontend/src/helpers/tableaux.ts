@@ -272,3 +272,35 @@ export const updateDragTransform = (
         [id]: dt,
     }));
 };
+
+/**
+ * Computes the absolute dt of a node
+ * @param {Tree<TableauxTreeLayoutNode>} t - Tree
+ * @param {number} id - The id to look for
+ * @param {Record<number, DragTransform>} dts - All dts
+ * @param {DragTransform} dt - Current dt
+ * @returns {DragTransform} - Absolute dt
+ */
+export const getAbsoluteDragTransform = (
+    t: Tree<TableauxTreeLayoutNode>,
+    id: number,
+    dts: Record<number, DragTransform>,
+    dt: DragTransform = dts[t.data.id] ?? { x: 0, y: 0 },
+): DragTransform | undefined => {
+    if (t.data.id === id) {
+        return dt;
+    }
+
+    for (const c of t.children) {
+        const cdt = dts[c.data.id] ?? { x: 0, y: 0 };
+        const res = getAbsoluteDragTransform(c, id, dts, {
+            x: dt.x + cdt.x,
+            y: dt.y + cdt.y,
+        });
+        if (res !== undefined) {
+            return res;
+        }
+    }
+
+    return;
+};

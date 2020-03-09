@@ -9,10 +9,12 @@ import {
 import { findSubTree } from "../../../helpers/layout/tree";
 import {
     getClosedLeaves,
+    getCompleteDragTransform,
     getNode,
     tableauxTreeLayout,
 } from "../../../helpers/tableaux";
 import { LayoutItem } from "../../../types/layout";
+import { Tree } from "../../../types/tree";
 import { DragTransform } from "../../../types/ui";
 import Zoomable from "../../zoomable";
 import * as style from "./style.scss";
@@ -54,6 +56,7 @@ interface Props {
 }
 
 interface ClosingEdgeProps {
+    root: Tree<TableauxTreeLayoutNode>;
     leaf: LayoutItem<TableauxTreeLayoutNode>;
     pred: LayoutItem<TableauxTreeLayoutNode>;
     dragTransforms: Record<number, DragTransform>;
@@ -61,16 +64,25 @@ interface ClosingEdgeProps {
 
 // Component to display an edge in a graph
 const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
+    root,
     leaf,
     pred,
     dragTransforms,
 }) => {
-    const predDt = dragTransforms[pred.data.id] ?? { x: 0, y: 0 };
-    const leafDt = dragTransforms[leaf.data.id] ?? { x: 0, y: 0 };
+    const predDt = getCompleteDragTransform(
+        root,
+        pred.data.id,
+        dragTransforms,
+    )!;
+    const leafDt = getCompleteDragTransform(
+        root,
+        leaf.data.id,
+        dragTransforms,
+    )!;
 
     // Calculate coordinates
-    const x1 = leaf.x + predDt.x + leafDt.x;
-    const y1 = leaf.y + predDt.y + leafDt.y;
+    const x1 = leaf.x + leafDt.x;
+    const y1 = leaf.y + leafDt.y;
     const x2 = pred.x + predDt.x;
     const y2 = pred.y + predDt.y;
 
@@ -95,19 +107,8 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
         yControlpoint = yControlpoint - -xVektor / divisor;
     }
 
-    const d =
-        "M " +
-        x1 +
-        " " +
-        y1 +
-        " Q " +
-        xControlpoint +
-        " " +
-        yControlpoint +
-        " " +
-        x2 +
-        " " +
-        y2;
+    const d = `M ${x1} ${y1} Q ${xControlpoint} ${yControlpoint} ${x2} ${y2}`;
+
     return <path d={d} class={style.link} />;
 };
 
@@ -151,13 +152,23 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                     (t) => t,
                 );
                 if (lemmaSource !== undefined) {
+                    const sdt = getCompleteDragTransform(
+                        root,
+                        lemmaSource.data.id,
+                        dragTransforms,
+                    )!;
+                    const tdt = getCompleteDragTransform(
+                        root,
+                        lemmaTarget.data.id,
+                        dragTransforms,
+                    )!;
                     return (
                         <line
                             class={style.lemmaLink}
-                            x1={lemmaTarget.x}
-                            y1={lemmaTarget.y + 6}
-                            x2={lemmaSource.x}
-                            y2={lemmaSource.y - 16}
+                            x1={lemmaTarget.x + tdt.x}
+                            y1={lemmaTarget.y + 6 + tdt.y}
+                            x2={lemmaSource.x + sdt.x}
+                            y2={lemmaSource.y - 16 + sdt.y}
                         />
                     );
                 }
@@ -185,6 +196,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                             {/* #1 render ClosingEdges -> keep order to avoid overlapping */
                             getClosedLeaves(root).map((n) => (
                                 <ClosingEdge
+                                    root={root}
                                     leaf={n}
                                     pred={
                                         findSubTree(
