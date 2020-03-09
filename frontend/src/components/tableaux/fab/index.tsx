@@ -9,12 +9,9 @@ import LemmaIcon from "../../../components/icons/lemma";
 import UndoIcon from "../../../components/icons/undo";
 import { checkClose } from "../../../helpers/api";
 import { useAppState } from "../../../helpers/app-state";
-import {
-    nextOpenLeaf,
-    sendBacktrack,
-} from "../../../helpers/tableaux";
+import { nextOpenLeaf, sendBacktrack } from "../../../helpers/tableaux";
 import { TableauxCalculusType } from "../../../types/app";
-import {FOTableauxState, PropTableauxState} from "../../../types/tableaux";
+import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
 
 interface Props {
     /**
@@ -41,6 +38,7 @@ interface Props {
      * Callback if lemma FAB is clicked
      */
     lemmaCallback: () => void;
+    resetDragTransforms: () => void;
 }
 
 const TableauxFAB: preact.FunctionalComponent<Props> = ({
@@ -50,21 +48,31 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
     expandCallback,
     lemmaMode,
     lemmaCallback,
-
+    resetDragTransforms,
 }) => {
-    const {
-        server,
-        smallScreen,
-        onError,
-        onChange,
-        onSuccess
-    } = useAppState();
+    const { server, smallScreen, onError, onChange, onSuccess } = useAppState();
+
+    const resetView = (
+        <FAB
+            icon={<CenterIcon />}
+            label="Reset View"
+            mini={true}
+            extended={true}
+            showIconAtEnd={true}
+            onClick={() => {
+                dispatchEvent(new CustomEvent("center"));
+                resetDragTransforms();
+            }}
+        />
+    );
 
     return (
         <ControlFAB alwaysOpen={!smallScreen}>
             {selectedNodeId === undefined ? (
                 <Fragment>
-                    {state!.nodes.filter(node => !node.isClosed).length > 0 ? (
+                    {resetView}
+                    {state!.nodes.filter((node) => !node.isClosed).length >
+                    0 ? (
                         <FAB
                             icon={<ExploreIcon />}
                             label="Next Leaf"
@@ -78,22 +86,14 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 }
                                 dispatchEvent(
                                     new CustomEvent("go-to", {
-                                        detail: { node }
-                                    })
+                                        detail: { node },
+                                    }),
                                 );
                             }}
                         />
-                    ) : undefined}
-                    <FAB
-                        icon={<CenterIcon />}
-                        label="Center"
-                        mini={true}
-                        extended={true}
-                        showIconAtEnd={true}
-                        onClick={() => {
-                            dispatchEvent(new CustomEvent("center"));
-                        }}
-                    />
+                    ) : (
+                        undefined
+                    )}
                     <FAB
                         icon={<CheckCircleIcon />}
                         label="Check"
@@ -106,7 +106,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 onError,
                                 onSuccess,
                                 calculus,
-                                state
+                                state,
                             )
                         }
                     />
@@ -123,24 +123,17 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                     server,
                                     state!,
                                     onChange,
-                                    onError
+                                    onError,
                                 );
                             }}
                         />
-                    ) : undefined}
+                    ) : (
+                        undefined
+                    )}
                 </Fragment>
             ) : (
                 <Fragment>
-                    <FAB
-                        icon={<CenterIcon />}
-                        label="Center"
-                        mini={true}
-                        extended={true}
-                        showIconAtEnd={true}
-                        onClick={() => {
-                            dispatchEvent(new CustomEvent("center"));
-                        }}
-                    />
+                    {resetView}
                     <FAB
                         icon={<AddIcon />}
                         label="Expand"
@@ -159,10 +152,9 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             onClick={lemmaCallback}
                             active={true}
                         />
-                    ) : (
-                        state!.nodes[selectedNodeId].children.length === 0 &&
-                        state!.nodes.filter(node => node.isClosed).length > 0
-                    ) ? (
+                    ) : state!.nodes[selectedNodeId].children.length === 0 &&
+                      state!.nodes.filter((node) => node.isClosed).length >
+                          0 ? (
                         <FAB
                             icon={<LemmaIcon />}
                             label="Lemma"
@@ -171,7 +163,9 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             showIconAtEnd={true}
                             onClick={lemmaCallback}
                         />
-                    ) : undefined}
+                    ) : (
+                        undefined
+                    )}
                 </Fragment>
             )}
         </ControlFAB>

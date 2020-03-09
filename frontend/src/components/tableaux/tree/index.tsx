@@ -6,13 +6,11 @@ import {
     TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
 
-import { useCallback, useState } from "preact/hooks";
 import { findSubTree } from "../../../helpers/layout/tree";
 import {
     getClosedLeaves,
     getNode,
     tableauxTreeLayout,
-    updateDragTransform,
 } from "../../../helpers/tableaux";
 import { LayoutItem } from "../../../types/layout";
 import { DragTransform } from "../../../types/ui";
@@ -45,6 +43,8 @@ interface Props {
      * Hands the Information over, that potential Lemma nodes are selectable
      */
     lemmaNodesSelectable?: boolean;
+    dragTransforms: Record<number, DragTransform>;
+    onDrag: (id: number, dt: DragTransform) => void;
 }
 
 interface ClosingEdgeProps {
@@ -110,6 +110,8 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     selectNodeCallback,
     selectedNodeId,
     lemmaNodesSelectable = false,
+    dragTransforms,
+    onDrag,
 }) => {
     const {
         root,
@@ -117,14 +119,6 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         width: treeWidth,
         links,
     } = tableauxTreeLayout(nodes);
-
-    const [dragTransforms, setDragTransforms] = useState<
-        Record<number, DragTransform>
-    >({});
-
-    const onDrag = useCallback(updateDragTransform(setDragTransforms), [
-        setDragTransforms,
-    ]);
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
