@@ -11,6 +11,7 @@ interface Props {
     lemmaNodesSelectable: boolean;
     onDrag: (id: number, dt: DragTransform) => void;
     dragTransforms: Record<number, DragTransform>;
+    zoomFactor: number;
 }
 
 const SubTree: preact.FunctionalComponent<Props> = ({
@@ -20,6 +21,7 @@ const SubTree: preact.FunctionalComponent<Props> = ({
     lemmaNodesSelectable,
     dragTransforms,
     onDrag,
+    zoomFactor,
 }) => {
     const dt = dragTransforms[node.data.id] ?? { x: 0, y: 0 };
 
@@ -32,6 +34,7 @@ const SubTree: preact.FunctionalComponent<Props> = ({
                 node={node}
                 selected={node.data.id === selectedNodeId}
                 lemmaNodesSelectable={lemmaNodesSelectable}
+                zoomFactor={zoomFactor}
             />
             {node.children.map((c) => (
                 <SubTree
@@ -41,6 +44,7 @@ const SubTree: preact.FunctionalComponent<Props> = ({
                     selectNodeCallback={selectNodeCallback}
                     selectedNodeId={selectedNodeId}
                     lemmaNodesSelectable={lemmaNodesSelectable}
+                    zoomFactor={zoomFactor}
                 />
             ))}
         </g>

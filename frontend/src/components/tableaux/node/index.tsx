@@ -28,6 +28,7 @@ interface Props {
     lemmaNodesSelectable: boolean;
     dragTransform: DragTransform;
     onDrag: (id: number, dt: DragTransform) => void;
+    zoomFactor: number;
 }
 
 // Component representing a single Node of a TableauxTree
@@ -38,6 +39,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     lemmaNodesSelectable,
     onDrag,
     dragTransform,
+    zoomFactor,
 }) => {
     const textRef = createRef<SVGTextElement>();
 
@@ -87,18 +89,20 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             e.preventDefault();
             e.stopPropagation();
 
-            const dx = e.clientX - x;
-            const dy = e.clientY - y;
-
             if (!moved) {
-                moved = dx * dx + dy * dy > 0;
+                const xChange = e.clientX - x;
+                const yChange = e.clientY - y;
+                moved = xChange * xChange + yChange * yChange > 0;
             }
 
             const p = mousePos(svg, e);
 
+            const dx = (p[0] - p0[0]) / zoomFactor;
+            const dy = (p[1] - p0[1]) / zoomFactor;
+
             onDrag(node.data.id, {
-                x: oldDt.x + p[0] - p0[0],
-                y: oldDt.y + p[1] - p0[1],
+                x: oldDt.x + dx,
+                y: oldDt.y + dy,
             });
         };
 

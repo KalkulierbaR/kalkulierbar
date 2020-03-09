@@ -219,6 +219,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     selectedNodeId={selectedNodeId}
                                     selectNodeCallback={selectNodeCallback}
                                     lemmaNodesSelectable={lemmaNodesSelectable}
+                                    zoomFactor={transform.k}
                                 />
                             }
                         </g>
