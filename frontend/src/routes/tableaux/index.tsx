@@ -3,9 +3,7 @@ import { Fragment, h } from "preact";
 import Switch from "../../components/switch";
 
 import { useState } from "preact/hooks";
-import FAB from "../../components/fab";
 import HintIcon, { Hint } from "../../components/hint";
-import StartIcon from "../../components/icons/start";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
@@ -18,8 +16,6 @@ import {
 } from "../../types/tableaux";
 import { useAppState } from "../../util/app-state";
 
-import * as style from "./style.scss";
-
 interface Props {
     /**
      * Which calculus to use
@@ -28,7 +24,7 @@ interface Props {
 }
 
 const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
-    const { smallScreen, firstVisit } = useAppState();
+    const { smallScreen } = useAppState();
 
     const [tabType, setTabType] = useState(TableauxType.unconnected);
     const [regular, setRegular] = useState(false);
@@ -164,15 +160,6 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
-            {firstVisit && (
-                <FAB
-                    class={style.tutorialBtn}
-                    icon={<StartIcon />}
-                    showIconAtEnd={true}
-                    extended={true}
-                    label="Start Tutorial"
-                />
-            )}
         </Fragment>
     );
 };
