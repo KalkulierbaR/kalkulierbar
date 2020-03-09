@@ -38,6 +38,7 @@ interface Props {
      * Callback if lemma FAB is clicked
      */
     lemmaCallback: () => void;
+    resetDragTransform: (id: number) => void;
     resetDragTransforms: () => void;
 }
 
@@ -48,6 +49,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
     expandCallback,
     lemmaMode,
     lemmaCallback,
+    resetDragTransform,
     resetDragTransforms,
 }) => {
     const { server, smallScreen, onError, onChange, onSuccess } = useAppState();
@@ -118,6 +120,17 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
+                                if (state.moveHistory.length > 0) {
+                                    const move =
+                                        state.moveHistory[
+                                            state.moveHistory.length - 1
+                                        ];
+                                    if (move.type === "EXPAND") {
+                                        resetDragTransform(
+                                            state.nodes.length - 1,
+                                        );
+                                    }
+                                }
                                 sendBacktrack(
                                     calculus,
                                     server,

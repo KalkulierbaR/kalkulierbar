@@ -59,6 +59,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         setDragTransforms,
     ]);
 
+    const resetDragTransform = useCallback(
+        (id: number) => onDrag(id, { x: 0, y: 0 }),
+        [onDrag],
+    );
     const resetDragTransforms = useCallback(() => setDragTransforms({}), [
         setDragTransforms,
     ]);
@@ -336,6 +340,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 expandCallback={() => setShowClauseDialog(!showClauseDialog)}
                 lemmaMode={lemmaMode}
                 lemmaCallback={() => setLemmaMode(!lemmaMode)}
+                resetDragTransform={resetDragTransform}
                 resetDragTransforms={resetDragTransforms}
             />
         </Fragment>
