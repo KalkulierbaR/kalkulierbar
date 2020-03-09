@@ -19,7 +19,7 @@ class Var(var spelling: String) : LogicNode() {
 @SerialName("not")
 class Not(override var child: LogicNode) : UnaryOp() {
 
-    override fun toString() = "!$child"
+    override fun toString() = "¬$child"
 
     override fun clone() = Not(child.clone())
 
