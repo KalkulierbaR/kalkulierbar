@@ -211,6 +211,14 @@ export const tableauxTreeLayout = (
     return treeLayout(nodes, tabNodeToTree);
 };
 
+/**
+ * Converts a list of TableauxNodes to a tree
+ * @param {Array<TableauxNode>} nodes - The list of nodes
+ * @param {TableauxNode} n - The current node
+ * @param {number} i - Current index
+ * @param {number} y - Current y position
+ * @returns {Tree<TableauxTreeLayoutNode>} - The resulting tree
+ */
 const tabNodeToTree = (
     nodes: TableauxNode[],
     n: TableauxNode = nodes[0],
@@ -228,9 +236,20 @@ const tabNodeToTree = (
     );
 };
 
+/**
+ * Finds a specific node in the tree
+ * @param {Tree<TableauxTreeLayoutNode>} t - The tree to search
+ * @param {number} id - The is to find
+ * @returns {TableauxTreeLayoutNode} - The node
+ */
 export const getNode = (t: Tree<TableauxTreeLayoutNode>, id: number) =>
     treeFind(t, (s) => s.data.id === id)!;
 
+/**
+ * Gets all closed leaves
+ * @param {Tree<TableauxTreeLayoutNode>} t - The tree
+ * @returns {Array<LayoutItem<TableauxTreeLayoutNode>>} - All closed leaves
+ */
 export const getClosedLeaves = (
     t: Tree<TableauxTreeLayoutNode>,
 ): Array<LayoutItem<TableauxTreeLayoutNode>> =>
@@ -240,6 +259,11 @@ export const getClosedLeaves = (
         data: c.data,
     }));
 
+/**
+ * Gives a function that sets a specific drag
+ * @param {StateUpdater<Record<number, DragTransform>>} setDragTransform - The update function
+ * @returns {Function} - Drag handler
+ */
 export const updateDragTransform = (
     setDragTransform: StateUpdater<Record<number, DragTransform>>,
 ) => (id: number, dt: DragTransform) => {

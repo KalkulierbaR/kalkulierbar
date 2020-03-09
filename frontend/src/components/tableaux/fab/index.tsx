@@ -38,7 +38,13 @@ interface Props {
      * Callback if lemma FAB is clicked
      */
     lemmaCallback: () => void;
+    /**
+     * Callback to reset a specific drag
+     */
     resetDragTransform: (id: number) => void;
+    /**
+     * Callback to reset all drags
+     */
     resetDragTransforms: () => void;
 }
 
@@ -120,6 +126,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
+                                // If the last move added a node, and we undo this, remove the corresponding drag
                                 if (state.moveHistory.length > 0) {
                                     const move =
                                         state.moveHistory[

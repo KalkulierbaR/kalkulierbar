@@ -43,7 +43,13 @@ interface Props {
      * Hands the Information over, that potential Lemma nodes are selectable
      */
     lemmaNodesSelectable?: boolean;
+    /**
+     * Drag transforms of all nodes
+     */
     dragTransforms: Record<number, DragTransform>;
+    /**
+     * Callback to change a specific drag
+     */
     onDrag: (id: number, dt: DragTransform) => void;
 }
 
@@ -198,7 +204,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                             {/* #2 render lemma line if it exists */
                             lineToLemmaSource()}
                             {
-                                /* #4 render nodes -> renders above all previous elements */
+                                /* #3 render nodes -> Recursively render each sub tree */
                                 <SubTree
                                     dragTransforms={dragTransforms}
                                     onDrag={onDrag}

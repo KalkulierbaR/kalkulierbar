@@ -49,9 +49,22 @@ export const preOrderTraverseTree = <T>(
     }
 };
 
+/**
+ * Finds a specific node in the tree
+ * @param {Tree<T>} t - The tree to search in
+ * @param {Predicate} p - The predicate to search by
+ * @returns {T} - The data of the first node to fulfill `p`
+ */
 export const treeFind = <T>(t: Tree<T>, p: (t: Tree<T>) => boolean) =>
     findSubTree(t, p, (c) => c.data);
 
+/**
+ * Finds a specific subtree and then runs a conversion function on the result
+ * @param {Tree<T>} t - The tree to search in
+ * @param {Predicate} p - The predicate to search by
+ * @param {Function} c - The conversion function
+ * @returns {V} - The result of the conversion
+ */
 export const findSubTree = <T, V>(
     t: Tree<T>,
     p: (t: Tree<T>) => boolean,
@@ -71,6 +84,12 @@ export const findSubTree = <T, V>(
     return;
 };
 
+/**
+ * Filters the tree and returns the sub trees as any array
+ * @param {Tree<T>} t - The tree to filter
+ * @param {Predicate} p - The predicate to filter by
+ * @returns {Array<Tree<T>>} - The result array
+ */
 export const filterTree = <T>(t: Tree<T>, p: (tree: Tree<T>) => boolean) => {
     const res: Array<Tree<T>> = [];
 

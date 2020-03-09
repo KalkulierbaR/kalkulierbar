@@ -28,8 +28,17 @@ interface Props {
      * Contains the Information, that potential Lemma nodes are selectable
      */
     lemmaNodesSelectable: boolean;
+    /**
+     * The drag transform of this node
+     */
     dragTransform: DragTransform;
+    /**
+     * Callback to set this node's drag
+     */
     onDrag: (id: number, dt: DragTransform) => void;
+    /**
+     * Current zoom factor of the SVG (needed for drag computation)
+     */
     zoomFactor: number;
 }
 
@@ -166,7 +175,9 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
 
         const t = touchPos(svg, e.changedTouches, touch.identifier);
 
-        if (!t) { return; }
+        if (!t) {
+            return;
+        }
 
         const dx = (t[0] - touch0[0]) / zoomFactor;
         const dy = (t[1] - touch0[1]) / zoomFactor;

@@ -7,12 +7,33 @@ import TableauxTreeNode from "../node";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * The current tree to render
+     */
     node: Tree<TableauxTreeLayoutNode>;
+    /**
+     * The selected node, if any
+     */
     selectedNodeId?: number;
+    /**
+     * Callback to select a node
+     */
     selectNodeCallback: (n: TableauxTreeLayoutNode) => void;
+    /**
+     * Contains the Information, that potential Lemma nodes are selectable
+     */
     lemmaNodesSelectable: boolean;
+    /**
+     * Callback to change specific drag
+     */
     onDrag: (id: number, dt: DragTransform) => void;
+    /**
+     * All drag transforms
+     */
     dragTransforms: Record<number, DragTransform>;
+    /**
+     * Zoom factor of the SVG
+     */
     zoomFactor: number;
 }
 
