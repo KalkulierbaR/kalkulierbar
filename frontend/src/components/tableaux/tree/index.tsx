@@ -8,8 +8,8 @@ import {
 
 import { findSubTree } from "../../../helpers/layout/tree";
 import {
+    getAbsoluteDragTransform,
     getClosedLeaves,
-    getCompleteDragTransform,
     getNode,
     tableauxTreeLayout,
 } from "../../../helpers/tableaux";
@@ -69,12 +69,12 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     pred,
     dragTransforms,
 }) => {
-    const predDt = getCompleteDragTransform(
+    const predDt = getAbsoluteDragTransform(
         root,
         pred.data.id,
         dragTransforms,
     )!;
-    const leafDt = getCompleteDragTransform(
+    const leafDt = getAbsoluteDragTransform(
         root,
         leaf.data.id,
         dragTransforms,
@@ -152,12 +152,12 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                     (t) => t,
                 );
                 if (lemmaSource !== undefined) {
-                    const sdt = getCompleteDragTransform(
+                    const sdt = getAbsoluteDragTransform(
                         root,
                         lemmaSource.data.id,
                         dragTransforms,
                     )!;
-                    const tdt = getCompleteDragTransform(
+                    const tdt = getAbsoluteDragTransform(
                         root,
                         lemmaTarget.data.id,
                         dragTransforms,
