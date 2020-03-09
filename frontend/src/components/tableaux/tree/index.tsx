@@ -113,12 +113,9 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     dragTransforms,
     onDrag,
 }) => {
-    const {
-        root,
-        height: treeHeight,
-        width: treeWidth,
-        links,
-    } = tableauxTreeLayout(nodes);
+    const { root, height: treeHeight, width: treeWidth } = tableauxTreeLayout(
+        nodes,
+    );
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
@@ -198,33 +195,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     dragTransforms={dragTransforms}
                                 />
                             ))}
-                            {/* #2 render links between nodes */
-                            links.map((l, i) => {
-                                const srcDt = dragTransforms[l.srcId] ?? {
-                                    x: 0,
-                                    y: 0,
-                                };
-                                const targetDt = dragTransforms[l.targetId] ?? {
-                                    x: 0,
-                                    y: 0,
-                                };
-                                return (
-                                    <line
-                                        key={i}
-                                        class={style.link}
-                                        x1={l.source[0] + srcDt.x}
-                                        y1={l.source[1] + 6 + srcDt.y}
-                                        x2={l.target[0] + srcDt.x + targetDt.x}
-                                        y2={
-                                            l.target[1] -
-                                            16 +
-                                            srcDt.y +
-                                            targetDt.y
-                                        }
-                                    />
-                                );
-                            })}
-                            {/* #3 render lemma line if it exists */
+                            {/* #2 render lemma line if it exists */
                             lineToLemmaSource()}
                             {
                                 /* #4 render nodes -> renders above all previous elements */

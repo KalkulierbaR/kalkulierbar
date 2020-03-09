@@ -1,8 +1,10 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 import { TableauxTreeLayoutNode } from "../../../types/tableaux";
 import { Tree } from "../../../types/tree";
 import { DragTransform } from "../../../types/ui";
 import TableauxTreeNode from "../node";
+
+import * as style from "./style.scss";
 
 interface Props {
     node: Tree<TableauxTreeLayoutNode>;
@@ -27,6 +29,29 @@ const SubTree: preact.FunctionalComponent<Props> = ({
 
     return (
         <g transform={`translate(${dt.x} ${dt.y})`}>
+            {node.children.map((c, i) => {
+                const childDt = dragTransforms[c.data.id] ?? { x: 0, y: 0 };
+                return (
+                    <Fragment key={i}>
+                        <line
+                            class={style.link}
+                            x1={node.x}
+                            y1={node.y + 6}
+                            x2={c.x + childDt.x}
+                            y2={c.y + childDt.y - 16}
+                        />
+                        <SubTree
+                            node={c}
+                            onDrag={onDrag}
+                            dragTransforms={dragTransforms}
+                            selectNodeCallback={selectNodeCallback}
+                            selectedNodeId={selectedNodeId}
+                            lemmaNodesSelectable={lemmaNodesSelectable}
+                            zoomFactor={zoomFactor}
+                        />
+                    </Fragment>
+                );
+            })}
             <TableauxTreeNode
                 onDrag={onDrag}
                 dragTransform={dt}
@@ -36,17 +61,6 @@ const SubTree: preact.FunctionalComponent<Props> = ({
                 lemmaNodesSelectable={lemmaNodesSelectable}
                 zoomFactor={zoomFactor}
             />
-            {node.children.map((c) => (
-                <SubTree
-                    node={c}
-                    onDrag={onDrag}
-                    dragTransforms={dragTransforms}
-                    selectNodeCallback={selectNodeCallback}
-                    selectedNodeId={selectedNodeId}
-                    lemmaNodesSelectable={lemmaNodesSelectable}
-                    zoomFactor={zoomFactor}
-                />
-            ))}
         </g>
     );
 };
