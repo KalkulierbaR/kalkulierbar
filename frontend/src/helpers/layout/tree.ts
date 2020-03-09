@@ -95,10 +95,12 @@ export const treeToLayoutItem = <T extends { id: number }>(
     return items;
 };
 
-const getLinks = <T>(t: Tree<T>): Link[] => {
+const getLinks = <T extends { id: number }>(t: Tree<T>): Link[] => {
     const links: Link[] = t.children.map((c) => ({
         source: [t.x, t.y],
         target: [c.x, c.y],
+        srcId: t.data.id,
+        targetId: c.data.id,
     }));
 
     return links.concat(...t.children.map((c) => getLinks(c)));

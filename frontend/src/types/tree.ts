@@ -46,6 +46,8 @@ export interface Tree<T> {
 }
 
 export interface Link {
+    srcId: number;
+    targetId: number;
     source: Point;
     target: Point;
 }

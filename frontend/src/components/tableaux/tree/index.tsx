@@ -50,18 +50,23 @@ interface Props {
 interface ClosingEdgeProps {
     leaf: LayoutItem<TableauxTreeLayoutNode>;
     pred: LayoutItem<TableauxTreeLayoutNode>;
+    dragTransforms: Record<number, DragTransform>;
 }
 
 // Component to display an edge in a graph
 const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
     leaf,
     pred,
+    dragTransforms,
 }) => {
+    const predDt = dragTransforms[pred.data.id] ?? { x: 0, y: 0 };
+    const leafDt = dragTransforms[leaf.data.id] ?? { x: 0, y: 0 };
+
     // Calculate coordinates
-    const x1 = leaf.x;
-    const y1 = leaf.y;
-    const x2 = pred.x;
-    const y2 = pred.y;
+    const x1 = leaf.x + predDt.x + leafDt.x;
+    const y1 = leaf.y + predDt.y + leafDt.y;
+    const x2 = pred.x + predDt.x;
+    const y2 = pred.y + predDt.y;
 
     // Calculate edge
     // M -> move to point x1,y1
@@ -196,18 +201,35 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                             }),
                                         )!
                                     }
+                                    dragTransforms={dragTransforms}
                                 />
                             ))}
                             {/* #2 render links between nodes */
-                            links.map((l) => (
-                                <line
-                                    class={style.link}
-                                    x1={l.source[0]}
-                                    y1={l.source[1] + 6}
-                                    x2={l.target[0]}
-                                    y2={l.target[1] - 16}
-                                />
-                            ))}
+                            links.map((l, i) => {
+                                const srcDt = dragTransforms[l.srcId] ?? {
+                                    x: 0,
+                                    y: 0,
+                                };
+                                const targetDt = dragTransforms[l.targetId] ?? {
+                                    x: 0,
+                                    y: 0,
+                                };
+                                return (
+                                    <line
+                                        key={i}
+                                        class={style.link}
+                                        x1={l.source[0] + srcDt.x}
+                                        y1={l.source[1] + 6 + srcDt.y}
+                                        x2={l.target[0] + srcDt.x + targetDt.x}
+                                        y2={
+                                            l.target[1] -
+                                            16 +
+                                            srcDt.y +
+                                            targetDt.y
+                                        }
+                                    />
+                                );
+                            })}
                             {/* #3 render lemma line if it exists */
                             lineToLemmaSource()}
                             {
