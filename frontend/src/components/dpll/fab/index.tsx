@@ -1,8 +1,9 @@
 import { h } from "preact";
+import { AppStateActionType, TutorialMode } from "../../../types/app";
 import { DPLLNodeType, DPLLState } from "../../../types/dpll";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
-import { sendPrune } from "../../../util/dpll";
+import { sendPrune, stateIsClosed } from "../../../util/dpll";
 import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
 import CheckCircleIcon from "../../icons/check-circle";
@@ -28,10 +29,21 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
     setShowModelDialog,
     setShowSplitDialog,
 }) => {
-    const { smallScreen, server, onChange, onError, onSuccess } = useAppState();
+    const {
+        smallScreen,
+        server,
+        onChange,
+        onError,
+        onSuccess,
+        tutorialMode,
+        dispatch,
+    } = useAppState();
 
     return (
-        <ControlFAB alwaysOpen={!smallScreen}>
+        <ControlFAB
+            alwaysOpen={!smallScreen}
+            couldShowCheckCloseHint={stateIsClosed(state.tree)}
+        >
             {smallScreen && (
                 <FAB
                     label={showTree ? "Clause View" : "Tree View"}
@@ -57,9 +69,15 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                 mini={true}
                 extended={true}
                 showIconAtEnd={true}
-                onClick={() =>
-                    checkClose(server, onError, onSuccess, "dpll", state)
-                }
+                onClick={() => {
+                    if (tutorialMode & TutorialMode.HighlightCheck) {
+                        dispatch({
+                            type: AppStateActionType.SET_TUTORIAL_MODE,
+                            value: tutorialMode ^ TutorialMode.HighlightCheck,
+                        });
+                    }
+                    checkClose(server, onError, onSuccess, "dpll", state);
+                }}
             />
             <FAB
                 label="Prune"

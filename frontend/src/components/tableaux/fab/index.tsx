@@ -7,7 +7,11 @@ import CheckCircleIcon from "../../../components/icons/check-circle";
 import ExploreIcon from "../../../components/icons/explore";
 import LemmaIcon from "../../../components/icons/lemma";
 import UndoIcon from "../../../components/icons/undo";
-import { TableauxCalculusType } from "../../../types/app";
+import {
+    AppStateActionType,
+    TableauxCalculusType,
+    TutorialMode,
+} from "../../../types/app";
 import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
@@ -48,11 +52,22 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
     lemmaMode,
     lemmaCallback,
 }) => {
-    const { server, smallScreen, onError, onChange, onSuccess } = useAppState();
+    const {
+        server,
+        smallScreen,
+        onError,
+        onChange,
+        onSuccess,
+        tutorialMode,
+        dispatch,
+    } = useAppState();
 
     return (
         <Fragment>
-            <ControlFAB alwaysOpen={!smallScreen}>
+            <ControlFAB
+                alwaysOpen={!smallScreen}
+                couldShowCheckCloseHint={state.nodes[0].isClosed}
+            >
                 {selectedNodeId === undefined ? (
                     <Fragment>
                         {state!.nodes.filter((node) => !node.isClosed).length >
@@ -94,15 +109,26 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             mini={true}
                             extended={true}
                             showIconAtEnd={true}
-                            onClick={() =>
+                            onClick={() => {
+                                if (
+                                    tutorialMode & TutorialMode.HighlightCheck
+                                ) {
+                                    dispatch({
+                                        type:
+                                            AppStateActionType.SET_TUTORIAL_MODE,
+                                        value:
+                                            tutorialMode ^
+                                            TutorialMode.HighlightCheck,
+                                    });
+                                }
                                 checkClose(
                                     server,
                                     onError,
                                     onSuccess,
                                     calculus,
                                     state,
-                                )
-                            }
+                                );
+                            }}
                         />
                         {state!.backtracking ? (
                             <FAB

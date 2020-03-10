@@ -18,6 +18,10 @@ interface Props {
      * The components DOM children
      */
     children: any;
+    /**
+     *
+     */
+    couldShowCheckCloseHint?: boolean;
 }
 
 interface MenuProps {
@@ -53,6 +57,7 @@ const Menu: preact.FunctionalComponent<MenuProps> = ({
 const ControlFAB: preact.FunctionalComponent<Props> = ({
     children,
     alwaysOpen = false,
+    couldShowCheckCloseHint = false,
 }) => {
     const { smallScreen, tutorialMode, dispatch } = useAppState();
     const [show, setShow] = useState(alwaysOpen);
@@ -87,6 +92,15 @@ const ControlFAB: preact.FunctionalComponent<Props> = ({
                 (tutorialMode & TutorialMode.HighlightFAB) !== 0 && (
                     <Tutorial
                         text="Try applying a rule"
+                        right="125px"
+                        bottom="0px"
+                    />
+                )}
+            {smallScreen &&
+                couldShowCheckCloseHint &&
+                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
+                    <Tutorial
+                        text="Check if the proof is complete"
                         right="125px"
                         bottom="0px"
                     />
