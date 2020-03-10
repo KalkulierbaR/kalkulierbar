@@ -135,7 +135,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             state.moveHistory.add(move)
         }
 
-        var mgu: Map<String, FirstOrderTerm>
+        val mgu: Map<String, FirstOrderTerm>
         // Try to find a unifying variable assignment for comparison with varAssign
         try {
             mgu = Unification.unify(leaf.relation, closeNode.relation)
@@ -143,7 +143,10 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             throw IllegalMove("Could not execute Unification algorithm to compare mgu with " +
                     "given variable assignment: ${e.message}")
         }
-        if (varAssign != mgu)
+
+        val notMGU = varAssign.any { !it.value.synEq(mgu[it.key]) }
+
+        if (notMGU)
             state.statusMessage = "Given variable assignment does not equal mgu: $mgu"
 
         return state
