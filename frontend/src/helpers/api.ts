@@ -96,7 +96,7 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
         }
         const parsed = await res.json();
         stateChanger(calculus, parsed);
-        if ("statusMessage" in parsed) {
+        if ("statusMessage" in parsed && parsed.statusMessage) {
             onWarning(parsed.statusMessage);
         }
         return parsed;
