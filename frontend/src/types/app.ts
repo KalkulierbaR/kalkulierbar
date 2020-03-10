@@ -191,4 +191,5 @@ export interface APIInformation<S> {
     state: S;
     onChange: AppStateUpdater;
     onError: (msg: string) => void;
+    onWarning: (msg: string) => void;
 }

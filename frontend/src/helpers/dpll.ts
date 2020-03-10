@@ -41,6 +41,7 @@ export const sendProp = (
     setNode: (node: number) => void,
     onChange: AppStateUpdater,
     onError: (msg: string) => void,
+    onWarning: (msg: string) => void,
 ) =>
     sendMove(
         server,
@@ -49,6 +50,7 @@ export const sendProp = (
         { type: "dpll-prop", branch, baseClause, propClause, propAtom },
         onChange,
         onError,
+        onWarning,
     ).then((s) => {
         if (s) {
             setNode(s.tree.length - 1);
@@ -62,6 +64,7 @@ export const sendPrune = (
     branch: number,
     onChange: AppStateUpdater,
     onError: (msg: string) => void,
+    onWarning: (msg: string) => void,
 ) =>
     sendMove(
         server,
@@ -70,6 +73,7 @@ export const sendPrune = (
         { type: "dpll-prune", branch },
         onChange,
         onError,
+        onWarning,
     );
 
 export const sendSplit = (
@@ -79,6 +83,7 @@ export const sendSplit = (
     literal: string,
     onChange: AppStateUpdater,
     onError: (msg: string) => void,
+    onWarning: (msg: string) => void,
 ) =>
     sendMove(
         server,
@@ -87,6 +92,7 @@ export const sendSplit = (
         { type: "dpll-split", branch, literal },
         onChange,
         onError,
+        onWarning,
     );
 
 export const sendModelCheck = (
@@ -96,6 +102,7 @@ export const sendModelCheck = (
     interpretation: Record<string, boolean>,
     onChange: AppStateUpdater,
     onError: (msg: string) => void,
+    onWarning: (msg: string) => void,
 ) =>
     sendMove(
         server,
@@ -104,6 +111,7 @@ export const sendModelCheck = (
         { type: "dpll-modelcheck", branch, interpretation },
         onChange,
         onError,
+        onWarning,
     );
 
 export const getAllLits = (cs: ClauseSet) => {

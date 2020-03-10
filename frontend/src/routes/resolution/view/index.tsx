@@ -5,8 +5,8 @@ import ResolutionFactorizeDialog from "../../../components/resolution/dialog/fac
 import ResolutionResolveDialog from "../../../components/resolution/dialog/resolve";
 import ResolutionFAB from "../../../components/resolution/fab";
 import { useAppState } from "../../../helpers/app-state";
-import {stringArrayToStringMap} from "../../../helpers/array-to-map";
-import {getCandidateClause} from "../../../helpers/clause";
+import { stringArrayToStringMap } from "../../../helpers/array-to-map";
+import { getCandidateClause } from "../../../helpers/clause";
 import {
     addHyperSidePremiss,
     findHyperSidePremiss,
@@ -24,7 +24,8 @@ import {
     CandidateClause,
     getCandidateCount,
     instanceOfPropCandidateClause,
-    PropCandidateClause, SelectedClauses,
+    PropCandidateClause,
+    SelectedClauses,
 } from "../../../types/clause";
 import {
     HyperResolutionMove,
@@ -46,8 +47,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         [calculus]: cState,
         onError,
         onChange,
+        onWarning,
     } = useAppState();
-    const apiInfo = { onChange, onError, server };
+    const apiInfo = { onChange, onError, server, onWarning };
 
     let state = cState;
     if (!state) {
@@ -70,7 +72,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const selectedClauseId =
         selectedClauses === undefined ? undefined : selectedClauses[0];
 
-    const showResolveDialog = selectedClauses !== undefined && selectedClauses.length === 2;
+    const showResolveDialog =
+        selectedClauses !== undefined && selectedClauses.length === 2;
 
     const candidateClauses: CandidateClause[] = getCandidateClauses(
         state.clauseSet,
@@ -126,7 +129,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             }
             // Ignore when no candidates found
         } else {
-            const candidateClause = getCandidateClause(newClauseId, candidateClauses);
+            const candidateClause = getCandidateClause(
+                newClauseId,
+                candidateClauses,
+            );
             if (candidateClause != null) {
                 const candidateAtomCount = getCandidateCount(candidateClause);
                 if (candidateAtomCount === 0) {
@@ -141,7 +147,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             selectedClauseId,
                             newClauseId,
                             options.entries().next().value[1],
-                            {...apiInfo, state},
+                            { ...apiInfo, state },
                         );
                     } else {
                         // Show dialog for literal selection
@@ -163,7 +169,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         newClauseId,
                         selectedClauseAtomIndex,
                         resolventAtomIndex,
-                        {...apiInfo, state},
+                        { ...apiInfo, state },
                     );
                 } else {
                     // Show dialog for literal selection
@@ -203,7 +209,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     selectedClauseAtomIndices.forEach((atomIndex) => {
                         const newOption: string = candidateClause!.clause.atoms[
                             atomIndex
-                            ].lit;
+                        ].lit;
                         if (!options.includes(newOption)) {
                             options[atomIndex] = newOption;
                         }
@@ -212,7 +218,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         }
         return stringArrayToStringMap(options);
     };
-    
+
     const selectable = getSelectable(
         candidateClauses,
         hyperRes,
@@ -235,9 +241,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 semiSelected={semiSelected}
                 selectable={selectable}
             />
-            
-            <ResolutionFAB 
-                calculus={calculus} 
+
+            <ResolutionFAB
+                calculus={calculus}
                 state={state}
                 selectedClauseId={selectedClauseId}
                 setSelectedClauses={setSelectedClauses}
@@ -258,13 +264,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 propOptions={literalOptions()}
             />
 
-            <ResolutionFactorizeDialog 
+            <ResolutionFactorizeDialog
                 showDialog={showFactorizeDialog}
                 setShowDialog={setShowFactorizeDialog}
-                calculus={calculus} 
-                state={state} 
+                calculus={calculus}
+                state={state}
                 selectedClauses={selectedClauses}
-                setSelectedClauses={setSelectedClauses} 
+                setSelectedClauses={setSelectedClauses}
             />
         </Fragment>
     );

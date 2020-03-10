@@ -28,7 +28,14 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
     setShowModelDialog,
     setShowSplitDialog,
 }) => {
-    const { smallScreen, server, onChange, onError, onSuccess } = useAppState();
+    const {
+        smallScreen,
+        server,
+        onChange,
+        onError,
+        onSuccess,
+        onWarning,
+    } = useAppState();
 
     return (
         <ControlFAB alwaysOpen={!smallScreen}>
@@ -68,7 +75,14 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                 extended={true}
                 showIconAtEnd={true}
                 onClick={() =>
-                    sendPrune(server, state, branch, onChange, onError)
+                    sendPrune(
+                        server,
+                        state,
+                        branch,
+                        onChange,
+                        onError,
+                        onWarning,
+                    )
                 }
             />
             <FAB

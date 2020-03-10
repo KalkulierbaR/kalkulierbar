@@ -36,6 +36,7 @@ export const nextOpenLeaf = (nodes: TableauxNode[]) => {
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
  * @param {Function} onError - Error handler
+ * @param {Function} onWarning - Warning handler
  * @param {number} leaf - The selected leaf
  * @param {number} pred - The selected predecessor
  * @param {boolean} autoClose - The server should decide about the variable assignment
@@ -49,6 +50,7 @@ export const sendClose = (
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
+    onWarning: (msg: string) => void,
     leaf: number,
     pred: number,
     autoClose?: boolean,
@@ -63,6 +65,7 @@ export const sendClose = (
             { type: "CLOSE", id1: leaf, id2: pred },
             stateChanger,
             onError,
+            onWarning,
         );
     } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
@@ -77,8 +80,9 @@ export const sendClose = (
             },
             stateChanger,
             onError,
+            onWarning,
         );
-        if (callback !== undefined){
+        if (callback !== undefined) {
             callback();
         }
     }
@@ -91,6 +95,7 @@ export const sendClose = (
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
  * @param {Function} onError - Error handler
+ * @param {Function} onWarning - Warning handler
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 export const sendBacktrack = (
@@ -99,6 +104,7 @@ export const sendBacktrack = (
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
+    onWarning: (msg: string) => void,
 ) => {
     if (instanceOfPropTabState(state, calculus)) {
         sendMove(
@@ -108,6 +114,7 @@ export const sendBacktrack = (
             { type: "UNDO", id1: -1, id2: -1 },
             stateChanger,
             onError,
+            onWarning,
         );
     } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
@@ -117,6 +124,7 @@ export const sendBacktrack = (
             { type: "UNDO", id1: -1, id2: -1, varAssign: {} },
             stateChanger,
             onError,
+            onWarning,
         );
     }
 };
@@ -128,6 +136,7 @@ export const sendBacktrack = (
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
  * @param {Function} onError - Error handler
+ * @param {Function} onWarning - Warning handler
  * @param {number} leaf - The selected leaf
  * @param {number} clause - The selected clause
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
@@ -138,6 +147,7 @@ export const sendExtend = (
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
+    onWarning: (msg: string) => void,
     leaf: number,
     clause: number,
 ) => {
@@ -149,6 +159,7 @@ export const sendExtend = (
             { type: "EXPAND", id1: leaf, id2: clause },
             stateChanger,
             onError,
+            onWarning,
         );
     } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
@@ -158,6 +169,7 @@ export const sendExtend = (
             { type: "EXPAND", id1: leaf, id2: clause, varAssign: {} },
             stateChanger,
             onError,
+            onWarning,
         );
     }
 };
@@ -169,6 +181,7 @@ export const sendExtend = (
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
  * @param {Function} onError - Error handler
+ * @param {Function} onWarning - Warning handler
  * @param {number} leaf - The selected leaf
  * @param {number} lemma - The selected Node to be used as lemma
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
@@ -179,6 +192,7 @@ export const sendLemma = (
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
+    onWarning: (msg: string) => void,
     leaf: number,
     lemma: number,
 ) => {
@@ -190,6 +204,7 @@ export const sendLemma = (
             { type: "LEMMA", id1: leaf, id2: lemma },
             stateChanger,
             onError,
+            onWarning,
         );
     } else if (instanceOfFOTabState(state, calculus)) {
         sendMove(
@@ -199,6 +214,7 @@ export const sendLemma = (
             { type: "LEMMA", id1: leaf, id2: lemma, varAssign: {} },
             stateChanger,
             onError,
+            onWarning,
         );
     }
 };

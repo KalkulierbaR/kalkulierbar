@@ -27,7 +27,7 @@ const DPLLPropLitDialog: preact.FunctionalComponent<Props> = ({
     branch,
     setBranch,
 }) => {
-    const { server, onChange, onError } = useAppState();
+    const { server, onChange, onError, onWarning } = useAppState();
 
     const propOptions =
         selectedClauses !== undefined && selectedClauses.length > 1
@@ -52,6 +52,7 @@ const DPLLPropLitDialog: preact.FunctionalComponent<Props> = ({
             setBranch,
             onChange,
             onError,
+            onWarning,
         );
         setSelectedClauses(undefined);
     };

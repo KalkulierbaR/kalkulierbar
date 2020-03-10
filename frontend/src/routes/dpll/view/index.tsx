@@ -23,7 +23,13 @@ import * as style from "./style.scss";
 interface Props {}
 
 const DPLLView: preact.FunctionalComponent<Props> = () => {
-    const { dpll: cState, server, onChange, onError } = useAppState();
+    const {
+        dpll: cState,
+        server,
+        onChange,
+        onError,
+        onWarning,
+    } = useAppState();
 
     const [showTree, setShowTree] = useState(false);
     const toggleShowTree = useCallback(() => setShowTree(!showTree), [
@@ -78,6 +84,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 setBranch,
                 onChange,
                 onError,
+                onWarning,
             );
             setSelectedClauses(undefined);
             return;
@@ -138,6 +145,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                         interpretation,
                         onChange,
                         onError,
+                        onWarning,
                     );
                     setShowModelDialog(false);
                 }}
