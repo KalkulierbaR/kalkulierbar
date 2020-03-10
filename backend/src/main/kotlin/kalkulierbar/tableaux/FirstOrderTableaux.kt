@@ -111,11 +111,23 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         varAssign: Map<String, FirstOrderTerm>
     ): FoTableauxState {
 
-        // Apply all specified variable instantiations globally
-        applyVarInstantiation(state, varAssign)
-
         val leaf = state.nodes[leafID]
         val closeNode = state.nodes[closeNodeID]
+
+        val mgu: Map<String, FirstOrderTerm>
+        // Try to find a unifying variable assignment for comparison with varAssign
+        try {
+            mgu = Unification.unify(leaf.relation, closeNode.relation)
+        } catch (e: UnificationImpossible) {
+            throw IllegalMove("Could not execute Unification algorithm to compare mgu with " +
+                    "given variable assignment: ${e.message}")
+        }
+        // val notMGU = varAssign.any { !it.value.synEq(mgu[it.key]) }
+        if (varAssign != mgu)
+            state.statusMessage = "Given variable assignment does not equal mgu: $mgu"
+
+        // Apply all specified variable instantiations globally
+        applyVarInstantiation(state, varAssign)
 
         if (!leaf.relation.synEq(closeNode.relation))
             throw IllegalMove("Node '$leaf' and '$closeNode' are not equal after variable instantiation")
@@ -134,20 +146,6 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             val move = FoTableauxMove(FoMoveType.CLOSE, leafID, closeNodeID, varAssignStrings)
             state.moveHistory.add(move)
         }
-
-        val mgu: Map<String, FirstOrderTerm>
-        // Try to find a unifying variable assignment for comparison with varAssign
-        try {
-            mgu = Unification.unify(leaf.relation, closeNode.relation)
-        } catch (e: UnificationImpossible) {
-            throw IllegalMove("Could not execute Unification algorithm to compare mgu with " +
-                    "given variable assignment: ${e.message}")
-        }
-
-        val notMGU = varAssign.any { !it.value.synEq(mgu[it.key]) }
-
-        if (notMGU)
-            state.statusMessage = "Given variable assignment does not equal mgu: $mgu"
 
         return state
     }
