@@ -3,7 +3,10 @@ import { useState } from "preact/hooks";
 import FAB from "../fab";
 import CloseIcon from "../icons/close";
 
+import { AppStateActionType, TutorialMode } from "../../types/app";
+import { useAppState } from "../../util/app-state";
 import MoreIcon from "../icons/more";
+import Tutorial from "../tutorial";
 import * as style from "./style.scss";
 
 interface Props {
@@ -51,6 +54,7 @@ const ControlFAB: preact.FunctionalComponent<Props> = ({
     children,
     alwaysOpen = false,
 }) => {
+    const { smallScreen, tutorialMode, dispatch } = useAppState();
     const [show, setShow] = useState(alwaysOpen);
 
     const SIZE = 32;
@@ -62,12 +66,31 @@ const ControlFAB: preact.FunctionalComponent<Props> = ({
         <MoreIcon fill={FILL} size={SIZE} />
     );
 
+    const handleClick = () => {
+        setShow(!show);
+        if ((tutorialMode & TutorialMode.HighlightFAB) === 0) {
+            return;
+        }
+        dispatch({
+            type: AppStateActionType.SET_TUTORIAL_MODE,
+            value: tutorialMode ^ TutorialMode.HighlightFAB,
+        });
+    };
+
     return (
         <div class={style.control}>
             <Menu show={show} setShow={alwaysOpen ? undefined : setShow}>
                 {children}
             </Menu>
-            <FAB icon={icon} label="Open Menu" onClick={() => setShow(!show)} />
+            <FAB icon={icon} label="Open Menu" onClick={handleClick} />
+            {smallScreen &&
+                (tutorialMode & TutorialMode.HighlightFAB) !== 0 && (
+                    <Tutorial
+                        text="Click here to see all see all moves"
+                        left="32px"
+                        bottom="0px"
+                    />
+                )}
         </div>
     );
 };

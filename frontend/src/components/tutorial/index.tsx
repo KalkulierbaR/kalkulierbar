@@ -19,7 +19,7 @@ const Tutorial: preact.FunctionalComponent<Props> = ({
             <svg class={style.svg} width={24} height={24} viewBox="0 0 24 24">
                 <path
                     fill="#fff"
-                    d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"
+                    d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"
                 />
             </svg>
         </div>

@@ -12,7 +12,6 @@ import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
-import Tutorial from "../../tutorial";
 
 interface Props {
     /**
@@ -49,14 +48,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
     lemmaMode,
     lemmaCallback,
 }) => {
-    const {
-        server,
-        smallScreen,
-        onError,
-        onChange,
-        onSuccess,
-        firstVisit,
-    } = useAppState();
+    const { server, smallScreen, onError, onChange, onSuccess } = useAppState();
 
     return (
         <Fragment>
@@ -181,13 +173,6 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 )}
             </ControlFAB>
-            {smallScreen && firstVisit && (
-                <Tutorial
-                    text="Click here to see all see all moves"
-                    left="32px"
-                    bottom="0px"
-                />
-            )}
         </Fragment>
     );
 };
