@@ -5,22 +5,19 @@ import * as style from "./style.scss";
 interface Props {
     text: string;
     bottom: string;
-    left: string;
+    right: string;
 }
 
 const Tutorial: preact.FunctionalComponent<Props> = ({
     text,
     bottom,
-    left,
+    right,
 }) => {
     return (
-        <div class={`card ${style.tut}`} style={{ bottom, left }}>
+        <div class={`card ${style.tut}`} style={{ bottom, right }}>
             <span>{text}</span>
-            <svg class={style.svg} width={24} height={24} viewBox="0 0 24 24">
-                <path
-                    fill="#fff"
-                    d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"
-                />
+            <svg class={style.svg} width={24} height={24} fill="var(--kbar-primary-text-color)" viewBox="0 0 24 24">
+                <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/>
             </svg>
         </div>
     );

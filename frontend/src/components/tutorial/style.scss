@@ -3,12 +3,13 @@
 
     max-width: 200px;
     box-shadow: var(--kbar-shadow-3dp);
-    background-color: var(--kbar-3dp-color);
+    background-color: var(--kbar-primary-text-color);
+    color: var(--kbar-card-color);
 }
 
 .svg {
     position: absolute;
-    left: 102%;
+    left: 100%;
     bottom: 23%;
     width: 60px;
     height: 30px;

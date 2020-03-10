@@ -86,8 +86,8 @@ const ControlFAB: preact.FunctionalComponent<Props> = ({
             {smallScreen &&
                 (tutorialMode & TutorialMode.HighlightFAB) !== 0 && (
                     <Tutorial
-                        text="Click here to see all see all moves"
-                        left="32px"
+                        text="Try applying a rule"
+                        right="125px"
                         bottom="0px"
                     />
                 )}
