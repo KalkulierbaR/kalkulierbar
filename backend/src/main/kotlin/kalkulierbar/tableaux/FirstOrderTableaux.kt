@@ -122,8 +122,8 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             throw IllegalMove("Could not execute Unification algorithm to compare mgu with " +
                     "given variable assignment: ${e.message}")
         }
-        // val notMGU = varAssign.any { !it.value.synEq(mgu[it.key]) }
-        if (varAssign != mgu)
+        val notMGU = varAssign.any { !it.value.synEq(mgu[it.key]) }
+        if (notMGU)
             state.statusMessage = "Given variable assignment does not equal mgu: $mgu"
 
         // Apply all specified variable instantiations globally
