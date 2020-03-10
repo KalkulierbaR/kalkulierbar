@@ -26,10 +26,20 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         if (params == null)
             return FoTableauxState(clauses, formula)
 
-        return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking, params.manualVarAssign)
+        return FoTableauxState(
+                clauses,
+                formula,
+                params.type,
+                params.regular,
+                params.backtracking,
+                params.manualVarAssign
+        )
     }
 
     override fun applyMoveOnState(state: FoTableauxState, move: FoTableauxMove): FoTableauxState {
+        // Reset status message
+        state.statusMessage = null
+
         // Pass moves to relevant subfunction
         return when (move.type) {
             FoMoveType.AUTOCLOSE -> applyAutoCloseBranch(state, move.id1, move.id2)
@@ -83,6 +93,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         return closeBranchCommon(state, leafID, closeNodeID, varAssign)
     }
 
+    @Suppress("ThrowsCount")
     /**
      * Close a branch using either computed or manually entered variable assignments
      * NOTE: This does NOT verify closeability.
@@ -123,6 +134,17 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             val move = FoTableauxMove(FoMoveType.CLOSE, leafID, closeNodeID, varAssignStrings)
             state.moveHistory.add(move)
         }
+
+        var mgu: Map<String, FirstOrderTerm>
+        // Try to find a unifying variable assignment for comparison with varAssign
+        try {
+            mgu = Unification.unify(leaf.relation, closeNode.relation)
+        } catch (e: UnificationImpossible) {
+            throw IllegalMove("Could not execute Unification algorithm to compare mgu with " +
+                    "given variable assignment: ${e.message}")
+        }
+        if (varAssign != mgu)
+            state.statusMessage = "Given variable assignment does not equal mgu: $mgu"
 
         return state
     }

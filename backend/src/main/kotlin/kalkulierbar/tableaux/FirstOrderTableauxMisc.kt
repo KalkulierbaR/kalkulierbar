@@ -28,6 +28,7 @@ class FoTableauxState(
 
     override var seal = ""
     var renderedClauseSet = listOf<String>()
+    var statusMessage: String? = null
 
     /**
      * Check if a given node can be closed
