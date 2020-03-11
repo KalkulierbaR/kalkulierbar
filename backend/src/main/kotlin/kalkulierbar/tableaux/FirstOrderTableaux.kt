@@ -91,14 +91,14 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     ): FoTableauxState {
         ensureBasicCloseability(state, leafID, closeNodeID)
 
-        val mgu: Map<String, FirstOrderTerm>
         val leaf = state.nodes[leafID]
         val closeNode = state.nodes[closeNodeID]
-
         // Check that given var assignment is a mgu, warn if not
         try {
-            mgu = Unification.unify(leaf.relation, closeNode.relation)
-            val notMGU = varAssign.any { !it.value.synEq(mgu[it.key]) }
+            val mgu = Unification.unify(leaf.relation, closeNode.relation)
+            // Truncate map elements where same elements are in key and value (X_1 -> X_1)
+            // Check for mgu == varAssign
+            val notMGU = varAssign.filter { it.key != it.value.toString() }.any { !it.value.synEq(mgu[it.key]) }
             if (notMGU)
                 state.statusMessage = "Given variable assignment does not equal mgu: $mgu"
         } catch (e: UnificationImpossible) {
