@@ -1,4 +1,4 @@
-import { Fragment, h } from "preact";
+import { Component, Fragment, h } from "preact";
 import { Link } from "preact-router";
 import { useCallback, useState } from "preact/hooks";
 import { useAppState } from "../../helpers/app-state";
@@ -147,31 +147,104 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
     );
 };
 
-const NavGroup: preact.FunctionalComponent<{
+interface NavGroupProps {
     group: LinkGroup;
     onLinkClick: (e: MouseEvent) => void;
     currentUrl: string;
     hamburger: boolean;
-}> = ({ group, onLinkClick, currentUrl, hamburger }) => {
-    return (
-        <div>
-            {hamburger ? (
-                <p class={style.linkGroupName}>{group.name}</p>
-            ) : (
-                <button>{group.name}</button>
-            )}
-            <nav>
-                {group.routes.map((r) => (
-                    <NavLink
-                        link={r}
-                        onClick={onLinkClick}
-                        currentUrl={currentUrl}
-                    />
-                ))}
-            </nav>
-        </div>
-    );
-};
+}
+
+interface NavGroupState {
+    open: boolean;
+}
+
+class NavGroup extends Component<NavGroupProps, NavGroupState> {
+    public state = { open: false };
+
+    public close = () => {
+        this.setState({ open: false });
+        return false;
+    };
+
+    public toggle = () => {
+        this.setState({ open: !this.state.open });
+        return false;
+    };
+
+    public handleClickOutside = ({ target }: MouseEvent) => {
+        if (!this.state.open || !target) {
+            return;
+        }
+
+        do {
+            if (target === this.base) {
+                return;
+            }
+            target = (target as any).parentNode;
+        } while (target);
+        this.close();
+    };
+
+    public componentDidMount() {
+        addEventListener("click", this.handleClickOutside);
+    }
+
+    public componentWillUnmount() {
+        removeEventListener("click", this.handleClickOutside);
+    }
+
+    public componentDidUpdate({ currentUrl, hamburger }: NavGroupProps) {
+        if (currentUrl !== this.props.currentUrl && this.state.open) {
+            this.close();
+        }
+        if (!this.state.open && hamburger) {
+            this.setState({ open: true });
+        }
+    }
+
+    public render(
+        { group, onLinkClick, currentUrl, hamburger }: NavGroupProps,
+        { open }: NavGroupState,
+    ) {
+        const isCurrent =
+            !hamburger &&
+            group.routes.find((r) => currentUrl.includes(r.path)) !== undefined;
+
+        return (
+            <div class={style.linkGroup}>
+                {hamburger ? (
+                    <p class={style.linkGroupName}>{group.name}</p>
+                ) : (
+                    <button
+                        class={classMap({
+                            [style.linkGroupBtn]: true,
+                            [style.current]: isCurrent,
+                        })}
+                        onClick={this.toggle}
+                    >
+                        {group.name}
+                    </button>
+                )}
+                <nav
+                    class={classMap({
+                        [style.linkGroupNav]: true,
+                        [style.linkGroupNavOpen]: open,
+                    })}
+                    aria-label="submenu"
+                    aria-hidden={`${!open}`}
+                >
+                    {group.routes.map((r) => (
+                        <NavLink
+                            link={r}
+                            onClick={onLinkClick}
+                            currentUrl={currentUrl}
+                        />
+                    ))}
+                </nav>
+            </div>
+        );
+    }
+}
 
 const NavLink: preact.FunctionalComponent<{
     link: SingleLink;
