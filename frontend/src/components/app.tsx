@@ -11,7 +11,6 @@ import Snackbar from "./snackbar";
 import * as style from "./style.scss";
 
 const SMALL_SCREEN_THRESHOLD = 700;
-const HAMBURGER_THRESHOLD = 1320;
 
 /**
  * Check if server is online
@@ -32,11 +31,10 @@ async function checkServer(url: string, onError: (msg: string) => void) {
  * @param {Function} setter - the function to call with the new value.
  * @returns {void} - nothing. JSDoc is dumb.
  */
-const updateScreenSize = (setter: (s: boolean, h: boolean) => void) => {
+const updateScreenSize = (setter: (s: boolean) => void) => {
     const width = window.innerWidth;
     const smallScreen = width < SMALL_SCREEN_THRESHOLD;
-    const hamburger = width < HAMBURGER_THRESHOLD;
-    setter(smallScreen, hamburger);
+    setter(smallScreen);
 };
 
 // Used for debugging with Yarn
@@ -54,11 +52,10 @@ const App: preact.FunctionalComponent = () => {
         onError,
         removeNotification,
     } = useAppState();
-    const saveScreenSize = (smallScreen: boolean, hamburger: boolean) =>
+    const saveScreenSize = (smallScreen: boolean) =>
         dispatch({
             type: AppStateActionType.UPDATE_SCREEN_SIZE,
             smallScreen,
-            hamburger,
         });
     const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
 
