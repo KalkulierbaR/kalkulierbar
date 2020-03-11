@@ -79,7 +79,6 @@ export interface AppState {
     server: string;
     notification?: Notification;
     smallScreen: boolean;
-    hamburger: boolean;
     theme: Theme;
     savedFormulas: Formulas;
     "prop-tableaux"?: PropTableauxState;
@@ -118,7 +117,6 @@ export enum AppStateActionType {
 export interface UpdateScreenSize extends AppStateActionBase {
     type: AppStateActionType.UPDATE_SCREEN_SIZE;
     smallScreen: boolean;
-    hamburger: boolean;
 }
 
 export interface AddNotification extends AppStateActionBase {

@@ -54,12 +54,12 @@ const routes: LinkGroup[] = [
 ];
 
 const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
-    const { hamburger } = useAppState();
+    const { smallScreen } = useAppState();
     const [open, setOpen] = useState(false);
     const toggle = useCallback(() => setOpen(!open), [open]);
     const setClosed = useCallback(() => setOpen(false), [setOpen]);
 
-    const right = hamburger ? (
+    const right = smallScreen ? (
         <Hamburger open={open} onClick={toggle} />
     ) : (
         <Fragment>
@@ -93,7 +93,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
             />
             <Dialog
                 class={style.dialog}
-                open={!hamburger && open}
+                open={!smallScreen && open}
                 label="Settings"
                 onClose={setClosed}
             >
