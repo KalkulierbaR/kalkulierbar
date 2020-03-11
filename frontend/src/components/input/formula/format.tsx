@@ -14,9 +14,11 @@ interface Props {
 }
 
 const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
-    const { tutorialMode } = useAppState();
+    const { tutorialMode, smallScreen } = useAppState();
 
-    const firstVisit = tutorialMode !== TutorialMode.None;
+    const firstVisit =
+        (smallScreen && tutorialMode !== TutorialMode.None) ||
+        (!smallScreen && (tutorialMode & TutorialMode.HighlightCheck) !== 0);
 
     const [collapsed, setCollapsed] = useState(!firstVisit);
 
