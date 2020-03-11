@@ -100,7 +100,7 @@ const ControlFAB: preact.FunctionalComponent<Props> = ({
                 couldShowCheckCloseHint &&
                 (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
                     <Tutorial
-                        text="Check if the proof is complete"
+                        text="Try closing this proof"
                         right="125px"
                         bottom="0px"
                     />
