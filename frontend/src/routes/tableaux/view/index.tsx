@@ -5,16 +5,7 @@ import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxFAB from "../../../components/tableaux/fab";
 import TableauxTreeView from "../../../components/tableaux/tree";
-import { useAppState } from "../../../helpers/app-state";
-import { clauseSetToStringMap } from "../../../helpers/clause";
-import {
-    sendBacktrack,
-    sendClose,
-    sendExtend,
-    sendLemma,
-    updateDragTransform,
-} from "../../../helpers/tableaux";
-import { Calculus, TableauxCalculusType } from "../../../types/app";
+import {Calculus, TableauxCalculusType} from "../../../types/app";
 import { FOArgument, FOArgumentType } from "../../../types/clause";
 import {
     instanceOfFOTabState,
@@ -24,6 +15,14 @@ import {
     VarAssign,
 } from "../../../types/tableaux";
 import { DragTransform } from "../../../types/ui";
+import { useAppState } from "../../../util/app-state";
+import { clauseSetToStringMap } from "../../../util/clause";
+import {
+    sendBacktrack,
+    sendClose,
+    sendExtend,
+    sendLemma
+} from "../../../util/tableaux";
 import { foExample, propExample } from "./example";
 import * as style from "./style.scss";
 

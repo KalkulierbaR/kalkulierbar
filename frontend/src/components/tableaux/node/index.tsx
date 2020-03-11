@@ -8,6 +8,7 @@ import { touchPos } from "../../../helpers/zoom/touch";
 import { LayoutItem } from "../../../types/layout";
 import { TableauxTreeLayoutNode } from "../../../types/tableaux";
 import { DragTransform, Point } from "../../../types/ui";
+import { classMap } from "../../../util/class-map";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 

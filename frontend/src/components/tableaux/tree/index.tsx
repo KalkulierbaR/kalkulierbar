@@ -1,10 +1,11 @@
 import { h } from "preact";
-
+import { LayoutItem } from "../../../types/layout";
 import {
     SelectNodeOptions,
     TableauxNode,
     TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
+import { tableauxTreeLayout } from "../../../util/tableaux";
 
 import { findSubTree } from "../../../helpers/layout/tree";
 import {
@@ -17,6 +18,7 @@ import { LayoutItem } from "../../../types/layout";
 import { Tree } from "../../../types/tree";
 import { DragTransform } from "../../../types/ui";
 import Zoomable from "../../zoomable";
+import TableauxTreeNode from "../node";
 import * as style from "./style.scss";
 import SubTree from "./subtree";
 

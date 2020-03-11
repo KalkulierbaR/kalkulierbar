@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { dpllTreeLayout } from "../../../helpers/dpll";
 import { DPLLTreeNode } from "../../../types/dpll";
+import { dpllTreeLayout } from "../../../util/dpll";
 import Zoomable from "../../zoomable";
 
 import { treeToLayoutItem } from "../../../helpers/layout/tree";

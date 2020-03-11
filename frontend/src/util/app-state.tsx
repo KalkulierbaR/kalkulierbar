@@ -11,6 +11,7 @@ import {
     NotificationType,
     RemoveNotification,
     Theme,
+    TutorialMode,
 } from "../types/app";
 import { localStorageGet, localStorageSet } from "./local-storage";
 
@@ -30,6 +31,7 @@ const INIT_APP_STATE: AppState = {
         ? "https://kalkulierbar-api.herokuapp.com"
         : `http://${location.hostname}:7000`,
     theme: Theme.auto,
+    tutorialMode: TutorialMode.HighlightAll,
 };
 
 const reducer: Reducer<AppState, AppStateAction> = (
@@ -65,6 +67,8 @@ const reducer: Reducer<AppState, AppStateAction> = (
                     [action.calculus]: action.value,
                 },
             };
+        case AppStateActionType.SET_TUTORIAL_MODE:
+            return { ...state, tutorialMode: action.value };
     }
 };
 
@@ -121,9 +125,13 @@ export const AppStateProvider = (
 ): preact.FunctionalComponent => () => {
     const storedTheme = localStorageGet<Theme>("theme");
     const storedServer = localStorageGet<string>("server");
+    const tutorialMode =
+        localStorageGet<TutorialMode>("tutorial_mode") ??
+        TutorialMode.HighlightAll;
 
     INIT_APP_STATE.theme = storedTheme || INIT_APP_STATE.theme;
     INIT_APP_STATE.server = storedServer || INIT_APP_STATE.server;
+    INIT_APP_STATE.tutorialMode = tutorialMode;
 
     const [state, dispatch] = useReducer<AppState, AppStateAction>(
         reducer,
@@ -135,10 +143,6 @@ export const AppStateProvider = (
         document.documentElement.setAttribute("data-theme", derived.theme);
         localStorageSet("theme", derived.theme);
     }, [derived.theme]);
-
-    useEffect(() => {
-        localStorageSet("server", derived.server);
-    }, [derived.server]);
 
     return (
         <AppStateCtx.Provider value={derived}>

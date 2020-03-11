@@ -2,6 +2,7 @@ import { AppStateUpdater } from "../types/app";
 import { Atom, Clause, ClauseSet } from "../types/clause";
 import {
     DPLLCsDiff,
+    DPLLNodeType,
     DPLLState,
     DPLLTreeLayoutNode,
     DPLLTreeNode,
@@ -173,3 +174,10 @@ export const getPropCandidates = (
 
     return candidates;
 };
+
+export const stateIsClosed = (nodes: DPLLTreeNode[]) =>
+    nodes.reduce(
+        (p, n) =>
+            p && (n.children.length > 0 || n.type === DPLLNodeType.CLOSED),
+        true,
+    );

@@ -1,4 +1,9 @@
-import {APIInformation, AppState, Calculus, ResolutionCalculusType} from "../types/app";
+import {
+    APIInformation,
+    AppState,
+    Calculus,
+    ResolutionCalculusType,
+} from "../types/app";
 import {
     Atom,
     CandidateClause,
@@ -189,7 +194,10 @@ export const findHyperSidePremiss = (
     id: number,
 ): number => {
     for (const mId in hyperRes.atomMap) {
-        if (hyperRes.atomMap.hasOwnProperty(mId) && hyperRes.atomMap[mId].first === id) {
+        if (
+            hyperRes.atomMap.hasOwnProperty(mId) &&
+            hyperRes.atomMap[mId].first === id
+        ) {
             return parseInt(mId);
         }
     }
@@ -372,6 +380,10 @@ export const getCandidateClauses = (
         }
     }
     return newCandidateClauses;
+};
+
+export const containsEmptyClause = (cs: ClauseSet<string | FOLiteral>) => {
+    return cs.clauses.filter((c) => c.atoms.length === 0).length > 0;
 };
 
 /**
