@@ -81,19 +81,19 @@ class FirstOrderResolution :
         val clause2 = state.clauseSet.clauses[c2]
         val literal1 = clause1.atoms[c1lit].lit
         val literal2 = clause2.atoms[c2lit].lit
-        var mgu = varAssign
+        var unifier = varAssign
 
         // Calculate mgu if no varAssign was given
-        if (mgu == null) {
+        if (unifier == null) {
             try {
-                mgu = Unification.unify(literal1, literal2)
+                unifier = Unification.unify(literal1, literal2)
             } catch (e: UnificationImpossible) {
                 throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
             }
         }
-        instantiate(state, c1, mgu)
+        instantiate(state, c1, unifier)
         val instance1 = state.clauseSet.clauses.size - 1
-        instantiate(state, c2, mgu)
+        instantiate(state, c2, unifier)
         val instance2 = state.clauseSet.clauses.size - 1
         val literal = state.clauseSet.clauses[instance1].atoms[c1lit].lit
 
