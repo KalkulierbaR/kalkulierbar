@@ -19,11 +19,45 @@ interface HeaderProps {
     currentUrl: string;
 }
 
+interface SingleLink {
+    name: string;
+    path: string;
+}
+
+interface LinkGroup {
+    name: string;
+    routes: SingleLink[];
+}
+
+const routes: LinkGroup[] = [
+    {
+        name: "Propositional",
+        routes: [
+            {
+                name: "Tableaux",
+                path: Calculus.propTableaux,
+            },
+            { name: "Resolution", path: Calculus.propResolution },
+            { name: "DPLL", path: Calculus.dpll },
+        ],
+    },
+    {
+        name: "First Order",
+        routes: [
+            {
+                name: "Tableaux",
+                path: Calculus.foTableaux,
+            },
+            { name: "Resolution", path: Calculus.foResolution },
+        ],
+    },
+];
+
 const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
     const { hamburger } = useAppState();
     const [open, setOpen] = useState(false);
     const toggle = useCallback(() => setOpen(!open), [open]);
-    const setClosed = useCallback(() => setOpen(false), [open]);
+    const setClosed = useCallback(() => setOpen(false), [setOpen]);
 
     const right = hamburger ? (
         <Hamburger open={open} onClick={toggle} />
@@ -90,7 +124,7 @@ const Hamburger: preact.FunctionalComponent<HamburgerProps> = ({
 
 interface NavProps {
     hamburger: boolean;
-    onLinkClick: CallableFunction;
+    onLinkClick: () => void;
     currentUrl: string;
 }
 
@@ -99,37 +133,59 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
     onLinkClick,
     currentUrl,
 }) => {
-    const links = {
-        "Propositional Tableaux": Calculus.propTableaux,
-        "FO Tableaux": Calculus.foTableaux,
-        "Propositional Resolution": Calculus.propResolution,
-        "FO Resolution": Calculus.foResolution,
-        "DPLL": Calculus.dpll,
-    };
-    return(
-        <nav
-            class={classMap({
-                [style.nav]: true,
-                [style.hamburgerLink]: hamburger,
-            })}
-        >
-            {Object.entries(links).map(([linkName, calculus]) =>
-                <Link
-                    key={linkName}
-                    onClick={() => onLinkClick()}
-                    class={
-                        currentUrl.includes(calculus)
-                            ? style.current
-                            : undefined
-                    }
-                    href={"/" + calculus}
-                >
-                    {linkName}
-                </Link>
-            )}
+    return (
+        <nav class={style.nav}>
+            {routes.map((r) => (
+                <NavGroup
+                    group={r}
+                    onLinkClick={onLinkClick}
+                    currentUrl={currentUrl}
+                    hamburger={hamburger}
+                />
+            ))}
         </nav>
     );
 };
+
+const NavGroup: preact.FunctionalComponent<{
+    group: LinkGroup;
+    onLinkClick: (e: MouseEvent) => void;
+    currentUrl: string;
+    hamburger: boolean;
+}> = ({ group, onLinkClick, currentUrl, hamburger }) => {
+    return (
+        <div>
+            {hamburger ? (
+                <p class={style.linkGroupName}>{group.name}</p>
+            ) : (
+                <button>{group.name}</button>
+            )}
+            <nav>
+                {group.routes.map((r) => (
+                    <NavLink
+                        link={r}
+                        onClick={onLinkClick}
+                        currentUrl={currentUrl}
+                    />
+                ))}
+            </nav>
+        </div>
+    );
+};
+
+const NavLink: preact.FunctionalComponent<{
+    link: SingleLink;
+    onClick: (e: MouseEvent) => void;
+    currentUrl: string;
+}> = ({ link, onClick, currentUrl }) => (
+    <Link
+        href={`/${link.path}`}
+        class={currentUrl.includes(link.path) ? style.current : undefined}
+        onClick={onClick}
+    >
+        {link.name}
+    </Link>
+);
 
 const Settings: preact.FunctionalComponent = () => {
     return (
@@ -248,7 +304,7 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
 
 interface DrawerProps {
     open: boolean;
-    onLinkClick: CallableFunction;
+    onLinkClick: () => void;
     currentUrl: string;
 }
 
