@@ -12,7 +12,7 @@
         "serve-only": "serve build/ -s -l ${PORT:-8080}",
         "dev": "preact watch",
         "lint": "tslint --project .",
-        "test": "jest ./tests",
+        "test": "jest ./tests"
     },
     "lint-staged": {
         "*.{js,jsx,css,md,scss}": [
