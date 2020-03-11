@@ -99,6 +99,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
         // Get the previous transform
         const oldDt = dragTransform;
 
+        // Get start pos
         const p0 = mousePos(svg, ev);
 
         // Handle mouse movement
