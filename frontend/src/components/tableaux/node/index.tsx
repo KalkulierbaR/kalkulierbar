@@ -1,14 +1,13 @@
 import { createRef, h } from "preact";
 
 import { useState } from "preact/hooks";
-import { classMap } from "../../../helpers/class-map";
-import { disableDrag, enableDrag } from "../../../helpers/zoom/drag";
-import { mousePos } from "../../../helpers/zoom/mouse";
-import { touchPos } from "../../../helpers/zoom/touch";
 import { LayoutItem } from "../../../types/layout";
 import { TableauxTreeLayoutNode } from "../../../types/tableaux";
 import { DragTransform, Point } from "../../../types/ui";
 import { classMap } from "../../../util/class-map";
+import { disableDrag, enableDrag } from "../../../util/zoom/drag";
+import { mousePos } from "../../../util/zoom/mouse";
+import { touchPos } from "../../../util/zoom/touch";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
 

@@ -3,7 +3,7 @@ import { DPLLTreeNode } from "../../../types/dpll";
 import { dpllTreeLayout } from "../../../util/dpll";
 import Zoomable from "../../zoomable";
 
-import { treeToLayoutItem } from "../../../helpers/layout/tree";
+import { treeToLayoutItem } from "../../../util/layout/tree";
 import DPLLNode from "../node";
 import * as style from "./style.scss";
 

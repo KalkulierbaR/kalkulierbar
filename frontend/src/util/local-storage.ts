@@ -2,7 +2,10 @@ import { useState } from "preact/hooks";
 
 export const localStorageGet = <V>(key: string): V | null => {
     try {
-        return (localStorage.getItem(key) as unknown) as V | null;
+        const value = (localStorage.getItem(key) as unknown) as V | null;
+        return !isNaN(value as any) && value !== null
+            ? (parseInt(value as any) as any)
+            : value;
     } catch (e) {
         return null;
     }
@@ -22,7 +25,7 @@ export const localStorageSet = (key: string, value: any) => {
  */
 export function useStoredValue<V>(
     key: string,
-    initial: V
+    initial: V,
 ): [V, (val: V) => void] {
     let stored = localStorageGet<V>(key);
     if (stored == null) {
