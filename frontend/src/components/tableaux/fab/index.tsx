@@ -16,6 +16,7 @@ import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
+import Tutorial from "../../tutorial";
 
 interface Props {
     /**
@@ -62,11 +63,13 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
         dispatch,
     } = useAppState();
 
+    const couldShowCheckCloseHint = state.nodes[0].isClosed;
+
     return (
         <Fragment>
             <ControlFAB
                 alwaysOpen={!smallScreen}
-                couldShowCheckCloseHint={state.nodes[0].isClosed}
+                couldShowCheckCloseHint={couldShowCheckCloseHint}
             >
                 {selectedNodeId === undefined ? (
                     <Fragment>
@@ -199,6 +202,15 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 )}
             </ControlFAB>
+            {!smallScreen &&
+                couldShowCheckCloseHint &&
+                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
+                    <Tutorial
+                        text="Check if the proof is complete"
+                        right="205px"
+                        bottom="115px"
+                    />
+                )}
         </Fragment>
     );
 };

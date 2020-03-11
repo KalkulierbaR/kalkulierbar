@@ -29,6 +29,7 @@ import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
+import Tutorial from "../../tutorial";
 
 interface Props {
     /**
@@ -81,11 +82,13 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
     } = useAppState();
     const apiInfo = { onChange, onError, server };
 
+    const couldShowCheckCloseHint = containsEmptyClause(state.clauseSet);
+
     return (
         <Fragment>
             <ControlFAB
                 alwaysOpen={!smallScreen}
-                couldShowCheckCloseHint={containsEmptyClause(state.clauseSet)}
+                couldShowCheckCloseHint={couldShowCheckCloseHint}
             >
                 {selectedClauseId !== undefined ? (
                     <Fragment>
@@ -227,6 +230,16 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     }}
                 />
             )}
+
+            {!smallScreen &&
+                couldShowCheckCloseHint &&
+                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
+                    <Tutorial
+                        text="Check if the proof is complete"
+                        right="205px"
+                        bottom="68px"
+                    />
+                )}
         </Fragment>
     );
 };

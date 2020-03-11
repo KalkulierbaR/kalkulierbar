@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 import { AppStateActionType, TutorialMode } from "../../../types/app";
 import { DPLLNodeType, DPLLState } from "../../../types/dpll";
 import { checkClose } from "../../../util/api";
@@ -11,6 +11,7 @@ import CheckCircleFilledIcon from "../../icons/check-circle-filled";
 import DeleteIcon from "../../icons/delete";
 import SplitIcon from "../../icons/split";
 import SwitchIcon from "../../icons/switch";
+import Tutorial from "../../tutorial";
 
 interface Props {
     state: DPLLState;
@@ -39,65 +40,79 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
         dispatch,
     } = useAppState();
 
+    const couldShowCheckCloseHint = stateIsClosed(state.tree);
+
     return (
-        <ControlFAB
-            alwaysOpen={!smallScreen}
-            couldShowCheckCloseHint={stateIsClosed(state.tree)}
-        >
-            {smallScreen && (
+        <Fragment>
+            <ControlFAB
+                alwaysOpen={!smallScreen}
+                couldShowCheckCloseHint={couldShowCheckCloseHint}
+            >
+                {smallScreen && (
+                    <FAB
+                        label={showTree ? "Clause View" : "Tree View"}
+                        icon={<SwitchIcon />}
+                        mini={true}
+                        extended={true}
+                        onClick={toggleShowTree}
+                    />
+                )}
+                {state.tree[branch].type === DPLLNodeType.MODEL && (
+                    <FAB
+                        icon={<CheckCircleFilledIcon />}
+                        label="Model Check"
+                        mini={true}
+                        extended={true}
+                        showIconAtEnd={true}
+                        onClick={() => setShowModelDialog(true)}
+                    />
+                )}
                 <FAB
-                    label={showTree ? "Clause View" : "Tree View"}
-                    icon={<SwitchIcon />}
-                    mini={true}
-                    extended={true}
-                    onClick={toggleShowTree}
-                />
-            )}
-            {state.tree[branch].type === DPLLNodeType.MODEL && (
-                <FAB
-                    icon={<CheckCircleFilledIcon />}
-                    label="Model Check"
+                    icon={<CheckCircleIcon />}
+                    label="Check"
                     mini={true}
                     extended={true}
                     showIconAtEnd={true}
-                    onClick={() => setShowModelDialog(true)}
+                    onClick={() => {
+                        if (tutorialMode & TutorialMode.HighlightCheck) {
+                            dispatch({
+                                type: AppStateActionType.SET_TUTORIAL_MODE,
+                                value:
+                                    tutorialMode ^ TutorialMode.HighlightCheck,
+                            });
+                        }
+                        checkClose(server, onError, onSuccess, "dpll", state);
+                    }}
                 />
-            )}
-            <FAB
-                icon={<CheckCircleIcon />}
-                label="Check"
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() => {
-                    if (tutorialMode & TutorialMode.HighlightCheck) {
-                        dispatch({
-                            type: AppStateActionType.SET_TUTORIAL_MODE,
-                            value: tutorialMode ^ TutorialMode.HighlightCheck,
-                        });
+                <FAB
+                    label="Prune"
+                    icon={<DeleteIcon />}
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() =>
+                        sendPrune(server, state, branch, onChange, onError)
                     }
-                    checkClose(server, onError, onSuccess, "dpll", state);
-                }}
-            />
-            <FAB
-                label="Prune"
-                icon={<DeleteIcon />}
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() =>
-                    sendPrune(server, state, branch, onChange, onError)
-                }
-            />
-            <FAB
-                label="Split"
-                icon={<SplitIcon />}
-                mini={true}
-                extended={true}
-                showIconAtEnd={true}
-                onClick={() => setShowSplitDialog(true)}
-            />
-        </ControlFAB>
+                />
+                <FAB
+                    label="Split"
+                    icon={<SplitIcon />}
+                    mini={true}
+                    extended={true}
+                    showIconAtEnd={true}
+                    onClick={() => setShowSplitDialog(true)}
+                />
+            </ControlFAB>
+            {!smallScreen &&
+                couldShowCheckCloseHint &&
+                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
+                    <Tutorial
+                        text="Check if the proof is complete"
+                        right="205px"
+                        bottom="165px"
+                    />
+                )}
+        </Fragment>
     );
 };
 
