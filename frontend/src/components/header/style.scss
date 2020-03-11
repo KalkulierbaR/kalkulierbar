@@ -121,7 +121,7 @@ $hamburgerBreakpoint: 700px;
     &-nav {
         @media (min-width: $hamburgerBreakpoint) {
             display: none;
-            background-color: var(--kbar-8dp-color);
+            background-color: var(--kbar-3dp-color);
             box-shadow: var(--kbar-shadow-3dp);
             border-radius: 0 0 var(--kbar-border-radius)
                 var(--kbar-border-radius);
@@ -134,6 +134,7 @@ $hamburgerBreakpoint: 700px;
             a {
                 width: 100%;
                 text-align: left;
+                color: var(--kbar-primary-text-color);
             }
         }
     }
