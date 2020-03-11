@@ -4,9 +4,6 @@ import FAB from "../../../components/fab";
 import AddIcon from "../../../components/icons/add";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
-import ExploreIcon from "../../../components/icons/explore";
-import LemmaIcon from "../../../components/icons/lemma";
-import UndoIcon from "../../../components/icons/undo";
 import {
     AppStateActionType,
     TableauxCalculusType,
@@ -16,6 +13,9 @@ import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
+import ExploreIcon from "../../icons/explore";
+import LemmaIcon from "../../icons/lemma";
+import UndoIcon from "../../icons/undo";
 import Tutorial from "../../tutorial";
 
 interface Props {
@@ -43,6 +43,14 @@ interface Props {
      * Callback if lemma FAB is clicked
      */
     lemmaCallback: () => void;
+    /**
+     * Callback to reset a specific drag
+     */
+    resetDragTransform: (id: number) => void;
+    /**
+     * Callback to reset all drags
+     */
+    resetDragTransforms: () => void;
 }
 
 const TableauxFAB: preact.FunctionalComponent<Props> = ({
@@ -52,6 +60,8 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
     expandCallback,
     lemmaMode,
     lemmaCallback,
+    resetDragTransform,
+    resetDragTransforms,
 }) => {
     const {
         server,
@@ -63,6 +73,20 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
         dispatch,
     } = useAppState();
 
+    const resetView = (
+        <FAB
+            icon={<CenterIcon />}
+            label="Reset View"
+            mini={true}
+            extended={true}
+            showIconAtEnd={true}
+            onClick={() => {
+                dispatchEvent(new CustomEvent("center"));
+                resetDragTransforms();
+            }}
+        />
+    );
+
     const couldShowCheckCloseHint = state.nodes[0].isClosed;
 
     return (
@@ -73,6 +97,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
             >
                 {selectedNodeId === undefined ? (
                     <Fragment>
+                        {resetView}
                         {state!.nodes.filter((node) => !node.isClosed).length >
                         0 ? (
                             <FAB
@@ -96,16 +121,6 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                         ) : (
                             undefined
                         )}
-                        <FAB
-                            icon={<CenterIcon />}
-                            label="Center"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                dispatchEvent(new CustomEvent("center"));
-                            }}
-                        />
                         <FAB
                             icon={<CheckCircleIcon />}
                             label="Check"
@@ -141,6 +156,18 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 extended={true}
                                 showIconAtEnd={true}
                                 onClick={() => {
+                                    // If the last move added a node, and we undo this, remove the corresponding drag
+                                    if (state.moveHistory.length > 0) {
+                                        const move =
+                                            state.moveHistory[
+                                                state.moveHistory.length - 1
+                                            ];
+                                        if (move.type === "EXPAND") {
+                                            resetDragTransform(
+                                                state.nodes.length - 1,
+                                            );
+                                        }
+                                    }
                                     sendBacktrack(
                                         calculus,
                                         server,
@@ -156,16 +183,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 ) : (
                     <Fragment>
-                        <FAB
-                            icon={<CenterIcon />}
-                            label="Center"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                dispatchEvent(new CustomEvent("center"));
-                            }}
-                        />
+                        {resetView}
                         <FAB
                             icon={<AddIcon />}
                             label="Expand"

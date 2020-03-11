@@ -1,5 +1,5 @@
 import { Clause, FOLiteral } from "../../types/clause";
-import { Layout } from "../../types/layout";
+import { ArrayLayout } from "../../types/layout";
 import { clauseToString } from "../clause";
 import { maxBy } from "../max-by";
 import { estimateSVGTextWidth } from "../text-width";
@@ -7,11 +7,11 @@ import { estimateSVGTextWidth } from "../text-width";
 /**
  * Calculate the circle layout to avoid overlapping or cutting of clauses
  * @param {Clause[]} clauses - The clauses to display in a circle
- * @returns {Layout<Clause>} - The circle layout of the clauses
+ * @returns {ArrayLayout<Clause>} - The circle layout of the clauses
  */
 export const circleLayout = (
     clauses: Array<Clause<string | FOLiteral>>,
-): Layout<Clause<string | FOLiteral>> & { radius: number } => {
+): ArrayLayout<Clause<string | FOLiteral>> & { radius: number } => {
     if (clauses.length === 0) {
         return { width: 0, height: 0, data: [], radius: 0 };
     }
