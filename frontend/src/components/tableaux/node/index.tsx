@@ -77,6 +77,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     };
 
     const onMouseDown = (ev: MouseEvent) => {
+        // Do nothing when the right mouse button is clicked
         if (ev.button) {
             return;
         }
@@ -95,34 +96,42 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
 
         let moved = false;
 
+        // Get the previous transform
         const oldDt = dragTransform;
 
         const p0 = mousePos(svg, ev);
 
+        // Handle mouse movement
         const onMouseMoved = (e: MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
 
+            // Check if we moved
             if (!moved) {
                 const xChange = e.clientX - x;
                 const yChange = e.clientY - y;
                 moved = xChange * xChange + yChange * yChange > 0;
             }
 
+            // Calculate how much we have moved (consider the zoom!)
             const p = mousePos(svg, e);
 
             const dx = (p[0] - p0[0]) / zoomFactor;
             const dy = (p[1] - p0[1]) / zoomFactor;
 
+            // Update drag transform
             onDrag(node.data.id, {
                 x: oldDt.x + dx,
                 y: oldDt.y + dy,
             });
         };
 
+        // Handle end of mouse move
         const onMouseUpped = (e: MouseEvent) => {
             e.stopPropagation();
             e.preventDefault();
+
+            // Enable drag and ignore clicks if we moved
             enableDrag(moved);
 
             window.removeEventListener("mousemove", onMouseMoved);
@@ -138,6 +147,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             return;
         }
 
+        // We only care if the user uses one finger
         if (e.touches.length !== 1) {
             return;
         }
@@ -151,10 +161,12 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
 
         const touch = e.touches[0];
 
+        // Store old drag
         setOldDt(dragTransform);
 
         const p0 = touchPos(svg, e.touches, touch.identifier);
 
+        // Store start pos
         setTouch0(p0!);
     };
 
@@ -163,6 +175,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             return;
         }
 
+        // We only care if the user uses one finger
         if (e.changedTouches.length !== 1) {
             return;
         }
@@ -180,13 +193,16 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
         e.stopPropagation();
         e.preventDefault();
 
+        // Calculate how much we have moved (consider the zoom!)
         const dx = (t[0] - touch0[0]) / zoomFactor;
         const dy = (t[1] - touch0[1]) / zoomFactor;
 
+        // Update drag transform
         onDrag(node.data.id, { x: oldTouchDt.x + dx, y: oldTouchDt.y + dy });
     };
 
     const onTouchEnd = () => {
+        // Calculate if we moved
         const dx = dragTransform.x - oldTouchDt.x;
         const dy = dragTransform.y - oldTouchDt.y;
 
@@ -194,6 +210,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
 
         enableDrag(moved);
 
+        // If we haven't moved, just say it was a click
         if (!moved) {
             handleClick();
         }
