@@ -58,7 +58,7 @@ class TestMGUWarning {
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1))
 
-        val move2 = FoTableauxMove(FoMoveType.CLOSE, 2, 1, mapOf("Y_2" to "X_1", "X_1" to "X_1"))
+        val move2 = FoTableauxMove(FoMoveType.CLOSE, 2, 1, mapOf("X_1" to "Y_2", "Y_2" to "Y_2"))
         state = instance.applyMoveOnState(state, move2)
 
         assertEquals(null, state.statusMessage)
