@@ -7,7 +7,6 @@ import {
 import {
     getAbsoluteDragTransform,
     getClosedLeaves,
-    getNode,
     tableauxTreeLayout,
 } from "../../../util/tableaux";
 
