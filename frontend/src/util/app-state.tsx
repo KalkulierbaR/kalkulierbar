@@ -124,11 +124,13 @@ export const AppStateProvider = (
     App: preact.FunctionalComponent,
 ): preact.FunctionalComponent => () => {
     const storedTheme = localStorageGet<Theme>("theme");
+    const storedServer = localStorageGet<string>("server");
     const tutorialMode =
         localStorageGet<TutorialMode>("tutorial_mode") ??
         TutorialMode.HighlightAll;
 
     INIT_APP_STATE.theme = storedTheme || INIT_APP_STATE.theme;
+    INIT_APP_STATE.server = storedServer || INIT_APP_STATE.server;
     INIT_APP_STATE.tutorialMode = tutorialMode;
 
     const [state, dispatch] = useReducer<AppState, AppStateAction>(
@@ -141,10 +143,6 @@ export const AppStateProvider = (
         document.documentElement.setAttribute("data-theme", derived.theme);
         localStorageSet("theme", derived.theme);
     }, [derived.theme]);
-
-    useEffect(() => {
-        localStorageSet("tutorial_mode", derived.tutorialMode);
-    }, [derived.tutorialMode]);
 
     return (
         <AppStateCtx.Provider value={derived}>
