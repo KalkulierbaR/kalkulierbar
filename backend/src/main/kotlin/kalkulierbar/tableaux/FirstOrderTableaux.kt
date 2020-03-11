@@ -90,6 +90,21 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         varAssign: Map<String, FirstOrderTerm>
     ): FoTableauxState {
         ensureBasicCloseability(state, leafID, closeNodeID)
+
+        val mgu: Map<String, FirstOrderTerm>
+        val leaf = state.nodes[leafID]
+        val closeNode = state.nodes[closeNodeID]
+
+        // Check that given var assignment is a mgu, warn if not
+        try {
+            mgu = Unification.unify(leaf.relation, closeNode.relation)
+            val notMGU = varAssign.any { !it.value.synEq(mgu[it.key]) }
+            if (notMGU)
+                state.statusMessage = "Given variable assignment does not equal mgu: $mgu"
+        } catch (e: UnificationImpossible) {
+            // Close move will fail in closeBranchCommon with better error message
+        }
+
         return closeBranchCommon(state, leafID, closeNodeID, varAssign)
     }
 
@@ -113,18 +128,6 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
 
         val leaf = state.nodes[leafID]
         val closeNode = state.nodes[closeNodeID]
-
-        val mgu: Map<String, FirstOrderTerm>
-        // Try to find a unifying variable assignment for comparison with varAssign
-        try {
-            mgu = Unification.unify(leaf.relation, closeNode.relation)
-        } catch (e: UnificationImpossible) {
-            throw IllegalMove("Could not execute Unification algorithm to compare mgu with " +
-                    "given variable assignment: ${e.message}")
-        }
-        val notMGU = varAssign.any { !it.value.synEq(mgu[it.key]) }
-        if (notMGU)
-            state.statusMessage = "Given variable assignment does not equal mgu: $mgu"
 
         // Apply all specified variable instantiations globally
         applyVarInstantiation(state, varAssign)
