@@ -1,5 +1,6 @@
 import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
+import { TutorialMode } from "../../../types/app";
 import { useAppState } from "../../../util/app-state";
 import { classMap } from "../../../util/class-map";
 import ChevronRightIcon from "../../icons/chevron-right";
@@ -13,7 +14,9 @@ interface Props {
 }
 
 const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
-    const { firstVisit } = useAppState();
+    const { tutorialMode } = useAppState();
+
+    const firstVisit = tutorialMode !== TutorialMode.None;
 
     const [collapsed, setCollapsed] = useState(!firstVisit);
 
