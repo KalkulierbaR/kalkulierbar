@@ -143,6 +143,12 @@ export const AppStateProvider = (
         document.documentElement.setAttribute("data-theme", derived.theme);
         localStorageSet("theme", derived.theme);
     }, [derived.theme]);
+    useEffect(() => {
+        localStorageSet("server", derived.server);
+    }, [derived.server]);
+    useEffect(() => {
+        localStorageSet("tutorial_mode", derived.tutorialMode);
+    }, [derived.tutorialMode]);
 
     return (
         <AppStateCtx.Provider value={derived}>

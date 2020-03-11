@@ -1,24 +1,23 @@
 import { h } from "preact";
-import { LayoutItem } from "../../../types/layout";
 import {
     SelectNodeOptions,
     TableauxNode,
     TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
-import { tableauxTreeLayout } from "../../../util/tableaux";
-
-import { findSubTree } from "../../../helpers/layout/tree";
 import {
     getAbsoluteDragTransform,
     getClosedLeaves,
     getNode,
     tableauxTreeLayout,
-} from "../../../helpers/tableaux";
+} from "../../../util/tableaux";
+
+import { findSubTree } from "../../../util/layout/tree";
+
 import { LayoutItem } from "../../../types/layout";
 import { Tree } from "../../../types/tree";
 import { DragTransform } from "../../../types/ui";
 import Zoomable from "../../zoomable";
-import TableauxTreeNode from "../node";
+
 import * as style from "./style.scss";
 import SubTree from "./subtree";
 
@@ -128,10 +127,15 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
-        const node = getNode(root, n);
-        selectNodeCallback(node, { ignoreClause: true });
 
-        const { x, y } = node as any;
+        const node = findSubTree(
+            root,
+            (t) => t.data.id === n,
+            (t) => t,
+        )!;
+        selectNodeCallback(node.data, { ignoreClause: true });
+
+        const { x, y } = node;
         return [treeWidth / 2 - x, treeHeight / 2 - y];
     };
 

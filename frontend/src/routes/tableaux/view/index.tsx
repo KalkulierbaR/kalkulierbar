@@ -5,7 +5,7 @@ import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxFAB from "../../../components/tableaux/fab";
 import TableauxTreeView from "../../../components/tableaux/tree";
-import {Calculus, TableauxCalculusType} from "../../../types/app";
+import { Calculus, TableauxCalculusType } from "../../../types/app";
 import { FOArgument, FOArgumentType } from "../../../types/clause";
 import {
     instanceOfFOTabState,
@@ -21,7 +21,8 @@ import {
     sendBacktrack,
     sendClose,
     sendExtend,
-    sendLemma
+    sendLemma,
+    updateDragTransform,
 } from "../../../util/tableaux";
 import { foExample, propExample } from "./example";
 import * as style from "./style.scss";
