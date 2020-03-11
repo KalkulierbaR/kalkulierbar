@@ -7,6 +7,6 @@ package-lock.json
 *.scss.d.ts
 .vscode
 .yarn/*
+!.yarn/cache
 !.yarn/releases
 !.yarn/plugins
-.pnp.*
