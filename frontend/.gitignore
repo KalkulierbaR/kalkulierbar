@@ -6,3 +6,7 @@ package-lock.json
 *.css.d.ts
 *.scss.d.ts
 .vscode
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
