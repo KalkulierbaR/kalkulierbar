@@ -1,29 +1,27 @@
 import { Fragment, h } from "preact";
-import { useCallback, useEffect, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import Dialog from "../../../components/dialog";
 import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxFAB from "../../../components/tableaux/fab";
 import TableauxTreeView from "../../../components/tableaux/tree";
-import { Calculus, TableauxCalculusType } from "../../../types/app";
+import { useAppState } from "../../../helpers/app-state";
+import { clauseSetToStringMap } from "../../../helpers/clause";
+import {
+    sendBacktrack,
+    sendClose,
+    sendExtend,
+    sendLemma
+} from "../../../helpers/tableaux";
+import {Calculus, TableauxCalculusType} from "../../../types/app";
 import { FOArgument, FOArgumentType } from "../../../types/clause";
 import {
     instanceOfFOTabState,
     instanceOfPropTabState,
     SelectNodeOptions,
     TableauxTreeLayoutNode,
-    VarAssign,
+    VarAssign
 } from "../../../types/tableaux";
-import { DragTransform } from "../../../types/ui";
-import { useAppState } from "../../../util/app-state";
-import { clauseSetToStringMap } from "../../../util/clause";
-import {
-    sendBacktrack,
-    sendClose,
-    sendExtend,
-    sendLemma,
-    updateDragTransform,
-} from "../../../util/tableaux";
 import { foExample, propExample } from "./example";
 import * as style from "./style.scss";
 
@@ -40,7 +38,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         [calculus]: cState,
         smallScreen,
         onError,
-        onChange,
+        onChange
     } = useAppState();
 
     let state = cState;
@@ -50,31 +48,14 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         state = calculus === Calculus.propTableaux ? propExample : foExample;
         onChange(calculus, state);
     }
-
-    const [dragTransforms, setDragTransforms] = useState<
-        Record<number, DragTransform>
-    >({});
-
-    const onDrag = useCallback(updateDragTransform(setDragTransforms), [
-        setDragTransforms,
-    ]);
-
-    const resetDragTransform = useCallback(
-        (id: number) => onDrag(id, { x: 0, y: 0 }),
-        [onDrag],
-    );
-    const resetDragTransforms = useCallback(() => setDragTransforms({}), [
-        setDragTransforms,
-    ]);
-
-    const clauseOptions = clauseSetToStringMap(state.clauseSet);
+    const clauseOptions =  clauseSetToStringMap(state.clauseSet);
 
     const [selectedClauseId, setSelectedClauseId] = useState<
         number | undefined
     >(undefined);
-    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
-        undefined,
-    );
+    const [selectedNodeId, setSelectedNodeId] = useState<
+        number | undefined
+    >(undefined);
     const [varAssignSecondNodeId, setVarAssignSecondNodeId] = useState<
         number | undefined
     >(undefined);
@@ -83,10 +64,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
     const [lemmaMode, setLemmaMode] = useState(false);
 
-    const selectedNode =
-        selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
-    const selectedNodeIsLeaf =
-        selectedNode !== undefined && selectedNode.children.length === 0;
+    const selectedNode = selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
+    const selectedNodeIsLeaf = selectedNode !== undefined && selectedNode.children.length === 0;
 
     /**
      * The function to call, when the user selects a clause
@@ -107,7 +86,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 onChange,
                 onError,
                 selectedNodeId,
-                newClauseId,
+                newClauseId
             );
             setSelectedNodeId(undefined);
             setSelectedClauseId(undefined);
@@ -124,7 +103,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
      */
     const selectNodeCallback = (
         newNode: TableauxTreeLayoutNode,
-        { ignoreClause = false }: SelectNodeOptions = {},
+        { ignoreClause = false }: SelectNodeOptions = {}
     ) => {
         const newNodeIsLeaf = newNode.children.length === 0;
 
@@ -144,7 +123,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     onChange,
                     onError,
                     newNode.id,
-                    selectedClauseId,
+                    selectedClauseId
                 );
                 setSelectedNodeId(undefined);
                 setSelectedClauseId(undefined);
@@ -152,7 +131,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         } else if (
             lemmaMode &&
             selectedNodeIsLeaf &&
-            !selectedNode!.isClosed &&
+            ! selectedNode!.isClosed &&
             newNode.isClosed
         ) {
             // Open leaf and a closed Node are selected => Try Lemma move
@@ -163,7 +142,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 onChange,
                 onError,
                 selectedNodeId,
-                newNode.id,
+                newNode.id
             );
             setSelectedNodeId(undefined);
             setLemmaMode(false);
@@ -183,7 +162,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 onChange,
                 onError,
                 newNodeIsLeaf ? newNode.id : selectedNodeId,
-                newNodeIsLeaf ? selectedNodeId : newNode.id,
+                newNodeIsLeaf ? selectedNodeId : newNode.id
             );
             setSelectedNodeId(undefined);
         } else if (instanceOfFOTabState(state, calculus)) {
@@ -194,7 +173,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 if (argument.type === FOArgumentType.quantifiedVariable) {
                     vars.push(argument.spelling);
                 }
-                if (argument.arguments) {
+                if(argument.arguments) {
                     argument.arguments.forEach(checkArgumentForVar);
                 }
             };
@@ -223,15 +202,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         ) {
             // Error for debugging
             throw new Error(
-                "Close move went wrong, since selected nodes could not be identified.",
+                "Close move went wrong, since selected nodes could not be identified."
             );
         }
-        const leaf = selectedNodeIsLeaf
-            ? selectedNodeId
-            : varAssignSecondNodeId;
-        const pred = selectedNodeIsLeaf
-            ? varAssignSecondNodeId
-            : selectedNodeId;
+        const leaf = selectedNodeIsLeaf ? selectedNodeId : varAssignSecondNodeId;
+        const pred = selectedNodeIsLeaf ? varAssignSecondNodeId : selectedNodeId;
         sendClose(
             calculus,
             server,
@@ -246,7 +221,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setSelectedNodeId(undefined);
                 setVarAssignSecondNodeId(undefined);
                 setShowVarAssignDialog(false);
-            },
+            }
         );
     };
 
@@ -277,13 +252,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     <div>
                         <OptionList
                             options={clauseOptions}
-                            selectedOptionIds={
-                                selectedClauseId !== undefined
-                                    ? [selectedClauseId]
-                                    : undefined
+                            selectedOptionIds={selectedClauseId  !== undefined ?
+                                [selectedClauseId] : undefined
                             }
-                            selectOptionCallback={(keyValuePair) =>
-                                selectClauseCallback(keyValuePair[0])
+                            selectOptionCallback={(keyValuePair =>
+                                selectClauseCallback(keyValuePair[0]))
                             }
                         />
                     </div>
@@ -295,8 +268,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={selectNodeCallback}
                     lemmaNodesSelectable={lemmaMode}
-                    dragTransforms={dragTransforms}
-                    onDrag={onDrag}
                 />
             </div>
 
@@ -329,9 +300,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog>
-            ) : (
-                undefined
-            )}
+            ) : undefined}
 
             <TableauxFAB
                 calculus={calculus}
@@ -340,8 +309,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 expandCallback={() => setShowClauseDialog(!showClauseDialog)}
                 lemmaMode={lemmaMode}
                 lemmaCallback={() => setLemmaMode(!lemmaMode)}
-                resetDragTransform={resetDragTransform}
-                resetDragTransforms={resetDragTransforms}
             />
         </Fragment>
     );

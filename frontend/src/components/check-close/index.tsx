@@ -1,7 +1,7 @@
 import { h } from "preact";
+import { checkClose as closeHelper } from "../../helpers/api";
+import { useAppState } from "../../helpers/app-state";
 import { CalculusType } from "../../types/app";
-import { checkClose as closeHelper } from "../../util/api";
-import { useAppState } from "../../util/app-state";
 import Btn from "../btn";
 
 interface Props {
