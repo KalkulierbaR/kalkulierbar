@@ -31,6 +31,7 @@ class NcTableauxNode(
     var closeRef: Int? = null
     val children = mutableListOf<Int>()
     var spelling = formula.toString()
+    val isLeaf = children.size == 0
 
     override fun toString() = spelling
 

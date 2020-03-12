@@ -4,8 +4,10 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
+import kalkulierbar.logic.And
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
+import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
@@ -37,10 +39,46 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         }
     }
 
+    /**
+     * While the outermost LogicNode is an AND:
+     * Split into subformulae, chain onto a single branch
+     * @param state: Non clausal tableaux state to apply move on
+     * @param leafID: leaf node ID to apply move on
+     */
     private fun applyAlpha(state: NcTableauxState, leafID: Int): NcTableauxState {
-        // While the outermost LogicNode is an AND:
-        // Split into subformulae, chain onto a single branch
-        throw IllegalMove("Not Implemented")
+        val nodes = state.nodes
+        if (leafID < 0 || leafID >= nodes.size)
+            throw IllegalMove("There is no node with ID: $leafID")
+        if (!nodes[leafID].isLeaf)
+            throw IllegalMove("Selected node is not a leaf")
+
+        val formula = state.formula
+        // Get sub-formula splitted by And
+        val conjunctions = recursiveAlpha(formula)
+
+        var parent = leafID
+        // Add nodes, chained onto a single branch
+        for (sub in conjunctions) {
+            nodes.add(NcTableauxNode(parent, sub))
+            nodes[parent].children.add(nodes.size - 1)
+            parent = nodes.size - 1
+        }
+        return state
+    }
+
+    /**
+     * While outermost LogicNOde is an AND -> split into subformulae
+     * @param node: node to apply splitting
+     * @return A list containing LogicNodes so that every element is not a AND
+     */
+    private fun recursiveAlpha(node: LogicNode): List<LogicNode> {
+        val lst = mutableListOf<LogicNode>()
+        // Recursively collects all AND LogicNodes
+        while (node is And) {
+            lst.addAll(recursiveAlpha(node.leftChild))
+            lst.addAll(recursiveAlpha(node.rightChild))
+        }
+        return lst
     }
 
     private fun applyBeta(state: NcTableauxState, leafID: Int): NcTableauxState {
