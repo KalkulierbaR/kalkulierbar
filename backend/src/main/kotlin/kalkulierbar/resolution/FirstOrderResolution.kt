@@ -42,9 +42,12 @@ class FirstOrderResolution :
     }
 
     override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
+        // Reset status message
+        state.statusMessage = null
+
         when (move) {
-            is MoveResolveUnify -> resolve(state, move.c1, move.c2, move.l1, move.l2, null)
-            is MoveResolveCustom -> resolve(state, move.c1, move.c2, move.l1, move.l2, move.getVarAssignTerms())
+            is MoveResolveUnify -> resolveMove(state, move.c1, move.c2, move.l1, move.l2, null)
+            is MoveResolveCustom -> resolveMove(state, move.c1, move.c2, move.l1, move.l2, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
             is MoveHyper -> hyper(state, move.mainID, move.atomMap)
@@ -67,7 +70,7 @@ class FirstOrderResolution :
      * @param c2lit The literal to unify of the second clause
      * @param varAssign Variable assignment to be used
      */
-    private fun resolve(
+    private fun resolveMove(
         state: FoResolutionState,
         c1: Int,
         c2: Int,
@@ -89,6 +92,18 @@ class FirstOrderResolution :
                 unifier = Unification.unify(literal1, literal2)
             } catch (e: UnificationImpossible) {
                 throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
+            }
+        } // Else check varAssign == mgu
+        else {
+            try {
+                val mgu = Unification.unify(literal1, literal2)
+                // Truncate map elements where same elements are in key and value (X_1 -> X_1)
+                // Check for mgu == varAssign
+                val notMGU = unifier.filter { it.key != it.value.toString() }.any { !it.value.synEq(mgu[it.key]) }
+                if (notMGU)
+                    state.statusMessage = "Given variable assignment does not equal mgu: $mgu"
+            } catch (e: UnificationImpossible) {
+                // Resolve move will fail in resolve with better error message
             }
         }
         instantiate(state, c1, unifier)
@@ -398,6 +413,7 @@ class FoResolutionState(
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<Relation>()
     var clauseCounter = 0
+    var statusMessage: String? = null
 
     override var seal = ""
 
