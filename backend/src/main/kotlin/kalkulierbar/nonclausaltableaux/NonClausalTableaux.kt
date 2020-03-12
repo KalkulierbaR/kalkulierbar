@@ -4,10 +4,7 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
-import kalkulierbar.logic.And
-import kalkulierbar.logic.FoTermModule
-import kalkulierbar.logic.LogicModule
-import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.*
 import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
@@ -44,6 +41,7 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
      * Split into subformulae, chain onto a single branch
      * @param state: Non clausal tableaux state to apply move on
      * @param leafID: leaf node ID to apply move on
+     * @return new state after applying move
      */
     private fun applyAlpha(state: NcTableauxState, leafID: Int): NcTableauxState {
         val nodes = state.nodes
@@ -81,10 +79,45 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         return lst
     }
 
+    /**
+     * While the outermost LogicNode is an OR:
+     * Split into subformulae and add to leaf node
+     * @param state: non clausal tableaux state to apply move on
+     * @param leafID: ID of leaf-node to apply move on
+     * @return new state after applying move
+     */
     private fun applyBeta(state: NcTableauxState, leafID: Int): NcTableauxState {
-        // While the outermost LogicNode is an OR:
-        // Split into subformulae
-        throw IllegalMove("Not Implemented")
+        val nodes = state.nodes
+        if (leafID < 0 || leafID >= nodes.size)
+            throw IllegalMove("There is no node with ID: $leafID")
+        if (!nodes[leafID].isLeaf)
+            throw IllegalMove("Selected node is not a leaf")
+
+        val formula = state.formula
+        // Get sub-formula splitted by Or
+        val disjunctions = recursiveBeta(formula)
+
+        // Add nodes as child node to leafID-node
+        for (sub in disjunctions) {
+            nodes.add(NcTableauxNode(leafID, sub))
+            nodes[leafID].children.add(nodes.size - 1)
+        }
+        return state
+    }
+
+    /**
+     * While outermost LogicNOde is an OR -> split into subformulae
+     * @param node: node to apply splitting
+     * @return A list containing LogicNodes so that every element is not a OR
+     */
+    private fun recursiveBeta(node: LogicNode): List<LogicNode> {
+        val lst = mutableListOf<LogicNode>()
+        // Recursively collects all OR LogicNodes
+        while (node is Or) {
+            lst.addAll(recursiveAlpha(node.leftChild))
+            lst.addAll(recursiveAlpha(node.rightChild))
+        }
+        return lst
     }
 
     private fun applyGamma(state: NcTableauxState, leafID: Int): NcTableauxState {
