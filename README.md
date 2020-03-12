@@ -4,7 +4,7 @@ KalkulierbaR helps you master your logic skills - learn to do proofs in various 
 
 ## Try it
 
-Check out the latest version of Kalkulierbar right here in your browser at [kbar.app](https://kbar.app) and get started faster than you can say *weaklyconnectedregulartableauxcalculus*.
+Check out the latest version of Kalkulierbar right here in your browser at [kalkulierbar.now.sh](https://kalkulierbar.now.sh) and get started faster than you can say *weaklyconnectedregulartableauxcalculus*.
 
 ## Own it
 

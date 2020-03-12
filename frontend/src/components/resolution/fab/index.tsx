@@ -3,33 +3,22 @@ import ControlFAB from "../../../components/control-fab";
 import FAB from "../../../components/fab";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
+import {checkClose, sendMove} from "../../../helpers/api";
+import { useAppState } from "../../../helpers/app-state";
+import {hideClause, sendFactorize, showHiddenClauses} from "../../../helpers/resolution";
 import * as style from "../../../routes/resolution/view/style.scss";
-import {
-    AppStateActionType,
-    ResolutionCalculusType,
-    TutorialMode,
-} from "../../../types/app";
-import { SelectedClauses } from "../../../types/clause";
+import {ResolutionCalculusType} from "../../../types/app";
+import {SelectedClauses} from "../../../types/clause";
 import {
     FOResolutionState,
-    HyperResolutionMove,
-    instanceOfPropResState,
-    PropResolutionState,
+    HyperResolutionMove, instanceOfPropResState,
+    PropResolutionState
 } from "../../../types/resolution";
-import { checkClose, sendMove } from "../../../util/api";
-import { useAppState } from "../../../util/app-state";
-import {
-    containsEmptyClause,
-    hideClause,
-    sendFactorize,
-    showHiddenClauses,
-} from "../../../util/resolution";
 import FactorizeIcon from "../../icons/factorize";
 import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
-import Tutorial from "../../tutorial";
 
 interface Props {
     /**
@@ -77,19 +66,12 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
         onChange,
         onError,
         onSuccess,
-        tutorialMode,
-        dispatch,
     } = useAppState();
     const apiInfo = { onChange, onError, server };
 
-    const couldShowCheckCloseHint = containsEmptyClause(state.clauseSet);
-
     return (
         <Fragment>
-            <ControlFAB
-                alwaysOpen={!smallScreen}
-                couldShowCheckCloseHint={couldShowCheckCloseHint}
-            >
+            <ControlFAB alwaysOpen={!smallScreen}>
                 {selectedClauseId !== undefined ? (
                     <Fragment>
                         <FAB
@@ -122,16 +104,12 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             showIconAtEnd={true}
                             icon={<HideIcon />}
                             onClick={() => {
-                                hideClause(selectedClauseId!, calculus, {
-                                    ...apiInfo,
-                                    state,
-                                });
+                                hideClause(selectedClauseId!, calculus, {...apiInfo, state,});
                                 setSelectedClauses(undefined);
                             }}
                         />
-
-                        {state.clauseSet.clauses[selectedClauseId].atoms
-                            .length > 0 ? (
+    
+                        {state.clauseSet.clauses[selectedClauseId].atoms.length > 0 ? (
                             <FAB
                                 mini={true}
                                 extended={true}
@@ -140,33 +118,24 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                 icon={<FactorizeIcon />}
                                 onClick={() => {
                                     if (
-                                        !instanceOfPropResState(
-                                            state,
-                                            calculus,
-                                        ) &&
-                                        state.clauseSet.clauses[
-                                            selectedClauseId
-                                        ].atoms.length !== 2
+                                        ! instanceOfPropResState(state, calculus) &&
+                                        state.clauseSet.clauses[selectedClauseId].atoms.length !== 2
                                     ) {
                                         setShowFactorizeDialog(true);
                                         return;
                                     }
                                     sendFactorize(
                                         selectedClauseId!,
-                                        new Set<number>([0, 1]),
+                                        new Set<number>([0,1]),
                                         calculus,
-                                        { ...apiInfo, state },
+                                        {...apiInfo, state},
                                     );
                                     setSelectedClauses(undefined);
                                 }}
                             />
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                     </Fragment>
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 {state!.hiddenClauses.clauses.length > 0 ? (
                     <FAB
                         mini={true}
@@ -175,13 +144,11 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         showIconAtEnd={true}
                         icon={<ShowIcon />}
                         onClick={() => {
-                            showHiddenClauses(calculus, { ...apiInfo, state });
+                            showHiddenClauses(calculus, {...apiInfo, state,});
                             setSelectedClauses(undefined);
                         }}
                     />
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 <FAB
                     mini={true}
                     extended={true}
@@ -196,19 +163,18 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     mini={true}
                     extended={true}
                     showIconAtEnd={true}
-                    onClick={() => {
-                        if (tutorialMode & TutorialMode.HighlightCheck) {
-                            dispatch({
-                                type: AppStateActionType.SET_TUTORIAL_MODE,
-                                value:
-                                    tutorialMode ^ TutorialMode.HighlightCheck,
-                            });
-                        }
-                        checkClose(server, onError, onSuccess, calculus, state);
-                    }}
+                    onClick={() =>
+                        checkClose(
+                            server, 
+                            onError, 
+                            onSuccess, 
+                            calculus, 
+                            state
+                        )
+                    }
                 />
             </ControlFAB>
-
+            
             {hyperRes && hyperRes.atomMap && (
                 <FAB
                     class={style.hyperFab}
@@ -230,16 +196,6 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     }}
                 />
             )}
-
-            {!smallScreen &&
-                couldShowCheckCloseHint &&
-                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
-                    <Tutorial
-                        text="Check if the proof is complete"
-                        right="205px"
-                        bottom="68px"
-                    />
-                )}
         </Fragment>
     );
 };

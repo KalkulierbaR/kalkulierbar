@@ -4,19 +4,17 @@ import FAB from "../../../components/fab";
 import AddIcon from "../../../components/icons/add";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
+import ExploreIcon from "../../../components/icons/explore";
+import LemmaIcon from "../../../components/icons/lemma";
+import UndoIcon from "../../../components/icons/undo";
+import { checkClose } from "../../../helpers/api";
+import { useAppState } from "../../../helpers/app-state";
 import {
-    AppStateActionType,
-    TableauxCalculusType,
-    TutorialMode,
-} from "../../../types/app";
-import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
-import { checkClose } from "../../../util/api";
-import { useAppState } from "../../../util/app-state";
-import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
-import ExploreIcon from "../../icons/explore";
-import LemmaIcon from "../../icons/lemma";
-import UndoIcon from "../../icons/undo";
-import Tutorial from "../../tutorial";
+    nextOpenLeaf,
+    sendBacktrack,
+} from "../../../helpers/tableaux";
+import { TableauxCalculusType } from "../../../types/app";
+import {FOTableauxState, PropTableauxState} from "../../../types/tableaux";
 
 interface Props {
     /**
@@ -43,14 +41,6 @@ interface Props {
      * Callback if lemma FAB is clicked
      */
     lemmaCallback: () => void;
-    /**
-     * Callback to reset a specific drag
-     */
-    resetDragTransform: (id: number) => void;
-    /**
-     * Callback to reset all drags
-     */
-    resetDragTransforms: () => void;
 }
 
 const TableauxFAB: preact.FunctionalComponent<Props> = ({
@@ -60,176 +50,131 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
     expandCallback,
     lemmaMode,
     lemmaCallback,
-    resetDragTransform,
-    resetDragTransforms,
+
 }) => {
     const {
         server,
         smallScreen,
         onError,
         onChange,
-        onSuccess,
-        tutorialMode,
-        dispatch,
+        onSuccess
     } = useAppState();
 
-    const resetView = (
-        <FAB
-            icon={<CenterIcon />}
-            label="Reset View"
-            mini={true}
-            extended={true}
-            showIconAtEnd={true}
-            onClick={() => {
-                dispatchEvent(new CustomEvent("center"));
-                resetDragTransforms();
-            }}
-        />
-    );
-
-    const couldShowCheckCloseHint = state.nodes[0].isClosed;
-
     return (
-        <Fragment>
-            <ControlFAB
-                alwaysOpen={!smallScreen}
-                couldShowCheckCloseHint={couldShowCheckCloseHint}
-            >
-                {selectedNodeId === undefined ? (
-                    <Fragment>
-                        {resetView}
-                        {state!.nodes.filter((node) => !node.isClosed).length >
-                        0 ? (
-                            <FAB
-                                icon={<ExploreIcon />}
-                                label="Next Leaf"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    const node = nextOpenLeaf(state!.nodes);
-                                    if (node === undefined) {
-                                        return;
-                                    }
-                                    dispatchEvent(
-                                        new CustomEvent("go-to", {
-                                            detail: { node },
-                                        }),
-                                    );
-                                }}
-                            />
-                        ) : (
-                            undefined
-                        )}
+        <ControlFAB alwaysOpen={!smallScreen}>
+            {selectedNodeId === undefined ? (
+                <Fragment>
+                    {state!.nodes.filter(node => !node.isClosed).length > 0 ? (
                         <FAB
-                            icon={<CheckCircleIcon />}
-                            label="Check"
+                            icon={<ExploreIcon />}
+                            label="Next Leaf"
                             mini={true}
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                if (
-                                    tutorialMode & TutorialMode.HighlightCheck
-                                ) {
-                                    dispatch({
-                                        type:
-                                            AppStateActionType.SET_TUTORIAL_MODE,
-                                        value:
-                                            tutorialMode ^
-                                            TutorialMode.HighlightCheck,
-                                    });
+                                const node = nextOpenLeaf(state!.nodes);
+                                if (node === undefined) {
+                                    return;
                                 }
-                                checkClose(
-                                    server,
-                                    onError,
-                                    onSuccess,
-                                    calculus,
-                                    state,
+                                dispatchEvent(
+                                    new CustomEvent("go-to", {
+                                        detail: { node }
+                                    })
                                 );
                             }}
                         />
-                        {state!.backtracking ? (
-                            <FAB
-                                icon={<UndoIcon />}
-                                label="Undo"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    // If the last move added a node, and we undo this, remove the corresponding drag
-                                    if (state.moveHistory.length > 0) {
-                                        const move =
-                                            state.moveHistory[
-                                                state.moveHistory.length - 1
-                                            ];
-                                        if (move.type === "EXPAND") {
-                                            resetDragTransform(
-                                                state.nodes.length - 1,
-                                            );
-                                        }
-                                    }
-                                    sendBacktrack(
-                                        calculus,
-                                        server,
-                                        state!,
-                                        onChange,
-                                        onError,
-                                    );
-                                }}
-                            />
-                        ) : (
-                            undefined
-                        )}
-                    </Fragment>
-                ) : (
-                    <Fragment>
-                        {resetView}
+                    ) : undefined}
+                    <FAB
+                        icon={<CenterIcon />}
+                        label="Center"
+                        mini={true}
+                        extended={true}
+                        showIconAtEnd={true}
+                        onClick={() => {
+                            dispatchEvent(new CustomEvent("center"));
+                        }}
+                    />
+                    <FAB
+                        icon={<CheckCircleIcon />}
+                        label="Check"
+                        mini={true}
+                        extended={true}
+                        showIconAtEnd={true}
+                        onClick={() =>
+                            checkClose(
+                                server,
+                                onError,
+                                onSuccess,
+                                calculus,
+                                state
+                            )
+                        }
+                    />
+                    {state!.backtracking ? (
                         <FAB
-                            icon={<AddIcon />}
-                            label="Expand"
+                            icon={<UndoIcon />}
+                            label="Undo"
                             mini={true}
                             extended={true}
                             showIconAtEnd={true}
-                            onClick={expandCallback}
+                            onClick={() => {
+                                sendBacktrack(
+                                    calculus,
+                                    server,
+                                    state!,
+                                    onChange,
+                                    onError
+                                );
+                            }}
                         />
-                        {lemmaMode ? (
-                            <FAB
-                                icon={<LemmaIcon fill="#000" />}
-                                label="Lemma"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={lemmaCallback}
-                                active={true}
-                            />
-                        ) : state!.nodes[selectedNodeId].children.length ===
-                              0 &&
-                          state!.nodes.filter((node) => node.isClosed).length >
-                              0 ? (
-                            <FAB
-                                icon={<LemmaIcon />}
-                                label="Lemma"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={lemmaCallback}
-                            />
-                        ) : (
-                            undefined
-                        )}
-                    </Fragment>
-                )}
-            </ControlFAB>
-            {!smallScreen &&
-                couldShowCheckCloseHint &&
-                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
-                    <Tutorial
-                        text="Check if the proof is complete"
-                        right="205px"
-                        bottom="115px"
+                    ) : undefined}
+                </Fragment>
+            ) : (
+                <Fragment>
+                    <FAB
+                        icon={<CenterIcon />}
+                        label="Center"
+                        mini={true}
+                        extended={true}
+                        showIconAtEnd={true}
+                        onClick={() => {
+                            dispatchEvent(new CustomEvent("center"));
+                        }}
                     />
-                )}
-        </Fragment>
+                    <FAB
+                        icon={<AddIcon />}
+                        label="Expand"
+                        mini={true}
+                        extended={true}
+                        showIconAtEnd={true}
+                        onClick={expandCallback}
+                    />
+                    {lemmaMode ? (
+                        <FAB
+                            icon={<LemmaIcon fill="#000" />}
+                            label="Lemma"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={lemmaCallback}
+                            active={true}
+                        />
+                    ) : (
+                        state!.nodes[selectedNodeId].children.length === 0 &&
+                        state!.nodes.filter(node => node.isClosed).length > 0
+                    ) ? (
+                        <FAB
+                            icon={<LemmaIcon />}
+                            label="Lemma"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={lemmaCallback}
+                        />
+                    ) : undefined}
+                </Fragment>
+            )}
+        </ControlFAB>
     );
 };
 

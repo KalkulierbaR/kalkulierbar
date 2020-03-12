@@ -7,11 +7,6 @@ export interface Transform {
     k: number;
 }
 
-export interface DragTransform {
-    x: number;
-    y: number;
-}
-
 export type Point = [number, number];
 
 export type Extent = [Point, Point];

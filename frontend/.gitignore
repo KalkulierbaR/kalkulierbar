@@ -1,10 +1,8 @@
 node_modules
 /build
+*.lock
 /*.log
 package-lock.json
 *.css.d.ts
 *.scss.d.ts
-.yarn/*
-!.yarn/cache
-!.yarn/releases
-!.yarn/plugins
+.vscode

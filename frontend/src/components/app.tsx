@@ -3,9 +3,9 @@ import AsyncRoute from "preact-async-route";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
+import { AppStateProvider, useAppState } from "../helpers/app-state";
+import Confetti from "../helpers/confetti";
 import { AppStateActionType, Calculus } from "../types/app";
-import { AppStateProvider, useAppState } from "../util/app-state";
-import Confetti from "../util/confetti";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";

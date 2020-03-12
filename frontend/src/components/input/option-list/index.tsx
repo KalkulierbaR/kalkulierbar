@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { classMap } from "../../../util/class-map";
+import { classMap } from "../../../helpers/class-map";
 import * as style from "./style.scss";
 
 interface Props {

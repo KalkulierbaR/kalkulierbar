@@ -7,14 +7,14 @@ import HintIcon, { Hint } from "../../components/hint";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
+import { useAppState } from "../../helpers/app-state";
 import { Calculus, TableauxCalculusType } from "../../types/app";
 import {
     CnfStrategy,
     FOTableauxParams,
     PropTableauxParams,
-    TableauxType,
+    TableauxType
 } from "../../types/tableaux";
-import { useAppState } from "../../util/app-state";
 
 interface Props {
     /**
@@ -58,7 +58,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 type: tabType,
                 regular,
                 backtracking,
-                cnfStrategy,
+                cnfStrategy
             };
             params = propParams;
             break;
@@ -67,7 +67,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 type: tabType,
                 regular,
                 backtracking,
-                manualVarAssign,
+                manualVarAssign
             };
             params = foParams;
             break;

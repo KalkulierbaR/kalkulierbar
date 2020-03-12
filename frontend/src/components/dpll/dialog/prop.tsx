@@ -1,10 +1,10 @@
 import { h } from "preact";
+import { useAppState } from "../../../helpers/app-state";
+import { stringArrayToStringMap } from "../../../helpers/array-to-map";
+import { atomToString } from "../../../helpers/clause";
+import { sendProp } from "../../../helpers/dpll";
 import { ClauseSet, SelectedClauses } from "../../../types/clause";
 import { DPLLState } from "../../../types/dpll";
-import { useAppState } from "../../../util/app-state";
-import { stringArrayToStringMap } from "../../../util/array-to-map";
-import { atomToString } from "../../../util/clause";
-import { sendProp } from "../../../util/dpll";
 import Dialog from "../../dialog";
 import OptionList from "../../input/option-list";
 

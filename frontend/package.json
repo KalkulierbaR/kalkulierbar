@@ -12,7 +12,8 @@
         "serve-only": "serve build/ -s -l ${PORT:-8080}",
         "dev": "preact watch",
         "lint": "tslint --project .",
-        "test": "jest ./tests"
+        "test": "jest ./tests",
+        "precommit": "lint-staged"
     },
     "lint-staged": {
         "*.{js,jsx,css,md,scss}": [
@@ -37,7 +38,7 @@
         "husky": "^1.2.0",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^23.6.0",
-        "lint-staged": "^10.0.8",
+        "lint-staged": "^8.1.0",
         "node-sass": "^4.13.0",
         "per-env": "^1.0.2",
         "preact-cli": "3.0.0-rc.7",
@@ -57,7 +58,6 @@
     "dependencies": {
         "@material/radio": "^4.0.0",
         "@material/switch": "^4.0.0",
-        "@yarnpkg/pnpify": "^2.0.0-rc.18",
         "preact": "^10.0.0",
         "preact-async-route": "^2.2.1",
         "preact-jsx-chai": "^3.0.0",
@@ -70,9 +70,6 @@
     "peerDependencies": {
         "prettier": ">1.0.0",
         "tslint": ">5.0.0"
-    },
-    "husky": {
-        "pre-commit": "lint-staged"
     },
     "jest": {
         "transform": {

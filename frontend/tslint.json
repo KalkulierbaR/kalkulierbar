@@ -47,7 +47,6 @@
             "severity": "warning",
             "options": "allow-destructuring"
         },
-        "prefer-const-enum": { "severity": "warning" },
-        "no-bitwise": false
+        "prefer-const-enum": { "severity": "warning" }
     }
 }

@@ -4,7 +4,7 @@ export interface LayoutItem<T> {
     data: T;
 }
 
-export interface Layout {
+export interface Layout<T> {
     /**
      * The width the svg element should have
      */
@@ -13,9 +13,6 @@ export interface Layout {
      * The height the svg element should have
      */
     height: number;
-}
-
-export interface ArrayLayout<T> extends Layout {
     /**
      * The array of items with their coordinates
      */

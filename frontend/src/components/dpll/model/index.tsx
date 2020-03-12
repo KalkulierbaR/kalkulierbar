@@ -1,6 +1,6 @@
 import { h } from "preact";
+import { getAllLits } from "../../../helpers/dpll";
 import { ClauseSet } from "../../../types/clause";
-import { getAllLits } from "../../../util/dpll";
 import Btn from "../../btn";
 import Dialog from "../../dialog";
 import Switch from "../../switch";
