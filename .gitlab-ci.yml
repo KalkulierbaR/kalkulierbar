@@ -10,6 +10,7 @@ yarn:
   before_script:
     - cd frontend
   script:
+    - yarn
     - yarn build
   after_script:
     - cd ..
