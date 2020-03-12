@@ -2,9 +2,9 @@
     position: fixed;
 
     max-width: 200px;
-    box-shadow: var(--kbar-shadow-3dp);
-    background-color: var(--kbar-primary-text-color);
-    color: var(--kbar-card-color);
+    box-shadow: var(--kbar-shadow-3dp) !important;
+    background-color: var(--kbar-primary-text-color) !important;
+    color: var(--kbar-card-color) !important;
 }
 
 .svg {
