@@ -5,6 +5,7 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.logic.*
+import kalkulierbar.logic.transform.LogicNodeRenamer
 import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
@@ -45,10 +46,7 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
      */
     private fun applyAlpha(state: NcTableauxState, leafID: Int): NcTableauxState {
         val nodes = state.nodes
-        if (leafID < 0 || leafID >= nodes.size)
-            throw IllegalMove("There is no node with ID: $leafID")
-        if (!nodes[leafID].isLeaf)
-            throw IllegalMove("Selected node is not a leaf")
+        checkLeafRestrictions(nodes, leafID)
 
         val formula = state.formula
         // Get sub-formula splitted by And
@@ -79,6 +77,13 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         return lst
     }
 
+    private fun checkLeafRestrictions(nodes: List<NcTableauxNode>, leafID: Int) {
+        if (leafID < 0 || leafID >= nodes.size)
+            throw IllegalMove("There is no node with ID: $leafID")
+        if (!nodes[leafID].isLeaf)
+            throw IllegalMove("Selected node is not a leaf")
+    }
+
     /**
      * While the outermost LogicNode is an OR:
      * Split into subformulae and add to leaf node
@@ -88,10 +93,7 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
      */
     private fun applyBeta(state: NcTableauxState, leafID: Int): NcTableauxState {
         val nodes = state.nodes
-        if (leafID < 0 || leafID >= nodes.size)
-            throw IllegalMove("There is no node with ID: $leafID")
-        if (!nodes[leafID].isLeaf)
-            throw IllegalMove("Selected node is not a leaf")
+        checkLeafRestrictions(nodes, leafID)
 
         val formula = state.formula
         // Get sub-formula splitted by Or
@@ -120,10 +122,35 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         return lst
     }
 
+    /**
+     * If outermost LogicNode is a universal quantifier:
+     * Remove quantifier and instantiate with fresh variable
+     * @param state: non clausal tableaux state to apply move on
+     * @param leafID: ID of leaf-node to apply move on
+     * @return new state after applying move
+     */
     private fun applyGamma(state: NcTableauxState, leafID: Int): NcTableauxState {
-        // If outermost LogicNode is a universal quantifier:
-        // Remove quantifier and instantiate with fresh variable
-        throw IllegalMove("Not Implemented")
+        val nodes = state.nodes
+        checkLeafRestrictions(nodes, leafID)
+
+        // Check leaf == UniversalQuantifier
+        val leaf = nodes[leafID]
+        if (leaf.formula !is UniversalQuantifier)
+            throw IllegalMove("There is no universal quantifier")
+
+        // Transform new Formula + remove UniversalQuantifier
+        val formula = leaf.formula
+        val vars = formula.boundVariables
+        val newFormula = formula.child
+        LogicNodeRenamer.transform(newFormula, vars, "_${state.expansionCounter + 1}")
+
+        // Add new node with formula to tree
+        val newNode = NcTableauxNode(leafID, newFormula)
+        nodes.add(newNode)
+        leaf.children.add(nodes.size - 1)
+
+        state.expansionCounter += 1
+        return state
     }
 
     private fun applyDelta(state: NcTableauxState, leafID: Int): NcTableauxState {
