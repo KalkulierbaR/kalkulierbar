@@ -1,6 +1,10 @@
 package kalkulierbar.nonclausaltableaux
 
+import kalkulierbar.clause.Atom
+import kalkulierbar.clause.Clause
 import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.Relation
+import kalkulierbar.logic.transform.VariableSuffixAppend
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -13,6 +17,7 @@ class NcTableauxState(
     val nodes = mutableListOf<NcTableauxNode>(NcTableauxNode(null, formula))
     val moveHistory = mutableListOf<NcTableauxMove>()
     var usedBacktracking = false
+    var expansionCounter = 0
 
     override var seal = ""
 
