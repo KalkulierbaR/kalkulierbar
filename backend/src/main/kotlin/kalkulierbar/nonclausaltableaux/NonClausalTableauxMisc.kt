@@ -1,10 +1,6 @@
 package kalkulierbar.nonclausaltableaux
 
-import kalkulierbar.clause.Atom
-import kalkulierbar.clause.Clause
 import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.transform.VariableSuffixAppend
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

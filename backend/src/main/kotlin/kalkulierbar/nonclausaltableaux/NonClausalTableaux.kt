@@ -4,7 +4,12 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
-import kalkulierbar.logic.*
+import kalkulierbar.logic.And
+import kalkulierbar.logic.FoTermModule
+import kalkulierbar.logic.LogicModule
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.Or
+import kalkulierbar.logic.UniversalQuantifier
 import kalkulierbar.logic.transform.LogicNodeRenamer
 import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.FirstOrderParser
