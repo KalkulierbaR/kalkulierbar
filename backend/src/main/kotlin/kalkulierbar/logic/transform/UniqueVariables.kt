@@ -138,39 +138,3 @@ class VariableRenamer(val replacementMap: Map<QuantifiedVariable, String>) : Fir
         }
     }
 }
-
-/**
- * LogicNode visitor to re-name Quantified Variables in formula
- * @param replacementMap Map of all variables to replace and their new Variable name
- */
-class LogicNodeVariableRenamer(val replacementMap: Map<QuantifiedVariable, String>) : DoNothingVisitor() {
-
-    companion object Companion {
-
-        /**
-         * Re-name variables in a given formula
-         * @param formula Formula to transform
-         * @param vars: quantified variables to be renamed
-         * @param suffix: suffix to be added to selected quantified variables
-         * @return Equivalent formula with possibly different variable names
-         */
-        fun transform(formula: LogicNode, vars: List<QuantifiedVariable>, suffix: String): LogicNode {
-            val map = vars.associateWith { it.spelling + suffix }
-            val instance = LogicNodeVariableRenamer(map)
-            return formula.accept(instance)
-        }
-    }
-
-    private val varRenamer = VariableRenamer(replacementMap)
-
-    /**
-     * Recursively rename quantified variables
-     * @param node: Relation of which child-terms should be renamed
-     */
-    override fun visit(node: Relation): LogicNode {
-        node.arguments.forEach {
-            it.accept(varRenamer)
-        }
-        return node
-    }
-}
