@@ -145,68 +145,37 @@ class VariableRenamer(val replacementMap: Map<QuantifiedVariable, String>) : Fir
 }
 
 /**
- * LogicNode visitor to rename Quantified Variables in formula
+ * LogicNode visitor to re-name Quantified Variables in formula
  * @param replacementMap Map of all variables to replace and their new Variable name
  */
-class LogicNodeRenamer(val replacementMap: Map<QuantifiedVariable, String>) : LogicNodeVisitor<Unit>() {
+class LogicNodeVariableRenamer(val replacementMap: Map<QuantifiedVariable, String>) : DoNothingVisitor() {
 
     companion object Companion {
 
         /**
-         * Re-name variables in a given formula to make them uniquely bound
+         * Re-name variables in a given formula
          * @param formula Formula to transform
          * @param vars: quantified variables to be renamed
          * @param suffix: suffix to be added to selected quantified variables
          * @return Equivalent formula with possibly different variable names
          */
-        fun transform(formula: LogicNode, vars: List<QuantifiedVariable>, suffix: String) {
+        fun transform(formula: LogicNode, vars: List<QuantifiedVariable>, suffix: String): LogicNode {
             val map = vars.associateWith { it.spelling + suffix }
-            val instance = LogicNodeRenamer(map)
+            val instance = LogicNodeVariableRenamer(map)
             return formula.accept(instance)
         }
     }
 
     private val varRenamer = VariableRenamer(replacementMap)
 
-    override fun visit(node: And) {
-        node.leftChild.accept(this)
-        node.rightChild.accept(this)
-    }
-
-    override fun visit(node: Or) {
-        node.leftChild.accept(this)
-        node.rightChild.accept(this)
-    }
-
-    override fun visit(node: Impl) {
-        node.leftChild.accept(this)
-        node.rightChild.accept(this)
-    }
-
-    override fun visit(node: Equiv) {
-        node.leftChild.accept(this)
-        node.rightChild.accept(this)
-    }
-
-    override fun visit(node: Not) {
-        node.child.accept(this)
-    }
-
     /**
      * Recursively rename quantified variables
      * @param node: Relation of which child-terms should be renamed
      */
-    override fun visit(node: Relation) {
+    override fun visit(node: Relation): LogicNode {
         node.arguments.forEach {
             it.accept(varRenamer)
         }
-    }
-
-    override fun visit(node: UniversalQuantifier) {
-        node.child.accept(this)
-    }
-
-    override fun visit(node: ExistentialQuantifier) {
-        node.child.accept(this)
+        return node
     }
 }
