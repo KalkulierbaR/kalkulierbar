@@ -18,7 +18,6 @@ import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-
 val serializer = Json(context = FoTermModule + LogicModule)
 
 @Suppress("TooManyFunctions")
@@ -87,7 +86,10 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         }
         return lst
     }
-    
+
+    /**
+     * Check leafID valid + node at leafID is leaf
+     */
     private fun checkLeafRestrictions(nodes: List<NcTableauxNode>, leafID: Int) {
         if (leafID < 0 || leafID >= nodes.size)
             throw IllegalMove("There is no node with ID: $leafID")
@@ -202,7 +204,12 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         return state
     }
 
-    private fun applyClose(state: NcTableauxState, leafID: Int, closeID: Int, varAssign: Map<String, String>?): NcTableauxState {
+    private fun applyClose(
+        state: NcTableauxState,
+        leafID: Int,
+        closeID: Int,
+        varAssign: Map<String, String>?
+    ): NcTableauxState {
         // Note: I believe nodes are closable if:
         //       1. The outermost LogicNode is a NOT for one and RELATION for the other
         //       2. The child of the NOT node is a RELATION (think this is already covered by converting to NNF)

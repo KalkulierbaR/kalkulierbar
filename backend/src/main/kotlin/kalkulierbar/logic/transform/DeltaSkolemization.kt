@@ -87,7 +87,7 @@ class DeltaSkolemization(val replacementMap: Map<QuantifiedVariable, FirstOrderT
  * @param replacementMap Map of variable instances to replace alongside their Skolem term
  */
 class DeltaSkolemTermReplacer(
-        val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>
+    val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     /**

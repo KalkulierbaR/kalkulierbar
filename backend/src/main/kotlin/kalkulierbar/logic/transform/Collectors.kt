@@ -33,7 +33,7 @@ class FreeVariableCollector : DoNothingCollector() {
     private val boundVariables = mutableSetOf<QuantifiedVariable>()
 
     override fun visit(node: Relation) {
-        val freeTermCollector = FreeTermCollector(boundVariables)
+        val freeTermCollector = FreeVariableTermCollector(boundVariables)
         node.arguments.forEach {
             freeVariables.addAll(it.accept(freeTermCollector))
         }
@@ -54,7 +54,9 @@ class FreeVariableCollector : DoNothingCollector() {
  * Collects free variables from a first-order term
  * @param boundVariables: set of bound variables to compare with variables in first-order term
  */
-class FreeTermCollector(val boundVariables: Set<QuantifiedVariable>): FirstOrderTermVisitor<Set<QuantifiedVariable>>() {
+class FreeVariableTermCollector(
+    val boundVariables: Set<QuantifiedVariable>
+) : FirstOrderTermVisitor<Set<QuantifiedVariable>>() {
     override fun visit(node: Constant): Set<QuantifiedVariable> {
         return mutableSetOf()
     }
@@ -68,7 +70,7 @@ class FreeTermCollector(val boundVariables: Set<QuantifiedVariable>): FirstOrder
 
     override fun visit(node: Function): Set<QuantifiedVariable> {
         val set = mutableSetOf<QuantifiedVariable>()
-        node.arguments.forEach{
+        node.arguments.forEach {
             set.addAll(it.accept(this))
         }
         return set
