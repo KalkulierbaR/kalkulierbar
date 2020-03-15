@@ -5,16 +5,19 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.logic.And
+import kalkulierbar.logic.ExistentialQuantifier
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.UniversalQuantifier
-import kalkulierbar.logic.transform.LogicNodeRenamer
+import kalkulierbar.logic.transform.DeltaSkolemization
+import kalkulierbar.logic.transform.LogicNodeVariableRenamer
 import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
+
 
 val serializer = Json(context = FoTermModule + LogicModule)
 
@@ -64,6 +67,9 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
             nodes[parent].children.add(nodes.size - 1)
             parent = nodes.size - 1
         }
+
+        // Add move to history
+        state.moveHistory.add(DeltaMove(leafID))
         return state
     }
 
@@ -81,7 +87,7 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         }
         return lst
     }
-
+    
     private fun checkLeafRestrictions(nodes: List<NcTableauxNode>, leafID: Int) {
         if (leafID < 0 || leafID >= nodes.size)
             throw IllegalMove("There is no node with ID: $leafID")
@@ -109,6 +115,9 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
             nodes.add(NcTableauxNode(leafID, sub))
             nodes[leafID].children.add(nodes.size - 1)
         }
+
+        // Add move to history
+        state.moveHistory.add(BetaMove(leafID))
         return state
     }
 
@@ -121,9 +130,10 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         val lst = mutableListOf<LogicNode>()
         // Recursively collects all OR LogicNodes
         while (node is Or) {
-            lst.addAll(recursiveAlpha(node.leftChild))
-            lst.addAll(recursiveAlpha(node.rightChild))
+            lst.addAll(recursiveBeta(node.leftChild))
+            lst.addAll(recursiveBeta(node.rightChild))
         }
+
         return lst
     }
 
@@ -138,30 +148,58 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         val nodes = state.nodes
         checkLeafRestrictions(nodes, leafID)
 
-        // Check leaf == UniversalQuantifier
-        val leaf = nodes[leafID]
-        if (leaf.formula !is UniversalQuantifier)
+        // Check leaf formula == UniversalQuantifier
+        val leafNode = nodes[leafID]
+        val formula = leafNode.formula
+        if (formula !is UniversalQuantifier)
             throw IllegalMove("There is no universal quantifier")
 
         // Transform new Formula + remove UniversalQuantifier
-        val formula = leaf.formula
         val vars = formula.boundVariables
-        val newFormula = formula.child
-        LogicNodeRenamer.transform(newFormula, vars, "_${state.expansionCounter + 1}")
+        val suffix = "_${state.expansionCounter + 1}"
+        val newFormula = LogicNodeVariableRenamer.transform(formula.child, vars, suffix)
 
-        // Add new node with formula to tree
+        // Add new node to tree
         val newNode = NcTableauxNode(leafID, newFormula)
         nodes.add(newNode)
-        leaf.children.add(nodes.size - 1)
+        leafNode.children.add(nodes.size - 1)
+
+        // Add move to history
+        state.moveHistory.add(GammaMove(leafID))
 
         state.expansionCounter += 1
         return state
     }
 
+    /**
+     * If outermost LogicNode is an existantial quantifier:
+     * Remove quantifier and instantiate with Skolem term
+     * -> Iff free variables in current node: term = firstOrderTerm (free variables)
+     * -> IFF no free variables: term = constant
+     * @param state: non clausal tableaux state to apply move on
+     * @param leafID: ID of leaf-node to apply move on
+     * @return new state after applying move
+     */
     private fun applyDelta(state: NcTableauxState, leafID: Int): NcTableauxState {
-        // If outermost LogicNode is an existantial quantifier:
-        // Remove quantifier and instantiate with Skolem term
-        throw IllegalMove("Not Implemented")
+        val nodes = state.nodes
+        checkLeafRestrictions(nodes, leafID)
+
+        // Check leaf == UniversalQuantifier
+        val leafNode = nodes[leafID]
+        val formula = leafNode.formula
+        if (formula !is ExistentialQuantifier)
+            throw IllegalMove("There is no existential quantifier")
+
+        val newFormula = DeltaSkolemization.transform(formula)
+
+        // Add new node to tree
+        val newNode = NcTableauxNode(leafID, newFormula)
+        nodes.add(newNode)
+        leafNode.children.add(nodes.size - 1)
+
+        // Add move to history
+        state.moveHistory.add(DeltaMove(leafID))
+        return state
     }
 
     private fun applyClose(state: NcTableauxState, leafID: Int, closeID: Int, varAssign: Map<String, String>?): NcTableauxState {
