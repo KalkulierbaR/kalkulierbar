@@ -1,9 +1,8 @@
 import {
-    AdminConfigParamTypes,
     AppState,
     AppStateUpdater,
     CalculusType,
-    CheckCloseResponse, Config,
+    CheckCloseResponse, Config, Example,
     Move,
 } from "../types/app";
 import SHA3 from "sha3";
@@ -132,16 +131,17 @@ export const getConfig = async(
     }
 };
 
-//ToDo: JSDoc Admin-Interaction
-export const editConfig = async(
+//ToDo: JSDoc checkCredentials
+export const checkCredentials = async(
     server: string,
-    action: string,
-    paramTypes: AdminConfigParamTypes,// ToDo: value pair?
-    mac: string,
     onError: (msg: string) => void,
 ) => {
-    const url = `${server}/admin/${action}`;
-    //const mac = new SHA3(256);
+    const url = `${server}/admin/checkCredentials`;
+    const newDate = new Date();
+    const date = "" + newDate.getFullYear() + newDate.getMonth() + newDate.getDay()
+    const mac = new SHA3(256);
+    console.log(date);
+    mac.update(`kbcc|${date}|${useAppState().adminKey}`);
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
@@ -149,13 +149,112 @@ export const editConfig = async(
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `move=${encodeURIComponent(JSON.stringify(param),)}
-            &mac=${encodeURIComponent(JSON.stringify(mac))}`,
+            body: `mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`
+        });
+        if (res.status !== 200) {
+            onError(await res.text());
+            //Todo: is Admin auf false setzen.
+        }  {
+            //Todo: is Admin auf true setzen.
+        }
+    } catch (e) {
+        onError((e as Error).message);
+    }
+};
+
+//ToDo: JSDoc setCalculusState
+export const setCalculusState = async <C extends CalculusType = CalculusType>(
+    server: string,
+    calculus: C,
+    value: boolean,
+    onError: (msg: string) => void,
+) => {
+    const url = `${server}/admin/setCalculusState`;
+    const newDate = new Date();
+    const date = "" + newDate.getFullYear() + newDate.getMonth() + newDate.getDay()
+    const mac = new SHA3(256);
+    console.log(date);
+    mac.update(`kbsc|${calculus}|${value}|${date}|${useAppState().adminKey}`);
+    try {
+        // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
+        const res = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body:
+                `calculus=${encodeURIComponent(JSON.stringify(calculus))}
+                &enable=${encodeURIComponent(JSON.stringify(value))}
+                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`
         });
         if (res.status !== 200) {
             onError(await res.text());
         }  {
-            //getConfig(server, useAppState().config, useAppState().onError);
+            //Todo: neue config holen
+        }
+    } catch (e) {
+        onError((e as Error).message);
+    }
+};
+
+//ToDo: JSDoc addExample
+export const addExample = async (
+    server: string,
+    example: Example,
+    onError: (msg: string) => void,
+) => {
+    const url = `${server}/admin/addExample`;
+    const newDate = new Date();
+    const date = "" + newDate.getFullYear() + newDate.getMonth() + newDate.getDay()
+    const mac = new SHA3(256);
+    console.log(date);
+    mac.update(`kbae|${example}|${date}|${useAppState().adminKey}`);
+    try {
+        // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
+        const res = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `example=${encodeURIComponent(JSON.stringify(example))}
+                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`
+        });
+        if (res.status !== 200) {
+            onError(await res.text());
+        }  {
+            //Todo: neue config holen
+        }
+    } catch (e) {
+        onError((e as Error).message);
+    }
+};
+
+//ToDo: JSDoc delExample
+export const delExample = async (
+    server: string,
+    exampleID: number,
+    onError: (msg: string) => void,
+) => {
+    const url = `${server}/admin/addExample`;
+    const newDate = new Date();
+    const date = "" + newDate.getFullYear() + newDate.getMonth() + newDate.getDay()
+    const mac = new SHA3(256);
+    console.log(date);
+    mac.update(`kbde|${exampleID}|${date}|${useAppState().adminKey}`);
+    try {
+        // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
+        const res = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `exampleID=${encodeURIComponent(JSON.stringify(exampleID))}
+                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`
+        });
+        if (res.status !== 200) {
+            onError(await res.text());
+        }  {
+            //Todo: neue config holen
         }
     } catch (e) {
         onError((e as Error).message);

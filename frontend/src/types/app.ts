@@ -25,14 +25,6 @@ export type CalculusType =
     | ResolutionCalculusType
     | "dpll";
 
-export enum AdminConfigParamOptions =
-    addExample = "ex"
-
-export type AdminConfigParamTypes =
-    | boolean
-    | Example
-    | number;
-
 export enum Calculus {
     propTableaux = "prop-tableaux",
     foTableaux = "fo-tableaux",
