@@ -15,7 +15,6 @@ import {
     TableauxType,
 } from "../../types/tableaux";
 import { useAppState } from "../../util/app-state";
-import OptionList from "../../components/input/option-list";
 
 interface Props {
     /**
@@ -161,7 +160,6 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
-            <OptionList options={} selectOptionCallback={} />
         </Fragment>
     );
 };

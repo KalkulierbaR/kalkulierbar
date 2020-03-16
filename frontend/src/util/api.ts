@@ -1,10 +1,13 @@
 import {
+    AdminConfigParamTypes,
     AppState,
     AppStateUpdater,
     CalculusType,
     CheckCloseResponse, Config,
     Move,
 } from "../types/app";
+import SHA3 from "sha3";
+import {useAppState} from "./app-state";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
@@ -102,6 +105,7 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
     }
 };
 
+//ToDo: JSDoc getConfig
 export const getConfig = async(
     server: string,
     changeConfig: (cfg: Config) => void,
@@ -122,6 +126,36 @@ export const getConfig = async(
         }  {
             const parsed = await res.json();
             changeConfig(parsed);
+        }
+    } catch (e) {
+        onError((e as Error).message);
+    }
+};
+
+//ToDo: JSDoc Admin-Interaction
+export const editConfig = async(
+    server: string,
+    action: string,
+    paramTypes: AdminConfigParamTypes,// ToDo: value pair?
+    mac: string,
+    onError: (msg: string) => void,
+) => {
+    const url = `${server}/admin/${action}`;
+    //const mac = new SHA3(256);
+    try {
+        // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
+        const res = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `move=${encodeURIComponent(JSON.stringify(param),)}
+            &mac=${encodeURIComponent(JSON.stringify(mac))}`,
+        });
+        if (res.status !== 200) {
+            onError(await res.text());
+        }  {
+            //getConfig(server, useAppState().config, useAppState().onError);
         }
     } catch (e) {
         onError((e as Error).message);

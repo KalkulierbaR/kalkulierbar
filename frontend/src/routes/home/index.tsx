@@ -2,6 +2,8 @@ import { h, VNode } from "preact";
 import { circle } from "../../components/resolution/circle/style.scss";
 import { Calculus } from "../../types/app";
 import * as style from "./style.scss";
+import {useAppState} from "../../util/app-state";
+import Switch from "../../components/switch";
 
 interface Route {
     name: string;
@@ -908,7 +910,7 @@ interface CalculusItemProps {
 const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
     route: { href, name, image, viewBox },
 }) => {
-    return (
+    return ((
         <a href={`/${href}`}>
             <div class={style.calculusItem}>
                 <svg class={style.calculusItemImage} viewBox={viewBox}>
@@ -917,7 +919,7 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
                 <h3 class={style.calculusItemTitle}>{name}</h3>
             </div>
         </a>
-    );
+    ));
 };
 
 const Home: preact.FunctionalComponent = () => {
@@ -927,7 +929,8 @@ const Home: preact.FunctionalComponent = () => {
                 <h3>Choose a calculus</h3>
                 <div class={style.calculusGrid}>
                     {ROUTES.map((r) => (
-                        <CalculusItem route={r} />
+                        useAppState().isAdmin ? <CalculusItem route={r}/> :
+                        useAppState().config.disabled.includes(r.href) ? undefined : <CalculusItem route={r}/>
                     ))}
                 </div>
             </div>
