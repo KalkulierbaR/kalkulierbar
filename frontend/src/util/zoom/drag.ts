@@ -28,7 +28,7 @@ export const enableDrag = (noClick: boolean) => {
     el.removeEventListener("dragstart", noEvent);
     el.removeEventListener("selectstart", noEvent);
     if (noClick) {
-        el.addEventListener("click", noEvent);
-        setTimeout(() => el.removeEventListener("click", noEvent), 0);
+        el.addEventListener("click", noEvent, true);
+        setTimeout(() => el.removeEventListener("click", noEvent, true), 0);
     }
 };

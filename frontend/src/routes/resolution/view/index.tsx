@@ -4,21 +4,6 @@ import ResolutionCircle from "../../../components/resolution/circle";
 import ResolutionFactorizeDialog from "../../../components/resolution/dialog/factorize";
 import ResolutionResolveDialog from "../../../components/resolution/dialog/resolve";
 import ResolutionFAB from "../../../components/resolution/fab";
-import { useAppState } from "../../../helpers/app-state";
-import {stringArrayToStringMap} from "../../../helpers/array-to-map";
-import {getCandidateClause} from "../../../helpers/clause";
-import {
-    addHyperSidePremiss,
-    findHyperSidePremiss,
-    getCandidateClauses,
-    getFOHyperCandidates,
-    getHyperClauseIds,
-    getPropHyperCandidates,
-    getSelectable,
-    removeHyperSidePremiss,
-    sendResolve,
-    sendResolveUnify,
-} from "../../../helpers/resolution";
 import { Calculus, ResolutionCalculusType } from "../../../types/app";
 import {
     CandidateClause,
@@ -31,6 +16,21 @@ import {
     instanceOfFOResState,
     instanceOfPropResState,
 } from "../../../types/resolution";
+import { useAppState } from "../../../util/app-state";
+import {stringArrayToStringMap} from "../../../util/array-to-map";
+import {getCandidateClause} from "../../../util/clause";
+import {
+    addHyperSidePremiss,
+    findHyperSidePremiss,
+    getCandidateClauses,
+    getFOHyperCandidates,
+    getHyperClauseIds,
+    getPropHyperCandidates,
+    getSelectable,
+    removeHyperSidePremiss,
+    sendResolve,
+    sendResolveUnify,
+} from "../../../util/resolution";
 import { foExample, propExample } from "./example";
 
 interface Props {

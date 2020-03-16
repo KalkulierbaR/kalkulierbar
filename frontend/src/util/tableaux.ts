@@ -1,5 +1,6 @@
+import { StateUpdater } from "preact/hooks/src";
 import { AppStateUpdater, TableauxCalculusType } from "../types/app";
-import { Layout } from "../types/layout";
+import { LayoutItem } from "../types/layout";
 import {
     FOTableauxState,
     instanceOfFOTabState,
@@ -9,9 +10,10 @@ import {
     TableauxTreeLayoutNode,
     VarAssign,
 } from "../types/tableaux";
-import { Link, Tree } from "../types/tree";
+import { Tree, TreeLayout } from "../types/tree";
+import { DragTransform } from "../types/ui";
 import { sendMove } from "./api";
-import { tree, treeLayout } from "./layout/tree";
+import { filterTree, tree, treeFind, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
 
 /**
@@ -78,7 +80,7 @@ export const sendClose = (
             stateChanger,
             onError,
         );
-        if (callback !== undefined){
+        if (callback !== undefined) {
             callback();
         }
     }
@@ -205,10 +207,18 @@ export const sendLemma = (
 
 export const tableauxTreeLayout = (
     nodes: TableauxNode[],
-): Layout<TableauxTreeLayoutNode> & { links: Link[] } => {
+): TreeLayout<TableauxTreeLayoutNode> => {
     return treeLayout(nodes, tabNodeToTree);
 };
 
+/**
+ * Converts a list of TableauxNodes to a tree
+ * @param {Array<TableauxNode>} nodes - The list of nodes
+ * @param {TableauxNode} n - The current node
+ * @param {number} i - Current index
+ * @param {number} y - Current y position
+ * @returns {Tree<TableauxTreeLayoutNode>} - The resulting tree
+ */
 const tabNodeToTree = (
     nodes: TableauxNode[],
     n: TableauxNode = nodes[0],
@@ -224,4 +234,73 @@ const tabNodeToTree = (
         { ...n, id: i },
         n.children.map((c) => tabNodeToTree(nodes, nodes[c], c, y + 72)),
     );
+};
+
+/**
+ * Finds a specific node in the tree
+ * @param {Tree<TableauxTreeLayoutNode>} t - The tree to search
+ * @param {number} id - The is to find
+ * @returns {TableauxTreeLayoutNode} - The node
+ */
+export const getNode = (t: Tree<TableauxTreeLayoutNode>, id: number) =>
+    treeFind(t, (s) => s.data.id === id)!;
+
+/**
+ * Gets all closed leaves
+ * @param {Tree<TableauxTreeLayoutNode>} t - The tree
+ * @returns {Array<LayoutItem<TableauxTreeLayoutNode>>} - All closed leaves
+ */
+export const getClosedLeaves = (
+    t: Tree<TableauxTreeLayoutNode>,
+): Array<LayoutItem<TableauxTreeLayoutNode>> =>
+    filterTree(t, (c) => c.data.closeRef !== null).map((c) => ({
+        x: c.x,
+        y: c.y,
+        data: c.data,
+    }));
+
+/**
+ * Gives a function that sets a specific drag
+ * @param {StateUpdater<Record<number, DragTransform>>} setDragTransform - The update function
+ * @returns {Function} - Drag handler
+ */
+export const updateDragTransform = (
+    setDragTransform: StateUpdater<Record<number, DragTransform>>,
+) => (id: number, dt: DragTransform) => {
+    setDragTransform((prev) => ({
+        ...prev,
+        [id]: dt,
+    }));
+};
+
+/**
+ * Computes the absolute dt of a node
+ * @param {Tree<TableauxTreeLayoutNode>} t - Tree
+ * @param {number} id - The id to look for
+ * @param {Record<number, DragTransform>} dts - All dts
+ * @param {DragTransform} dt - Current dt
+ * @returns {DragTransform} - Absolute dt
+ */
+export const getAbsoluteDragTransform = (
+    t: Tree<TableauxTreeLayoutNode>,
+    id: number,
+    dts: Record<number, DragTransform>,
+    dt: DragTransform = dts[t.data.id] ?? { x: 0, y: 0 },
+): DragTransform | undefined => {
+    if (t.data.id === id) {
+        return dt;
+    }
+
+    for (const c of t.children) {
+        const cdt = dts[c.data.id] ?? { x: 0, y: 0 };
+        const res = getAbsoluteDragTransform(c, id, dts, {
+            x: dt.x + cdt.x,
+            y: dt.y + cdt.y,
+        });
+        if (res !== undefined) {
+            return res;
+        }
+    }
+
+    return;
 };

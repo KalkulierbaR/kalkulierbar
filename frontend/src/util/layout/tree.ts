@@ -1,5 +1,5 @@
-import { Layout, LayoutItem } from "../../types/layout";
-import { LeftSiblingList, Link, Tree } from "../../types/tree";
+import { LayoutItem } from "../../types/layout";
+import { LeftSiblingList, Link, Tree, TreeLayout } from "../../types/tree";
 import { maxBy } from "../max-by";
 
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
@@ -30,24 +30,79 @@ export const tree = <T>(
 export const treeLayout = <N, T extends { id: number }>(
     nodes: N[],
     nodesToTree: (nodes: N[]) => Tree<T>,
-): Layout<T> & { links: Link[] } => {
+): TreeLayout<T> => {
     const root = nodesToTree(nodes);
     layout(root);
 
-    const data = treeToLayoutItem(root);
     const width = treeWidth(root);
     const links = getLinks(root);
-    return { width, height: root.treeHeight, data, links };
+    return { width, height: root.treeHeight, root, links };
 };
 
-const preOrderTraverseTree = <T>(t: Tree<T>, f: (t: Tree<T>) => void) => {
+export const preOrderTraverseTree = <T>(
+    t: Tree<T>,
+    f: (t: Tree<T>) => void,
+) => {
     f(t);
     for (const c of t.children) {
         preOrderTraverseTree(c, f);
     }
 };
 
-const treeToLayoutItem = <T extends { id: number }>(
+/**
+ * Finds a specific node in the tree
+ * @param {Tree<T>} t - The tree to search in
+ * @param {Predicate} p - The predicate to search by
+ * @returns {T} - The data of the first node to fulfill `p`
+ */
+export const treeFind = <T>(t: Tree<T>, p: (t: Tree<T>) => boolean) =>
+    findSubTree(t, p, (c) => c.data);
+
+/**
+ * Finds a specific subtree and then runs a conversion function on the result
+ * @param {Tree<T>} t - The tree to search in
+ * @param {Predicate} p - The predicate to search by
+ * @param {Function} c - The conversion function
+ * @returns {V} - The result of the conversion
+ */
+export const findSubTree = <T, V>(
+    t: Tree<T>,
+    p: (t: Tree<T>) => boolean,
+    c: (t: Tree<T>) => V,
+): V | undefined => {
+    if (p(t)) {
+        return c(t);
+    }
+
+    for (const child of t.children) {
+        const res = findSubTree(child, p, c);
+        if (res !== undefined) {
+            return res;
+        }
+    }
+
+    return;
+};
+
+/**
+ * Filters the tree and returns the sub trees as any array
+ * @param {Tree<T>} t - The tree to filter
+ * @param {Predicate} p - The predicate to filter by
+ * @returns {Array<Tree<T>>} - The result array
+ */
+export const filterTree = <T>(t: Tree<T>, p: (tree: Tree<T>) => boolean) => {
+    const res: Array<Tree<T>> = [];
+
+    preOrderTraverseTree(t, (c) => {
+        if (p(c)) {
+            res.push(c);
+        }
+    });
+
+    return res;
+};
+
+export const treeToLayoutItem = <T extends { id: number }>(
     t: Tree<T>,
 ): Array<LayoutItem<T>> => {
     const items: Array<LayoutItem<T>> = [];
@@ -59,10 +114,12 @@ const treeToLayoutItem = <T extends { id: number }>(
     return items;
 };
 
-const getLinks = <T>(t: Tree<T>): Link[] => {
+const getLinks = <T extends { id: number }>(t: Tree<T>): Link[] => {
     const links: Link[] = t.children.map((c) => ({
         source: [t.x, t.y],
         target: [c.x, c.y],
+        srcId: t.data.id,
+        targetId: c.data.id,
     }));
 
     return links.concat(...t.children.map((c) => getLinks(c)));
