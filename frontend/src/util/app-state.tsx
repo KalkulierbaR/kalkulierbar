@@ -31,6 +31,7 @@ const INIT_APP_STATE: AppState = {
         : `http://${location.hostname}:7000`,
     theme: Theme.auto,
     tutorialMode: TutorialMode.HighlightAll,
+    isAdmin: true,
 };
 
 const reducer: Reducer<AppState, AppStateAction> = (

@@ -51,6 +51,14 @@ export const ResolutionCalculus: CalculusType[] = [
     Calculus.foResolution,
 ];
 
+export interface Example {
+    name: string;
+    description: string;
+    calculus: CalculusType;
+    formula: Formulas;
+    params: Params;
+}
+
 export interface Move {
     "prop-tableaux": TableauxMove;
     "prop-resolution": PropResolutionMove;
@@ -87,6 +95,10 @@ export interface AppState {
     "fo-resolution"?: FOResolutionState;
     dpll?: DPLLState;
     tutorialMode: TutorialMode;
+    isAdmin: boolean;
+    adminKey: string;
+    disabledCalculi?: Calculus[];
+    examples?: Example[];
 }
 
 export interface DerivedAppState extends AppState {

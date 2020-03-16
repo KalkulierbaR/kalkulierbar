@@ -101,3 +101,32 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
         return state;
     }
 };
+
+export const getConfig = async (
+    server: string,
+    state: AppState[C],
+    onError: (msg: string) => void,
+): Promise<AppState> => {
+    const url = `${server}/cobfig`;
+    try {
+        // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
+        const res = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "GET",
+
+        });
+        if (res.status !== 200) {
+            onError(await res.text());
+            return state;
+        }  {
+            const parsed = await res.json();
+            stateChanger(calculus, parsed);
+            return parsed;
+        }
+    } catch (e) {
+        onError((e as Error).message);
+        return state;
+    }
+};
