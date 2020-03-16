@@ -10,7 +10,7 @@ import {
     TutorialMode,
 } from "../../../types/app";
 import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
-import { checkClose } from "../../../util/api";
+import {checkClose} from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
 import ExploreIcon from "../../icons/explore";
@@ -118,9 +118,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                     );
                                 }}
                             />
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                         <FAB
                             icon={<CheckCircleIcon />}
                             label="Check"
@@ -177,9 +175,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                     );
                                 }}
                             />
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                     </Fragment>
                 ) : (
                     <Fragment>
@@ -214,12 +210,11 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 showIconAtEnd={true}
                                 onClick={lemmaCallback}
                             />
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                     </Fragment>
                 )}
             </ControlFAB>
+
             {!smallScreen &&
                 couldShowCheckCloseHint &&
                 (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (

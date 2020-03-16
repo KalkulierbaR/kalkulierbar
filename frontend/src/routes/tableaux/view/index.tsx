@@ -1,6 +1,7 @@
 import { Fragment, h } from "preact";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import Dialog from "../../../components/dialog";
+import HelpMenu from "../../../components/help-menu";
 import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxFAB from "../../../components/tableaux/fab";
@@ -329,9 +330,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog>
-            ) : (
-                undefined
-            )}
+            ) : undefined}
 
             <TableauxFAB
                 calculus={calculus}
@@ -343,6 +342,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 resetDragTransform={resetDragTransform}
                 resetDragTransforms={resetDragTransforms}
             />
+
+            <HelpMenu />
         </Fragment>
     );
 };

@@ -1,0 +1,11 @@
+.help-menu {
+    position: fixed;
+    top: 86px;
+    right: 16px;
+}
+
+@media (min-width: 700px) {
+    .help-menu {
+        right: 32px;
+    }
+}

@@ -160,13 +160,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                     setSelectedClauses(undefined);
                                 }}
                             />
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                     </Fragment>
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 {state!.hiddenClauses.clauses.length > 0 ? (
                     <FAB
                         mini={true}
@@ -179,9 +175,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             setSelectedClauses(undefined);
                         }}
                     />
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 <FAB
                     mini={true}
                     extended={true}
