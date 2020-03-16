@@ -127,6 +127,12 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         ctx.result(StateKeeper.getConfig())
     }
 
+    app.post("/admin/checkCredentials") { ctx ->
+        val mac = ctx.formParam("mac")
+                    ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
+        ctx.result(StateKeeper.checkCredentials(mac))
+    }
+
     app.post("/admin/setCalculusState") { ctx ->
         val calculus = ctx.formParam("calculus")
                     ?: throw ApiMisuseException("POST parameter 'calculus' with calculus name must be present")
