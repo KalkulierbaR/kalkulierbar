@@ -491,6 +491,12 @@ const ROUTES: Route[] = [
             "-416.9861703960861 -331.4861703960861 833.9723407921722 662.9723407921722",
     },
     {
+        href: Calculus.ncTableaux,
+        name: "NC Tableaux",
+        viewBox: "0 0 50 50",
+        image: <text>No preview</text>,
+    },
+    {
         href: Calculus.dpll,
         name: "DPLL",
         viewBox: "0 -16 385.5 504",
