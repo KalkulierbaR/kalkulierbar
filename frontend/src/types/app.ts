@@ -51,12 +51,12 @@ export const ResolutionCalculus: CalculusType[] = [
     Calculus.foResolution,
 ];
 
-export interface Example {
+export interface Example <C extends CalculusType = CalculusType> {
     name: string;
     description: string;
     calculus: CalculusType;
-    formula: Formulas;
-    params: Params;
+    formula: string;
+    params: Params[C];
 }
 
 export interface Move {
@@ -97,8 +97,7 @@ export interface AppState {
     tutorialMode: TutorialMode;
     isAdmin: boolean;
     adminKey: string;
-    disabledCalculi?: Calculus[];
-    examples?: Example[];
+    config: Config;
 }
 
 export interface DerivedAppState extends AppState {
@@ -185,6 +184,11 @@ export type AppStateUpdater = <C extends CalculusType = CalculusType>(
     id: C,
     newState: AppState[C],
 ) => void;
+
+export interface Config {
+    disabled: CalculusType[];
+    examples: Example[];
+}
 
 export enum NotificationType {
     Error,

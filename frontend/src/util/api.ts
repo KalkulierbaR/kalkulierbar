@@ -2,7 +2,7 @@ import {
     AppState,
     AppStateUpdater,
     CalculusType,
-    CheckCloseResponse,
+    CheckCloseResponse, Config,
     Move,
 } from "../types/app";
 
@@ -102,11 +102,11 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
     }
 };
 
-export const getConfig = async (
+export const getConfig = async(
     server: string,
-    state: AppState[C],
+    changeConfig: (cfg: Config) => void,
     onError: (msg: string) => void,
-): Promise<AppState> => {
+) => {
     const url = `${server}/cobfig`;
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
@@ -119,14 +119,11 @@ export const getConfig = async (
         });
         if (res.status !== 200) {
             onError(await res.text());
-            return state;
         }  {
             const parsed = await res.json();
-            stateChanger(calculus, parsed);
-            return parsed;
+            changeConfig(parsed);
         }
     } catch (e) {
         onError((e as Error).message);
-        return state;
     }
 };
