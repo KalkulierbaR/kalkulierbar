@@ -59,6 +59,19 @@ class StateKeeper {
             return """{"disabled": [$calculiJson], "examples": [$examplesJson]}"""
         }
 
+        /**
+         * Allows a frontend implementation to check admin credentials
+         * @param mac Message Authentication Code for this request
+         *            sha3-256("kbcc|$date|$state.key"), hex-encoded
+         * @return Constant string "true" if the credentials are valid
+         */
+        fun checkCredentials(mac: String): String {
+            val fingerprint = "kbcc"
+            if (!verifyMAC(fingerprint, mac))
+                throw AuthenticationException("Invalid MAC")
+
+            return "true"
+        }
 
         /**
          * Enables or disables a calculus
