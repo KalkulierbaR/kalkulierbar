@@ -7,7 +7,7 @@ import {
     Example,
     Move,
 } from "../types/app";
-import SHA3 from "sha3";
+import Keccak from "sha3";
 import { useAppState } from "./app-state";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
@@ -135,31 +135,35 @@ export const getConfig = async (
 //ToDo: JSDoc checkCredentials
 export const checkCredentials = async (
     server: string,
+    adminKey: string,
+    setAdmin: (isAdmin: boolean) => void,
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/checkCredentials`;
-    const newDate = new Date();
-    const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
-    const mac = new SHA3(256);
-    console.log(date);
-    mac.update(`kbcc|${date}|${useAppState().adminKey}`);
+    const mac = new Keccak(256);
+    console.log(JSON.stringify(adminKey));
+    mac.update(`kbcc|${getCurrentDate()}|${adminKey}`);
     try {
-        // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
+        console.log(mac.digest("hex"));
         const res = await fetch(url, {
             headers: {
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `mac=${encodeURIComponent(
-                JSON.stringify(mac.digest("hex")),
+            body: `mac=${
+                JSON.stringify(mac.digest("hex"),
             )}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
-            //Todo: is Admin auf false setzen.
+        }else {
+            const parsed = await res.json();
+            console.log(parsed);
+            if (parsed != true)
+                setAdmin(false);
+            else
+                setAdmin(parsed);
         }
-
-        //Todo: is Admin auf true setzen.
     } catch (e) {
         onError((e as Error).message);
     }
@@ -175,7 +179,7 @@ export const setCalculusState = async (
     const url = `${server}/admin/setCalculusState`;
     const newDate = new Date();
     const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
-    const mac = new SHA3(256);
+    const mac = new Keccak(256);
     console.log(date);
     mac.update(`kbsc|${calculus}|${value}|${date}|${useAppState().adminKey}`);
     try {
@@ -208,7 +212,7 @@ export const addExample = async (
     const url = `${server}/admin/addExample`;
     const newDate = new Date();
     const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
-    const mac = new SHA3(256);
+    const mac = new Keccak(256);
     console.log(date);
     mac.update(`kbae|${example}|${date}|${useAppState().adminKey}`);
     try {
@@ -240,7 +244,7 @@ export const delExample = async (
     const url = `${server}/admin/addExample`;
     const newDate = new Date();
     const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
-    const mac = new SHA3(256);
+    const mac = new Keccak(256);
     console.log(date);
     mac.update(`kbde|${exampleID}|${date}|${useAppState().adminKey}`);
     try {
@@ -263,3 +267,12 @@ export const delExample = async (
         onError((e as Error).message);
     }
 };
+
+const getCurrentDate = () => {
+    let newDate = new Date()
+    let date = newDate.getUTCDate();
+    let month = newDate.getUTCMonth() + 1;
+    let year = newDate.getUTCFullYear();
+
+    return `${year}${month<10?`0${month}`:`${month}`}${date}`
+}

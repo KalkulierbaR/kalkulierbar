@@ -32,7 +32,7 @@ const INIT_APP_STATE: AppState = {
     theme: Theme.auto,
     tutorialMode: TutorialMode.HighlightAll,
     isAdmin: true, //TODO: false
-    adminKey: "",
+    adminKey: "test",
     config: {
         disabled: ["prop-tableaux"],
         examples: [],
@@ -75,6 +75,10 @@ const reducer: Reducer<AppState, AppStateAction> = (
             return { ...state, tutorialMode: action.value };
         case AppStateActionType.SET_CONFIG:
             return { ...state, config: action.value };
+        case AppStateActionType.SET_ADMIN_KEY:
+            return { ...state, adminKey: action.value };
+        case AppStateActionType.SET_ADMIN:
+            return { ...state, isAdmin: action.value };
     }
 };
 

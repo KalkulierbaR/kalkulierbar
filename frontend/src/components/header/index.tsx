@@ -14,6 +14,7 @@ import ThemeDark from "../icons/theme-dark";
 import ThemeLight from "../icons/theme-light";
 import TextInput from "../input/text";
 import * as style from "./style.scss";
+import { checkCredentials } from "../../util/api";
 
 interface HeaderProps {
     currentUrl: string;
@@ -265,6 +266,7 @@ const Settings: preact.FunctionalComponent = () => {
         <div class={style.settings}>
             <ThemeSwitcher />
             <ServerInput />
+            <AdminKeyInput />
         </div>
     );
 };
@@ -322,6 +324,70 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                     <FAB
                         icon={<SaveIcon />}
                         label="Save Server URL"
+                        mini={true}
+                        onClick={onSubmit}
+                    />
+                }
+            />
+        </div>
+    );
+};
+
+
+const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
+   showLabel = true,
+   close,
+}) => {
+    const { dispatch, adminKey } = useAppState();
+    const [newAdminKey, setAdminKey] = useState(adminKey);
+
+    const dispatchAdminKey = useCallback(() => {
+        dispatch({
+            type: AppStateActionType.SET_ADMIN_KEY,
+            value: newAdminKey,
+        });
+    }, [newAdminKey]);
+
+    const onSubmit = useCallback(() => {
+        dispatchAdminKey();
+        checkCredentials(
+            useAppState().server,
+            useAppState().adminKey,
+            (isAdmin) =>
+                dispatch({type: AppStateActionType.SET_ADMIN, value: isAdmin}),
+            useAppState().onError);
+        if (document.activeElement) {
+            (document.activeElement as HTMLElement).blur();
+        }
+        if (close) {
+            close();
+        }
+    }, [dispatchAdminKey]);
+
+    const handleEnter = useCallback(
+        (e: KeyboardEvent) => {
+            if (e.keyCode === 13) {
+                onSubmit();
+            }
+        },
+        [dispatchAdminKey],
+    );
+
+    return (
+        <div class={style.serverInputWrapper}>
+            <div class={style.overlay} />
+            <TextInput
+                class={style.serverInput}
+                label={showLabel ? "Admin Key" : undefined}
+                onChange={setAdminKey}
+                value={adminKey}
+                type="url"
+                autoComplete={true}
+                onKeyDown={handleEnter}
+                submitButton={
+                    <FAB
+                        icon={useAppState().isAdmin ? <SaveIcon /> : <SaveIcon />}
+                        label="Save Admin Key"
                         mini={true}
                         onClick={onSubmit}
                     />

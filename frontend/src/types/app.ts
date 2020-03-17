@@ -126,6 +126,8 @@ export enum AppStateActionType {
     UPDATE_SAVED_FORMULA,
     SET_TUTORIAL_MODE,
     SET_CONFIG,
+    SET_ADMIN_KEY,
+    SET_ADMIN,
 }
 
 export interface UpdateScreenSize extends AppStateActionBase {
@@ -176,6 +178,15 @@ export interface SetConfig extends AppStateActionBase {
     value: Config;
 }
 
+export interface SetAdminKey extends AppStateActionBase{
+    type: AppStateActionType.SET_ADMIN_KEY;
+    value: string;
+}
+export interface SetAdmin extends AppStateActionBase{
+    type: AppStateActionType.SET_ADMIN;
+    value: boolean;
+}
+
 export type AppStateAction =
     | UpdateScreenSize
     | AddNotification
@@ -185,7 +196,9 @@ export type AppStateAction =
     | SetServer
     | UpdateSavedFormula
     | SetTutorialMode
-    | SetConfig;
+    | SetConfig
+    | SetAdminKey
+    | SetAdmin;
 
 export type AppStateUpdater = <C extends CalculusType = CalculusType>(
     id: C,

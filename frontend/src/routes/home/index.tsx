@@ -911,7 +911,7 @@ interface CalculusItemProps {
 const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
     route: { href, name, image, viewBox },
 }) => {
-    return ((
+    return (
         //Todo: äusersten div container anderst lösen
         <div>
             <a href={`/${href}`}>
@@ -922,16 +922,8 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
                     <h3 class={style.calculusItemTitle}>{name}</h3>
                 </div>
             </a>
-            {useAppState().isAdmin ? <Switch onChange={/*SwitchCalculus(!useAppState().config.disabled.includes(href), href)*/ alert(href)} initialState={!useAppState().config.disabled.includes(href)}/> : undefined}
         </div>
-    ));
-};
-
-const SwitchCalculus = (
-    state: boolean,
-    calculus: CalculusType,
-) =>{
-    setCalculusState(useAppState().server, calculus, !state, useAppState().onError)
+    );
 };
 
 const Home: preact.FunctionalComponent = () => {
