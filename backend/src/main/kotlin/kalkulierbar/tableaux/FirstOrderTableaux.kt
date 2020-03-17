@@ -12,13 +12,14 @@ import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
-
-val serializer = Json(context = FoTermModule)
+import kotlinx.serialization.modules.plus
 
 @Suppress("TooManyFunctions")
 class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxState, TableauxMove, FoTableauxParam>() {
 
     override val identifier = "fo-tableaux"
+
+    private val serializer = Json(context = FoTermModule + tableauxMoveModule)
 
     override fun parseFormulaToState(formula: String, params: FoTableauxParam?): FoTableauxState {
         val clauses = FirstOrderCNF.transform(FirstOrderParser.parse(formula))
@@ -26,7 +27,14 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         if (params == null)
             return FoTableauxState(clauses, formula)
 
-        return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking, params.manualVarAssign)
+        return FoTableauxState(
+                clauses,
+                formula,
+                params.type,
+                params.regular,
+                params.backtracking,
+                params.manualVarAssign
+        )
     }
 
     override fun applyMoveOnState(state: FoTableauxState, move: TableauxMove): FoTableauxState {
@@ -284,7 +292,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     @kotlinx.serialization.UnstableDefault
     override fun jsonToMove(json: String): TableauxMove {
         try {
-            return Json.parse(TableauxMove.serializer(), json)
+            return serializer.parse(TableauxMove.serializer(), json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON move: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -300,7 +308,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     @kotlinx.serialization.UnstableDefault
     override fun jsonToParam(json: String): FoTableauxParam {
         try {
-            return Json.parse(FoTableauxParam.serializer(), json)
+            return serializer.parse(FoTableauxParam.serializer(), json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON params"
             throw JsonParseException(msg + (e.message ?: "Unknown error"))

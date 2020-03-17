@@ -8,7 +8,7 @@ import kotlinx.serialization.modules.SerializersModule
 
 // Context object for move serialization
 // Tells kotlinx.serialize about child types of DPLLMove
-val dpllMoveModule = SerializersModule {
+val tableauxMoveModule = SerializersModule {
     polymorphic(TableauxMove::class) {
         MoveExpand::class with MoveExpand.serializer()
         MoveAutoClose::class with MoveAutoClose.serializer()
@@ -22,7 +22,7 @@ val dpllMoveModule = SerializersModule {
  * Class representing a rule application in a Tableaux
  */
 @Serializable
-abstract class TableauxMove// (val type: MoveType, val id1: Int, val id2: Int)
+abstract class TableauxMove
 
 @Serializable
 @SerialName("tableaux-expand")

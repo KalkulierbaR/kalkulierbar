@@ -15,6 +15,8 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
     override val identifier = "prop-tableaux"
 
+    private val serializer = Json(context = tableauxMoveModule)
+
     /**
      * Parses a provided clause set as text into an initial internal state
      * Resulting state object will have a root node labeled 'true' in its tree
@@ -45,7 +47,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
             is MoveAutoClose -> applyMoveCloseBranch(state, move.id1, move.id2)
             is MoveExpand -> applyMoveExpandLeaf(state, move.id1, move.id2)
             is MoveLemma -> applyMoveUseLemma(state, move.id1, move.id2)
-            is MoveLemma-> applyMoveUndo(state)
+            is MoveUndo -> applyMoveUndo(state)
             else -> throw IllegalMove("Unknown move")
         }
     }
@@ -233,7 +235,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     @kotlinx.serialization.UnstableDefault
     override fun jsonToState(json: String): TableauxState {
         try {
-            val parsed = Json.parse(TableauxState.serializer(), json)
+            val parsed = serializer.parse(TableauxState.serializer(), json)
 
             // Ensure valid, unmodified state object
             if (!parsed.verifySeal())
@@ -254,7 +256,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     @kotlinx.serialization.UnstableDefault
     override fun stateToJson(state: TableauxState): String {
         state.computeSeal()
-        return Json.stringify(TableauxState.serializer(), state)
+        return serializer.stringify(TableauxState.serializer(), state)
     }
 
     /*
@@ -266,7 +268,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     @kotlinx.serialization.UnstableDefault
     override fun jsonToMove(json: String): TableauxMove {
         try {
-            return Json.parse(TableauxMove.serializer(), json)
+            return serializer.parse(TableauxMove.serializer(), json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON move: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -282,7 +284,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     @kotlinx.serialization.UnstableDefault
     override fun jsonToParam(json: String): TableauxParam {
         try {
-            return Json.parse(TableauxParam.serializer(), json)
+            return serializer.parse(TableauxParam.serializer(), json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON params: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
