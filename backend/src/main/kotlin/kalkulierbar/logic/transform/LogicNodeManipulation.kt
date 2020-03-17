@@ -27,9 +27,7 @@ class LogicNodeVariableInstantiator(val replacementMap: Map<String, FirstOrderTe
 
     override fun visit(node: Relation): LogicNode {
         val variableInstantiator = VariableInstantiator(replacementMap)
-        node.arguments.forEach {
-            it.accept(variableInstantiator)
-        }
+        node.arguments = node.arguments.map{ it.accept(variableInstantiator) }
 
         return node
     }
@@ -57,7 +55,7 @@ class SelectiveSuffixAppender(val replacementMap: Map<QuantifiedVariable, String
         }
     }
 
-    private val varRenamer = VariableRenamer(replacementMap)
+    private val varRenamer = VariableRenamer(replacementMap, strict = false)
 
     /**
      * Recursively rename quantified variables
