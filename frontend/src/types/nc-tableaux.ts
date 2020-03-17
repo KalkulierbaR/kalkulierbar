@@ -38,6 +38,7 @@ export interface LogicImpl extends BinaryLogicNode {
 }
 
 export interface LogicRelation {
+    type: "relation";
     spelling: string;
     arguments: FOTerm[];
 }
