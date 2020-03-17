@@ -166,9 +166,9 @@ export const checkCredentials = async (
 };
 
 //ToDo: JSDoc setCalculusState
-export const setCalculusState = async <C extends CalculusType = CalculusType>(
+export const setCalculusState = async (
     server: string,
-    calculus: C,
+    calculus: CalculusType,
     value: boolean,
     onError: (msg: string) => void,
 ) => {
