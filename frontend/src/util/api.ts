@@ -150,9 +150,7 @@ export const checkCredentials = async (
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `mac=${
-                JSON.stringify(mac.digest("hex"),
-            )}`,
+            body: `mac=${(mac.digest("hex"))}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
