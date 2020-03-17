@@ -33,7 +33,7 @@ class NcTableauxState(
             return true
         if (child.parent == 0 || child.parent == null)
             return false
-        return nodeIsParentOf(parentID, child.parent!!)
+        return nodeIsParentOf(parentID, child.parent)
     }
 
     override fun getHash(): String {
