@@ -8,6 +8,7 @@ import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
 
 @Serializable
 class NcTableauxState(
@@ -94,7 +95,7 @@ class NcTableauxNode(
 }
 
 @Serializable
-open class NcTableauxMove
+abstract class NcTableauxMove
 
 @Serializable
 @SerialName("alpha")
@@ -151,4 +152,17 @@ class CloseMove(
 @SerialName("undo")
 class UndoMove : NcTableauxMove() {
     override fun toString() = "(undo)"
+}
+
+// Context object for move serialization
+// Tells kotlinx.serialize about child types of NcTableauxMove
+val NcMoveModule = SerializersModule {
+    polymorphic(NcTableauxMove::class) {
+        AlphaMove::class with AlphaMove.serializer()
+        BetaMove::class with BetaMove.serializer()
+        GammaMove::class with GammaMove.serializer()
+        DeltaMove::class with DeltaMove.serializer()
+        CloseMove::class with CloseMove.serializer()
+        UndoMove::class with UndoMove.serializer()
+    }
 }

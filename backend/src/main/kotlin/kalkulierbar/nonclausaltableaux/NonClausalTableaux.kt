@@ -19,7 +19,7 @@ import kotlinx.serialization.modules.plus
 
 class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>() {
 
-    private val serializer = Json(context = FoTermModule + LogicModule)
+    private val serializer = Json(context = FoTermModule + LogicModule + NcMoveModule)
 
     override val identifier = "nc-tableaux"
 
