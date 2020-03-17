@@ -3,6 +3,7 @@ package kalkulierbar.nonclausaltableaux
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.SerialName
@@ -15,8 +16,10 @@ class NcTableauxState(
 ) : ProtectedState() {
     val nodes = mutableListOf<NcTableauxNode>(NcTableauxNode(null, formula))
     val moveHistory = mutableListOf<NcTableauxMove>()
+    val identifiers = IdentifierCollector.collect(formula).toMutableSet()
     var usedBacktracking = false
     var gammaSuffixCounter = 0
+    var skolemCounter = 0
 
     override var seal = ""
 
@@ -56,7 +59,9 @@ class NcTableauxState(
     override fun getHash(): String {
         val nodeH = nodes.map { it.getHash() }.joinToString(",")
         val historyH = moveHistory.joinToString(",")
-        return "nctableaux|$backtracking|$usedBacktracking|$gammaSuffixCounter|$nodeH|$historyH"
+        val identifiersH = identifiers.joinToString(",")
+        val variousH = "$backtracking|$usedBacktracking|$gammaSuffixCounter|$skolemCounter|$formula"
+        return "nctableaux|$variousH|$identifiersH|$nodeH|$historyH"
     }
 }
 

@@ -6,7 +6,7 @@ import kalkulierbar.logic.ExistentialQuantifier
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.UniversalQuantifier
-import kalkulierbar.logic.transform.DeltaSkolemization
+import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.SelectiveSuffixAppender
 
 /**
@@ -104,6 +104,12 @@ fun applyGamma(state: NcTableauxState, leafID: Int): NcTableauxState {
     val suffix = "_${state.gammaSuffixCounter}"
     val newFormula = SelectiveSuffixAppender.transform(formula.child, vars, suffix)
 
+    // Add new identifiers to the set
+    // This is not strictly speaking necessary as skolem term names can never be in
+    // conflict with suffixed variable names, but we'll do it still to ensure
+    // that state.identifiers contains _all_ identifiers in the tableaux
+    state.identifiers.addAll(IdentifierCollector.collect(newFormula))
+
     // Add new node to tree
     val newNode = NcTableauxNode(leafID, newFormula)
     nodes.add(newNode)
@@ -135,7 +141,10 @@ fun applyDelta(state: NcTableauxState, leafID: Int): NcTableauxState {
     if (formula !is ExistentialQuantifier)
         throw IllegalMove("The outermost logic operator is not an existential quantifier")
 
-    val newFormula = DeltaSkolemization.transform(formula)
+    state.skolemCounter++
+    // Apply skolemization to the top-level existential quantifier
+    // This adds the newly created skolem term identifier to the state.identifiers set
+    val newFormula = DeltaSkolemization.transform(formula, state.identifiers, state.skolemCounter)
 
     // Add new node to tree
     val newNode = NcTableauxNode(leafID, newFormula)

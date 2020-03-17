@@ -1,4 +1,4 @@
-package kalkulierbar.logic.transform
+package kalkulierbar.nonclausaltableaux
 
 import kalkulierbar.logic.Constant
 import kalkulierbar.logic.ExistentialQuantifier
@@ -7,36 +7,36 @@ import kalkulierbar.logic.Function
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Relation
+import kalkulierbar.logic.transform.DoNothingVisitor
+import kalkulierbar.logic.transform.FirstOrderTermVisitor
+import kalkulierbar.logic.transform.FreeVariableCollector
 
 /**
  * Class to apply skolemization for Delta Move of non-clausal-tableaux
  * @param replacementMap maps free-variables to skolem-term
  */
-class DeltaSkolemization(val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>) : DoNothingVisitor() {
+class DeltaSkolemization(val toReplace: List<QuantifiedVariable>, val term: FirstOrderTerm) : DoNothingVisitor() {
 
     companion object Companion {
         /**
-         * Remove existential quantor at top from a formula and replace bound variables to quantor with skolem term
-         * @param formula Formula with existential-quantor at top to transform
-         * @return Formula containing skolem replacements of existential quantor
+         * Remove existential quantifier at top from a formula and replace bound
+         * variables to quantifier with skolem term
+         * @param formula Formula with existential-quantifier at top to transform
+         * @return Formula containing skolem replacements of existential quantifier
          */
-        fun transform(formula: ExistentialQuantifier): LogicNode {
-            // Collect all identifiers already in use and add to blacklist
-            val blacklist = IdentifierCollector.collect(formula)
+        fun transform(
+            formula: ExistentialQuantifier,
+            blacklist: MutableSet<String>,
+            skolemCounter: Int
+        ): LogicNode {
             // Collect free variables in formula
             val freeVariables = FreeVariableCollector.collect(formula)
             // get skolem-term with free variables paying attention to blacklist
-            val term = getSkolemTerm(blacklist, freeVariables)
-            // Create replacement map
-            var replacementMap = mutableMapOf<QuantifiedVariable, FirstOrderTerm>()
-            formula.boundVariables.forEach {
-                replacementMap[it] = term
-            }
-            val instance = DeltaSkolemization(replacementMap)
+            val term = getSkolemTerm(skolemCounter, blacklist, freeVariables)
 
-            // Apply instantiation of bound variables with skolem term
-            // + removes existential quantor
-            return formula.child.accept(instance)
+            // Replace variables bound by top-level quantifier with skolem term
+            val instance = DeltaSkolemization(formula.boundVariables, term)
+            return formula.child.accept(instance) // Return formula without top-level quantifier
         }
 
         /**
@@ -45,8 +45,12 @@ class DeltaSkolemization(val replacementMap: Map<QuantifiedVariable, FirstOrderT
          * @param freeVariables set of free variables to build skolem term with
          * @return Skolem term
          */
-        private fun getSkolemTerm(nameBlacklist: Set<String>, freeVariables: Set<QuantifiedVariable>): FirstOrderTerm {
-            var skolemCounter = 1
+        private fun getSkolemTerm(
+            skolemBaseCount: Int,
+            nameBlacklist: MutableSet<String>,
+            freeVariables: Set<QuantifiedVariable>
+        ): FirstOrderTerm {
+            var skolemCounter = skolemBaseCount
             var skolemName = "sk$skolemCounter"
 
             // Ensure freshness
@@ -54,6 +58,9 @@ class DeltaSkolemization(val replacementMap: Map<QuantifiedVariable, FirstOrderT
                 skolemCounter += 1
                 skolemName = "sk$skolemCounter"
             }
+
+            // add new identifier to identifier set
+            nameBlacklist.add(skolemName)
 
             // Constant iff no free vars
             if (freeVariables.size == 0)
@@ -75,7 +82,7 @@ class DeltaSkolemization(val replacementMap: Map<QuantifiedVariable, FirstOrderT
      * @return Relation with substituted variables
      */
     override fun visit(node: Relation): LogicNode {
-        val replacer = DeltaSkolemTermReplacer(replacementMap)
+        val replacer = DeltaSkolemTermReplacer(toReplace, term)
         node.arguments = node.arguments.map { it.accept(replacer) }
 
         return node
@@ -87,7 +94,8 @@ class DeltaSkolemization(val replacementMap: Map<QuantifiedVariable, FirstOrderT
  * @param replacementMap Map of variable instances to replace alongside their Skolem term
  */
 class DeltaSkolemTermReplacer(
-    val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>
+    val toReplace: List<QuantifiedVariable>,
+    val term: FirstOrderTerm
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     /**
@@ -96,9 +104,9 @@ class DeltaSkolemTermReplacer(
      * @return Skolem term of the variable if given, unchanged variable otherwise
      */
     override fun visit(node: QuantifiedVariable): FirstOrderTerm {
-        if (replacementMap[node] != null) {
+        if (toReplace.contains(node)) {
             // Clone the term to avoid object-sharing related weirdness
-            return replacementMap[node]!!.clone()
+            return term.clone()
         }
         return node
     }
