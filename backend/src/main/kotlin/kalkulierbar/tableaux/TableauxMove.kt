@@ -11,7 +11,7 @@ import kotlinx.serialization.modules.SerializersModule
 val dpllMoveModule = SerializersModule {
     polymorphic(TableauxMove::class) {
         MoveExpand::class with MoveExpand.serializer()
-        MoveClose::class with MoveClose.serializer()
+        MoveAutoClose::class with MoveAutoClose.serializer()
         MoveLemma::class with MoveLemma.serializer()
         MoveUndo::class with MoveUndo.serializer()
         MoveCloseAssign::class with MoveCloseAssign.serializer()
@@ -30,7 +30,7 @@ data class MoveExpand(val id1: Int, val id2: Int) : TableauxMove()
 
 @Serializable
 @SerialName("tableaux-close")
-data class MoveClose(val id1: Int, val id2: Int) : TableauxMove()
+data class MoveAutoClose(val id1: Int, val id2: Int) : TableauxMove()
 
 @Serializable
 @SerialName("tableaux-lemma")

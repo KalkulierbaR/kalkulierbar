@@ -32,7 +32,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     override fun applyMoveOnState(state: FoTableauxState, move: TableauxMove): FoTableauxState {
         // Pass moves to relevant subfunction
         return when (move) {
-            is MoveClose -> applyAutoCloseBranch(state, move.id1, move.id2)
+            is MoveAutoClose -> applyAutoCloseBranch(state, move.id1, move.id2)
             is MoveCloseAssign -> applyMoveCloseBranch(state, move.id1, move.id2, move.getVarAssignTerms())
             is MoveExpand -> applyMoveExpandLeaf(state, move.id1, move.id2)
             is MoveLemma -> applyMoveUseLemma(state, move.id1, move.id2)

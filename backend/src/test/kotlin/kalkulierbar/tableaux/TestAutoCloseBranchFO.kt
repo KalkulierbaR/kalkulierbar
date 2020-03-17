@@ -32,9 +32,9 @@ class TestAutoCloseBranchFO {
     fun state1() {
         var state = states[0]
         // {!R(a), R(b), !R(b)}, {!R(a), !R(a), !R(b)}
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 1))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, 2))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(2, 1))
+        state = instance.applyMoveOnState(state, MoveClose(6, 2))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 4, 2))
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 5, 2))
 

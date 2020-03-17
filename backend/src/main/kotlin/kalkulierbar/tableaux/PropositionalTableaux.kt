@@ -42,7 +42,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
         // Pass expand, close, undo moves to relevant subfunction
         return when (move) {
-            is MoveClose -> applyMoveCloseBranch(state, move.id1, move.id2)
+            is MoveAutoClose -> applyMoveCloseBranch(state, move.id1, move.id2)
             is MoveExpand -> applyMoveExpandLeaf(state, move.id1, move.id2)
             is MoveLemma -> applyMoveUseLemma(state, move.id1, move.id2)
             is MoveLemma-> applyMoveUndo(state)
@@ -70,7 +70,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
         // Add move to state history
         if (state.backtracking) {
-            state.moveHistory.add(MoveClose(leafID, closeNodeID))
+            state.moveHistory.add(MoveAutoClose(leafID, closeNodeID))
         }
 
         return state
@@ -159,7 +159,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
         // Pass undo move to relevant expand and close subfunction
         return when (top) {
-            is MoveClose -> undoClose(state, top)
+            is MoveAutoClose -> undoClose(state, top)
             is MoveExpand -> undoExpand(state, top)
             is MoveLemma -> undoLemma(state, top)
             else -> throw IllegalMove("Something went wrong. Move not implemented!")
@@ -172,7 +172,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      *  @param move The last move executed
      *  @return New state after undoing latest close move
      */
-    private fun undoClose(state: TableauxState, move: MoveClose): TableauxState {
+    private fun undoClose(state: TableauxState, move: MoveAutoClose): TableauxState {
         val leafID = move.id1
         val leaf = state.nodes[leafID]
 
