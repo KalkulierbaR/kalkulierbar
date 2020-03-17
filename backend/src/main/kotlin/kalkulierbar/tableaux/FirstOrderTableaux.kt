@@ -16,7 +16,7 @@ import kotlinx.serialization.json.Json
 val serializer = Json(context = FoTermModule)
 
 @Suppress("TooManyFunctions")
-class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxState, FoTableauxMove, FoTableauxParam>() {
+class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxState, TableauxMove, FoTableauxParam>() {
 
     override val identifier = "fo-tableaux"
 
@@ -29,14 +29,15 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking, params.manualVarAssign)
     }
 
-    override fun applyMoveOnState(state: FoTableauxState, move: FoTableauxMove): FoTableauxState {
+    override fun applyMoveOnState(state: FoTableauxState, move: TableauxMove): FoTableauxState {
         // Pass moves to relevant subfunction
-        return when (move.type) {
-            FoMoveType.AUTOCLOSE -> applyAutoCloseBranch(state, move.id1, move.id2)
-            FoMoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2, move.getVarAssignTerms())
-            FoMoveType.EXPAND -> applyMoveExpandLeaf(state, move.id1, move.id2)
-            FoMoveType.LEMMA -> applyMoveUseLemma(state, move.id1, move.id2)
-            FoMoveType.UNDO -> applyMoveUndo(state)
+        return when (move) {
+            is MoveClose -> applyAutoCloseBranch(state, move.id1, move.id2)
+            is MoveCloseAssign -> applyMoveCloseBranch(state, move.id1, move.id2, move.getVarAssignTerms())
+            is MoveExpand -> applyMoveExpandLeaf(state, move.id1, move.id2)
+            is MoveLemma -> applyMoveUseLemma(state, move.id1, move.id2)
+            is MoveUndo -> applyMoveUndo(state)
+            else -> throw IllegalMove("Unknown Move")
         }
     }
 
@@ -120,7 +121,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         // Record close move for backtracking purposes
         if (state.backtracking) {
             val varAssignStrings = varAssign.mapValues { it.value.toString() }
-            val move = FoTableauxMove(FoMoveType.CLOSE, leafID, closeNodeID, varAssignStrings)
+            val move = MoveCloseAssign(leafID, closeNodeID, varAssignStrings)
             state.moveHistory.add(move)
         }
 
@@ -157,7 +158,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
 
         // Record expansion for backtracking
         if (state.backtracking)
-            state.moveHistory.add(FoTableauxMove(FoMoveType.EXPAND, leafID, clauseID))
+            state.moveHistory.add(MoveExpand(leafID, clauseID))
 
         state.expansionCounter += 1
 
@@ -187,7 +188,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
 
         // Add move to state history
         if (state.backtracking) {
-            state.moveHistory.add(FoTableauxMove(FoMoveType.LEMMA, leafID, lemmaID, mapOf()))
+            state.moveHistory.add(MoveLemma(leafID, lemmaID))
         }
 
         return state
@@ -281,9 +282,9 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
      */
     @Suppress("TooGenericExceptionCaught")
     @kotlinx.serialization.UnstableDefault
-    override fun jsonToMove(json: String): FoTableauxMove {
+    override fun jsonToMove(json: String): TableauxMove {
         try {
-            return Json.parse(FoTableauxMove.serializer(), json)
+            return Json.parse(TableauxMove.serializer(), json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON move: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))

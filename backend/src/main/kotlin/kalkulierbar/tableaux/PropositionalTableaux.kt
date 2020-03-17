@@ -41,11 +41,12 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     @Suppress("ReturnCount")
     override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
         // Pass expand, close, undo moves to relevant subfunction
-        return when (move.type) {
-            MoveType.CLOSE -> applyMoveCloseBranch(state, move.id1, move.id2)
-            MoveType.EXPAND -> applyMoveExpandLeaf(state, move.id1, move.id2)
-            MoveType.LEMMA -> applyMoveUseLemma(state, move.id1, move.id2)
-            MoveType.UNDO -> applyMoveUndo(state)
+        return when (move) {
+            is MoveClose -> applyMoveCloseBranch(state, move.id1, move.id2)
+            is MoveExpand -> applyMoveExpandLeaf(state, move.id1, move.id2)
+            is MoveLemma -> applyMoveUseLemma(state, move.id1, move.id2)
+            is MoveLemma-> applyMoveUndo(state)
+            else -> throw IllegalMove("Unknown move")
         }
     }
 
@@ -69,7 +70,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
         // Add move to state history
         if (state.backtracking) {
-            state.moveHistory.add(TableauxMove(MoveType.CLOSE, leafID, closeNodeID))
+            state.moveHistory.add(MoveClose(leafID, closeNodeID))
         }
 
         return state
@@ -101,7 +102,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
         // Add move to state history
         if (state.backtracking) {
-            state.moveHistory.add(TableauxMove(MoveType.EXPAND, leafID, clauseID))
+            state.moveHistory.add(MoveExpand(leafID, clauseID))
         }
 
         return state
@@ -129,7 +130,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
         // Add move to state history
         if (state.backtracking) {
-            state.moveHistory.add(TableauxMove(MoveType.LEMMA, leafID, lemmaID))
+            state.moveHistory.add(MoveLemma(leafID, lemmaID))
         }
 
         return state
@@ -157,10 +158,10 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
         state.usedBacktracking = true
 
         // Pass undo move to relevant expand and close subfunction
-        return when (top.type) {
-            MoveType.CLOSE -> undoClose(state, top)
-            MoveType.EXPAND -> undoExpand(state, top)
-            MoveType.LEMMA -> undoLemma(state, top)
+        return when (top) {
+            is MoveClose -> undoClose(state, top)
+            is MoveExpand -> undoExpand(state, top)
+            is MoveLemma -> undoLemma(state, top)
             else -> throw IllegalMove("Something went wrong. Move not implemented!")
         }
     }
@@ -171,7 +172,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      *  @param move The last move executed
      *  @return New state after undoing latest close move
      */
-    private fun undoClose(state: TableauxState, move: TableauxMove): TableauxState {
+    private fun undoClose(state: TableauxState, move: MoveClose): TableauxState {
         val leafID = move.id1
         val leaf = state.nodes[leafID]
 
@@ -194,7 +195,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      *  @parm move The last move executed
      *  @return New state after undoing latest expand move
      */
-    private fun undoExpand(state: TableauxState, move: TableauxMove): TableauxState {
+    private fun undoExpand(state: TableauxState, move: MoveExpand): TableauxState {
         val leafID = move.id1
         val leaf = state.nodes[leafID]
         val children = leaf.children
@@ -214,7 +215,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
     }
 
     // Undoing a lemma expansion is the same as undoing a regular expand move
-    private fun undoLemma(state: TableauxState, move: TableauxMove) = undoExpand(state, move)
+    private fun undoLemma(state: TableauxState, move: MoveLemma) = undoExpand(state, MoveExpand(move.id1, move.id2))
 
     /**
      * Checks if a given state represents a valid, closed proof.

@@ -1,6 +1,5 @@
 package kalkulierbar.tableaux
 
-import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.UnificationImpossible
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
@@ -8,7 +7,6 @@ import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableSuffixAppend
-import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
@@ -22,7 +20,7 @@ class FoTableauxState(
     val manualVarAssign: Boolean = false
 ) : GenericTableauxState<Relation>, ProtectedState() {
     override val nodes = mutableListOf<FoTableauxNode>(FoTableauxNode(null, Relation("true", listOf()), false))
-    val moveHistory = mutableListOf<FoTableauxMove>()
+    val moveHistory = mutableListOf<TableauxMove>()
     override var usedBacktracking = false
     var expansionCounter = 0
 
@@ -123,7 +121,7 @@ class FoTableauxState(
         val clauseSetHash = clauseSet.toString()
         val optsHash = "$type|$regular|$backtracking|$usedBacktracking|$manualVarAssign"
         val variousHash = "$formula|$expansionCounter"
-        val historyHash = moveHistory.map { "(${it.type},${it.id1},${it.id2},${it.varAssign})" }.joinToString(",")
+        val historyHash = moveHistory.map { "($it)" }.joinToString(",")
         return "fotableaux|$variousHash|$optsHash|$clauseSetHash|[$nodesHash]|[$historyHash]"
     }
 }
@@ -180,29 +178,9 @@ class FoTableauxNode(
 }
 
 @Serializable
-data class FoTableauxMove(
-    val type: FoMoveType,
-    val id1: Int,
-    val id2: Int,
-    val varAssign: Map<String, String> = mapOf()
-) {
-    fun getVarAssignTerms() = varAssign.mapValues {
-        try {
-            FirstOrderParser.parseTerm(it.value)
-        } catch (e: InvalidFormulaFormat) {
-            throw InvalidFormulaFormat("Could not parse term '${it.value}': ${e.message}")
-        }
-    }
-}
-
-@Serializable
 data class FoTableauxParam(
     val type: TableauxType,
     val regular: Boolean,
     val backtracking: Boolean,
     val manualVarAssign: Boolean
 )
-
-enum class FoMoveType {
-    EXPAND, CLOSE, AUTOCLOSE, LEMMA, UNDO
-}
