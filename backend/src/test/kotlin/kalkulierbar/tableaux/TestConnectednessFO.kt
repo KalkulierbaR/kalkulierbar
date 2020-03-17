@@ -1,11 +1,7 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.FirstOrderTableaux
-import kalkulierbar.tableaux.FoMoveType
-import kalkulierbar.tableaux.FoTableauxMove
-import kalkulierbar.tableaux.FoTableauxParam
-import kalkulierbar.tableaux.TableauxType
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
@@ -22,9 +18,9 @@ class TestConnectednessFO {
     @Test
     fun testValidStrongProof() {
         var state = instance.parseFormulaToState("\\all X: P(X) & !P(f(c)) & !P(a,b)", strong)
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 2, 1, mapOf()))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(2, 1))
         val msg = instance.checkCloseOnState(state)
         assert(msg.closed)
     }
@@ -32,10 +28,10 @@ class TestConnectednessFO {
     @Test
     fun testInvalidStrongProof() {
         var state = instance.parseFormulaToState("\\all X: P(X) & !P(f(c)) & !P(a,b)", strong)
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0, mapOf()))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 2, mapOf()))
+            instance.applyMoveOnState(state, MoveExpand(1, 2))
         }
     }
 
@@ -46,11 +42,11 @@ class TestConnectednessFO {
     @Test
     fun testValidWeakProof() {
         var state = instance.parseFormulaToState("\\all X: P(X) & (!P(f(c)) | R(c)) & !P(a,b) & !P(f(c))", weak)
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 2, 1, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 3, 3, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 4, 1, mapOf()))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(2, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(3, 3))
+        state = instance.applyMoveOnState(state, MoveAutoClose(4, 1))
         val msg = instance.checkCloseOnState(state)
         assert(msg.closed)
     }
@@ -58,21 +54,21 @@ class TestConnectednessFO {
     @Test
     fun testInvalidWeakProofA() {
         var state = instance.parseFormulaToState("\\all X: P(X) & !P(f(c)) & !P(a,b)", weak)
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1, mapOf()))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
 
         assertFailsWith<IllegalMove> {
-            state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 1, mapOf()))
+            state = instance.applyMoveOnState(state, MoveExpand(2, 1))
         }
     }
 
     @Test
     fun testInvalidWeakProofB() {
         var state = instance.parseFormulaToState("\\all X: P(X) & !P(f(c)) & !P(a,b)", weak)
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0, mapOf()))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
 
         assertFailsWith<IllegalMove> {
-            state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 2, mapOf()))
+            state = instance.applyMoveOnState(state, MoveExpand(1, 2))
         }
     }
 }

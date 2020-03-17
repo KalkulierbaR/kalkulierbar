@@ -1,11 +1,7 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.JsonParseException
-import kalkulierbar.tableaux.FirstOrderTableaux
-import kalkulierbar.tableaux.FoMoveType
-import kalkulierbar.tableaux.FoTableauxMove
-import kalkulierbar.tableaux.FoTableauxParam
-import kalkulierbar.tableaux.TableauxType
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -23,7 +19,7 @@ class TestFirstOrderJson {
     fun testJsonMoveValid() {
         val json = "{\"type\": \"UNDO\", \"id1\": 0, \"id2\": 1, \"varAssign\":{}}"
         val move = instance.jsonToMove(json)
-        assertEquals(FoTableauxMove(FoMoveType.UNDO, 0, 1, mapOf()), move)
+        assertEquals(MoveUndo(0, 1), move)
     }
 
     @Test

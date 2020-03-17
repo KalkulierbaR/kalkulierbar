@@ -32,12 +32,12 @@ class TestCloseBranchFO {
     @Test
     fun testRegularityViolation() {
         var state = states[0]
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 2))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(2, 2))
 
         assertFailsWith<IllegalMove> {
-            val move = FoTableauxMove(FoMoveType.CLOSE, 3, 1, mapOf("X_1" to "c"))
+            val move = MoveCloseAssign(3, 1, mapOf("X_1" to "c"))
             instance.applyMoveOnState(state, move)
         }
     }
@@ -45,11 +45,11 @@ class TestCloseBranchFO {
     @Test
     fun testManualVarAssignOnly() {
         var state = states[0]
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 1))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 2))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 2))
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 2, 1))
+            instance.applyMoveOnState(state, MoveAutoClose(2, 1))
         }
     }
 
@@ -57,13 +57,13 @@ class TestCloseBranchFO {
     fun testIncorrectInstantiation() {
         var state = states[1]
 
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
 
         val incorrect = mapOf("X_1" to "sk2", "W_2" to "sk1(c)") // Should be sk1(sk2)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 2, 1, incorrect))
+            instance.applyMoveOnState(state, MoveCloseAssign(2, 1, incorrect))
         }
     }
 
@@ -71,12 +71,12 @@ class TestCloseBranchFO {
     fun testValid1() {
         var state = states[1]
 
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
 
         val correct = mapOf("X_1" to "sk2", "W_2" to "sk1(sk2)")
 
-        instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 2, 1, correct))
+        instance.applyMoveOnState(state, MoveCloseAssign(2, 1, correct))
         val msg = instance.checkCloseOnState(state)
 
         assert(msg.closed)
@@ -86,23 +86,23 @@ class TestCloseBranchFO {
     fun testValid2() {
         var state = notRegStates[2]
         // {!R(A), R(B), !R(B)}, {!R(A), !R(A), !R(B)}
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(2, 1))
 
         val map = mapOf("B_2" to "B_1", "A_2" to "B_1")
 
         // Without mapping
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 4, 2))
+            instance.applyMoveOnState(state, MoveAutoClose(4, 2))
         }
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 5, 2))
+            instance.applyMoveOnState(state, MoveAutoClose(5, 2))
         }
 
         // With mapping
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 6, 2, map))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 4, 2, map))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 5, 2, map))
+        state = instance.applyMoveOnState(state, MoveCloseAssign(6, 2, map))
+        state = instance.applyMoveOnState(state, MoveCloseAssign(4, 2, map))
+        state = instance.applyMoveOnState(state, MoveCloseAssign(5, 2, map))
 
         assertEquals(state.nodes[2].isClosed, true)
         assertEquals(state.nodes[4].isClosed, true)
@@ -112,11 +112,6 @@ class TestCloseBranchFO {
         assertEquals(state.nodes[6].isClosed, true)
         assertEquals(state.nodes[6].closeRef, 2)
     }
-/*
-    @Test
-    fun testValid3() {
-        var state = states[3]
-    }*/
 
     @Test
     // Prints ClauseSet of each state

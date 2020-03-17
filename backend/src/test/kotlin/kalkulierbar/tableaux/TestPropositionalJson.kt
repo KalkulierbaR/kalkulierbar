@@ -1,11 +1,7 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.JsonParseException
-import kalkulierbar.tableaux.MoveType
-import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxMove
-import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxType
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -23,7 +19,7 @@ class TestPropositionalJson {
     fun testJsonMoveValid() {
         val json = "{\"type\": \"UNDO\", \"id1\": 0, \"id2\": 1}"
         val move = instance.jsonToMove(json)
-        assertEquals(TableauxMove(MoveType.UNDO, 0, 1), move)
+        assertEquals(MoveUndo(0, 1), move)
     }
 
     @Test
