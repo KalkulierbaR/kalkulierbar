@@ -1,7 +1,11 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.*
+import kalkulierbar.tableaux.MoveAutoClose
+import kalkulierbar.tableaux.PropositionalTableaux
+import kalkulierbar.tableaux.TableauxNode
+import kalkulierbar.tableaux.TableauxParam
+import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
