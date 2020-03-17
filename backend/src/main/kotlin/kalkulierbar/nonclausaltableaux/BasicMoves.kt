@@ -31,8 +31,8 @@ fun applyAlpha(state: NcTableauxState, leafID: Int): NcTableauxState {
     while (worklist.isNotEmpty()) {
         val subformula = worklist.removeAt(0)
         if (subformula is And) {
-            worklist.add(subformula.leftChild)
             worklist.add(subformula.rightChild)
+            worklist.add(subformula.leftChild)
         } else {
             nodes.add(NcTableauxNode(parentID, subformula))
             nodes[parentID].children.add(nodes.size - 1)
@@ -67,8 +67,8 @@ fun applyBeta(state: NcTableauxState, leafID: Int): NcTableauxState {
     while (worklist.isNotEmpty()) {
         val subformula = worklist.removeAt(0)
         if (subformula is Or) {
-            worklist.add(subformula.leftChild)
             worklist.add(subformula.rightChild)
+            worklist.add(subformula.leftChild)
         } else {
             nodes.add(NcTableauxNode(leafID, subformula))
             nodes[leafID].children.add(nodes.size - 1)

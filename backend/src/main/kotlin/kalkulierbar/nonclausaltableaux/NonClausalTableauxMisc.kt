@@ -56,6 +56,12 @@ class NcTableauxState(
         }
     }
 
+    fun render() {
+        nodes.forEach {
+            it.render()
+        }
+    }
+
     override fun getHash(): String {
         val nodeH = nodes.map { it.getHash() }.joinToString(",")
         val historyH = moveHistory.joinToString(",")
@@ -68,16 +74,21 @@ class NcTableauxState(
 @Serializable
 class NcTableauxNode(
     val parent: Int?,
-    val formula: LogicNode
+    var formula: LogicNode
 ) {
 
     var isClosed = false
     var closeRef: Int? = null
     val children = mutableListOf<Int>()
     var spelling = formula.toString()
-    val isLeaf = children.size == 0
+    val isLeaf
+        get() = children.size == 0
 
-    override fun toString() = spelling
+    override fun toString() = formula.toString()
+
+    fun render() {
+        spelling = formula.toString()
+    }
 
     fun getHash() = "($parent|$children|$isClosed|$closeRef|$formula)"
 }

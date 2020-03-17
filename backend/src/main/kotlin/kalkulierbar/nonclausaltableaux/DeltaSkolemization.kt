@@ -15,7 +15,10 @@ import kalkulierbar.logic.transform.FreeVariableCollector
  * Class to apply skolemization for Delta Move of non-clausal-tableaux
  * @param replacementMap maps free-variables to skolem-term
  */
-class DeltaSkolemization(val toReplace: List<QuantifiedVariable>, val term: FirstOrderTerm) : DoNothingVisitor() {
+class DeltaSkolemization(
+    private val toReplace: List<QuantifiedVariable>,
+    private val term: FirstOrderTerm
+) : DoNothingVisitor() {
 
     companion object Companion {
         /**
@@ -94,8 +97,8 @@ class DeltaSkolemization(val toReplace: List<QuantifiedVariable>, val term: Firs
  * @param replacementMap Map of variable instances to replace alongside their Skolem term
  */
 class DeltaSkolemTermReplacer(
-    val toReplace: List<QuantifiedVariable>,
-    val term: FirstOrderTerm
+    private val toReplace: List<QuantifiedVariable>,
+    private val term: FirstOrderTerm
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     /**

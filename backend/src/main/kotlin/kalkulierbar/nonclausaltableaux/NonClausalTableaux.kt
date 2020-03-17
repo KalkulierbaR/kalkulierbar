@@ -122,7 +122,7 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         // Apply all specified variable instantiations globally
         val instantiator = LogicNodeVariableInstantiator(unifier)
         state.nodes.forEach {
-            it.formula.accept(instantiator)
+            it.formula = it.formula.accept(instantiator)
         }
 
         // Check relations after instantiation
@@ -210,6 +210,7 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
      * @return JSON state representation
      */
     override fun stateToJson(state: NcTableauxState): String {
+        state.render()
         state.computeSeal()
         return serializer.stringify(NcTableauxState.serializer(), state)
     }
