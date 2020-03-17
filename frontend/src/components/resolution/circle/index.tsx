@@ -1,8 +1,8 @@
 import { h } from "preact";
 import { useMemo } from "preact/hooks";
-import { circleLayout } from "../../../helpers/layout/resolution";
 import { CandidateClause } from "../../../types/clause";
 import { VisualHelp } from "../../../types/resolution";
+import { circleLayout } from "../../../util/layout/resolution";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
