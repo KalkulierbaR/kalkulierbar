@@ -386,7 +386,7 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                 onKeyDown={handleEnter}
                 submitButton={
                     <FAB
-                        icon={useAppState().isAdmin ? <SaveIcon /> : <SaveIcon />}
+                        icon={<SaveIcon />}
                         label="Save Admin Key"
                         mini={true}
                         onClick={onSubmit}
