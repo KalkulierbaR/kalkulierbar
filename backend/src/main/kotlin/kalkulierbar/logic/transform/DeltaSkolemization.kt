@@ -98,9 +98,7 @@ class DeltaSkolemTermReplacer(
     override fun visit(node: QuantifiedVariable): FirstOrderTerm {
         if (replacementMap[node] != null) {
             // Clone the term to avoid object-sharing related weirdness
-            val skolemTerm = replacementMap[node]!!.clone()
-
-            return skolemTerm
+            return replacementMap[node]!!.clone()
         }
         return node
     }
