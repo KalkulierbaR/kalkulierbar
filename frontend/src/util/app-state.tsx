@@ -1,4 +1,4 @@
-import { createContext, h , } from "preact";
+import { createContext, h } from "preact";
 import { Reducer, useContext, useEffect, useReducer } from "preact/hooks";
 import {
     AddNotification,
@@ -36,7 +36,7 @@ const INIT_APP_STATE: AppState = {
     config: {
         examples: [],
         disabled: ["prop-tableaux"],
-    }
+    },
 };
 
 const reducer: Reducer<AppState, AppStateAction> = (
@@ -73,6 +73,8 @@ const reducer: Reducer<AppState, AppStateAction> = (
             };
         case AppStateActionType.SET_TUTORIAL_MODE:
             return { ...state, tutorialMode: action.value };
+        case AppStateActionType.SET_CONFIG:
+            return { ...state, config: action.value };
     }
 };
 

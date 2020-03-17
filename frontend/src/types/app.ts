@@ -51,7 +51,7 @@ export const ResolutionCalculus: CalculusType[] = [
     Calculus.foResolution,
 ];
 
-export interface Example <C extends CalculusType = CalculusType> {
+export interface Example<C extends CalculusType = CalculusType> {
     name: string;
     description: string;
     calculus: CalculusType;
@@ -125,6 +125,7 @@ export enum AppStateActionType {
     SET_SERVER,
     UPDATE_SAVED_FORMULA,
     SET_TUTORIAL_MODE,
+    SET_CONFIG,
 }
 
 export interface UpdateScreenSize extends AppStateActionBase {
@@ -170,6 +171,11 @@ export interface SetTutorialMode extends AppStateActionBase {
     value: TutorialMode;
 }
 
+export interface SetConfig extends AppStateActionBase {
+    type: AppStateActionType.SET_CONFIG;
+    value: Config;
+}
+
 export type AppStateAction =
     | UpdateScreenSize
     | AddNotification
@@ -178,7 +184,8 @@ export type AppStateAction =
     | SetTheme
     | SetServer
     | UpdateSavedFormula
-    | SetTutorialMode;
+    | SetTutorialMode
+    | SetConfig;
 
 export type AppStateUpdater = <C extends CalculusType = CalculusType>(
     id: C,

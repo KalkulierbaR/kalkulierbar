@@ -9,7 +9,7 @@ import Confetti from "../util/confetti";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
-import {getConfig} from "../util/api";
+import { getConfig } from "../util/api";
 
 const SMALL_SCREEN_THRESHOLD = 700;
 
@@ -73,8 +73,12 @@ const App: preact.FunctionalComponent = () => {
     useEffect(() => {
         checkServer(server, onError);
 
-        //todo: getConfig aufruf zu programm beginn.
-        //getConfig(server, /* ?? */ ,onError);
+        getConfig(
+            server,
+            (cfg) =>
+                dispatch({ type: AppStateActionType.SET_CONFIG, value: cfg }),
+            onError,
+        );
 
         const cf = new Confetti({ speed: 10, maxCount: 150 });
 
