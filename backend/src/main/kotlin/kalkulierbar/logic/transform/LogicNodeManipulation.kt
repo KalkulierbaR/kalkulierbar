@@ -27,7 +27,7 @@ class LogicNodeVariableInstantiator(val replacementMap: Map<String, FirstOrderTe
 
     override fun visit(node: Relation): LogicNode {
         val variableInstantiator = VariableInstantiator(replacementMap)
-        node.arguments = node.arguments.map{ it.accept(variableInstantiator) }
+        node.arguments = node.arguments.map { it.accept(variableInstantiator) }
 
         return node
     }
