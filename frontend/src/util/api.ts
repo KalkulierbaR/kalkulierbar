@@ -112,7 +112,7 @@ export const getConfig = async (
     changeConfig: (cfg: Config) => void,
     onError: (msg: string) => void,
 ) => {
-    const url = `${server}/cobfig`;
+    const url = `${server}/config`;
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {

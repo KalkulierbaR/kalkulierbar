@@ -1,9 +1,10 @@
 import { h, VNode } from "preact";
 import { circle } from "../../components/resolution/circle/style.scss";
-import { Calculus } from "../../types/app";
+import {Calculus, CalculusType} from "../../types/app";
 import * as style from "./style.scss";
 import {useAppState} from "../../util/app-state";
 import Switch from "../../components/switch";
+import {setCalculusState} from "../../util/api";
 
 interface Route {
     name: string;
@@ -911,15 +912,26 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
     route: { href, name, image, viewBox },
 }) => {
     return ((
-        <a href={`/${href}`}>
-            <div class={style.calculusItem}>
-                <svg class={style.calculusItemImage} viewBox={viewBox}>
-                    {image}
-                </svg>
-                <h3 class={style.calculusItemTitle}>{name}</h3>
-            </div>
-        </a>
+        //Todo: äusersten div container anderst lösen
+        <div>
+            <a href={`/${href}`}>
+                <div class={style.calculusItem}>
+                    <svg class={style.calculusItemImage} viewBox={viewBox}>
+                        {image}
+                    </svg>
+                    <h3 class={style.calculusItemTitle}>{name}</h3>
+                </div>
+            </a>
+            {useAppState().isAdmin ? <Switch onChange={/*SwitchCalculus(!useAppState().config.disabled.includes(href), href)*/ alert(href)} initialState={!useAppState().config.disabled.includes(href)}/> : undefined}
+        </div>
     ));
+};
+
+const SwitchCalculus = (
+    state: boolean,
+    calculus: CalculusType,
+) =>{
+    setCalculusState(useAppState().server, calculus, !state, useAppState().onError)
 };
 
 const Home: preact.FunctionalComponent = () => {

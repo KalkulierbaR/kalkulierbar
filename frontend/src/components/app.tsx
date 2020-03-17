@@ -68,17 +68,20 @@ const App: preact.FunctionalComponent = () => {
     const onChangeRoute = (args: RouterOnChangeArgs) => {
         setCurrentUrl(args.url);
         removeNotification();
+        console.log(useAppState());
     };
 
     useEffect(() => {
         checkServer(server, onError);
 
+        //todo: if abfrage vor merge entfernen (nur fürs debuggen)
+        if(false) {
         getConfig(
             server,
             (cfg) =>
                 dispatch({ type: AppStateActionType.SET_CONFIG, value: cfg }),
             onError,
-        );
+        );}
 
         const cf = new Confetti({ speed: 10, maxCount: 150 });
 
