@@ -2,11 +2,13 @@ import {
     AppState,
     AppStateUpdater,
     CalculusType,
-    CheckCloseResponse, Config, Example,
+    CheckCloseResponse,
+    Config,
+    Example,
     Move,
 } from "../types/app";
 import SHA3 from "sha3";
-import {useAppState} from "./app-state";
+import { useAppState } from "./app-state";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
@@ -93,11 +95,11 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
         if (res.status !== 200) {
             onError(await res.text());
             return state;
-        }  {
-            const parsed = await res.json();
-            stateChanger(calculus, parsed);
-            return parsed;
         }
+
+        const parsed = await res.json();
+        stateChanger(calculus, parsed);
+        return parsed;
     } catch (e) {
         onError((e as Error).message);
         return state;
@@ -105,7 +107,7 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
 };
 
 //ToDo: JSDoc getConfig
-export const getConfig = async(
+export const getConfig = async (
     server: string,
     changeConfig: (cfg: Config) => void,
     onError: (msg: string) => void,
@@ -118,27 +120,26 @@ export const getConfig = async(
                 "Content-Type": "text/plain",
             },
             method: "GET",
-
         });
         if (res.status !== 200) {
             onError(await res.text());
-        }  {
-            const parsed = await res.json();
-            changeConfig(parsed);
         }
+
+        const parsed = await res.json();
+        changeConfig(parsed);
     } catch (e) {
         onError((e as Error).message);
     }
 };
 
 //ToDo: JSDoc checkCredentials
-export const checkCredentials = async(
+export const checkCredentials = async (
     server: string,
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/checkCredentials`;
     const newDate = new Date();
-    const date = "" + newDate.getFullYear() + newDate.getMonth() + newDate.getDay()
+    const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
     const mac = new SHA3(256);
     console.log(date);
     mac.update(`kbcc|${date}|${useAppState().adminKey}`);
@@ -149,14 +150,16 @@ export const checkCredentials = async(
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`
+            body: `mac=${encodeURIComponent(
+                JSON.stringify(mac.digest("hex")),
+            )}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
             //Todo: is Admin auf false setzen.
-        }  {
-            //Todo: is Admin auf true setzen.
         }
+
+        //Todo: is Admin auf true setzen.
     } catch (e) {
         onError((e as Error).message);
     }
@@ -171,7 +174,7 @@ export const setCalculusState = async <C extends CalculusType = CalculusType>(
 ) => {
     const url = `${server}/admin/setCalculusState`;
     const newDate = new Date();
-    const date = "" + newDate.getFullYear() + newDate.getMonth() + newDate.getDay()
+    const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
     const mac = new SHA3(256);
     console.log(date);
     mac.update(`kbsc|${calculus}|${value}|${date}|${useAppState().adminKey}`);
@@ -182,16 +185,15 @@ export const setCalculusState = async <C extends CalculusType = CalculusType>(
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body:
-                `calculus=${encodeURIComponent(JSON.stringify(calculus))}
+            body: `calculus=${encodeURIComponent(JSON.stringify(calculus))}
                 &enable=${encodeURIComponent(JSON.stringify(value))}
-                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`
+                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
-        }  {
-            //Todo: neue config holen
         }
+
+        //Todo: neue config holen
     } catch (e) {
         onError((e as Error).message);
     }
@@ -205,7 +207,7 @@ export const addExample = async (
 ) => {
     const url = `${server}/admin/addExample`;
     const newDate = new Date();
-    const date = "" + newDate.getFullYear() + newDate.getMonth() + newDate.getDay()
+    const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
     const mac = new SHA3(256);
     console.log(date);
     mac.update(`kbae|${example}|${date}|${useAppState().adminKey}`);
@@ -217,13 +219,13 @@ export const addExample = async (
             },
             method: "POST",
             body: `example=${encodeURIComponent(JSON.stringify(example))}
-                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`
+                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
-        }  {
-            //Todo: neue config holen
         }
+
+        //Todo: neue config holen
     } catch (e) {
         onError((e as Error).message);
     }
@@ -237,7 +239,7 @@ export const delExample = async (
 ) => {
     const url = `${server}/admin/addExample`;
     const newDate = new Date();
-    const date = "" + newDate.getFullYear() + newDate.getMonth() + newDate.getDay()
+    const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
     const mac = new SHA3(256);
     console.log(date);
     mac.update(`kbde|${exampleID}|${date}|${useAppState().adminKey}`);
@@ -249,11 +251,12 @@ export const delExample = async (
             },
             method: "POST",
             body: `exampleID=${encodeURIComponent(JSON.stringify(exampleID))}
-                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`
+                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
-        }  {
+        }
+        {
             //Todo: neue config holen
         }
     } catch (e) {
