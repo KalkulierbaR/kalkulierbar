@@ -25,15 +25,6 @@
     fill: #555555;
 }
 
-.node--lemma {
-    stroke: var(--kbar-accent-2-color);
-    stroke-width: 2px;
-}
-
-.node--selectLemma {
-    fill: var(--kbar-accent-2-color);
-}
-
 .node--closed {
     transform: none;
 }
