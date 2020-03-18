@@ -8,8 +8,12 @@ import {
     sendBeta,
     sendGamma,
     sendDelta,
+    sendUndo,
 } from "../../../util/nc-tableaux";
 import { NCTableauxState } from "../../../types/nc-tableaux";
+import CheckCircleIcon from "../../icons/check-circle";
+import { checkClose } from "../../../util/api";
+import UndoIcon from "../../icons/undo";
 
 interface Props {
     state: NCTableauxState;
@@ -29,7 +33,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
     setSelectedNode,
     resetDragTransform,
 }) => {
-    const { smallScreen, server, onError, onChange } = useAppState();
+    const { smallScreen, server, onError, onChange, onSuccess } = useAppState();
 
     const resetView = (
         <FAB
@@ -48,7 +52,47 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
     return (
         <ControlFAB alwaysOpen={!smallScreen}>
             {selectedNodeId === undefined ? (
-                <Fragment>{resetView}</Fragment>
+                <Fragment>
+                    {resetView}
+                    <FAB
+                        icon={<CheckCircleIcon />}
+                        label="Check"
+                        showIconAtEnd
+                        mini
+                        extended
+                        onClick={() => {
+                            checkClose(
+                                server,
+                                onError,
+                                onSuccess,
+                                "nc-tableaux",
+                                state,
+                            );
+                        }}
+                    />
+                    <FAB
+                        icon={<UndoIcon />}
+                        label="Undo"
+                        mini={true}
+                        extended={true}
+                        showIconAtEnd={true}
+                        onClick={() => {
+                            sendUndo(server, state, onChange, onError).then(
+                                (s) => {
+                                    console.log(s);
+                                    if (!s) return;
+                                    for (
+                                        let i = s.nodes.length;
+                                        i < state.nodes.length;
+                                        i++
+                                    ) {
+                                        resetDragTransform(i);
+                                    }
+                                },
+                            );
+                        }}
+                    />
+                </Fragment>
             ) : (
                 <Fragment>
                     {resetView}

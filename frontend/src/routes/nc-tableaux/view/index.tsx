@@ -10,7 +10,11 @@ import NCTabFAB from "../../../components/nc-tableaux/fab";
 import Dialog from "../../../components/dialog";
 import VarAssignList from "../../../components/input/var-assign-list";
 import { VarAssign } from "../../../types/tableaux";
-import { sendClose, collectVarsFromNode } from "../../../util/nc-tableaux";
+import {
+    sendClose,
+    collectVarsFromNode,
+    removeUnusedDrags,
+} from "../../../util/nc-tableaux";
 
 const NCTableauxView: preact.FunctionalComponent = () => {
     const { "nc-tableaux": cState, onChange, server, onError } = useAppState();
