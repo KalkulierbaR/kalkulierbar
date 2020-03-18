@@ -18,13 +18,13 @@ export const sendAlpha = (
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
-    leafID: number,
+    nodeID: number,
 ) =>
     sendMove(
         server,
         "nc-tableaux",
         state,
-        { type: "alpha", leafID },
+        { type: "alpha", nodeID },
         stateChanger,
         onError,
     );
@@ -34,13 +34,13 @@ export const sendBeta = (
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
-    leafID: number,
+    nodeID: number,
 ) =>
     sendMove(
         server,
         "nc-tableaux",
         state,
-        { type: "beta", leafID },
+        { type: "beta", nodeID },
         stateChanger,
         onError,
     );
@@ -50,13 +50,13 @@ export const sendGamma = (
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
-    leafID: number,
+    nodeID: number,
 ) =>
     sendMove(
         server,
         "nc-tableaux",
         state,
-        { type: "gamma", leafID },
+        { type: "gamma", nodeID },
         stateChanger,
         onError,
     );
@@ -66,13 +66,13 @@ export const sendDelta = (
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
-    leafID: number,
+    nodeID: number,
 ) =>
     sendMove(
         server,
         "nc-tableaux",
         state,
-        { type: "delta", leafID },
+        { type: "delta", nodeID },
         stateChanger,
         onError,
     );
@@ -82,7 +82,7 @@ export const sendClose = (
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
-    leafID: number,
+    nodeID: number,
     closeID: number,
     varAssign: VarAssign | null,
 ) =>
@@ -90,7 +90,7 @@ export const sendClose = (
         server,
         "nc-tableaux",
         state,
-        { type: "close", leafID, closeID, varAssign },
+        { type: "close", nodeID, closeID, varAssign },
         stateChanger,
         onError,
     );

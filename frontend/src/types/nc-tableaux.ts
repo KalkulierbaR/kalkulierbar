@@ -100,27 +100,27 @@ export interface NCTabTreeNode extends NCTableauxNode {
 
 export interface NCTabAlphaMove {
     type: "alpha";
-    leafID: number;
+    nodeID: number;
 }
 
 export interface NCTabBetaMove {
     type: "beta";
-    leafID: number;
+    nodeID: number;
 }
 
 export interface NCTabGammaMove {
     type: "gamma";
-    leafID: number;
+    nodeID: number;
 }
 
 export interface NCTabDeltaMove {
     type: "delta";
-    leafID: number;
+    nodeID: number;
 }
 
 export interface NCTabCloseMove {
     type: "close";
-    leafID: number;
+    nodeID: number;
     closeID: number;
     varAssign: VarAssign | null;
 }
