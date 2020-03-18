@@ -14,6 +14,7 @@ import { NCTableauxState } from "../../../types/nc-tableaux";
 interface Props {
     state: NCTableauxState;
     selectedNodeId: number | undefined;
+    setSelectedNode: (id: number | undefined) => void;
     resetDragTransforms: () => void;
     /**
      * Callback to reset a specific drag
@@ -25,6 +26,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
     selectedNodeId,
     state,
     resetDragTransforms,
+    setSelectedNode,
     resetDragTransform,
 }) => {
     const { smallScreen, server, onError, onChange } = useAppState();
@@ -56,15 +58,16 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         mini
                         extended
                         label="Alpha"
-                        onClick={() =>
+                        onClick={() => {
                             sendAlpha(
                                 server,
                                 state,
                                 onChange,
                                 onError,
                                 selectedNodeId,
-                            )
-                        }
+                            );
+                            setSelectedNode(undefined);
+                        }}
                     />
                     <FAB
                         icon={null}
@@ -72,15 +75,16 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         mini
                         extended
                         label="Beta"
-                        onClick={() =>
+                        onClick={() => {
                             sendBeta(
                                 server,
                                 state,
                                 onChange,
                                 onError,
                                 selectedNodeId,
-                            )
-                        }
+                            );
+                            setSelectedNode(undefined);
+                        }}
                     />
                     <FAB
                         icon={null}
@@ -88,15 +92,16 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         mini
                         extended
                         label="Gamma"
-                        onClick={() =>
+                        onClick={() => {
                             sendGamma(
                                 server,
                                 state,
                                 onChange,
                                 onError,
                                 selectedNodeId,
-                            )
-                        }
+                            );
+                            setSelectedNode(undefined);
+                        }}
                     />
                     <FAB
                         icon={null}
@@ -104,15 +109,16 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         mini
                         extended
                         label="Delta"
-                        onClick={() =>
+                        onClick={() => {
                             sendDelta(
                                 server,
                                 state,
                                 onChange,
                                 onError,
                                 selectedNodeId,
-                            )
-                        }
+                            );
+                            setSelectedNode(undefined);
+                        }}
                     />
                 </Fragment>
             )}

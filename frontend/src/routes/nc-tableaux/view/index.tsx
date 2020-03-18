@@ -57,6 +57,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
             <NCTabFAB
                 state={state}
                 selectedNodeId={selectedNodeId}
+                setSelectedNode={setSelectedNode}
                 resetDragTransform={resetDragTransform}
                 resetDragTransforms={resetDragTransforms}
             />
