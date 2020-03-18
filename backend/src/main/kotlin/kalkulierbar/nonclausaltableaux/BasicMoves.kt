@@ -27,6 +27,10 @@ fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val workList = mutableListOf(node.formula)
     var parentID = nodeID
 
+    while (!nodes[parentID].isLeaf) {
+        parentID = nodes[nodeID].children[0]
+    }
+
     while (workList.isNotEmpty()) {
         val subFormula = workList.removeAt(0)
         if (subFormula is And) {
@@ -63,14 +67,19 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
 
     val workList = mutableListOf(node.formula)
 
+    var parentID = nodeID
+    while (!nodes[parentID].isLeaf) {
+        parentID = nodes[nodeID].children[0]
+    }
+
     while (workList.isNotEmpty()) {
         val subFormula = workList.removeAt(0)
         if (subFormula is Or) {
             workList.add(subFormula.rightChild)
             workList.add(subFormula.leftChild)
         } else {
-            nodes.add(NcTableauxNode(nodeID, subFormula))
-            nodes[nodeID].children.add(nodes.size - 1)
+            nodes.add(NcTableauxNode(parentID, subFormula))
+            nodes[parentID].children.add(nodes.size - 1)
         }
     }
 
@@ -109,10 +118,15 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
     // that state.identifiers contains _all_ identifiers in the tableaux
     state.identifiers.addAll(IdentifierCollector.collect(newFormula))
 
+    var parentID = nodeID
+    while (!nodes[parentID].isLeaf) {
+        parentID = nodes[nodeID].children[0]
+    }
+
     // Add new node to tree
-    val newNode = NcTableauxNode(nodeID, newFormula)
+    val newNode = NcTableauxNode(parentID, newFormula)
     nodes.add(newNode)
-    node.children.add(nodes.size - 1)
+    nodes[parentID].children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
@@ -145,10 +159,15 @@ fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     // This adds the newly created skolem term identifier to the state.identifiers set
     val newFormula = DeltaSkolemization.transform(formula, state.identifiers, state.skolemCounter)
 
+    var parentID = nodeID
+    while (!nodes[parentID].isLeaf) {
+        parentID = nodes[nodeID].children[0]
+    }
+
     // Add new node to tree
-    val newNode = NcTableauxNode(nodeID, newFormula)
+    val newNode = NcTableauxNode(parentID, newFormula)
     nodes.add(newNode)
-    node.children.add(nodes.size - 1)
+    nodes[parentID].children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
