@@ -3,7 +3,6 @@ package kalkulierbar.nonclausaltableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.And
 import kalkulierbar.logic.ExistentialQuantifier
-import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.UniversalQuantifier
 import kalkulierbar.logic.transform.IdentifierCollector
@@ -13,28 +12,28 @@ import kalkulierbar.logic.transform.SelectiveSuffixAppender
  * While the outermost LogicNode is an AND:
  * Split into subformulae, chain onto a single branch
  * @param state: Non clausal tableaux state to apply move on
- * @param leafID: leaf node ID to apply move on
+ * @param nodeID: node ID to apply move on
  * @return new state after applying move
  */
-fun applyAlpha(state: NcTableauxState, leafID: Int): NcTableauxState {
+fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val nodes = state.nodes
-    checkLeafRestrictions(nodes, leafID)
+    checkRestrictions(nodes, nodeID)
 
-    val leaf = nodes[leafID]
+    val node = nodes[nodeID]
 
-    if (leaf.formula !is And)
+    if (node.formula !is And)
         throw IllegalMove("Outermost logic operator is not AND")
 
-    val worklist = mutableListOf<LogicNode>(leaf.formula)
-    var parentID = leafID
+    val workList = mutableListOf(node.formula)
+    var parentID = nodeID
 
-    while (worklist.isNotEmpty()) {
-        val subformula = worklist.removeAt(0)
-        if (subformula is And) {
-            worklist.add(subformula.rightChild)
-            worklist.add(subformula.leftChild)
+    while (workList.isNotEmpty()) {
+        val subFormula = workList.removeAt(0)
+        if (subFormula is And) {
+            workList.add(subFormula.rightChild)
+            workList.add(subFormula.leftChild)
         } else {
-            nodes.add(NcTableauxNode(parentID, subformula))
+            nodes.add(NcTableauxNode(parentID, subFormula))
             nodes[parentID].children.add(nodes.size - 1)
             parentID = nodes.size - 1
         }
@@ -42,42 +41,42 @@ fun applyAlpha(state: NcTableauxState, leafID: Int): NcTableauxState {
 
     // Add move to history
     if (state.backtracking)
-        state.moveHistory.add(DeltaMove(leafID))
+        state.moveHistory.add(AlphaMove(nodeID))
     return state
 }
 
 /**
  * While the outermost LogicNode is an OR:
- * Split into subformulae and add to leaf node
+ * Split into subformulae and add to node
  * @param state: non clausal tableaux state to apply move on
- * @param leafID: ID of leaf-node to apply move on
+ * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-fun applyBeta(state: NcTableauxState, leafID: Int): NcTableauxState {
+fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val nodes = state.nodes
-    checkLeafRestrictions(nodes, leafID)
+    checkRestrictions(nodes, nodeID)
 
-    val leaf = nodes[leafID]
+    val node = nodes[nodeID]
 
-    if (leaf.formula !is Or)
+    if (node.formula !is Or)
         throw IllegalMove("Outermost logic operator is not OR")
 
-    val worklist = mutableListOf<LogicNode>(leaf.formula)
+    val workList = mutableListOf(node.formula)
 
-    while (worklist.isNotEmpty()) {
-        val subformula = worklist.removeAt(0)
-        if (subformula is Or) {
-            worklist.add(subformula.rightChild)
-            worklist.add(subformula.leftChild)
+    while (workList.isNotEmpty()) {
+        val subFormula = workList.removeAt(0)
+        if (subFormula is Or) {
+            workList.add(subFormula.rightChild)
+            workList.add(subFormula.leftChild)
         } else {
-            nodes.add(NcTableauxNode(leafID, subformula))
-            nodes[leafID].children.add(nodes.size - 1)
+            nodes.add(NcTableauxNode(nodeID, subFormula))
+            nodes[nodeID].children.add(nodes.size - 1)
         }
     }
 
     // Add move to history
     if (state.backtracking)
-        state.moveHistory.add(BetaMove(leafID))
+        state.moveHistory.add(BetaMove(nodeID))
     return state
 }
 
@@ -85,16 +84,16 @@ fun applyBeta(state: NcTableauxState, leafID: Int): NcTableauxState {
  * If outermost LogicNode is a universal quantifier:
  * Remove quantifier and instantiate with fresh variable
  * @param state: non clausal tableaux state to apply move on
- * @param leafID: ID of leaf-node to apply move on
+ * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-fun applyGamma(state: NcTableauxState, leafID: Int): NcTableauxState {
+fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val nodes = state.nodes
-    checkLeafRestrictions(nodes, leafID)
+    checkRestrictions(nodes, nodeID)
 
-    // Check leaf formula == UniversalQuantifier
-    val leafNode = nodes[leafID]
-    val formula = leafNode.formula
+    // Check node formula == UniversalQuantifier
+    val node = nodes[nodeID]
+    val formula = node.formula
     if (formula !is UniversalQuantifier)
         throw IllegalMove("Outermost logic operator is not a universal quantifier")
 
@@ -111,13 +110,13 @@ fun applyGamma(state: NcTableauxState, leafID: Int): NcTableauxState {
     state.identifiers.addAll(IdentifierCollector.collect(newFormula))
 
     // Add new node to tree
-    val newNode = NcTableauxNode(leafID, newFormula)
+    val newNode = NcTableauxNode(nodeID, newFormula)
     nodes.add(newNode)
-    leafNode.children.add(nodes.size - 1)
+    node.children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
-        state.moveHistory.add(GammaMove(leafID))
+        state.moveHistory.add(GammaMove(nodeID))
 
     return state
 }
@@ -128,16 +127,16 @@ fun applyGamma(state: NcTableauxState, leafID: Int): NcTableauxState {
  * -> Iff free variables in current node: term = firstOrderTerm (free variables)
  * -> Iff no free variables: term = constant
  * @param state: non clausal tableaux state to apply move on
- * @param leafID: ID of leaf-node to apply move on
+ * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-fun applyDelta(state: NcTableauxState, leafID: Int): NcTableauxState {
+fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val nodes = state.nodes
-    checkLeafRestrictions(nodes, leafID)
+    checkRestrictions(nodes, nodeID)
 
-    // Check leaf == UniversalQuantifier
-    val leafNode = nodes[leafID]
-    val formula = leafNode.formula
+    // Check node == UniversalQuantifier
+    val node = nodes[nodeID]
+    val formula = node.formula
     if (formula !is ExistentialQuantifier)
         throw IllegalMove("The outermost logic operator is not an existential quantifier")
 
@@ -147,22 +146,20 @@ fun applyDelta(state: NcTableauxState, leafID: Int): NcTableauxState {
     val newFormula = DeltaSkolemization.transform(formula, state.identifiers, state.skolemCounter)
 
     // Add new node to tree
-    val newNode = NcTableauxNode(leafID, newFormula)
+    val newNode = NcTableauxNode(nodeID, newFormula)
     nodes.add(newNode)
-    leafNode.children.add(nodes.size - 1)
+    node.children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
-        state.moveHistory.add(DeltaMove(leafID))
+        state.moveHistory.add(DeltaMove(nodeID))
     return state
 }
 
 /**
- * Check leafID valid + node at leafID is leaf
+ * Check nodeID valid
  */
-fun checkLeafRestrictions(nodes: List<NcTableauxNode>, leafID: Int) {
-    if (leafID < 0 || leafID >= nodes.size)
-        throw IllegalMove("There is no node with ID: $leafID")
-    if (!nodes[leafID].isLeaf)
-        throw IllegalMove("Selected node is not a leaf")
+fun checkRestrictions(nodes: List<NcTableauxNode>, nodeID: Int) {
+    if (nodeID < 0 || nodeID >= nodes.size)
+        throw IllegalMove("There is no node with ID: $nodeID")
 }

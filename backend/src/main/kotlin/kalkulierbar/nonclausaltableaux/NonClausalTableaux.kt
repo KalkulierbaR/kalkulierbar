@@ -32,11 +32,11 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
     override fun applyMoveOnState(state: NcTableauxState, move: NcTableauxMove): NcTableauxState {
         // Pass moves to relevant subfunction
         return when (move) {
-            is AlphaMove -> applyAlpha(state, move.leafID)
-            is BetaMove -> applyBeta(state, move.leafID)
-            is GammaMove -> applyGamma(state, move.leafID)
-            is DeltaMove -> applyDelta(state, move.leafID)
-            is CloseMove -> applyClose(state, move.leafID, move.closeID, move.getVarAssignTerms())
+            is AlphaMove -> applyAlpha(state, move.nodeID)
+            is BetaMove -> applyBeta(state, move.nodeID)
+            is GammaMove -> applyGamma(state, move.nodeID)
+            is DeltaMove -> applyDelta(state, move.nodeID)
+            is CloseMove -> applyClose(state, move.nodeID, move.closeID, move.getVarAssignTerms())
             is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")
         }
@@ -48,76 +48,73 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
      * 2. The child of the NOT node is a RELATION (think this is already covered by converting to NNF)
      * 3. Both RELATION nodes are syntactically equal after (global) variable instantiation
      * @param state State to apply close move on
-     * @param leafID Leaf to close
+     * @param nodeID Node to close
      * @param closeID Node to close with
      * @param varAssign variable assignment to instantiate variables
      * @return state after applying move
      */
     @Suppress("ThrowsCount", "ComplexMethod", "LongMethod")
     private fun applyClose(
-        state: NcTableauxState,
-        leafID: Int,
-        closeID: Int,
-        varAssign: Map<String, FirstOrderTerm>?
+            state: NcTableauxState,
+            nodeID: Int,
+            closeID: Int,
+            varAssign: Map<String, FirstOrderTerm>?
     ): NcTableauxState {
         val nodes = state.nodes
 
-        // Verify that both leaf and closeNode are valid nodes
-        if (leafID >= nodes.size || leafID < 0)
-            throw IllegalMove("Node with ID $leafID does not exist")
+        // Verify that both node and closeNode are valid nodes
+        if (nodeID >= nodes.size || nodeID < 0)
+            throw IllegalMove("Node with ID $nodeID does not exist")
         if (closeID >= nodes.size || closeID < 0)
             throw IllegalMove("Node with ID $closeID does not exist")
 
-        val leaf = state.nodes[leafID]
+        val node = state.nodes[nodeID]
         val closeNode = state.nodes[closeID]
 
-        // Verify that leaf is actually a leaf
-        if (!leaf.isLeaf)
-            throw IllegalMove("Node '$leaf' is not a leaf")
+        // Verify that node is not already closed
+        if (node.isClosed)
+            throw IllegalMove("Node '$node' is already closed, no need to close again")
 
-        // Verify that leaf is not already closed
-        if (leaf.isClosed)
-            throw IllegalMove("Leaf '$leaf' is already closed, no need to close again")
+        // Verify that closeNode is transitive parent of node
+        if (!state.nodeIsParentOf(closeID, nodeID))
+            throw IllegalMove("Node '$closeNode' is not an ancestor of node '$node'")
 
-        // Verify that closeNode is transitive parent of leaf
-        if (!state.nodeIsParentOf(closeID, leafID))
-            throw IllegalMove("Node '$closeNode' is not an ancestor of leaf '$leaf'")
-
-        val leafFormula = leaf.formula
+        val nodeFormula = node.formula
         val closeNodeFormula = closeNode.formula
-        val leafRelation: Relation
+        val nodeRelation: Relation
         val closeRelation: Relation
 
-        // Verify that leaf and closeNode are (negated) Relations of compatible polarity
-        if (leafFormula is Not) {
-            if (leafFormula.child !is Relation)
-                throw IllegalMove("Leaf formula '$leafFormula' is not a negated relation")
-            if (closeNodeFormula !is Relation)
-                throw IllegalMove("Close node formula '$closeNodeFormula' is not a relation")
-            leafRelation = leafFormula.child as Relation
-            closeRelation = closeNodeFormula
-        } else if (closeNodeFormula is Not) {
-            if (closeNodeFormula.child !is Relation)
-                throw IllegalMove("Close node formula '$closeNodeFormula' is not a negated relation")
-            if (leafFormula !is Relation)
-                throw IllegalMove("Leaf formula '$leafFormula' is not a relation")
-            leafRelation = leafFormula
-            closeRelation = closeNodeFormula.child as Relation
-        } else {
-            throw IllegalMove("Neither '$leafFormula' nor '$closeNodeFormula' are negated")
+        // Verify that node and closeNode are (negated) Relations of compatible polarity
+        when {
+            nodeFormula is Not -> {
+                if (nodeFormula.child !is Relation)
+                    throw IllegalMove("Node formula '$nodeFormula' is not a negated relation")
+                if (closeNodeFormula !is Relation)
+                    throw IllegalMove("Close node formula '$closeNodeFormula' is not a relation")
+                nodeRelation = nodeFormula.child as Relation
+                closeRelation = closeNodeFormula
+            }
+            closeNodeFormula is Not -> {
+                if (closeNodeFormula.child !is Relation)
+                    throw IllegalMove("Close node formula '$closeNodeFormula' is not a negated relation")
+                if (nodeFormula !is Relation)
+                    throw IllegalMove("Node formula '$nodeFormula' is not a relation")
+                nodeRelation = nodeFormula
+                closeRelation = closeNodeFormula.child as Relation
+            }
+            else -> {
+                throw IllegalMove("Neither '$nodeFormula' nor '$closeNodeFormula' are negated")
+            }
         }
 
         // Use user-supplied variable assignment if given, calculate MGU otherwise
         val unifier: Map<String, FirstOrderTerm>
-        if (varAssign != null)
-            unifier = varAssign
-        else {
-            try {
-                unifier = Unification.unify(leafRelation, closeRelation)
-            } catch (e: UnificationImpossible) {
-                throw IllegalMove("Cannot unify '$leafRelation' and '$closeRelation': ${e.message}")
-            }
-        }
+        unifier = varAssign
+                ?: try {
+                    Unification.unify(nodeRelation, closeRelation)
+                } catch (e: UnificationImpossible) {
+                    throw IllegalMove("Cannot unify '$nodeRelation' and '$closeRelation': ${e.message}")
+                }
 
         // Apply all specified variable instantiations globally
         val instantiator = LogicNodeVariableInstantiator(unifier)
@@ -126,18 +123,18 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         }
 
         // Check relations after instantiation
-        if (!leafRelation.synEq(closeRelation))
-            throw IllegalMove("Relations '$leafRelation' and '$closeRelation' are" +
-                " not equal after variable instantiation")
+        if (!nodeRelation.synEq(closeRelation))
+            throw IllegalMove("Relations '$nodeRelation' and '$closeRelation' are" +
+                    " not equal after variable instantiation")
 
         // Close branch
-        leaf.closeRef = closeID
-        state.setClosed(leafID)
+        node.closeRef = closeID
+        state.setClosed(nodeID)
 
         // Record close move for backtracking purposes
         if (state.backtracking) {
             val varAssignStrings = unifier.mapValues { it.value.toString() }
-            val move = CloseMove(leafID, closeID, varAssignStrings)
+            val move = CloseMove(nodeID, closeID, varAssignStrings)
             state.moveHistory.add(move)
         }
 

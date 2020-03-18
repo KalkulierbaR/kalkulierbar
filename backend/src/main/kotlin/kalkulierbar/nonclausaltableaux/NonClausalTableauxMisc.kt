@@ -32,7 +32,7 @@ class NcTableauxState(
      */
     @Suppress("ReturnCount")
     fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
-        val child = nodes.get(childID)
+        val child = nodes[childID]
         if (child.parent == parentID)
             return true
         if (child.parent == 0 || child.parent == null)
@@ -42,14 +42,14 @@ class NcTableauxState(
 
     /**
      * Marks a tree node and its ancestry as closed
-     * NOTE: This does NOT set the closeRef of the closed leaf
+     * NOTE: This does NOT set the closeRef of the closed node
      *       so make sure the closeRef is set before calling this
-     * @param nodeID The leaf to mark as closed
+     * @param nodeID The node to mark as closed
      */
     fun setClosed(nodeID: Int) {
         var node = nodes[nodeID]
-        // Set isClosed to true for all nodes dominated by leaf in reverse tree
-        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
+        // Set isClosed to true for all nodes dominated by node in reverse tree
+        while (node == nodes[nodeID] || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
             node.isClosed = true
             if (node.parent == null)
                 break
@@ -64,7 +64,7 @@ class NcTableauxState(
     }
 
     override fun getHash(): String {
-        val nodeH = nodes.map { it.getHash() }.joinToString(",")
+        val nodeH = nodes.joinToString(",") { it.getHash() }
         val historyH = moveHistory.joinToString(",")
         val identifiersH = identifiers.joinToString(",")
         val variousH = "$backtracking|$usedBacktracking|$gammaSuffixCounter|$skolemCounter|$formula"
@@ -99,34 +99,34 @@ abstract class NcTableauxMove
 
 @Serializable
 @SerialName("alpha")
-class AlphaMove(val leafID: Int) : NcTableauxMove() {
-    override fun toString() = "(alpha|$leafID)"
+class AlphaMove(val nodeID: Int) : NcTableauxMove() {
+    override fun toString() = "(alpha|$nodeID)"
 }
 
 @Serializable
 @SerialName("beta")
-class BetaMove(val leafID: Int) : NcTableauxMove() {
-    override fun toString() = "(beta|$leafID)"
+class BetaMove(val nodeID: Int) : NcTableauxMove() {
+    override fun toString() = "(beta|$nodeID)"
 }
 
 @Serializable
 @SerialName("gamma")
-class GammaMove(val leafID: Int) : NcTableauxMove() {
-    override fun toString() = "(gamma|$leafID)"
+class GammaMove(val nodeID: Int) : NcTableauxMove() {
+    override fun toString() = "(gamma|$nodeID)"
 }
 
 @Serializable
 @SerialName("delta")
-class DeltaMove(val leafID: Int) : NcTableauxMove() {
-    override fun toString() = "(delta|$leafID)"
+class DeltaMove(val nodeID: Int) : NcTableauxMove() {
+    override fun toString() = "(delta|$nodeID)"
 }
 
 @Serializable
 @SerialName("close")
 class CloseMove(
-    val leafID: Int,
-    val closeID: Int,
-    val varAssign: Map<String, String>?
+        val nodeID: Int,
+        val closeID: Int,
+        val varAssign: Map<String, String>?
 ) : NcTableauxMove() {
     /**
      * Parses map values to first-order terms
@@ -145,7 +145,7 @@ class CloseMove(
         }
     }
 
-    override fun toString() = "(close|$leafID|$closeID|$varAssign)"
+    override fun toString() = "(close|$nodeID|$closeID|$varAssign)"
 }
 
 @Serializable
