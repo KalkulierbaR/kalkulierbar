@@ -208,11 +208,9 @@ export const addExample = async (
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/addExample`;
-    const newDate = new Date();
-    const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
     const mac = new Keccak(256);
-    console.log(date);
-    mac.update(`kbae|${example}|${date}|${useAppState().adminKey}`);
+    //todo: Mac wird falsch berechnet
+    mac.update(`kbae|${example}|${getCurrentDate()}|${useAppState().adminKey}`);
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {

@@ -7,6 +7,7 @@ import {stringArrayToStringMap} from "../../../util/array-to-map";
 import Btn from "../../btn";
 import OptionList from "../option-list";
 import * as style from "./style.scss";
+import {addExample} from "../../../util/api";
 
 declare module "preact" {
     namespace JSX {
@@ -57,6 +58,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     } = useAppState();
 
     const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
+    const [createExample, setCreateExample] = useState(false);
 
     /**
      * Handle the Submit event of the form
@@ -81,12 +83,30 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 onError(await response.text());
             } else {
                 const parsed = await response.json();
-                onChange(calculus, parsed);
-                route(`/${calculus}/view`);
+                if(!createExample) {
+                    onChange(calculus, parsed);
+                    route(`/${calculus}/view`);
+                }else{
+                    addExample(
+                        server,
+                        {
+                            name: "name",
+                            description: "descr",
+                            calculus: calculus,
+                            formula: normalizeInput(savedFormulas[calculus]),
+                            params: params!
+                        },
+                        onError
+                    )
+                }
             }
         } catch (e) {
             onError((e as Error).message);
         }
+    };
+
+    const onSubmitExample = (event: Event) => {
+        setCreateExample(true);
     };
 
     const textAreaRef = createRef<HTMLTextAreaElement>();
@@ -181,10 +201,24 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 }
                 <Btn
                     type="submit"
+                    name="action"
+                    value="parse"
                     disabled={textareaValue.length === 0}
                 >
                     Start proof
                 </Btn>
+                {
+                    useAppState().isAdmin ?
+                        <Btn
+                            type="submit"
+                            name="action"
+                            value="addExample"
+                            onClick={onSubmitExample}
+                            disabled={textareaValue.length === 0}
+                        >
+                            add Example
+                        </Btn> : undefined
+                }
             </form>
         </div>
     );

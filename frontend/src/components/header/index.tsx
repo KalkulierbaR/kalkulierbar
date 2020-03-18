@@ -333,7 +333,7 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     );
 };
 
-
+//ToDo: BUG: erst nach der 2. request wird der Wert übernommen.
 const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
    showLabel = true,
    close,
