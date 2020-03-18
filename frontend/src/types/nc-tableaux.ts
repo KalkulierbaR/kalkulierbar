@@ -119,7 +119,7 @@ export interface NCTabDeltaMove {
 }
 
 export interface NCTabCloseMove {
-    type: "alpha";
+    type: "close";
     leafID: number;
     closeID: number;
     varAssign: VarAssign | null;

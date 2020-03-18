@@ -6,6 +6,7 @@ import { useState, useCallback } from "preact/hooks";
 import { DragTransform } from "../../../types/ui";
 import { NCTabTreeNode } from "../../../types/nc-tableaux";
 import { updateDragTransform } from "../../../util/tableaux";
+import NCTabFAB from "../../../components/nc-tableaux/fab";
 
 const NCTableauxView: preact.FunctionalComponent = () => {
     const { "nc-tableaux": cState, onChange } = useAppState();
@@ -53,6 +54,12 @@ const NCTableauxView: preact.FunctionalComponent = () => {
                     onDrag={onDrag}
                 />
             </div>
+            <NCTabFAB
+                state={state}
+                selectedNodeId={selectedNodeId}
+                resetDragTransform={resetDragTransform}
+                resetDragTransforms={resetDragTransforms}
+            />
         </Fragment>
     );
 };
