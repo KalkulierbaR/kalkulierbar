@@ -37,6 +37,33 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
 }) => {
     const { smallScreen, server, onError, onChange, onSuccess } = useAppState();
 
+    const selectedNode =
+        selectedNodeId === undefined ? undefined : state.nodes[selectedNodeId];
+
+    const showAlpha =
+        selectedNode &&
+        (selectedNode.formula.type === "and" ||
+            (selectedNode.formula.type === "not" &&
+                selectedNode.formula.child.type === "or"));
+
+    const showBeta =
+        selectedNode &&
+        (selectedNode.formula.type === "or" ||
+            (selectedNode.formula.type === "not" &&
+                selectedNode.formula.child.type === "and"));
+
+    const showGamma =
+        selectedNode &&
+        (selectedNode.formula.type === "allquant" ||
+            (selectedNode.formula.type === "not" &&
+                selectedNode.formula.child.type === "exquant"));
+
+    const showDelta =
+        selectedNode &&
+        (selectedNode.formula.type === "exquant" ||
+            (selectedNode.formula.type === "not" &&
+                selectedNode.formula.child.type === "allquant"));
+
     const resetView = (
         <FAB
             icon={<CenterIcon />}
@@ -98,74 +125,82 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
             ) : (
                 <Fragment>
                     {resetView}
-                    <FAB
-                        icon={<span class={style.greekLetter}>α</span>}
-                        showIconAtEnd
-                        mini
-                        extended
-                        label="Alpha"
-                        onClick={() => {
-                            sendAlpha(
-                                server,
-                                state,
-                                onChange,
-                                onError,
-                                selectedNodeId,
-                            );
-                            setSelectedNode(undefined);
-                        }}
-                    />
-                    <FAB
-                        icon={<span class={style.greekLetter}>β</span>}
-                        showIconAtEnd
-                        mini
-                        extended
-                        label="Beta"
-                        onClick={() => {
-                            sendBeta(
-                                server,
-                                state,
-                                onChange,
-                                onError,
-                                selectedNodeId,
-                            );
-                            setSelectedNode(undefined);
-                        }}
-                    />
-                    <FAB
-                        icon={<span class={style.greekLetter}>γ</span>}
-                        showIconAtEnd
-                        mini
-                        extended
-                        label="Gamma"
-                        onClick={() => {
-                            sendGamma(
-                                server,
-                                state,
-                                onChange,
-                                onError,
-                                selectedNodeId,
-                            );
-                            setSelectedNode(undefined);
-                        }}
-                    />
-                    <FAB
-                        icon={<span class={style.greekLetter}>δ</span>}
-                        showIconAtEnd
-                        mini
-                        extended
-                        label="Delta"
-                        onClick={() => {
-                            sendDelta(
-                                server,
-                                state,
-                                onChange,
-                                onError,
-                                selectedNodeId,
-                            );
-                            setSelectedNode(undefined);
-                        }}
-                    />
+                    {showAlpha && (
+                        <FAB
+                            icon={<span class={style.greekLetter}>α</span>}
+                            showIconAtEnd
+                            mini
+                            extended
+                            label="Alpha"
+                            onClick={() => {
+                                sendAlpha(
+                                    server,
+                                    state,
+                                    onChange,
+                                    onError,
+                                    selectedNodeId,
+                                );
+                                setSelectedNode(undefined);
+                            }}
+                        />
+                    )}
+                    {showBeta && (
+                        <FAB
+                            icon={<span class={style.greekLetter}>β</span>}
+                            showIconAtEnd
+                            mini
+                            extended
+                            label="Beta"
+                            onClick={() => {
+                                sendBeta(
+                                    server,
+                                    state,
+                                    onChange,
+                                    onError,
+                                    selectedNodeId,
+                                );
+                                setSelectedNode(undefined);
+                            }}
+                        />
+                    )}
+                    {showGamma && (
+                        <FAB
+                            icon={<span class={style.greekLetter}>γ</span>}
+                            showIconAtEnd
+                            mini
+                            extended
+                            label="Gamma"
+                            onClick={() => {
+                                sendGamma(
+                                    server,
+                                    state,
+                                    onChange,
+                                    onError,
+                                    selectedNodeId,
+                                );
+                                setSelectedNode(undefined);
+                            }}
+                        />
+                    )}
+                    {showDelta && (
+                        <FAB
+                            icon={<span class={style.greekLetter}>δ</span>}
+                            showIconAtEnd
+                            mini
+                            extended
+                            label="Delta"
+                            onClick={() => {
+                                sendDelta(
+                                    server,
+                                    state,
+                                    onChange,
+                                    onError,
+                                    selectedNodeId,
+                                );
+                                setSelectedNode(undefined);
+                            }}
+                        />
+                    )}
                 </Fragment>
             )}
         </ControlFAB>
