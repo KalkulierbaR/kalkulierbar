@@ -15,6 +15,8 @@ import CheckCircleIcon from "../../icons/check-circle";
 import { checkClose } from "../../../util/api";
 import UndoIcon from "../../icons/undo";
 
+import * as style from "./style.scss";
+
 interface Props {
     state: NCTableauxState;
     selectedNodeId: number | undefined;
@@ -97,7 +99,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                 <Fragment>
                     {resetView}
                     <FAB
-                        icon={null}
+                        icon={<span class={style.greekLetter}>α</span>}
                         showIconAtEnd
                         mini
                         extended
@@ -114,7 +116,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         }}
                     />
                     <FAB
-                        icon={null}
+                        icon={<span class={style.greekLetter}>β</span>}
                         showIconAtEnd
                         mini
                         extended
@@ -131,7 +133,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         }}
                     />
                     <FAB
-                        icon={null}
+                        icon={<span class={style.greekLetter}>γ</span>}
                         showIconAtEnd
                         mini
                         extended
@@ -148,7 +150,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         }}
                     />
                     <FAB
-                        icon={null}
+                        icon={<span class={style.greekLetter}>δ</span>}
                         showIconAtEnd
                         mini
                         extended
