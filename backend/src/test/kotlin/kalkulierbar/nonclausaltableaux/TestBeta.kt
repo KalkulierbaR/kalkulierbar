@@ -35,18 +35,6 @@ class TestBeta {
     }
 
     @Test
-    fun testNonLeaf() {
-        val formula = FirstOrderParser.parse("P(c) & (P(d) | P(d))")
-        var state = NcTableauxState(formula)
-
-        state = instance.applyMoveOnState(state, AlphaMove(0))
-
-        assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, BetaMove(1))
-        }
-    }
-
-    @Test
     fun testBasic() {
         val formula = FirstOrderParser.parse("P(c) | P(d)")
         var state = NcTableauxState(formula)
