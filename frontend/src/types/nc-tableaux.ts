@@ -94,6 +94,10 @@ export interface NCTableauxNode {
     spelling: string;
 }
 
+export interface NCTabTreeNode extends NCTableauxNode {
+    id: number;
+}
+
 export interface NCTabAlphaMove {
     type: "alpha";
     leafID: number;

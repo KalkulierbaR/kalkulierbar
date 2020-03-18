@@ -341,7 +341,7 @@ const exampleState: NCTableauxState = {
             closeRef: null,
             children: [],
             spelling:
-                "(((((((R(b) âˆ§ R(c)) âˆ§ R(a)) âˆ§ (âˆ€X: R(f(b, X)))) âˆ§ (Â¬R(f(b, a)) âˆ¨ Â¬R(f(b, b)))) âˆ§ ((Â¬R(a) âˆ¨ Â¬R(b)) âˆ¨ Â¬R(c))) âˆ§ (âˆ€Y: Q(Y))) âˆ§ Â¬Q(c))",
+                "(((((((R(b) ∧ R(c)) ∧ R(a)) ∧ (∀X: R(f(b, X)))) ∧ (¬R(f(b, a)) ∨ ¬R(f(b, b)))) ∧ ((¬R(a) ∨ ¬R(b)) ∨ ¬R(c))) ∧ (∀Y: Q(Y))) ∧ ¬Q(c))",
             isLeaf: true,
         },
     ],
