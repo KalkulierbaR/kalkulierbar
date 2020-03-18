@@ -6,152 +6,77 @@ const exampleState: NCTableauxState = {
         leftChild: {
             type: "and",
             leftChild: {
-                type: "and",
-                leftChild: {
-                    type: "and",
-                    leftChild: {
-                        type: "and",
-                        leftChild: {
-                            type: "and",
-                            leftChild: {
-                                type: "and",
-                                leftChild: {
-                                    type: "relation",
-                                    spelling: "R",
-                                    arguments: [
-                                        { type: "Constant", spelling: "b" },
-                                    ],
-                                },
-                                rightChild: {
-                                    type: "relation",
-                                    spelling: "R",
-                                    arguments: [
-                                        { type: "Constant", spelling: "c" },
-                                    ],
-                                },
-                            },
-                            rightChild: {
-                                type: "relation",
-                                spelling: "R",
-                                arguments: [
-                                    { type: "Constant", spelling: "a" },
-                                ],
-                            },
-                        },
-                        rightChild: {
-                            type: "allquant",
-                            varName: "X",
-                            child: {
-                                type: "relation",
-                                spelling: "R",
+                type: "allquant",
+                varName: "X",
+                child: {
+                    type: "not",
+                    child: {
+                        type: "relation",
+                        spelling: "R",
+                        arguments: [
+                            {
+                                type: "Function",
+                                spelling: "f",
                                 arguments: [
                                     {
-                                        type: "Function",
-                                        spelling: "f",
-                                        arguments: [
-                                            { type: "Constant", spelling: "b" },
-                                            {
-                                                type: "QuantifiedVariable",
-                                                spelling: "X",
-                                            },
-                                        ],
+                                        type: "QuantifiedVariable",
+                                        spelling: "X",
                                     },
                                 ],
                             },
-                            boundVariables: [{ spelling: "X" }],
-                        },
-                    },
-                    rightChild: {
-                        type: "or",
-                        leftChild: {
-                            type: "not",
-                            child: {
-                                type: "relation",
-                                spelling: "R",
-                                arguments: [
-                                    {
-                                        type: "Function",
-                                        spelling: "f",
-                                        arguments: [
-                                            { type: "Constant", spelling: "b" },
-                                            { type: "Constant", spelling: "a" },
-                                        ],
-                                    },
-                                ],
-                            },
-                        },
-                        rightChild: {
-                            type: "not",
-                            child: {
-                                type: "relation",
-                                spelling: "R",
-                                arguments: [
-                                    {
-                                        type: "Function",
-                                        spelling: "f",
-                                        arguments: [
-                                            { type: "Constant", spelling: "b" },
-                                            { type: "Constant", spelling: "b" },
-                                        ],
-                                    },
-                                ],
-                            },
-                        },
+                        ],
                     },
                 },
-                rightChild: {
-                    type: "or",
-                    leftChild: {
-                        type: "or",
-                        leftChild: {
-                            type: "not",
-                            child: {
-                                type: "relation",
-                                spelling: "R",
-                                arguments: [
-                                    { type: "Constant", spelling: "a" },
-                                ],
-                            },
+                boundVariables: [{ spelling: "X" }],
+            },
+            rightChild: {
+                type: "or",
+                leftChild: {
+                    type: "relation",
+                    spelling: "R",
+                    arguments: [
+                        {
+                            type: "Function",
+                            spelling: "f",
+                            arguments: [{ type: "Constant", spelling: "a" }],
                         },
-                        rightChild: {
-                            type: "not",
-                            child: {
-                                type: "relation",
-                                spelling: "R",
+                    ],
+                },
+                rightChild: {
+                    type: "not",
+                    child: {
+                        type: "relation",
+                        spelling: "R",
+                        arguments: [
+                            {
+                                type: "Function",
+                                spelling: "f",
                                 arguments: [
                                     { type: "Constant", spelling: "b" },
                                 ],
                             },
-                        },
-                    },
-                    rightChild: {
-                        type: "not",
-                        child: {
-                            type: "relation",
-                            spelling: "R",
-                            arguments: [{ type: "Constant", spelling: "c" }],
-                        },
+                        ],
                     },
                 },
-            },
-            rightChild: {
-                type: "allquant",
-                varName: "Y",
-                child: {
-                    type: "relation",
-                    spelling: "Q",
-                    arguments: [{ type: "QuantifiedVariable", spelling: "Y" }],
-                },
-                boundVariables: [{ spelling: "Y" }],
             },
         },
         rightChild: {
-            type: "not",
+            type: "allquant",
+            varName: "X",
             child: {
                 type: "relation",
-                spelling: "Q",
-                arguments: [{ type: "Constant", spelling: "c" }],
+                spelling: "R",
+                arguments: [
+                    {
+                        type: "Function",
+                        spelling: "f",
+                        arguments: [
+                            { type: "QuantifiedVariable", spelling: "X" },
+                        ],
+                    },
+                ],
             },
+            boundVariables: [{ spelling: "X" }],
         },
     },
     backtracking: true,
@@ -163,192 +88,97 @@ const exampleState: NCTableauxState = {
                 leftChild: {
                     type: "and",
                     leftChild: {
-                        type: "and",
-                        leftChild: {
-                            type: "and",
-                            leftChild: {
-                                type: "and",
-                                leftChild: {
-                                    type: "and",
-                                    leftChild: {
-                                        type: "and",
-                                        leftChild: {
-                                            type: "relation",
-                                            spelling: "R",
-                                            arguments: [
-                                                {
-                                                    type: "Constant",
-                                                    spelling: "b",
-                                                },
-                                            ],
-                                        },
-                                        rightChild: {
-                                            type: "relation",
-                                            spelling: "R",
-                                            arguments: [
-                                                {
-                                                    type: "Constant",
-                                                    spelling: "c",
-                                                },
-                                            ],
-                                        },
-                                    },
-                                    rightChild: {
-                                        type: "relation",
-                                        spelling: "R",
-                                        arguments: [
-                                            { type: "Constant", spelling: "a" },
-                                        ],
-                                    },
-                                },
-                                rightChild: {
-                                    type: "allquant",
-                                    varName: "X",
-                                    child: {
-                                        type: "relation",
-                                        spelling: "R",
+                        type: "allquant",
+                        varName: "X",
+                        child: {
+                            type: "not",
+                            child: {
+                                type: "relation",
+                                spelling: "R",
+                                arguments: [
+                                    {
+                                        type: "Function",
+                                        spelling: "f",
                                         arguments: [
                                             {
-                                                type: "Function",
-                                                spelling: "f",
-                                                arguments: [
-                                                    {
-                                                        type: "Constant",
-                                                        spelling: "b",
-                                                    },
-                                                    {
-                                                        type:
-                                                            "QuantifiedVariable",
-                                                        spelling: "X",
-                                                    },
-                                                ],
+                                                type: "QuantifiedVariable",
+                                                spelling: "X",
                                             },
                                         ],
                                     },
-                                    boundVariables: [{ spelling: "X" }],
-                                },
-                            },
-                            rightChild: {
-                                type: "or",
-                                leftChild: {
-                                    type: "not",
-                                    child: {
-                                        type: "relation",
-                                        spelling: "R",
-                                        arguments: [
-                                            {
-                                                type: "Function",
-                                                spelling: "f",
-                                                arguments: [
-                                                    {
-                                                        type: "Constant",
-                                                        spelling: "b",
-                                                    },
-                                                    {
-                                                        type: "Constant",
-                                                        spelling: "a",
-                                                    },
-                                                ],
-                                            },
-                                        ],
-                                    },
-                                },
-                                rightChild: {
-                                    type: "not",
-                                    child: {
-                                        type: "relation",
-                                        spelling: "R",
-                                        arguments: [
-                                            {
-                                                type: "Function",
-                                                spelling: "f",
-                                                arguments: [
-                                                    {
-                                                        type: "Constant",
-                                                        spelling: "b",
-                                                    },
-                                                    {
-                                                        type: "Constant",
-                                                        spelling: "b",
-                                                    },
-                                                ],
-                                            },
-                                        ],
-                                    },
-                                },
+                                ],
                             },
                         },
-                        rightChild: {
-                            type: "or",
-                            leftChild: {
-                                type: "or",
-                                leftChild: {
-                                    type: "not",
-                                    child: {
-                                        type: "relation",
-                                        spelling: "R",
-                                        arguments: [
-                                            { type: "Constant", spelling: "a" },
-                                        ],
-                                    },
+                        boundVariables: [{ spelling: "X" }],
+                    },
+                    rightChild: {
+                        type: "or",
+                        leftChild: {
+                            type: "relation",
+                            spelling: "R",
+                            arguments: [
+                                {
+                                    type: "Function",
+                                    spelling: "f",
+                                    arguments: [
+                                        { type: "Constant", spelling: "a" },
+                                    ],
                                 },
-                                rightChild: {
-                                    type: "not",
-                                    child: {
-                                        type: "relation",
-                                        spelling: "R",
+                            ],
+                        },
+                        rightChild: {
+                            type: "not",
+                            child: {
+                                type: "relation",
+                                spelling: "R",
+                                arguments: [
+                                    {
+                                        type: "Function",
+                                        spelling: "f",
                                         arguments: [
                                             { type: "Constant", spelling: "b" },
                                         ],
                                     },
-                                },
-                            },
-                            rightChild: {
-                                type: "not",
-                                child: {
-                                    type: "relation",
-                                    spelling: "R",
-                                    arguments: [
-                                        { type: "Constant", spelling: "c" },
-                                    ],
-                                },
+                                ],
                             },
                         },
-                    },
-                    rightChild: {
-                        type: "allquant",
-                        varName: "Y",
-                        child: {
-                            type: "relation",
-                            spelling: "Q",
-                            arguments: [
-                                { type: "QuantifiedVariable", spelling: "Y" },
-                            ],
-                        },
-                        boundVariables: [{ spelling: "Y" }],
                     },
                 },
                 rightChild: {
-                    type: "not",
+                    type: "allquant",
+                    varName: "X",
                     child: {
                         type: "relation",
-                        spelling: "Q",
-                        arguments: [{ type: "Constant", spelling: "c" }],
+                        spelling: "R",
+                        arguments: [
+                            {
+                                type: "Function",
+                                spelling: "f",
+                                arguments: [
+                                    {
+                                        type: "QuantifiedVariable",
+                                        spelling: "X",
+                                    },
+                                ],
+                            },
+                        ],
                     },
+                    boundVariables: [{ spelling: "X" }],
                 },
             },
             isClosed: false,
             closeRef: null,
             children: [],
             spelling:
-                "(((((((R(b) ∧ R(c)) ∧ R(a)) ∧ (∀X: R(f(b, X)))) ∧ (¬R(f(b, a)) ∨ ¬R(f(b, b)))) ∧ ((¬R(a) ∨ ¬R(b)) ∨ ¬R(c))) ∧ (∀Y: Q(Y))) ∧ ¬Q(c))",
-            isLeaf: true,
+                "(((∀X: ¬R(f(X))) ∧ (R(f(a)) ∨ ¬R(f(b)))) ∧ (∀X: R(f(X))))",
         },
     ],
     moveHistory: [],
+    identifiers: ["X", "R", "f", "a", "b"],
     usedBacktracking: false,
-    expansionCounter: 0,
-    seal: "F84F6DA714EE82F5A0CE2ACB30CBF6D3235C6F9D98896860FCD89A074860189D",
+    gammaSuffixCounter: 0,
+    skolemCounter: 0,
+    seal: "0272C639650E0F0D9B9FA4A07D20FCE7BF01AB43ACF78AC46BEE13E4F0FA8C74",
 };
 
 export default exampleState;
