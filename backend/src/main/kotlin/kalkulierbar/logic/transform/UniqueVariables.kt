@@ -111,7 +111,7 @@ class UniqueVariables : DoNothingVisitor() {
  * FirstOrderTerm visitor to re-name variables
  * @param replacementMap Map of all variables to replace and their new variable name
  */
-class VariableRenamer(val replacementMap: Map<QuantifiedVariable, String>) : FirstOrderTermVisitor<Unit>() {
+class VariableRenamer(val replacementMap: Map<QuantifiedVariable, String>, val strict: Boolean = true) : FirstOrderTermVisitor<Unit>() {
 
     /**
      * Change the variable name to the new spelling
@@ -121,7 +121,7 @@ class VariableRenamer(val replacementMap: Map<QuantifiedVariable, String>) : Fir
     override fun visit(node: QuantifiedVariable) {
         if (replacementMap[node] != null)
             node.spelling = replacementMap[node]!!
-        else
+        else if (strict)
             throw FormulaConversionException("Encountered QuantifiedVariable with no disambiguation replacement: $node")
     }
 

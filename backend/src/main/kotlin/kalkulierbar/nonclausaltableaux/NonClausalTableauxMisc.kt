@@ -3,10 +3,12 @@ package kalkulierbar.nonclausaltableaux
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
 
 @Serializable
 class NcTableauxState(
@@ -15,8 +17,10 @@ class NcTableauxState(
 ) : ProtectedState() {
     val nodes = mutableListOf<NcTableauxNode>(NcTableauxNode(null, formula))
     val moveHistory = mutableListOf<NcTableauxMove>()
+    val identifiers = IdentifierCollector.collect(formula).toMutableSet()
     var usedBacktracking = false
-    var expansionCounter = 0
+    var gammaSuffixCounter = 0
+    var skolemCounter = 0
 
     override var seal = ""
 
@@ -33,49 +37,89 @@ class NcTableauxState(
             return true
         if (child.parent == 0 || child.parent == null)
             return false
-        return nodeIsParentOf(parentID, child.parent!!)
+        return nodeIsParentOf(parentID, child.parent)
+    }
+
+    /**
+     * Marks a tree node and its ancestry as closed
+     * NOTE: This does NOT set the closeRef of the closed leaf
+     *       so make sure the closeRef is set before calling this
+     * @param nodeID The leaf to mark as closed
+     */
+    fun setClosed(nodeID: Int) {
+        var node = nodes[nodeID]
+        // Set isClosed to true for all nodes dominated by leaf in reverse tree
+        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
+            node.isClosed = true
+            if (node.parent == null)
+                break
+            node = nodes[node.parent!!]
+        }
+    }
+
+    fun render() {
+        nodes.forEach {
+            it.render()
+        }
     }
 
     override fun getHash(): String {
-        return "sphinxofblackquartz"
+        val nodeH = nodes.map { it.getHash() }.joinToString(",")
+        val historyH = moveHistory.joinToString(",")
+        val identifiersH = identifiers.joinToString(",")
+        val variousH = "$backtracking|$usedBacktracking|$gammaSuffixCounter|$skolemCounter|$formula"
+        return "nctableaux|$variousH|$identifiersH|$nodeH|$historyH"
     }
 }
 
 @Serializable
 class NcTableauxNode(
     val parent: Int?,
-    val formula: LogicNode
+    var formula: LogicNode
 ) {
 
     var isClosed = false
     var closeRef: Int? = null
     val children = mutableListOf<Int>()
     var spelling = formula.toString()
-    val isLeaf = children.size == 0
+    val isLeaf
+        get() = children.size == 0
 
-    override fun toString() = spelling
+    override fun toString() = formula.toString()
 
-    fun getHash() = "judgemyvow"
+    fun render() {
+        spelling = formula.toString()
+    }
+
+    fun getHash() = "($parent|$children|$isClosed|$closeRef|$formula)"
 }
 
 @Serializable
-open class NcTableauxMove
+abstract class NcTableauxMove
 
 @Serializable
 @SerialName("alpha")
-class AlphaMove(val leafID: Int) : NcTableauxMove()
+class AlphaMove(val leafID: Int) : NcTableauxMove() {
+    override fun toString() = "(alpha|$leafID)"
+}
 
 @Serializable
 @SerialName("beta")
-class BetaMove(val leafID: Int) : NcTableauxMove()
+class BetaMove(val leafID: Int) : NcTableauxMove() {
+    override fun toString() = "(beta|$leafID)"
+}
 
 @Serializable
 @SerialName("gamma")
-class GammaMove(val leafID: Int) : NcTableauxMove()
+class GammaMove(val leafID: Int) : NcTableauxMove() {
+    override fun toString() = "(gamma|$leafID)"
+}
 
 @Serializable
 @SerialName("delta")
-class DeltaMove(val leafID: Int) : NcTableauxMove()
+class DeltaMove(val leafID: Int) : NcTableauxMove() {
+    override fun toString() = "(delta|$leafID)"
+}
 
 @Serializable
 @SerialName("close")
@@ -100,8 +144,25 @@ class CloseMove(
             }
         }
     }
+
+    override fun toString() = "(close|$leafID|$closeID|$varAssign)"
 }
 
 @Serializable
 @SerialName("undo")
-class UndoMove : NcTableauxMove()
+class UndoMove : NcTableauxMove() {
+    override fun toString() = "(undo)"
+}
+
+// Context object for move serialization
+// Tells kotlinx.serialize about child types of NcTableauxMove
+val NcMoveModule = SerializersModule {
+    polymorphic(NcTableauxMove::class) {
+        AlphaMove::class with AlphaMove.serializer()
+        BetaMove::class with BetaMove.serializer()
+        GammaMove::class with GammaMove.serializer()
+        DeltaMove::class with DeltaMove.serializer()
+        CloseMove::class with CloseMove.serializer()
+        UndoMove::class with UndoMove.serializer()
+    }
+}

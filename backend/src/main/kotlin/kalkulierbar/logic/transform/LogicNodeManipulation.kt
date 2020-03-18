@@ -27,9 +27,7 @@ class LogicNodeVariableInstantiator(val replacementMap: Map<String, FirstOrderTe
 
     override fun visit(node: Relation): LogicNode {
         val variableInstantiator = VariableInstantiator(replacementMap)
-        node.arguments.forEach {
-            it.accept(variableInstantiator)
-        }
+        node.arguments = node.arguments.map { it.accept(variableInstantiator) }
 
         return node
     }
@@ -39,7 +37,7 @@ class LogicNodeVariableInstantiator(val replacementMap: Map<String, FirstOrderTe
  * LogicNode visitor to re-name Quantified Variables in formula
  * @param replacementMap Map of all variables to replace and their new Variable name
  */
-class LogicNodeVariableRenamer(val replacementMap: Map<QuantifiedVariable, String>) : DoNothingVisitor() {
+class SelectiveSuffixAppender(val replacementMap: Map<QuantifiedVariable, String>) : DoNothingVisitor() {
 
     companion object Companion {
 
@@ -52,12 +50,12 @@ class LogicNodeVariableRenamer(val replacementMap: Map<QuantifiedVariable, Strin
          */
         fun transform(formula: LogicNode, vars: List<QuantifiedVariable>, suffix: String): LogicNode {
             val map = vars.associateWith { it.spelling + suffix }
-            val instance = LogicNodeVariableRenamer(map)
+            val instance = SelectiveSuffixAppender(map)
             return formula.accept(instance)
         }
     }
 
-    private val varRenamer = VariableRenamer(replacementMap)
+    private val varRenamer = VariableRenamer(replacementMap, strict = false)
 
     /**
      * Recursively rename quantified variables

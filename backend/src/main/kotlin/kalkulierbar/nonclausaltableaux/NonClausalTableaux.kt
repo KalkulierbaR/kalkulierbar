@@ -5,29 +5,21 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.UnificationImpossible
-import kalkulierbar.logic.And
-import kalkulierbar.logic.ExistentialQuantifier
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
-import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
 import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
-import kalkulierbar.logic.transform.DeltaSkolemization
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
-import kalkulierbar.logic.transform.LogicNodeVariableRenamer
 import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.logic.transform.Unification
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-val serializer = Json(context = FoTermModule + LogicModule)
-
-@Suppress("TooManyFunctions")
 class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>() {
+
+    private val serializer = Json(context = FoTermModule + LogicModule + NcMoveModule)
 
     override val identifier = "nc-tableaux"
 
@@ -51,166 +43,6 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
     }
 
     /**
-     * While the outermost LogicNode is an AND:
-     * Split into subformulae, chain onto a single branch
-     * @param state: Non clausal tableaux state to apply move on
-     * @param leafID: leaf node ID to apply move on
-     * @return new state after applying move
-     */
-    private fun applyAlpha(state: NcTableauxState, leafID: Int): NcTableauxState {
-        val nodes = state.nodes
-        checkLeafRestrictions(nodes, leafID)
-
-        val formula = state.formula
-        // Get sub-formula splitted by And
-        val conjunctions = recursiveAlpha(formula)
-
-        var parent = leafID
-        // Add nodes, chained onto a single branch
-        for (sub in conjunctions) {
-            nodes.add(NcTableauxNode(parent, sub))
-            nodes[parent].children.add(nodes.size - 1)
-            parent = nodes.size - 1
-        }
-
-        // Add move to history
-        state.moveHistory.add(DeltaMove(leafID))
-        return state
-    }
-
-    /**
-     * While outermost LogicNOde is an AND -> split into subformulae
-     * @param node: node to apply splitting
-     * @return A list containing LogicNodes so that every element is not a AND
-     */
-    private fun recursiveAlpha(node: LogicNode): List<LogicNode> {
-        val lst = mutableListOf<LogicNode>()
-        // Recursively collects all AND LogicNodes
-        while (node is And) {
-            lst.addAll(recursiveAlpha(node.leftChild))
-            lst.addAll(recursiveAlpha(node.rightChild))
-        }
-        return lst
-    }
-
-    /**
-     * Check leafID valid + node at leafID is leaf
-     */
-    private fun checkLeafRestrictions(nodes: List<NcTableauxNode>, leafID: Int) {
-        if (leafID < 0 || leafID >= nodes.size)
-            throw IllegalMove("There is no node with ID: $leafID")
-        if (!nodes[leafID].isLeaf)
-            throw IllegalMove("Selected node is not a leaf")
-    }
-
-    /**
-     * While the outermost LogicNode is an OR:
-     * Split into subformulae and add to leaf node
-     * @param state: non clausal tableaux state to apply move on
-     * @param leafID: ID of leaf-node to apply move on
-     * @return new state after applying move
-     */
-    private fun applyBeta(state: NcTableauxState, leafID: Int): NcTableauxState {
-        val nodes = state.nodes
-        checkLeafRestrictions(nodes, leafID)
-
-        val formula = state.formula
-        // Get sub-formula splitted by Or
-        val disjunctions = recursiveBeta(formula)
-
-        // Add nodes as child node to leafID-node
-        for (sub in disjunctions) {
-            nodes.add(NcTableauxNode(leafID, sub))
-            nodes[leafID].children.add(nodes.size - 1)
-        }
-
-        // Add move to history
-        state.moveHistory.add(BetaMove(leafID))
-        return state
-    }
-
-    /**
-     * While outermost LogicNOde is an OR -> split into subformulae
-     * @param node: node to apply splitting
-     * @return A list containing LogicNodes so that every element is not a OR
-     */
-    private fun recursiveBeta(node: LogicNode): List<LogicNode> {
-        val lst = mutableListOf<LogicNode>()
-        // Recursively collects all OR LogicNodes
-        while (node is Or) {
-            lst.addAll(recursiveBeta(node.leftChild))
-            lst.addAll(recursiveBeta(node.rightChild))
-        }
-
-        return lst
-    }
-
-    /**
-     * If outermost LogicNode is a universal quantifier:
-     * Remove quantifier and instantiate with fresh variable
-     * @param state: non clausal tableaux state to apply move on
-     * @param leafID: ID of leaf-node to apply move on
-     * @return new state after applying move
-     */
-    private fun applyGamma(state: NcTableauxState, leafID: Int): NcTableauxState {
-        val nodes = state.nodes
-        checkLeafRestrictions(nodes, leafID)
-
-        // Check leaf formula == UniversalQuantifier
-        val leafNode = nodes[leafID]
-        val formula = leafNode.formula
-        if (formula !is UniversalQuantifier)
-            throw IllegalMove("There is no universal quantifier")
-
-        // Transform new Formula + remove UniversalQuantifier
-        val vars = formula.boundVariables
-        val suffix = "_${state.expansionCounter + 1}"
-        val newFormula = LogicNodeVariableRenamer.transform(formula.child, vars, suffix)
-
-        // Add new node to tree
-        val newNode = NcTableauxNode(leafID, newFormula)
-        nodes.add(newNode)
-        leafNode.children.add(nodes.size - 1)
-
-        // Add move to history
-        state.moveHistory.add(GammaMove(leafID))
-
-        state.expansionCounter += 1
-        return state
-    }
-
-    /**
-     * If outermost LogicNode is an existantial quantifier:
-     * Remove quantifier and instantiate with Skolem term
-     * -> Iff free variables in current node: term = firstOrderTerm (free variables)
-     * -> IFF no free variables: term = constant
-     * @param state: non clausal tableaux state to apply move on
-     * @param leafID: ID of leaf-node to apply move on
-     * @return new state after applying move
-     */
-    private fun applyDelta(state: NcTableauxState, leafID: Int): NcTableauxState {
-        val nodes = state.nodes
-        checkLeafRestrictions(nodes, leafID)
-
-        // Check leaf == UniversalQuantifier
-        val leafNode = nodes[leafID]
-        val formula = leafNode.formula
-        if (formula !is ExistentialQuantifier)
-            throw IllegalMove("There is no existential quantifier")
-
-        val newFormula = DeltaSkolemization.transform(formula)
-
-        // Add new node to tree
-        val newNode = NcTableauxNode(leafID, newFormula)
-        nodes.add(newNode)
-        leafNode.children.add(nodes.size - 1)
-
-        // Add move to history
-        state.moveHistory.add(DeltaMove(leafID))
-        return state
-    }
-
-    /**
      * Applies close move by following constraints:
      * 1. The outermost LogicNode is a NOT for one and RELATION for the other
      * 2. The child of the NOT node is a RELATION (think this is already covered by converting to NNF)
@@ -221,6 +53,7 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
      * @param varAssign variable assignment to instantiate variables
      * @return state after applying move
      */
+    @Suppress("ThrowsCount", "ComplexMethod", "LongMethod")
     private fun applyClose(
         state: NcTableauxState,
         leafID: Int,
@@ -228,45 +61,11 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         varAssign: Map<String, FirstOrderTerm>?
     ): NcTableauxState {
         val nodes = state.nodes
-        val (leafRelation, closeRelation) = ensureBasicCloseability(state, leafID, closeID)
 
-        val closeNode = nodes[closeID]
-        val leafNode = nodes[leafID]
-
-        if (varAssign != null)
-            return closeBranchCommon(state, leafID, closeID, leafRelation, closeRelation, varAssign)
-
-        // Try to find a unifying variable assignment and pass it to the internal close method
-        // which will handle the verification, tree modification, and history management for us
-        try {
-            val varAssign = Unification.unify(leafRelation, closeRelation)
-            return closeBranchCommon(state, leafID, closeID, leafRelation, closeRelation, varAssign)
-        } catch (e: UnificationImpossible) {
-            throw IllegalMove("Cannot unify '$leafRelation' and '$closeRelation': ${e.message}")
-        }
-    }
-
-    /**
-     * Ensures that basic conditions for branch closure are met
-     * If a condition is not met, an explaining exception will be thrown
-     * Conditions inlcude:
-     *  - Both nodes exist
-     *  - The specified leaf is a leaf and not yet closed
-     *  - Both nodes share the same relation stem (relation name + argument size)
-     *  - The nodes are of opposite polarity
-     *  - The closeNode is an ancestor of the leaf
-     *
-     * @param state State to apply close move in
-     * @param leafID Leaf to close
-     * @param closeID Node to close with
-     * @return Pair of (leaf-relation, closeNode-relation)
-     */
-    @Suppress("ComplexMethod", "ThrowsCount")
-    private fun ensureBasicCloseability(state: NcTableauxState, leafID: Int, closeID: Int): Pair<Relation, Relation> {
         // Verify that both leaf and closeNode are valid nodes
-        if (leafID >= state.nodes.size || leafID < 0)
+        if (leafID >= nodes.size || leafID < 0)
             throw IllegalMove("Node with ID $leafID does not exist")
-        if (closeID >= state.nodes.size || closeID < 0)
+        if (closeID >= nodes.size || closeID < 0)
             throw IllegalMove("Node with ID $closeID does not exist")
 
         val leaf = state.nodes[leafID]
@@ -280,113 +79,69 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
         if (leaf.isClosed)
             throw IllegalMove("Leaf '$leaf' is already closed, no need to close again")
 
-        // Ensure that tree root node cannot be used to close literals of same spelling ('true')
-        if (closeID == 0)
-            throw IllegalMove("The root node cannot be used for branch closure")
-
         // Verify that closeNode is transitive parent of leaf
         if (!state.nodeIsParentOf(closeID, leafID))
             throw IllegalMove("Node '$closeNode' is not an ancestor of leaf '$leaf'")
 
         val leafFormula = leaf.formula
         val closeNodeFormula = closeNode.formula
-        // Verify that leaf and closeNode reference the same Relation
-        if (leafFormula is Not && leafFormula.child is Relation && closeNodeFormula is Relation) {
-            checkCloseRelation(leafFormula.child as Relation, closeNodeFormula)
-            return Pair(leafFormula.child as Relation, closeNodeFormula)
-        } else if (closeNodeFormula is Not && closeNodeFormula.child is Relation && leafFormula is Relation) {
-            checkCloseRelation(leafFormula, closeNodeFormula.child as Relation)
-            return Pair(leafFormula, closeNodeFormula.child as Relation)
-        } else throw IllegalMove("Either one of selected nodes has to be a negated relation " +
-                "while the other is a relation (not negated)")
-    }
+        val leafRelation: Relation
+        val closeRelation: Relation
 
-    private fun checkCloseRelation(rel1: Relation, rel2: Relation) {
-        if (rel1.spelling != rel2.spelling)
-            throw IllegalMove("Leaf and node do not reference the same relation")
-        if (rel1.arguments.size != rel2.arguments.size)
-            throw IllegalMove("Argument size of both relations is not the same")
-    }
+        // Verify that leaf and closeNode are (negated) Relations of compatible polarity
+        if (leafFormula is Not) {
+            if (leafFormula.child !is Relation)
+                throw IllegalMove("Leaf formula '$leafFormula' is not a negated relation")
+            if (closeNodeFormula !is Relation)
+                throw IllegalMove("Close node formula '$closeNodeFormula' is not a relation")
+            leafRelation = leafFormula.child as Relation
+            closeRelation = closeNodeFormula
+        } else if (closeNodeFormula is Not) {
+            if (closeNodeFormula.child !is Relation)
+                throw IllegalMove("Close node formula '$closeNodeFormula' is not a negated relation")
+            if (leafFormula !is Relation)
+                throw IllegalMove("Leaf formula '$leafFormula' is not a relation")
+            leafRelation = leafFormula
+            closeRelation = closeNodeFormula.child as Relation
+        } else {
+            throw IllegalMove("Neither '$leafFormula' nor '$closeNodeFormula' are negated")
+        }
 
-    @Suppress("LongParameterList")
-    /**
-     * Close a branch using either computed or manually entered variable assignments
-     * NOTE: This does NOT verify closeability.
-     *       It is assumed that ensureBasicCloseability has been called before.
-     * @param state State to apply the close move in
-     * @param leafID Leaf to close
-     * @param closeID Node to close the leaf with
-     * @param leafRelation Relation referenced to leaf
-     * @param closeRelation Relation referenced to closeNode
-     * @param varAssign Map of variable names and terms to replace them with
-     * @return state with the close move applied
-     */
-    private fun closeBranchCommon(
-        state: NcTableauxState,
-        leafID: Int,
-        closeID: Int,
-        leafRelation: Relation,
-        closeRelation: Relation,
-        varAssign: Map<String, FirstOrderTerm>
-    ): NcTableauxState {
+        // Use user-supplied variable assignment if given, calculate MGU otherwise
+        val unifier: Map<String, FirstOrderTerm>
+        if (varAssign != null)
+            unifier = varAssign
+        else {
+            try {
+                unifier = Unification.unify(leafRelation, closeRelation)
+            } catch (e: UnificationImpossible) {
+                throw IllegalMove("Cannot unify '$leafRelation' and '$closeRelation': ${e.message}")
+            }
+        }
 
         // Apply all specified variable instantiations globally
-        applyVarInstantiation(state, varAssign)
-
-        val leaf = state.nodes[leafID]
-        val closeNode = state.nodes[closeID]
+        val instantiator = LogicNodeVariableInstantiator(unifier)
+        state.nodes.forEach {
+            it.formula = it.formula.accept(instantiator)
+        }
 
         // Check relations after instantiation
         if (!leafRelation.synEq(closeRelation))
-            throw IllegalMove("Node '$leaf' and '$closeNode' are not equal after variable instantiation")
+            throw IllegalMove("Relations '$leafRelation' and '$closeRelation' are" +
+                " not equal after variable instantiation")
 
         // Close branch
         leaf.closeRef = closeID
-        setNodeClosed(state, leaf)
+        state.setClosed(leafID)
 
         // Record close move for backtracking purposes
         if (state.backtracking) {
-            val varAssignStrings = varAssign.mapValues { it.value.toString() }
+            val varAssignStrings = unifier.mapValues { it.value.toString() }
             val move = CloseMove(leafID, closeID, varAssignStrings)
             state.moveHistory.add(move)
         }
 
         return state
-    }
-
-    /**
-     * Apply a global variable instantiation in the proof tree
-     * @param state State to apply instantiation in
-     * @param varAssign Map of which variables to replace with which terms
-     * @return State with all occurences of variables in the map replaced with their respective terms
-     */
-    private fun applyVarInstantiation(state: NcTableauxState, varAssign: Map<String, FirstOrderTerm>): NcTableauxState {
-        val instantiator = LogicNodeVariableInstantiator(varAssign)
-
-        state.nodes.forEach {
-            it.formula.accept(instantiator)
-        }
-
-        return state
-    }
-
-    /**
-     * Marks a tree node and its ancestry as closed
-     * NOTE: This does NOT set the closeRef of the closed leaf
-     *       so make sure the closeRef is set before calling this
-     * @param state State object to modify
-     * @param leaf The leaf to mark as closed
-     */
-    fun setNodeClosed(state: NcTableauxState, leaf: NcTableauxNode) {
-        var node = leaf
-
-        // Set isClosed to true for all nodes dominated by leaf in reverse tree
-        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && state.nodes[e].isClosed }) {
-            node.isClosed = true
-            if (node.parent == null)
-                break
-            node = state.nodes[node.parent!!]
-        }
     }
 
     /**
@@ -422,7 +177,6 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
 
         if (state.nodes[0].isClosed) {
             val withWithoutBT = if (state.usedBacktracking) "with" else "without"
-
             msg = "The proof is closed and valid in non-clausal tableaux $withWithoutBT backtracking"
         }
 
@@ -456,6 +210,7 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
      * @return JSON state representation
      */
     override fun stateToJson(state: NcTableauxState): String {
+        state.render()
         state.computeSeal()
         return serializer.stringify(NcTableauxState.serializer(), state)
     }
