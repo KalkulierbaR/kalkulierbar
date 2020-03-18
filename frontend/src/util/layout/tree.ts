@@ -34,6 +34,13 @@ export const treeLayout = <N, T extends { id: number }>(
     const root = nodesToTree(nodes);
     layout(root);
 
+    if (root.x - root.width / 2 < 0) {
+        const dist = -(root.x - root.width / 2);
+        preOrderTraverseTree(root, (t) => {
+            t.x += dist;
+        });
+    }
+
     const width = treeWidth(root);
     const links = getLinks(root);
     return { width, height: root.treeHeight, root, links };
@@ -291,7 +298,7 @@ const distributeExtra = <T>(
     const nr = i - si;
     t.children[si + 1].shift += dist / nr;
     t.children[i].shift -= dist / nr;
-    t.children[i].change -= dist / nr;
+    t.children[i].change -= dist - dist / nr;
 };
 
 const addChildSpacing = <T>(t: Tree<T>) => {
