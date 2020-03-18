@@ -2,6 +2,9 @@ import {
     NCTableauxNode,
     NCTabTreeNode,
     NCTableauxState,
+    LogicNode,
+    LogicRelation,
+    FOTerm,
 } from "../types/nc-tableaux";
 import { Tree } from "../types/tree";
 import { estimateSVGTextWidth } from "./text-width";
@@ -124,4 +127,35 @@ const ncTabNodeToTree = (
         { ...n, id: i },
         n.children.map((c) => ncTabNodeToTree(nodes, nodes[c], c, y + 72)),
     );
+};
+
+export const collectVarsFromTerm = (vars: string[], term: FOTerm) => {
+    switch (term.type) {
+        case "Constant":
+            break;
+        case "QuantifiedVariable":
+            vars.push(term.spelling);
+            break;
+        case "Function":
+            for (const arg of term.arguments) {
+                collectVarsFromTerm(vars, arg);
+            }
+            break;
+    }
+};
+
+export const collectVarsFromNode = (vars: string[], formula: LogicNode) => {
+    let node: LogicRelation;
+    if (formula.type === "not" && formula.child.type === "relation") {
+        node = formula.child;
+    } else if (formula.type === "relation") {
+        node = formula;
+    } else {
+        return;
+    }
+
+    for (const arg of node.arguments) {
+        collectVarsFromTerm(vars, arg);
+    }
+    return vars;
 };

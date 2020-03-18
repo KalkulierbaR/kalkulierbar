@@ -7,9 +7,13 @@ import { DragTransform } from "../../../types/ui";
 import { NCTabTreeNode } from "../../../types/nc-tableaux";
 import { updateDragTransform } from "../../../util/tableaux";
 import NCTabFAB from "../../../components/nc-tableaux/fab";
+import Dialog from "../../../components/dialog";
+import VarAssignList from "../../../components/input/var-assign-list";
+import { VarAssign } from "../../../types/tableaux";
+import { sendClose, collectVarsFromNode } from "../../../util/nc-tableaux";
 
 const NCTableauxView: preact.FunctionalComponent = () => {
-    const { "nc-tableaux": cState, onChange } = useAppState();
+    const { "nc-tableaux": cState, onChange, server, onError } = useAppState();
 
     let state = cState;
 
@@ -34,12 +38,70 @@ const NCTableauxView: preact.FunctionalComponent = () => {
     );
     const resetDragTransforms = useCallback(() => setDts({}), [setDts]);
 
+    const [varAssignSecondNodeId, setVarAssignSecondNodeId] = useState<
+        number | undefined
+    >(undefined);
+    const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
+    const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+
+    const selectedNode =
+        selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
+    const selectedNodeIsLeaf =
+        selectedNode !== undefined
+            ? selectedNode.children.length === 0
+            : undefined;
+
     const handleNodeSelect = (node: NCTabTreeNode) => {
+        const newNodeIsLeaf = node.children.length === 0;
         if (selectedNodeId === undefined) {
             setSelectedNode(node.id);
         } else if (selectedNodeId === node.id) {
             setSelectedNode(undefined);
+        } else if (
+            // Don't select two leafs or two nodes at the same time
+            (selectedNodeIsLeaf && newNodeIsLeaf) ||
+            (!selectedNodeIsLeaf && !newNodeIsLeaf)
+        ) {
+            setSelectedNode(node.id);
+        } else {
+            setVarAssignSecondNodeId(node.id);
+            const vars: string[] = [];
+            collectVarsFromNode(vars, selectedNode!.formula);
+            collectVarsFromNode(vars, node.formula);
+            if (vars.length <= 0) {
+                sendFOClose(false, {});
+                return;
+            }
+            setVarsToAssign(vars);
+            setShowVarAssignDialog(true);
         }
+    };
+
+    const sendFOClose = (auto: boolean, varAssign: VarAssign = {}) => {
+        if (
+            selectedNodeId === undefined ||
+            varAssignSecondNodeId === undefined
+        ) {
+            // Error for debugging
+            throw new Error(
+                "Close move went wrong, since selected nodes could not be identified.",
+            );
+        }
+        const leaf = selectedNodeIsLeaf
+            ? selectedNodeId
+            : varAssignSecondNodeId;
+        const pred = selectedNodeIsLeaf
+            ? varAssignSecondNodeId
+            : selectedNodeId;
+        sendClose(
+            server,
+            state!,
+            onChange,
+            onError,
+            leaf,
+            pred,
+            auto ? null : varAssign,
+        );
     };
 
     return (
@@ -54,6 +116,20 @@ const NCTableauxView: preact.FunctionalComponent = () => {
                     onDrag={onDrag}
                 />
             </div>
+            <Dialog
+                open={showVarAssignDialog}
+                label="Choose variable assignments or leave them blank"
+                onClose={() => setShowVarAssignDialog(false)}
+            >
+                <VarAssignList
+                    vars={varsToAssign}
+                    manualVarAssignOnly={false}
+                    submitVarAssignCallback={sendFOClose}
+                    submitLabel="Assign variables"
+                    secondSubmitEvent={sendFOClose}
+                    secondSubmitLabel="Automatic assignment"
+                />
+            </Dialog>
             <NCTabFAB
                 state={state}
                 selectedNodeId={selectedNodeId}
