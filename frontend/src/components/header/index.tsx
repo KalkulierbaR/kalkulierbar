@@ -353,7 +353,7 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
         dispatchAdminKey();
         checkCredentials(
             server,
-            adminKey,
+            newAdminKey,
             (isAdmin) =>
                 dispatch({
                     type: AppStateActionType.SET_ADMIN,

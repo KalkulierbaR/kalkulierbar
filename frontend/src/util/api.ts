@@ -8,7 +8,6 @@ import {
     Move,
 } from "../types/app";
 import Keccak from "sha3";
-import { useAppState } from "./app-state";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
@@ -150,17 +149,15 @@ export const checkCredentials = async (
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `mac=${(mac.digest("hex"))}`,
+            body: `mac=${mac.digest("hex")}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
-        }else {
+        } else {
             const parsed = await res.json();
             console.log(parsed);
-            if (parsed != true)
-                setAdmin(false);
-            else
-                setAdmin(parsed);
+            if (parsed != true) setAdmin(false);
+            else setAdmin(parsed);
         }
     } catch (e) {
         onError((e as Error).message);
@@ -172,14 +169,15 @@ export const setCalculusState = async (
     server: string,
     calculus: CalculusType,
     value: boolean,
+    adminKey: string,
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/setCalculusState`;
     const newDate = new Date();
     const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
-    const mac = new Keccak(256);
+    const keccak = new Keccak(256);
     console.log(date);
-    mac.update(`kbsc|${calculus}|${value}|${date}|${useAppState().adminKey}`);
+    keccak.update(`kbsc|${calculus}|${value}|${date}|${adminKey}`);
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
@@ -187,9 +185,11 @@ export const setCalculusState = async (
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `calculus=${encodeURIComponent(JSON.stringify(calculus))}
-                &enable=${encodeURIComponent(JSON.stringify(value))}
-                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`,
+            body: `calculus=${encodeURIComponent(
+                JSON.stringify(calculus),
+            )}&enable=${encodeURIComponent(
+                JSON.stringify(value),
+            )}&mac=${encodeURIComponent(JSON.stringify(keccak.digest("hex")))}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
@@ -205,12 +205,18 @@ export const setCalculusState = async (
 export const addExample = async (
     server: string,
     example: Example,
+    adminKey: string,
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/addExample`;
-    const mac = new Keccak(256);
+    const keccak = new Keccak(256);
     //todo: Mac wird falsch berechnet
-    mac.update(`kbae|${example}|${getCurrentDate()}|${useAppState().adminKey}`);
+    keccak.update(`kbae|${example}|${getCurrentDate()}|${adminKey}`);
+    console.log(
+        `kbae|${JSON.stringify(example)}|${getCurrentDate()}|${adminKey}`,
+    );
+    const mac = keccak.digest("hex");
+    console.log(mac);
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
@@ -218,8 +224,9 @@ export const addExample = async (
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `example=${encodeURIComponent(JSON.stringify(example))}
-                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`,
+            body: `example=${encodeURIComponent(
+                JSON.stringify(example),
+            )}&mac=${encodeURIComponent(JSON.stringify(keccak.digest("hex")))}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
@@ -235,14 +242,17 @@ export const addExample = async (
 export const delExample = async (
     server: string,
     exampleID: number,
+    adminKey: string,
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/addExample`;
     const newDate = new Date();
     const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
-    const mac = new Keccak(256);
+    const keccak = new Keccak(256);
     console.log(date);
-    mac.update(`kbde|${exampleID}|${date}|${useAppState().adminKey}`);
+    keccak.update(`kbde|${exampleID}|${date}|${adminKey}`);
+    const mac = keccak.digest("hex");
+    console.log(mac);
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
@@ -250,8 +260,9 @@ export const delExample = async (
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `exampleID=${encodeURIComponent(JSON.stringify(exampleID))}
-                &mac=${encodeURIComponent(JSON.stringify(mac.digest("hex")))}`,
+            body: `exampleID=${encodeURIComponent(
+                JSON.stringify(exampleID),
+            )}&mac=${encodeURIComponent(JSON.stringify(keccak.digest("hex")))}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
@@ -265,10 +276,10 @@ export const delExample = async (
 };
 
 const getCurrentDate = () => {
-    let newDate = new Date()
+    let newDate = new Date();
     let date = newDate.getUTCDate();
     let month = newDate.getUTCMonth() + 1;
     let year = newDate.getUTCFullYear();
 
-    return `${year}${month<10?`0${month}`:`${month}`}${date}`
-}
+    return `${year}${month < 10 ? `0${month}` : `${month}`}${date}`;
+};

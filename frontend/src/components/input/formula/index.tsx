@@ -61,6 +61,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         savedFormulas,
         dispatch,
         isAdmin,
+        adminKey,
     } = useAppState();
 
     const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
@@ -102,6 +103,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                             formula: normalizeInput(savedFormulas[calculus]),
                             params: params!,
                         },
+                        adminKey,
                         onError,
                     );
                 }

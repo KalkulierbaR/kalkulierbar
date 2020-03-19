@@ -1,10 +1,8 @@
 import { h, VNode } from "preact";
 import { circle } from "../../components/resolution/circle/style.scss";
-import { Calculus, CalculusType } from "../../types/app";
+import { Calculus } from "../../types/app";
 import * as style from "./style.scss";
 import { useAppState } from "../../util/app-state";
-import Switch from "../../components/switch";
-import { setCalculusState } from "../../util/api";
 
 interface Route {
     name: string;
