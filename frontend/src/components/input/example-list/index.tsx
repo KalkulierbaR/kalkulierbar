@@ -1,9 +1,9 @@
-import {h} from "preact";
-import {AppStateActionType, CalculusType, Example} from "../../../types/app";
-import {delExample} from "../../../util/api";
-import {useAppState} from "../../../util/app-state";
+import { h } from "preact";
+import { CalculusType } from "../../../types/app";
+import { delExample } from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
 import Btn from "../../btn";
-import {route} from "preact-router";
+import { route } from "preact-router";
 
 interface Props {
     /**
@@ -18,14 +18,8 @@ interface Props {
 
 const onDelete = (e: Event, index: number) => {
     e.stopImmediatePropagation();
-    const { server, onError, adminKey, setConfig} = useAppState();
-    delExample(
-        server,
-        index,
-        adminKey,
-        setConfig,
-        onError,
-    );
+    const { server, onError, adminKey, setConfig } = useAppState();
+    delExample(server, index, adminKey, setConfig, onError);
 };
 
 /**
@@ -100,7 +94,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                         undefined
             )))}
         </div>
-    )
+    );
 };
 
 export default ExampleList;
