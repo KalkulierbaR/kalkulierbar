@@ -158,7 +158,6 @@ export const checkCredentials = async (
             setAdmin(false);
         } else {
             const parsed = await res.json();
-            console.log(parsed);
             if (parsed != true) setAdmin(false);
             else setAdmin(parsed);
         }
