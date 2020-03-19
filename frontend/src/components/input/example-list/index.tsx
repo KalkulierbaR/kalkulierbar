@@ -1,8 +1,9 @@
 import {h} from "preact";
-import {CalculusType} from "../../../types/app";
+import {AppStateActionType, CalculusType, Example} from "../../../types/app";
 import {delExample} from "../../../util/api";
-import { useAppState } from "../../../util/app-state";
+import {useAppState} from "../../../util/app-state";
 import Btn from "../../btn";
+import {route} from "preact-router";
 
 interface Props {
     /**
@@ -26,6 +27,51 @@ const onDelete = (index: number) => {
     );
 };
 
+/**
+ * Normalizes the user input. It replaces multiple newlines with just one,
+ * replaces newlines by semicolon and removes whitespace
+ * @param {string} input - The user input
+ * @returns {string} - Normalized clause string
+ */
+const normalizeInput = (input: string) => {
+    input = input.replace(/\n+$/, "");
+    input = input.replace(/\n+/g, "\n");
+    return encodeURIComponent(input);
+};
+
+const useExample = async (exmpl: Example) => {
+    const { server, onError, onChange, savedFormulas, dispatch } = useAppState();
+    const calculus = exmpl.calculus;
+    const url = `${server}/${exmpl.calculus}/parse`;
+
+    dispatch({
+        type: AppStateActionType.UPDATE_SAVED_FORMULA,
+        calculus,
+        value: exmpl.formula,
+    })
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `formula=${normalizeInput(
+                exmpl.formula,
+            )}&params=${exmpl.params}`,
+        });
+        if (response.status !== 200) {
+            onError(await response.text());
+        } else {
+            const parsed = await response.json();
+            onChange(calculus, parsed);
+            route(`/${calculus}/view`);
+        }
+    } catch (e) {
+        onError((e as Error).message);
+    }
+}
+
 const ExampleList: preact.FunctionalComponent<Props> = ({
     calculus,
     className,
@@ -36,7 +82,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
         <div class={`card ${className}`}>
             {config.examples.map((exmpl, index) => (
                 (exmpl.calculus === calculus) ? (
-                    <div class="card">
+                    <div class="card" onClick={() => useExample(exmpl)}>
                         <p>{exmpl.name}</p>
                         <p>{exmpl.description}</p>
                         <p>{exmpl.formula}</p>

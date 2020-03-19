@@ -108,6 +108,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         setConfig,
                         onError,
                     );
+                    setCreateExample(false);
                 }
             }
         } catch (e) {
