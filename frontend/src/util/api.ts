@@ -14,8 +14,6 @@ export type checkCloseFn<C extends CalculusType = CalculusType> = (
     state: AppState[C],
 ) => Promise<void>;
 
-(window as any).Keccak = Keccak;
-
 /**
  * Sends a request to the server to check, if the tree is closed and
  * shows the result to the user
@@ -175,12 +173,14 @@ export const setCalculusState = async (
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/setCalculusState`;
-    const newDate = new Date();
-    const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
+    const date = getCurrentDate();
     const keccak = new Keccak(256);
-    console.log(date);
-    keccak.update(`kbsc|${calculus}|${value}|${date}|${adminKey}`);
-    const mac = keccak.digest("hex");
+
+    const payload = `kbsc|${calculus}|${value}|${date}|${adminKey}`;
+
+    keccak.update(payload);
+    const mac = keccak.digest("hex").toUpperCase();
+
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
@@ -189,7 +189,7 @@ export const setCalculusState = async (
             },
             method: "POST",
             body: `calculus=${encodeURIComponent(
-                JSON.stringify(calculus),
+                calculus,
             )}&enable=${encodeURIComponent(JSON.stringify(value))}&mac=${mac}`,
         });
         if (res.status !== 200) {

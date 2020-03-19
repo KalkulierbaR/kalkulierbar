@@ -3,6 +3,8 @@ import { circle } from "../../components/resolution/circle/style.scss";
 import { Calculus } from "../../types/app";
 import * as style from "./style.scss";
 import { useAppState } from "../../util/app-state";
+import Switch from "../../components/switch";
+import { setCalculusState } from "../../util/api";
 
 interface Route {
     name: string;
@@ -904,23 +906,41 @@ const ROUTES: Route[] = [
 
 interface CalculusItemProps {
     route: Route;
+    showSwitch?: boolean;
 }
 
 const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
     route: { href, name, image, viewBox },
+    showSwitch = false,
 }) => {
+    const { config, server, onError, adminKey } = useAppState();
+
+    const handleChange = (checked: boolean) => {
+        setCalculusState(server, href, checked, adminKey, onError);
+    };
+
     return (
-        //Todo: äusersten div container anderst lösen
-        <div>
-            <a href={`/${href}`}>
-                <div class={style.calculusItem}>
-                    <svg class={style.calculusItemImage} viewBox={viewBox}>
-                        {image}
-                    </svg>
+        <a href={`/${href}`}>
+            <div class={style.calculusItem}>
+                <svg class={style.calculusItemImage} viewBox={viewBox}>
+                    {image}
+                </svg>
+                <div
+                    class={`${style.calculusItemTitleWrapper} ${showSwitch &&
+                        style.calculusItemTitleWrapperShowSwitch}`}
+                >
                     <h3 class={style.calculusItemTitle}>{name}</h3>
+                    <span onClick={(e) => e.stopImmediatePropagation()}>
+                        {showSwitch && (
+                            <Switch
+                                initialState={!config.disabled.includes(href)}
+                                onChange={handleChange}
+                            />
+                        )}
+                    </span>
                 </div>
-            </a>
-        </div>
+            </div>
+        </a>
     );
 };
 
@@ -934,7 +954,7 @@ const Home: preact.FunctionalComponent = () => {
                 <div class={style.calculusGrid}>
                     {ROUTES.map((r) =>
                         isAdmin ? (
-                            <CalculusItem route={r} />
+                            <CalculusItem route={r} showSwitch />
                         ) : config.disabled.includes(r.href) ? (
                             undefined
                         ) : (

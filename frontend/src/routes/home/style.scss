@@ -24,6 +24,15 @@
         padding: 8px;
         text-align: center;
         margin: 0;
+
+        &-wrapper {
+            display: flex;
+            justify-content: center;
+
+            &--showSwitch {
+                justify-content: space-between;
+            }
+        }
     }
 
     &-image {
