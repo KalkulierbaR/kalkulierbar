@@ -97,6 +97,8 @@ class StateKeeper {
             else
                 throw InvalidRequest("Calculus '$calculus' does not exist")
 
+            flush()
+
             return "true"
         }
 
