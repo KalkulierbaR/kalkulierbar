@@ -1,7 +1,7 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.JsonParseException
-import kalkulierbar.tableaux.MoveUndo
+import kalkulierbar.tableaux.MoveAutoClose
 import kalkulierbar.tableaux.PropositionalTableaux
 import kalkulierbar.tableaux.TableauxParam
 import kalkulierbar.tableaux.TableauxType
@@ -20,15 +20,15 @@ class TestPropositionalJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveValid() {
-        val json = "{\"type\": \"tableaux-undo\", \"id1\": 0, \"id2\": 1}"
+        val json = "{\"type\": \"tableaux-close\", \"id1\": 0, \"id2\": 12}"
         val move = instance.jsonToMove(json)
-        assertEquals(MoveUndo(0, 1), move)
+        assertEquals(MoveAutoClose(0, 12), move)
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveNull() {
-        val json = "{\"type\": \"tableaux-undo\", \"id1\": 0, \"id2\": null}"
+        val json = "{\"type\": \"tableaux-close\", \"id1\": 0, \"id2\": null}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
@@ -37,7 +37,7 @@ class TestPropositionalJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveMissingField() {
-        val json = "{\"type\": \"tableaux-undo\", \"id2\": 42}"
+        val json = "{\"type\": \"tableaux-expand\", \"id2\": 42}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
@@ -46,7 +46,7 @@ class TestPropositionalJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveTypeMismatch() {
-        val json = "{\"type\": \"tableaux-undo\", \"id2\": \"dream\"}"
+        val json = "{\"type\": \"tableaux-expand\", \"id2\": \"dream\"}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }

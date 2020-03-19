@@ -21,7 +21,7 @@ class TestUndo {
         val state = instance.parseFormulaToState("a,b;c", null)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, MoveUndo(0, 0))
+            instance.applyMoveOnState(state, MoveUndo())
         }
     }
 
@@ -30,7 +30,7 @@ class TestUndo {
         val state = instance.parseFormulaToState("a,b,c;d", opts)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, MoveUndo(0, 0))
+            instance.applyMoveOnState(state, MoveUndo())
         }
     }
 
@@ -42,7 +42,7 @@ class TestUndo {
 
         assertEquals(false, state.usedBacktracking)
 
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
 
         assert(state.usedBacktracking)
 
@@ -58,7 +58,7 @@ class TestUndo {
         val prestateHash = state.getHash()
 
         state = instance.applyMoveOnState(state, MoveExpand(0, 0))
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
 
         assertEquals(prestateHash, state.getHash())
     }
@@ -73,7 +73,7 @@ class TestUndo {
         val prestateHash = state.getHash()
 
         state = instance.applyMoveOnState(state, MoveAutoClose(2, 1))
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
 
         assertEquals(prestateHash, state.getHash())
     }
@@ -96,17 +96,17 @@ class TestUndo {
         val s6 = state.getHash()
         state = instance.applyMoveOnState(state, MoveAutoClose(8, 5))
 
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
         assertEquals(s6, state.getHash())
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
         assertEquals(s5, state.getHash())
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
         assertEquals(s4, state.getHash())
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
         assertEquals(s3, state.getHash())
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
         assertEquals(s2, state.getHash())
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
         assertEquals(s1, state.getHash())
     }
 }

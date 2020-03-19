@@ -38,7 +38,7 @@ data class MoveLemma(val id1: Int, val id2: Int) : TableauxMove()
 
 @Serializable
 @SerialName("tableaux-undo")
-data class MoveUndo(val id1: Int, val id2: Int) : TableauxMove()
+class MoveUndo : TableauxMove()
 
 // FO-Move
 @Serializable

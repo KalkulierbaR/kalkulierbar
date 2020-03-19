@@ -32,7 +32,7 @@ class TestUndoFO {
         assertEquals(state.usedBacktracking, false)
 
         // Kein Error wird geworfen bei Anfangszustand
-        state = instance.applyMoveOnState(state, MoveUndo(0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
         assertEquals(state.nodes.size, 1)
         assertEquals(state.moveHistory.isEmpty(), true)
         // assertEquals(state.usedBacktracking, true)
@@ -48,8 +48,8 @@ class TestUndoFO {
         state = instance.applyMoveOnState(state, MoveAutoClose(4, 2))
         state = instance.applyMoveOnState(state, MoveAutoClose(5, 2))
 
-        state = instance.applyMoveOnState(state, MoveUndo(Integer.MAX_VALUE, Integer.MIN_VALUE))
-        state = instance.applyMoveOnState(state, MoveUndo(-1, 1))
+        state = instance.applyMoveOnState(state, MoveUndo())
+        state = instance.applyMoveOnState(state, MoveUndo())
 
         val nodes = state.nodes
         // check for leaf closed and close ref
@@ -79,8 +79,8 @@ class TestUndoFO {
         state = instance.applyMoveOnState(state, MoveCloseAssign(3, 2, map))
         state = instance.applyMoveOnState(state, MoveCloseAssign(4, 2, map))
 
-        state = instance.applyMoveOnState(state, MoveUndo(4, 2))
-        state = instance.applyMoveOnState(state, MoveUndo(4, 2))
+        state = instance.applyMoveOnState(state, MoveUndo())
+        state = instance.applyMoveOnState(state, MoveUndo())
 
         var nodes = state.nodes
 
@@ -109,7 +109,7 @@ class TestUndoFO {
         // {!R(A), R(A)}, {!R(A), !R(B)}, {!R(A), !R(B)}, {!R(A), !R(A)}
         state = instance.applyMoveOnState(state, MoveExpand(0, 0))
         state = instance.applyMoveOnState(state, MoveExpand(2, 1))
-        state = instance.applyMoveOnState(state, MoveUndo(0, 1))
+        state = instance.applyMoveOnState(state, MoveUndo())
 
         assertEquals(state.moveHistory.size, 1)
         assertEquals(state.usedBacktracking, true)

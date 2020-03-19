@@ -3,7 +3,7 @@ package kalkulierbar.tests.tableaux
 import kalkulierbar.JsonParseException
 import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.FoTableauxParam
-import kalkulierbar.tableaux.MoveUndo
+import kalkulierbar.tableaux.MoveExpand
 import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,15 +20,15 @@ class TestFirstOrderJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveValid() {
-        val json = "{\"type\":\"tableaux-undo\", \"id1\": 0, \"id2\": 1}"
+        val json = "{\"type\": \"tableaux-expand\", \"id1\": 0, \"id2\": 42}"
         val move = instance.jsonToMove(json)
-        assertEquals(MoveUndo(0, 1), move)
+        assertEquals(MoveExpand(0, 42), move)
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveNull() {
-        val json = "{\"type\": \"tableaux-undo\", \"id1\": 0, \"id2\": null}"
+        val json = "{\"type\": \"tableaux-expand\", \"id1\": 0, \"id2\": null}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
@@ -37,7 +37,7 @@ class TestFirstOrderJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveMissingField() {
-        val json = "{\"type\": \"tableaux-undo\", \"id2\": 42, \"varAssign\":{}}"
+        val json = "{\"type\": \"tableaux-expand\", \"id2\": 42, \"varAssign\":{}}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
@@ -46,7 +46,7 @@ class TestFirstOrderJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveTypeMismatch() {
-        val json = "{\"type\": \"tableaux-undo\", \"id2\": \"dream\", \"varAssign\":{}}"
+        val json = "{\"type\": \"tableaux-expand\", \"id2\": \"dream\", \"varAssign\":{}}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
