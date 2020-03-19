@@ -493,8 +493,140 @@ const ROUTES: Route[] = [
     {
         href: Calculus.ncTableaux,
         name: "NC Tableaux",
-        viewBox: "0 0 50 50",
-        image: <text>No preview</text>,
+        viewBox: "0 -16 450.015625 360",
+        image: (
+            <g transform="translate(0 0) scale(1)">
+                <g transform="translate(0 0)">
+                    <line
+                        class={style.link}
+                        x1="225.0078125"
+                        y1="22"
+                        x2="225.0078125"
+                        y2="72"
+                    ></line>
+                    <g transform="translate(0 0)">
+                        <line
+                            class={style.link}
+                            x1="225.0078125"
+                            y1="94"
+                            x2="225.0078125"
+                            y2="144"
+                        ></line>
+                        <g transform="translate(0 0)">
+                            <line
+                                class={style.link}
+                                x1="225.0078125"
+                                y1="166"
+                                x2="225.0078125"
+                                y2="216"
+                            ></line>
+                            <g transform="translate(0 0)">
+                                <line
+                                    class={style.link}
+                                    x1="225.0078125"
+                                    y1="238"
+                                    x2="225.0078125"
+                                    y2="288"
+                                ></line>
+                                <g transform="translate(0 0)">
+                                    <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
+                                        <rect
+                                            class={style.rect}
+                                            x="188.15625"
+                                            y="284.734375"
+                                            width="73.703125"
+                                            height="26.609375"
+                                            rx="4"
+                                        ></rect>
+                                        <text
+                                            text-anchor="middle"
+                                            class=""
+                                            x="225.0078125"
+                                            y="304"
+                                        >
+                                            ¬R(f(X))
+                                        </text>
+                                    </g>
+                                </g>
+                                <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
+                                    <rect
+                                        class={style.rect}
+                                        x="165.140625"
+                                        y="212.734375"
+                                        width="119.734375"
+                                        height="26.609375"
+                                        rx="4"
+                                    ></rect>
+                                    <text
+                                        text-anchor="middle"
+                                        class=""
+                                        x="225.0078125"
+                                        y="232"
+                                    >
+                                        (∀X: ¬R(f(X)))
+                                    </text>
+                                </g>
+                            </g>
+                            <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
+                                <rect
+                                    class={style.rect}
+                                    x="148.453125"
+                                    y="140.734375"
+                                    width="153.109375"
+                                    height="26.609375"
+                                    rx="4"
+                                ></rect>
+                                <text
+                                    text-anchor="middle"
+                                    class=""
+                                    x="225.0078125"
+                                    y="160"
+                                >
+                                    (R(f(a)) ∨ ¬R(f(b)))
+                                </text>
+                            </g>
+                        </g>
+                        <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
+                            <rect
+                                class={style.rect}
+                                x="169.90625"
+                                y="68.734375"
+                                width="110.203125"
+                                height="26.609375"
+                                rx="4"
+                            ></rect>
+                            <text
+                                text-anchor="middle"
+                                class=""
+                                x="225.0078125"
+                                y="88"
+                            >
+                                (∀X: R(f(X)))
+                            </text>
+                        </g>
+                    </g>
+                    <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
+                        <rect
+                            class={style.rect}
+                            x="14.421875"
+                            y="-3.265625"
+                            width="421.171875"
+                            height="26.609375"
+                            rx="4"
+                        ></rect>
+                        <text
+                            text-anchor="middle"
+                            class=""
+                            x="225.0078125"
+                            y="16"
+                        >
+                            (((∀X: ¬R(f(X))) ∧ (R(f(a)) ∨ ¬R(f(b)))) ∧ (∀X:
+                            R(f(X))))
+                        </text>
+                    </g>
+                </g>
+            </g>
+        ),
     },
     {
         href: Calculus.dpll,
