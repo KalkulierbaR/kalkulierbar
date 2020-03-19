@@ -138,10 +138,12 @@ export const AppStateProvider = (
     const tutorialMode =
         localStorageGet<TutorialMode>("tutorial_mode") ??
         TutorialMode.HighlightAll;
+    const adminKey = localStorageGet<string>("admin_key");
 
     INIT_APP_STATE.theme = storedTheme || INIT_APP_STATE.theme;
     INIT_APP_STATE.server = storedServer || INIT_APP_STATE.server;
     INIT_APP_STATE.tutorialMode = tutorialMode;
+    INIT_APP_STATE.adminKey = adminKey || INIT_APP_STATE.adminKey;
 
     const [state, dispatch] = useReducer<AppState, AppStateAction>(
         reducer,
@@ -159,6 +161,9 @@ export const AppStateProvider = (
     useEffect(() => {
         localStorageSet("tutorial_mode", derived.tutorialMode);
     }, [derived.tutorialMode]);
+    useEffect(() => {
+        localStorageSet("admin_key", derived.adminKey);
+    }, [derived.adminKey]);
 
     return (
         <AppStateCtx.Provider value={derived}>
