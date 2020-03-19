@@ -16,7 +16,8 @@ interface Props {
     className?: string;
 }
 
-const onDelete = (index: number) => {
+const onDelete = (e: Event, index: number) => {
+    e.stopImmediatePropagation();
     const { server, onError, adminKey, setConfig} = useAppState();
     delExample(
         server,
@@ -40,7 +41,7 @@ const normalizeInput = (input: string) => {
 };
 
 const useExample = async (exmpl: Example) => {
-    const { server, onError, onChange, savedFormulas, dispatch } = useAppState();
+    const { server, onError, onChange, dispatch } = useAppState();
     const calculus = exmpl.calculus;
     const url = `${server}/${exmpl.calculus}/parse`;
 
@@ -79,7 +80,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
     const { config, isAdmin} = useAppState();
 
     return(
-        <div class={`card ${className}`}>
+        <div class={`card  ${className}`}>
             {config.examples.map((exmpl, index) => (
                 (exmpl.calculus === calculus) ? (
                     <div class="card" onClick={() => useExample(exmpl)}>
@@ -88,7 +89,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                         <p>{exmpl.formula}</p>
                         <p>{exmpl.params}</p>
                         {isAdmin ? (
-                            <Btn onClick={() => onDelete(index)}>
+                            <Btn onClick={(e) => onDelete(e, index)}>
                                 Delete
                             </Btn>
                         ) : (
