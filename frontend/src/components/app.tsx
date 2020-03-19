@@ -60,7 +60,6 @@ const App: preact.FunctionalComponent = () => {
             smallScreen,
         });
     const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
-    console.log(useAppState().config);
     /**
      * Execute actions based upon if the route changed
      * @param {RouterOnChangeArgs} args - The arguments of the current route change

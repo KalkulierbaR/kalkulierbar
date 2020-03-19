@@ -155,9 +155,9 @@ export const checkCredentials = async (
         });
         if (res.status !== 200) {
             onError(await res.text());
+            setAdmin(false);
         } else {
             const parsed = await res.json();
-            console.log(parsed);
             if (parsed != true) setAdmin(false);
             else setAdmin(parsed);
         }
