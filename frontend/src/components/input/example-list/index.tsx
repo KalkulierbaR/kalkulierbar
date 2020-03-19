@@ -39,7 +39,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                 <div class="card">
                     <p>{example.name}</p>
                     <p>{example.description}</p>
-                    <p>{example.formula}</p>
+                    <p>{decodeURIComponent(example.formula)}</p>
                     <p>{example.params}</p>
                     <Btn onClick={() => onDelete(index)}>Delete</Btn>
                 </div>
