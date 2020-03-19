@@ -57,12 +57,12 @@ export const sendClose = (
     varAssignments?: VarAssign,
     callback?: CallableFunction,
 ) => {
-    if (instanceOfPropTabState(state, calculus)) {
+    if (instanceOfPropTabState(state, calculus) || autoClose) {
         sendMove(
             server,
             calculus,
             state,
-            { type: "CLOSE", id1: leaf, id2: pred },
+            { type: "tableaux-close", id1: leaf, id2: pred },
             stateChanger,
             onError,
         );
@@ -72,7 +72,7 @@ export const sendClose = (
             calculus,
             state,
             {
-                type: autoClose ? "AUTOCLOSE" : "CLOSE",
+                type: "tableaux-close-assign",
                 id1: leaf,
                 id2: pred,
                 varAssign: varAssignments!,
@@ -101,27 +101,15 @@ export const sendBacktrack = (
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
-) => {
-    if (instanceOfPropTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "UNDO", id1: -1, id2: -1 },
-            stateChanger,
-            onError,
-        );
-    } else if (instanceOfFOTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "UNDO", id1: -1, id2: -1, varAssign: {} },
-            stateChanger,
-            onError,
-        );
-    }
-};
+) =>
+    sendMove(
+        server,
+        calculus,
+        state,
+        { type: "tableaux-undo" },
+        stateChanger,
+        onError,
+    );
 
 /**
  * Wrapper to send move request
@@ -142,27 +130,15 @@ export const sendExtend = (
     onError: (msg: string) => void,
     leaf: number,
     clause: number,
-) => {
-    if (instanceOfPropTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "EXPAND", id1: leaf, id2: clause },
-            stateChanger,
-            onError,
-        );
-    } else if (instanceOfFOTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "EXPAND", id1: leaf, id2: clause, varAssign: {} },
-            stateChanger,
-            onError,
-        );
-    }
-};
+) =>
+    sendMove(
+        server,
+        calculus,
+        state,
+        { type: "tableaux-expand", id1: leaf, id2: clause },
+        stateChanger,
+        onError,
+    );
 
 /**
  * Wrapper to send move request
@@ -183,27 +159,15 @@ export const sendLemma = (
     onError: (msg: string) => void,
     leaf: number,
     lemma: number,
-) => {
-    if (instanceOfPropTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "LEMMA", id1: leaf, id2: lemma },
-            stateChanger,
-            onError,
-        );
-    } else if (instanceOfFOTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "LEMMA", id1: leaf, id2: lemma, varAssign: {} },
-            stateChanger,
-            onError,
-        );
-    }
-};
+) =>
+    sendMove(
+        server,
+        calculus,
+        state,
+        { type: "tableaux-lemma", id1: leaf, id2: lemma },
+        stateChanger,
+        onError,
+    );
 
 export const tableauxTreeLayout = (
     nodes: TableauxNode[],
