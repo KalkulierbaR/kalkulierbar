@@ -15,6 +15,7 @@ import {
     TableauxType,
 } from "../../types/tableaux";
 import { useAppState } from "../../util/app-state";
+import ExampleList from "../../components/input/example-list";
 
 interface Props {
     /**
@@ -160,6 +161,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
+            <ExampleList calculus={calculus}/>
         </Fragment>
     );
 };

@@ -139,17 +139,19 @@ export const checkCredentials = async (
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/checkCredentials`;
-    const mac = new Keccak(256);
-    console.log(JSON.stringify(adminKey));
-    mac.update(`kbcc|${getCurrentDate()}|${adminKey}`);
+    const keccak = new Keccak(256);
+
+    const payload = `kbcc|${getCurrentDate()}|${adminKey}`;
+
+    keccak.update(payload);
+    const mac = keccak.digest("hex");
     try {
-        console.log(mac.digest("hex"));
         const res = await fetch(url, {
             headers: {
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `mac=${mac.digest("hex")}`,
+            body: `mac=${mac}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
@@ -215,11 +217,11 @@ export const addExample = async (
     const url = `${server}/admin/addExample`;
     const keccak = new Keccak(256);
 
-    keccak.update(
-        `kbae|${JSON.stringify(example)}|${getCurrentDate()}|${adminKey}`,
-    );
+    const payload = `kbae|${JSON.stringify(example)}|${getCurrentDate()}|${adminKey}`;
+
+    keccak.update(payload);
     const mac = keccak.digest("hex").toUpperCase();
-    console.log(example);
+
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
@@ -250,14 +252,14 @@ export const delExample = async (
     changeConfig: (cfg: Config) => void,
     onError: (msg: string) => void,
 ) => {
-    const url = `${server}/admin/addExample`;
-    const newDate = new Date();
-    const date = `${newDate.getFullYear()}${newDate.getMonth()}${newDate.getDay()}`;
+    const url = `${server}/admin/delExample`;
     const keccak = new Keccak(256);
-    console.log(date);
-    keccak.update(`kbde|${exampleID}|${date}|${adminKey}`);
+
+    const payload = `kbde|${exampleID}|${getCurrentDate()}|${adminKey}`;
+
+    keccak.update(payload);
     const mac = keccak.digest("hex");
-    console.log(mac);
+
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
