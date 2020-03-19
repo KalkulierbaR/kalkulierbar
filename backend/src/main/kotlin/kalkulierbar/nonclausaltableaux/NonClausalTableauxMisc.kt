@@ -55,6 +55,14 @@ class NcTableauxState(
                 break
             node = nodes[node.parent!!]
         }
+
+        // Set isClosed for all descendants of the node
+        val worklist = mutableListOf<Int>(nodeID)
+        while (worklist.isNotEmpty()) {
+            val elem = nodes[worklist.removeAt(0)]
+            worklist.addAll(elem.children)
+            elem.isClosed = true
+        }
     }
 
     fun render() {
@@ -124,9 +132,9 @@ class DeltaMove(val nodeID: Int) : NcTableauxMove() {
 @Serializable
 @SerialName("close")
 class CloseMove(
-        val nodeID: Int,
-        val closeID: Int,
-        val varAssign: Map<String, String>?
+    val nodeID: Int,
+    val closeID: Int,
+    val varAssign: Map<String, String>?
 ) : NcTableauxMove() {
     /**
      * Parses map values to first-order terms
