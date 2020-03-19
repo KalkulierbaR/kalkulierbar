@@ -73,7 +73,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
 }) => {
     const { config, isAdmin } = useAppState();
 
-    const examples = config.examples;
+    const examples = config.examples.filter(example => example.calculus === calculus);
 
     if (!examples.length) {
         return null;
