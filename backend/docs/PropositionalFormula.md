@@ -1,6 +1,7 @@
 # Propositional Formula
 
-Propositional formulae may be shared between different calculi as a common input format and are thus specified on their own here.
+Propositional formulae may be shared between different calculi as a common input format 
+and are thus specified on their own here.
 
 ## Format Specification
 
@@ -10,7 +11,8 @@ Variables can be any alpha-numeric string and are case-sensitive.
 
 ### Operations
 
-Operator notation follows the usual infix notation for propositional logic. Syntax conventions are designed to be compatible with the notation used by the KeY system.
+Operator notation follows the usual infix notation for propositional logic. 
+Syntax conventions are designed to be compatible with the notation used by the KeY system.
 
 | Operation     | Symbol        | Example           |
 | ------------- |:-------------:| -----------------:|
@@ -23,7 +25,8 @@ Operator notation follows the usual infix notation for propositional logic. Synt
 
 ### Operator precedence
 
-Operator precedence is defined as follows: `()` > `!` > `&` > `|` > `->` > `<=>`. All binary operations are left-associative. 
+Operator precedence is defined as follows: `()` > `!` > `&` > `|` > `->` > `<=>`. 
+All binary operations are left-associative. 
 
 ### Whitespace
 
