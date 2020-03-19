@@ -11,10 +11,11 @@ import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
-import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.transform.VariableSuffixAppend
 import kalkulierbar.logic.transform.VariableSuffixStripper
+import kalkulierbar.logic.util.Unification
+import kalkulierbar.logic.util.UnifierEquivalence
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
@@ -42,9 +43,12 @@ class FirstOrderResolution :
     }
 
     override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
+        // Reset status message
+        state.statusMessage = null
+
         when (move) {
-            is MoveResolveUnify -> resolve(state, move.c1, move.c2, move.l1, move.l2, null)
-            is MoveResolveCustom -> resolve(state, move.c1, move.c2, move.l1, move.l2, move.getVarAssignTerms())
+            is MoveResolveUnify -> resolveMove(state, move.c1, move.c2, move.l1, move.l2, null)
+            is MoveResolveCustom -> resolveMove(state, move.c1, move.c2, move.l1, move.l2, move.getVarAssignTerms())
             is MoveHide -> hide(state, move.c1)
             is MoveShow -> show(state)
             is MoveHyper -> hyper(state, move.mainID, move.atomMap)
@@ -67,7 +71,7 @@ class FirstOrderResolution :
      * @param c2lit The literal to unify of the second clause
      * @param varAssign Variable assignment to be used
      */
-    private fun resolve(
+    private fun resolveMove(
         state: FoResolutionState,
         c1: Int,
         c2: Int,
@@ -90,7 +94,11 @@ class FirstOrderResolution :
             } catch (e: UnificationImpossible) {
                 throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
             }
+        } // Else check varAssign == mgu
+        else if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, literal1, literal2)) {
+            state.statusMessage = "The unifier you specified is not an MGU"
         }
+
         instantiate(state, c1, unifier)
         val instance1 = state.clauseSet.clauses.size - 1
         instantiate(state, c2, unifier)
@@ -398,6 +406,7 @@ class FoResolutionState(
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<Relation>()
     var clauseCounter = 0
+    var statusMessage: String? = null
 
     override var seal = ""
 

@@ -66,6 +66,7 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
  * @param {any} move - Move to send
  * @param {AppStateUpdater} stateChanger - Function to update the state
  * @param {Function} onError - error handler
+ * @param {Function} onWarning - warning handler
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 export const sendMove = async <C extends CalculusType = CalculusType>(
@@ -75,6 +76,7 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
     move: Move[C],
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
+    onWarning: (msg: string) => void,
 ): Promise<AppState[C]> => {
     const url = `${server}/${calculus}/move`;
     try {
@@ -91,11 +93,13 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
         if (res.status !== 200) {
             onError(await res.text());
             return state;
-        }  {
-            const parsed = await res.json();
-            stateChanger(calculus, parsed);
-            return parsed;
         }
+        const parsed = await res.json();
+        stateChanger(calculus, parsed);
+        if ("statusMessage" in parsed && parsed.statusMessage) {
+            onWarning(parsed.statusMessage);
+        }
+        return parsed;
     } catch (e) {
         onError((e as Error).message);
         return state;

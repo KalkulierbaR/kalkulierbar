@@ -21,6 +21,7 @@ class NcTableauxState(
     var usedBacktracking = false
     var gammaSuffixCounter = 0
     var skolemCounter = 0
+    var statusMessage: String? = null
 
     override var seal = ""
 

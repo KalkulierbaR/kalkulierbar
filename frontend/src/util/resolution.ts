@@ -402,7 +402,13 @@ export const sendResolve = (
     c1: number,
     c2: number,
     literal: string,
-    { server, state, onChange, onError }: APIInformation<PropResolutionState>,
+    {
+        server,
+        state,
+        onChange,
+        onError,
+        onWarning,
+    }: APIInformation<PropResolutionState>,
 ) =>
     sendMove(
         server,
@@ -411,6 +417,7 @@ export const sendResolve = (
         { type: "res-resolve", c1, c2, literal },
         onChange,
         onError,
+        onWarning,
     );
 
 /**
@@ -430,7 +437,13 @@ export const sendResolveUnify = (
     c2: number,
     l1: number,
     l2: number,
-    { server, state, onChange, onError }: APIInformation<FOResolutionState>,
+    {
+        server,
+        state,
+        onChange,
+        onError,
+        onWarning,
+    }: APIInformation<FOResolutionState>,
 ) =>
     sendMove(
         server,
@@ -439,6 +452,7 @@ export const sendResolveUnify = (
         { type: "res-resolveunify", c1, c2, l1, l2 },
         onChange,
         onError,
+        onWarning,
     );
 
 export const sendResolveCustom = (
@@ -447,7 +461,13 @@ export const sendResolveCustom = (
     l1: number,
     l2: number,
     varAssign: VarAssign,
-    { server, state, onChange, onError }: APIInformation<FOResolutionState>,
+    {
+        server,
+        state,
+        onChange,
+        onError,
+        onWarning,
+    }: APIInformation<FOResolutionState>,
 ) =>
     sendMove(
         server,
@@ -456,6 +476,7 @@ export const sendResolveCustom = (
         { type: "res-resolvecustom", c1, c2, l1, l2, varAssign },
         onChange,
         onError,
+        onWarning,
     );
 
 /**
@@ -473,7 +494,13 @@ export const hideClause = <
 >(
     clauseId: number,
     calculus: ResolutionCalculusType,
-    { server, state, onChange, onError }: APIInformation<AppState[C]>,
+    {
+        server,
+        state,
+        onChange,
+        onError,
+        onWarning,
+    }: APIInformation<AppState[C]>,
 ) => {
     // Send hide move to backend
     sendMove(
@@ -486,6 +513,7 @@ export const hideClause = <
         },
         onChange,
         onError,
+        onWarning,
     );
 };
 
@@ -502,7 +530,13 @@ export const showHiddenClauses = <
     C extends ResolutionCalculusType = ResolutionCalculusType
 >(
     calculus: ResolutionCalculusType,
-    { server, state, onChange, onError }: APIInformation<AppState[C]>,
+    {
+        server,
+        state,
+        onChange,
+        onError,
+        onWarning,
+    }: APIInformation<AppState[C]>,
 ) => {
     // Send show move to backend
     sendMove(
@@ -514,6 +548,7 @@ export const showHiddenClauses = <
         },
         onChange,
         onError,
+        onWarning,
     );
 };
 
@@ -534,7 +569,13 @@ export const sendFactorize = <
     selectedClauseId: number,
     atoms: Set<number>,
     calculus: ResolutionCalculusType,
-    { server, state, onChange, onError }: APIInformation<AppState[C]>,
+    {
+        server,
+        state,
+        onChange,
+        onError,
+        onWarning,
+    }: APIInformation<AppState[C]>,
 ) => {
     sendMove(
         server,
@@ -547,5 +588,6 @@ export const sendFactorize = <
         },
         onChange,
         onError,
+        onWarning,
     );
 };

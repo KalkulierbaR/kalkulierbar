@@ -71,6 +71,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
         onSuccess,
         tutorialMode,
         dispatch,
+        onWarning,
     } = useAppState();
 
     const resetView = (
@@ -174,6 +175,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                         state!,
                                         onChange,
                                         onError,
+                                        onWarning,
                                     );
                                 }}
                             />

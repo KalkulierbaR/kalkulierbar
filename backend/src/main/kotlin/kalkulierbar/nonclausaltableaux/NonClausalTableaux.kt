@@ -12,7 +12,8 @@ import kalkulierbar.logic.Not
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.logic.transform.NegationNormalForm
-import kalkulierbar.logic.transform.Unification
+import kalkulierbar.logic.util.Unification
+import kalkulierbar.logic.util.UnifierEquivalence
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
@@ -30,6 +31,9 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
     }
 
     override fun applyMoveOnState(state: NcTableauxState, move: NcTableauxMove): NcTableauxState {
+        // Clear status message
+        state.statusMessage = null
+
         // Pass moves to relevant subfunction
         return when (move) {
             is AlphaMove -> applyAlpha(state, move.nodeID)
@@ -115,6 +119,9 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
                 } catch (e: UnificationImpossible) {
                     throw IllegalMove("Cannot unify '$nodeRelation' and '$closeRelation': ${e.message}")
                 }
+
+        if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, nodeRelation, closeRelation))
+            state.statusMessage = "The unifier you specified is not an MGU"
 
         // Apply all specified variable instantiations globally
         val instantiator = LogicNodeVariableInstantiator(unifier)

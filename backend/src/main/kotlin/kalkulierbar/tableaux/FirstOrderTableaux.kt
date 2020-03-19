@@ -8,8 +8,9 @@ import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
-import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
+import kalkulierbar.logic.util.Unification
+import kalkulierbar.logic.util.UnifierEquivalence
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
 
@@ -26,10 +27,20 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         if (params == null)
             return FoTableauxState(clauses, formula)
 
-        return FoTableauxState(clauses, formula, params.type, params.regular, params.backtracking, params.manualVarAssign)
+        return FoTableauxState(
+                clauses,
+                formula,
+                params.type,
+                params.regular,
+                params.backtracking,
+                params.manualVarAssign
+        )
     }
 
     override fun applyMoveOnState(state: FoTableauxState, move: FoTableauxMove): FoTableauxState {
+        // Reset status message
+        state.statusMessage = null
+
         // Pass moves to relevant subfunction
         return when (move.type) {
             FoMoveType.AUTOCLOSE -> applyAutoCloseBranch(state, move.id1, move.id2)
@@ -80,9 +91,17 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         varAssign: Map<String, FirstOrderTerm>
     ): FoTableauxState {
         ensureBasicCloseability(state, leafID, closeNodeID)
+
+        val leaf = state.nodes[leafID]
+        val closeNode = state.nodes[closeNodeID]
+        // Check that given var assignment is a mgu, warn if not
+        if (!UnifierEquivalence.isMGUorNotUnifiable(varAssign, leaf.relation, closeNode.relation))
+            state.statusMessage = "The unifier you specified is not an MGU"
+
         return closeBranchCommon(state, leafID, closeNodeID, varAssign)
     }
 
+    @Suppress("ThrowsCount")
     /**
      * Close a branch using either computed or manually entered variable assignments
      * NOTE: This does NOT verify closeability.
@@ -100,11 +119,11 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         varAssign: Map<String, FirstOrderTerm>
     ): FoTableauxState {
 
-        // Apply all specified variable instantiations globally
-        applyVarInstantiation(state, varAssign)
-
         val leaf = state.nodes[leafID]
         val closeNode = state.nodes[closeNodeID]
+
+        // Apply all specified variable instantiations globally
+        applyVarInstantiation(state, varAssign)
 
         if (!leaf.relation.synEq(closeNode.relation))
             throw IllegalMove("Node '$leaf' and '$closeNode' are not equal after variable instantiation")

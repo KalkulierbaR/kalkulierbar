@@ -1,6 +1,7 @@
 package kalkulierbar.logic.transform
 
 import kalkulierbar.UnificationImpossible
+import kalkulierbar.logic.util.Unification
 import kalkulierbar.parsers.FirstOrderParser
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -23,7 +23,7 @@ const DPLLSplitDialog: preact.FunctionalComponent<Props> = ({
     state,
     branch,
 }) => {
-    const { server, onError, onChange } = useAppState();
+    const { server, onError, onChange, onWarning } = useAppState();
 
     const lits = useMemo(() => getAllLits(clauseSet), [clauseSet]);
 
@@ -35,6 +35,7 @@ const DPLLSplitDialog: preact.FunctionalComponent<Props> = ({
             lits[keyValuePair[0]],
             onChange,
             onError,
+            onWarning,
         );
         setOpen(false);
     };
