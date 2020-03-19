@@ -127,7 +127,15 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
 
     nodes.add(newNode)
     node.children.add(nodes.size - 1)
-
+    // Fix TODO: drüberschauen
+    savedChildren.forEach {
+        val saveChildFormula = nodes[it].formula
+        val newNode = NcTableauxNode(nodes.size - 1, saveChildFormula)
+        newNode.children.addAll(nodes[it].children)
+        newNode.closeRef = nodes[it].closeRef
+        newNode.isClosed = nodes[it].isClosed
+        nodes[it] = newNode
+    }
     // Add move to history
     if (state.backtracking)
         state.moveHistory.add(GammaMove(nodeID))
