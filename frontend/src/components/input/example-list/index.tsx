@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { CalculusType } from "../../../types/app";
+import { CalculusType, Example, AppStateActionType } from "../../../types/app";
 import { delExample } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../btn";
@@ -34,16 +34,16 @@ const normalizeInput = (input: string) => {
     return encodeURIComponent(input);
 };
 
-const useExample = async (exmpl: Example) => {
+const useExample = async (example: Example) => {
     const { server, onError, onChange, dispatch } = useAppState();
-    const calculus = exmpl.calculus;
-    const url = `${server}/${exmpl.calculus}/parse`;
+    const calculus = example.calculus;
+    const url = `${server}/${example.calculus}/parse`;
 
     dispatch({
         type: AppStateActionType.UPDATE_SAVED_FORMULA,
         calculus,
-        value: exmpl.formula,
-    })
+        value: example.formula,
+    });
 
     try {
         const response = await fetch(url, {
@@ -51,9 +51,9 @@ const useExample = async (exmpl: Example) => {
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `formula=${normalizeInput(
-                exmpl.formula,
-            )}&params=${exmpl.params}`,
+            body: `formula=${normalizeInput(example.formula)}&params=${
+                example.params
+            }`,
         });
         if (response.status !== 200) {
             onError(await response.text());
@@ -65,27 +65,29 @@ const useExample = async (exmpl: Example) => {
     } catch (e) {
         onError((e as Error).message);
     }
-}
+};
 
 const ExampleList: preact.FunctionalComponent<Props> = ({
     calculus,
     className,
 }) => {
-    const { config, isAdmin} = useAppState();
+    const { config, isAdmin } = useAppState();
+
+    const examples = config.examples;
 
     if (!examples.length) {
         return null;
     }
 
-    return(
+    return (
         <div class={`card  ${className}`}>
-            {config.examples.map((exmpl, index) => (
-                (exmpl.calculus === calculus) ? (
-                    <div class="card" onClick={() => useExample(exmpl)}>
-                        <p>{exmpl.name}</p>
-                        <p>{exmpl.description}</p>
+            {config.examples.map((example, index) =>
+                example.calculus === calculus ? (
+                    <div class="card" onClick={() => useExample(example)}>
+                        <p>{example.name}</p>
+                        <p>{example.description}</p>
                         <p>{decodeURIComponent(example.formula)}</p>
-                        <p>{exmpl.params}</p>
+                        <p>{example.params}</p>
                         {isAdmin ? (
                             <Btn onClick={(e) => onDelete(e, index)}>
                                 Delete
@@ -94,9 +96,10 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                             undefined
                         )}
                     </div>
-                    ) : (
-                        undefined
-            )))}
+                ) : (
+                    undefined
+                ),
+            )}
         </div>
     );
 };
