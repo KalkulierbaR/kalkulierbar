@@ -64,4 +64,11 @@ class TestFOResolveUnify {
         testFormula(valid3, MoveResolveUnify(0, 1, 0, 2))
         testFormula(valid1, MoveResolveUnify(0, 1, 0, -2))
     }
+
+    @Test
+    fun testManual() {
+        testFormula(valid1, MoveResolveCustom(0, 1, 0, 0, mapOf("X_1" to "a")), "resolutionstate|{R(f(X_1, c), X_1)}, {!R(f(a, c), a)}, {}||NONE|2|3")
+        testFormula(valid2, MoveResolveCustom(0, 1, 0, 0, mapOf("X_1" to "Y_2")), "resolutionstate|{R(f(X_1, c), X_1)}, {!R(f(Y_2, c), Y_2)}, {}||NONE|2|3")
+        testFormula(valid3, MoveResolveCustom(0, 1, 0, 0, mapOf("X_1" to "f(nope)")))
+    }
 }

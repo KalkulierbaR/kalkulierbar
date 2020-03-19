@@ -6,7 +6,6 @@ import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxFAB from "../../../components/tableaux/fab";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import { Calculus, TableauxCalculusType } from "../../../types/app";
-import { FOArgument, FOArgumentType } from "../../../types/clause";
 import {
     instanceOfFOTabState,
     instanceOfPropTabState,
@@ -16,7 +15,7 @@ import {
 } from "../../../types/tableaux";
 import { DragTransform } from "../../../types/ui";
 import { useAppState } from "../../../util/app-state";
-import { clauseSetToStringMap } from "../../../util/clause";
+import { checkRelationsForVar, clauseSetToStringMap } from "../../../util/clause";
 import {
     sendBacktrack,
     sendClose,
@@ -189,17 +188,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         } else if (instanceOfFOTabState(state, calculus)) {
             // Prepare dialog for automatic/manual unification
             setVarAssignSecondNodeId(newNode.id);
-            const vars: string[] = [];
-            const checkArgumentForVar = (argument: FOArgument) => {
-                if (argument.type === FOArgumentType.quantifiedVariable) {
-                    vars.push(argument.spelling);
-                }
-                if (argument.arguments) {
-                    argument.arguments.forEach(checkArgumentForVar);
-                }
-            };
-            selectedNode!.relation!.arguments.forEach(checkArgumentForVar);
-            newNode.relation!.arguments.forEach(checkArgumentForVar);
+            const vars = checkRelationsForVar(
+                [selectedNode!.relation!, newNode.relation!]
+            );
             if (vars.length <= 0) {
                 sendFOClose(false, {});
                 return;
@@ -317,7 +308,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             {instanceOfFOTabState(state, calculus) ? (
                 <Dialog
                     open={showVarAssignDialog}
-                    label="Choose variable assignments or leave them blank"
+                    label="Variable assignments"
                     onClose={() => setShowVarAssignDialog(false)}
                 >
                     <VarAssignList
@@ -329,9 +320,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog>
-            ) : (
-                undefined
-            )}
+            ) : undefined}
 
             <TableauxFAB
                 calculus={calculus}
