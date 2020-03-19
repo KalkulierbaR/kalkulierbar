@@ -81,9 +81,9 @@ class TestPropositionalLogic {
 
     @Test
     fun testNotToBasicOps() {
-        assertEquals("!a", ToBasicOps.transform(n1).toString())
-        assertEquals("!((!!b ∧ a) ∨ (!!!b ∧ !a))", ToBasicOps.transform(n2).toString())
-        assertEquals("!((a ∨ !a) ∧ !c)", ToBasicOps.transform(n3).toString())
+        assertEquals("¬a", ToBasicOps.transform(n1).toString())
+        assertEquals("¬((¬¬b ∧ a) ∨ (¬¬¬b ∧ ¬a))", ToBasicOps.transform(n2).toString())
+        assertEquals("¬((a ∨ ¬a) ∧ ¬c)", ToBasicOps.transform(n3).toString())
     }
 
     @Test
@@ -112,9 +112,9 @@ class TestPropositionalLogic {
 
     @Test
     fun testAndToBasicOps() {
-        assertEquals("(!a ∧ (b ∧ (!b ∨ a)))", ToBasicOps.transform(a1).toString())
-        assertEquals("(a ∧ !a)", ToBasicOps.transform(a2).toString())
-        assertEquals("((a ∨ !a) ∧ b)", ToBasicOps.transform(a3).toString())
+        assertEquals("(¬a ∧ (b ∧ (¬b ∨ a)))", ToBasicOps.transform(a1).toString())
+        assertEquals("(a ∧ ¬a)", ToBasicOps.transform(a2).toString())
+        assertEquals("((a ∨ ¬a) ∧ b)", ToBasicOps.transform(a3).toString())
     }
 
     @Test
@@ -140,8 +140,8 @@ class TestPropositionalLogic {
     @Test
     fun testOrToBasicOps() {
         assertEquals("(a ∨ b)", ToBasicOps.transform(o1).toString())
-        assertEquals("((a ∨ !b) ∨ ((a ∧ b) ∨ (!a ∧ !b)))", ToBasicOps.transform(o2).toString())
-        assertEquals("(!(a ∧ b) ∨ !(!b ∨ !b))", ToBasicOps.transform(o3).toString())
+        assertEquals("((a ∨ ¬b) ∨ ((a ∧ b) ∨ (¬a ∧ ¬b)))", ToBasicOps.transform(o2).toString())
+        assertEquals("(¬(a ∧ b) ∨ ¬(¬b ∨ ¬b))", ToBasicOps.transform(o3).toString())
     }
 
     @Test
