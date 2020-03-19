@@ -1,0 +1,17 @@
+/* Styles for the Example-List component */
+
+div.example{
+    background-color: var(--kbar-16dp-color);
+    cursor: pointer;
+}
+
+
+p.description{
+    font-style: italic;
+}
+
+
+p.params {
+    font-style: oblique;
+    word-break: break-word;
+}
