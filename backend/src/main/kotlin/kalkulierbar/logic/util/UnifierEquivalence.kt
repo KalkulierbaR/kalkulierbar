@@ -61,7 +61,9 @@ class UnifierEquivalence {
          * @param list List of pairs of terms to rename
          * @return List of pairs of terms with canonical names applied
          */
-        private fun canonicalVarNames(list: List<Pair<FirstOrderTerm, FirstOrderTerm>>): List<Pair<FirstOrderTerm, FirstOrderTerm>> {
+        private fun canonicalVarNames(
+            list: List<Pair<FirstOrderTerm, FirstOrderTerm>>
+        ): List<Pair<FirstOrderTerm, FirstOrderTerm>> {
             val canon1 = VariableCanonicizer()
             val canon2 = VariableCanonicizer()
 
@@ -79,7 +81,7 @@ class UnifierEquivalence {
  *          variable across invocations. Apply UniqueVariables before using this if you
  *          are unsure whether this might be a problem.
  */
-class VariableCanonicizer() : FirstOrderTermVisitor<FirstOrderTerm>() {
+class VariableCanonicizer : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     var counter = 0
     val replacements = mutableMapOf<String, String>()
