@@ -32,8 +32,8 @@ const INIT_APP_STATE: AppState = {
         : `http://${location.hostname}:7000`,
     theme: Theme.auto,
     tutorialMode: TutorialMode.HighlightAll,
-    isAdmin: true, //TODO: false
-    adminKey: "test",
+    isAdmin: false,
+    adminKey: "",
     config: {
         disabled: ["prop-tableaux"],
         examples: [],
