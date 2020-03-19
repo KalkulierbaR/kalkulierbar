@@ -343,7 +343,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 resetDragTransforms={resetDragTransforms}
             />
 
-            <HelpMenu />
+            <HelpMenu calculus={calculus}/>
         </Fragment>
     );
 };
