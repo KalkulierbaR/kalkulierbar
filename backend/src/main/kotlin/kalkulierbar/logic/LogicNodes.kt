@@ -1,8 +1,11 @@
 package kalkulierbar.logic
 
 import kalkulierbar.logic.transform.LogicNodeVisitor
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Serializable
+@SerialName("var")
 class Var(var spelling: String) : LogicNode() {
 
     override fun toString() = spelling
@@ -12,16 +15,20 @@ class Var(var spelling: String) : LogicNode() {
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
-class Not(child: LogicNode) : UnaryOp(child) {
+@Serializable
+@SerialName("not")
+class Not(override var child: LogicNode) : UnaryOp() {
 
-    override fun toString() = "!$child"
+    override fun toString() = "¬$child"
 
     override fun clone() = Not(child.clone())
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
-class And(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
+@Serializable
+@SerialName("and")
+class And(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
 
     override fun toString() = "($leftChild ∧ $rightChild)"
 
@@ -30,7 +37,9 @@ class And(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rig
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
-class Or(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
+@Serializable
+@SerialName("or")
+class Or(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
 
     override fun toString() = "($leftChild ∨ $rightChild)"
 
@@ -39,7 +48,9 @@ class Or(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, righ
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
-class Impl(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
+@Serializable
+@SerialName("impl")
+class Impl(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
 
     override fun toString() = "($leftChild --> $rightChild)"
 
@@ -48,7 +59,9 @@ class Impl(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, ri
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
-class Equiv(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, rightChild) {
+@Serializable
+@SerialName("equiv")
+class Equiv(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
 
     override fun toString() = "($leftChild <=> $rightChild)"
 
@@ -58,6 +71,7 @@ class Equiv(leftChild: LogicNode, rightChild: LogicNode) : BinaryOp(leftChild, r
 }
 
 @Serializable
+@SerialName("relation")
 class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : SyntacticEquality, LogicNode() {
 
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
@@ -91,11 +105,13 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Synt
     }
 }
 
+@Serializable
+@SerialName("allquant")
 class UniversalQuantifier(
-    varName: String,
-    child: LogicNode,
-    boundVariables: MutableList<QuantifiedVariable>
-) : Quantifier(varName, child, boundVariables) {
+    override var varName: String,
+    override var child: LogicNode,
+    override val boundVariables: MutableList<QuantifiedVariable>
+) : Quantifier() {
 
     override fun toString() = "(∀$varName: $child)"
 
@@ -104,11 +120,13 @@ class UniversalQuantifier(
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
 
+@Serializable
+@SerialName("exquant")
 class ExistentialQuantifier(
-    varName: String,
-    child: LogicNode,
-    boundVariables: MutableList<QuantifiedVariable>
-) : Quantifier(varName, child, boundVariables) {
+    override var varName: String,
+    override var child: LogicNode,
+    override val boundVariables: MutableList<QuantifiedVariable>
+) : Quantifier() {
 
     override fun toString() = "(∃$varName: $child)"
 

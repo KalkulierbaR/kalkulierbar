@@ -47,6 +47,15 @@ export interface ResolutionResolveUnifyMove {
     l2: number;
 }
 
+export interface ResolutionResolveCustomMove {
+    type: "res-resolvecustom";
+    c1: number;
+    c2: number;
+    l1: number;
+    l2: number;
+    varAssign: VarAssign;
+}
+
 export interface ResolutionInstantiateMove {
     type: "res-instantiate";
     c1: number;
@@ -86,6 +95,7 @@ export type PropResolutionMove =
 export type FOResolutionMove =
     | BaseResolutionMove
     | ResolutionResolveUnifyMove
+    | ResolutionResolveCustomMove
     | ResolutionInstantiateMove
     | FOResolutionFactorizeMove;
 

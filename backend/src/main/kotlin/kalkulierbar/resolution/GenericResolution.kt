@@ -263,6 +263,7 @@ val resolutionMoveModule = SerializersModule {
     polymorphic(ResolutionMove::class) {
         MoveResolve::class with MoveResolve.serializer()
         MoveResolveUnify::class with MoveResolveUnify.serializer()
+        MoveResolveCustom::class with MoveResolveCustom.serializer()
         MoveHide::class with MoveHide.serializer()
         MoveShow::class with MoveShow.serializer()
         MoveHyper::class with MoveHyper.serializer()

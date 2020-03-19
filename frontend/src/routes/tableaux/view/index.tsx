@@ -1,20 +1,11 @@
 import { Fragment, h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import Dialog from "../../../components/dialog";
 import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxFAB from "../../../components/tableaux/fab";
 import TableauxTreeView from "../../../components/tableaux/tree";
-import { useAppState } from "../../../helpers/app-state";
-import { clauseSetToStringMap } from "../../../helpers/clause";
-import {
-    sendBacktrack,
-    sendClose,
-    sendExtend,
-    sendLemma,
-} from "../../../helpers/tableaux";
 import { Calculus, TableauxCalculusType } from "../../../types/app";
-import { FOArgument, FOArgumentType } from "../../../types/clause";
 import {
     instanceOfFOTabState,
     instanceOfPropTabState,
@@ -22,6 +13,16 @@ import {
     TableauxTreeLayoutNode,
     VarAssign,
 } from "../../../types/tableaux";
+import { DragTransform } from "../../../types/ui";
+import { useAppState } from "../../../util/app-state";
+import { checkRelationsForVar, clauseSetToStringMap } from "../../../util/clause";
+import {
+    sendBacktrack,
+    sendClose,
+    sendExtend,
+    sendLemma,
+    updateDragTransform,
+} from "../../../util/tableaux";
 import { foExample, propExample } from "./example";
 import * as style from "./style.scss";
 
@@ -39,7 +40,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         smallScreen,
         onError,
         onChange,
-        onWarning,
     } = useAppState();
 
     let state = cState;
@@ -49,6 +49,23 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         state = calculus === Calculus.propTableaux ? propExample : foExample;
         onChange(calculus, state);
     }
+
+    const [dragTransforms, setDragTransforms] = useState<
+        Record<number, DragTransform>
+    >({});
+
+    const onDrag = useCallback(updateDragTransform(setDragTransforms), [
+        setDragTransforms,
+    ]);
+
+    const resetDragTransform = useCallback(
+        (id: number) => onDrag(id, { x: 0, y: 0 }),
+        [onDrag],
+    );
+    const resetDragTransforms = useCallback(() => setDragTransforms({}), [
+        setDragTransforms,
+    ]);
+
     const clauseOptions = clauseSetToStringMap(state.clauseSet);
 
     const [selectedClauseId, setSelectedClauseId] = useState<
@@ -175,17 +192,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         } else if (instanceOfFOTabState(state, calculus)) {
             // Prepare dialog for automatic/manual unification
             setVarAssignSecondNodeId(newNode.id);
-            const vars: string[] = [];
-            const checkArgumentForVar = (argument: FOArgument) => {
-                if (argument.type === FOArgumentType.quantifiedVariable) {
-                    vars.push(argument.spelling);
-                }
-                if (argument.arguments) {
-                    argument.arguments.forEach(checkArgumentForVar);
-                }
-            };
-            selectedNode!.relation!.arguments.forEach(checkArgumentForVar);
-            newNode.relation!.arguments.forEach(checkArgumentForVar);
+            const vars = checkRelationsForVar(
+                [selectedNode!.relation!, newNode.relation!]
+            );
             if (vars.length <= 0) {
                 sendFOClose(false, {});
                 return;
@@ -289,6 +298,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={selectNodeCallback}
                     lemmaNodesSelectable={lemmaMode}
+                    dragTransforms={dragTransforms}
+                    onDrag={onDrag}
                 />
             </div>
 
@@ -309,7 +320,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             {instanceOfFOTabState(state, calculus) ? (
                 <Dialog
                     open={showVarAssignDialog}
-                    label="Choose variable assignments or leave them blank"
+                    label="Variable assignments"
                     onClose={() => setShowVarAssignDialog(false)}
                 >
                     <VarAssignList
@@ -332,6 +343,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 expandCallback={() => setShowClauseDialog(!showClauseDialog)}
                 lemmaMode={lemmaMode}
                 lemmaCallback={() => setLemmaMode(!lemmaMode)}
+                resetDragTransform={resetDragTransform}
+                resetDragTransforms={resetDragTransforms}
             />
         </Fragment>
     );

@@ -1,22 +1,21 @@
 import { Fragment, h } from "preact";
-import DPLLTree from "../../../components/dpll/tree";
-import { useAppState } from "../../../helpers/app-state";
-
 import { useCallback, useState } from "preact/hooks";
 import DPLLPropLitDialog from "../../../components/dpll/dialog/prop";
 import DPLLSplitDialog from "../../../components/dpll/dialog/split";
 import DPLLControlFAB from "../../../components/dpll/fab";
 import DPLLModelInput from "../../../components/dpll/model";
+import DPLLTree from "../../../components/dpll/tree";
 import OptionList from "../../../components/input/option-list";
-import { classMap } from "../../../helpers/class-map";
-import { clauseSetToStringMap } from "../../../helpers/clause";
+import { SelectedClauses } from "../../../types/clause";
+import { useAppState } from "../../../util/app-state";
+import { classMap } from "../../../util/class-map";
+import { clauseSetToStringMap } from "../../../util/clause";
 import {
     calculateClauseSet,
     getPropCandidates,
     sendModelCheck,
     sendProp,
-} from "../../../helpers/dpll";
-import { SelectedClauses } from "../../../types/clause";
+} from "../../../util/dpll";
 import dpllExampleState from "./example";
 import * as style from "./style.scss";
 
