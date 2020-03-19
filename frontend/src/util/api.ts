@@ -170,6 +170,7 @@ export const setCalculusState = async (
     calculus: CalculusType,
     value: boolean,
     adminKey: string,
+    changeConfig: (cfg: Config) => void,
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/setCalculusState`;
@@ -196,7 +197,7 @@ export const setCalculusState = async (
             onError(await res.text());
         }
 
-        //Todo: neue config holen
+        getConfig(server, changeConfig, onError);
     } catch (e) {
         onError((e as Error).message);
     }

@@ -1,6 +1,6 @@
 import { h, VNode } from "preact";
 import { circle } from "../../components/resolution/circle/style.scss";
-import { Calculus } from "../../types/app";
+import { Calculus, AppStateActionType, Config } from "../../types/app";
 import * as style from "./style.scss";
 import { useAppState } from "../../util/app-state";
 import Switch from "../../components/switch";
@@ -913,10 +913,18 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
     route: { href, name, image, viewBox },
     showSwitch = false,
 }) => {
-    const { config, server, onError, adminKey } = useAppState();
+    const { config, server, onError, adminKey, dispatch } = useAppState();
 
     const handleChange = (checked: boolean) => {
-        setCalculusState(server, href, checked, adminKey, onError);
+        setCalculusState(
+            server,
+            href,
+            checked,
+            adminKey,
+            (cfg: Config) =>
+                dispatch({ type: AppStateActionType.SET_CONFIG, value: cfg }),
+            onError,
+        );
     };
 
     return (
