@@ -9,6 +9,7 @@ import { Calculus, ResolutionCalculusType } from "../../types/app";
 import { VisualHelp } from "../../types/resolution";
 import { CnfStrategy } from "../../types/tableaux";
 import { useAppState } from "../../util/app-state";
+import ExampleList from "../../components/input/example-list";
 
 interface Props {
     /**
@@ -98,6 +99,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     )}
                 </div>
             </div>
+            <ExampleList calculus={calculus}/>
         </Fragment>
     );
 };

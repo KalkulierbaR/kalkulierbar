@@ -30,22 +30,28 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
     calculus,
     className,
 }) => {
-    const { config } = useAppState();
-    const examples = config.examples.filter(exmpl => exmpl.calculus === calculus);
+    const { config, isAdmin} = useAppState();
 
     return(
         <div class={`card ${className}`}>
-            {examples.map( (exmpl, index) => (
-                <div class="card">
-                    <p>{exmpl.name}</p>
-                    <p>{exmpl.description}</p>
-                    <p>{exmpl.formula}</p>
-                    <p>{exmpl.params}</p>
-                    <Btn onClick={() => onDelete(index)}>
-                        Delete
-                    </Btn>
-                </div>
-            ))}
+            {config.examples.map((exmpl, index) => (
+                (exmpl.calculus === calculus) ? (
+                    <div class="card">
+                        <p>{exmpl.name}</p>
+                        <p>{exmpl.description}</p>
+                        <p>{exmpl.formula}</p>
+                        <p>{exmpl.params}</p>
+                        {isAdmin ? (
+                            <Btn onClick={() => onDelete(index)}>
+                                Delete
+                            </Btn>
+                        ) : (
+                            undefined
+                        )}
+                    </div>
+                    ) : (
+                        undefined
+            )))}
         </div>
     )
 };
