@@ -15,11 +15,11 @@ interface Props {
     className?: string;
 }
 
-const onDelete = () => {
+const onDelete = (index: number) => {
     const { server, onError, adminKey, setConfig} = useAppState();
     delExample(
         server,
-        1,
+        index,
         adminKey,
         setConfig,
         onError,
@@ -36,13 +36,13 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
 
     return(
         <div class={`card ${className}`}>
-            {examples.map( exmpl => (
+            {examples.map( (exmpl, index) => (
                 <div class="card">
                     <p>{exmpl.name}</p>
                     <p>{exmpl.description}</p>
                     <p>{exmpl.formula}</p>
                     <p>{exmpl.params}</p>
-                    <Btn onClick={onDelete}>
+                    <Btn onClick={onDelete(index)}>
                         Delete
                     </Btn>
                 </div>
