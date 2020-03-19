@@ -20,16 +20,14 @@ fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
     checkRestrictions(nodes, nodeID)
 
     val node = nodes[nodeID]
+    val savedChildren = node.children.toMutableList() // Save a copy of the node's children
+    node.children.clear() // We will insert new nodes between the node and its children
 
     if (node.formula !is And)
         throw IllegalMove("Outermost logic operator is not AND")
 
     val workList = mutableListOf(node.formula)
     var parentID = nodeID
-
-    while (!nodes[parentID].isLeaf) {
-        parentID = nodes[nodeID].children[0]
-    }
 
     while (workList.isNotEmpty()) {
         val subFormula = workList.removeAt(0)
@@ -42,6 +40,9 @@ fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
             parentID = nodes.size - 1
         }
     }
+
+    // Add the node's children to the last inserted node to restore the tree structure
+    nodes[parentID].children.addAll(savedChildren)
 
     // Add move to history
     if (state.backtracking)
@@ -65,12 +66,10 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     if (node.formula !is Or)
         throw IllegalMove("Outermost logic operator is not OR")
 
-    val workList = mutableListOf(node.formula)
+    if (!node.isLeaf)
+        throw IllegalMove("Splitting for non-leaves is not supported yet")
 
-    var parentID = nodeID
-    while (!nodes[parentID].isLeaf) {
-        parentID = nodes[nodeID].children[0]
-    }
+    val workList = mutableListOf(node.formula)
 
     while (workList.isNotEmpty()) {
         val subFormula = workList.removeAt(0)
@@ -78,8 +77,8 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
             workList.add(subFormula.rightChild)
             workList.add(subFormula.leftChild)
         } else {
-            nodes.add(NcTableauxNode(parentID, subFormula))
-            nodes[parentID].children.add(nodes.size - 1)
+            nodes.add(NcTableauxNode(nodeID, subFormula))
+            nodes[nodeID].children.add(nodes.size - 1)
         }
     }
 
@@ -106,6 +105,10 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
     if (formula !is UniversalQuantifier)
         throw IllegalMove("Outermost logic operator is not a universal quantifier")
 
+    // Prepare the selected node for insertion of new nodes
+    val savedChildren = node.children.toMutableList()
+    node.children.clear()
+
     // Transform new Formula + remove UniversalQuantifier
     val vars = formula.boundVariables
     state.gammaSuffixCounter += 1
@@ -118,15 +121,12 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
     // that state.identifiers contains _all_ identifiers in the tableaux
     state.identifiers.addAll(IdentifierCollector.collect(newFormula))
 
-    var parentID = nodeID
-    while (!nodes[parentID].isLeaf) {
-        parentID = nodes[nodeID].children[0]
-    }
-
     // Add new node to tree
-    val newNode = NcTableauxNode(parentID, newFormula)
+    val newNode = NcTableauxNode(nodeID, newFormula)
+    newNode.children.addAll(savedChildren)
+
     nodes.add(newNode)
-    nodes[parentID].children.add(nodes.size - 1)
+    node.children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
@@ -154,20 +154,20 @@ fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     if (formula !is ExistentialQuantifier)
         throw IllegalMove("The outermost logic operator is not an existential quantifier")
 
-    state.skolemCounter++
+    // Prepare the selected node for insertion of new nodes
+    val savedChildren = node.children.toMutableList()
+    node.children.clear()
+
     // Apply skolemization to the top-level existential quantifier
     // This adds the newly created skolem term identifier to the state.identifiers set
+    state.skolemCounter++
     val newFormula = DeltaSkolemization.transform(formula, state.identifiers, state.skolemCounter)
 
-    var parentID = nodeID
-    while (!nodes[parentID].isLeaf) {
-        parentID = nodes[nodeID].children[0]
-    }
-
     // Add new node to tree
-    val newNode = NcTableauxNode(parentID, newFormula)
+    val newNode = NcTableauxNode(nodeID, newFormula)
+    newNode.children.addAll(savedChildren)
     nodes.add(newNode)
-    nodes[parentID].children.add(nodes.size - 1)
+    node.children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
@@ -176,9 +176,13 @@ fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
 }
 
 /**
- * Check nodeID valid
+ * Check nodeID valid + already closed
  */
 fun checkRestrictions(nodes: List<NcTableauxNode>, nodeID: Int) {
     if (nodeID < 0 || nodeID >= nodes.size)
         throw IllegalMove("There is no node with ID: $nodeID")
+    // Verify that node is not already closed
+    val node = nodes[nodeID]
+    if (node.isClosed)
+        throw IllegalMove("Node '$node' is already closed")
 }

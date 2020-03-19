@@ -285,7 +285,7 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     const dispatchServer = useCallback(() => {
         dispatch({
             type: AppStateActionType.SET_SERVER,
-            value: newServer,
+            value: newServer.trim(),
         });
     }, [newServer]);
 

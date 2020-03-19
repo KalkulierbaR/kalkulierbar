@@ -2,9 +2,10 @@ import {
     Atom, CandidateClause,
     Clause,
     ClauseSet,
-    FOArgument,
+    FOArgument, FOArgumentType, FOAtom,
     FOLiteral,
 } from "../types/clause";
+import {FORelation} from "../types/tableaux";
 import {stringArrayToStringMap} from "./array-to-map";
 import { maxBy } from "./max-by";
 
@@ -88,3 +89,50 @@ export const getCandidateClause = (searchIndex: number, candidateClauses: Candid
     }
     return null;
 };
+
+/**
+ * Check an array of FO Relations for vars to assign
+ * @param {FORelation[]} relations - The relations to search in
+ * @returns {string[]} - The vars found
+ */
+export const checkRelationsForVar = (relations: FORelation[]) => {
+    const vars: string[] = [];
+
+    const checkArgumentForVar = (argument: FOArgument) => {
+        if (argument.type === FOArgumentType.quantifiedVariable) {
+            vars.push(argument.spelling);
+        }
+        if (argument.arguments) {
+            argument.arguments.forEach(checkArgumentForVar);
+        }
+    };
+    relations.forEach(relation => {
+        relation.arguments.forEach(checkArgumentForVar)
+    });
+
+    return vars;
+};
+
+/**
+ * Check an array of FO Atoms for vars to assign
+ * @param {FOAtom[]} atoms - The atoms to search in
+ * @returns {string[]} - The vars found
+ */
+export const checkAtomsForVar = (atoms: FOAtom[]) => {
+    const vars: string[] = [];
+
+    const checkArgumentForVar = (argument: FOArgument) => {
+        if (argument.type === FOArgumentType.quantifiedVariable) {
+            vars.push(argument.spelling);
+        }
+        if (argument.arguments) {
+            argument.arguments.forEach(checkArgumentForVar);
+        }
+    };
+    atoms.forEach(atom => {
+        atom.lit.arguments.forEach(checkArgumentForVar)
+    });
+
+    return vars;
+};
+

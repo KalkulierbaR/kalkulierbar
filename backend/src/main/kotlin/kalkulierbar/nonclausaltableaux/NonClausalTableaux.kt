@@ -55,10 +55,10 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
      */
     @Suppress("ThrowsCount", "ComplexMethod", "LongMethod")
     private fun applyClose(
-            state: NcTableauxState,
-            nodeID: Int,
-            closeID: Int,
-            varAssign: Map<String, FirstOrderTerm>?
+        state: NcTableauxState,
+        nodeID: Int,
+        closeID: Int,
+        varAssign: Map<String, FirstOrderTerm>?
     ): NcTableauxState {
         val nodes = state.nodes
 
