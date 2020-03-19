@@ -51,12 +51,12 @@ export const ResolutionCalculus: CalculusType[] = [
     Calculus.foResolution,
 ];
 
-export interface Example<C extends CalculusType = CalculusType> {
+export interface Example {
     name: string;
     description: string;
     calculus: CalculusType;
     formula: string;
-    params: Params[C];
+    params: string;
 }
 
 export interface Move {
@@ -178,11 +178,11 @@ export interface SetConfig extends AppStateActionBase {
     value: Config;
 }
 
-export interface SetAdminKey extends AppStateActionBase{
+export interface SetAdminKey extends AppStateActionBase {
     type: AppStateActionType.SET_ADMIN_KEY;
     value: string;
 }
-export interface SetAdmin extends AppStateActionBase{
+export interface SetAdmin extends AppStateActionBase {
     type: AppStateActionType.SET_ADMIN;
     value: boolean;
 }

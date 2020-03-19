@@ -14,6 +14,8 @@ export type checkCloseFn<C extends CalculusType = CalculusType> = (
     state: AppState[C],
 ) => Promise<void>;
 
+(window as any).Keccak = Keccak;
+
 /**
  * Sends a request to the server to check, if the tree is closed and
  * shows the result to the user
@@ -211,12 +213,11 @@ export const addExample = async (
     const url = `${server}/admin/addExample`;
     const keccak = new Keccak(256);
     //todo: Mac wird falsch berechnet
-    keccak.update(`kbae|${example}|${getCurrentDate()}|${adminKey}`);
-    console.log(
+    keccak.update(
         `kbae|${JSON.stringify(example)}|${getCurrentDate()}|${adminKey}`,
     );
-    const mac = keccak.digest("hex");
-    console.log(mac);
+    const mac = keccak.digest("hex").toUpperCase();
+    console.log(example);
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
@@ -226,7 +227,7 @@ export const addExample = async (
             method: "POST",
             body: `example=${encodeURIComponent(
                 JSON.stringify(example),
-            )}&mac=${encodeURIComponent(JSON.stringify(keccak.digest("hex")))}`,
+            )}&mac=${mac}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
@@ -262,7 +263,7 @@ export const delExample = async (
             method: "POST",
             body: `exampleID=${encodeURIComponent(
                 JSON.stringify(exampleID),
-            )}&mac=${encodeURIComponent(JSON.stringify(keccak.digest("hex")))}`,
+            )}&mac=${encodeURIComponent(JSON.stringify(mac))}`,
         });
         if (res.status !== 200) {
             onError(await res.text());

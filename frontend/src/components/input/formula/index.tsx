@@ -99,9 +99,9 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         {
                             name: "name",
                             description: "descr",
-                            calculus: calculus,
+                            calculus,
                             formula: normalizeInput(savedFormulas[calculus]),
-                            params: params!,
+                            params: JSON.stringify(params),
                         },
                         adminKey,
                         onError,
