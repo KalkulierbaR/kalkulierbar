@@ -1,8 +1,8 @@
-import {CalculusType} from "../../../types/app";
-import { useAppState } from "../../../util/app-state";
 import {h} from "preact";
-import Btn from "../../btn";
+import {CalculusType} from "../../../types/app";
 import {delExample} from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
+import Btn from "../../btn";
 
 interface Props {
     /**
@@ -23,9 +23,8 @@ const onDelete = (index: number) => {
         adminKey,
         setConfig,
         onError,
-    )
-    return undefined;
-}
+    );
+};
 
 const ExampleList: preact.FunctionalComponent<Props> = ({
     calculus,
@@ -42,13 +41,13 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                     <p>{exmpl.description}</p>
                     <p>{exmpl.formula}</p>
                     <p>{exmpl.params}</p>
-                    <Btn onClick={onDelete(index)}>
+                    <Btn onClick={() => onDelete(index)}>
                         Delete
                     </Btn>
                 </div>
             ))}
         </div>
     )
-}
+};
 
 export default ExampleList;
