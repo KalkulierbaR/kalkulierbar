@@ -5,9 +5,9 @@ import {
     FOArgument, FOArgumentType, FOAtom,
     FOLiteral,
 } from "../types/clause";
+import {FORelation} from "../types/tableaux";
 import {stringArrayToStringMap} from "./array-to-map";
 import { maxBy } from "./max-by";
-import {FORelation} from "../types/tableaux";
 
 /**
  * Parse a First Order argument to a string

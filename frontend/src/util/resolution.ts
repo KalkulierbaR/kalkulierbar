@@ -24,8 +24,8 @@ import {
     PropResolutionState,
     VisualHelp,
 } from "../types/resolution";
-import { sendMove } from "./api";
 import { VarAssign } from "../types/tableaux";
+import { sendMove } from "./api";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
