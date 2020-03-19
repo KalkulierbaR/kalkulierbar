@@ -12,6 +12,7 @@ import {
     RemoveNotification,
     Theme,
     TutorialMode,
+    Config,
 } from "../types/app";
 import { localStorageGet, localStorageSet } from "./local-storage";
 
@@ -121,6 +122,8 @@ const derive = (
         dispatch(createNotification(msg, type)),
     removeNotification: () => dispatch(RemoveNotificationAction),
     onChange: updateCalculusState(dispatch),
+    setConfig: (cfg: Config) =>
+        dispatch({ type: AppStateActionType.SET_CONFIG, value: cfg }),
     dispatch,
 });
 

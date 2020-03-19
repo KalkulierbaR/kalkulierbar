@@ -52,6 +52,7 @@ const App: preact.FunctionalComponent = () => {
         dispatch,
         onError,
         removeNotification,
+        setConfig,
     } = useAppState();
     const saveScreenSize = (smallScreen: boolean) =>
         dispatch({
@@ -73,12 +74,7 @@ const App: preact.FunctionalComponent = () => {
     useEffect(() => {
         checkServer(server, onError);
 
-        getConfig(
-            server,
-            (cfg) =>
-                dispatch({ type: AppStateActionType.SET_CONFIG, value: cfg }),
-            onError,
-        );
+        getConfig(server, setConfig, onError);
 
         const cf = new Confetti({ speed: 10, maxCount: 150 });
 

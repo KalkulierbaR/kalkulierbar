@@ -109,6 +109,7 @@ export interface DerivedAppState extends AppState {
         calculus: C,
         state: AppState[C],
     ) => void;
+    setConfig: (cfg: Config) => void;
     dispatch: (a: AppStateAction) => void;
 }
 

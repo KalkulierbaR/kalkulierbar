@@ -913,18 +913,10 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
     route: { href, name, image, viewBox },
     showSwitch = false,
 }) => {
-    const { config, server, onError, adminKey, dispatch } = useAppState();
+    const { config, server, onError, adminKey, setConfig } = useAppState();
 
     const handleChange = (checked: boolean) => {
-        setCalculusState(
-            server,
-            href,
-            checked,
-            adminKey,
-            (cfg: Config) =>
-                dispatch({ type: AppStateActionType.SET_CONFIG, value: cfg }),
-            onError,
-        );
+        setCalculusState(server, href, checked, adminKey, setConfig, onError);
     };
 
     return (

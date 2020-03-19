@@ -195,6 +195,7 @@ export const setCalculusState = async (
         });
         if (res.status !== 200) {
             onError(await res.text());
+            return;
         }
 
         getConfig(server, changeConfig, onError);
@@ -208,11 +209,12 @@ export const addExample = async (
     server: string,
     example: Example,
     adminKey: string,
+    changeConfig: (cfg: Config) => void,
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/addExample`;
     const keccak = new Keccak(256);
-    //todo: Mac wird falsch berechnet
+
     keccak.update(
         `kbae|${JSON.stringify(example)}|${getCurrentDate()}|${adminKey}`,
     );
@@ -231,9 +233,10 @@ export const addExample = async (
         });
         if (res.status !== 200) {
             onError(await res.text());
+            return;
         }
 
-        //Todo: neue config holen
+        getConfig(server, changeConfig, onError);
     } catch (e) {
         onError((e as Error).message);
     }
@@ -244,6 +247,7 @@ export const delExample = async (
     server: string,
     exampleID: number,
     adminKey: string,
+    changeConfig: (cfg: Config) => void,
     onError: (msg: string) => void,
 ) => {
     const url = `${server}/admin/addExample`;
@@ -267,10 +271,9 @@ export const delExample = async (
         });
         if (res.status !== 200) {
             onError(await res.text());
+            return;
         }
-        {
-            //Todo: neue config holen
-        }
+        getConfig(server, changeConfig, onError);
     } catch (e) {
         onError((e as Error).message);
     }
