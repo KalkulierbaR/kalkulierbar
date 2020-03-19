@@ -175,9 +175,13 @@ fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
 }
 
 /**
- * Check nodeID valid
+ * Check nodeID valid + already closed
  */
 fun checkRestrictions(nodes: List<NcTableauxNode>, nodeID: Int) {
     if (nodeID < 0 || nodeID >= nodes.size)
         throw IllegalMove("There is no node with ID: $nodeID")
+    // Verify that node is not already closed
+    val node = nodes[nodeID]
+    if (node.isClosed)
+        throw IllegalMove("Node '$node' is already closed")
 }
