@@ -1,6 +1,6 @@
 # Non Clausal Tableaux
 
-The Non-clausal Tableaux is like a First Order Tableaux but without the clausal view.
+The Non-clausal Tableaux is like a First Order Tableaux but without the clausal aspect.
 
 ## Input Format Specification
 
