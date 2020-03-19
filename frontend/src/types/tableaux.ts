@@ -34,25 +34,23 @@ export function instanceOfPropTabState(
 }
 
 export interface TableauxExpandMove {
-    type: "EXPAND";
+    type: "tableaux-expand";
     id1: number;
     id2: number;
 }
 
 export interface TableauxCloseMove {
-    type: "CLOSE" | "AUTOCLOSE";
+    type: "tableaux-close";
     id1: number;
     id2: number;
 }
 
 export interface TableauxUndoMove {
-    type: "UNDO";
-    id1: number;
-    id2: number;
+    type: "tableaux-undo";
 }
 
 export interface TableauxLemmaMove {
-    type: "LEMMA";
+    type: "tableaux-lemma";
     id1: number;
     id2: number;
 }
@@ -114,7 +112,16 @@ export function instanceOfFOTabState(
 
 export type VarAssign = KStringMap<string>;
 
-export type FOTableauxMove = TableauxMove & { varAssign: VarAssign };
+export interface TableauxCloseAssignMove {
+    type: "tableaux-close-assign";
+    id1: number;
+    id2: number;
+    varAssign: VarAssign;
+}
+
+export type FOTableauxMove =
+    | TableauxMove
+    | TableauxCloseAssignMove
 
 export interface FORelation {
     spelling: string;
