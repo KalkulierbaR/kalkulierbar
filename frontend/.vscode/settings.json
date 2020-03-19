@@ -1,12 +1,10 @@
 {
-  "cSpell.words": [
-    "DPLL",
-    "DPLLCs",
-    "Hamburgler",
-    "Kalkulierba",
-    "Zoomable",
-    "preact"
-  ],
-  "prettier.prettierPath": ".vscode/pnpify/prettier/index.js",
-  "typescript.tsdk": ".vscode/pnpify/typescript/lib"
+    "cSpell.words": [
+        "DPLL",
+        "DPLLCs",
+        "Hamburgler",
+        "Kalkulierba",
+        "Zoomable",
+        "preact"
+    ]
 }
