@@ -42,7 +42,7 @@ const useExample = async (example: Example) => {
     dispatch({
         type: AppStateActionType.UPDATE_SAVED_FORMULA,
         calculus,
-        value: example.formula,
+        value: decodeURIComponent(example.formula),
     });
 
     try {
