@@ -6,6 +6,9 @@ export interface NCTableauxState {
     nodes: NCTableauxNode[];
     moveHistory: NCTableauxMove[];
     usedBacktracking: boolean;
+    identifiers: string[];
+    gammaSuffixCounter: number;
+    skolemCounter: number;
     seal: string;
 }
 
@@ -43,10 +46,14 @@ export interface LogicRelation {
     arguments: FOTerm[];
 }
 
+export interface BoundVar {
+    spelling: string;
+}
+
 export interface Quantifier {
     varName: string;
     child: LogicNode;
-    boundVariables: QuantifiedVar[];
+    boundVariables: BoundVar[];
 }
 
 export interface AllQuantifier extends Quantifier {
