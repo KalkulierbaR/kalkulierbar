@@ -15,7 +15,10 @@ import {
 } from "../../../types/tableaux";
 import { DragTransform } from "../../../types/ui";
 import { useAppState } from "../../../util/app-state";
-import { checkRelationsForVar, clauseSetToStringMap } from "../../../util/clause";
+import {
+    checkRelationsForVar,
+    clauseSetToStringMap,
+} from "../../../util/clause";
 import {
     sendBacktrack,
     sendClose,
@@ -40,6 +43,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         smallScreen,
         onError,
         onChange,
+        onWarning,
     } = useAppState();
 
     let state = cState;
@@ -192,9 +196,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         } else if (instanceOfFOTabState(state, calculus)) {
             // Prepare dialog for automatic/manual unification
             setVarAssignSecondNodeId(newNode.id);
-            const vars = checkRelationsForVar(
-                [selectedNode!.relation!, newNode.relation!]
-            );
+            const vars = checkRelationsForVar([
+                selectedNode!.relation!,
+                newNode.relation!,
+            ]);
             if (vars.length <= 0) {
                 sendFOClose(false, {});
                 return;

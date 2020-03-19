@@ -79,6 +79,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
         onSuccess,
         tutorialMode,
         dispatch,
+        onWarning,
     } = useAppState();
     const apiInfo = { onChange, onError, server, onWarning };
 

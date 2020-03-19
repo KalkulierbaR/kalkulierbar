@@ -175,6 +175,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                         state!,
                                         onChange,
                                         onError,
+                                        onWarning,
                                     );
                                 }}
                             />

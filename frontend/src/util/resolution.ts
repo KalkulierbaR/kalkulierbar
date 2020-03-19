@@ -461,7 +461,13 @@ export const sendResolveCustom = (
     l1: number,
     l2: number,
     varAssign: VarAssign,
-    { server, state, onChange, onError }: APIInformation<FOResolutionState>,
+    {
+        server,
+        state,
+        onChange,
+        onError,
+        onWarning,
+    }: APIInformation<FOResolutionState>,
 ) =>
     sendMove(
         server,
@@ -470,6 +476,7 @@ export const sendResolveCustom = (
         { type: "res-resolvecustom", c1, c2, l1, l2, varAssign },
         onChange,
         onError,
+        onWarning,
     );
 
 /**
