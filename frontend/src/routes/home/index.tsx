@@ -1,10 +1,10 @@
 import { h, VNode } from "preact";
 import { circle } from "../../components/resolution/circle/style.scss";
-import {Calculus, CalculusType} from "../../types/app";
+import { Calculus, CalculusType } from "../../types/app";
 import * as style from "./style.scss";
-import {useAppState} from "../../util/app-state";
+import { useAppState } from "../../util/app-state";
 import Switch from "../../components/switch";
-import {setCalculusState} from "../../util/api";
+import { setCalculusState } from "../../util/api";
 
 interface Route {
     name: string;
@@ -927,15 +927,22 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
 };
 
 const Home: preact.FunctionalComponent = () => {
+    const { isAdmin, config } = useAppState();
+
     return (
         <div class={style.home}>
             <div className="card">
                 <h3>Choose a calculus</h3>
                 <div class={style.calculusGrid}>
-                    {ROUTES.map((r) => (
-                        useAppState().isAdmin ? <CalculusItem route={r}/> :
-                        useAppState().config.disabled.includes(r.href) ? undefined : <CalculusItem route={r}/>
-                    ))}
+                    {ROUTES.map((r) =>
+                        isAdmin ? (
+                            <CalculusItem route={r} />
+                        ) : config.disabled.includes(r.href) ? (
+                            undefined
+                        ) : (
+                            <CalculusItem route={r} />
+                        ),
+                    )}
                 </div>
             </div>
         </div>

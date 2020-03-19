@@ -1,13 +1,18 @@
-import {createRef, h} from "preact";
-import {route} from "preact-router";
-import {useState} from "preact/hooks";
-import {AppStateActionType, CalculusType, FOCalculus, Params} from "../../../types/app";
-import {useAppState} from "../../../util/app-state";
-import {stringArrayToStringMap} from "../../../util/array-to-map";
+import { createRef, h } from "preact";
+import { route } from "preact-router";
+import { useState } from "preact/hooks";
+import {
+    AppStateActionType,
+    CalculusType,
+    FOCalculus,
+    Params,
+} from "../../../types/app";
+import { useAppState } from "../../../util/app-state";
+import { stringArrayToStringMap } from "../../../util/array-to-map";
 import Btn from "../../btn";
 import OptionList from "../option-list";
 import * as style from "./style.scss";
-import {addExample} from "../../../util/api";
+import { addExample } from "../../../util/api";
 
 declare module "preact" {
     namespace JSX {
@@ -47,14 +52,15 @@ const normalizeInput = (input: string) => {
  */
 const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
-    params
+    params,
 }) => {
     const {
         server,
         onError,
         onChange,
         savedFormulas,
-        dispatch
+        dispatch,
+        isAdmin,
     } = useAppState();
 
     const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
@@ -72,21 +78,21 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         try {
             const response = await fetch(url, {
                 headers: {
-                    "Content-Type": "text/plain"
+                    "Content-Type": "text/plain",
                 },
                 method: "POST",
                 body: `formula=${normalizeInput(
-                    savedFormulas[calculus]
-                )}&params=${JSON.stringify(params)}`
+                    savedFormulas[calculus],
+                )}&params=${JSON.stringify(params)}`,
             });
             if (response.status !== 200) {
                 onError(await response.text());
             } else {
                 const parsed = await response.json();
-                if(!createExample) {
+                if (!createExample) {
                     onChange(calculus, parsed);
                     route(`/${calculus}/view`);
-                }else{
+                } else {
                     addExample(
                         server,
                         {
@@ -94,10 +100,10 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                             description: "descr",
                             calculus: calculus,
                             formula: normalizeInput(savedFormulas[calculus]),
-                            params: params!
+                            params: params!,
                         },
-                        onError
-                    )
+                        onError,
+                    );
                 }
             }
         } catch (e) {
@@ -105,7 +111,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         }
     };
 
-    const onSubmitExample = (event: Event) => {
+    const onSubmitExample = () => {
         setCreateExample(true);
     };
 
@@ -115,14 +121,21 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
 
     // Filter the suggestion based on the users input
     const suggestionMap = stringArrayToStringMap(
-        ["\\all","\\ex", "/all", "/ex", "\\all X:", "\\ex X:",  "/all X:", "/ex X:"].filter(
-            option => {
-                if (regExMatches != null && regExMatches.length > 0){
-                    return option.includes(regExMatches[0]);
-                }
-                return false;
+        [
+            "\\all",
+            "\\ex",
+            "/all",
+            "/ex",
+            "\\all X:",
+            "\\ex X:",
+            "/all X:",
+            "/ex X:",
+        ].filter((option) => {
+            if (regExMatches != null && regExMatches.length > 0) {
+                return option.includes(regExMatches[0]);
             }
-        )
+            return false;
+        }),
     );
 
     /**
@@ -132,14 +145,14 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
      */
     const onInput = (event: Event) => {
         const target: HTMLTextAreaElement = event.target as HTMLTextAreaElement;
-        target.style.height = 'inherit';
+        target.style.height = "inherit";
         target.style.height = `${target.scrollHeight + 4}px`;
 
         setTextareaValue(target.value);
         dispatch({
             type: AppStateActionType.UPDATE_SAVED_FORMULA,
             calculus,
-            value: target.value
+            value: target.value,
         });
     };
 
@@ -168,10 +181,9 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         if (textAreaRef.current === null || textAreaRef.current === undefined) {
             return;
         }
-        setTextareaValue(textareaValue.replace(
-            suggestionsRegEx,
-            keyValuePair[1] + " "
-        ));
+        setTextareaValue(
+            textareaValue.replace(suggestionsRegEx, keyValuePair[1] + " "),
+        );
         textAreaRef.current.focus();
     };
 
@@ -191,14 +203,17 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     autocapitalize="off"
                     autocorrect="off"
                 />
-                {
-                    FOCalculus.includes(calculus) ?
-                        <OptionList
-                            options={suggestionMap}
-                            selectOptionCallback={selectSuggestion}
-                            className={suggestionMap.size > 0 ? undefined : style.hide}
-                        /> : undefined
-                }
+                {FOCalculus.includes(calculus) ? (
+                    <OptionList
+                        options={suggestionMap}
+                        selectOptionCallback={selectSuggestion}
+                        className={
+                            suggestionMap.size > 0 ? undefined : style.hide
+                        }
+                    />
+                ) : (
+                    undefined
+                )}
                 <Btn
                     type="submit"
                     name="action"
@@ -207,18 +222,19 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 >
                     Start proof
                 </Btn>
-                {
-                    useAppState().isAdmin ?
-                        <Btn
-                            type="submit"
-                            name="action"
-                            value="addExample"
-                            onClick={onSubmitExample}
-                            disabled={textareaValue.length === 0}
-                        >
-                            add Example
-                        </Btn> : undefined
-                }
+                {isAdmin ? (
+                    <Btn
+                        type="submit"
+                        name="action"
+                        value="addExample"
+                        onClick={onSubmitExample}
+                        disabled={textareaValue.length === 0}
+                    >
+                        add Example
+                    </Btn>
+                ) : (
+                    undefined
+                )}
             </form>
         </div>
     );

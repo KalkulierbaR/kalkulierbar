@@ -335,10 +335,11 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
 
 //ToDo: BUG: erst nach der 2. request wird der Wert übernommen.
 const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
-   showLabel = true,
-   close,
+    showLabel = true,
+    close,
 }) => {
-    const { dispatch, adminKey } = useAppState();
+    const { dispatch, adminKey, onError, server } = useAppState();
+
     const [newAdminKey, setAdminKey] = useState(adminKey);
 
     const dispatchAdminKey = useCallback(() => {
@@ -351,11 +352,15 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
     const onSubmit = useCallback(() => {
         dispatchAdminKey();
         checkCredentials(
-            useAppState().server,
-            useAppState().adminKey,
+            server,
+            adminKey,
             (isAdmin) =>
-                dispatch({type: AppStateActionType.SET_ADMIN, value: isAdmin}),
-            useAppState().onError);
+                dispatch({
+                    type: AppStateActionType.SET_ADMIN,
+                    value: isAdmin,
+                }),
+            onError,
+        );
         if (document.activeElement) {
             (document.activeElement as HTMLElement).blur();
         }
