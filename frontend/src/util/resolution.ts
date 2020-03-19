@@ -25,6 +25,7 @@ import {
     VisualHelp,
 } from "../types/resolution";
 import { sendMove } from "./api";
+import { VarAssign } from "../types/tableaux";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
@@ -436,6 +437,23 @@ export const sendResolveUnify = (
         Calculus.foResolution,
         state,
         { type: "res-resolveunify", c1, c2, l1, l2 },
+        onChange,
+        onError,
+    );
+
+export const sendResolveCustom = (
+    c1: number,
+    c2: number,
+    l1: number,
+    l2: number,
+    varAssign: VarAssign,
+    { server, state, onChange, onError }: APIInformation<FOResolutionState>,
+) =>
+    sendMove(
+        server,
+        Calculus.foResolution,
+        state,
+        { type: "res-resolvecustom", c1, c2, l1, l2, varAssign },
         onChange,
         onError,
     );
