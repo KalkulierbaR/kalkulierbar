@@ -15,6 +15,7 @@ import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.transform.VariableSuffixAppend
 import kalkulierbar.logic.transform.VariableSuffixStripper
 import kalkulierbar.logic.util.Unification
+import kalkulierbar.logic.util.UnifierEquivalence
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
@@ -94,21 +95,10 @@ class FirstOrderResolution :
                 throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
             }
         } // Else check varAssign == mgu
-        else {
-            try {
-                // checks both variants because unify is not symmetric
-                val mgu1 = Unification.unify(literal1, literal2)
-                val mgu2 = Unification.unify(literal2, literal1)
-                // Truncate map elements where same elements are in key and value (X_1 -> X_1)
-                // Check for mgu == varAssign
-                val notMGU1 = unifier.filter { it.key != it.value.toString() }.any { !it.value.synEq(mgu1[it.key]) }
-                val notMGU2 = unifier.filter { it.key != it.value.toString() }.any { !it.value.synEq(mgu2[it.key]) }
-                if (notMGU1 && notMGU2)
-                    state.statusMessage = "Given variable assignment does not equal mgu: $mgu1 or $mgu2"
-            } catch (e: UnificationImpossible) {
-                // Resolve move will fail in resolve with better error message
-            }
+        else if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, literal1, literal2)) {
+            state.statusMessage = "The unifier you specified is not an MGU"
         }
+
         instantiate(state, c1, unifier)
         val instance1 = state.clauseSet.clauses.size - 1
         instantiate(state, c2, unifier)

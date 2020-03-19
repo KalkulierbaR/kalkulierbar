@@ -53,6 +53,8 @@ class TestMGUWarning {
 
         assertEquals(null, state.statusMessage)
 
+        println("Second case")
+
         // Test other valid MGU
         state = instance.parseFormulaToState("/all X: R(X) & /all Y: !R(Y)", null)
         state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))

@@ -10,6 +10,7 @@ import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.util.Unification
+import kalkulierbar.logic.util.UnifierEquivalence
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
 
@@ -94,19 +95,8 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         val leaf = state.nodes[leafID]
         val closeNode = state.nodes[closeNodeID]
         // Check that given var assignment is a mgu, warn if not
-        try {
-            // checks both variants because unify is not symmetric
-            val mgu1 = Unification.unify(leaf.relation, closeNode.relation)
-            val mgu2 = Unification.unify(closeNode.relation, leaf.relation)
-            // Truncate map elements where same elements are in key and value (X_1 -> X_1)
-            // Check for mgu == varAssign
-            val notMGU1 = varAssign.filter { it.key != it.value.toString() }.any { !it.value.synEq(mgu1[it.key]) }
-            val notMGU2 = varAssign.filter { it.key != it.value.toString() }.any { !it.value.synEq(mgu2[it.key]) }
-            if (notMGU1 && notMGU2)
-                state.statusMessage = "Given variable assignment does not equal mgu: $mgu1 or $mgu2"
-        } catch (e: UnificationImpossible) {
-            // Close move will fail in closeBranchCommon with better error message
-        }
+        if (!UnifierEquivalence.isMGUorNotUnifiable(varAssign, leaf.relation, closeNode.relation))
+            state.statusMessage = "The unifier you specified is not an MGU"
 
         return closeBranchCommon(state, leafID, closeNodeID, varAssign)
     }
