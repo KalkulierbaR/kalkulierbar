@@ -11,10 +11,10 @@ import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
-import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.transform.VariableSuffixAppend
 import kalkulierbar.logic.transform.VariableSuffixStripper
+import kalkulierbar.logic.util.Unification
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable

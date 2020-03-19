@@ -8,8 +8,8 @@ import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
-import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableInstantiator
+import kalkulierbar.logic.util.Unification
 import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.json.Json
 
