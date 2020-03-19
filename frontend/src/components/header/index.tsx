@@ -1,9 +1,9 @@
-import { Component, Fragment, h } from "preact";
-import { Link } from "preact-router";
-import { useCallback, useState } from "preact/hooks";
-import { AppStateActionType, Calculus, Theme } from "../../types/app";
-import { useAppState } from "../../util/app-state";
-import { classMap } from "../../util/class-map";
+import {Component, Fragment, h} from "preact";
+import {Link} from "preact-router";
+import {useCallback, useState} from "preact/hooks";
+import {AppStateActionType, Calculus, Theme} from "../../types/app";
+import {useAppState} from "../../util/app-state";
+import {classMap} from "../../util/class-map";
 import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";
@@ -14,7 +14,9 @@ import ThemeDark from "../icons/theme-dark";
 import ThemeLight from "../icons/theme-light";
 import TextInput from "../input/text";
 import * as style from "./style.scss";
-import { checkCredentials } from "../../util/api";
+import {checkCredentials} from "../../util/api";
+import LogOutIcon from "../icons/logOut";
+import LogInIcon from "../icons/logIn";
 
 interface HeaderProps {
     currentUrl: string;
@@ -333,12 +335,11 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     );
 };
 
-//ToDo: BUG: erst nach der 2. request wird der Wert übernommen.
 const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
     showLabel = true,
     close,
 }) => {
-    const { dispatch, adminKey, onError, server } = useAppState();
+    const { dispatch, isAdmin, adminKey, onError, server } = useAppState();
 
     const [newAdminKey, setAdminKey] = useState(adminKey);
 
@@ -351,16 +352,23 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
 
     const onSubmit = useCallback(() => {
         dispatchAdminKey();
-        checkCredentials(
-            server,
-            newAdminKey,
-            (isAdmin) =>
-                dispatch({
-                    type: AppStateActionType.SET_ADMIN,
-                    value: isAdmin,
-                }),
-            onError,
-        );
+        if(!isAdmin){
+            checkCredentials(
+                server,
+                newAdminKey,
+                (isAdmin) =>
+                    dispatch({
+                        type: AppStateActionType.SET_ADMIN,
+                        value: isAdmin,
+                    }),
+                onError,
+            );
+        }else{
+            dispatch({
+                type: AppStateActionType.SET_ADMIN,
+                value: false,
+            });
+        }
         if (document.activeElement) {
             (document.activeElement as HTMLElement).blur();
         }
@@ -391,7 +399,7 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                 onKeyDown={handleEnter}
                 submitButton={
                     <FAB
-                        icon={<SaveIcon />}
+                        icon={isAdmin ? <LogOutIcon /> : <LogInIcon/>}
                         label="Save Admin Key"
                         mini={true}
                         onClick={onSubmit}
