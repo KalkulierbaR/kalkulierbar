@@ -180,6 +180,7 @@ export const setCalculusState = async (
     const keccak = new Keccak(256);
     console.log(date);
     keccak.update(`kbsc|${calculus}|${value}|${date}|${adminKey}`);
+    const mac = keccak.digest("hex");
     try {
         // console.log(`move=${JSON.stringify(move)}&state=${JSON.stringify(state)}`);
         const res = await fetch(url, {
@@ -189,9 +190,7 @@ export const setCalculusState = async (
             method: "POST",
             body: `calculus=${encodeURIComponent(
                 JSON.stringify(calculus),
-            )}&enable=${encodeURIComponent(
-                JSON.stringify(value),
-            )}&mac=${encodeURIComponent(JSON.stringify(keccak.digest("hex")))}`,
+            )}&enable=${encodeURIComponent(JSON.stringify(value))}&mac=${mac}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
@@ -263,7 +262,7 @@ export const delExample = async (
             method: "POST",
             body: `exampleID=${encodeURIComponent(
                 JSON.stringify(exampleID),
-            )}&mac=${encodeURIComponent(JSON.stringify(mac))}`,
+            )}&mac=${mac}`,
         });
         if (res.status !== 200) {
             onError(await res.text());
