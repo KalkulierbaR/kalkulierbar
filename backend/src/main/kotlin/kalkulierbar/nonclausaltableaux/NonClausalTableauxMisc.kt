@@ -37,7 +37,7 @@ class NcTableauxState(
             return true
         if (child.parent == 0 || child.parent == null)
             return false
-        return nodeIsParentOf(parentID, child.parent)
+        return nodeIsParentOf(parentID, child.parent!!)
     }
 
     /**
@@ -65,6 +65,17 @@ class NcTableauxState(
         }
     }
 
+    /**
+     * Overwrite parent reference for some nodes
+     * @param children List of nodes to update
+     * @param parent New parent reference
+     */
+    fun setParent(children: List<Int>, parent: Int) {
+        children.forEach {
+            nodes[it].parent = parent
+        }
+    }
+
     fun render() {
         nodes.forEach {
             it.render()
@@ -82,7 +93,7 @@ class NcTableauxState(
 
 @Serializable
 class NcTableauxNode(
-    val parent: Int?,
+    var parent: Int?,
     var formula: LogicNode
 ) {
 
