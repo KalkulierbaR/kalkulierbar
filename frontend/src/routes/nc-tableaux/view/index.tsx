@@ -102,6 +102,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
         setSelectedNode(undefined);
         setVarAssignSecondNodeId(undefined);
         setVarsToAssign([]);
+        setShowVarAssignDialog(false);
     };
 
     return (
