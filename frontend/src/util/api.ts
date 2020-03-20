@@ -1,3 +1,4 @@
+import Keccak from "sha3";
 import {
     AppState,
     AppStateUpdater,
@@ -7,7 +8,6 @@ import {
     Example,
     Move,
 } from "../types/app";
-import Keccak from "sha3";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
@@ -109,7 +109,7 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
     }
 };
 
-//ToDo: JSDoc getConfig
+// ToDo: JSDoc getConfig
 export const getConfig = async (
     server: string,
     changeConfig: (cfg: Config) => void,
@@ -135,7 +135,7 @@ export const getConfig = async (
     }
 };
 
-//ToDo: JSDoc checkCredentials
+// ToDo: JSDoc checkCredentials
 export const checkCredentials = async (
     server: string,
     adminKey: string,
@@ -162,15 +162,19 @@ export const checkCredentials = async (
             setAdmin(false);
         } else {
             const parsed = await res.json();
-            if (parsed != true) setAdmin(false);
-            else setAdmin(parsed);
+            if (!parsed) { 
+                setAdmin(false); 
+            }
+            else { 
+                setAdmin(parsed); 
+            }
         }
     } catch (e) {
         onError((e as Error).message);
     }
 };
 
-//ToDo: JSDoc setCalculusState
+// ToDo: JSDoc setCalculusState
 export const setCalculusState = async (
     server: string,
     calculus: CalculusType,
@@ -210,7 +214,7 @@ export const setCalculusState = async (
     }
 };
 
-//ToDo: JSDoc addExample
+// ToDo: JSDoc addExample
 export const addExample = async (
     server: string,
     example: Example,
@@ -248,7 +252,7 @@ export const addExample = async (
     }
 };
 
-//ToDo: JSDoc delExample
+// ToDo: JSDoc delExample
 export const delExample = async (
     server: string,
     exampleID: number,
@@ -286,10 +290,10 @@ export const delExample = async (
 };
 
 const getCurrentDate = () => {
-    let newDate = new Date();
-    let date = newDate.getUTCDate();
-    let month = newDate.getUTCMonth() + 1;
-    let year = newDate.getUTCFullYear();
+    const newDate = new Date();
+    const date = newDate.getUTCDate();
+    const month = newDate.getUTCMonth() + 1;
+    const year = newDate.getUTCFullYear();
 
     return `${year}${month < 10 ? `0${month}` : `${month}`}${date}`;
 };

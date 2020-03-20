@@ -7,12 +7,12 @@ import {
     FOCalculus,
     Params,
 } from "../../../types/app";
+import { addExample } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import Btn from "../../btn";
 import OptionList from "../option-list";
 import * as style from "./style.scss";
-import { addExample } from "../../../util/api";
 
 declare module "preact" {
     namespace JSX {

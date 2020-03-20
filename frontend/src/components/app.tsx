@@ -4,12 +4,12 @@ import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
 import { AppStateActionType, Calculus } from "../types/app";
+import { getConfig } from "../util/api";
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
-import { getConfig } from "../util/api";
 
 const SMALL_SCREEN_THRESHOLD = 700;
 

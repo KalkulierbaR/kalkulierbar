@@ -1,6 +1,7 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import HintIcon, { Hint } from "../../components/hint";
+import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
@@ -9,7 +10,6 @@ import { Calculus, ResolutionCalculusType } from "../../types/app";
 import { VisualHelp } from "../../types/resolution";
 import { CnfStrategy } from "../../types/tableaux";
 import { useAppState } from "../../util/app-state";
-import ExampleList from "../../components/input/example-list";
 
 interface Props {
     /**

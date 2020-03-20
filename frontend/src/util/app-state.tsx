@@ -7,12 +7,12 @@ import {
     AppStateActionType,
     Calculus,
     CalculusType,
+    Config,
     DerivedAppState,
     NotificationType,
     RemoveNotification,
     Theme,
     TutorialMode,
-    Config,
 } from "../types/app";
 import { localStorageGet, localStorageSet } from "./local-storage";
 

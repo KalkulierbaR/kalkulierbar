@@ -1,12 +1,11 @@
 import { Fragment, h } from "preact";
-
-import Switch from "../../components/switch";
-
 import { useState } from "preact/hooks";
 import HintIcon, { Hint } from "../../components/hint";
+import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
+import Switch from "../../components/switch";
 import { Calculus, TableauxCalculusType } from "../../types/app";
 import {
     CnfStrategy,
@@ -15,7 +14,6 @@ import {
     TableauxType,
 } from "../../types/tableaux";
 import { useAppState } from "../../util/app-state";
-import ExampleList from "../../components/input/example-list";
 
 interface Props {
     /**

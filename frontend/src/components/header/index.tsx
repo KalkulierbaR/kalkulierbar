@@ -2,11 +2,14 @@ import {Component, Fragment, h} from "preact";
 import {Link} from "preact-router";
 import {useCallback, useState} from "preact/hooks";
 import {AppStateActionType, Calculus, Theme} from "../../types/app";
+import {checkCredentials} from "../../util/api";
 import {useAppState} from "../../util/app-state";
 import {classMap} from "../../util/class-map";
 import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";
+import LogInIcon from "../icons/logIn";
+import LogOutIcon from "../icons/logOut";
 import SaveIcon from "../icons/save";
 import SettingsIcon from "../icons/settings";
 import ThemeAuto from "../icons/theme-auto";
@@ -14,9 +17,6 @@ import ThemeDark from "../icons/theme-dark";
 import ThemeLight from "../icons/theme-light";
 import TextInput from "../input/text";
 import * as style from "./style.scss";
-import {checkCredentials} from "../../util/api";
-import LogOutIcon from "../icons/logOut";
-import LogInIcon from "../icons/logIn";
 
 interface HeaderProps {
     currentUrl: string;
@@ -356,10 +356,10 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
             checkCredentials(
                 server,
                 newAdminKey,
-                (isAdmin) =>
+                (userIsAdmin) =>
                     dispatch({
                         type: AppStateActionType.SET_ADMIN,
-                        value: isAdmin,
+                        value: userIsAdmin,
                     }),
                 onError,
             );
