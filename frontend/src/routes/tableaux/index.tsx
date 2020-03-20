@@ -108,7 +108,11 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format foLogic={calculus === Calculus.foTableaux} />
-            <FormulaInput calculus={calculus} params={params} />
+            <FormulaInput
+                calculus={calculus}
+                params={params}
+                foLogic={calculus === Calculus.foTableaux}
+            />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
