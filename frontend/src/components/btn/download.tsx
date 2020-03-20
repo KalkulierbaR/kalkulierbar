@@ -3,6 +3,8 @@ import FAB from "../fab";
 import DownloadIcon from "../icons/download";
 import { useMemo } from "preact/hooks";
 
+import * as style from "./style.scss";
+
 interface Props {
     state: any;
     name: string;
@@ -17,6 +19,7 @@ const DownloadFAB: preact.FunctionalComponent<Props> = ({ state, name }) => {
         <a
             href={`data:text/json;charset=utf-8,${finalJSON}`}
             download={`${name}.json`}
+            class={style.noUnderline}
         >
             <FAB
                 icon={<DownloadIcon />}
