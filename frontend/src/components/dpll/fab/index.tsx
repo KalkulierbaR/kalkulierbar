@@ -38,6 +38,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
         onSuccess,
         tutorialMode,
         dispatch,
+        onWarning,
     } = useAppState();
 
     const couldShowCheckCloseHint = stateIsClosed(state.tree);
@@ -91,7 +92,14 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                     extended={true}
                     showIconAtEnd={true}
                     onClick={() =>
-                        sendPrune(server, state, branch, onChange, onError)
+                        sendPrune(
+                            server,
+                            state,
+                            branch,
+                            onChange,
+                            onError,
+                            onWarning,
+                        )
                     }
                 />
                 <FAB

@@ -1,20 +1,11 @@
 package kalkulierbar.logic.transform
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.And
 import kalkulierbar.logic.Constant
-import kalkulierbar.logic.Equiv
-import kalkulierbar.logic.ExistentialQuantifier
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
 import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Quantifier
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
 
 class VariableInstantiator(val replacementMap: Map<String, FirstOrderTerm>) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
@@ -202,93 +193,5 @@ class QuantifierLinker(val quantifiers: List<Quantifier>, val enforceUnique: Boo
 
     override fun visit(node: Function) {
         node.arguments.forEach { it.accept(this) }
-    }
-}
-
-/**
- * Collects used identifiers from a first-order formula
- */
-class IdentifierCollector : LogicNodeVisitor<Unit>() {
-
-    companion object {
-        private val instance = IdentifierCollector()
-
-        /**
-         * Collect a set of all identifiers used in a formula
-         * Including: Variables, constants, function- and relation names
-         * @param formula Formula to collect identifiers from
-         * @return Set of all identifiers found
-         */
-        fun collect(formula: LogicNode): Set<String> {
-            instance.identifiers.clear()
-            formula.accept(instance)
-            return instance.identifiers
-        }
-    }
-
-    private val identifiers = mutableSetOf<String>()
-    private val termIdCollector = TermIdentifierCollector(identifiers)
-
-    override fun visit(node: And) {
-        node.leftChild.accept(this)
-        node.rightChild.accept(this)
-    }
-
-    override fun visit(node: Or) {
-        node.leftChild.accept(this)
-        node.rightChild.accept(this)
-    }
-
-    override fun visit(node: Impl) {
-        node.leftChild.accept(this)
-        node.rightChild.accept(this)
-    }
-
-    override fun visit(node: Equiv) {
-        node.leftChild.accept(this)
-        node.rightChild.accept(this)
-    }
-
-    override fun visit(node: Not) {
-        node.child.accept(this)
-    }
-
-    override fun visit(node: Relation) {
-        identifiers.add(node.spelling)
-        node.arguments.forEach {
-            it.accept(termIdCollector)
-        }
-    }
-
-    override fun visit(node: UniversalQuantifier) {
-        identifiers.add(node.varName)
-        node.child.accept(this)
-    }
-
-    override fun visit(node: ExistentialQuantifier) {
-        identifiers.add(node.varName)
-        node.child.accept(this)
-    }
-}
-
-/**
- * Collects identifiers (function names, constants, variable names)
- * from first order terms
- * @param identifiers Set of identifiers to add found identifiers to
- */
-class TermIdentifierCollector(val identifiers: MutableSet<String>) : FirstOrderTermVisitor<Unit>() {
-    override fun visit(node: Constant) {
-        identifiers.add(node.spelling)
-    }
-
-    override fun visit(node: QuantifiedVariable) {
-        identifiers.add(node.spelling)
-    }
-
-    override fun visit(node: Function) {
-        identifiers.add(node.spelling)
-        node.arguments.forEach {
-            it.accept(this)
-        }
     }
 }

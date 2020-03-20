@@ -79,8 +79,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
         onSuccess,
         tutorialMode,
         dispatch,
+        onWarning,
     } = useAppState();
-    const apiInfo = { onChange, onError, server };
+    const apiInfo = { onChange, onError, server, onWarning };
 
     const couldShowCheckCloseHint = containsEmptyClause(state.clauseSet);
 
@@ -218,6 +219,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             hyperRes,
                             onChange,
                             onError,
+                            onWarning,
                         );
                         setHyperRes(undefined);
                         setSelectedClauses(undefined);

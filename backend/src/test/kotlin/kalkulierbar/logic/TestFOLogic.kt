@@ -94,7 +94,7 @@ class TestFOLogic {
 
     @Test
     fun testAllBasicOps() {
-        assertEquals("(∀X: (X ∨ !X))", ToBasicOps.transform(u1).toString())
+        assertEquals("(∀X: (X ∨ ¬X))", ToBasicOps.transform(u1).toString())
         assertEquals("(∀X: (∃Y: (∀Z: (R(X, Y) ∧ R(Y, Z)))))", ToBasicOps.transform(u2).toString())
         assertEquals("(∀Number1: (∃Number2: Greater(Number1, Number2)))", ToBasicOps.transform(u3).toString())
     }
@@ -115,9 +115,9 @@ class TestFOLogic {
 
     @Test
     fun testExBasicOps() {
-        assertEquals("(∃C: !Q(C))", ToBasicOps.transform(e1).toString())
+        assertEquals("(∃C: ¬Q(C))", ToBasicOps.transform(e1).toString())
         assertEquals("(∃X: (∀Y: =(Y, m(X, Y))))", ToBasicOps.transform(e2).toString())
-        assertEquals("(∃El: (!P(El) ∨ (∀Y: P(Y))))", ToBasicOps.transform(e3).toString())
+        assertEquals("(∃El: (¬P(El) ∨ (∀Y: P(Y))))", ToBasicOps.transform(e3).toString())
     }
 
     @Test

@@ -1,15 +1,11 @@
 import { h } from "preact";
-import {useState} from "preact/hooks";
+import { useState } from "preact/hooks";
 import Dialog from "../../../components/dialog";
 import OptionList from "../../../components/input/option-list";
 import { ResolutionCalculusType } from "../../../types/app";
+import { Atom, FOAtom, SelectedClauses } from "../../../types/clause";
 import {
-    Atom,
-    FOAtom,
-    SelectedClauses
-} from "../../../types/clause";
-import {
-    FOResolutionState, 
+    FOResolutionState,
     instanceOfFOResState,
     instanceOfPropResState,
     PropResolutionState,
@@ -57,14 +53,12 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
     selectedClauses,
     setSelectedClauses,
 }) => {
-    const {
-        server,
-        onError,
-        onChange,
-    } = useAppState();
-    const apiInfo = { onChange, onError, server };
+    const { server, onError, onChange, onWarning } = useAppState();
+    const apiInfo = { onChange, onError, server, onWarning };
 
-    const [factorizeAtomIndices, setFactorizeAtomIndices] = useState(new Set<number>());
+    const [factorizeAtomIndices, setFactorizeAtomIndices] = useState(
+        new Set<number>(),
+    );
 
     /**
      * Get factorize options for the factorize dialog
@@ -75,21 +69,21 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
         if (selectedClauses !== undefined) {
             if (instanceOfPropResState(state, calculus)) {
                 options = stringArrayToStringMap(
-                    state.clauseSet.clauses[selectedClauses[0]].atoms.map(
-                        (atom: Atom) => atomToString(atom)
-                    )
+                    state.clauseSet.clauses[
+                        selectedClauses[0]
+                    ].atoms.map((atom: Atom) => atomToString(atom)),
                 );
             } else if (instanceOfFOResState(state, calculus)) {
                 options = stringArrayToStringMap(
-                    state.clauseSet.clauses[selectedClauses[0]].atoms.map(
-                        (atom: FOAtom) => atomToString(atom)
-                    )
+                    state.clauseSet.clauses[
+                        selectedClauses[0]
+                    ].atoms.map((atom: FOAtom) => atomToString(atom)),
                 );
             }
         }
         return options;
     };
-    
+
     /**
      * Handler for the selection of an factorizeOption in the FO factorize dialog
      * @param {[number, string]} optionKeyValuePair - The key value pair of the selected option
@@ -107,7 +101,7 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
         }
         setFactorizeAtomIndices(newSet);
     };
-    
+
     return (
         <Dialog
             open={showDialog}
@@ -128,7 +122,7 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
                         selectedClauses![0],
                         factorizeAtomIndices,
                         calculus,
-                        {...apiInfo, state},
+                        { ...apiInfo, state },
                     );
                     setShowDialog(false);
                     factorizeAtomIndices.clear();
