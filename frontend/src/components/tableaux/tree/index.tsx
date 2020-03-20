@@ -3,6 +3,7 @@ import {
     SelectNodeOptions,
     TableauxNode,
     TableauxTreeLayoutNode,
+    ClosableNodePair,
 } from "../../../types/tableaux";
 import {
     getAbsoluteDragTransform,
@@ -53,6 +54,7 @@ interface Props {
      * Callback to change a specific drag
      */
     onDrag: (id: number, dt: DragTransform) => void;
+    closableNodes?: ClosableNodePair;
 }
 
 interface ClosingEdgeProps {
@@ -119,6 +121,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     lemmaNodesSelectable = false,
     dragTransforms,
     onDrag,
+    closableNodes,
 }) => {
     const { root, height, width: treeWidth } = tableauxTreeLayout(nodes);
 
@@ -230,6 +233,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     selectNodeCallback={selectNodeCallback}
                                     lemmaNodesSelectable={lemmaNodesSelectable}
                                     zoomFactor={transform.k}
+                                    closableNodes={closableNodes}
                                 />
                             }
                         </g>

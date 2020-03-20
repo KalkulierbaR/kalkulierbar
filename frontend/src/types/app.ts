@@ -203,7 +203,8 @@ export interface APIInformation<S> {
 export enum TutorialMode {
     None = 0,
     HighlightFAB = 1,
-    HighlightCheck = 2,
+    HighlightCheck = 1 << 1,
+    HighlightTableauxClose = 1 << 2,
 
-    HighlightAll = HighlightCheck | HighlightFAB,
+    HighlightAll = HighlightCheck | HighlightFAB | HighlightTableauxClose,
 }

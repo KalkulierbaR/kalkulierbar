@@ -1,5 +1,8 @@
 import { Fragment, h } from "preact";
-import { TableauxTreeLayoutNode } from "../../../types/tableaux";
+import {
+    TableauxTreeLayoutNode,
+    ClosableNodePair,
+} from "../../../types/tableaux";
 import { Tree } from "../../../types/tree";
 import { DragTransform } from "../../../types/ui";
 import TableauxTreeNode from "../node";
@@ -35,6 +38,7 @@ interface Props {
      * Zoom factor of the SVG
      */
     zoomFactor: number;
+    closableNodes?: ClosableNodePair;
 }
 
 const SubTree: preact.FunctionalComponent<Props> = ({
@@ -45,6 +49,7 @@ const SubTree: preact.FunctionalComponent<Props> = ({
     dragTransforms,
     onDrag,
     zoomFactor,
+    closableNodes,
 }) => {
     const dt = dragTransforms[node.data.id] ?? { x: 0, y: 0 };
 
@@ -69,10 +74,15 @@ const SubTree: preact.FunctionalComponent<Props> = ({
                             selectedNodeId={selectedNodeId}
                             lemmaNodesSelectable={lemmaNodesSelectable}
                             zoomFactor={zoomFactor}
+                            closableNodes={closableNodes}
                         />
                     </Fragment>
                 );
             })}
+            {(closableNodes?.leafId === node.data.id ||
+                closableNodes?.predId === node.data.id) && (
+                <CloseTip x={node.x + dt.x} y={node.y + dt.y} />
+            )}
             <TableauxTreeNode
                 onDrag={onDrag}
                 dragTransform={dt}
@@ -82,6 +92,31 @@ const SubTree: preact.FunctionalComponent<Props> = ({
                 lemmaNodesSelectable={lemmaNodesSelectable}
                 zoomFactor={zoomFactor}
             />
+        </g>
+    );
+};
+
+interface CloseTipProps {
+    x: number;
+    y: number;
+}
+
+const CloseTip: preact.FunctionalComponent<CloseTipProps> = ({ x, y }) => {
+    return (
+        <g>
+            <text
+                class={style.closeTipText}
+                x={x}
+                y={y + 12}
+                text-anchor="middle"
+            >
+                <tspan x={x} dy="1.2em">
+                    Select this node
+                </tspan>
+                <tspan x={x} dy="1.2em">
+                    to close
+                </tspan>
+            </text>
         </g>
     );
 };

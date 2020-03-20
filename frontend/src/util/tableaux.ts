@@ -9,6 +9,8 @@ import {
     TableauxNode,
     TableauxTreeLayoutNode,
     VarAssign,
+    TableauxExpandMove,
+    ClosableNodePair,
 } from "../types/tableaux";
 import { Tree, TreeLayout } from "../types/tree";
 import { DragTransform } from "../types/ui";
@@ -319,4 +321,25 @@ export const getAbsoluteDragTransform = (
     }
 
     return;
+};
+
+export const findClosableNode = (
+    state: PropTableauxState,
+    leafId: number,
+): ClosableNodePair | undefined => {
+    const leaf = state.nodes[leafId];
+
+    let predId = leaf.parent;
+
+    while (predId) {
+        const pred = state.nodes[predId];
+
+        if (pred.spelling === leaf.spelling && pred.negated !== leaf.negated) {
+            return { leafId, predId };
+        }
+
+        predId = pred.parent;
+    }
+
+    return undefined;
 };
