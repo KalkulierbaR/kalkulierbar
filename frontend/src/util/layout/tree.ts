@@ -124,7 +124,7 @@ export const treeToLayoutItem = <T extends { id: number }>(
 
 /**
  * Computes the absolute dt of a node
- * @param {Tree<TableauxTreeLayoutNode>} t - Tree
+ * @param {Tree<T>} t - Tree
  * @param {number} id - The id to look for
  * @param {Record<number, DragTransform>} dts - All dts
  * @param {DragTransform} dt - Current dt
@@ -156,8 +156,8 @@ export const getAbsoluteDragTransform = <T extends { id: number }>(
 
 /**
  * Gets all closed leaves
- * @param {Tree<TableauxTreeLayoutNode>} t - The tree
- * @returns {Array<LayoutItem<TableauxTreeLayoutNode>>} - All closed leaves
+ * @param {Tree<T>} t - The tree
+ * @returns {Array<Tree<T>>} - All closed leaves
  */
 export const getClosedLeaves = <T extends { closeRef: number | null }>(
     t: Tree<T>,
