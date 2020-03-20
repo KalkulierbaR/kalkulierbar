@@ -52,7 +52,7 @@ const UploadFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
             />
             <FAB
                 onClick={handleClick}
-                label="Upload"
+                label="Load Proof"
                 icon={<UploadIcon />}
                 showIconAtEnd
                 extended
