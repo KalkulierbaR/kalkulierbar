@@ -33,7 +33,7 @@ fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, lea
 
     for (atom in processedClause) {
         if (lst.contains(atom))
-            throw IllegalMove("Expanding this clause would introduce a duplicate" +
+            throw IllegalMove("Expanding this clause would introduce a duplicate " +
                 "node '$atom' on the branch, making the tree irregular")
     }
 }
