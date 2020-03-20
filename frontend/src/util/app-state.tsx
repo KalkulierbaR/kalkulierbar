@@ -20,11 +20,13 @@ const isDeployed = location.port !== "8080";
 const INIT_APP_STATE: AppState = {
     smallScreen: false,
     savedFormulas: {
-        [Calculus.propResolution]: "",
-        [Calculus.foResolution]: "",
-        [Calculus.propTableaux]: "",
-        [Calculus.foTableaux]: "",
-        [Calculus.dpll]: "",
+        [Calculus.propResolution]: "!a, c; a; !c",
+        [Calculus.foResolution]:
+            "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))",
+        [Calculus.propTableaux]: "!a, c; a; !c",
+        [Calculus.foTableaux]:
+            "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))",
+        [Calculus.dpll]: "!a, c; a; !c",
     },
     server: isDeployed
         ? "https://kalkulierbar-api.herokuapp.com"
