@@ -168,7 +168,7 @@ const Draggable: preact.FunctionalComponent<Props> = ({
         const dx = dragTransform.x - oldTouchDt.x;
         const dy = dragTransform.y - oldTouchDt.y;
 
-        const moved = dx * dx + dy * dy > 0;
+        const moved = dx * dx + dy * dy > 5;
 
         enableDrag(moved);
 
