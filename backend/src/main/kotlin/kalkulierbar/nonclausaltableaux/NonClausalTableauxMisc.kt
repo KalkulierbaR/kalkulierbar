@@ -15,7 +15,7 @@ class NcTableauxState(
     val formula: LogicNode,
     val backtracking: Boolean = true
 ) : ProtectedState() {
-    val nodes = mutableListOf<NcTableauxNode>(NcTableauxNode(null, formula))
+    val nodes = mutableListOf<NcTableauxNode>(NcTableauxNode(null, formula.clone()))
     val moveHistory = mutableListOf<NcTableauxMove>()
     val identifiers = IdentifierCollector.collect(formula).toMutableSet()
     var usedBacktracking = false

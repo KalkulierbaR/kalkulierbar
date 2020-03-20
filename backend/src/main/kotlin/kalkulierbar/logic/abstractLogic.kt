@@ -25,10 +25,9 @@ abstract class LogicNode {
 
     /**
      * Create a deep copy of a logic node
-     * NOTE: This will break quantifier linking
      * @return copy of the current logic node
      */
-    abstract fun clone(): LogicNode
+    abstract fun clone(qm: Map<String, Quantifier> = mapOf()): LogicNode
 
     abstract fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>): ReturnType
 }

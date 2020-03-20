@@ -105,9 +105,11 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val nodes = state.nodes
     checkRestrictions(nodes, nodeID)
 
-    // Check node formula == UniversalQuantifier
     val node = nodes[nodeID]
-    val formula = node.formula
+    // Note: This clone() is important as it restores quantifier linking
+    //       Which cannot be recovered from deserialization
+    val formula = node.formula.clone()
+
     if (formula !is UniversalQuantifier)
         throw IllegalMove("Outermost logic operator is not a universal quantifier")
 
@@ -154,9 +156,12 @@ fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val nodes = state.nodes
     checkRestrictions(nodes, nodeID)
 
-    // Check node == UniversalQuantifier
     val node = nodes[nodeID]
-    val formula = node.formula
+    // Note: This clone() is important as it restores quantifier linking
+    //       Which cannot be recovered from deserialization
+    val formula = node.formula.clone()
+
+    // Check node == UniversalQuantifier
     if (formula !is ExistentialQuantifier)
         throw IllegalMove("The outermost logic operator is not an existential quantifier")
 

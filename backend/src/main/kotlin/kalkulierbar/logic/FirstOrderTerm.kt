@@ -21,10 +21,9 @@ abstract class FirstOrderTerm : SyntacticEquality {
 
     /**
      * Create a deep copy of a term
-     * NOTE: This will break quantifier linking
      * @return copy of the current term
      */
-    abstract fun clone(): FirstOrderTerm
+    abstract fun clone(qm: Map<String, Quantifier> = mapOf()): FirstOrderTerm
 }
 
 @Serializable
@@ -32,7 +31,16 @@ abstract class FirstOrderTerm : SyntacticEquality {
 class QuantifiedVariable(var spelling: String) : FirstOrderTerm() {
     override fun toString() = spelling
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)
-    override fun clone() = QuantifiedVariable(spelling)
+
+    override fun clone(qm: Map<String, Quantifier>): QuantifiedVariable {
+        val newVar = QuantifiedVariable(spelling)
+
+        // Register the new variable with a binding quantifier, should one exist
+        if (qm[spelling] != null)
+            qm[spelling]!!.boundVariables.add(newVar)
+
+        return newVar
+    }
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || !(other is QuantifiedVariable))
@@ -47,7 +55,7 @@ class QuantifiedVariable(var spelling: String) : FirstOrderTerm() {
 class Constant(val spelling: String) : FirstOrderTerm() {
     override fun toString() = spelling
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)
-    override fun clone() = Constant(spelling)
+    override fun clone(qm: Map<String, Quantifier>) = Constant(spelling)
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || !(other is Constant))
@@ -62,7 +70,7 @@ class Constant(val spelling: String) : FirstOrderTerm() {
 class Function(val spelling: String, var arguments: List<FirstOrderTerm>) : FirstOrderTerm() {
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)
-    override fun clone() = Function(spelling, arguments.map { it.clone() })
+    override fun clone(qm: Map<String, Quantifier>) = Function(spelling, arguments.map { it.clone(qm) })
 
     @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
