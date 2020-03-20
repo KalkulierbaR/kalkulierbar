@@ -30,6 +30,7 @@ import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
 import Tutorial from "../../tutorial";
+import DownloadFAB from "../../control-fab/download";
 
 interface Props {
     /**
@@ -166,8 +167,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         )}
                     </Fragment>
                 ) : (
-                    undefined
+                    <DownloadFAB state={state} name={calculus} />
                 )}
+
                 {state!.hiddenClauses.clauses.length > 0 ? (
                     <FAB
                         mini={true}

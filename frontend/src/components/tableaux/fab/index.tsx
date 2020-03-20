@@ -17,6 +17,7 @@ import ExploreIcon from "../../icons/explore";
 import LemmaIcon from "../../icons/lemma";
 import UndoIcon from "../../icons/undo";
 import Tutorial from "../../tutorial";
+import DownloadFAB from "../../control-fab/download";
 
 interface Props {
     /**
@@ -99,6 +100,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                 {selectedNodeId === undefined ? (
                     <Fragment>
                         {resetView}
+                        <DownloadFAB state={state} name={calculus} />
                         {state!.nodes.filter((node) => !node.isClosed).length >
                         0 ? (
                             <FAB

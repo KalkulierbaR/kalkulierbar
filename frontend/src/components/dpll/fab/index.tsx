@@ -12,6 +12,7 @@ import DeleteIcon from "../../icons/delete";
 import SplitIcon from "../../icons/split";
 import SwitchIcon from "../../icons/switch";
 import Tutorial from "../../tutorial";
+import DownloadFAB from "../../control-fab/download";
 
 interface Props {
     state: DPLLState;
@@ -68,6 +69,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                         onClick={() => setShowModelDialog(true)}
                     />
                 )}
+                <DownloadFAB state={state} name="dpll" />
                 <FAB
                     icon={<CheckCircleIcon />}
                     label="Check"
