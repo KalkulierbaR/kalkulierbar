@@ -1,9 +1,9 @@
-import { h, Fragment } from "preact";
-import { CalculusType, Example, AppStateActionType } from "../../../types/app";
+import { Fragment, h } from "preact";
+import { route } from "preact-router";
+import { AppStateActionType, CalculusType, Example } from "../../../types/app";
 import { delExample } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../btn";
-import { route } from "preact-router";
 import * as style from "./style.scss";
 
 interface Props {
@@ -19,8 +19,9 @@ interface Props {
 
 /**
  * Deletes an example
- * @param e - the Event that called the function
- * @param index - the index of the Example that should be deleted
+ * @param {Event} e - The Event that called the function
+ * @param {number} index - The index of the Example that should be deleted
+ * @returns {void}
  */
 const onDelete = (e: Event, index: number) => {
     e.stopImmediatePropagation();
@@ -39,9 +40,11 @@ const normalizeInput = (input: string) => {
     input = input.replace(/\n+/g, "\n");
     return encodeURIComponent(input);
 };
+
 /**
  * Parses an example, and changes to the calculus/view
- * @param example - The example that should be used
+ * @param {Example} example - The example that should be used
+ * @returns {void}
  */
 const useExample = async (example: Example) => {
     const { server, onError, onChange, dispatch } = useAppState();
@@ -100,7 +103,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                         {/* ToDo: name and description anzeigen lassen
                         <p class="">{example.name}</p>
                         <p class={style.description}>{example.description}</p>*/
-                        //todo: Vorschau der Formel einheitlicher anzeigen
+                        // Todo: Vorschau der Formel einheitlicher anzeigen
                         }
                         <h3 class="">{decodeURIComponent(example.formula).split(/\n/).join(" ; ")}</h3>
                         {isAdmin ? (
@@ -110,13 +113,9 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                                     Delete
                                 </Btn>
                             </Fragment>
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                     </div>
-                ) : (
-                    undefined
-                ),
+                ) : undefined,
             )}
         </div>
     );

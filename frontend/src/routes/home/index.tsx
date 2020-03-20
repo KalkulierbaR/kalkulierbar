@@ -1,10 +1,10 @@
 import { h, VNode } from "preact";
 import { circle } from "../../components/resolution/circle/style.scss";
-import { Calculus, AppStateActionType, Config } from "../../types/app";
-import * as style from "./style.scss";
-import { useAppState } from "../../util/app-state";
 import Switch from "../../components/switch";
+import { Calculus } from "../../types/app";
 import { setCalculusState } from "../../util/api";
+import { useAppState } from "../../util/app-state";
+import * as style from "./style.scss";
 
 interface Route {
     name: string;
@@ -954,10 +954,8 @@ const Home: preact.FunctionalComponent = () => {
                 <div class={style.calculusGrid}>
                     {ROUTES.map((r) =>
                         isAdmin ? (
-                            <CalculusItem route={r} showSwitch />
-                        ) : config.disabled.includes(r.href) ? (
-                            undefined
-                        ) : (
+                            <CalculusItem route={r} showSwitch={true} />
+                        ) : config.disabled.includes(r.href) ? undefined : (
                             <CalculusItem route={r} />
                         ),
                     )}
