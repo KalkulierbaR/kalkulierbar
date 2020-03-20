@@ -43,7 +43,7 @@ fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
 
     // Add the node's children to the last inserted node to restore the tree structure
     nodes[parentID].children.addAll(savedChildren)
-    setParent(savedChildren, nodes)
+    state.setParent(savedChildren, nodes.size - 1)
     // Add move to history
     if (state.backtracking)
         state.moveHistory.add(AlphaMove(nodeID))
@@ -127,7 +127,7 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
 
     nodes.add(newNode)
     node.children.add(nodes.size - 1)
-    setParent(savedChildren, nodes)
+    state.setParent(savedChildren, nodes.size - 1)
     // Add move to history
     if (state.backtracking)
         state.moveHistory.add(GammaMove(nodeID))
@@ -168,7 +168,7 @@ fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     newNode.children.addAll(savedChildren)
     nodes.add(newNode)
     node.children.add(nodes.size - 1)
-    setParent(savedChildren, nodes)
+    state.setParent(savedChildren, nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
@@ -186,16 +186,4 @@ fun checkRestrictions(nodes: List<NcTableauxNode>, nodeID: Int) {
     val node = nodes[nodeID]
     if (node.isClosed)
         throw IllegalMove("Node '$node' is already closed")
-}
-
-fun setParent(savedChildren: MutableList<Int>, nodes: MutableList<NcTableauxNode>) {
-    // Fix TODO: drüberschauen
-    savedChildren.forEach {
-        val saveChildFormula = nodes[it].formula
-        val newNode = NcTableauxNode(nodes.size - 1, saveChildFormula)
-        newNode.children.addAll(nodes[it].children)
-        newNode.closeRef = nodes[it].closeRef
-        newNode.isClosed = nodes[it].isClosed
-        nodes[it] = newNode
-    }
 }
