@@ -12,7 +12,7 @@ import {
 import { Tree, TreeLayout } from "../types/tree";
 import { DragTransform } from "../types/ui";
 import { sendMove } from "./api";
-import { filterTree, tree, treeFind, treeLayout } from "./layout/tree";
+import { tree, treeFind, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
 
 /**
