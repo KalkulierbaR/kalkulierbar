@@ -22,6 +22,7 @@ const FactoriseIcon: preact.FunctionalComponent<Props> = ({
         viewBox="0 0 24 24"
         fill="none"
         stroke={fill}
+        style="stroke-width:2.1"
     >
         <polyline points="4 14 10 14 10 20" />
         <polyline points="20 10 14 10 14 4" />
