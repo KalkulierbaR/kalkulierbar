@@ -66,10 +66,14 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     if (node.formula !is Or)
         throw IllegalMove("Outermost logic operator is not OR")
 
-    if (!node.isLeaf)
-        throw IllegalMove("Splitting for non-leaves is not supported yet")
-
     val workList = mutableListOf(node.formula)
+    // Get all leaf nodes in current branch
+    val branchLeaves = nodes.filter { it.isLeaf && state.nodeIsParentOf(nodeID, nodes.indexOf(it)) }
+    // IDs of filtered leaf nodes in current branch
+    var branchLeavesID = branchLeaves.map { nodes.indexOf(it) }
+    // Iff node is leaf -> Only add split nodes to this node
+    if (node.isLeaf)
+        branchLeavesID = mutableListOf(nodeID)
 
     while (workList.isNotEmpty()) {
         val subFormula = workList.removeAt(0)
@@ -77,11 +81,12 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
             workList.add(subFormula.rightChild)
             workList.add(subFormula.leftChild)
         } else {
-            nodes.add(NcTableauxNode(nodeID, subFormula))
-            nodes[nodeID].children.add(nodes.size - 1)
+            branchLeavesID.forEach {
+                nodes.add(NcTableauxNode(it, subFormula))
+                nodes[it].children.add(nodes.size - 1)
+            }
         }
     }
-
     // Add move to history
     if (state.backtracking)
         state.moveHistory.add(BetaMove(nodeID))
