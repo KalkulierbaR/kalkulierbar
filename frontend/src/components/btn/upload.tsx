@@ -4,6 +4,7 @@ import UploadIcon from "../icons/upload";
 import { CalculusType } from "../../types/app";
 import { checkValid } from "../../util/api";
 import { useAppState } from "../../util/app-state";
+import { readFile } from "../../util/file";
 import { useRef } from "preact/hooks";
 import { route } from "preact-router";
 
@@ -25,23 +26,28 @@ const UploadFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
         if (!input.current || !input.current.files) return;
 
         const file = input.current.files[0];
+        try {
+            const state = await readFile(file);
 
-        const state = await file.text();
+            const valid = await checkValid(server, onError, calculus, state);
 
-        const valid = await checkValid(server, onError, calculus, state);
-
-        if (valid) {
-            onChange(calculus, JSON.parse(state));
-            route(`/${calculus}/view`);
+            if (valid) {
+                onError("4");
+                onChange(calculus, JSON.parse(state));
+                route(`/${calculus}/view`);
+            }
+        } catch (e) {
+            onError("" + e);
         }
     };
 
     return (
         <Fragment>
             <input
-                onInput={handleUpload}
+                onChange={handleUpload}
                 ref={input}
                 type="file"
+                accept="application/json"
                 style="display: none;"
             />
             <FAB
