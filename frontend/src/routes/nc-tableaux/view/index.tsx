@@ -69,7 +69,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
             collectVarsFromNode(vars, selectedNode!.formula);
             collectVarsFromNode(vars, node.formula);
             if (vars.length <= 0) {
-                sendFOClose(false, {});
+                sendFOClose(false, {}, node.id);
                 return;
             }
             setVarsToAssign(vars);
@@ -77,22 +77,19 @@ const NCTableauxView: preact.FunctionalComponent = () => {
         }
     };
 
-    const sendFOClose = (auto: boolean, varAssign: VarAssign = {}) => {
-        if (
-            selectedNodeId === undefined ||
-            varAssignSecondNodeId === undefined
-        ) {
+    const sendFOClose = (
+        auto: boolean,
+        varAssign: VarAssign = {},
+        secondID: number | undefined = varAssignSecondNodeId,
+    ) => {
+        if (selectedNodeId === undefined || secondID === undefined) {
             // Error for debugging
             throw new Error(
                 "Close move went wrong, since selected nodes could not be identified.",
             );
         }
-        const leaf = selectedNodeIsLeaf
-            ? selectedNodeId
-            : varAssignSecondNodeId;
-        const pred = selectedNodeIsLeaf
-            ? varAssignSecondNodeId
-            : selectedNodeId;
+        const leaf = selectedNodeIsLeaf ? selectedNodeId : secondID;
+        const pred = selectedNodeIsLeaf ? secondID : selectedNodeId;
         sendClose(
             server,
             state!,
@@ -102,6 +99,9 @@ const NCTableauxView: preact.FunctionalComponent = () => {
             pred,
             auto ? null : varAssign,
         );
+        setSelectedNode(undefined);
+        setVarAssignSecondNodeId(undefined);
+        setVarsToAssign([]);
     };
 
     return (

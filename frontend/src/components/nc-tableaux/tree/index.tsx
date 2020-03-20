@@ -4,6 +4,8 @@ import { ncTabTreeLayout } from "../../../util/nc-tableaux";
 import Zoomable from "../../zoomable";
 import NCSubTree from "./subtree";
 import { DragTransform } from "../../../types/ui";
+import ClosingEdge from "../../closing-edge";
+import { findSubTree, getClosedLeaves } from "../../../util/layout/tree";
 
 interface Props {
     nodes: NCTableauxNode[];
@@ -45,6 +47,21 @@ const NCTabTree: preact.FunctionalComponent<Props> = ({
                 <g
                     transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                 >
+                    {/* #1 render ClosingEdges -> keep order to avoid overlapping */
+                    getClosedLeaves(root).map((n) => (
+                        <ClosingEdge
+                            root={root}
+                            leaf={n}
+                            pred={
+                                findSubTree(
+                                    root,
+                                    (t) => t.data.id === n.data.closeRef!,
+                                    (t) => t,
+                                )!
+                            }
+                            dragTransforms={dragTransforms}
+                        />
+                    ))}
                     <NCSubTree
                         node={root}
                         zoomFactor={transform.k}

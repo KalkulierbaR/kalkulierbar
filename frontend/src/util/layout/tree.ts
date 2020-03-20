@@ -1,6 +1,7 @@
 import { LayoutItem } from "../../types/layout";
 import { LeftSiblingList, Link, Tree, TreeLayout } from "../../types/tree";
 import { maxBy } from "../max-by";
+import { DragTransform } from "../../types/ui";
 
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
 // https://doi.org/10.1002/spe.2213
@@ -120,6 +121,47 @@ export const treeToLayoutItem = <T extends { id: number }>(
 
     return items;
 };
+
+/**
+ * Computes the absolute dt of a node
+ * @param {Tree<TableauxTreeLayoutNode>} t - Tree
+ * @param {number} id - The id to look for
+ * @param {Record<number, DragTransform>} dts - All dts
+ * @param {DragTransform} dt - Current dt
+ * @returns {DragTransform} - Absolute dt
+ */
+export const getAbsoluteDragTransform = <T extends { id: number }>(
+    t: Tree<T>,
+    id: number,
+    dts: Record<number, DragTransform>,
+    dt: DragTransform = dts[t.data.id] ?? { x: 0, y: 0 },
+): DragTransform | undefined => {
+    if (t.data.id === id) {
+        return dt;
+    }
+
+    for (const c of t.children) {
+        const cdt = dts[c.data.id] ?? { x: 0, y: 0 };
+        const res = getAbsoluteDragTransform(c, id, dts, {
+            x: dt.x + cdt.x,
+            y: dt.y + cdt.y,
+        });
+        if (res !== undefined) {
+            return res;
+        }
+    }
+
+    return;
+};
+
+/**
+ * Gets all closed leaves
+ * @param {Tree<TableauxTreeLayoutNode>} t - The tree
+ * @returns {Array<LayoutItem<TableauxTreeLayoutNode>>} - All closed leaves
+ */
+export const getClosedLeaves = <T extends { closeRef: number | null }>(
+    t: Tree<T>,
+): Array<Tree<T>> => filterTree(t, (c) => c.data.closeRef !== null);
 
 const getLinks = <T extends { id: number }>(t: Tree<T>): Link[] => {
     const links: Link[] = t.children.map((c) => ({
