@@ -76,6 +76,27 @@ class NcTableauxState(
         }
     }
 
+    /**
+     * Collect leaves from below a given node in the tree
+     * If the given node is a leaf, only its ID will be returned
+     * @param parent ID of the common parent of all leaves
+     * @return List of Leaf IDs
+     */
+    fun childLeavesOf(parent: Int): List<Int> {
+        val worklist = mutableListOf(parent)
+        val leaves = mutableListOf<Int>()
+
+        while (worklist.isNotEmpty()) {
+            val index = worklist.removeAt(0)
+            val node = nodes[index]
+            worklist.addAll(node.children)
+            if (node.isLeaf)
+                leaves.add(index)
+        }
+
+        return leaves
+    }
+
     fun render() {
         nodes.forEach {
             it.render()
