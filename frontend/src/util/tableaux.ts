@@ -9,7 +9,6 @@ import {
     TableauxNode,
     TableauxTreeLayoutNode,
     VarAssign,
-    TableauxExpandMove,
     ClosableNodePair,
 } from "../types/tableaux";
 import { Tree, TreeLayout } from "../types/tree";
