@@ -1,5 +1,7 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
+import Dialog from "../../../components/dialog";
+import VarAssignList from "../../../components/input/var-assign-list";
 import ResolutionCircle from "../../../components/resolution/circle";
 import ResolutionFactorizeDialog from "../../../components/resolution/dialog/factorize";
 import ResolutionResolveDialog from "../../../components/resolution/dialog/resolve";
@@ -9,16 +11,18 @@ import {
     CandidateClause,
     getCandidateCount,
     instanceOfPropCandidateClause,
-    PropCandidateClause, SelectedClauses,
+    PropCandidateClause,
+    SelectedClauses,
 } from "../../../types/clause";
 import {
     HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
 } from "../../../types/resolution";
+import {VarAssign} from "../../../types/tableaux";
 import { useAppState } from "../../../util/app-state";
 import {stringArrayToStringMap} from "../../../util/array-to-map";
-import {getCandidateClause} from "../../../util/clause";
+import {checkAtomsForVar, getCandidateClause} from "../../../util/clause";
 import {
     addHyperSidePremiss,
     findHyperSidePremiss,
@@ -28,7 +32,7 @@ import {
     getPropHyperCandidates,
     getSelectable,
     removeHyperSidePremiss,
-    sendResolve,
+    sendResolve, sendResolveCustom,
     sendResolveUnify,
 } from "../../../util/resolution";
 import { foExample, propExample } from "./example";
@@ -46,8 +50,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         [calculus]: cState,
         onError,
         onChange,
+        onWarning,
     } = useAppState();
-    const apiInfo = { onChange, onError, server };
+    const apiInfo = { onChange, onError, server, onWarning };
 
     let state = cState;
     if (!state) {
@@ -67,10 +72,19 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const [showFactorizeDialog, setShowFactorizeDialog] = useState(false);
 
+    const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
+    const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+    const [selectedClauseAtomIndex, setSelectedClauseAtomIndex] = useState<number|undefined>(undefined);
+    const [candidateAtomIndex, setCandidateAtomIndex] = useState<number|undefined>(undefined);
+    const [varAssignSecondClauseId, setVarAssignSecondClauseId] = useState<
+        number | undefined
+        >(undefined);
+
     const selectedClauseId =
         selectedClauses === undefined ? undefined : selectedClauses[0];
 
-    const showResolveDialog = selectedClauses !== undefined && selectedClauses.length === 2;
+    const showResolveDialog =
+        selectedClauses !== undefined && selectedClauses.length === 2;
 
     const candidateClauses: CandidateClause[] = getCandidateClauses(
         state.clauseSet,
@@ -126,7 +140,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             }
             // Ignore when no candidates found
         } else {
-            const candidateClause = getCandidateClause(newClauseId, candidateClauses);
+            const candidateClause = getCandidateClause(
+                newClauseId,
+                candidateClauses,
+            );
             if (candidateClause != null) {
                 const candidateAtomCount = getCandidateCount(candidateClause);
                 if (candidateAtomCount === 0) {
@@ -141,7 +158,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             selectedClauseId,
                             newClauseId,
                             options.entries().next().value[1],
-                            {...apiInfo, state},
+                            { ...apiInfo, state },
                         );
                     } else {
                         // Show dialog for literal selection
@@ -152,17 +169,32 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     candidateAtomCount === 1 &&
                     instanceOfFOResState(state, calculus)
                 ) {
-                    const resolventAtomIndex = candidateClause.candidateAtomMap
-                        .values()
-                        .next().value[0];
-                    const selectedClauseAtomIndex = candidateClause.candidateAtomMap
+                    const newSelectedClauseAtomIndex = candidateClause.candidateAtomMap
                         .keys()
                         .next().value;
+                    const newCandidateAtomIndex = candidateClause.candidateAtomMap
+                        .values()
+                        .next().value[0];
+
+                    const vars = checkAtomsForVar(
+                        [
+                            state.clauseSet.clauses[selectedClauseId].atoms[newSelectedClauseAtomIndex],
+                            state.clauseSet.clauses[newClauseId].atoms[newCandidateAtomIndex]
+                        ]
+                    );
+                    if(vars.length > 0){
+                        setVarsToAssign(vars);
+                        setShowVarAssignDialog(true);
+                        setSelectedClauseAtomIndex(newSelectedClauseAtomIndex);
+                        setCandidateAtomIndex(newCandidateAtomIndex);
+                        setVarAssignSecondClauseId(newClauseId);
+                        return;
+                    }
                     sendResolveUnify(
                         selectedClauseId,
                         newClauseId,
-                        selectedClauseAtomIndex,
-                        resolventAtomIndex,
+                        newSelectedClauseAtomIndex,
+                        newCandidateAtomIndex,
                         {...apiInfo, state},
                     );
                 } else {
@@ -203,7 +235,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     selectedClauseAtomIndices.forEach((atomIndex) => {
                         const newOption: string = candidateClause!.clause.atoms[
                             atomIndex
-                            ].lit;
+                        ].lit;
                         if (!options.includes(newOption)) {
                             options[atomIndex] = newOption;
                         }
@@ -211,6 +243,38 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             );
         }
         return stringArrayToStringMap(options);
+    };
+
+    /**
+     * FO Resolution: Submit a custom resolve move containing variable assignment rules
+     * @param {boolean} autoAssign - Automatically assign variables if this is set to true
+     * @param {VarAssign} varAssign - Variable assignments by the user
+     * @returns {void | Error} - Error if the two nodes for the close move can't be identified
+     */
+    const sendFOResolve = (autoAssign: boolean, varAssign: VarAssign = {}) => {
+        setShowVarAssignDialog(false);
+        if (selectedClauseId === undefined || varAssignSecondClauseId === undefined || !instanceOfFOResState(state, calculus)) {
+            return;
+        }
+        if(autoAssign){
+            sendResolveUnify(
+                selectedClauseId,
+                varAssignSecondClauseId,
+                selectedClauseAtomIndex!,
+                candidateAtomIndex!,
+                {...apiInfo, state},
+            );
+        } else {
+            sendResolveCustom(
+                selectedClauseId,
+                varAssignSecondClauseId,
+                selectedClauseAtomIndex!,
+                candidateAtomIndex!,
+                varAssign,
+                {...apiInfo, state},
+            );
+        }
+        setSelectedClauses(undefined);
     };
     
     const selectable = getSelectable(
@@ -235,9 +299,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 semiSelected={semiSelected}
                 selectable={selectable}
             />
-            
-            <ResolutionFAB 
-                calculus={calculus} 
+
+            <ResolutionFAB
+                calculus={calculus}
                 state={state}
                 selectedClauseId={selectedClauseId}
                 setSelectedClauses={setSelectedClauses}
@@ -245,6 +309,21 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setHyperRes={setHyperRes}
                 setShowFactorizeDialog={setShowFactorizeDialog}
             />
+
+            <Dialog
+                open={showVarAssignDialog}
+                label="Variable assignments"
+                onClose={() => setShowVarAssignDialog(false)}
+            >
+                <VarAssignList
+                    vars={varsToAssign}
+                    manualVarAssignOnly={false}
+                    submitVarAssignCallback={sendFOResolve}
+                    submitLabel="Assign variables"
+                    secondSubmitEvent={sendFOResolve}
+                    secondSubmitLabel="Automatic assignment"
+                />
+            </Dialog>
 
             <ResolutionResolveDialog
                 showDialog={showResolveDialog}
@@ -258,13 +337,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 propOptions={literalOptions()}
             />
 
-            <ResolutionFactorizeDialog 
+            <ResolutionFactorizeDialog
                 showDialog={showFactorizeDialog}
                 setShowDialog={setShowFactorizeDialog}
-                calculus={calculus} 
-                state={state} 
+                calculus={calculus}
+                state={state}
                 selectedClauses={selectedClauses}
-                setSelectedClauses={setSelectedClauses} 
+                setSelectedClauses={setSelectedClauses}
             />
         </Fragment>
     );

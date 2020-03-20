@@ -1,15 +1,17 @@
 {
-    "cSpell.words": [
-        "DPLL",
-        "DPLLCs",
-        "Hamburgler",
-        "Kalkulierba",
-        "Keccak",
-        "Zoomable",
-        "kbae",
-        "kbar",
-        "kbcc",
-        "kbde",
-        "preact"
-    ]
+  "cSpell.words": [
+    "DPLL",
+    "DPLLCs",
+    "Hamburgler",
+    "Kalkulierba",
+    "Keccak",
+    "Zoomable",
+    "kbae",
+    "kbar",
+    "kbcc",
+    "kbde",
+    "preact"
+  ],
+  "prettier.prettierPath": ".vscode/pnpify/prettier/index.js",
+  "typescript.tsdk": ".vscode/pnpify/typescript/lib"
 }

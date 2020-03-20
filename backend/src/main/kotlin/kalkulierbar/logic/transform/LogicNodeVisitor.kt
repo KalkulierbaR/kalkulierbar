@@ -41,18 +41,18 @@ abstract class LogicNodeVisitor<ReturnType> {
     }
 
     open fun visit(node: Var): ReturnType {
-        throw FormulaConversionException("Visiting Var implemented")
+        throw FormulaConversionException("Visiting Var not implemented")
     }
 
     open fun visit(node: Relation): ReturnType {
-        throw FormulaConversionException("Visiting Relation implemented")
+        throw FormulaConversionException("Visiting Relation not implemented")
     }
 
     open fun visit(node: UniversalQuantifier): ReturnType {
-        throw FormulaConversionException("Visiting UniversalQuantifier implemented")
+        throw FormulaConversionException("Visiting UniversalQuantifier not implemented")
     }
 
     open fun visit(node: ExistentialQuantifier): ReturnType {
-        throw FormulaConversionException("Visiting ExistentialQuantifier implemented")
+        throw FormulaConversionException("Visiting ExistentialQuantifier not implemented")
     }
 }

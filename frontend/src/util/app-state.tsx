@@ -101,6 +101,9 @@ export const createErrorNotification = (msg: string) =>
 export const createSuccessNotification = (msg: string) =>
     createNotification(msg, NotificationType.Success);
 
+export const createWarningNotification = (msg: string) =>
+    createNotification(msg, NotificationType.Warning);
+
 export const updateCalculusState = <C extends CalculusType = CalculusType>(
     dispatch: (state: AppStateAction) => void,
 ) => (calculus: C, state: AppState[C]) => {
@@ -118,6 +121,7 @@ const derive = (
     ...state,
     onError: (msg: string) => dispatch(createErrorNotification(msg)),
     onSuccess: (msg: string) => dispatch(createSuccessNotification(msg)),
+    onWarning: (msg: string) => dispatch(createWarningNotification(msg)),
     onMessage: (msg: string, type: NotificationType) =>
         dispatch(createNotification(msg, type)),
     removeNotification: () => dispatch(RemoveNotificationAction),

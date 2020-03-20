@@ -6,6 +6,7 @@ import kalkulierbar.Calculus
 import kalkulierbar.KBAR_DEFAULT_PORT
 import kalkulierbar.KalkulierbarException
 import kalkulierbar.dpll.DPLL
+import kalkulierbar.nonclausaltableaux.NonClausalTableaux
 import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.tableaux.FirstOrderTableaux
@@ -20,7 +21,8 @@ val endpoints: Set<Calculus> = setOf<Calculus>(
         PropositionalResolution(),
         FirstOrderTableaux(),
         FirstOrderResolution(),
-        DPLL()
+        DPLL(),
+        NonClausalTableaux()
     )
 
 fun main(args: Array<String>) {
