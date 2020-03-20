@@ -15,6 +15,7 @@ import {
     TableauxType,
 } from "../../types/tableaux";
 import { useAppState } from "../../util/app-state";
+import UploadFAB from "../../components/btn/upload";
 
 interface Props {
     /**
@@ -160,6 +161,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
+            <UploadFAB calculus={calculus} />
         </Fragment>
     );
 };

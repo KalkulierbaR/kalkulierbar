@@ -30,7 +30,7 @@ import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
 import Tutorial from "../../tutorial";
-import DownloadFAB from "../../control-fab/download";
+import DownloadFAB from "../../btn/download";
 
 interface Props {
     /**

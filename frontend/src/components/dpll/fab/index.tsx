@@ -12,7 +12,7 @@ import DeleteIcon from "../../icons/delete";
 import SplitIcon from "../../icons/split";
 import SwitchIcon from "../../icons/switch";
 import Tutorial from "../../tutorial";
-import DownloadFAB from "../../control-fab/download";
+import DownloadFAB from "../../btn/download";
 
 interface Props {
     state: DPLLState;
