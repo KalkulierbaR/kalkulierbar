@@ -48,7 +48,6 @@ interface GenericTableauxState<AtomType> {
      * Marks a tree node and its ancestry as closed
      * NOTE: This does NOT set the closeRef of the closed leaf
      *       so make sure the closeRef is set before calling this
-     * @param state State object to modify
      * @param leaf The leaf to mark as closed
      */
     fun setNodeClosed(leaf: GenericTableauxNode<AtomType>) {
@@ -66,7 +65,6 @@ interface GenericTableauxState<AtomType> {
     /**
      * Generates a CloseMessage stating whether the proof is closed and, if so,
      * what type of tableaux the proof is valid in
-     * @param State to generate message for
      * @return CloseMessage explaining the proof state
      */
     fun getCloseMessage(): CloseMessage {
@@ -98,7 +96,6 @@ interface GenericTableauxState<AtomType> {
      *  - The referenced leaf and node are siblings (the ancestry of the node is included in the ancestry of the leaf)
      *  - Appending the lemma would not violate regularity restrictions
      *
-     * @param state State to apply lemma move in
      * @param leafID Node to append created lemma on
      * @param lemmaID Node to create lemma from
      * @return Atom representing the lemma node to be appended to the leaf
