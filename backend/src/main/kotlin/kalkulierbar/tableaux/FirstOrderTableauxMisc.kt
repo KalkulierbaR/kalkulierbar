@@ -4,7 +4,9 @@ import kalkulierbar.UnificationImpossible
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
+import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Relation
+import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.transform.VariableSuffixAppend
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.tamperprotect.ProtectedState
@@ -105,6 +107,19 @@ class FoTableauxState(
         }
 
         return false
+    }
+
+    /**
+     * Apply a global variable instantiation in the proof tree
+     * @param varAssign Map of which variables to replace with which terms
+     * @return State with all occurences of variables in the map replaced with their respective terms
+     */
+    fun applyVarInstantiation(varAssign: Map<String, FirstOrderTerm>) {
+        val instantiator = VariableInstantiator(varAssign)
+
+        nodes.forEach {
+            it.relation.arguments = it.relation.arguments.map { it.accept(instantiator) }
+        }
     }
 
     /**

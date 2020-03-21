@@ -3,7 +3,6 @@ package kalkulierbar.tableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.UnificationImpossible
 import kalkulierbar.logic.FirstOrderTerm
-import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
 
@@ -79,7 +78,7 @@ private fun closeBranchCommon(
     val closeNode = state.nodes[closeNodeID]
 
     // Apply all specified variable instantiations globally
-    applyVarInstantiation(state, varAssign)
+    state.applyVarInstantiation(varAssign)
 
     if (!leaf.relation.synEq(closeNode.relation))
         throw IllegalMove("Node '$leaf' and '$closeNode' are not equal after variable instantiation")
@@ -163,22 +162,6 @@ fun applyMoveUseLemma(state: FoTableauxState, leafID: Int, lemmaID: Int): FoTabl
     // Add move to state history
     if (state.backtracking) {
         state.moveHistory.add(MoveLemma(leafID, lemmaID))
-    }
-
-    return state
-}
-
-/**
- * Apply a global variable instantiation in the proof tree
- * @param state State to apply instantiation in
- * @param varAssign Map of which variables to replace with which terms
- * @return State with all occurences of variables in the map replaced with their respective terms
- */
-private fun applyVarInstantiation(state: FoTableauxState, varAssign: Map<String, FirstOrderTerm>): FoTableauxState {
-    val instantiator = VariableInstantiator(varAssign)
-
-    state.nodes.forEach {
-        it.relation.arguments = it.relation.arguments.map { it.accept(instantiator) }
     }
 
     return state
