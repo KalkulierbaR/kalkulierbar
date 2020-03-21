@@ -10,64 +10,7 @@ import kalkulierbar.clause.ClauseSet
  * Interface defining common methods useful for both Propositional
  * and First Order tableaux calculi
  */
-interface GenericTableaux<AtomType> {
-
-    /**
-     * Ensures that conditions for a lemma rule application are met
-     * and determines the atom that should be appended as part of the lemma rule
-     * If a precondition is not met, an explaining exception will be thrown
-     * Conditions include:
-     *  - Both leafID and lemmaID reference existing nodes
-     *  - The references leaf is an open leaf, the referenced node is closed
-     *  - The referenced leaf and node are siblings (the ancestry of the node is included in the ancestry of the leaf)
-     *  - Appending the lemma would not violate regularity restrictions
-     *
-     * @param state State to apply lemma move in
-     * @param leafID Node to append created lemma on
-     * @param lemmaID Node to create lemma from
-     * @return Atom representing the lemma node to be appended to the leaf
-     */
-    @Suppress("ThrowsCount")
-    fun getLemma(state: GenericTableauxState<AtomType>, leafID: Int, lemmaID: Int): Atom<AtomType> {
-        // Verify that subtree root for lemma creation exists
-        if (lemmaID >= state.nodes.size || lemmaID < 0)
-            throw IllegalMove("Node with ID $lemmaID does not exist")
-            // Verify that subtree root for lemma creation exists
-        if (leafID >= state.nodes.size || leafID < 0)
-            throw IllegalMove("Node with ID $leafID does not exist")
-
-        val leaf = state.nodes[leafID]
-        val lemmaNode = state.nodes[lemmaID]
-
-        if (!leaf.isLeaf)
-            throw IllegalMove("Node '$leaf' is not a leaf")
-
-        if (leaf.isClosed)
-            throw IllegalMove("Leaf '$leaf' is already closed")
-
-        if (!lemmaNode.isClosed)
-            throw IllegalMove("Node '$lemmaNode' is not the root of a closed subtableaux")
-
-        if (lemmaNode.parent == null)
-            throw IllegalMove("Root node cannot be used for lemma creation")
-
-        if (lemmaNode.isLeaf)
-            throw IllegalMove("Cannot create lemma from a leaf")
-
-        val commonParent: Int = lemmaNode.parent!!
-
-        if (!state.nodeIsParentOf(commonParent, leafID))
-            throw IllegalMove("Nodes '$leaf' and '$lemmaNode' are not siblings")
-
-        val atom = lemmaNode.toAtom().not()
-
-        // Verify compliance with regularity criteria
-        if (state.regular)
-            verifyExpandRegularity(state, leafID, Clause(mutableListOf(atom)), applyPreprocessing = false)
-
-        return atom
-    }
-}
+interface GenericTableaux<AtomType>
 
 /**
  * Interface for a generic/common tableaux state
@@ -143,6 +86,62 @@ interface GenericTableauxState<AtomType> {
         }
 
         return CloseMessage(root.isClosed, msg)
+    }
+
+    /**
+     * Ensures that conditions for a lemma rule application are met
+     * and determines the atom that should be appended as part of the lemma rule
+     * If a precondition is not met, an explaining exception will be thrown
+     * Conditions include:
+     *  - Both leafID and lemmaID reference existing nodes
+     *  - The references leaf is an open leaf, the referenced node is closed
+     *  - The referenced leaf and node are siblings (the ancestry of the node is included in the ancestry of the leaf)
+     *  - Appending the lemma would not violate regularity restrictions
+     *
+     * @param state State to apply lemma move in
+     * @param leafID Node to append created lemma on
+     * @param lemmaID Node to create lemma from
+     * @return Atom representing the lemma node to be appended to the leaf
+     */
+    @Suppress("ThrowsCount")
+    fun getLemma(leafID: Int, lemmaID: Int): Atom<AtomType> {
+        // Verify that subtree root for lemma creation exists
+        if (lemmaID >= nodes.size || lemmaID < 0)
+            throw IllegalMove("Node with ID $lemmaID does not exist")
+        // Verify that subtree root for lemma creation exists
+        if (leafID >= nodes.size || leafID < 0)
+            throw IllegalMove("Node with ID $leafID does not exist")
+
+        val leaf = nodes[leafID]
+        val lemmaNode = nodes[lemmaID]
+
+        if (!leaf.isLeaf)
+            throw IllegalMove("Node '$leaf' is not a leaf")
+
+        if (leaf.isClosed)
+            throw IllegalMove("Leaf '$leaf' is already closed")
+
+        if (!lemmaNode.isClosed)
+            throw IllegalMove("Node '$lemmaNode' is not the root of a closed subtableaux")
+
+        if (lemmaNode.parent == null)
+            throw IllegalMove("Root node cannot be used for lemma creation")
+
+        if (lemmaNode.isLeaf)
+            throw IllegalMove("Cannot create lemma from a leaf")
+
+        val commonParent: Int = lemmaNode.parent!!
+
+        if (!nodeIsParentOf(commonParent, leafID))
+            throw IllegalMove("Nodes '$leaf' and '$lemmaNode' are not siblings")
+
+        val atom = lemmaNode.toAtom().not()
+
+        // Verify compliance with regularity criteria
+        if (regular)
+            verifyExpandRegularity(this, leafID, Clause(mutableListOf(atom)), applyPreprocessing = false)
+
+        return atom
     }
 
     fun nodeIsCloseable(nodeID: Int): Boolean
