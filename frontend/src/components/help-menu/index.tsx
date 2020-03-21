@@ -1,6 +1,7 @@
-import { Fragment, h } from "preact";
+import {Fragment, h} from "preact";
 import {useState} from "preact/hooks";
-import { CalculusType, TableauxCalculus } from "../../types/app";
+import {CalculusType, TableauxCalculus, TutorialMode} from "../../types/app";
+import {useAppState} from "../../util/app-state";
 import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";
@@ -14,37 +15,42 @@ interface Props {
 const HelpMenu: preact.FunctionalComponent<Props> = ({
     calculus,
 }) => {
-    const [showDialog, setShowDialog] = useState(false);
+    const { tutorialMode } = useAppState();
+    const [showDialog, setShowDialog] = useState(tutorialMode  !== TutorialMode.None);
     
     return (
         <Fragment>
             <FAB
                 class={style.helpMenu}
                 label="Help"
-                icon={<InfoIcon />}
+                icon={<InfoIcon fill="#fff" />}
+                showIconAtEnd={true}
                 extended={true}
                 mini={true}
                 onClick={() => setShowDialog(true)}
             />
             <Dialog
                 open={showDialog}
-                label="Help menu"
+                label="Tutorial"
                 onClose={() => setShowDialog(false)}
             >
-                {TableauxCalculus.includes(calculus) ?
-                    <Fragment>
-                        <h3>Expand</h3>
-                        <p>
-                            Select a leaf which you want to expand. Now hit the action Button "EXPAND" and select a clause.
-                        </p>
-                        <h3>Close</h3>
-                        <p>
-                            Select a leaf and close it with the leaf's complementary node in the path to the root.
-                        </p>
-                    </Fragment>
-                    : undefined
+                {TableauxCalculus.includes(calculus) &&
+                    <div class="flex-container">
+                        <div class={`first  ${style.firstSpace}`}>
+                            <h3>Expand move</h3>
+                            <img src="../../assets/gifs/prop_tableaux_expand.gif" alt="" />
+                            <p>You can expand the tree by choosing a leaf and a clause.</p>
+                        </div>
+                        <div class="second">
+                            <h3>Close move</h3>
+                            <img src="../../assets/gifs/prop_tableaux_close.gif" alt="" />
+                            <p>Close all leafs with complementary nodes in the tree path.</p>
+                        </div>
+                    </div>
                 }
-                <Btn onClick={() => setShowDialog(false)}>Got it</Btn>
+                <p>
+                    <Btn onClick={() => setShowDialog(false)}>Okay I got it</Btn>
+                </p>
             </Dialog>
         </Fragment>
     );
