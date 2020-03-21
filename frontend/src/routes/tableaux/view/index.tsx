@@ -6,7 +6,6 @@ import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxFAB from "../../../components/tableaux/fab";
 import TableauxTreeView from "../../../components/tableaux/tree";
 import { Calculus, TableauxCalculusType } from "../../../types/app";
-import { FOArgument, FOArgumentType } from "../../../types/clause";
 import {
     instanceOfFOTabState,
     instanceOfPropTabState,
@@ -16,7 +15,10 @@ import {
 } from "../../../types/tableaux";
 import { DragTransform } from "../../../types/ui";
 import { useAppState } from "../../../util/app-state";
-import { clauseSetToStringMap } from "../../../util/clause";
+import {
+    checkRelationsForVar,
+    clauseSetToStringMap,
+} from "../../../util/clause";
 import {
     sendBacktrack,
     sendClose,
@@ -41,6 +43,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         smallScreen,
         onError,
         onChange,
+        onWarning,
     } = useAppState();
 
     let state = cState;
@@ -106,6 +109,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 state!,
                 onChange,
                 onError,
+                onWarning,
                 selectedNodeId,
                 newClauseId,
             );
@@ -143,6 +147,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     state!,
                     onChange,
                     onError,
+                    onWarning,
                     newNode.id,
                     selectedClauseId,
                 );
@@ -162,6 +167,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 state!,
                 onChange,
                 onError,
+                onWarning,
                 selectedNodeId,
                 newNode.id,
             );
@@ -182,6 +188,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 state!,
                 onChange,
                 onError,
+                onWarning,
                 newNodeIsLeaf ? newNode.id : selectedNodeId,
                 newNodeIsLeaf ? selectedNodeId : newNode.id,
             );
@@ -189,17 +196,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         } else if (instanceOfFOTabState(state, calculus)) {
             // Prepare dialog for automatic/manual unification
             setVarAssignSecondNodeId(newNode.id);
-            const vars: string[] = [];
-            const checkArgumentForVar = (argument: FOArgument) => {
-                if (argument.type === FOArgumentType.quantifiedVariable) {
-                    vars.push(argument.spelling);
-                }
-                if (argument.arguments) {
-                    argument.arguments.forEach(checkArgumentForVar);
-                }
-            };
-            selectedNode!.relation!.arguments.forEach(checkArgumentForVar);
-            newNode.relation!.arguments.forEach(checkArgumentForVar);
+            const vars = checkRelationsForVar([
+                selectedNode!.relation!,
+                newNode.relation!,
+            ]);
             if (vars.length <= 0) {
                 sendFOClose(false, {});
                 return;
@@ -238,6 +238,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             state!,
             onChange,
             onError,
+            onWarning,
             leaf,
             pred,
             autoAssign,
@@ -258,7 +259,14 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             }
             e.preventDefault();
             e.stopImmediatePropagation();
-            sendBacktrack(calculus, server, state!, onChange, onError);
+            sendBacktrack(
+                calculus,
+                server,
+                state!,
+                onChange,
+                onError,
+                onWarning,
+            );
         };
 
         window.addEventListener("keydown", handleKeyDown);
@@ -317,7 +325,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             {instanceOfFOTabState(state, calculus) ? (
                 <Dialog
                     open={showVarAssignDialog}
-                    label="Choose variable assignments or leave them blank"
+                    label="Variable assignments"
                     onClose={() => setShowVarAssignDialog(false)}
                 >
                     <VarAssignList

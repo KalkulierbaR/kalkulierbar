@@ -101,6 +101,7 @@ export interface FOTableauxState {
     expansionCounter: number;
     manualVarAssign: boolean;
     renderedClauseSet: string[];
+    statusMessage: string | null;
 }
 
 export function instanceOfFOTabState(

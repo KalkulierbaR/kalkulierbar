@@ -1,7 +1,26 @@
 package kalkulierbar.logic
 
 import kalkulierbar.logic.transform.LogicNodeVisitor
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
 
+// Context object for logic formula serialization
+// Tells kotlinx.serialize about child types of LogicNode
+val LogicModule = SerializersModule {
+    polymorphic(LogicNode::class) {
+        Var::class with Var.serializer()
+        Not::class with Not.serializer()
+        And::class with And.serializer()
+        Or::class with Or.serializer()
+        Impl::class with Impl.serializer()
+        Equiv::class with Equiv.serializer()
+        Relation::class with Relation.serializer()
+        ExistentialQuantifier::class with ExistentialQuantifier.serializer()
+        UniversalQuantifier::class with UniversalQuantifier.serializer()
+    }
+}
+
+@Serializable
 abstract class LogicNode {
 
     /**
@@ -14,26 +33,28 @@ abstract class LogicNode {
     abstract fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>): ReturnType
 }
 
-abstract class BinaryOp(
-    var leftChild: LogicNode,
-    var rightChild: LogicNode
-) : LogicNode() {
+abstract class BinaryOp : LogicNode() {
+
+    abstract var leftChild: LogicNode
+    abstract var rightChild: LogicNode
+
     override fun toString(): String {
         return "( $leftChild bop $rightChild)"
     }
 }
 
-abstract class UnaryOp(var child: LogicNode) : LogicNode() {
+abstract class UnaryOp : LogicNode() {
+    abstract var child: LogicNode
+
     override fun toString(): String {
         return "(uop $child)"
     }
 }
 
-abstract class Quantifier(
-    var varName: String,
-    child: LogicNode,
-    val boundVariables: MutableList<QuantifiedVariable>
-) : UnaryOp(child)
+abstract class Quantifier : UnaryOp() {
+    abstract var varName: String
+    abstract val boundVariables: MutableList<QuantifiedVariable>
+}
 
 /**
  * Interface defining a function to check syntactic equality

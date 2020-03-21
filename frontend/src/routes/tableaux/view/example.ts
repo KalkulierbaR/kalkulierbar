@@ -245,4 +245,5 @@ export const foExample: FOTableauxState = {
     expansionCounter: 2,
     seal: "D9CBFCD29C08A89041652FE3A8276DFEDE29D994E59A21AA99D4A553415E9F58",
     renderedClauseSet: ["!R(f(X))", "R(f(a)), !R(f(b))", "R(f(Xv1))"],
+    statusMessage: null,
 };

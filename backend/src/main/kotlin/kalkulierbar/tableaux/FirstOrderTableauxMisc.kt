@@ -5,8 +5,8 @@ import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.Relation
-import kalkulierbar.logic.transform.Unification
 import kalkulierbar.logic.transform.VariableSuffixAppend
+import kalkulierbar.logic.util.Unification
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
@@ -26,6 +26,7 @@ class FoTableauxState(
 
     override var seal = ""
     var renderedClauseSet = listOf<String>()
+    var statusMessage: String? = null
 
     /**
      * Check if a given node can be closed
