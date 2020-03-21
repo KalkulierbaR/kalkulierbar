@@ -13,50 +13,6 @@ import kalkulierbar.clause.ClauseSet
 interface GenericTableaux<AtomType> {
 
     /**
-     * Marks a tree node and its ancestry as closed
-     * NOTE: This does NOT set the closeRef of the closed leaf
-     *       so make sure the closeRef is set before calling this
-     * @param state State object to modify
-     * @param leaf The leaf to mark as closed
-     */
-    fun setNodeClosed(state: GenericTableauxState<AtomType>, leaf: GenericTableauxNode<AtomType>) {
-        var node = leaf
-
-        // Set isClosed to true for all nodes dominated by leaf in reverse tree
-        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && state.nodes[e].isClosed }) {
-            node.isClosed = true
-            if (node.parent == null)
-                break
-            node = state.nodes[node.parent!!]
-        }
-    }
-
-    /**
-     * Generates a CloseMessage stating whether the proof is closed and, if so,
-     * what type of tableaux the proof is valid in
-     * @param State to generate message for
-     * @return CloseMessage explaining the proof state
-     */
-    fun getCloseMessage(state: GenericTableauxState<AtomType>): CloseMessage {
-        var msg = "The proof tree is not closed"
-
-        if (state.root.isClosed) {
-            var connectedness = "unconnected"
-            if (checkConnectedness(state, TableauxType.STRONGLYCONNECTED))
-                connectedness = "strongly connected"
-            else if (checkConnectedness(state, TableauxType.WEAKLYCONNECTED))
-                connectedness = "weakly connected"
-
-            val regularity = if (checkRegularity(state)) "regular " else ""
-            val withWithoutBT = if (state.usedBacktracking) "with" else "without"
-
-            msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux $withWithoutBT backtracking"
-        }
-
-        return CloseMessage(state.root.isClosed, msg)
-    }
-
-    /**
      * Ensures that conditions for a lemma rule application are met
      * and determines the atom that should be appended as part of the lemma rule
      * If a precondition is not met, an explaining exception will be thrown
@@ -143,6 +99,50 @@ interface GenericTableauxState<AtomType> {
         if (child.parent == 0 || child.parent == null)
             return false
         return nodeIsParentOf(parentID, child.parent!!)
+    }
+
+    /**
+     * Marks a tree node and its ancestry as closed
+     * NOTE: This does NOT set the closeRef of the closed leaf
+     *       so make sure the closeRef is set before calling this
+     * @param state State object to modify
+     * @param leaf The leaf to mark as closed
+     */
+    fun setNodeClosed(leaf: GenericTableauxNode<AtomType>) {
+        var node = leaf
+
+        // Set isClosed to true for all nodes dominated by leaf in reverse tree
+        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
+            node.isClosed = true
+            if (node.parent == null)
+                break
+            node = nodes[node.parent!!]
+        }
+    }
+
+    /**
+     * Generates a CloseMessage stating whether the proof is closed and, if so,
+     * what type of tableaux the proof is valid in
+     * @param State to generate message for
+     * @return CloseMessage explaining the proof state
+     */
+    fun getCloseMessage(): CloseMessage {
+        var msg = "The proof tree is not closed"
+
+        if (root.isClosed) {
+            var connectedness = "unconnected"
+            if (checkConnectedness(this, TableauxType.STRONGLYCONNECTED))
+                connectedness = "strongly connected"
+            else if (checkConnectedness(this, TableauxType.WEAKLYCONNECTED))
+                connectedness = "weakly connected"
+
+            val regularity = if (checkRegularity(this)) "regular " else ""
+            val withWithoutBT = if (usedBacktracking) "with" else "without"
+
+            msg = "The proof is closed and valid in a $connectedness ${regularity}tableaux $withWithoutBT backtracking"
+        }
+
+        return CloseMessage(root.isClosed, msg)
     }
 
     fun nodeIsCloseable(nodeID: Int): Boolean

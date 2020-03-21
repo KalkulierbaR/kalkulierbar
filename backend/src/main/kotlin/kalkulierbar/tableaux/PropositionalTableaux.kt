@@ -68,7 +68,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
         // Close branch
         leaf.closeRef = closeNodeID
-        setNodeClosed(state, leaf)
+        state.setNodeClosed(leaf)
 
         // Add move to state history
         if (state.backtracking) {
@@ -224,7 +224,7 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      * @param state state object to validate
      * @return string representing proof closed state (true/false)
      */
-    override fun checkCloseOnState(state: TableauxState) = getCloseMessage(state)
+    override fun checkCloseOnState(state: TableauxState) = state.getCloseMessage()
 
     /**
      * Parses a JSON state representation into a TableauxState object

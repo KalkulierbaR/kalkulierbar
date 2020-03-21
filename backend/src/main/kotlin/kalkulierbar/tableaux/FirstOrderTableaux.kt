@@ -136,7 +136,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
 
         // Close branch
         leaf.closeRef = closeNodeID
-        setNodeClosed(state, leaf)
+        state.setNodeClosed(leaf)
 
         // Record close move for backtracking purposes
         if (state.backtracking) {
@@ -243,7 +243,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         return freshState
     }
 
-    override fun checkCloseOnState(state: FoTableauxState) = getCloseMessage(state)
+    override fun checkCloseOnState(state: FoTableauxState) = state.getCloseMessage()
 
     /**
      * Apply a global variable instantiation in the proof tree
