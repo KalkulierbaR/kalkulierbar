@@ -44,7 +44,10 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({
                         <div class="second">
                             <h3>Close move</h3>
                             <img src="../../assets/gifs/prop_tableaux_close.gif" alt="" />
-                            <p>Close all leafs with complementary nodes in the tree path.</p>
+                            <p>
+                                Close a leaf with a complementary node on the path to the root.
+                                The proof is complete when all leafs are closed.
+                            </p>
                         </div>
                     </div>
                 }
