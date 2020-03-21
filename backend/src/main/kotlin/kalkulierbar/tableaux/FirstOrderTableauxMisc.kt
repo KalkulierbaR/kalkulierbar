@@ -122,7 +122,7 @@ class FoTableauxState(
         val clauseSetHash = clauseSet.toString()
         val optsHash = "$type|$regular|$backtracking|$usedBacktracking|$manualVarAssign"
         val variousHash = "$formula|$expansionCounter"
-        val historyHash = moveHistory.map { "($it)" }.joinToString(",")
+        val historyHash = moveHistory.joinToString(",")
         return "fotableaux|$variousHash|$optsHash|$clauseSetHash|[$nodesHash]|[$historyHash]"
     }
 }

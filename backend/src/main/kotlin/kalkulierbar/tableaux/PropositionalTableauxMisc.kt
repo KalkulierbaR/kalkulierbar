@@ -78,7 +78,7 @@ class TableauxState(
         val nodesHash = nodes.joinToString("|") { it.getHash() }
         val clauseSetHash = clauseSet.toString()
         val optsHash = "$type|$regular|$backtracking|$usedBacktracking"
-        val historyHash = moveHistory.map { "($it)" }.joinToString(",")
+        val historyHash = moveHistory.joinToString(",")
         return "tableauxstate|$optsHash|$clauseSetHash|[$nodesHash]|[$historyHash]"
     }
 }
