@@ -75,7 +75,7 @@ export const propExample: PropTableauxState = {
         },
     ],
     usedBacktracking: false,
-    seal: "D2A6057DD55D161AA29B0E00D0E9B7CC750EEA2C6372A7A96740123385CE50CE",
+    seal: "8730EA61E695FB8046FEB1EBEDB3984DC8B06F66185EB334BD20208C24E77F45",
 };
 
 export const foExample: FOTableauxState = {
