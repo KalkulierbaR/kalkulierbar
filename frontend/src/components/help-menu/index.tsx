@@ -40,7 +40,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             <h3>Expand move</h3>
                             <video autoPlay loop alt="Tableaux Expand Move">
                                 <source
-                                    src="../../assets/gifs/prop_tableaux_expand.mp4"
+                                    src="../../assets/videos/prop_tableaux_expand.mp4"
                                     type="video/mp4"
                                 />
                             </video>
@@ -53,7 +53,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             <h3>Close move</h3>
                             <video autoPlay loop alt="Tableaux Close Move">
                                 <source
-                                    src="../../assets/gifs/prop_tableaux_close.mp4"
+                                    src="../../assets/videos/prop_tableaux_close.mp4"
                                     type="video/mp4"
                                 />
                             </video>
