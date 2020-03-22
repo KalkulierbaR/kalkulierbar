@@ -128,8 +128,3 @@ export interface FOTableauxParams {
     backtracking: boolean;
     manualVarAssign: boolean;
 }
-
-export interface ClosableNodePair {
-    leafId: number;
-    predId: number;
-}

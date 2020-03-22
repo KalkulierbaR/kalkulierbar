@@ -204,7 +204,6 @@ export enum TutorialMode {
     None = 0,
     HighlightFAB = 1,
     HighlightCheck = 1 << 1,
-    HighlightTableauxClose = 1 << 2,
 
-    HighlightAll = HighlightCheck | HighlightFAB | HighlightTableauxClose,
+    HighlightAll = HighlightCheck | HighlightFAB,
 }

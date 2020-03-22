@@ -25,7 +25,6 @@ import {
     sendExtend,
     sendLemma,
     updateDragTransform,
-    findClosableNode,
 } from "../../../util/tableaux";
 import { foExample, propExample } from "./example";
 import * as style from "./style.scss";
@@ -54,17 +53,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         state = calculus === Calculus.propTableaux ? propExample : foExample;
         onChange(calculus, state);
     }
-
-    const lastMove = state.moveHistory.length
-        ? state.moveHistory[state.moveHistory.length - 1]
-        : undefined;
-
-    const closableNodes =
-        lastMove &&
-        lastMove.type === "EXPAND" &&
-        instanceOfPropTabState(state, calculus)
-            ? findClosableNode(state, state.nodes.length - 1)
-            : undefined;
 
     const [dragTransforms, setDragTransforms] = useState<
         Record<number, DragTransform>
@@ -317,7 +305,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     lemmaNodesSelectable={lemmaMode}
                     dragTransforms={dragTransforms}
                     onDrag={onDrag}
-                    closableNodes={closableNodes}
                 />
             </div>
 
