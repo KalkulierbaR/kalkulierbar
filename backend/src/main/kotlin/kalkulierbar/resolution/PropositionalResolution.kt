@@ -74,7 +74,7 @@ class PropositionalResolution : GenericResolution<String>,
      */
     @Suppress("ThrowsCount")
     fun hyper(
-        state: GenericResolutionState<String>,
+        state: ResolutionState,
         mainID: Int,
         atomMap: Map<Int, Pair<Int, Int>>
     ) {
