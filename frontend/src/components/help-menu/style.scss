@@ -4,12 +4,39 @@
     right: 16px;
 }
 
-.first-space {
-    margin-right: 60px;
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @media (min-width: 870px) {
+        display: grid;
+        grid-template-columns: 400px 400px;
+        grid-auto-flow: row;
+        gap: 16px;
+    }
+}
+
+.child {
+    max-width: 400px;
+    margin-bottom: 16px;
+
+    @media (min-width: 870px) {
+        margin: 0;
+    }
+
+    video {
+        width: 100%;
+        height: auto;
+    }
 }
 
 @media (min-width: 700px) {
     .help-menu {
         right: 32px;
     }
+}
+
+.dialog {
+    min-height: 690px;
 }

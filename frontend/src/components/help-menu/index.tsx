@@ -33,10 +33,11 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 open={showDialog}
                 label="Tutorial"
                 onClose={() => setShowDialog(false)}
+                class={style.dialog}
             >
                 {TableauxCalculus.includes(calculus) && (
-                    <div class="flex-container">
-                        <div class={`first  ${style.firstSpace}`}>
+                    <div class={style.container}>
+                        <div class={style.child}>
                             <h3>Expand move</h3>
                             <video autoPlay loop alt="Tableaux Expand Move">
                                 <source
@@ -49,7 +50,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 clause.
                             </p>
                         </div>
-                        <div class="second">
+                        <div class={style.child}>
                             <h3>Close move</h3>
                             <video autoPlay loop alt="Tableaux Close Move">
                                 <source
