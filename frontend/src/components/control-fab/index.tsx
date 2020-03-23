@@ -1,10 +1,10 @@
-import {h} from "preact";
-import {useState} from "preact/hooks";
+import { h } from "preact";
+import { useState } from "preact/hooks";
 import FAB from "../fab";
 import CloseIcon from "../icons/close";
 
-import {AppStateActionType, TutorialMode} from "../../types/app";
-import {useAppState} from "../../util/app-state";
+import { AppStateActionType, TutorialMode } from "../../types/app";
+import { useAppState } from "../../util/app-state";
 import MoreIcon from "../icons/more";
 import Tutorial from "../tutorial";
 import * as style from "./style.scss";
@@ -73,11 +73,11 @@ const ControlFAB: preact.FunctionalComponent<Props> = ({
 
     const handleClick = () => {
         setShow(!show);
-        if (tutorialMode === TutorialMode.None) {
+        if ((tutorialMode & TutorialMode.HighlightFAB) === 0) {
             return;
         }
         dispatch({
-            type: AppStateActionType.SET_TUTORIAL_MODE,
+            type: tutorialMode ^ TutorialMode.HighlightFAB,
             value: TutorialMode.HighlightCheck,
         });
     };
@@ -89,21 +89,21 @@ const ControlFAB: preact.FunctionalComponent<Props> = ({
             </Menu>
             <FAB icon={icon} label="Open Menu" onClick={handleClick} />
             {smallScreen &&
-                tutorialMode === TutorialMode.HighlightFAB &&
+                (tutorialMode & TutorialMode.HighlightFAB) !== 0 && (
                     <Tutorial
                         text="Try applying a rule"
                         right="125px"
                         bottom="0px"
                     />
-                }
+                )}
             {couldShowCheckCloseHint &&
-                tutorialMode === TutorialMode.HighlightCheck &&
+                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
                     <Tutorial
                         text="Check if proof is complete"
                         right={smallScreen ? "125px" : "205px"}
                         bottom={smallScreen ? "0px" : "115px"}
                     />
-                }
+                )}
         </div>
     );
 };

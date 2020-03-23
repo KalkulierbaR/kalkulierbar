@@ -10,7 +10,7 @@ import {
     TutorialMode,
 } from "../../../types/app";
 import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
-import {checkClose} from "../../../util/api";
+import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
 import ExploreIcon from "../../icons/explore";
@@ -95,10 +95,11 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
             >
-                {selectedNodeId === undefined ?
+                {selectedNodeId === undefined ? (
                     <Fragment>
                         {resetView}
-                        {state.nodes.filter((node) => !node.isClosed).length > 0 &&
+                        {state.nodes.filter((node) => !node.isClosed).length >
+                            0 && (
                             <FAB
                                 icon={<ExploreIcon />}
                                 label="Next Leaf"
@@ -117,7 +118,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                     );
                                 }}
                             />
-                        }
+                        )}
                         <FAB
                             icon={<CheckCircleIcon />}
                             label="Check"
@@ -126,11 +127,14 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             showIconAtEnd={true}
                             onClick={() => {
                                 if (
-                                    tutorialMode
+                                    tutorialMode & TutorialMode.HighlightCheck
                                 ) {
                                     dispatch({
-                                        type: AppStateActionType.SET_TUTORIAL_MODE,
-                                        value: TutorialMode.None,
+                                        type:
+                                            AppStateActionType.SET_TUTORIAL_MODE,
+                                        value:
+                                            tutorialMode ^
+                                            TutorialMode.HighlightCheck,
                                     });
                                 }
                                 checkClose(
@@ -142,7 +146,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 );
                             }}
                         />
-                        {state.backtracking && state.moveHistory.length > 0 &&
+                        {state.backtracking && state.moveHistory.length > 0 && (
                             <FAB
                                 icon={<UndoIcon />}
                                 label="Undo"
@@ -172,9 +176,9 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                     );
                                 }}
                             />
-                        }
+                        )}
                     </Fragment>
-                :
+                ) : (
                     <Fragment>
                         {resetView}
                         <FAB
@@ -185,7 +189,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             showIconAtEnd={true}
                             onClick={expandCallback}
                         />
-                        {lemmaMode ?
+                        {lemmaMode ? (
                             <FAB
                                 icon={<LemmaIcon fill="#000" />}
                                 label="Lemma"
@@ -195,20 +199,23 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 onClick={lemmaCallback}
                                 active={true}
                             />
-                        :
-                            state!.nodes[selectedNodeId].children.length === 0 &&
-                            state!.nodes.filter((node) => node.isClosed).length > 0 &&
-                            <FAB
-                                icon={<LemmaIcon />}
-                                label="Lemma"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={lemmaCallback}
-                            />
-                        }
+                        ) : (
+                            state!.nodes[selectedNodeId].children.length ===
+                                0 &&
+                            state!.nodes.filter((node) => node.isClosed)
+                                .length > 0 && (
+                                <FAB
+                                    icon={<LemmaIcon />}
+                                    label="Lemma"
+                                    mini={true}
+                                    extended={true}
+                                    showIconAtEnd={true}
+                                    onClick={lemmaCallback}
+                                />
+                            )
+                        )}
                     </Fragment>
-                }
+                )}
             </ControlFAB>
         </Fragment>
     );

@@ -90,7 +90,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
             >
-                {selectedClauseId !== undefined &&
+                {selectedClauseId !== undefined && (
                     <Fragment>
                         <FAB
                             mini={true}
@@ -129,7 +129,8 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                 setSelectedClauses(undefined);
                             }}
                         />
-                        {state.clauseSet.clauses[selectedClauseId].atoms.length > 1 &&
+                        {state.clauseSet.clauses[selectedClauseId].atoms
+                            .length > 1 && (
                             <FAB
                                 mini={true}
                                 extended={true}
@@ -158,10 +159,10 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                     setSelectedClauses(undefined);
                                 }}
                             />
-                        }
+                        )}
                     </Fragment>
-                }
-                {state.hiddenClauses.clauses.length > 0 &&
+                )}
+                {state.hiddenClauses.clauses.length > 0 && (
                     <FAB
                         mini={true}
                         extended={true}
@@ -173,7 +174,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             setSelectedClauses(undefined);
                         }}
                     />
-                }
+                )}
                 <FAB
                     mini={true}
                     extended={true}
@@ -189,24 +190,19 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     extended={true}
                     showIconAtEnd={true}
                     onClick={() => {
-                        if (tutorialMode) {
+                        if (tutorialMode & TutorialMode.HighlightCheck) {
                             dispatch({
                                 type: AppStateActionType.SET_TUTORIAL_MODE,
-                                value: TutorialMode.None,
+                                value:
+                                    tutorialMode ^ TutorialMode.HighlightCheck,
                             });
                         }
-                        checkClose(
-                            server,
-                            onError,
-                            onSuccess,
-                            calculus,
-                            state
-                        );
+                        checkClose(server, onError, onSuccess, calculus, state);
                     }}
                 />
             </ControlFAB>
 
-            {hyperRes && hyperRes.atomMap &&
+            {hyperRes && hyperRes.atomMap && (
                 <FAB
                     class={style.hyperFab}
                     label="Send"
@@ -227,7 +223,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         setSelectedClauses(undefined);
                     }}
                 />
-            }
+            )}
         </Fragment>
     );
 };
