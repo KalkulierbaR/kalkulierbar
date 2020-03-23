@@ -4,11 +4,7 @@ import FAB from "../../../components/fab";
 import AddIcon from "../../../components/icons/add";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
-import {
-    AppStateActionType,
-    TableauxCalculusType,
-    TutorialMode,
-} from "../../../types/app";
+import { TableauxCalculusType, TutorialMode } from "../../../types/app";
 import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
@@ -16,6 +12,10 @@ import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
 import ExploreIcon from "../../icons/explore";
 import LemmaIcon from "../../icons/lemma";
 import UndoIcon from "../../icons/undo";
+import {
+    getHighlightCheck,
+    disableTutorial,
+} from "../../../util/tutorial-mode";
 
 interface Props {
     /**
@@ -126,16 +126,12 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                if (
-                                    tutorialMode & TutorialMode.HighlightCheck
-                                ) {
-                                    dispatch({
-                                        type:
-                                            AppStateActionType.SET_TUTORIAL_MODE,
-                                        value:
-                                            tutorialMode ^
-                                            TutorialMode.HighlightCheck,
-                                    });
+                                if (getHighlightCheck(tutorialMode)) {
+                                    disableTutorial(
+                                        dispatch,
+                                        tutorialMode,
+                                        TutorialMode.HighlightCheck,
+                                    );
                                 }
                                 checkClose(
                                     server,

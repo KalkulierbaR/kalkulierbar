@@ -4,11 +4,7 @@ import FAB from "../../../components/fab";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import * as style from "../../../routes/resolution/view/style.scss";
-import {
-    AppStateActionType,
-    ResolutionCalculusType,
-    TutorialMode,
-} from "../../../types/app";
+import { ResolutionCalculusType, TutorialMode } from "../../../types/app";
 import { SelectedClauses } from "../../../types/clause";
 import {
     FOResolutionState,
@@ -29,6 +25,10 @@ import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
+import {
+    getHighlightCheck,
+    disableTutorial,
+} from "../../../util/tutorial-mode";
 
 interface Props {
     /**
@@ -190,12 +190,12 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     extended={true}
                     showIconAtEnd={true}
                     onClick={() => {
-                        if (tutorialMode & TutorialMode.HighlightCheck) {
-                            dispatch({
-                                type: AppStateActionType.SET_TUTORIAL_MODE,
-                                value:
-                                    tutorialMode ^ TutorialMode.HighlightCheck,
-                            });
+                        if (getHighlightCheck(tutorialMode)) {
+                            disableTutorial(
+                                dispatch,
+                                tutorialMode,
+                                TutorialMode.HighlightCheck,
+                            );
                         }
                         checkClose(server, onError, onSuccess, calculus, state);
                     }}

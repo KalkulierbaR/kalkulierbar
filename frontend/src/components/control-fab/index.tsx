@@ -3,11 +3,12 @@ import { useState } from "preact/hooks";
 import FAB from "../fab";
 import CloseIcon from "../icons/close";
 
-import { AppStateActionType, TutorialMode } from "../../types/app";
+import { TutorialMode } from "../../types/app";
 import { useAppState } from "../../util/app-state";
 import MoreIcon from "../icons/more";
 import Tutorial from "../tutorial";
 import * as style from "./style.scss";
+import { getHighlightFAB, disableTutorial } from "../../util/tutorial-mode";
 
 interface Props {
     /**
@@ -73,13 +74,10 @@ const ControlFAB: preact.FunctionalComponent<Props> = ({
 
     const handleClick = () => {
         setShow(!show);
-        if ((tutorialMode & TutorialMode.HighlightFAB) === 0) {
+        if (!getHighlightFAB(tutorialMode)) {
             return;
         }
-        dispatch({
-            type: tutorialMode ^ TutorialMode.HighlightFAB,
-            value: TutorialMode.HighlightCheck,
-        });
+        disableTutorial(dispatch, tutorialMode, TutorialMode.HighlightFAB);
     };
 
     return (
