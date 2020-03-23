@@ -36,6 +36,7 @@ import {
     sendResolveCustom,
     sendResolveUnify,
     getInitialCandidateClauses,
+    addClause,
 } from "../../../util/resolution";
 import { foExample, propExample } from "./example";
 
@@ -109,9 +110,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     }, [setCandidateClauses, selectedClauseId]);
 
     useEffect(() => {
-        setCandidateClauses(
-            getInitialCandidateClauses(state!.clauseSet, calculus),
-        );
+        if (state!.newestNode === -1) return;
+        addClause(state!.clauseSet, candidateClauses, state!.newestNode);
+        setCandidateClauses([...candidateClauses]);
     }, [state.clauseSet]);
 
     /**

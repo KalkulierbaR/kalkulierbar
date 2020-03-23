@@ -414,6 +414,32 @@ export const recalculateCandidateClauses = (
     return newCandidateClauses;
 };
 
+export const addClause = (
+    clauseSet: ClauseSet<string | FOLiteral>,
+    clauses: CandidateClause[],
+    newClauseId: number,
+) => {
+    const newClause = clauseSet.clauses[newClauseId];
+
+    let newIndex: number = newClauseId;
+
+    for (let i = 0; i < clauses.length; i++) {
+        const c = clauses[i];
+        if (c.index === newClauseId) {
+            newIndex = i;
+        }
+        if (c.index >= newClauseId) {
+            c.index++;
+        }
+    }
+
+    clauses.splice(newIndex, 0, {
+        clause: newClause as any,
+        index: newClauseId,
+        candidateAtomMap: new Map(),
+    });
+};
+
 export const containsEmptyClause = (cs: ClauseSet<string | FOLiteral>) => {
     return cs.clauses.filter((c) => c.atoms.length === 0).length > 0;
 };
