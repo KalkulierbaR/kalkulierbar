@@ -25,8 +25,8 @@ interface Props {
  */
 const onDelete = (e: Event, index: number) => {
     e.stopImmediatePropagation();
-    const { server, onError, adminKey, setConfig } = useAppState();
-    delExample(server, index, adminKey, setConfig, onError);
+    const { server, onError, adminKey, setConfig, onSuccess } = useAppState();
+    delExample(server, index, adminKey, setConfig, onError, onSuccess);
 };
 
 /**
@@ -100,20 +100,17 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
             {config.examples.map((example, index) =>
                 example.calculus === calculus ? (
                     <div class={`card  ${style.example}`} onClick={() => useExample(example)}>
-                        {/* ToDo: name and description anzeigen lassen
-                        <p class="">{example.name}</p>
-                        <p class={style.description}>{example.description}</p>*/
-                        // Todo: Vorschau der Formel einheitlicher anzeigen
-                        }
-                        <h3 class="">{decodeURIComponent(example.formula).split(/\n/).join(" ; ")}</h3>
-                        {isAdmin ? (
+                        {example.name ? <h3 class="">{example.name}</h3> : undefined}
+                        {example.description ? <p class={style.description}>{example.description}</p> : undefined}
+                        <p class="">{decodeURIComponent(example.formula).split(/\n/).join(" ; ")}</p>
+                        {isAdmin &&
                             <Fragment>
                                 <p class={style.params} >{example.params}</p>
                                 <Btn onClick={(e) => onDelete(e, index)}>
                                     Delete
                                 </Btn>
                             </Fragment>
-                        ) : undefined}
+                        }
                     </div>
                 ) : undefined,
             )}

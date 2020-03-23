@@ -221,6 +221,7 @@ export const addExample = async (
     adminKey: string,
     changeConfig: (cfg: Config) => void,
     onError: (msg: string) => void,
+    onSuccess: (msg: string) => void,
 ) => {
     const url = `${server}/admin/addExample`;
     const keccak = new Keccak(256);
@@ -245,8 +246,8 @@ export const addExample = async (
             onError(await res.text());
             return;
         }
-
         getConfig(server, changeConfig, onError);
+        onSuccess("Example added");
     } catch (e) {
         onError((e as Error).message);
     }
@@ -258,6 +259,7 @@ export const delExample = async (
     adminKey: string,
     changeConfig: (cfg: Config) => void,
     onError: (msg: string) => void,
+    onSuccess: (msg: string) => void,
 ) => {
     const url = `${server}/admin/delExample`;
     const keccak = new Keccak(256);
@@ -283,6 +285,7 @@ export const delExample = async (
             return;
         }
         getConfig(server, changeConfig, onError);
+        onSuccess("Example deleted");
     } catch (e) {
         onError((e as Error).message);
     }

@@ -381,7 +381,7 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
 
     return (isAdmin ?
                 <div
-                    onclick={
+                    onClick={
                         () => dispatch({
                             type: AppStateActionType.SET_ADMIN,
                             value: false,

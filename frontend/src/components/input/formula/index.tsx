@@ -13,6 +13,8 @@ import { stringArrayToStringMap } from "../../../util/array-to-map";
 import Btn from "../../btn";
 import OptionList from "../option-list";
 import * as style from "./style.scss";
+import Dialog from "../../dialog";
+import TextInput from "../text";
 
 declare module "preact" {
     namespace JSX {
@@ -57,6 +59,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     const {
         server,
         onError,
+        onSuccess,
         onChange,
         savedFormulas,
         dispatch,
@@ -66,15 +69,19 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     } = useAppState();
 
     const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
-    const [createExample, setCreateExample] = useState(false);
+    const [exampleName, setExampleName] = useState("");
+    const [exampleDescription, setExampleDescription] = useState("");
+    const [showCreateExampleDialog, setShowCreateExampleDialog] = useState(false);
 
     /**
      * Handle the Submit event of the form
-     * @param {Event} event - The submit event
+     * @param {Event} event - The submit event (if none is provided we add an example)
      * @returns {void}
      */
-    const onSubmit = async (event: Event) => {
-        event.preventDefault();
+    const onSubmit = async (event?: Event) => {
+        if(event) {
+            event.preventDefault();
+        }
         const url = `${server}/${calculus}/parse`;
 
         try {
@@ -91,15 +98,12 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 onError(await response.text());
             } else {
                 const parsed = await response.json();
-                if (!createExample) {
-                    onChange(calculus, parsed);
-                    route(`/${calculus}/view`);
-                } else {
+                if (!event) {
                     addExample(
                         server,
                         {
-                            name: "name",
-                            description: "descr",
+                            name: exampleName,
+                            description: exampleDescription,
                             calculus,
                             formula: normalizeInput(savedFormulas[calculus]),
                             params: (params ? JSON.stringify(params) : ""),
@@ -107,17 +111,17 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         adminKey,
                         setConfig,
                         onError,
+                        onSuccess,
                     );
-                    setCreateExample(false);
+                    setShowCreateExampleDialog(false);
+                } else {
+                    onChange(calculus, parsed);
+                    route(`/${calculus}/view`);
                 }
             }
         } catch (e) {
             onError((e as Error).message);
         }
-    };
-
-    const onSubmitExample = () => {
-        setCreateExample(true);
     };
 
     const textAreaRef = createRef<HTMLTextAreaElement>();
@@ -227,16 +231,44 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 </Btn>
                 {isAdmin &&
                     <Btn
-                        type="submit"
-                        name="action"
-                        value="addExample"
-                        onClick={onSubmitExample}
+                        type="button"
+                        onClick={() => setShowCreateExampleDialog(true)}
                         disabled={textareaValue.length === 0}
                     >
                         Add example
                     </Btn>
                 }
             </form>
+            {isAdmin &&
+                <Dialog
+                    open={showCreateExampleDialog}
+                    label="Add example"
+                    onClose={() => setShowCreateExampleDialog(false)}
+                >
+                    <p>The name and description are optional. The parameters will be saved how you currently have set them.</p>
+                    <TextInput
+                        label="Name"
+                        onChange={(value) => setExampleName(value)}
+                        autoComplete={true}
+                        required={true}
+                    />
+                    <br/>
+                    <TextInput
+                        label="Description"
+                        onChange={(value) => setExampleDescription(value)}
+                        autoComplete={true}
+                        required={true}
+                    />
+                    <br/>
+                    <Btn
+                        type="button"
+                        onClick={() => onSubmit()}
+                        disabled={textareaValue.length === 0}
+                    >
+                        Save like this
+                    </Btn>
+                </Dialog>
+            }
         </div>
     );
 };
