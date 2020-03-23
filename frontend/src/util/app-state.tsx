@@ -79,6 +79,13 @@ const reducer: Reducer<AppState, AppStateAction> = (
         case AppStateActionType.SET_ADMIN_KEY:
             return { ...state, adminKey: action.value };
         case AppStateActionType.SET_ADMIN:
+            if(!action.value){
+                return {
+                    ...state,
+                    isAdmin: action.value,
+                    adminKey: "",
+                };
+            }
             return { ...state, isAdmin: action.value };
     }
 };

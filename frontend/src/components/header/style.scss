@@ -266,11 +266,10 @@ $hamburgerBreakpoint: 700px;
     }
 }
 
-.theme-container {
+.button-container {
     display: flex;
     align-items: center;
-    padding: 10px 0 10px 0;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     cursor: pointer;
 
     @media (max-width: $hamburgerBreakpoint) {
@@ -293,13 +292,17 @@ $hamburgerBreakpoint: 700px;
     pointer-events: none;
     transition: background-color 0.2s ease;
     @media (max-width: $hamburgerBreakpoint) {
-        .server-input-wrapper:focus-within & {
+        .settings-input-wrapper:focus-within & {
             opacity: 0.5;
         }
     }
 }
 
-.server-input {
+.settings-input-wrapper{
+    margin-bottom: 20px;
+}
+
+.settings-input {
     overflow-scrolling: unset;
     transition: all 0.2s ease;
 

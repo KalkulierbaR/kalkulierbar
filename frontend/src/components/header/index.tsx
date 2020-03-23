@@ -312,10 +312,10 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     );
 
     return (
-        <div class={style.serverInputWrapper}>
+        <div class={style.settingsInputWrapper}>
             <div class={style.overlay} />
             <TextInput
-                class={style.serverInput}
+                class={style.settingsInput}
                 label={showLabel ? "Server" : undefined}
                 onChange={setServer}
                 value={server}
@@ -352,23 +352,16 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
 
     const onSubmit = useCallback(() => {
         dispatchAdminKey();
-        if(!isAdmin){
-            checkCredentials(
-                server,
-                newAdminKey,
-                (userIsAdmin) =>
-                    dispatch({
-                        type: AppStateActionType.SET_ADMIN,
-                        value: userIsAdmin,
-                    }),
-                onError,
-            );
-        }else{
-            dispatch({
-                type: AppStateActionType.SET_ADMIN,
-                value: false,
-            });
-        }
+        checkCredentials(
+            server,
+            newAdminKey,
+            (userIsAdmin) =>
+                dispatch({
+                    type: AppStateActionType.SET_ADMIN,
+                    value: userIsAdmin,
+                }),
+            onError,
+        );
         if (document.activeElement) {
             (document.activeElement as HTMLElement).blur();
         }
@@ -386,27 +379,46 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
         [dispatchAdminKey],
     );
 
-    return (
-        <div class={style.serverInputWrapper}>
-            <div class={style.overlay} />
-            <TextInput
-                class={style.serverInput}
-                label={showLabel ? "Admin Key" : undefined}
-                onChange={setAdminKey}
-                value={adminKey}
-                type="url"
-                autoComplete={true}
-                onKeyDown={handleEnter}
-                submitButton={
-                    <FAB
-                        icon={isAdmin ? <LogOutIcon /> : <LogInIcon/>}
-                        label="Save Admin Key"
-                        mini={true}
-                        onClick={onSubmit}
+    return (isAdmin ?
+                <div
+                    onclick={
+                        () => dispatch({
+                            type: AppStateActionType.SET_ADMIN,
+                            value: false,
+                        })
+                    }
+                    class={style.buttonContainer}
+                >
+                    <Btn
+                        class={style.themeSwitcher}
+                        title="Logout"
+                        id="logout-button"
+                    >
+                        <LogOutIcon/>
+                    </Btn>
+                    <label for="logout-button">Logout</label>
+                </div>
+            :
+                <div class={style.settingsInputWrapper}>
+                    <div class={style.overlay}/>
+                    <TextInput
+                        class={style.settingsInput}
+                        label={showLabel ? "Admin Login" : undefined}
+                        onChange={setAdminKey}
+                        value={adminKey}
+                        type="password"
+                        autoComplete={true}
+                        onKeyDown={handleEnter}
+                        submitButton={
+                            <FAB
+                                icon={<LogInIcon/>}
+                                label="Login"
+                                mini={true}
+                                onClick={onSubmit}
+                            />
+                        }
                     />
-                }
-            />
-        </div>
+                </div>
     );
 };
 
@@ -441,7 +453,7 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
     };
 
     return (
-        <div onClick={onClick} class={style.themeContainer}>
+        <div onClick={onClick} class={style.buttonContainer}>
             <Btn
                 class={style.themeSwitcher}
                 title="Change color theme"

@@ -4,7 +4,7 @@ import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
 import { AppStateActionType, Calculus } from "../types/app";
-import { getConfig } from "../util/api";
+import {checkCredentials, getConfig} from "../util/api";
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
 import Header from "./header";
@@ -53,6 +53,7 @@ const App: preact.FunctionalComponent = () => {
         onError,
         removeNotification,
         setConfig,
+        adminKey,
     } = useAppState();
     const saveScreenSize = (smallScreen: boolean) =>
         dispatch({
@@ -60,6 +61,7 @@ const App: preact.FunctionalComponent = () => {
             smallScreen,
         });
     const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
+
     /**
      * Execute actions based upon if the route changed
      * @param {RouterOnChangeArgs} args - The arguments of the current route change
@@ -74,6 +76,18 @@ const App: preact.FunctionalComponent = () => {
         checkServer(server, onError);
 
         getConfig(server, setConfig, onError);
+
+        if(adminKey) {
+            checkCredentials(
+                server,
+                adminKey,
+                (userIsAdmin) =>
+                    dispatch({
+                        type: AppStateActionType.SET_ADMIN,
+                        value: userIsAdmin,
+                    }),
+            );
+        }
 
         const cf = new Confetti({ speed: 10, maxCount: 150 });
 

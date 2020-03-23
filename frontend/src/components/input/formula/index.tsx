@@ -208,7 +208,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     autocapitalize="off"
                     autocorrect="off"
                 />
-                {FOCalculus.includes(calculus) ? (
+                {FOCalculus.includes(calculus) &&
                     <OptionList
                         options={suggestionMap}
                         selectOptionCallback={selectSuggestion}
@@ -216,9 +216,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                             suggestionMap.size > 0 ? undefined : style.hide
                         }
                     />
-                ) : (
-                    undefined
-                )}
+                }
                 <Btn
                     type="submit"
                     name="action"
@@ -227,7 +225,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 >
                     Start proof
                 </Btn>
-                {isAdmin ? (
+                {isAdmin &&
                     <Btn
                         type="submit"
                         name="action"
@@ -235,11 +233,9 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         onClick={onSubmitExample}
                         disabled={textareaValue.length === 0}
                     >
-                        add Example
+                        Add example
                     </Btn>
-                ) : (
-                    undefined
-                )}
+                }
             </form>
         </div>
     );

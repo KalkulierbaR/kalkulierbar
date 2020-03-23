@@ -109,7 +109,6 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
     }
 };
 
-// ToDo: JSDoc getConfig
 export const getConfig = async (
     server: string,
     changeConfig: (cfg: Config) => void,
@@ -135,12 +134,11 @@ export const getConfig = async (
     }
 };
 
-// ToDo: JSDoc checkCredentials
 export const checkCredentials = async (
     server: string,
     adminKey: string,
     setAdmin: (isAdmin: boolean) => void,
-    onError: (msg: string) => void,
+    onError?: (msg: string) => void,
 ) => {
     const url = `${server}/admin/checkCredentials`;
     const keccak = new Keccak(256);
@@ -158,7 +156,9 @@ export const checkCredentials = async (
             body: `mac=${mac}`,
         });
         if (res.status !== 200) {
-            onError(await res.text());
+            if(onError){
+                onError(await res.text());
+            }
             setAdmin(false);
         } else {
             const parsed = await res.json();
@@ -170,11 +170,12 @@ export const checkCredentials = async (
             }
         }
     } catch (e) {
-        onError((e as Error).message);
+        if(onError) {
+            onError((e as Error).message);
+        }
     }
 };
 
-// ToDo: JSDoc setCalculusState
 export const setCalculusState = async (
     server: string,
     calculus: CalculusType,
@@ -214,7 +215,6 @@ export const setCalculusState = async (
     }
 };
 
-// ToDo: JSDoc addExample
 export const addExample = async (
     server: string,
     example: Example,
@@ -252,7 +252,6 @@ export const addExample = async (
     }
 };
 
-// ToDo: JSDoc delExample
 export const delExample = async (
     server: string,
     exampleID: number,
