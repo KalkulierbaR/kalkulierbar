@@ -103,24 +103,27 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                     >
                         <circle class={style.circle} cx="0" cy="0" r={radius} />
                         {data.map(({ x, y }, index) => {
+                            const clause = clauses[index];
                             const disabled =
                                 [
                                     VisualHelp.highlight,
                                     VisualHelp.rearrange,
                                 ].includes(visualHelp) &&
-                                selectedClauseId !== index &&
-                                !selectable.includes(index);
+                                selectedClauseId !== clause.index &&
+                                !selectable.includes(clause.index);
                             return (
                                 <ResolutionNode
                                     key={index}
                                     disabled={disabled}
-                                    selected={selectedClauseId === index}
+                                    selected={selectedClauseId === clause.index}
                                     coordinates={[x, y]}
-                                    clause={clauses[index]}
+                                    clause={clause}
                                     indexInCircle={index}
                                     selectCallback={selectClauseCallback}
-                                    isNew={index === newestNode}
-                                    semiSelected={semiSelected.includes(index)}
+                                    isNew={clause.index === newestNode}
+                                    semiSelected={semiSelected.includes(
+                                        clause.index,
+                                    )}
                                     zoomFactor={transform.k}
                                     onDrop={onDrop}
                                 />

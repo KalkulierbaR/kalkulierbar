@@ -289,6 +289,33 @@ export const getSelectable = (
         .map((c) => c.index);
 };
 
+export const getInitialCandidateClauses = (
+    clauseSet: ClauseSet<string | FOLiteral>,
+    calculus: ResolutionCalculusType,
+) => {
+    const newCandidateClauses: CandidateClause[] = [];
+    // Create default candidates
+    if (instanceOfPropClauseSet(clauseSet, calculus)) {
+        clauseSet.clauses.forEach((clause, clauseIndex) => {
+            newCandidateClauses[clauseIndex] = {
+                clause,
+                candidateAtomMap: new Map<number, number[]>(),
+                index: clauseIndex,
+            };
+        });
+    } else if (instanceOfFOClauseSet(clauseSet, calculus)) {
+        clauseSet.clauses.forEach((clause, clauseIndex) => {
+            newCandidateClauses[clauseIndex] = {
+                clause,
+                candidateAtomMap: new Map<number, number[]>(),
+                index: clauseIndex,
+            };
+        });
+    }
+
+    return newCandidateClauses;
+};
+
 /**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
@@ -297,81 +324,85 @@ export const getSelectable = (
  * @param {number} selectedClauseId - Currently selected clause
  * @returns {CandidateClause[]} - The new candidate clauses
  */
-export const getCandidateClauses = (
+export const recalculateCandidateClauses = (
     clauseSet: ClauseSet<string | FOLiteral>,
+    clauses: CandidateClause[],
     visualHelp: VisualHelp,
     calculus: ResolutionCalculusType,
     selectedClauseId?: number,
 ) => {
     const newCandidateClauses: CandidateClause[] = [];
-
     if (selectedClauseId === undefined) {
         // Create default candidates
         if (instanceOfPropClauseSet(clauseSet, calculus)) {
-            clauseSet.clauses.forEach((clause, clauseIndex) => {
+            clauses.forEach((clause, clauseIndex) => {
                 newCandidateClauses[clauseIndex] = {
-                    clause,
+                    clause: clause.clause as Clause<string>,
                     candidateAtomMap: new Map<number, number[]>(),
-                    index: clauseIndex,
+                    index: clause.index,
                 };
             });
         } else if (instanceOfFOClauseSet(clauseSet, calculus)) {
-            clauseSet.clauses.forEach((clause, clauseIndex) => {
+            clauses.forEach((clause, clauseIndex) => {
                 newCandidateClauses[clauseIndex] = {
-                    clause,
+                    clause: clause.clause as Clause<FOLiteral>,
                     candidateAtomMap: new Map<number, number[]>(),
-                    index: clauseIndex,
+                    index: clause.index,
                 };
             });
         }
     } else {
         // Get selected clause
-        const selectedClause = clauseSet.clauses[selectedClauseId];
+        const selectedClause = clauseSet.clauses[selectedClauseId] as Clause<
+            string | FOLiteral
+        >;
 
         // Filter for possible resolve candidates
-        clauseSet.clauses.forEach((clause, clauseIndex) => {
+        clauses.forEach((clause, clauseIndex) => {
             const candidateAtomMap: Map<number, number[]> = new Map<
                 number,
                 number[]
             >();
             selectedClause.atoms.forEach((atom1, atom1Index) => {
                 const resolventAtomIndices: number[] = [];
-                clause.atoms.forEach((atom2, atom2Index) => {
-                    if (
-                        atom1.negated !== atom2.negated &&
-                        ((instanceOfPropAtom(atom1, calculus) &&
-                            instanceOfPropAtom(atom2, calculus) &&
-                            atom1.lit === atom2.lit) ||
-                            (instanceOfFOAtom(atom1, calculus) &&
-                                instanceOfFOAtom(atom2, calculus) &&
-                                atom1.lit.spelling === atom2.lit.spelling &&
-                                atom1.lit.arguments.length ===
-                                    atom2.lit.arguments.length))
-                    ) {
-                        resolventAtomIndices.push(atom2Index);
-                    }
-                });
+                (clause.clause as Clause<string | FOLiteral>).atoms.forEach(
+                    (atom2, atom2Index) => {
+                        if (
+                            atom1.negated !== atom2.negated &&
+                            ((instanceOfPropAtom(atom1, calculus) &&
+                                instanceOfPropAtom(atom2, calculus) &&
+                                atom1.lit === atom2.lit) ||
+                                (instanceOfFOAtom(atom1, calculus) &&
+                                    instanceOfFOAtom(atom2, calculus) &&
+                                    atom1.lit.spelling === atom2.lit.spelling &&
+                                    atom1.lit.arguments.length ===
+                                        atom2.lit.arguments.length))
+                        ) {
+                            resolventAtomIndices.push(atom2Index);
+                        }
+                    },
+                );
                 if (resolventAtomIndices.length > 0) {
                     candidateAtomMap.set(atom1Index, resolventAtomIndices);
                 }
             });
             if (
                 instanceOfPropClauseSet(clauseSet, calculus) &&
-                instanceOfPropClause(clause, calculus)
+                instanceOfPropClause(clause.clause, calculus)
             ) {
                 newCandidateClauses[clauseIndex] = {
-                    clause,
+                    clause: clause.clause,
                     candidateAtomMap,
-                    index: clauseIndex,
+                    index: clause.index,
                 };
             } else if (
                 instanceOfFOClauseSet(clauseSet, calculus) &&
-                instanceOfFOClause(clause, calculus)
+                instanceOfFOClause(clause.clause, calculus)
             ) {
                 newCandidateClauses[clauseIndex] = {
-                    clause,
+                    clause: clause.clause,
                     candidateAtomMap,
-                    index: clauseIndex,
+                    index: clause.index,
                 };
             }
         });

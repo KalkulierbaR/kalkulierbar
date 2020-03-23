@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import Dialog from "../../../components/dialog";
 import VarAssignList from "../../../components/input/var-assign-list";
 import ResolutionCircle from "../../../components/resolution/circle";
@@ -22,15 +22,11 @@ import {
 import { VarAssign } from "../../../types/tableaux";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
-import {
-    checkAtomsForVar,
-    getCandidateClause,
-    clauseToString,
-} from "../../../util/clause";
+import { checkAtomsForVar, getCandidateClause } from "../../../util/clause";
 import {
     addHyperSidePremiss,
     findHyperSidePremiss,
-    getCandidateClauses,
+    recalculateCandidateClauses,
     getFOHyperCandidates,
     getHyperClauseIds,
     getPropHyperCandidates,
@@ -39,6 +35,7 @@ import {
     sendResolve,
     sendResolveCustom,
     sendResolveUnify,
+    getInitialCandidateClauses,
 } from "../../../util/resolution";
 import { foExample, propExample } from "./example";
 
@@ -96,15 +93,26 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         selectedClauses !== undefined && selectedClauses.length === 2;
 
     const [candidateClauses, setCandidateClauses] = useState<CandidateClause[]>(
-        getCandidateClauses(
-            state.clauseSet,
-            state.visualHelp,
-            calculus,
-            selectedClauseId,
-        ),
+        getInitialCandidateClauses(state.clauseSet, calculus),
     );
 
-    console.log(candidateClauses.map((c) => clauseToString(c.clause)));
+    useEffect(() => {
+        setCandidateClauses(
+            recalculateCandidateClauses(
+                state!.clauseSet,
+                candidateClauses,
+                state!.visualHelp,
+                calculus,
+                selectedClauseId,
+            ),
+        );
+    }, [setCandidateClauses, selectedClauseId]);
+
+    useEffect(() => {
+        setCandidateClauses(
+            getInitialCandidateClauses(state!.clauseSet, calculus),
+        );
+    }, [state.clauseSet]);
 
     /**
      * Moves a clause to a new pos and shifts all other clauses
@@ -115,7 +123,6 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const shiftCandidateClause = (oldIndex: number, newIndex: number) => {
         if (oldIndex === newIndex) return;
 
-        console.log(oldIndex, newIndex);
         // Save clause to shift
         const c = candidateClauses[oldIndex];
         // Remove clause and shift accordingly
