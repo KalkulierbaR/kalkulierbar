@@ -6,6 +6,7 @@ import { circleLayout } from "../../../util/layout/resolution";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
+import { DragTransform } from "../../../types/ui";
 
 interface Props {
     /**
@@ -36,6 +37,7 @@ interface Props {
      * List of clause ids who should be highlighted, but not as primary
      */
     semiSelected: number[];
+    shiftCandidateClause: (oldIdx: number, newIdx: number) => void;
 }
 
 const ResolutionCircle: preact.FunctionalComponent<Props> = ({
@@ -46,11 +48,44 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     newestNode,
     semiSelected,
     selectable,
+    shiftCandidateClause,
 }) => {
     const { width, height, data, radius } = useMemo(
         () => circleLayout(clauses.map((c) => c.clause)),
         [clauses],
     );
+
+    /**
+     * Handler for the drag part of drag&drop
+     * @param {number} id - the index of the clause in the circle
+     * @param {DragTransform} dt - how much the clause is dragged
+     * @returns {void} - nothing
+     */
+    const onDrop = (id: number, dt: DragTransform) => {
+        const clause = data[id];
+
+        const { x: x0, y: y0 } = clause;
+
+        const x = x0 + dt.x;
+        const y = y0 + dt.y;
+
+        // Calculate distance to (0,0) (hypotenuse)
+        const distToCenter = Math.sqrt(x * x + y * y);
+
+        // Calculate the angle for the right half
+        // (we shift by Math.Pi / 2 because we did the same in the layout)
+        const alpha = Math.asin(y / distToCenter) + Math.PI / 2;
+
+        // Calculate the angle for the whole circle
+        const angle = x < 0 ? 2 * Math.PI - alpha : alpha;
+
+        // Calculate the new index and do modulo to prevent an index > length
+        const newIndex =
+            Math.round((angle / (2 * Math.PI)) * clauses.length) %
+            clauses.length;
+
+        shiftCandidateClause(id, newIndex);
+    };
 
     return (
         <div class={`card ${style.noPad}`}>
@@ -82,9 +117,12 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                                     selected={selectedClauseId === index}
                                     coordinates={[x, y]}
                                     clause={clauses[index]}
+                                    indexInCircle={index}
                                     selectCallback={selectClauseCallback}
                                     isNew={index === newestNode}
                                     semiSelected={semiSelected.includes(index)}
+                                    zoomFactor={transform.k}
+                                    onDrop={onDrop}
                                 />
                             );
                         })}
