@@ -36,7 +36,8 @@
         right: 32px;
     }
 }
-
-.dialog {
-    min-height: 690px;
+@media (min-height: 690px) {
+    .dialog {
+        min-height: 690px;
+    }
 }

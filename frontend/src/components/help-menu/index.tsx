@@ -2,7 +2,6 @@ import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import { CalculusType, TableauxCalculus, TutorialMode } from "../../types/app";
 import { useAppState } from "../../util/app-state";
-import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";
 import InfoIcon from "../icons/info";
@@ -33,13 +32,14 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 open={showDialog}
                 label="Tutorial"
                 onClose={() => setShowDialog(false)}
+                onConfirm={() => setShowDialog(false)}
                 class={style.dialog}
             >
                 {TableauxCalculus.includes(calculus) && (
                     <div class={style.container}>
                         <div class={style.child}>
                             <h3>Expand move</h3>
-                            <video autoPlay loop alt="Tableaux Expand Move">
+                            <video autoPlay={true} loop={true} alt="Tableaux Expand Move">
                                 <source
                                     src="../../assets/videos/prop_tableaux_expand.mp4"
                                     type="video/mp4"
@@ -52,7 +52,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         </div>
                         <div class={style.child}>
                             <h3>Close move</h3>
-                            <video autoPlay loop alt="Tableaux Close Move">
+                            <video autoPlay={true} loop={true} alt="Tableaux Close Move">
                                 <source
                                     src="../../assets/videos/prop_tableaux_close.mp4"
                                     type="video/mp4"
@@ -66,11 +66,6 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         </div>
                     </div>
                 )}
-                <p>
-                    <Btn onClick={() => setShowDialog(false)}>
-                        Okay I got it
-                    </Btn>
-                </p>
             </Dialog>
         </Fragment>
     );
