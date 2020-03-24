@@ -2,7 +2,7 @@ import { h, VNode } from "preact";
 import { circle } from "../../components/resolution/circle/style.scss";
 import Switch from "../../components/switch";
 import { Calculus } from "../../types/app";
-import { setCalculusState } from "../../util/api";
+import { setCalculusState } from "../../util/admin";
 import { useAppState } from "../../util/app-state";
 import * as style from "./style.scss";
 

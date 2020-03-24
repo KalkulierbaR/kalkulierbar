@@ -7,7 +7,7 @@ import {
     FOCalculus,
     Params,
 } from "../../../types/app";
-import { addExample } from "../../../util/api";
+import { addExample } from "../../../util/admin";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import Btn from "../../btn";

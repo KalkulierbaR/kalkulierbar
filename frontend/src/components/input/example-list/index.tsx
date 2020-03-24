@@ -1,7 +1,7 @@
 import { Fragment, h } from "preact";
 import { route } from "preact-router";
 import { AppStateActionType, CalculusType, Example } from "../../../types/app";
-import { delExample } from "../../../util/api";
+import { delExample } from "../../../util/admin";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../btn";
 import * as style from "./style.scss";

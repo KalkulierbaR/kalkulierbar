@@ -2,7 +2,7 @@ import {Component, Fragment, h} from "preact";
 import {Link} from "preact-router";
 import {useCallback, useState} from "preact/hooks";
 import {AppStateActionType, Calculus, Theme} from "../../types/app";
-import {checkCredentials} from "../../util/api";
+import {checkCredentials} from "../../util/admin";
 import {useAppState} from "../../util/app-state";
 import {classMap} from "../../util/class-map";
 import Btn from "../btn";
