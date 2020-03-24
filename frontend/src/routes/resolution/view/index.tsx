@@ -1,6 +1,7 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import Dialog from "../../../components/dialog";
+import HelpMenu from "../../../components/help-menu";
 import VarAssignList from "../../../components/input/var-assign-list";
 import ResolutionCircle from "../../../components/resolution/circle";
 import ResolutionFactorizeDialog from "../../../components/resolution/dialog/factorize";
@@ -345,6 +346,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 selectedClauses={selectedClauses}
                 setSelectedClauses={setSelectedClauses}
             />
+            
+            <HelpMenu calculus={calculus}/>
         </Fragment>
     );
 };

@@ -1,14 +1,13 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import FAB from "../fab";
-import CloseIcon from "../icons/close";
-
 import { TutorialMode } from "../../types/app";
 import { useAppState } from "../../util/app-state";
+import { disableTutorial, getHighlightFAB } from "../../util/tutorial-mode";
+import FAB from "../fab";
+import CloseIcon from "../icons/close";
 import MoreIcon from "../icons/more";
 import Tutorial from "../tutorial";
 import * as style from "./style.scss";
-import { getHighlightFAB, disableTutorial } from "../../util/tutorial-mode";
 
 interface Props {
     /**

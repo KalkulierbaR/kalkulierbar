@@ -20,15 +20,15 @@ import {
     sendFactorize,
     showHiddenClauses,
 } from "../../../util/resolution";
+import {
+    disableTutorial,
+    getHighlightCheck,
+} from "../../../util/tutorial-mode";
 import FactorizeIcon from "../../icons/factorize";
 import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
-import {
-    getHighlightCheck,
-    disableTutorial,
-} from "../../../util/tutorial-mode";
 
 interface Props {
     /**

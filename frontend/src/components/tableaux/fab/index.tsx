@@ -9,13 +9,13 @@ import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
+import {
+    disableTutorial,
+    getHighlightCheck,
+} from "../../../util/tutorial-mode";
 import ExploreIcon from "../../icons/explore";
 import LemmaIcon from "../../icons/lemma";
 import UndoIcon from "../../icons/undo";
-import {
-    getHighlightCheck,
-    disableTutorial,
-} from "../../../util/tutorial-mode";
 
 interface Props {
     /**
