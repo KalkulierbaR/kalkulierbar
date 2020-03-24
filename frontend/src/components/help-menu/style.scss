@@ -19,6 +19,7 @@
 
 .child {
     max-width: 400px;
+    align-self: flex-start;
     margin-bottom: 16px;
 
     @media (min-width: 870px) {
