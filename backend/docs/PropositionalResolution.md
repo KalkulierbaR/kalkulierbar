@@ -56,7 +56,9 @@ Hyperresolution moves are encoded as
 }
 ```
 The atomMap maps the ID of an atom in the main premiss to a pair of   
-(ID of side premiss , index of atom in that side premiss).
+(ID of side premiss , index of atom in that side premiss).  
+The map has the form `{1: {2, 3}, 2: {42, 13}, ...}`  
+
 
 ### Factorize
 

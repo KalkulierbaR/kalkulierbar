@@ -21,6 +21,9 @@ The `clauses` list holds the user-supplied clauses, each clause having a list of
 Each atom has a `lit` property holding an atomic formula (a Relation) as well as a `negated` flag  
 to indicate a negated atom.
 
+The `statusMessage` field contains a status message, set by a method in backend and displayed in frontend.
+After parsing a state, `statusMessage` should always be set to null.
+
 ## Rule Specification
 
 ### Resolution (automatic)
@@ -65,7 +68,7 @@ First-order resolution (manual) moves are encoded as
   "varAssign": <Custom variable assignment>
 }
 ```
-The varAssign map maps a variable to a first-order term. 
+The varAssign map maps a variable to a first-order term in the form `{"X": "f(a)", "Y": "X"}`.  
 This term has to be parsed first, so that correct syntax is used. 
 
 ### Hyperresolution
@@ -87,7 +90,8 @@ Hyperresolution moves are encoded as
 }
 ```
 The atomMap maps the ID of an atom in the main premiss to a pair of   
-(ID of side premiss , index of atom in that side premiss).
+(ID of side premiss , index of atom in that side premiss).  
+The map has the form `{1: {2, 3}, 2: {42, 13}, ...}`
 
 ### Factorize
 
