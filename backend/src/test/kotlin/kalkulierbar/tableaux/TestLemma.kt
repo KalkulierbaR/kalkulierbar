@@ -30,36 +30,36 @@ class TestLemma {
     fun testValid1() {
         var state = states[0]
         // a,a;!a,b;!b
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 4, 2))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(4, 2))
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 3, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 5, 4))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 2, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(3, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(5, 4))
+        state = instance.applyMoveOnState(state, MoveLemma(2, 1))
 
         assertEquals(1, state.nodes[6].lemmaSource)
         assertEquals(true, state.nodes[6].negated)
 
-        instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 2))
+        instance.applyMoveOnState(state, MoveAutoClose(6, 2))
     }
 
     @Test
     fun testValid2() {
         var state = states[1]
         // a;b,b;!a,!b
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 2, 2))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(2, 2))
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 5, 2))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 3, 2))
+        state = instance.applyMoveOnState(state, MoveAutoClose(4, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(5, 2))
+        state = instance.applyMoveOnState(state, MoveLemma(3, 2))
 
         assertEquals(2, state.nodes[6].lemmaSource)
         assertEquals(true, state.nodes[6].negated)
 
-        instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 6, 3))
+        instance.applyMoveOnState(state, MoveAutoClose(6, 3))
     }
 
     @Test
@@ -67,13 +67,13 @@ class TestLemma {
         var state = states[2]
 
         // !a,b;!b;a,b
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 3, 2))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(3, 2))
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 5, 3))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 2, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(4, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(5, 3))
+        state = instance.applyMoveOnState(state, MoveLemma(2, 1))
 
         assertEquals(1, state.nodes[6].lemmaSource)
         assertEquals(false, state.nodes[6].negated)
@@ -83,21 +83,21 @@ class TestLemma {
     fun testInvalid() {
         var state = states[3]
         // a,b;!b;!a,b
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 3, 2))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(3, 2))
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 4, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.CLOSE, 5, 3))
+        state = instance.applyMoveOnState(state, MoveAutoClose(4, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(5, 3))
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 2, 3))
+            instance.applyMoveOnState(state, MoveLemma(2, 3))
         }
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 2, 4))
+            instance.applyMoveOnState(state, MoveLemma(2, 4))
         }
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 5, 3))
+            instance.applyMoveOnState(state, MoveLemma(5, 3))
         }
 
         assertEquals(6, state.nodes.size)
@@ -107,16 +107,16 @@ class TestLemma {
     fun testSpecialCase() {
         var state = states[0]
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 0, 0))
+            instance.applyMoveOnState(state, MoveLemma(0, 0))
         }
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, 1, Integer.MIN_VALUE))
+            instance.applyMoveOnState(state, MoveLemma(1, Integer.MIN_VALUE))
         }
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, TableauxMove(MoveType.LEMMA, Integer.MAX_VALUE, 0))
+            instance.applyMoveOnState(state, MoveLemma(Integer.MAX_VALUE, 0))
         }
     }
 }

@@ -17,6 +17,7 @@ import ExploreIcon from "../../icons/explore";
 import LemmaIcon from "../../icons/lemma";
 import UndoIcon from "../../icons/undo";
 import Tutorial from "../../tutorial";
+import DownloadFAB from "../../btn/download";
 
 interface Props {
     /**
@@ -71,6 +72,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
         onSuccess,
         tutorialMode,
         dispatch,
+        onWarning,
     } = useAppState();
 
     const resetView = (
@@ -98,6 +100,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                 {selectedNodeId === undefined ? (
                     <Fragment>
                         {resetView}
+                        <DownloadFAB state={state} name={calculus} />
                         {state!.nodes.filter((node) => !node.isClosed).length >
                         0 ? (
                             <FAB
@@ -162,7 +165,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                             state.moveHistory[
                                                 state.moveHistory.length - 1
                                             ];
-                                        if (move.type === "EXPAND") {
+                                        if (move.type === "tableaux-expand") {
                                             resetDragTransform(
                                                 state.nodes.length - 1,
                                             );
@@ -174,6 +177,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                         state!,
                                         onChange,
                                         onError,
+                                        onWarning,
                                     );
                                 }}
                             />

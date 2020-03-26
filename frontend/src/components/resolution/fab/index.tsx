@@ -30,6 +30,7 @@ import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
 import Tutorial from "../../tutorial";
+import DownloadFAB from "../../btn/download";
 
 interface Props {
     /**
@@ -79,8 +80,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
         onSuccess,
         tutorialMode,
         dispatch,
+        onWarning,
     } = useAppState();
-    const apiInfo = { onChange, onError, server };
+    const apiInfo = { onChange, onError, server, onWarning };
 
     const couldShowCheckCloseHint = containsEmptyClause(state.clauseSet);
 
@@ -165,8 +167,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         )}
                     </Fragment>
                 ) : (
-                    undefined
+                    <DownloadFAB state={state} name={calculus} />
                 )}
+
                 {state!.hiddenClauses.clauses.length > 0 ? (
                     <FAB
                         mini={true}
@@ -224,6 +227,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             hyperRes,
                             onChange,
                             onError,
+                            onWarning,
                         );
                         setHyperRes(undefined);
                         setSelectedClauses(undefined);

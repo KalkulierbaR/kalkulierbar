@@ -26,6 +26,9 @@ class TestCheckModel {
         state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to true)))
         assertEquals("model ✓", state.tree[2].label)
         assertEquals(true, state.tree[2].modelVerified)
+
+        val closeMessage = dpll.checkCloseOnState(state)
+        assertEquals(false, closeMessage.closed)
     }
 
     @Test
@@ -44,6 +47,22 @@ class TestCheckModel {
         assertFailsWith<IllegalMove> { // Doubled check
             state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to false, "b" to true)))
         }
+
+        val closeMessage = dpll.checkCloseOnState(state)
+        assertEquals(false, closeMessage.closed)
+    }
+
+    @Test
+    fun testCheckModelUnsatisfiable() {
+        var state = dpll.parseFormulaToState("a;!a", null)
+        state = dpll.applyMoveOnState(state, MovePropagate(0, 0, 1, 0))
+
+        assertEquals(3, state.tree.size)
+        assertEquals("prop", state.tree[1].label)
+        assertEquals("closed", state.tree[2].label)
+
+        val closeMessage = dpll.checkCloseOnState(state)
+        assertEquals(true, closeMessage.closed)
     }
 
     @Test

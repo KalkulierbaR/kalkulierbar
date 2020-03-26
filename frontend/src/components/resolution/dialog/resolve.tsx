@@ -6,10 +6,12 @@ import { ResolutionCalculusType } from "../../../types/app";
 import {
     CandidateClause,
     Clause,
-    SelectedClauses
+    SelectedClauses,
 } from "../../../types/clause";
 import {
-    FOResolutionState, HyperResolutionMove, instanceOfFOResState,
+    FOResolutionState,
+    HyperResolutionMove,
+    instanceOfFOResState,
     instanceOfPropResState,
     PropResolutionState,
 } from "../../../types/resolution";
@@ -75,16 +77,12 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
     candidateClauses,
     propOptions,
 }) => {
-    const {
-        server,
-        onError,
-        onChange,
-    } = useAppState();
-    const apiInfo = { onChange, onError, server };
+    const { server, onError, onChange, onWarning } = useAppState();
+    const apiInfo = { onChange, onError, server, onWarning };
 
     const [selectedClauseAtomOption, setSelectedClauseAtomOption] = useState<
         number | undefined
-        >(undefined);
+    >(undefined);
     const [candidateClauseAtomOption, setCandidateClauseAtomOption] = useState<
         number | undefined
         >(undefined);
@@ -97,7 +95,11 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const selectLiteralOption = (keyValuePair: [number, string]) => {
-        if (selectedClauses && selectedClauses.length === 2 && instanceOfPropResState(state, calculus)) {
+        if (
+            selectedClauses &&
+            selectedClauses.length === 2 &&
+            instanceOfPropResState(state, calculus)
+        ) {
             if (hyperRes) {
                 setHyperRes(
                     addHyperSidePremiss(
@@ -106,10 +108,10 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
                             hyperRes,
                             state!.clauseSet.clauses[
                                 selectedClauses[0]
-                                ] as Clause,
+                            ] as Clause,
                             (state!.clauseSet.clauses[
                                 selectedClauses[1]
-                                ] as Clause).atoms[keyValuePair[0]].lit,
+                            ] as Clause).atoms[keyValuePair[0]].lit,
                         ),
                         selectedClauses[1],
                         keyValuePair[0],
@@ -122,7 +124,7 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
                 selectedClauses[0],
                 selectedClauses[1],
                 keyValuePair[1],
-                {...apiInfo, state},
+                { ...apiInfo, state },
             );
         }
         setSelectedClauses(undefined);
@@ -136,7 +138,10 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
     const foAtomOptions = () => {
         const options = [new Map<number, string>(), new Map<number, string>()];
         if (selectedClauses && selectedClauses.length === 2) {
-            const candidateClause = getCandidateClause(selectedClauses[1], candidateClauses);
+            const candidateClause = getCandidateClause(
+                selectedClauses[1],
+                candidateClauses,
+            );
             if (candidateClause != null) {
                 const uniqueCandidateClauseAtomIndices = new Set<number>();
                 candidateClause.candidateAtomMap.forEach(
@@ -144,23 +149,29 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
                         candidateAtomIndices: number[],
                         selectedClauseAtomIndex: number,
                     ) => {
-                        options[0].set(selectedClauseAtomIndex, atomToString(
-                            state!.clauseSet.clauses[selectedClauses[0]].atoms[
-                                selectedClauseAtomIndex
-                                ],
-                        ));
-                        candidateAtomIndices.forEach(
-                            candidateAtomIndex => uniqueCandidateClauseAtomIndices.add(candidateAtomIndex)
+                        options[0].set(
+                            selectedClauseAtomIndex,
+                            atomToString(
+                                state!.clauseSet.clauses[selectedClauses[0]]
+                                    .atoms[selectedClauseAtomIndex],
+                            ),
+                        );
+                        candidateAtomIndices.forEach((candidateAtomIndex) =>
+                            uniqueCandidateClauseAtomIndices.add(
+                                candidateAtomIndex,
+                            ),
                         );
                     },
                 );
                 uniqueCandidateClauseAtomIndices.forEach(
                     (candidateClauseAtomIndex: number) => {
-                        options[1].set(candidateClauseAtomIndex, atomToString(
-                            state!.clauseSet.clauses[selectedClauses[1]].atoms[
-                                candidateClauseAtomIndex
-                                ],
-                        ));
+                        options[1].set(
+                            candidateClauseAtomIndex,
+                            atomToString(
+                                state!.clauseSet.clauses[selectedClauses[1]]
+                                    .atoms[candidateClauseAtomIndex],
+                            ),
+                        );
                     },
                 );
             }
@@ -236,7 +247,9 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
      * @param {[number, string]} optionKeyValuePair - The key value pair of the selected option
      * @returns {void}
      */
-    const selectCandidateAtomOption = (optionKeyValuePair: [number, string]) => {
+    const selectCandidateAtomOption = (
+        optionKeyValuePair: [number, string],
+    ) => {
         const atomIndex = optionKeyValuePair[0];
         if (!selectedClauses || selectedClauses.length !== 2) {
             return;

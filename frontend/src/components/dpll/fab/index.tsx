@@ -12,6 +12,7 @@ import DeleteIcon from "../../icons/delete";
 import SplitIcon from "../../icons/split";
 import SwitchIcon from "../../icons/switch";
 import Tutorial from "../../tutorial";
+import DownloadFAB from "../../btn/download";
 
 interface Props {
     state: DPLLState;
@@ -38,6 +39,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
         onSuccess,
         tutorialMode,
         dispatch,
+        onWarning,
     } = useAppState();
 
     const couldShowCheckCloseHint = stateIsClosed(state.tree);
@@ -67,6 +69,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                         onClick={() => setShowModelDialog(true)}
                     />
                 )}
+                <DownloadFAB state={state} name="dpll" />
                 <FAB
                     icon={<CheckCircleIcon />}
                     label="Check"
@@ -91,7 +94,14 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                     extended={true}
                     showIconAtEnd={true}
                     onClick={() =>
-                        sendPrune(server, state, branch, onChange, onError)
+                        sendPrune(
+                            server,
+                            state,
+                            branch,
+                            onChange,
+                            onError,
+                            onWarning,
+                        )
                     }
                 />
                 <FAB

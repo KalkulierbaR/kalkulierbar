@@ -2,9 +2,8 @@ package kalkulierbar.tests.tableaux
 
 import kalkulierbar.JsonParseException
 import kalkulierbar.tableaux.FirstOrderTableaux
-import kalkulierbar.tableaux.FoMoveType
-import kalkulierbar.tableaux.FoTableauxMove
 import kalkulierbar.tableaux.FoTableauxParam
+import kalkulierbar.tableaux.MoveExpand
 import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,15 +20,15 @@ class TestFirstOrderJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveValid() {
-        val json = "{\"type\": \"UNDO\", \"id1\": 0, \"id2\": 1, \"varAssign\":{}}"
+        val json = "{\"type\": \"tableaux-expand\", \"id1\": 0, \"id2\": 42}"
         val move = instance.jsonToMove(json)
-        assertEquals(FoTableauxMove(FoMoveType.UNDO, 0, 1, mapOf()), move)
+        assertEquals(MoveExpand(0, 42), move)
     }
 
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveNull() {
-        val json = "{\"type\": \"UNDO\", \"id1\": 0, \"id2\": null, \"varAssign\":{}}"
+        val json = "{\"type\": \"tableaux-expand\", \"id1\": 0, \"id2\": null}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
@@ -38,7 +37,7 @@ class TestFirstOrderJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveMissingField() {
-        val json = "{\"type\": \"UNDO\", \"id2\": 42, \"varAssign\":{}}"
+        val json = "{\"type\": \"tableaux-expand\", \"id2\": 42, \"varAssign\":{}}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
@@ -47,7 +46,7 @@ class TestFirstOrderJson {
     @Test
     @kotlinx.serialization.UnstableDefault
     fun testJsonMoveTypeMismatch() {
-        val json = "{\"type\": \"UNDO\", \"id2\": \"dream\", \"varAssign\":{}}"
+        val json = "{\"type\": \"tableaux-expand\", \"id2\": \"dream\", \"varAssign\":{}}"
         assertFailsWith<JsonParseException> {
             instance.jsonToMove(json)
         }
@@ -82,7 +81,7 @@ class TestFirstOrderJson {
     @Test
     fun testStateToJson() {
         val json = instance.parseFormula("\\ex X: R(X)", null)
-        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"Constant","spelling":"sk1"}]},"negated":false}]}]},"formula":"\\ex X: R(X)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"lemmaSource":null,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"22B8CEDC626EBF36DAAA3E50356CD328C075805A0538EA0F91B4C88658D8C465","renderedClauseSet":["R(sk1)"]}"""
+        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":{"spelling":"R","arguments":[{"type":"Constant","spelling":"sk1"}]},"negated":false}]}]},"formula":"\\ex X: R(X)","type":"UNCONNECTED","regular":false,"backtracking":false,"manualVarAssign":false,"nodes":[{"parent":null,"relation":{"spelling":"true","arguments":[]},"negated":false,"lemmaSource":null,"isClosed":false,"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,"expansionCounter":0,"seal":"22B8CEDC626EBF36DAAA3E50356CD328C075805A0538EA0F91B4C88658D8C465","renderedClauseSet":["R(sk1)"],"statusMessage":null}"""
         assertEquals(expected, json)
     }
 
