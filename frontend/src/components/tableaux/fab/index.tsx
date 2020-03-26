@@ -165,7 +165,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                             state.moveHistory[
                                                 state.moveHistory.length - 1
                                             ];
-                                        if (move.type === "EXPAND") {
+                                        if (move.type === "tableaux-expand") {
                                             resetDragTransform(
                                                 state.nodes.length - 1,
                                             );
