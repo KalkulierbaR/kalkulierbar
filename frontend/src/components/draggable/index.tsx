@@ -1,13 +1,22 @@
 import { h } from "preact";
 import { PropRef, useState } from "preact/hooks";
-import { Point, DragTransform } from "../../types/ui";
+import { DragTransform, Point } from "../../types/ui";
 import { disableDrag, enableDrag } from "../../util/zoom/drag";
 import { mousePos } from "../../util/zoom/mouse";
 import { touchPos } from "../../util/zoom/touch";
 
 interface Props {
+    /**
+     * The element's reference
+     */
     elementRef: PropRef<SVGElement>;
+    /**
+     * The element's id
+     */
     id: number;
+    /**
+     * The function to perform when the element is clicked
+     */
     onClick: () => void;
     /**
      * The drag transform of this node
@@ -21,6 +30,9 @@ interface Props {
      * Current zoom factor of the SVG (needed for drag computation)
      */
     zoomFactor: number;
+    /**
+     * Any additional class for styling
+     */
     class?: string;
 }
 
@@ -36,6 +48,12 @@ const Draggable: preact.FunctionalComponent<Props> = ({
 }) => {
     const [oldTouchDt, setOldDt] = useState<DragTransform>({ x: 0, y: 0 });
     const [touch0, setTouch0] = useState<Point | undefined>(undefined);
+
+    /**
+     * The event triggered when the mouse is clicked
+     * @param {MouseEvent} ev - The mouse event
+     * @returns {void}
+     */
 
     const onMouseDown = (ev: MouseEvent) => {
         // Do nothing when the right mouse button is clicked
@@ -104,6 +122,12 @@ const Draggable: preact.FunctionalComponent<Props> = ({
         window.addEventListener("mouseup", onMouseUpped);
     };
 
+    /**
+     * The event triggered when the user does a touch
+     * @param {TouchEvent} e - The touch event
+     * @returns {void}
+     */
+
     const onTouchStart = (e: TouchEvent) => {
         if (!elementRef.current) {
             return;
@@ -131,6 +155,12 @@ const Draggable: preact.FunctionalComponent<Props> = ({
         // Store start pos
         setTouch0(p0!);
     };
+
+    /**
+     * The event triggered when the user does a touch move
+     * @param {TouchEvent} e - The touch event
+     * @returns {void}
+     */
 
     const onTouchMove = (e: TouchEvent) => {
         if (!elementRef.current || !touch0) {
@@ -162,6 +192,11 @@ const Draggable: preact.FunctionalComponent<Props> = ({
         // Update drag transform
         onDrag(id, { x: oldTouchDt.x + dx, y: oldTouchDt.y + dy });
     };
+
+    /**
+     * The event triggered when the user ends a touch
+     * @returns {void}
+     */
 
     const onTouchEnd = () => {
         // Calculate if we moved

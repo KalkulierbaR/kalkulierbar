@@ -1,15 +1,17 @@
 import { h } from "preact";
-import { NCTabTreeNode } from "../../../types/nc-tableaux";
 import { useRef } from "preact/hooks";
+import { NCTabTreeNode } from "../../../types/nc-tableaux";
 import { Tree } from "../../../types/tree";
-import Rectangle from "../../rectangle";
 import { DragTransform } from "../../../types/ui";
 import { classMap } from "../../../util/class-map";
-
-import * as style from "./style.scss";
 import Draggable from "../../draggable";
+import Rectangle from "../../rectangle";
+import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * The tree node
+     */
     node: Tree<NCTabTreeNode>;
     /**
      * The id of a node if one is selected

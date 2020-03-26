@@ -6,9 +6,21 @@ import { getAbsoluteDragTransform } from "../../util/layout/tree";
 import * as style from "./style.scss";
 
 interface ClosingEdgeProps<T> {
+    /**
+     * The tree's root
+     */
     root: Tree<T>;
+    /**
+     * The leaf as starting point of the edge
+     */
     leaf: Tree<T>;
+    /**
+     * The pred in the tree path as ending point of the edge
+     */
     pred: Tree<T>;
+    /**
+     * The transform modification caused by a drag
+     */
     dragTransforms: Record<number, DragTransform>;
 }
 

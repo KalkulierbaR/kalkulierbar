@@ -1,11 +1,11 @@
 import { h } from "preact";
 import { NCTableauxNode, NCTabTreeNode } from "../../../types/nc-tableaux";
+import { DragTransform } from "../../../types/ui";
+import { findSubTree, getClosedLeaves } from "../../../util/layout/tree";
 import { ncTabTreeLayout } from "../../../util/nc-tableaux";
+import ClosingEdge from "../../closing-edge";
 import Zoomable from "../../zoomable";
 import NCSubTree from "./subtree";
-import { DragTransform } from "../../../types/ui";
-import ClosingEdge from "../../closing-edge";
-import { findSubTree, getClosedLeaves } from "../../../util/layout/tree";
 
 interface Props {
     nodes: NCTableauxNode[];

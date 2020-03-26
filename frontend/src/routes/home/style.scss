@@ -46,7 +46,7 @@
 }
 
 .rect {
-    fill: #d4bcff;
+    fill: var(--kbar-accent-light-color);
 
     &--accent {
         fill: var(--kbar-accent-2-color);

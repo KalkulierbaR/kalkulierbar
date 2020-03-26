@@ -97,6 +97,11 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
         }
     };
 
+    /**
+     * Handle the FocusEvent of the text input
+     * @param {FocusEvent} e - The focus event
+     * @returns {void}
+     */
     const onFocus = (e: FocusEvent) => {
         const target = e.target as HTMLInputElement;
         setFocusedInputElement(target.id);
@@ -124,9 +129,7 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                 <Btn onClick={() => secondSubmitEvent(true)}>
                     {secondSubmitLabel}
                 </Btn>
-            ) : (
-                undefined
-            )}
+            ) : undefined}
         </div>
     );
 };

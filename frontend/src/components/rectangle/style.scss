@@ -1,5 +1,5 @@
 .active {
-    fill: #d4bcff;
+    fill: var(--kbar-accent-light-color);
 }
 
 .disabled {
@@ -7,7 +7,5 @@
 }
 
 .selected {
-    /* stroke: hsla(0, 0%, 26%, 1);
-    stroke-width: 2; */
     fill: var(--kbar-accent-color);
 }

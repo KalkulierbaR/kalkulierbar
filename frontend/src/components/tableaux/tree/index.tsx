@@ -4,22 +4,18 @@ import {
     TableauxNode,
     TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
-import { tableauxTreeLayout } from "../../../util/tableaux";
-
+import { DragTransform } from "../../../types/ui";
 import {
     findSubTree,
     getAbsoluteDragTransform,
     getClosedLeaves,
 } from "../../../util/layout/tree";
-
-import { DragTransform } from "../../../types/ui";
+import { tableauxTreeLayout } from "../../../util/tableaux";
+import ClosingEdge from "../../closing-edge";
 import Zoomable from "../../zoomable";
-
 import * as style from "./style.scss";
 import SubTree from "./subtree";
-import ClosingEdge from "../../closing-edge";
 
-// Properties Interface for the TableauxTreeView component
 interface Props {
     /**
      * The nodes of the tree
@@ -66,6 +62,11 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
         nodes,
     );
 
+    /**
+     * Go to a node in the tree
+     * @param {any} d - The node to go to
+     * @returns {[number, number]} - The target coordinates
+     */
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
 

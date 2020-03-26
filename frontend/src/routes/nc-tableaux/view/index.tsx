@@ -1,16 +1,16 @@
-import { h, Fragment } from "preact";
-import { useAppState } from "../../../util/app-state";
-import exampleState from "./example";
-import NCTabTree from "../../../components/nc-tableaux/tree";
-import { useState, useCallback } from "preact/hooks";
-import { DragTransform } from "../../../types/ui";
-import { NCTabTreeNode } from "../../../types/nc-tableaux";
-import { updateDragTransform } from "../../../util/tableaux";
-import NCTabFAB from "../../../components/nc-tableaux/fab";
+import { Fragment, h } from "preact";
+import { useCallback, useState } from "preact/hooks";
 import Dialog from "../../../components/dialog";
 import VarAssignList from "../../../components/input/var-assign-list";
+import NCTabFAB from "../../../components/nc-tableaux/fab";
+import NCTabTree from "../../../components/nc-tableaux/tree";
+import { NCTabTreeNode } from "../../../types/nc-tableaux";
 import { VarAssign } from "../../../types/tableaux";
-import { sendClose, collectVarsFromNode } from "../../../util/nc-tableaux";
+import { DragTransform } from "../../../types/ui";
+import { useAppState } from "../../../util/app-state";
+import { collectVarsFromNode, sendClose } from "../../../util/nc-tableaux";
+import { updateDragTransform } from "../../../util/tableaux";
+import exampleState from "./example";
 
 const NCTableauxView: preact.FunctionalComponent = () => {
     const { "nc-tableaux": cState, onChange, server, onError } = useAppState();

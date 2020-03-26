@@ -1,4 +1,5 @@
 import { DPLLMove, DPLLState } from "./dpll";
+import { NCTableauxMove, NCTableauxState } from "./nc-tableaux";
 import {
     FOResolutionMove,
     FOResolutionParams,
@@ -15,7 +16,6 @@ import {
     PropTableauxState,
     TableauxMove,
 } from "./tableaux";
-import { NCTableauxState, NCTableauxMove } from "./nc-tableaux";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";

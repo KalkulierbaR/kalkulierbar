@@ -1,13 +1,12 @@
 import { h } from "preact";
-
 import { useRef } from "preact/hooks";
 import { LayoutItem } from "../../../types/layout";
 import { TableauxTreeLayoutNode } from "../../../types/tableaux";
 import { DragTransform } from "../../../types/ui";
 import { classMap } from "../../../util/class-map";
+import Draggable from "../../draggable";
 import Rectangle from "../../rectangle";
 import * as style from "./style.scss";
-import Draggable from "../../draggable";
 
 interface Props {
     /**

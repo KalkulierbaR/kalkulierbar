@@ -1,26 +1,38 @@
-import { h, Fragment } from "preact";
-import ControlFAB from "../../control-fab";
-import CenterIcon from "../../icons/center";
-import FAB from "../../fab";
+import { Fragment, h } from "preact";
+import { NCTableauxState } from "../../../types/nc-tableaux";
+import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import {
     sendAlpha,
     sendBeta,
-    sendGamma,
     sendDelta,
+    sendGamma,
     sendUndo,
 } from "../../../util/nc-tableaux";
-import { NCTableauxState } from "../../../types/nc-tableaux";
+import ControlFAB from "../../control-fab";
+import FAB from "../../fab";
+import CenterIcon from "../../icons/center";
 import CheckCircleIcon from "../../icons/check-circle";
-import { checkClose } from "../../../util/api";
 import UndoIcon from "../../icons/undo";
 
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * The NCTableaux state
+     */
     state: NCTableauxState;
+    /**
+     * The selected node's id
+     */
     selectedNodeId: number | undefined;
+    /**
+     * The function to set a node as selected
+     */
     setSelectedNode: (id: number | undefined) => void;
+    /**
+     * The function to reset drag transformations
+     */
     resetDragTransforms: () => void;
     /**
      * Callback to reset a specific drag
@@ -86,9 +98,9 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                     <FAB
                         icon={<CheckCircleIcon />}
                         label="Check"
-                        showIconAtEnd
-                        mini
-                        extended
+                        showIconAtEnd={true}
+                        mini={true}
+                        extended={true}
                         onClick={() => {
                             checkClose(
                                 server,
@@ -109,7 +121,9 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                             sendUndo(server, state, onChange, onError).then(
                                 (s) => {
                                     console.log(s);
-                                    if (!s) return;
+                                    if (!s) {
+                                        return;
+                                    }
                                     for (
                                         let i = s.nodes.length;
                                         i < state.nodes.length;
@@ -128,9 +142,9 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                     {showAlpha && (
                         <FAB
                             icon={<span class={style.greekLetter}>α</span>}
-                            showIconAtEnd
-                            mini
-                            extended
+                            showIconAtEnd={true}
+                            mini={true}
+                            extended={true}
                             label="Alpha"
                             onClick={() => {
                                 sendAlpha(
@@ -147,9 +161,9 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                     {showBeta && (
                         <FAB
                             icon={<span class={style.greekLetter}>β</span>}
-                            showIconAtEnd
-                            mini
-                            extended
+                            showIconAtEnd={true}
+                            mini={true}
+                            extended={true}
                             label="Beta"
                             onClick={() => {
                                 sendBeta(
@@ -166,9 +180,9 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                     {showGamma && (
                         <FAB
                             icon={<span class={style.greekLetter}>γ</span>}
-                            showIconAtEnd
-                            mini
-                            extended
+                            showIconAtEnd={true}
+                            mini={true}
+                            extended={true}
                             label="Gamma"
                             onClick={() => {
                                 sendGamma(
@@ -185,9 +199,9 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                     {showDelta && (
                         <FAB
                             icon={<span class={style.greekLetter}>δ</span>}
-                            showIconAtEnd
-                            mini
-                            extended
+                            showIconAtEnd={true}
+                            mini={true}
+                            extended={true}
                             label="Delta"
                             onClick={() => {
                                 sendDelta(

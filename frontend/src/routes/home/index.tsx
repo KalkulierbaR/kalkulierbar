@@ -503,7 +503,7 @@ const ROUTES: Route[] = [
                         y1="22"
                         x2="225.0078125"
                         y2="72"
-                    ></line>
+                    />
                     <g transform="translate(0 0)">
                         <line
                             class={style.link}
@@ -511,7 +511,7 @@ const ROUTES: Route[] = [
                             y1="94"
                             x2="225.0078125"
                             y2="144"
-                        ></line>
+                        />
                         <g transform="translate(0 0)">
                             <line
                                 class={style.link}
@@ -519,7 +519,7 @@ const ROUTES: Route[] = [
                                 y1="166"
                                 x2="225.0078125"
                                 y2="216"
-                            ></line>
+                            />
                             <g transform="translate(0 0)">
                                 <line
                                     class={style.link}
@@ -527,7 +527,7 @@ const ROUTES: Route[] = [
                                     y1="238"
                                     x2="225.0078125"
                                     y2="288"
-                                ></line>
+                                />
                                 <g transform="translate(0 0)">
                                     <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
                                         <rect
@@ -537,7 +537,7 @@ const ROUTES: Route[] = [
                                             width="73.703125"
                                             height="26.609375"
                                             rx="4"
-                                        ></rect>
+                                        />
                                         <text
                                             text-anchor="middle"
                                             class=""
@@ -556,7 +556,7 @@ const ROUTES: Route[] = [
                                         width="119.734375"
                                         height="26.609375"
                                         rx="4"
-                                    ></rect>
+                                    />
                                     <text
                                         text-anchor="middle"
                                         class=""
@@ -575,7 +575,7 @@ const ROUTES: Route[] = [
                                     width="153.109375"
                                     height="26.609375"
                                     rx="4"
-                                ></rect>
+                                />
                                 <text
                                     text-anchor="middle"
                                     class=""
@@ -594,7 +594,7 @@ const ROUTES: Route[] = [
                                 width="110.203125"
                                 height="26.609375"
                                 rx="4"
-                            ></rect>
+                            />
                             <text
                                 text-anchor="middle"
                                 class=""
@@ -613,7 +613,7 @@ const ROUTES: Route[] = [
                             width="421.171875"
                             height="26.609375"
                             rx="4"
-                        ></rect>
+                        />
                         <text
                             text-anchor="middle"
                             class=""

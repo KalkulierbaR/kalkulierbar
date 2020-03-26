@@ -3,26 +3,12 @@
     cursor: default;
 }
 
-.f-closed {
-    fill: rgb(218, 218, 218);
-}
-
-.f-default {
-    fill: #d4bcff;
-}
-
-.rect--selected {
-    /* stroke: hsla(0, 0%, 26%, 1);
-    stroke-width: 2; */
-    fill: var(--kbar-accent-color);
-}
-
 .text--selected {
-    fill: #fff;
+    fill: var(--kbar-text-selected-color);
 }
 
 .text--closed {
-    fill: #555555;
+    fill: var(--kbar-text-closed-color);
 }
 
 .node--closed {

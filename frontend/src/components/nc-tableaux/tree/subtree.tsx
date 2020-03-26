@@ -1,6 +1,6 @@
-import { h, Fragment } from "preact";
-import { Tree } from "../../../types/tree";
+import { Fragment, h } from "preact";
 import { NCTabTreeNode } from "../../../types/nc-tableaux";
+import { Tree } from "../../../types/tree";
 import { DragTransform } from "../../../types/ui";
 import NCTabNode from "../node";
 

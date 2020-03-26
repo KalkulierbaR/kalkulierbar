@@ -1,17 +1,17 @@
+import { AppStateUpdater } from "../types/app";
 import {
-    NCTableauxNode,
-    NCTabTreeNode,
-    NCTableauxState,
+    FOTerm,
     LogicNode,
     LogicRelation,
-    FOTerm,
+    NCTableauxNode,
+    NCTableauxState,
+    NCTabTreeNode,
 } from "../types/nc-tableaux";
-import { Tree } from "../types/tree";
-import { estimateSVGTextWidth } from "./text-width";
-import { tree, treeLayout } from "./layout/tree";
-import { AppStateUpdater } from "../types/app";
-import { sendMove } from "./api";
 import { VarAssign } from "../types/tableaux";
+import { Tree } from "../types/tree";
+import { sendMove } from "./api";
+import { tree, treeLayout } from "./layout/tree";
+import { estimateSVGTextWidth } from "./text-width";
 
 export const sendAlpha = (
     server: string,
