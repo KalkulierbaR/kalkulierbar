@@ -1,13 +1,13 @@
 # Implementing your own Calculus
-KalkulierbaR comes with a whole set of features to help you implement your own Calculi   
+KalkulierbaR comes with a whole set of features to help you implement your own Calculi
 - let's see how you might want to get started!
 
 ## The Bare Metal
-At their core, calculi are just classes implementing the `Calculus` interface.  
-There are three core functions: Parsing a formula and setting up the initial proof state,  
-taking a proof state and applying a rule ('move') on it, and checking if a given state represents a closed proof.  
+At their core, calculi are just classes implementing the `Calculus` interface.
+There are three core functions: Parsing a formula and setting up the initial proof state,
+taking a proof state and applying a rule ('move') on it, and checking if a given state represents a closed proof.
 
-So a really basic calculus might be implemented like this:  
+So a really basic calculus might be implemented like this:
 ```kotlin
 class BareMetalCalculus : Calculus {
     // Give your calculus a unique name
@@ -30,23 +30,23 @@ class BareMetalCalculus : Calculus {
     }
 }
 ```
-As you have probably noticed, all these functions operate on plain old strings,  
-meaning you have both the freedom and the obligation to define your own data interchange format   
-that you'd like to use for this calculus.  
+As you have probably noticed, all these functions operate on plain old strings,
+meaning you have both the freedom and the obligation to define your own data interchange format
+that you'd like to use for this calculus.
 
-Also note how the calculus is completely stateless  
-- state information is always supplied by the user to the function.   
+Also note how the calculus is completely stateless
+- state information is always supplied by the user to the function.
 
-This means you won't have to worry about keeping tabs on who's currently using the calculus   
-- a user might even change servers mid-proof without noticing a thing.   
+This means you won't have to worry about keeping tabs on who's currently using the calculus
+- a user might even change servers mid-proof without noticing a thing.
 
 ## A bit more structured
-Most of the time, you'll probably want to use an established data format like JSON   
-for your calculus instead of rolling your own.  
-To do so, just implement the `JSONCalculus` instead! Using this interface, you can define your own classes  
-to represent proof states, moves, and parameters. 
+Most of the time, you'll probably want to use an established data format like JSON
+for your calculus instead of rolling your own.
+To do so, just implement the `JSONCalculus` instead! Using this interface, you can define your own classes
+to represent proof states, moves, and parameters.
  
-You can then operate on these classes when implementing the calculus logic 
+You can then operate on these classes when implementing the calculus logic
 - the corresponding parsing and serialization functions will be called automatically.
 
 ```kotlin
@@ -87,24 +87,24 @@ class CommonCalculus : JSONCalculus<State, Move, Param>() {
     }
 }
 ```
-Note that the `checkCloseOnState` function returns a `CloseMessage` - this is a predefined data class containing  
-a boolean field `closed` indicating whether the proof is, well, closed,  
-alongside a string `message` containing more information.  
+Note that the `checkCloseOnState` function returns a `CloseMessage` - this is a predefined data class containing
+a boolean field `closed` indicating whether the proof is, well, closed,
+alongside a string `message` containing more information.
 
 ## Some Safety
-One important caveat to the stateless nature of KalkulierbaR is that we have to be able to trust the client  
-not to modify the proof state in between requests if we want to ensure the correctness of all proofs.  
-You might be okay just assuming that the client won't be that careless, but if you want to be sure,  
-you can use the `ProtectedState` abstract class we provide for this reason. To make a state protected,  
-it needs to override the `seal` field and the `getHash` function.  
-The `getHash` function should transform the state (or at least the parts that you care about not being changed)  
-into a string fingerprint deterministically.  
-With that in place, you can now user the `stateObj.computeSeal()` and `stateObj.verifySeal()` functions.  
-The compute seal function will generate a cryptographic checksum of the state fingerprint and  
-store it in the `seal` variable.   
-You should always call this before serializing your state.  
-The verify seal method checks if checksum in the `seal` variable matches the state fingerprint,  
-returning `false` if the state appears to have been modified.  
+One important caveat to the stateless nature of KalkulierbaR is that we have to be able to trust the client
+not to modify the proof state in between requests if we want to ensure the correctness of all proofs.
+You might be okay just assuming that the client won't be that careless, but if you want to be sure,
+you can use the `ProtectedState` abstract class we provide for this reason. To make a state protected,
+it needs to override the `seal` field and the `getHash` function.
+The `getHash` function should transform the state (or at least the parts that you care about not being changed)
+into a string fingerprint deterministically.
+With that in place, you can now user the `stateObj.computeSeal()` and `stateObj.verifySeal()` functions.
+The compute seal function will generate a cryptographic checksum of the state fingerprint and
+store it in the `seal` variable.
+You should always call this before serializing your state.
+The verify seal method checks if checksum in the `seal` variable matches the state fingerprint,
+returning `false` if the state appears to have been modified.
 
 ```kotlin
 class SampleState(): ProtectedState() {
@@ -123,7 +123,7 @@ class SampleState(): ProtectedState() {
 ```
 
 ## Speaking Tongues
-At some point, you'll most likely want to parse a logic formula in one way or another.  
+At some point, you'll most likely want to parse a logic formula in one way or another.
 
 Because writing parsers takes time, we have some ready that you can use:
 * `ClauseSetParser.parse(formula)` parses a propositional clause set in our very own clause set notation
@@ -132,8 +132,8 @@ Because writing parsers takes time, we have some ready that you can use:
 * `FirstOrderParser.parse(formula)` parses a first-order formula into a tree representation
 
 
-For details on the input formats see the input format specification files in this folder,  
-for details on the parsed representations it's probably best to jump right to the source code  
-in the `logic` and `clause` packages.  
-There is also a variety of ready-to-use formula transformations (CNF, NNF, SNF, Unification, etc)  
-for both propositional and first-order formulae in the `logic/transform` package.  
+For details on the input formats see the input format specification files in this folder,
+for details on the parsed representations it's probably best to jump right to the source code
+in the `logic` and `clause` packages.
+There is also a variety of ready-to-use formula transformations (CNF, NNF, SNF, Unification, etc)
+for both propositional and first-order formulae in the `logic/transform` package.
