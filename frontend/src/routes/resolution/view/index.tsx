@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import Dialog from "../../../components/dialog";
 import VarAssignList from "../../../components/input/var-assign-list";
 import ResolutionCircle from "../../../components/resolution/circle";
@@ -24,19 +24,19 @@ import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { checkAtomsForVar, getCandidateClause } from "../../../util/clause";
 import {
+    addClause,
     addHyperSidePremiss,
     findHyperSidePremiss,
-    recalculateCandidateClauses,
     getFOHyperCandidates,
     getHyperClauseIds,
+    getInitialCandidateClauses,
     getPropHyperCandidates,
     getSelectable,
+    recalculateCandidateClauses,
     removeHyperSidePremiss,
     sendResolve,
     sendResolveCustom,
     sendResolveUnify,
-    getInitialCandidateClauses,
-    addClause,
 } from "../../../util/resolution";
 import { foExample, propExample } from "./example";
 
@@ -110,7 +110,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     }, [setCandidateClauses, selectedClauseId]);
 
     useEffect(() => {
-        if (state!.newestNode === -1) return;
+        if (state!.newestNode === -1) {
+            return;
+        }
         addClause(state!.clauseSet, candidateClauses, state!.newestNode);
         setCandidateClauses([...candidateClauses]);
     }, [state.clauseSet]);
@@ -122,7 +124,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
      * @returns {void} - nothing
      */
     const shiftCandidateClause = (oldIndex: number, newIndex: number) => {
-        if (oldIndex === newIndex) return;
+        if (oldIndex === newIndex) {
+            return;
+        }
 
         // Save clause to shift
         const c = candidateClauses[oldIndex];

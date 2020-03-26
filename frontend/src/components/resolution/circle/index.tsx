@@ -2,11 +2,11 @@ import { h } from "preact";
 import { useMemo } from "preact/hooks";
 import { CandidateClause } from "../../../types/clause";
 import { VisualHelp } from "../../../types/resolution";
+import { DragTransform } from "../../../types/ui";
 import { circleLayout } from "../../../util/layout/resolution";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
-import { DragTransform } from "../../../types/ui";
 
 interface Props {
     /**
@@ -37,6 +37,9 @@ interface Props {
      * List of clause ids who should be highlighted, but not as primary
      */
     semiSelected: number[];
+    /**
+     * A function to shift a clause in the clauseSet
+     */
     shiftCandidateClause: (oldIdx: number, newIdx: number) => void;
 }
 

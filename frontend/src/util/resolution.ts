@@ -289,6 +289,12 @@ export const getSelectable = (
         .map((c) => c.index);
 };
 
+/**
+ * Get the initial candidate clauses
+ * @param {ClauseSet<string | FOLiteral>} clauseSet - The clause set to work on
+ * @param {ResolutionCalculusType} calculus - The current resolution calculus type
+ * @returns {CandidateClause[]} - The new candidate clauses
+ */
 export const getInitialCandidateClauses = (
     clauseSet: ClauseSet<string | FOLiteral>,
     calculus: ResolutionCalculusType,
@@ -319,6 +325,7 @@ export const getInitialCandidateClauses = (
 /**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
+ * @param {CandidateClause[]} clauses - The candidate clauses
  * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
  * @param {ResolutionCalculusType} calculus - The current calculus type
  * @param {number} selectedClauseId - Currently selected clause
@@ -414,6 +421,13 @@ export const recalculateCandidateClauses = (
     return newCandidateClauses;
 };
 
+/**
+ * Add a clause to the clause set
+ * @param {ClauseSet<string | FOLiteral>} clauseSet - The clause set to work on
+ * @param {CandidateClause[]} clauses - The candidate clauses
+ * @param {number} newClauseId - The id of the new clause (might be changed if already occupied)
+ * @returns {void}
+ */
 export const addClause = (
     clauseSet: ClauseSet<string | FOLiteral>,
     clauses: CandidateClause[],
@@ -440,12 +454,16 @@ export const addClause = (
     });
 };
 
+/**
+ * @param {ClauseSet<string | FOLiteral>} cs - The clause set to work on
+ * @returns {boolean} - Whether the clause set contains the empty clause
+ */
 export const containsEmptyClause = (cs: ClauseSet<string | FOLiteral>) => {
     return cs.clauses.filter((c) => c.atoms.length === 0).length > 0;
 };
 
 /**
- * The function to call when the user hides a clause
+ * Send a resolve move (propositional) to the backend
  * @param {number} c1 - The id of the first clause
  * @param {number} c2 - The id of the second clause
  * @param {string} literal - The literal to resolve
@@ -453,6 +471,7 @@ export const containsEmptyClause = (cs: ClauseSet<string | FOLiteral>) => {
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendResolve = (
@@ -478,7 +497,7 @@ export const sendResolve = (
     );
 
 /**
- * The function to call when the user hides a clause
+ * Send a resolve unify move (FO logic) to the backend
  * @param {number} c1 - The id of the first clause
  * @param {number} c2 - The id of the second clause
  * @param {number} l1 - The id of the first atom
@@ -487,6 +506,7 @@ export const sendResolve = (
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendResolveUnify = (
@@ -512,6 +532,20 @@ export const sendResolveUnify = (
         onWarning,
     );
 
+/**
+ * Send a resolve move with variable assignments (FO logic) to the backend
+ * @param {number} c1 - The id of the first clause
+ * @param {number} c2 - The id of the second clause
+ * @param {number} l1 - The id of the first atom
+ * @param {number} l2 - The id of the second atom
+ * @param {VarAssign} varAssign - The variable assignments
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
+ * @returns {void}
+ */
 export const sendResolveCustom = (
     c1: number,
     c2: number,
@@ -544,6 +578,7 @@ export const sendResolveCustom = (
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const hideClause = <
@@ -581,6 +616,7 @@ export const hideClause = <
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const showHiddenClauses = <
@@ -618,6 +654,7 @@ export const showHiddenClauses = <
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendFactorize = <

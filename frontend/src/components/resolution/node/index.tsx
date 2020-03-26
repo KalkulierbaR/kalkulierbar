@@ -1,14 +1,14 @@
 import { createRef, h } from "preact";
+import { useState } from "preact/hooks";
 import { CandidateClause } from "../../../types/clause";
+import { DragTransform, Point } from "../../../types/ui";
 import { classMap } from "../../../util/class-map";
 import { clauseToString } from "../../../util/clause";
-import Rectangle from "../../rectangle";
-import * as style from "./style.scss";
 import { disableDrag, enableDrag } from "../../../util/zoom/drag";
 import { mousePos } from "../../../util/zoom/mouse";
 import { touchPos } from "../../../util/zoom/touch";
-import { DragTransform, Point } from "../../../types/ui";
-import { useState } from "preact/hooks";
+import Rectangle from "../../rectangle";
+import * as style from "./style.scss";
 
 interface Props {
     /**
@@ -43,7 +43,13 @@ interface Props {
      * Current zoom factor of the SVG (needed for drag computation)
      */
     zoomFactor: number;
+    /**
+     * The function to call, when the user drops a node after dragging it
+     */
     onDrop: (id: number, p: DragTransform) => void;
+    /**
+     * The index of the node in the circle layout
+     */
     indexInCircle: number;
 }
 
@@ -65,11 +71,22 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
     const [oldTouchDt, setOldDt] = useState<DragTransform>({ x: 0, y: 0 });
     const [touch0, setTouch0] = useState<Point | undefined>(undefined);
 
+    /**
+     * Handle a click on the node
+     * @returns {void}
+     */
     const handleClick = () => {
-        if (disabled) return;
+        if (disabled) {
+            return;
+        }
         selectCallback(clause.index);
     };
 
+    /**
+     * The event triggered when the mouse is clicked
+     * @param {MouseEvent} ev - The mouse event
+     * @returns {void}
+     */
     const onMouseDown = (ev: MouseEvent) => {
         // Do nothing when the right mouse button is clicked
         if (ev.button) {
@@ -146,6 +163,11 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
         window.addEventListener("mouseup", onMouseUpped);
     };
 
+    /**
+     * The event triggered when the user does a touch
+     * @param {TouchEvent} e - The touch event
+     * @returns {void}
+     */
     const onTouchStart = (e: TouchEvent) => {
         if (!textRef.current) {
             return;
@@ -174,7 +196,13 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
         setTouch0(p0!);
     };
 
-    const onTouchMove = (e: TouchEvent) => {
+    /**
+     * Handle a user touch event
+     * @param {TouchEvent} e - The touch event
+     * @param {boolean} moving - Whether the touch is still moving
+     * @returns {void}
+     */
+    const handleTouchEvent = (e: TouchEvent, moving: boolean) => {
         if (!textRef.current || !touch0) {
             return;
         }
@@ -201,36 +229,11 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
         const dx = (t[0] - touch0[0]) / zoomFactor;
         const dy = (t[1] - touch0[1]) / zoomFactor;
 
-        // Update drag transform
-        setDt({ x: oldTouchDt.x + dx, y: oldTouchDt.y + dy });
-    };
-
-    const onTouchEnd = (e: TouchEvent) => {
-        if (!textRef.current || !touch0) {
+        if (moving) {
+            // Update drag transform
+            setDt({ x: oldTouchDt.x + dx, y: oldTouchDt.y + dy });
             return;
         }
-
-        // We only care if the user uses one finger
-        if (e.changedTouches.length !== 1) {
-            return;
-        }
-
-        const svg = textRef.current.ownerSVGElement!;
-
-        const touch = e.changedTouches[0];
-
-        const t = touchPos(svg, e.changedTouches, touch.identifier);
-
-        if (!t) {
-            return;
-        }
-
-        e.stopPropagation();
-        e.preventDefault();
-
-        // Calculate how much we have moved (consider the zoom!)
-        const dx = (t[0] - touch0[0]) / zoomFactor;
-        const dy = (t[1] - touch0[1]) / zoomFactor;
 
         const moved = dx * dx + dy * dy > 0;
 
@@ -245,6 +248,24 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
         }
 
         setTouch0(undefined);
+    };
+
+    /**
+     * The event triggered when the user does a touch move
+     * @param {TouchEvent} e - The touch event
+     * @returns {void}
+     */
+    const onTouchMove = (e: TouchEvent) => {
+        handleTouchEvent(e, true);
+    };
+
+    /**
+     * The event triggered when the user ends a touch
+     * @param {TouchEvent} e - The touch event
+     * @returns {void}
+     */
+    const onTouchEnd = (e: TouchEvent) => {
+        handleTouchEvent(e, false);
     };
 
     return (
