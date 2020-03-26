@@ -24,13 +24,13 @@ import {
     sendFactorize,
     showHiddenClauses,
 } from "../../../util/resolution";
+import DownloadFAB from "../../btn/download";
 import FactorizeIcon from "../../icons/factorize";
 import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
 import Tutorial from "../../tutorial";
-import DownloadFAB from "../../btn/download";
 
 interface Props {
     /**

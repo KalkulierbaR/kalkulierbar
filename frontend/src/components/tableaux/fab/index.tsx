@@ -13,11 +13,11 @@ import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
+import DownloadFAB from "../../btn/download";
 import ExploreIcon from "../../icons/explore";
 import LemmaIcon from "../../icons/lemma";
 import UndoIcon from "../../icons/undo";
 import Tutorial from "../../tutorial";
-import DownloadFAB from "../../btn/download";
 
 interface Props {
     /**

@@ -1,7 +1,7 @@
 import { h } from "preact";
+import { useMemo } from "preact/hooks";
 import FAB from "../fab";
 import DownloadIcon from "../icons/download";
-import { useMemo } from "preact/hooks";
 
 import * as style from "./style.scss";
 
@@ -24,9 +24,9 @@ const DownloadFAB: preact.FunctionalComponent<Props> = ({ state, name }) => {
             <FAB
                 icon={<DownloadIcon />}
                 label="Download"
-                showIconAtEnd
-                mini
-                extended
+                showIconAtEnd={true}
+                mini={true}
+                extended={true}
             />
         </a>
     );

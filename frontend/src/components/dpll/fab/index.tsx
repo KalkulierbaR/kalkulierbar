@@ -4,6 +4,7 @@ import { DPLLNodeType, DPLLState } from "../../../types/dpll";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { sendPrune, stateIsClosed } from "../../../util/dpll";
+import DownloadFAB from "../../btn/download";
 import ControlFAB from "../../control-fab";
 import FAB from "../../fab";
 import CheckCircleIcon from "../../icons/check-circle";
@@ -12,14 +13,31 @@ import DeleteIcon from "../../icons/delete";
 import SplitIcon from "../../icons/split";
 import SwitchIcon from "../../icons/switch";
 import Tutorial from "../../tutorial";
-import DownloadFAB from "../../btn/download";
 
 interface Props {
+    /**
+     * The current dpll state
+     */
     state: DPLLState;
+    /**
+     * The branch
+     */
     branch: number;
+    /**
+     * Whether to show the tree
+     */
     showTree: boolean;
+    /**
+     * Function to toggle visibility of tree
+     */
     toggleShowTree: () => void;
+    /**
+     * Function to set visibility of model dialog
+     */
     setShowModelDialog: (v: boolean) => void;
+    /**
+     * Function to set visibility of split dialog
+     */
     setShowSplitDialog: (v: boolean) => void;
 }
 

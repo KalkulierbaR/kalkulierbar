@@ -1,5 +1,6 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
+import UploadFAB from "../../components/btn/upload";
 import HintIcon, { Hint } from "../../components/hint";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
@@ -9,7 +10,6 @@ import { Calculus, ResolutionCalculusType } from "../../types/app";
 import { VisualHelp } from "../../types/resolution";
 import { CnfStrategy } from "../../types/tableaux";
 import { useAppState } from "../../util/app-state";
-import UploadFAB from "../../components/btn/upload";
 
 interface Props {
     /**

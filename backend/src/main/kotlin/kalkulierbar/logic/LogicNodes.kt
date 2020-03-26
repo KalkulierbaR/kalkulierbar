@@ -10,7 +10,7 @@ class Var(var spelling: String) : LogicNode() {
 
     override fun toString() = spelling
 
-    override fun clone() = Var(spelling)
+    override fun clone(qm: Map<String, Quantifier>) = Var(spelling)
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -21,7 +21,7 @@ class Not(override var child: LogicNode) : UnaryOp() {
 
     override fun toString() = "¬$child"
 
-    override fun clone() = Not(child.clone())
+    override fun clone(qm: Map<String, Quantifier>) = Not(child.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -32,7 +32,7 @@ class And(override var leftChild: LogicNode, override var rightChild: LogicNode)
 
     override fun toString() = "($leftChild ∧ $rightChild)"
 
-    override fun clone() = And(leftChild.clone(), rightChild.clone())
+    override fun clone(qm: Map<String, Quantifier>) = And(leftChild.clone(qm), rightChild.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -43,7 +43,7 @@ class Or(override var leftChild: LogicNode, override var rightChild: LogicNode) 
 
     override fun toString() = "($leftChild ∨ $rightChild)"
 
-    override fun clone() = Or(leftChild.clone(), rightChild.clone())
+    override fun clone(qm: Map<String, Quantifier>) = Or(leftChild.clone(qm), rightChild.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -54,7 +54,7 @@ class Impl(override var leftChild: LogicNode, override var rightChild: LogicNode
 
     override fun toString() = "($leftChild --> $rightChild)"
 
-    override fun clone() = Impl(leftChild.clone(), rightChild.clone())
+    override fun clone(qm: Map<String, Quantifier>) = Impl(leftChild.clone(qm), rightChild.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -65,7 +65,7 @@ class Equiv(override var leftChild: LogicNode, override var rightChild: LogicNod
 
     override fun toString() = "($leftChild <=> $rightChild)"
 
-    override fun clone() = Equiv(leftChild.clone(), rightChild.clone())
+    override fun clone(qm: Map<String, Quantifier>) = Equiv(leftChild.clone(qm), rightChild.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -76,8 +76,8 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Synt
 
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
 
-    override fun clone(): Relation {
-        val args = arguments.map { it.clone() }
+    override fun clone(qm: Map<String, Quantifier>): Relation {
+        val args = arguments.map { it.clone(qm) }
         return Relation(spelling, args)
     }
 
@@ -115,7 +115,17 @@ class UniversalQuantifier(
 
     override fun toString() = "(∀$varName: $child)"
 
-    override fun clone() = UniversalQuantifier(varName, child.clone(), mutableListOf())
+    override fun clone(qm: Map<String, Quantifier>): UniversalQuantifier {
+        val newQuantifier = UniversalQuantifier(varName, child, mutableListOf())
+
+        // Set this quantifier as the binding one for variables of name $varName
+        val modMap = qm.toMutableMap()
+        modMap[varName] = newQuantifier
+
+        // Replace the child reference with a deep copy and compute quantifier linking
+        newQuantifier.child = child.clone(modMap)
+        return newQuantifier
+    }
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }
@@ -130,7 +140,17 @@ class ExistentialQuantifier(
 
     override fun toString() = "(∃$varName: $child)"
 
-    override fun clone() = ExistentialQuantifier(varName, child.clone(), mutableListOf())
+    override fun clone(qm: Map<String, Quantifier>): ExistentialQuantifier {
+        val newQuantifier = ExistentialQuantifier(varName, child, mutableListOf())
+
+        // Set this quantifier as the binding one for variables of name $varName
+        val modMap = qm.toMutableMap()
+        modMap[varName] = newQuantifier
+
+        // Replace the child reference with a deep copy and compute quantifier linking
+        newQuantifier.child = child.clone(modMap)
+        return newQuantifier
+    }
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 }

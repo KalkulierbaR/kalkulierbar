@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useRef } from "preact/hooks";
-import { LayoutItem } from "../../../types/layout";
-import { TableauxTreeLayoutNode } from "../../../types/tableaux";
+import { NCTabTreeNode } from "../../../types/nc-tableaux";
+import { Tree } from "../../../types/tree";
 import { DragTransform } from "../../../types/ui";
 import { classMap } from "../../../util/class-map";
 import Draggable from "../../draggable";
@@ -10,21 +10,17 @@ import * as style from "./style.scss";
 
 interface Props {
     /**
-     * The single tree node to represent
+     * The tree node
      */
-    node: LayoutItem<TableauxTreeLayoutNode>;
+    node: Tree<NCTabTreeNode>;
     /**
-     * Boolean to change the style of the node if it is selected
+     * The id of a node if one is selected
      */
     selected: boolean;
     /**
-     * The function to call, when the user selects this node
+     * The function to call, when the user selects a node
      */
-    selectNodeCallback: (node: TableauxTreeLayoutNode) => void;
-    /**
-     * Contains the Information, that potential Lemma nodes are selectable
-     */
-    lemmaNodesSelectable: boolean;
+    selectNodeCallback: (node: NCTabTreeNode) => void;
     /**
      * The drag transform of this node
      */
@@ -39,26 +35,18 @@ interface Props {
     zoomFactor: number;
 }
 
-// Component representing a single Node of a TableauxTree
-const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
+const NCTabNode: preact.FunctionalComponent<Props> = ({
     node,
     selected,
     selectNodeCallback,
-    lemmaNodesSelectable,
-    onDrag,
     dragTransform,
+    onDrag,
     zoomFactor,
 }) => {
     const textRef = useRef<SVGTextElement>();
 
-    // The nodes name which is displayed
-    const name = `${node.data.negated ? "¬" : ""}${node.data.spelling}`;
-
     // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
-    const nodeIsClickable =
-        (lemmaNodesSelectable && node.data.isClosed) ||
-        (!lemmaNodesSelectable && !node.data.isClosed) ||
-        (lemmaNodesSelectable && selected);
+    const nodeIsClickable = true;
 
     /**
      * Handle the onClick event of the node
@@ -75,40 +63,34 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
             onClick={handleClick}
             class={classMap({
                 [style.node]: true,
-                [style.nodeClosed]: node.data.isClosed && !lemmaNodesSelectable,
+                [style.nodeClosed]: node.data.isClosed,
                 [style.nodeClickable]: nodeIsClickable,
             })}
-            id={node.data.id}
-            zoomFactor={zoomFactor}
+            elementRef={textRef}
             dragTransform={dragTransform}
             onDrag={onDrag}
-            elementRef={textRef}
+            zoomFactor={zoomFactor}
+            id={node.data.id}
         >
             <Rectangle
                 elementRef={textRef}
-                disabled={node.data.isClosed && !lemmaNodesSelectable}
+                disabled={node.data.isClosed}
                 selected={selected}
-                class={classMap({
-                    [style.nodeLemma]: node.data.lemmaSource != null,
-                    [style.nodeSelectLemma]:
-                        node.data.isClosed && lemmaNodesSelectable,
-                })}
             />
             <text
                 ref={textRef}
                 text-anchor="middle"
                 class={classMap({
                     [style.textSelected]: selected,
-                    [style.textClosed]:
-                        node.data.isClosed && !lemmaNodesSelectable,
+                    [style.textClosed]: node.data.isClosed,
                 })}
                 x={node.x}
                 y={node.y}
             >
-                {name}
+                {node.data.spelling}
             </text>
         </Draggable>
     );
 };
 
-export default TableauxTreeNode;
+export default NCTabNode;

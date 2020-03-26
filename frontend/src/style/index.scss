@@ -28,6 +28,7 @@
 
 :root {
     --kbar-accent-color: #673ab7;
+    --kbar-accent-light-color: #d4bcff;
     --kbar-accent-2-color: #e9be4b;
     --kbar-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
         0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
@@ -38,10 +39,12 @@
     --kbar-card-color: #fff;
     --kbar-3dp-color: #fff;
     --kbar-8dp-color: rgb(218, 218, 218);
-    --kbar-selected-color: #d4bcff;
+    --kbar-selected-color: var(--kbar-accent-light-color);
     --kbar-primary-text-color: #444;
     --kbar-secondary-text-color: var(--kbar-accent-color);
     --kbar-link-color: var(--kbar-accent-color);
+    --kbar-text-selected-color: #fff;
+    --kbar-text-closed-color: #555555;
     --mdc-theme-secondary: var(--kbar-accent-color);
 }
 
@@ -82,6 +85,10 @@ p {
     padding: 16px;
     box-shadow: var(--kbar-shadow);
     margin-bottom: 16px;
+}
+
+.no-pad {
+    padding: 0;
 }
 
 h3,

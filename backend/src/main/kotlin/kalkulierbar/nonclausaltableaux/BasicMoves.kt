@@ -51,7 +51,7 @@ fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
 
     // Add the node's children to the last inserted node to restore the tree structure
     nodes[parentID].children.addAll(savedChildren)
-
+    state.setParent(savedChildren, nodes.size - 1)
     // Add move to history
     if (state.backtracking)
         state.moveHistory.add(AlphaMove(nodeID))
@@ -74,19 +74,25 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     if (node.formula !is Or)
         throw IllegalMove("Outermost logic operator is not OR")
 
-    if (!node.isLeaf)
-        throw IllegalMove("Splitting for non-leaves is not supported yet")
+    // Collect all leaves in the current branch where the split nodes
+    // will have to be appended
+    // If the node is a leaf, this will only be the nodeID
+    val branchLeaveIDs = state.childLeavesOf(nodeID)
 
     val workList = mutableListOf(node.formula)
 
     while (workList.isNotEmpty()) {
         val subFormula = workList.removeAt(0)
+        // Further decompose the formula
         if (subFormula is Or) {
             workList.add(subFormula.rightChild)
             workList.add(subFormula.leftChild)
         } else {
-            nodes.add(NcTableauxNode(nodeID, subFormula))
-            nodes[nodeID].children.add(nodes.size - 1)
+            // Append the split nodes to every leaf
+            branchLeaveIDs.forEach {
+                nodes.add(NcTableauxNode(it, subFormula.clone()))
+                nodes[it].children.add(nodes.size - 1)
+            }
         }
     }
 
@@ -107,9 +113,11 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val nodes = state.nodes
     checkNodeRestrictions(nodes, nodeID)
 
-    // Check node formula == UniversalQuantifier
     val node = nodes[nodeID]
-    val formula = node.formula
+    // Note: This clone() is important as it restores quantifier linking
+    //       Which cannot be recovered from deserialization
+    val formula = node.formula.clone()
+
     if (formula !is UniversalQuantifier)
         throw IllegalMove("Outermost logic operator is not a universal quantifier")
 
@@ -132,9 +140,10 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
     // Add new node to tree
     val newNode = NcTableauxNode(nodeID, newFormula)
     newNode.children.addAll(savedChildren)
+
     nodes.add(newNode)
     node.children.add(nodes.size - 1)
-
+    state.setParent(savedChildren, nodes.size - 1)
     // Add move to history
     if (state.backtracking)
         state.moveHistory.add(GammaMove(nodeID))
@@ -155,9 +164,12 @@ fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val nodes = state.nodes
     checkNodeRestrictions(nodes, nodeID)
 
-    // Check node == UniversalQuantifier
     val node = nodes[nodeID]
-    val formula = node.formula
+    // Note: This clone() is important as it restores quantifier linking
+    //       Which cannot be recovered from deserialization
+    val formula = node.formula.clone()
+
+    // Check node == UniversalQuantifier
     if (formula !is ExistentialQuantifier)
         throw IllegalMove("The outermost logic operator is not an existential quantifier")
 
@@ -175,6 +187,7 @@ fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     newNode.children.addAll(savedChildren)
     nodes.add(newNode)
     node.children.add(nodes.size - 1)
+    state.setParent(savedChildren, nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
