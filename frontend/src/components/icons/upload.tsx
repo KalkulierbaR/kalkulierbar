@@ -11,7 +11,7 @@ interface Props {
     fill?: string;
 }
 
-const FactoriseIcon: preact.FunctionalComponent<Props> = ({
+const UploadIcon: preact.FunctionalComponent<Props> = ({
     size = 24,
     fill = "#fff",
 }) => (
@@ -20,15 +20,10 @@ const FactoriseIcon: preact.FunctionalComponent<Props> = ({
         width={size}
         height={size}
         viewBox="0 0 24 24"
-        fill="none"
-        stroke={fill}
-        style="stroke-width:2.1"
     >
-        <polyline points="4 14 10 14 10 20" />
-        <polyline points="20 10 14 10 14 4" />
-        <line x1="14" y1="10" x2="21" y2="3" />
-        <line x1="3" y1="21" x2="10" y2="14" />
+        <path fill="none" d="M0 0h24v24H0V0z" />
+        <path fill={fill} d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z" />
     </svg>
 );
 
-export default FactoriseIcon;
+export default UploadIcon;

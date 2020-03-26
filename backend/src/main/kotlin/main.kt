@@ -22,7 +22,7 @@ val endpoints: Set<Calculus> = setOf<Calculus>(
         FirstOrderResolution(),
         DPLL(),
         NonClausalTableaux()
-    )
+)
 
 fun main(args: Array<String>) {
     // Verify that all calculus implementations have unique names
@@ -89,7 +89,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         // Small documentation at the main calculus endpoint
         app.get("/$name") { ctx ->
             ctx.result("""Calculus "$name" loaded.
-                |Interact via the /parse /move and /close endpoints""".trimMargin())
+                |Interact via the /parse /move /close and /validate endpoints""".trimMargin())
         }
 
         // Parse endpoint takes formula parameter and passes it to calculus implementation
@@ -98,6 +98,12 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
             val formula = getParam(map, "formula")!!
             val params = getParam(map, "params", true)
             ctx.result(endpoint.parseFormula(formula, params))
+        }
+
+        app.post("/$name/validate") { ctx ->
+            val map = ctx.formParamMap()
+            val state = getParam(map, "state")!!
+            ctx.result(endpoint.validate(state))
         }
 
         // Move endpoint takes state and move parameter values and passes them to calculus implementation
