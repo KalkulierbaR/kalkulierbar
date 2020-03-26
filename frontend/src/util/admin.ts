@@ -1,4 +1,3 @@
-// Todo Admin API auslagern...
 import { CalculusType, Config, Example } from "../types/app";
 import { calcMac, getCurrentDate } from "./mac";
 
