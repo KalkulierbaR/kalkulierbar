@@ -24,6 +24,7 @@ import {
     sendFactorize,
     showHiddenClauses,
 } from "../../../util/resolution";
+import DownloadFAB from "../../btn/download";
 import FactorizeIcon from "../../icons/factorize";
 import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
@@ -166,8 +167,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         )}
                     </Fragment>
                 ) : (
-                    undefined
+                    <DownloadFAB state={state} name={calculus} />
                 )}
+
                 {state!.hiddenClauses.clauses.length > 0 ? (
                     <FAB
                         mini={true}

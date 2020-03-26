@@ -52,6 +52,7 @@ const routes: LinkGroup[] = [
                 path: Calculus.foTableaux,
             },
             { name: "Resolution", path: Calculus.foResolution },
+            { name: "NC Tableaux", path: Calculus.ncTableaux },
         ],
     },
 ];

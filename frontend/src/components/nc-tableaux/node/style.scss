@@ -1,0 +1,20 @@
+.node {
+    transform: none;
+    cursor: default;
+}
+
+.text--selected {
+    fill: var(--kbar-text-selected-color);
+}
+
+.text--closed {
+    fill: var(--kbar-text-closed-color);
+}
+
+.node--closed {
+    transform: none;
+}
+
+.node--clickable {
+    cursor: pointer;
+}

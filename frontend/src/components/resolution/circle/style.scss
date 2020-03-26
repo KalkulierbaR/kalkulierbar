@@ -13,11 +13,11 @@
 }
 
 .text--selected {
-    fill: #fff;
+    fill: var(--kbar-text-selected-color);
 }
 
 .text--closed {
-    fill: #555555;
+    fill: var(--kbar-text-closed-color);
 }
 
 .svg {

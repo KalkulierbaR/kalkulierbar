@@ -26,6 +26,7 @@ class TestFOResolveUnify {
 
     private fun testFormula(formula: String, move: ResolutionMove, expected: String? = null) {
         val state = inst.parseFormulaToState(formula, null)
+        assertEquals(state.clauseSet.clauses.size, state.clauseCounter)
 
         if (expected == null) {
             assertFailsWith<IllegalMove> {

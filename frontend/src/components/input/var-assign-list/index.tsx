@@ -1,5 +1,5 @@
-import {h} from "preact";
-import {useState} from "preact/hooks";
+import { h } from "preact";
+import { useState } from "preact/hooks";
 import { VarAssign } from "../../../types/tableaux";
 import Btn from "../../btn";
 import TextInput from "../text";
@@ -16,7 +16,10 @@ interface Props {
     /**
      * The function to call, when the user submits the list
      */
-    submitVarAssignCallback: (autoAssign: boolean, varAssign?: VarAssign) => void;
+    submitVarAssignCallback: (
+        autoAssign: boolean,
+        varAssign?: VarAssign,
+    ) => void;
     /**
      * Label for the submit button
      */
@@ -42,19 +45,27 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
     submitLabel,
     secondSubmitLabel,
     secondSubmitEvent,
-    className
+    className,
 }) => {
     const varAssign: VarAssign = {};
-    const [focusedInputElement, setFocusedInputElement] = useState<string>(vars[0]);
+    const [focusedInputElement, setFocusedInputElement] = useState<string>(
+        vars[0],
+    );
 
     /**
      * Submit the manual variable assignment by the user
      * @returns {void}
      */
     const submitManualVarAssign = () => {
-        vars.forEach(variable => {
+        vars.forEach((variable) => {
             const textInput = document.getElementById(variable);
-            if (!(textInput && textInput instanceof HTMLInputElement && textInput.value)) {
+            if (
+                !(
+                    textInput &&
+                    textInput instanceof HTMLInputElement &&
+                    textInput.value
+                )
+            ) {
                 return;
             }
             varAssign[variable] = textInput.value;
@@ -72,18 +83,25 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
         if (e.keyCode === 13 && e.ctrlKey) {
             // Submit manual varAssign when hitting (enter + ctrlKey)
             submitManualVarAssign();
-        }else if (e.keyCode === 13){
+        } else if (e.keyCode === 13) {
             // Select next input or submit manual varAssign when hitting (enter)
             const focusedElementIndex = vars.indexOf(focusedInputElement);
-            if (focusedElementIndex === (vars.length - 1)){
+            if (focusedElementIndex === vars.length - 1) {
                 submitManualVarAssign();
-            } else{
-                const nextInput = document.getElementById(vars[focusedElementIndex + 1]) as HTMLInputElement;
+            } else {
+                const nextInput = document.getElementById(
+                    vars[focusedElementIndex + 1],
+                ) as HTMLInputElement;
                 nextInput.focus();
             }
         }
     };
 
+    /**
+     * Handle the FocusEvent of the text input
+     * @param {FocusEvent} e - The focus event
+     * @returns {void}
+     */
     const onFocus = (e: FocusEvent) => {
         const target = e.target as HTMLInputElement;
         setFocusedInputElement(target.id);
@@ -92,19 +110,19 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
 
     return (
         <div class={`card ${className}`}>
-            {vars.map((variable, index) =>
-                    <p key={variable}>
-                        <TextInput
-                            id={variable}
-                            label={variable + " := "}
-                            required={manualVarAssignOnly}
-                            inline={true}
-                            onKeyDown={onKeyDown}
-                            onFocus={onFocus}
-                            autoFocus= {index === 0}
-                        />
-                    </p>
-            )}
+            {vars.map((variable, index) => (
+                <p key={variable}>
+                    <TextInput
+                        id={variable}
+                        label={variable + " := "}
+                        required={manualVarAssignOnly}
+                        inline={true}
+                        onKeyDown={onKeyDown}
+                        onFocus={onFocus}
+                        autoFocus={index === 0}
+                    />
+                </p>
+            ))}
             <Btn onClick={submitManualVarAssign}>{submitLabel}</Btn>
 
             {!manualVarAssignOnly && secondSubmitLabel && secondSubmitEvent ? (

@@ -1,5 +1,6 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
+import UploadFAB from "../../components/btn/upload";
 import HintIcon, { Hint } from "../../components/hint";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
@@ -54,7 +55,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format foLogic={fo} />
-            <FormulaInput calculus={calculus} params={params} />
+            <FormulaInput calculus={calculus} params={params} foLogic={fo} />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
@@ -89,16 +90,17 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                     {!fo && (
                         <div class="switches">
-                                <Switch
-                                    label="Naive CNF transformation"
-                                    onChange={strategySelect}
-                                />
+                            <Switch
+                                label="Naive CNF transformation"
+                                onChange={strategySelect}
+                            />
 
-                                <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
+                            <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
                         </div>
                     )}
                 </div>
             </div>
+            <UploadFAB calculus={calculus} />
             <ExampleList calculus={calculus}/>
         </Fragment>
     );

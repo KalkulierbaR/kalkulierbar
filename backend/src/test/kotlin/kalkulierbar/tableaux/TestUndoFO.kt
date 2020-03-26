@@ -32,7 +32,7 @@ class TestUndoFO {
         assertEquals(state.usedBacktracking, false)
 
         // Kein Error wird geworfen bei Anfangszustand
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.UNDO, 0, 0))
+        state = instance.applyMoveOnState(state, MoveUndo())
         assertEquals(state.nodes.size, 1)
         assertEquals(state.moveHistory.isEmpty(), true)
         // assertEquals(state.usedBacktracking, true)
@@ -42,14 +42,14 @@ class TestUndoFO {
     fun testUndo1() {
         var state = states[1]
         // {!R(a), R(b), !R(b)}, {!R(a), !R(a), !R(b)}
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 1))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 6, 2))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 4, 2))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 5, 2))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(2, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(6, 2))
+        state = instance.applyMoveOnState(state, MoveAutoClose(4, 2))
+        state = instance.applyMoveOnState(state, MoveAutoClose(5, 2))
 
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.UNDO, Integer.MAX_VALUE, Integer.MIN_VALUE))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.UNDO, -1, 1))
+        state = instance.applyMoveOnState(state, MoveUndo())
+        state = instance.applyMoveOnState(state, MoveUndo())
 
         val nodes = state.nodes
         // check for leaf closed and close ref
@@ -73,14 +73,14 @@ class TestUndoFO {
         val map = mapOf("B_2" to "A_1", "A_2" to "A_1")
 
         // {!R(A), R(A)}, {!R(A), !R(B)}, {!R(A), !R(B)}, {!R(A), !R(A)}
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(2, 1))
 
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 3, 2, map))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.CLOSE, 4, 2, map))
+        state = instance.applyMoveOnState(state, MoveCloseAssign(3, 2, map))
+        state = instance.applyMoveOnState(state, MoveCloseAssign(4, 2, map))
 
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.UNDO, 4, 2, map))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.UNDO, 4, 2, map))
+        state = instance.applyMoveOnState(state, MoveUndo())
+        state = instance.applyMoveOnState(state, MoveUndo())
 
         var nodes = state.nodes
 
@@ -107,9 +107,9 @@ class TestUndoFO {
     fun testUndoExpand3() {
         var state = states[2]
         // {!R(A), R(A)}, {!R(A), !R(B)}, {!R(A), !R(B)}, {!R(A), !R(A)}
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 2, 1))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.UNDO, 0, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(2, 1))
+        state = instance.applyMoveOnState(state, MoveUndo())
 
         assertEquals(state.moveHistory.size, 1)
         assertEquals(state.usedBacktracking, true)

@@ -1,4 +1,5 @@
 import { DPLLMove, DPLLState } from "./dpll";
+import { NCTableauxMove, NCTableauxState } from "./nc-tableaux";
 import {
     FOResolutionMove,
     FOResolutionParams,
@@ -19,17 +20,15 @@ import {
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
 export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll";
-export type FOCalculusType = "fo-tableaux" | "fo-resolution";
-export type CalculusType =
-    | TableauxCalculusType
-    | ResolutionCalculusType
-    | "dpll";
+export type FOCalculusType = "fo-tableaux" | "fo-resolution" | "nc-tableaux";
+export type CalculusType = FOCalculusType | PropCalculusType;
 
 export enum Calculus {
     propTableaux = "prop-tableaux",
     foTableaux = "fo-tableaux",
     propResolution = "prop-resolution",
     foResolution = "fo-resolution",
+    ncTableaux = "nc-tableaux",
     dpll = "dpll",
 }
 
@@ -64,6 +63,7 @@ export interface Move {
     "prop-resolution": PropResolutionMove;
     "fo-tableaux": FOTableauxMove;
     "fo-resolution": FOResolutionMove;
+    "nc-tableaux": NCTableauxMove;
     dpll: DPLLMove;
 }
 
@@ -72,6 +72,7 @@ export interface Params {
     "prop-resolution": PropResolutionParams;
     "fo-tableaux": FOTableauxParams;
     "fo-resolution": FOResolutionParams;
+    "nc-tableaux": null;
     dpll: null;
 }
 
@@ -93,6 +94,7 @@ export interface AppState {
     "prop-resolution"?: PropResolutionState;
     "fo-tableaux"?: FOTableauxState;
     "fo-resolution"?: FOResolutionState;
+    "nc-tableaux"?: NCTableauxState;
     dpll?: DPLLState;
     tutorialMode: TutorialMode;
     isAdmin: boolean;
@@ -240,7 +242,7 @@ export interface APIInformation<S> {
 export enum TutorialMode {
     None = 0,
     HighlightFAB = 1,
-    HighlightCheck = 2,
+    HighlightCheck = 1 << 1,
 
     HighlightAll = HighlightCheck | HighlightFAB,
 }

@@ -114,14 +114,14 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path={"/" + Calculus.propTableaux}
+                        path={`/${Calculus.propTableaux}`}
                         calculus={Calculus.propTableaux}
                         getComponent={() =>
                             import("../routes/tableaux").then((m) => m.default)
                         }
                     />
                     <AsyncRoute
-                        path={"/" + Calculus.propTableaux + "/view"}
+                        path={`/${Calculus.propTableaux}/view`}
                         calculus={Calculus.propTableaux}
                         getComponent={() =>
                             import("../routes/tableaux/view").then(
@@ -137,7 +137,7 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path={"/" + Calculus.foTableaux + "/view"}
+                        path={`/${Calculus.foTableaux}/view`}
                         calculus={Calculus.foTableaux}
                         getComponent={() =>
                             import("../routes/tableaux/view").then(
@@ -146,7 +146,7 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path={"/" + Calculus.propResolution}
+                        path={`/${Calculus.propResolution}`}
                         calculus={Calculus.propResolution}
                         getComponent={() =>
                             import("../routes/resolution").then(
@@ -155,7 +155,7 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path={"/" + Calculus.propResolution + "/view"}
+                        path={`/${Calculus.propResolution}/view`}
                         calculus={Calculus.propResolution}
                         getComponent={() =>
                             import("../routes/resolution/view").then(
@@ -164,7 +164,7 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path={"/" + Calculus.foResolution}
+                        path={`/${Calculus.foResolution}`}
                         calculus={Calculus.foResolution}
                         getComponent={() =>
                             import("../routes/resolution").then(
@@ -173,7 +173,7 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path={"/" + Calculus.foResolution + "/view"}
+                        path={`/${Calculus.foResolution}/view`}
                         calculus={Calculus.foResolution}
                         getComponent={() =>
                             import("../routes/resolution/view").then(
@@ -182,13 +182,29 @@ const App: preact.FunctionalComponent = () => {
                         }
                     />
                     <AsyncRoute
-                        path={"/" + Calculus.dpll}
+                        path={`/${Calculus.ncTableaux}`}
+                        getComponent={() =>
+                            import("../routes/nc-tableaux").then(
+                                (m) => m.default,
+                            )
+                        }
+                    />
+                    <AsyncRoute
+                        path={`/${Calculus.ncTableaux}/view`}
+                        getComponent={() =>
+                            import("../routes/nc-tableaux/view").then(
+                                (m) => m.default,
+                            )
+                        }
+                    />
+                    <AsyncRoute
+                        path={`/${Calculus.dpll}`}
                         getComponent={() =>
                             import("../routes/dpll").then((m) => m.default)
                         }
                     />
                     <AsyncRoute
-                        path={"/" + Calculus.dpll + "/view"}
+                        path={`/${Calculus.dpll}/view`}
                         getComponent={() =>
                             import("../routes/dpll/view").then((m) => m.default)
                         }

@@ -33,6 +33,10 @@ interface Props {
      * Additional params for the calculus
      */
     params?: Params[CalculusType];
+    /**
+     * Whether this is currently FO logic
+     */
+    foLogic: boolean;
 }
 
 /**
@@ -55,6 +59,7 @@ const normalizeInput = (input: string) => {
 const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params,
+    foLogic,
 }) => {
     const {
         server,
@@ -211,6 +216,11 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     autocomplete="nope"
                     autocapitalize="off"
                     autocorrect="off"
+                    placeholder={
+                        foLogic
+                            ? "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"
+                            : "!a, c; a; !c"
+                    }
                 />
                 {FOCalculus.includes(calculus) &&
                     <OptionList
