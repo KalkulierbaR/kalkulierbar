@@ -2,9 +2,8 @@ import { h } from "preact";
 import AsyncRoute from "preact-async-route";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
-
 import { AppStateActionType, Calculus } from "../types/app";
-import { getConfig, checkCredentials } from "../util/admin";
+import { checkCredentials, getConfig } from "../util/admin";
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
 import Header from "./header";

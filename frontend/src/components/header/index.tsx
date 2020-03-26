@@ -1,7 +1,7 @@
 import {Component, Fragment, h} from "preact";
 import {Link} from "preact-router";
 import {useCallback, useState} from "preact/hooks";
-import {AppStateActionType, Calculus, Theme, TableauxCalculusType} from "../../types/app";
+import {AppStateActionType, Calculus, TableauxCalculusType, Theme} from "../../types/app";
 import {checkCredentials} from "../../util/admin";
 import {useAppState} from "../../util/app-state";
 import {classMap} from "../../util/class-map";
@@ -140,18 +140,22 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
 
     return (
         <nav class={style.nav}>
-            {routes.map((r) => (
-                (r.routes.filter((l) => config.disabled.includes(l.path as TableauxCalculusType)).length == r.routes.length ?
-                    (undefined)
-                :
-                    (<NavGroup
+            {routes.map((r) => {
+                const filteredRoutes = r.routes.filter((l) =>
+                    config.disabled.includes(l.path as TableauxCalculusType)
+                );
+
+                return filteredRoutes.length === r.routes.length ?
+                    undefined
+                : (
+                    <NavGroup
                         group={r}
                         onLinkClick={onLinkClick}
                         currentUrl={currentUrl}
                         hamburger={hamburger}
-                    />)
-                )
-            ))}
+                    />
+                );
+            })}
         </nav>
     );
 };
@@ -247,7 +251,7 @@ class NavGroup extends Component<NavGroupProps, NavGroupState> {
                 >
                     {group.routes.map((r) => (
                         (config.disabled.includes(r.path as TableauxCalculusType) ?
-                            (undefined)
+                            undefined
                         :
                             (<NavLink
                                 link={r}

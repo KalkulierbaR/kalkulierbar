@@ -11,10 +11,10 @@ import { addExample } from "../../../util/admin";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import Btn from "../../btn";
-import OptionList from "../option-list";
-import * as style from "./style.scss";
 import Dialog from "../../dialog";
+import OptionList from "../option-list";
 import TextInput from "../text";
+import * as style from "./style.scss";
 
 declare module "preact" {
     namespace JSX {

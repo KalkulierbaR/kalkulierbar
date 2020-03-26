@@ -1,13 +1,14 @@
 // Todo Admin API auslagern...
 import { CalculusType, Config, Example } from "../types/app";
-import { getCurrentDate, calcMac} from "./mac";
+import { calcMac, getCurrentDate } from "./mac";
 
 /**
  * Pulls the current config (kbar-state.json) of the backend sever
  *
- * @param server - Server
- * @param changeConfig - Change-Config handler
- * @param onError - Error handler
+ * @param {string} server - Server
+ * @param {CallableFunction} changeConfig - Change-Config handler
+ * @param {CallableFunction} onError - Error handler
+ * @returns {void}
  */
 export const getConfig = async (
     server: string,
@@ -38,10 +39,11 @@ export const getConfig = async (
  * Checks if the entered Admin-Key is the same as in the kbar-state.json provided and
  * enables the admin options on success
  *
- * @param server - Server
- * @param adminKey - the key to be checked
- * @param setAdmin - Unlock admin options handler
- * @param onError - Error handler
+ * @param {string} server - Server
+ * @param {string} adminKey - the key to be checked
+ * @param {CallableFunction} setAdmin - Unlock admin options handler
+ * @param {CallableFunction} onError - Error handler
+ * @returns {void}
  */
 export const checkCredentials = async (
     server: string,
@@ -86,12 +88,13 @@ export const checkCredentials = async (
  * Changes a calculus to be disabled in the config (kbar-state.json) of the backend sever and
  * loads the new config from the backend
  *
- * @param server - Server
- * @param calculus - the calculus to be changed
- * @param disabled - whether the calculus should be disabled
- * @param adminKey - the admin key to proof authenticity of the request
- * @param changeConfig - Change config handler
- * @param onError - Error handler
+ * @param {string} server - Server
+ * @param {CalculusType} calculus - the calculus to be changed
+ * @param {boolean} disabled - whether the calculus should be disabled
+ * @param {string} adminKey - the admin key to proof authenticity of the request
+ * @param {CallableFunction} changeConfig - Change config handler
+ * @param {CallableFunction} onError - Error handler
+ * @returns {void}
  */
 export const setCalculusState = async (
     server: string,
@@ -130,12 +133,13 @@ export const setCalculusState = async (
  * Adds an Example to the config (kbar-state.json) of the backend server and
  * loads the new config from the backend
  *
- * @param server - Server
- * @param example - the Example object
- * @param adminKey - the admin key to proof authenticity of the request
- * @param changeConfig - Change config handler
- * @param onError - Error handler
- * @param onSuccess - Success handler
+ * @param {string} server - Server
+ * @param {Example} example - the Example object
+ * @param {string} adminKey - the admin key to proof authenticity of the request
+ * @param {CallableFunction} changeConfig - Change config handler
+ * @param {CallableFunction} onError - Error handler
+ * @param {CallableFunction} onSuccess - Success handler
+ * @returns {void}
  */
 export const addExample = async (
     server: string,
@@ -174,12 +178,13 @@ export const addExample = async (
  * Adds an Example to the config (kbar-state.json) of the backend server and
  * loads the new config from the backend
  *
- * @param server - Server
- * @param exampleID - the ID of the example to be deleted
- * @param adminKey - the admin key to proof authenticity of the request
- * @param changeConfig - Change config handler
- * @param onError - Error handler
- * @param onSuccess - Success handler
+ * @param {string} server - Server
+ * @param {number} exampleID - the ID of the example to be deleted
+ * @param {string} adminKey - the admin key to proof authenticity of the request
+ * @param {CallableFunction} changeConfig - Change config handler
+ * @param {CallableFunction} onError - Error handler
+ * @param {CallableFunction} onSuccess - Success handler
+ * @returns {void}
  */
 export const delExample = async (
     server: string,

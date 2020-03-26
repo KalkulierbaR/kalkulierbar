@@ -1,7 +1,7 @@
 import Keccak from "sha3";
 
 /**
- * returns the current date of UTC
+ * @returns {string} - The current date of UTC
  */
 export const getCurrentDate = () => {
     const newDate = new Date();
@@ -13,8 +13,8 @@ export const getCurrentDate = () => {
 };
 
 /**
- * Returns the keccak-256 hash of the payload
- * @param payload
+ * @param {string} payload - The payload to hash
+ * @returns {string} - The keccak-256 hash of the payload
  */
 export const calcMac = (
     payload: string,
