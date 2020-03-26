@@ -106,7 +106,7 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
     move: Move[C],
     stateChanger: AppStateUpdater,
     onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    onWarning?: (msg: string) => void,
 ): Promise<AppState[C]> => {
     const url = `${server}/${calculus}/move`;
     try {
@@ -126,7 +126,7 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
         }
         const parsed = await res.json();
         stateChanger(calculus, parsed);
-        if ("statusMessage" in parsed && parsed.statusMessage) {
+        if ("statusMessage" in parsed && parsed.statusMessage && onWarning) {
             onWarning(parsed.statusMessage);
         }
         return parsed;

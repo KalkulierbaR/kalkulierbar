@@ -13,6 +13,15 @@ import { sendMove } from "./api";
 import { tree, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
 
+/**
+ * Send alpha move to backend
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} stateChanger - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {number} nodeID - The node's id
+ * @returns {void}
+ */
 export const sendAlpha = (
     server: string,
     state: NCTableauxState,
@@ -29,6 +38,15 @@ export const sendAlpha = (
         onError,
     );
 
+/**
+ * Send beta move to backend
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} stateChanger - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {number} nodeID - The node's id
+ * @returns {void}
+ */
 export const sendBeta = (
     server: string,
     state: NCTableauxState,
@@ -45,6 +63,15 @@ export const sendBeta = (
         onError,
     );
 
+/**
+ * Send gamma move to backend
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} stateChanger - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {number} nodeID - The node's id
+ * @returns {void}
+ */
 export const sendGamma = (
     server: string,
     state: NCTableauxState,
@@ -61,6 +88,15 @@ export const sendGamma = (
         onError,
     );
 
+/**
+ * Send delta move to backend
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} stateChanger - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {number} nodeID - The node's id
+ * @returns {void}
+ */
 export const sendDelta = (
     server: string,
     state: NCTableauxState,
@@ -77,6 +113,17 @@ export const sendDelta = (
         onError,
     );
 
+/**
+ * Send close move to backend
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} stateChanger - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {number} nodeID - The node's id
+ * @param {number} closeID - The second node's id
+ * @param {VarAssign | null} varAssign - The variable assignments
+ * @returns {void}
+ */
 export const sendClose = (
     server: string,
     state: NCTableauxState,
@@ -95,6 +142,14 @@ export const sendClose = (
         onError,
     );
 
+/**
+ * Send undo move to backend
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} stateChanger - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @returns {void}
+ */
 export const sendUndo = (
     server: string,
     state: NCTableauxState,
@@ -110,9 +165,21 @@ export const sendUndo = (
         onError,
     );
 
+/**
+ * @param {NCTableauxNode[]} nodes - The nodes to work on
+ * @returns {TreeLayout<T>} - The tree layout
+ */
 export const ncTabTreeLayout = (nodes: NCTableauxNode[]) =>
     treeLayout(nodes, ncTabNodeToTree);
 
+/**
+ * Get a tree from a ncTabNode
+ * @param {NCTableauxNode[]} nodes - The nodes to work on
+ * @param {NCTableauxNode} n - The tree's root
+ * @param {number} i - The id
+ * @param {number} y - The y coordinate
+ * @returns {Tree<NCTabTreeNode>} - The tree
+ */
 const ncTabNodeToTree = (
     nodes: NCTableauxNode[],
     n: NCTableauxNode = nodes[0],
@@ -129,6 +196,12 @@ const ncTabNodeToTree = (
     );
 };
 
+/**
+ * Collect vars from a term
+ * @param {string[]} vars - The vars array to fill
+ * @param {FOTerm} term - The term to search in
+ * @returns {void}
+ */
 export const collectVarsFromTerm = (vars: string[], term: FOTerm) => {
     switch (term.type) {
         case "Constant":
@@ -144,6 +217,12 @@ export const collectVarsFromTerm = (vars: string[], term: FOTerm) => {
     }
 };
 
+/**
+ * Collect vars from a node
+ * @param {string[]} vars - The vars array to fill
+ * @param {LogicNode} formula - The formula to search in
+ * @returns {void}
+ */
 export const collectVarsFromNode = (vars: string[], formula: LogicNode) => {
     let node: LogicRelation;
     if (formula.type === "not" && formula.child.type === "relation") {
