@@ -1,8 +1,8 @@
 import { h } from "preact";
 import { useRef } from "preact/hooks";
-import { classMap } from "../../../helpers/class-map";
 import { DPLLNodeType, DPLLTreeLayoutNode } from "../../../types/dpll";
 import { LayoutItem } from "../../../types/layout";
+import { classMap } from "../../../util/class-map";
 import Rectangle from "../../rectangle";
 
 import * as style from "./style.scss";

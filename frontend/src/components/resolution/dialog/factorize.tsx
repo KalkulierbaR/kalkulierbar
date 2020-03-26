@@ -2,12 +2,6 @@ import { h } from "preact";
 import {useState} from "preact/hooks";
 import Dialog from "../../../components/dialog";
 import OptionList from "../../../components/input/option-list";
-import {useAppState} from "../../../helpers/app-state";
-import {stringArrayToStringMap} from "../../../helpers/array-to-map";
-import {atomToString} from "../../../helpers/clause";
-import {
-    sendFactorize,
-} from "../../../helpers/resolution";
 import { ResolutionCalculusType } from "../../../types/app";
 import {
     Atom,
@@ -20,6 +14,12 @@ import {
     instanceOfPropResState,
     PropResolutionState,
 } from "../../../types/resolution";
+import {useAppState} from "../../../util/app-state";
+import {stringArrayToStringMap} from "../../../util/array-to-map";
+import {atomToString} from "../../../util/clause";
+import {
+    sendFactorize,
+} from "../../../util/resolution";
 import Btn from "../../btn";
 
 interface Props {

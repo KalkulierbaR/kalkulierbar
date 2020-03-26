@@ -1,12 +1,12 @@
 import { Component, ComponentChildren, createRef, h } from "preact";
-import { disableDrag, enableDrag } from "../../helpers/zoom/drag";
-import { extent } from "../../helpers/zoom/extent";
-import { Gesture } from "../../helpers/zoom/gesture";
-import { mousePos } from "../../helpers/zoom/mouse";
-import { dist } from "../../helpers/zoom/point";
-import { touchPos } from "../../helpers/zoom/touch";
-import { constrain, IDENTITY, invert } from "../../helpers/zoom/transform";
 import { Extent, GoToEvent, Point, Transform } from "../../types/ui";
+import { disableDrag, enableDrag } from "../../util/zoom/drag";
+import { extent } from "../../util/zoom/extent";
+import { Gesture } from "../../util/zoom/gesture";
+import { mousePos } from "../../util/zoom/mouse";
+import { dist } from "../../util/zoom/point";
+import { touchPos } from "../../util/zoom/touch";
+import { constrain, IDENTITY, invert } from "../../util/zoom/transform";
 
 // Zoom algorithms taken from d3-zoom
 

@@ -2,9 +2,6 @@ import { h } from "preact";
 import {useState} from "preact/hooks";
 import Dialog from "../../../components/dialog";
 import OptionList from "../../../components/input/option-list";
-import {useAppState} from "../../../helpers/app-state";
-import {atomToString, getCandidateClause} from "../../../helpers/clause";
-import {addHyperSidePremiss, findOptimalMainLit, sendResolve, sendResolveUnify} from "../../../helpers/resolution";
 import { ResolutionCalculusType } from "../../../types/app";
 import {
     CandidateClause,
@@ -16,6 +13,9 @@ import {
     instanceOfPropResState,
     PropResolutionState,
 } from "../../../types/resolution";
+import {useAppState} from "../../../util/app-state";
+import {atomToString, getCandidateClause} from "../../../util/clause";
+import {addHyperSidePremiss, findOptimalMainLit, sendResolve, sendResolveUnify} from "../../../util/resolution";
 
 interface Props {
     /**

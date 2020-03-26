@@ -87,6 +87,7 @@ export interface AppState {
     "fo-tableaux"?: FOTableauxState;
     "fo-resolution"?: FOResolutionState;
     dpll?: DPLLState;
+    tutorialMode: TutorialMode;
 }
 
 export interface DerivedAppState extends AppState {
@@ -113,6 +114,7 @@ export enum AppStateActionType {
     SET_THEME,
     SET_SERVER,
     UPDATE_SAVED_FORMULA,
+    SET_TUTORIAL_MODE,
 }
 
 export interface UpdateScreenSize extends AppStateActionBase {
@@ -154,6 +156,11 @@ export interface UpdateSavedFormula<C extends CalculusType = CalculusType>
     value: string;
 }
 
+export interface SetTutorialMode extends AppStateActionBase {
+    type: AppStateActionType.SET_TUTORIAL_MODE;
+    value: TutorialMode;
+}
+
 export type AppStateAction =
     | UpdateScreenSize
     | AddNotification
@@ -161,7 +168,8 @@ export type AppStateAction =
     | UpdateCalculusState
     | SetTheme
     | SetServer
-    | UpdateSavedFormula;
+    | UpdateSavedFormula
+    | SetTutorialMode;
 
 export type AppStateUpdater = <C extends CalculusType = CalculusType>(
     id: C,
@@ -189,4 +197,12 @@ export interface APIInformation<S> {
     state: S;
     onChange: AppStateUpdater;
     onError: (msg: string) => void;
+}
+
+export enum TutorialMode {
+    None = 0,
+    HighlightFAB = 1,
+    HighlightCheck = 2,
+
+    HighlightAll = HighlightCheck | HighlightFAB,
 }

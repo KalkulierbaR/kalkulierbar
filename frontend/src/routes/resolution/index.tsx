@@ -5,10 +5,10 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
 import Switch from "../../components/switch";
-import { useAppState } from "../../helpers/app-state";
 import { Calculus, ResolutionCalculusType } from "../../types/app";
 import { VisualHelp } from "../../types/resolution";
 import { CnfStrategy } from "../../types/tableaux";
+import { useAppState } from "../../util/app-state";
 
 interface Props {
     /**
