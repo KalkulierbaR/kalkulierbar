@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import {CalculusType, ResolutionCalculus, TableauxCalculus, TutorialMode} from "../../types/app";
+import { CalculusType, ResolutionCalculus, TableauxCalculus, TutorialMode } from "../../types/app";
 import { useAppState } from "../../util/app-state";
 import Dialog from "../dialog";
 import FAB from "../fab";
@@ -8,6 +8,9 @@ import InfoIcon from "../icons/info";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * The currently active calculus
+     */
     calculus: CalculusType;
 }
 
@@ -90,7 +93,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 />
                             </video>
                             <p>
-                                If a clause has multiple identical atoms, you can factorize the clause.
+                                If a clause has multiple identical atoms, you can factorize it.
                             </p>
                         </div>
                         <div class={style.child}>
@@ -104,7 +107,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             <p>
                                 You can resolve multiple clauses at once with the hyper resolution.
                                 The main clause is selected first.
-                                Now you can select side premises with positive atoms only.
+                                Then you can add side premises which only contain positive atoms.
                             </p>
                         </div>
                     </div>
