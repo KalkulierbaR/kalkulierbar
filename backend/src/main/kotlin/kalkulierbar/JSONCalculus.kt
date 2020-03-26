@@ -29,6 +29,20 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      */
     abstract fun parseFormulaToState(formula: String, params: Param?): State
 
+    override fun validate(state: String): String {
+        val stateObj = jsonToState(state)
+        return if (validateOnState(stateObj)) "true" else "false"
+    }
+
+    /**
+     * Takes a state and evaluates whether it is valid
+     * @param state The current state
+     * @return Whether or not it is valid
+     */
+    open fun validateOnState(state: State): Boolean {
+        return true
+    }
+
     /**
      * Takes in a state representation and a move and applies the move on the state if possible.
      * Throws an exception explaining why the move is illegal otherwise.

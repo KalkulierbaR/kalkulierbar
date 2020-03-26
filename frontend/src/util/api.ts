@@ -57,6 +57,36 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     }
 };
 
+export const checkValid = async <C extends CalculusType = CalculusType>(
+    server: string,
+    onError: (msg: string) => void,
+    calculus: C,
+    state: string,
+) => {
+    const url = `${server}/${calculus}/validate`;
+    try {
+        const response = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `state=${encodeURIComponent(state)}`,
+        });
+        if (response.status !== 200) {
+            onError(await response.text());
+        } else {
+            const valid = (await response.json()) as boolean;
+            if (!valid) {
+                onError("The uploaded state is invalid");
+            }
+            return valid;
+        }
+    } catch (e) {
+        onError((e as Error).message);
+    }
+    return false;
+};
+
 /**
  * A asynchronous function to send requested move to backend
  * Updates app state with response from backend

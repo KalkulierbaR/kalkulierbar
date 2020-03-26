@@ -6,8 +6,10 @@ KalkulierbaR comes with a whole set of features to help you implement your own C
 At their core, calculi are just classes implementing the `Calculus` interface.
 There are three core functions: Parsing a formula and setting up the initial proof state,
 taking a proof state and applying a rule ('move') on it, and checking if a given state represents a closed proof.
-
+An additional endpoint that you might want to support is state validation, 
+which lets a frontend implementation check stored states without applying any moves. 
 So a really basic calculus might be implemented like this:
+
 ```kotlin
 class BareMetalCalculus : Calculus {
     // Give your calculus a unique name
@@ -26,6 +28,11 @@ class BareMetalCalculus : Calculus {
 
     // Take in a state, return a message indicating proof closure state
     override fun checkClose(state: String): String {
+        /*...*/
+    }
+
+    // Take in a state, return a message indicating its validity
+    override fun validate(state: String): String {
         /*...*/
     }
 }
@@ -90,6 +97,9 @@ class CommonCalculus : JSONCalculus<State, Move, Param>() {
 Note that the `checkCloseOnState` function returns a `CloseMessage` - this is a predefined data class containing
 a boolean field `closed` indicating whether the proof is, well, closed,
 alongside a string `message` containing more information.
+Also, you might have noticed there is no `validate` function here - and that's by design. 
+Using the `JSONCalculus`, the validate endpoint will simply return `true` if parsing of the state succeeds. 
+If you would like to perform additional validation, you can do so by overriding the `validateOnState` method of the interface.
 
 ## Some Safety
 One important caveat to the stateless nature of KalkulierbaR is that we have to be able to trust the client
@@ -131,9 +141,8 @@ Because writing parsers takes time, we have some ready that you can use:
 * `FlexibleClauseSetParser.parse(formula)` parses both clause set notation and propositional formulae into clause sets
 * `FirstOrderParser.parse(formula)` parses a first-order formula into a tree representation
 
-
 For details on the input formats see the input format specification files in this folder,
 for details on the parsed representations it's probably best to jump right to the source code
 in the `logic` and `clause` packages.
 There is also a variety of ready-to-use formula transformations (CNF, NNF, SNF, Unification, etc)
-for both propositional and first-order formulae in the `logic/transform` package.
+for both propositional and first-order formulae in the `logic/transform` `logic/util` packages.

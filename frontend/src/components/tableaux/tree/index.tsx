@@ -120,9 +120,9 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     dragTransforms,
     onDrag,
 }) => {
-    const { root, height: treeHeight, width: treeWidth } = tableauxTreeLayout(
-        nodes,
-    );
+    const { root, height, width: treeWidth } = tableauxTreeLayout(nodes);
+
+    const treeHeight = Math.max(height, 200);
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;

@@ -15,6 +15,7 @@ import {
     TableauxType,
 } from "../../types/tableaux";
 import { useAppState } from "../../util/app-state";
+import UploadFAB from "../../components/btn/upload";
 
 interface Props {
     /**
@@ -107,7 +108,11 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format foLogic={calculus === Calculus.foTableaux} />
-            <FormulaInput calculus={calculus} params={params} />
+            <FormulaInput
+                calculus={calculus}
+                params={params}
+                foLogic={calculus === Calculus.foTableaux}
+            />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
@@ -160,6 +165,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
+            <UploadFAB calculus={calculus} />
         </Fragment>
     );
 };
