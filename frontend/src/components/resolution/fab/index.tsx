@@ -30,7 +30,6 @@ import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
-import Tutorial from "../../tutorial";
 
 interface Props {
     /**
@@ -92,7 +91,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
             >
-                {selectedClauseId !== undefined && (
+                {selectedClauseId !== undefined ?
                     <Fragment>
                         <FAB
                             mini={true}
@@ -122,7 +121,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             label="Hide clause"
                             showIconAtEnd={true}
-                            icon={<HideIcon />}
+                            icon={<HideIcon/>}
                             onClick={() => {
                                 hideClause(selectedClauseId!, calculus, {
                                     ...apiInfo,
@@ -138,7 +137,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                 extended={true}
                                 label="Factorize"
                                 showIconAtEnd={true}
-                                icon={<FactorizeIcon />}
+                                icon={<FactorizeIcon/>}
                                 onClick={() => {
                                     if (
                                         !instanceOfPropResState(
@@ -147,7 +146,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                         ) &&
                                         state.clauseSet.clauses[
                                             selectedClauseId
-                                        ].atoms.length !== 2
+                                            ].atoms.length !== 2
                                     ) {
                                         setShowFactorizeDialog(true);
                                         return;
@@ -156,16 +155,15 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                         selectedClauseId!,
                                         new Set<number>([0, 1]),
                                         calculus,
-                                        { ...apiInfo, state },
+                                        {...apiInfo, state},
                                     );
                                     setSelectedClauses(undefined);
                                 }}
                             />
                         )}
                     </Fragment>
-                )}
-                {selectedClauseId === undefined &&
-                    <DownloadFAB state={state} name={calculus} />
+                :
+                    <DownloadFAB state={state} name={calculus}/>
                 }
                 {state.hiddenClauses.clauses.length > 0 && (
                     <FAB

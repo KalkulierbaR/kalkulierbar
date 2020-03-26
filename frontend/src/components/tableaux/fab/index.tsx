@@ -17,7 +17,6 @@ import DownloadFAB from "../../btn/download";
 import ExploreIcon from "../../icons/explore";
 import LemmaIcon from "../../icons/lemma";
 import UndoIcon from "../../icons/undo";
-import Tutorial from "../../tutorial";
 
 interface Props {
     /**
