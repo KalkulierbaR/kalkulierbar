@@ -5,7 +5,6 @@ import kalkulierbar.clause.ClauseSet
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.plus
 
 // Context object for clause set diff serialization
 // Tells kotlinx.serialize about child types of CsDiff

@@ -4,23 +4,18 @@ import {
     TableauxNode,
     TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
+import { DragTransform } from "../../../types/ui";
 import {
+    findSubTree,
     getAbsoluteDragTransform,
     getClosedLeaves,
-    tableauxTreeLayout,
-} from "../../../util/tableaux";
-
-import { findSubTree } from "../../../util/layout/tree";
-
-import { LayoutItem } from "../../../types/layout";
-import { Tree } from "../../../types/tree";
-import { DragTransform } from "../../../types/ui";
+} from "../../../util/layout/tree";
+import { tableauxTreeLayout } from "../../../util/tableaux";
+import ClosingEdge from "../../closing-edge";
 import Zoomable from "../../zoomable";
-
 import * as style from "./style.scss";
 import SubTree from "./subtree";
 
-// Properties Interface for the TableauxTreeView component
 interface Props {
     /**
      * The nodes of the tree
@@ -55,63 +50,6 @@ interface Props {
     onDrag: (id: number, dt: DragTransform) => void;
 }
 
-interface ClosingEdgeProps {
-    root: Tree<TableauxTreeLayoutNode>;
-    leaf: LayoutItem<TableauxTreeLayoutNode>;
-    pred: LayoutItem<TableauxTreeLayoutNode>;
-    dragTransforms: Record<number, DragTransform>;
-}
-
-// Component to display an edge in a graph
-const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
-    root,
-    leaf,
-    pred,
-    dragTransforms,
-}) => {
-    const predDt = getAbsoluteDragTransform(
-        root,
-        pred.data.id,
-        dragTransforms,
-    )!;
-    const leafDt = getAbsoluteDragTransform(
-        root,
-        leaf.data.id,
-        dragTransforms,
-    )!;
-
-    // Calculate coordinates
-    const x1 = leaf.x + leafDt.x;
-    const y1 = leaf.y + leafDt.y;
-    const x2 = pred.x + predDt.x;
-    const y2 = pred.y + predDt.y;
-
-    // Calculate edge
-    // M -> move to point x1,y1
-    // Q -> draw quadratic curve (type of Bezier Curve https://developer.mozilla.org/de/docs/Web/SVG/Tutorial/Pfade)
-    //      xC,yC of the control point
-    //      x2,y2 of the target
-    // should look like d="M x1 x2 Q xC yC x2 y2"
-    const xVektor = x1 - x2;
-    const yVektor = y1 - y2;
-    let xControlpoint = x1 - xVektor / 2;
-    let yControlpoint = y1 - yVektor / 2;
-    const divisor = 2;
-    if (x1 > x2) {
-        // child is to the right of the parent
-        xControlpoint = xControlpoint - -yVektor / divisor;
-        yControlpoint = yControlpoint - xVektor / divisor;
-    } else {
-        // child is to the left of the parent
-        xControlpoint = xControlpoint - yVektor / divisor;
-        yControlpoint = yControlpoint - -xVektor / divisor;
-    }
-
-    const d = `M ${x1} ${y1} Q ${xControlpoint} ${yControlpoint} ${x2} ${y2}`;
-
-    return <path d={d} class={style.link} />;
-};
-
 const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
     selectNodeCallback,
@@ -120,10 +58,15 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     dragTransforms,
     onDrag,
 }) => {
-    const { root, height: treeHeight, width: treeWidth } = tableauxTreeLayout(
-        nodes,
-    );
+    const { root, height, width: treeWidth } = tableauxTreeLayout(nodes);
 
+    const treeHeight = Math.max(height, 200);
+
+    /**
+     * Go to a node in the tree
+     * @param {any} d - The node to go to
+     * @returns {[number, number]} - The target coordinates
+     */
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
 
@@ -208,11 +151,7 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                                             root,
                                             (t) =>
                                                 t.data.id === n.data.closeRef!,
-                                            ({ x, y, data }) => ({
-                                                x,
-                                                y,
-                                                data,
-                                            }),
+                                            (t) => t,
                                         )!
                                     }
                                     dragTransforms={dragTransforms}

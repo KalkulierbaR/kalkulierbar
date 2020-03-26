@@ -66,16 +66,16 @@ export const propExample: PropTableauxState = {
         },
     ],
     moveHistory: [
-        { type: "EXPAND", id1: 0, id2: 0 },
-        { type: "EXPAND", id1: 1, id2: 1 },
+        { type: "tableaux-expand", id1: 0, id2: 0 },
+        { type: "tableaux-expand", id1: 1, id2: 1 },
         {
-            type: "EXPAND",
+            type: "tableaux-expand",
             id1: 2,
             id2: 2,
         },
     ],
     usedBacktracking: false,
-    seal: "D2A6057DD55D161AA29B0E00D0E9B7CC750EEA2C6372A7A96740123385CE50CE",
+    seal: "8730EA61E695FB8046FEB1EBEDB3984DC8B06F66185EB334BD20208C24E77F45",
 };
 
 export const foExample: FOTableauxState = {
@@ -113,7 +113,10 @@ export const foExample: FOTableauxState = {
                                     type: "Function",
                                     spelling: "f",
                                     arguments: [
-                                        { type: "Constant", spelling: "a" },
+                                        {
+                                            type: "Constant",
+                                            spelling: "a",
+                                        },
                                     ],
                                 },
                             ],
@@ -128,7 +131,10 @@ export const foExample: FOTableauxState = {
                                     type: "Function",
                                     spelling: "f",
                                     arguments: [
-                                        { type: "Constant", spelling: "b" },
+                                        {
+                                            type: "Constant",
+                                            spelling: "b",
+                                        },
                                     ],
                                 },
                             ],
@@ -221,7 +227,10 @@ export const foExample: FOTableauxState = {
                         type: "Function",
                         spelling: "f",
                         arguments: [
-                            { type: "QuantifiedVariable", spelling: "X_2" },
+                            {
+                                type: "QuantifiedVariable",
+                                spelling: "X_2",
+                            },
                         ],
                     },
                 ],
@@ -234,17 +243,16 @@ export const foExample: FOTableauxState = {
         },
     ],
     moveHistory: [
-        { type: "EXPAND", id1: 0, id2: 1, varAssign: {} },
+        { type: "tableaux-expand", id1: 0, id2: 1 },
         {
-            type: "EXPAND",
+            type: "tableaux-expand",
             id1: 1,
             id2: 0,
-            varAssign: {},
         },
     ],
     usedBacktracking: false,
     expansionCounter: 2,
-    seal: "D9CBFCD29C08A89041652FE3A8276DFEDE29D994E59A21AA99D4A553415E9F58",
+    seal: "C40FE5C4B0B780B997866215ED2D67BA1F9E3EDF5EBD35D250DF5488DE147D0B",
     renderedClauseSet: ["!R(f(X))", "R(f(a)), !R(f(b))", "R(f(Xv1))"],
     statusMessage: null,
 };

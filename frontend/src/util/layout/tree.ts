@@ -1,5 +1,6 @@
 import { LayoutItem } from "../../types/layout";
 import { LeftSiblingList, Link, Tree, TreeLayout } from "../../types/tree";
+import { DragTransform } from "../../types/ui";
 import { maxBy } from "../max-by";
 
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
@@ -33,6 +34,13 @@ export const treeLayout = <N, T extends { id: number }>(
 ): TreeLayout<T> => {
     const root = nodesToTree(nodes);
     layout(root);
+
+    if (root.x - root.width / 2 < 0) {
+        const dist = -(root.x - root.width / 2);
+        preOrderTraverseTree(root, (t) => {
+            t.x += dist;
+        });
+    }
 
     const width = treeWidth(root);
     const links = getLinks(root);
@@ -113,6 +121,47 @@ export const treeToLayoutItem = <T extends { id: number }>(
 
     return items;
 };
+
+/**
+ * Computes the absolute dt of a node
+ * @param {Tree<T>} t - Tree
+ * @param {number} id - The id to look for
+ * @param {Record<number, DragTransform>} dts - All dts
+ * @param {DragTransform} dt - Current dt
+ * @returns {DragTransform} - Absolute dt
+ */
+export const getAbsoluteDragTransform = <T extends { id: number }>(
+    t: Tree<T>,
+    id: number,
+    dts: Record<number, DragTransform>,
+    dt: DragTransform = dts[t.data.id] ?? { x: 0, y: 0 },
+): DragTransform | undefined => {
+    if (t.data.id === id) {
+        return dt;
+    }
+
+    for (const c of t.children) {
+        const cdt = dts[c.data.id] ?? { x: 0, y: 0 };
+        const res = getAbsoluteDragTransform(c, id, dts, {
+            x: dt.x + cdt.x,
+            y: dt.y + cdt.y,
+        });
+        if (res !== undefined) {
+            return res;
+        }
+    }
+
+    return;
+};
+
+/**
+ * Gets all closed leaves
+ * @param {Tree<T>} t - The tree
+ * @returns {Array<Tree<T>>} - All closed leaves
+ */
+export const getClosedLeaves = <T extends { closeRef: number | null }>(
+    t: Tree<T>,
+): Array<Tree<T>> => filterTree(t, (c) => c.data.closeRef !== null);
 
 const getLinks = <T extends { id: number }>(t: Tree<T>): Link[] => {
     const links: Link[] = t.children.map((c) => ({
@@ -291,7 +340,7 @@ const distributeExtra = <T>(
     const nr = i - si;
     t.children[si + 1].shift += dist / nr;
     t.children[i].shift -= dist / nr;
-    t.children[i].change -= dist / nr;
+    t.children[i].change -= dist - dist / nr;
 };
 
 const addChildSpacing = <T>(t: Tree<T>) => {

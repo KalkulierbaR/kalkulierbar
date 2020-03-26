@@ -1,12 +1,11 @@
 import { Fragment, h } from "preact";
-
-import Switch from "../../components/switch";
-
 import { useState } from "preact/hooks";
+import UploadFAB from "../../components/btn/upload";
 import HintIcon, { Hint } from "../../components/hint";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
+import Switch from "../../components/switch";
 import { Calculus, TableauxCalculusType } from "../../types/app";
 import {
     CnfStrategy,
@@ -107,7 +106,11 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format foLogic={calculus === Calculus.foTableaux} />
-            <FormulaInput calculus={calculus} params={params} />
+            <FormulaInput
+                calculus={calculus}
+                params={params}
+                foLogic={calculus === Calculus.foTableaux}
+            />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
@@ -160,6 +163,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
+            <UploadFAB calculus={calculus} />
         </Fragment>
     );
 };

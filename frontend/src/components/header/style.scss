@@ -72,6 +72,10 @@ $hamburgerBreakpoint: 700px;
         }
     }
 
+    button {
+        min-width: 128px;
+    }
+
     a.current {
         background: rgba(0, 0, 0, 0.2);
 

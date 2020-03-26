@@ -24,6 +24,7 @@ const INIT_APP_STATE: AppState = {
         [Calculus.foResolution]: "",
         [Calculus.propTableaux]: "",
         [Calculus.foTableaux]: "",
+        [Calculus.ncTableaux]: "",
         [Calculus.dpll]: "",
     },
     server: isDeployed

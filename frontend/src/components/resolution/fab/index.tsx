@@ -24,11 +24,13 @@ import {
     disableTutorial,
     getHighlightCheck,
 } from "../../../util/tutorial-mode";
+import DownloadFAB from "../../btn/download";
 import FactorizeIcon from "../../icons/factorize";
 import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
+import Tutorial from "../../tutorial";
 
 interface Props {
     /**
@@ -162,6 +164,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         )}
                     </Fragment>
                 )}
+                {selectedClauseId === undefined &&
+                    <DownloadFAB state={state} name={calculus} />
+                }
                 {state.hiddenClauses.clauses.length > 0 && (
                     <FAB
                         mini={true}
