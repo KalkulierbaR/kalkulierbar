@@ -1,16 +1,24 @@
 import { h } from "preact";
-
 import {
     SelectNodeOptions,
     TableauxNode,
     TableauxTreeLayoutNode,
 } from "../../../types/tableaux";
-import TableauxTreeNode from "../node";
+import {
+    getAbsoluteDragTransform,
+    getClosedLeaves,
+    tableauxTreeLayout,
+} from "../../../util/tableaux";
 
-import { tableauxTreeLayout } from "../../../helpers/tableaux";
+import { findSubTree } from "../../../util/layout/tree";
+
 import { LayoutItem } from "../../../types/layout";
+import { Tree } from "../../../types/tree";
+import { DragTransform } from "../../../types/ui";
 import Zoomable from "../../zoomable";
+
 import * as style from "./style.scss";
+import SubTree from "./subtree";
 
 // Properties Interface for the TableauxTreeView component
 interface Props {
@@ -37,23 +45,46 @@ interface Props {
      * Hands the Information over, that potential Lemma nodes are selectable
      */
     lemmaNodesSelectable?: boolean;
+    /**
+     * Drag transforms of all nodes
+     */
+    dragTransforms: Record<number, DragTransform>;
+    /**
+     * Callback to change a specific drag
+     */
+    onDrag: (id: number, dt: DragTransform) => void;
 }
 
 interface ClosingEdgeProps {
+    root: Tree<TableauxTreeLayoutNode>;
     leaf: LayoutItem<TableauxTreeLayoutNode>;
     pred: LayoutItem<TableauxTreeLayoutNode>;
+    dragTransforms: Record<number, DragTransform>;
 }
 
 // Component to display an edge in a graph
 const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
+    root,
     leaf,
     pred,
+    dragTransforms,
 }) => {
+    const predDt = getAbsoluteDragTransform(
+        root,
+        pred.data.id,
+        dragTransforms,
+    )!;
+    const leafDt = getAbsoluteDragTransform(
+        root,
+        leaf.data.id,
+        dragTransforms,
+    )!;
+
     // Calculate coordinates
-    const x1 = leaf.x;
-    const y1 = leaf.y;
-    const x2 = pred.x;
-    const y2 = pred.y;
+    const x1 = leaf.x + leafDt.x;
+    const y1 = leaf.y + leafDt.y;
+    const x2 = pred.x + predDt.x;
+    const y2 = pred.y + predDt.y;
 
     // Calculate edge
     // M -> move to point x1,y1
@@ -76,19 +107,8 @@ const ClosingEdge: preact.FunctionalComponent<ClosingEdgeProps> = ({
         yControlpoint = yControlpoint - -xVektor / divisor;
     }
 
-    const d =
-        "M " +
-        x1 +
-        " " +
-        y1 +
-        " Q " +
-        xControlpoint +
-        " " +
-        yControlpoint +
-        " " +
-        x2 +
-        " " +
-        y2;
+    const d = `M ${x1} ${y1} Q ${xControlpoint} ${yControlpoint} ${x2} ${y2}`;
+
     return <path d={d} class={style.link} />;
 };
 
@@ -97,20 +117,24 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
     selectNodeCallback,
     selectedNodeId,
     lemmaNodesSelectable = false,
+    dragTransforms,
+    onDrag,
 }) => {
-    const {
-        data,
-        height: treeHeight,
-        width: treeWidth,
-        links,
-    } = tableauxTreeLayout(nodes);
+    const { root, height: treeHeight, width: treeWidth } = tableauxTreeLayout(
+        nodes,
+    );
 
     const transformGoTo = (d: any): [number, number] => {
         const n = d.node as number;
-        const node = data[n];
+
+        const node = findSubTree(
+            root,
+            (t) => t.data.id === n,
+            (t) => t,
+        )!;
         selectNodeCallback(node.data, { ignoreClause: true });
 
-        const { x, y } = node as any;
+        const { x, y } = node;
         return [treeWidth / 2 - x, treeHeight / 2 - y];
     };
 
@@ -120,20 +144,36 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
      */
     const lineToLemmaSource = () => {
         if (selectedNodeId !== undefined) {
-            const lemmaTarget = data.find((n) => n.data.id === selectedNodeId);
+            const lemmaTarget = findSubTree(
+                root,
+                (t) => t.data.id === selectedNodeId,
+                (t) => t,
+            );
 
             if (lemmaTarget && lemmaTarget.data.lemmaSource !== undefined) {
-                const lemmaSource = data.find(
-                    (n) => n.data.id === lemmaTarget.data.lemmaSource,
+                const lemmaSource = findSubTree(
+                    root,
+                    (t) => t.data.id === lemmaTarget.data.lemmaSource,
+                    (t) => t,
                 );
                 if (lemmaSource !== undefined) {
+                    const sdt = getAbsoluteDragTransform(
+                        root,
+                        lemmaSource.data.id,
+                        dragTransforms,
+                    )!;
+                    const tdt = getAbsoluteDragTransform(
+                        root,
+                        lemmaTarget.data.id,
+                        dragTransforms,
+                    )!;
                     return (
                         <line
                             class={style.lemmaLink}
-                            x1={lemmaTarget.x}
-                            y1={lemmaTarget.y + 6}
-                            x2={lemmaSource.x}
-                            y2={lemmaSource.y - 16}
+                            x1={lemmaTarget.x + tdt.x}
+                            y1={lemmaTarget.y + 6 + tdt.y}
+                            x2={lemmaSource.x + sdt.x}
+                            y2={lemmaSource.y - 16 + sdt.y}
                         />
                     );
                 }
@@ -159,37 +199,39 @@ const TableauxTreeView: preact.FunctionalComponent<Props> = ({
                     >
                         <g>
                             {/* #1 render ClosingEdges -> keep order to avoid overlapping */
-                            data.map((n) =>
-                                n.data.closeRef !== null ? (
-                                    <ClosingEdge
-                                        leaf={n}
-                                        pred={data[n.data.closeRef]}
-                                    />
-                                ) : (
-                                    undefined
-                                ),
-                            )}
-                            {/* #2 render links between nodes */
-                            links.map((l) => (
-                                <line
-                                    class={style.link}
-                                    x1={l.source[0]}
-                                    y1={l.source[1] + 6}
-                                    x2={l.target[0]}
-                                    y2={l.target[1] - 16}
+                            getClosedLeaves(root).map((n) => (
+                                <ClosingEdge
+                                    root={root}
+                                    leaf={n}
+                                    pred={
+                                        findSubTree(
+                                            root,
+                                            (t) =>
+                                                t.data.id === n.data.closeRef!,
+                                            ({ x, y, data }) => ({
+                                                x,
+                                                y,
+                                                data,
+                                            }),
+                                        )!
+                                    }
+                                    dragTransforms={dragTransforms}
                                 />
                             ))}
-                            {/* #3 render lemma line if it exists */
+                            {/* #2 render lemma line if it exists */
                             lineToLemmaSource()}
-                            {/* #4 render nodes -> renders above all previous elements */
-                            data.map((n) => (
-                                <TableauxTreeNode
+                            {
+                                /* #3 render nodes -> Recursively render each sub tree */
+                                <SubTree
+                                    dragTransforms={dragTransforms}
+                                    onDrag={onDrag}
+                                    node={root}
+                                    selectedNodeId={selectedNodeId}
                                     selectNodeCallback={selectNodeCallback}
-                                    node={n}
-                                    selected={n.data.id === selectedNodeId}
                                     lemmaNodesSelectable={lemmaNodesSelectable}
+                                    zoomFactor={transform.k}
                                 />
-                            ))}
+                            }
                         </g>
                     </g>
                 )}

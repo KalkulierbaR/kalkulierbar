@@ -1,9 +1,9 @@
 import {createRef, h} from "preact";
 import {route} from "preact-router";
 import {useState} from "preact/hooks";
-import {useAppState} from "../../../helpers/app-state";
-import {stringArrayToStringMap} from "../../../helpers/array-to-map";
 import {AppStateActionType, CalculusType, FOCalculus, Params} from "../../../types/app";
+import {useAppState} from "../../../util/app-state";
+import {stringArrayToStringMap} from "../../../util/array-to-map";
 import Btn from "../../btn";
 import OptionList from "../option-list";
 import * as style from "./style.scss";
