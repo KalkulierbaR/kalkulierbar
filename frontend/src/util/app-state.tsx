@@ -19,7 +19,6 @@ const isDeployed = location.port !== "8080";
 
 const INIT_APP_STATE: AppState = {
     smallScreen: false,
-    hamburger: false,
     savedFormulas: {
         [Calculus.propResolution]: "",
         [Calculus.foResolution]: "",
@@ -43,7 +42,6 @@ const reducer: Reducer<AppState, AppStateAction> = (
             return {
                 ...state,
                 smallScreen: action.smallScreen,
-                hamburger: action.hamburger,
             };
         case AppStateActionType.ADD_NOTIFICATION:
             return { ...state, notification: action.value };
@@ -90,6 +88,9 @@ export const createErrorNotification = (msg: string) =>
 export const createSuccessNotification = (msg: string) =>
     createNotification(msg, NotificationType.Success);
 
+export const createWarningNotification = (msg: string) =>
+    createNotification(msg, NotificationType.Warning);
+
 export const updateCalculusState = <C extends CalculusType = CalculusType>(
     dispatch: (state: AppStateAction) => void,
 ) => (calculus: C, state: AppState[C]) => {
@@ -107,6 +108,7 @@ const derive = (
     ...state,
     onError: (msg: string) => dispatch(createErrorNotification(msg)),
     onSuccess: (msg: string) => dispatch(createSuccessNotification(msg)),
+    onWarning: (msg: string) => dispatch(createWarningNotification(msg)),
     onMessage: (msg: string, type: NotificationType) =>
         dispatch(createNotification(msg, type)),
     removeNotification: () => dispatch(RemoveNotificationAction),

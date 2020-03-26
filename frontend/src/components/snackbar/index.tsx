@@ -17,7 +17,7 @@ interface Props {
 
 const Snackbar: preact.FunctionalComponent<Props> = ({
     notification,
-    onDelete
+    onDelete,
 }) => {
     let typeClass: string;
 
@@ -27,6 +27,9 @@ const Snackbar: preact.FunctionalComponent<Props> = ({
             break;
         case NotificationType.Success:
             typeClass = style.success;
+            break;
+        case NotificationType.Warning:
+            typeClass = style.warn;
             break;
         default:
             typeClass = style.none;

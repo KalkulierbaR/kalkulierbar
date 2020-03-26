@@ -1,10 +1,12 @@
-package kalkulierbar.logic.transform
+package kalkulierbar.logic.util
 
 import kalkulierbar.UnificationImpossible
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
 import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Relation
+import kalkulierbar.logic.transform.TermContainsVariable
+import kalkulierbar.logic.transform.VariableInstantiator
 
 /**
  * Implements functions for a first order unification

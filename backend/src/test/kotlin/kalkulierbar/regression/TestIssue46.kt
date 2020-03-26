@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class TestIssue46 {
 
     private val testStrings = mapOf(
-            "\\all X: Q(X,X) <=> R(c)" to "(((∀X: Q(X, X)) ∧ R(c)) ∨ ((∃Xv1: !Q(Xv1, Xv1)) ∧ !R(c)))",
+            "\\all X: Q(X,X) <=> R(c)" to "(((∀X: Q(X, X)) ∧ R(c)) ∨ ((∃Xv1: ¬Q(Xv1, Xv1)) ∧ ¬R(c)))",
             "\\ex X: \\ex X: R(X, X)" to "(∃X: (∃Xv1: R(Xv1, Xv1)))"
     )
 

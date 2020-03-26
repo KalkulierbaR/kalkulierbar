@@ -79,7 +79,6 @@ export interface AppState {
     server: string;
     notification?: Notification;
     smallScreen: boolean;
-    hamburger: boolean;
     theme: Theme;
     savedFormulas: Formulas;
     "prop-tableaux"?: PropTableauxState;
@@ -93,6 +92,7 @@ export interface AppState {
 export interface DerivedAppState extends AppState {
     onError: (msg: string) => void;
     onSuccess: (msg: string) => void;
+    onWarning: (msg: string) => void;
     onMessage: (msg: string, type: NotificationType) => void;
     removeNotification: () => void;
     onChange: <C extends CalculusType = CalculusType>(
@@ -120,7 +120,6 @@ export enum AppStateActionType {
 export interface UpdateScreenSize extends AppStateActionBase {
     type: AppStateActionType.UPDATE_SCREEN_SIZE;
     smallScreen: boolean;
-    hamburger: boolean;
 }
 
 export interface AddNotification extends AppStateActionBase {
@@ -179,6 +178,7 @@ export type AppStateUpdater = <C extends CalculusType = CalculusType>(
 export enum NotificationType {
     Error,
     Success,
+    Warning,
     None,
 }
 
@@ -197,6 +197,7 @@ export interface APIInformation<S> {
     state: S;
     onChange: AppStateUpdater;
     onError: (msg: string) => void;
+    onWarning: (msg: string) => void;
 }
 
 export enum TutorialMode {
