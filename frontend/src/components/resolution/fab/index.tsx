@@ -64,11 +64,11 @@ interface Props {
      */
     setShowFactorizeDialog: (b: boolean) => void;
     /**
-     * Whether the grid is shown
+     * Whether the grid view is active
      */
     showGrid: boolean;
     /**
-     * Function to set visibility of grid
+     * Setter for the grid view
      */
     setShowGrid: (v: boolean) => void;
 }
