@@ -47,7 +47,12 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
     setSelectedNode,
     resetDragTransform,
 }) => {
-    const { smallScreen, server, onError, onChange, onSuccess } = useAppState();
+    const {
+        smallScreen,
+        server,
+        onChange,
+        notificationHandler,
+    } = useAppState();
 
     const selectedNode =
         selectedNodeId === undefined ? undefined : state.nodes[selectedNodeId];
@@ -110,8 +115,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         onClick={() => {
                             checkClose(
                                 server,
-                                onError,
-                                onSuccess,
+                                notificationHandler,
                                 "nc-tableaux",
                                 state,
                             );
@@ -124,21 +128,24 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         extended={true}
                         showIconAtEnd={true}
                         onClick={() => {
-                            sendUndo(server, state, onChange, onError).then(
-                                (s) => {
-                                    console.log(s);
-                                    if (!s) {
-                                        return;
-                                    }
-                                    for (
-                                        let i = s.nodes.length;
-                                        i < state.nodes.length;
-                                        i++
-                                    ) {
-                                        resetDragTransform(i);
-                                    }
-                                },
-                            );
+                            sendUndo(
+                                server,
+                                state,
+                                onChange,
+                                notificationHandler,
+                            ).then((s) => {
+                                console.log(s);
+                                if (!s) {
+                                    return;
+                                }
+                                for (
+                                    let i = s.nodes.length;
+                                    i < state.nodes.length;
+                                    i++
+                                ) {
+                                    resetDragTransform(i);
+                                }
+                            });
                         }}
                     />
                 </Fragment>
@@ -157,7 +164,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                                     server,
                                     state,
                                     onChange,
-                                    onError,
+                                    notificationHandler,
                                     selectedNodeId,
                                 );
                                 setSelectedNode(undefined);
@@ -176,7 +183,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                                     server,
                                     state,
                                     onChange,
-                                    onError,
+                                    notificationHandler,
                                     selectedNodeId,
                                 );
                                 setSelectedNode(undefined);
@@ -195,7 +202,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                                     server,
                                     state,
                                     onChange,
-                                    onError,
+                                    notificationHandler,
                                     selectedNodeId,
                                 );
                                 setSelectedNode(undefined);
@@ -214,7 +221,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                                     server,
                                     state,
                                     onChange,
-                                    onError,
+                                    notificationHandler,
                                     selectedNodeId,
                                 );
                                 setSelectedNode(undefined);

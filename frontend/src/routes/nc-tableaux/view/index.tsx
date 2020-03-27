@@ -5,7 +5,7 @@ import HelpMenu from "../../../components/help-menu";
 import VarAssignList from "../../../components/input/var-assign-list";
 import NCTabFAB from "../../../components/nc-tableaux/fab";
 import NCTabTree from "../../../components/nc-tableaux/tree";
-import {Calculus} from "../../../types/app";
+import { Calculus } from "../../../types/app";
 import { NCTabTreeNode } from "../../../types/nc-tableaux";
 import { VarAssign } from "../../../types/tableaux";
 import { DragTransform } from "../../../types/ui";
@@ -15,7 +15,12 @@ import { updateDragTransform } from "../../../util/tableaux";
 import exampleState from "./example";
 
 const NCTableauxView: preact.FunctionalComponent = () => {
-    const { "nc-tableaux": cState, onChange, server, onError } = useAppState();
+    const {
+        "nc-tableaux": cState,
+        onChange,
+        server,
+        notificationHandler,
+    } = useAppState();
 
     let state = cState;
 
@@ -96,7 +101,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
             server,
             state!,
             onChange,
-            onError,
+            notificationHandler,
             leaf,
             pred,
             auto ? null : varAssign,
@@ -140,7 +145,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
                 resetDragTransform={resetDragTransform}
                 resetDragTransforms={resetDragTransforms}
             />
-            <HelpMenu calculus={Calculus.ncTableaux}/>
+            <HelpMenu calculus={Calculus.ncTableaux} />
         </Fragment>
     );
 };

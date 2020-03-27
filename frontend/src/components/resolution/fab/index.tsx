@@ -75,13 +75,11 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
         server,
         smallScreen,
         onChange,
-        onError,
-        onSuccess,
         tutorialMode,
         dispatch,
-        onWarning,
+        notificationHandler,
     } = useAppState();
-    const apiInfo = { onChange, onError, server, onWarning };
+    const apiInfo = { onChange, server, notificationHandler, state };
 
     const couldShowCheckCloseHint = containsEmptyClause(state.clauseSet);
 
@@ -92,7 +90,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
                 checkFABPositionFromBottom={1}
             >
-                {selectedClauseId !== undefined ?
+                {selectedClauseId !== undefined ? (
                     <Fragment>
                         <FAB
                             mini={true}
@@ -122,7 +120,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             label="Hide clause"
                             showIconAtEnd={true}
-                            icon={<HideIcon/>}
+                            icon={<HideIcon />}
                             onClick={() => {
                                 hideClause(selectedClauseId!, calculus, {
                                     ...apiInfo,
@@ -138,7 +136,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                 extended={true}
                                 label="Factorize"
                                 showIconAtEnd={true}
-                                icon={<FactorizeIcon/>}
+                                icon={<FactorizeIcon />}
                                 onClick={() => {
                                     if (
                                         !instanceOfPropResState(
@@ -147,7 +145,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                         ) &&
                                         state.clauseSet.clauses[
                                             selectedClauseId
-                                            ].atoms.length !== 2
+                                        ].atoms.length !== 2
                                     ) {
                                         setShowFactorizeDialog(true);
                                         return;
@@ -156,16 +154,16 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                         selectedClauseId!,
                                         new Set<number>([0, 1]),
                                         calculus,
-                                        {...apiInfo, state},
+                                        apiInfo,
                                     );
                                     setSelectedClauses(undefined);
                                 }}
                             />
                         )}
                     </Fragment>
-                :
-                    <DownloadFAB state={state} name={calculus}/>
-                }
+                ) : (
+                    <DownloadFAB state={state} name={calculus} />
+                )}
                 {state.hiddenClauses.clauses.length > 0 && (
                     <FAB
                         mini={true}
@@ -174,7 +172,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         showIconAtEnd={true}
                         icon={<ShowIcon />}
                         onClick={() => {
-                            showHiddenClauses(calculus, { ...apiInfo, state });
+                            showHiddenClauses(calculus, apiInfo);
                             setSelectedClauses(undefined);
                         }}
                     />
@@ -201,7 +199,12 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                 TutorialMode.HighlightCheck,
                             );
                         }
-                        checkClose(server, onError, onSuccess, calculus, state);
+                        checkClose(
+                            server,
+                            notificationHandler,
+                            calculus,
+                            state,
+                        );
                     }}
                 />
             </ControlFAB>
@@ -220,8 +223,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             state,
                             hyperRes,
                             onChange,
-                            onError,
-                            onWarning,
+                            notificationHandler,
                         );
                         setHyperRes(undefined);
                         setSelectedClauses(undefined);

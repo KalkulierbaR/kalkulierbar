@@ -3,27 +3,34 @@ import AsyncRoute from "preact-async-route";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
-import { AppStateActionType, Calculus } from "../types/app";
+import {
+    AppStateActionType,
+    Calculus,
+    NotificationHandler,
+} from "../types/app";
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
+import Page404 from "./404";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
-import Page404 from "./404";
 
 const SMALL_SCREEN_THRESHOLD = 700;
 
 /**
  * Check if server is online
  * @param {string} url - The url to send a request to
- * @param {Function} onError - Error handler
+ * @param {NotificationHandler} notificationHandler - Notification Handler
  * @returns {Promise} - Promise that resolves when check is done
  */
-async function checkServer(url: string, onError: (msg: string) => void) {
+async function checkServer(
+    url: string,
+    notificationHandler: NotificationHandler,
+) {
     try {
         await fetch(url);
     } catch (e) {
-        onError(`Server ${url} appears to be offline`);
+        notificationHandler.error(`Server ${url} appears to be offline`);
     }
 }
 
@@ -50,8 +57,7 @@ const App: preact.FunctionalComponent = () => {
         notification,
         server,
         dispatch,
-        onError,
-        removeNotification,
+        notificationHandler,
     } = useAppState();
     const saveScreenSize = (smallScreen: boolean) =>
         dispatch({
@@ -67,11 +73,11 @@ const App: preact.FunctionalComponent = () => {
      */
     const onChangeRoute = (args: RouterOnChangeArgs) => {
         setCurrentUrl(args.url);
-        removeNotification();
+        notificationHandler.remove();
     };
 
     useEffect(() => {
-        checkServer(server, onError);
+        checkServer(server, notificationHandler);
 
         const cf = new Confetti({ speed: 10, maxCount: 150 });
 
@@ -194,14 +200,14 @@ const App: preact.FunctionalComponent = () => {
                             import("../routes/dpll/view").then((m) => m.default)
                         }
                     />
-                    <Page404 default />
+                    <Page404 default={true} />
                 </Router>
             </main>
             <div class={style.notifications}>
                 {notification && (
                     <Snackbar
                         notification={notification}
-                        onDelete={() => removeNotification()}
+                        onDelete={notificationHandler.remove}
                     />
                 )}
             </div>

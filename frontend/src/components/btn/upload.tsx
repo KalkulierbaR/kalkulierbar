@@ -13,13 +13,13 @@ interface Props {
 }
 
 const UploadFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
-    const { server, onChange, onError } = useAppState();
+    const { server, onChange, notificationHandler } = useAppState();
 
     const input = useRef<HTMLInputElement>();
 
     const handleClick = () => {
-        if (!input.current) { 
-            return; 
+        if (!input.current) {
+            return;
         }
         input.current.click();
     };
@@ -33,15 +33,19 @@ const UploadFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
         try {
             const state = await readFile(file);
 
-            const valid = await checkValid(server, onError, calculus, state);
+            const valid = await checkValid(
+                server,
+                notificationHandler,
+                calculus,
+                state,
+            );
 
             if (valid) {
-                onError("4");
                 onChange(calculus, JSON.parse(state));
                 route(`/${calculus}/view`);
             }
         } catch (e) {
-            onError("" + e);
+            notificationHandler.error("" + e);
         }
     };
 

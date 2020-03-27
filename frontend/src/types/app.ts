@@ -91,12 +91,16 @@ export interface AppState {
     tutorialMode: TutorialMode;
 }
 
+export interface NotificationHandler {
+    message: (type: NotificationType, msg: string) => void;
+    error: (msg: string) => void;
+    success: (msg: string) => void;
+    warning: (msg: string) => void;
+    remove: () => void;
+}
+
 export interface DerivedAppState extends AppState {
-    onError: (msg: string) => void;
-    onSuccess: (msg: string) => void;
-    onWarning: (msg: string) => void;
-    onMessage: (msg: string, type: NotificationType) => void;
-    removeNotification: () => void;
+    notificationHandler: NotificationHandler;
     onChange: <C extends CalculusType = CalculusType>(
         calculus: C,
         state: AppState[C],
@@ -198,8 +202,7 @@ export interface APIInformation<S> {
     server: string;
     state: S;
     onChange: AppStateUpdater;
-    onError: (msg: string) => void;
-    onWarning: (msg: string) => void;
+    notificationHandler: NotificationHandler;
 }
 
 export enum TutorialMode {

@@ -1,5 +1,9 @@
 import { StateUpdater } from "preact/hooks/src";
-import { AppStateUpdater, TableauxCalculusType } from "../types/app";
+import {
+    AppStateUpdater,
+    NotificationHandler,
+    TableauxCalculusType,
+} from "../types/app";
 import {
     FOTableauxState,
     instanceOfFOTabState,
@@ -36,8 +40,7 @@ export const nextOpenLeaf = (nodes: TableauxNode[]) => {
  * @param {string} server - URL of server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {Function} onWarning - Warning handler
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} leaf - The selected leaf
  * @param {number} pred - The selected predecessor
  * @param {boolean} autoClose - The server should decide about the variable assignment
@@ -50,8 +53,7 @@ export const sendClose = (
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     leaf: number,
     pred: number,
     autoClose?: boolean,
@@ -65,10 +67,12 @@ export const sendClose = (
             state,
             { type: "tableaux-close", id1: leaf, id2: pred },
             stateChanger,
-            onError,
-            onWarning,
+            notificationHandler,
         );
-    } else if (instanceOfFOTabState(state, calculus) && varAssignments !== undefined) {
+    } else if (
+        instanceOfFOTabState(state, calculus) &&
+        varAssignments !== undefined
+    ) {
         sendMove(
             server,
             calculus,
@@ -80,8 +84,7 @@ export const sendClose = (
                 varAssign: varAssignments,
             },
             stateChanger,
-            onError,
-            onWarning,
+            notificationHandler,
         );
     }
     if (callback !== undefined) {
@@ -95,8 +98,7 @@ export const sendClose = (
  * @param {string} server - URL of the server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {Function} onWarning - Warning handler
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 export const sendBacktrack = (
@@ -104,8 +106,7 @@ export const sendBacktrack = (
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) =>
     sendMove(
         server,
@@ -113,8 +114,7 @@ export const sendBacktrack = (
         state,
         { type: "tableaux-undo" },
         stateChanger,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 
 /**
@@ -123,8 +123,7 @@ export const sendBacktrack = (
  * @param {string} server - URL of the server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {Function} onWarning - Warning handler
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} leaf - The selected leaf
  * @param {number} clause - The selected clause
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
@@ -134,8 +133,7 @@ export const sendExtend = (
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     leaf: number,
     clause: number,
 ) =>
@@ -145,8 +143,7 @@ export const sendExtend = (
         state,
         { type: "tableaux-expand", id1: leaf, id2: clause },
         stateChanger,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 
 /**
@@ -155,8 +152,7 @@ export const sendExtend = (
  * @param {string} server - URL of the server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {Function} onWarning - Warning handler
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} leaf - The selected leaf
  * @param {number} lemma - The selected Node to be used as lemma
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
@@ -166,8 +162,7 @@ export const sendLemma = (
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     leaf: number,
     lemma: number,
 ) =>
@@ -177,8 +172,7 @@ export const sendLemma = (
         state,
         { type: "tableaux-lemma", id1: leaf, id2: lemma },
         stateChanger,
-        onError,
-        onWarning
+        notificationHandler,
     );
 
 export const tableauxTreeLayout = (

@@ -1,4 +1,4 @@
-import { AppStateUpdater } from "../types/app";
+import { AppStateUpdater, NotificationHandler } from "../types/app";
 import { Atom, Clause, ClauseSet } from "../types/clause";
 import {
     DPLLCsDiff,
@@ -41,8 +41,7 @@ export const sendProp = (
     propAtom: number,
     setNode: (node: number) => void,
     onChange: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) =>
     sendMove(
         server,
@@ -50,8 +49,7 @@ export const sendProp = (
         state,
         { type: "dpll-prop", branch, baseClause, propClause, propAtom },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     ).then((s) => {
         if (s) {
             setNode(s.tree.length - 1);
@@ -64,8 +62,7 @@ export const sendPrune = (
     state: DPLLState,
     branch: number,
     onChange: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) =>
     sendMove(
         server,
@@ -73,8 +70,7 @@ export const sendPrune = (
         state,
         { type: "dpll-prune", branch },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 
 export const sendSplit = (
@@ -83,8 +79,7 @@ export const sendSplit = (
     branch: number,
     literal: string,
     onChange: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) =>
     sendMove(
         server,
@@ -92,8 +87,7 @@ export const sendSplit = (
         state,
         { type: "dpll-split", branch, literal },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 
 export const sendModelCheck = (
@@ -102,8 +96,7 @@ export const sendModelCheck = (
     branch: number,
     interpretation: Record<string, boolean>,
     onChange: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) =>
     sendMove(
         server,
@@ -111,8 +104,7 @@ export const sendModelCheck = (
         state,
         { type: "dpll-modelcheck", branch, interpretation },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 
 export const getAllLits = (cs: ClauseSet) => {

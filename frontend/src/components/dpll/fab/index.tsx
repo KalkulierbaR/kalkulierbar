@@ -52,11 +52,9 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
         smallScreen,
         server,
         onChange,
-        onError,
-        onSuccess,
+        notificationHandler,
         tutorialMode,
         dispatch,
-        onWarning,
     } = useAppState();
 
     const couldShowCheckCloseHint = stateIsClosed(state.tree);
@@ -102,7 +100,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                                     tutorialMode ^ TutorialMode.HighlightCheck,
                             });
                         }
-                        checkClose(server, onError, onSuccess, "dpll", state);
+                        checkClose(server, notificationHandler, "dpll", state);
                     }}
                 />
                 <FAB
@@ -117,8 +115,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                             state,
                             branch,
                             onChange,
-                            onError,
-                            onWarning,
+                            notificationHandler,
                         )
                     }
                 />

@@ -66,12 +66,10 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
     const {
         server,
         smallScreen,
-        onError,
         onChange,
-        onSuccess,
         tutorialMode,
         dispatch,
-        onWarning,
+        notificationHandler,
     } = useAppState();
 
     const resetView = (
@@ -138,8 +136,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 }
                                 checkClose(
                                     server,
-                                    onError,
-                                    onSuccess,
+                                    notificationHandler,
                                     calculus,
                                     state,
                                 );
@@ -170,8 +167,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                         server,
                                         state!,
                                         onChange,
-                                        onError,
-                                        onWarning,
+                                        notificationHandler,
                                     );
                                 }}
                             />

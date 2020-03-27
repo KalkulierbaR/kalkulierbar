@@ -1,4 +1,4 @@
-import { AppStateUpdater } from "../types/app";
+import { AppStateUpdater, NotificationHandler } from "../types/app";
 import {
     FOTerm,
     LogicNode,
@@ -18,7 +18,7 @@ import { estimateSVGTextWidth } from "./text-width";
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @returns {void}
  */
@@ -26,7 +26,7 @@ export const sendAlpha = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
 ) =>
     sendMove(
@@ -35,7 +35,7 @@ export const sendAlpha = (
         state,
         { type: "alpha", nodeID },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -43,7 +43,7 @@ export const sendAlpha = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @returns {void}
  */
@@ -51,7 +51,7 @@ export const sendBeta = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
 ) =>
     sendMove(
@@ -60,7 +60,7 @@ export const sendBeta = (
         state,
         { type: "beta", nodeID },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -68,7 +68,7 @@ export const sendBeta = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @returns {void}
  */
@@ -76,7 +76,7 @@ export const sendGamma = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
 ) =>
     sendMove(
@@ -85,7 +85,7 @@ export const sendGamma = (
         state,
         { type: "gamma", nodeID },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -93,7 +93,7 @@ export const sendGamma = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @returns {void}
  */
@@ -101,7 +101,7 @@ export const sendDelta = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
 ) =>
     sendMove(
@@ -110,7 +110,7 @@ export const sendDelta = (
         state,
         { type: "delta", nodeID },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -118,7 +118,7 @@ export const sendDelta = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @param {number} closeID - The second node's id
  * @param {VarAssign | null} varAssign - The variable assignments
@@ -128,7 +128,7 @@ export const sendClose = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
     closeID: number,
     varAssign: VarAssign | null,
@@ -139,7 +139,7 @@ export const sendClose = (
         state,
         { type: "close", nodeID, closeID, varAssign },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -147,14 +147,14 @@ export const sendClose = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @returns {void}
  */
 export const sendUndo = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) =>
     sendMove(
         server,
@@ -162,7 +162,7 @@ export const sendUndo = (
         state,
         { type: "undo" },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**

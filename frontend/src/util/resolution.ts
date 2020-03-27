@@ -486,8 +486,7 @@ export const sendResolve = (
         server,
         state,
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     }: APIInformation<PropResolutionState>,
 ) =>
     sendMove(
@@ -496,8 +495,7 @@ export const sendResolve = (
         state,
         { type: "res-resolve", c1, c2, literal },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 
 /**
@@ -522,8 +520,7 @@ export const sendResolveUnify = (
         server,
         state,
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     }: APIInformation<FOResolutionState>,
 ) =>
     sendMove(
@@ -532,8 +529,7 @@ export const sendResolveUnify = (
         state,
         { type: "res-resolveunify", c1, c2, l1, l2 },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 
 /**
@@ -560,8 +556,7 @@ export const sendResolveCustom = (
         server,
         state,
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     }: APIInformation<FOResolutionState>,
 ) =>
     sendMove(
@@ -570,8 +565,7 @@ export const sendResolveCustom = (
         state,
         { type: "res-resolvecustom", c1, c2, l1, l2, varAssign },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 
 /**
@@ -594,8 +588,7 @@ export const hideClause = <
         server,
         state,
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     }: APIInformation<AppState[C]>,
 ) => {
     // Send hide move to backend
@@ -608,8 +601,7 @@ export const hideClause = <
             c1: clauseId,
         },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 };
 
@@ -631,8 +623,7 @@ export const showHiddenClauses = <
         server,
         state,
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     }: APIInformation<AppState[C]>,
 ) => {
     // Send show move to backend
@@ -644,8 +635,7 @@ export const showHiddenClauses = <
             type: "res-show",
         },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 };
 
@@ -671,8 +661,7 @@ export const sendFactorize = <
         server,
         state,
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     }: APIInformation<AppState[C]>,
 ) => {
     sendMove(
@@ -685,7 +674,6 @@ export const sendFactorize = <
             atoms: Array.from(atoms),
         },
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     );
 };

@@ -52,11 +52,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const {
         server,
         [calculus]: cState,
-        onError,
+        notificationHandler,
         onChange,
-        onWarning,
     } = useAppState();
-    const apiInfo = { onChange, onError, server, onWarning };
 
     let state = cState;
     if (!state) {
@@ -65,6 +63,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         state = calculus === Calculus.propResolution ? propExample : foExample;
         onChange(calculus, state);
     }
+
+    const apiInfo = { onChange, notificationHandler, server };
 
     const [hyperRes, setHyperRes] = useState<HyperResolutionMove | undefined>(
         undefined,
@@ -192,7 +192,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             if (candidateClause != null) {
                 const candidateAtomCount = getCandidateCount(candidateClause);
                 if (candidateAtomCount === 0) {
-                    onError("These clauses can't be resolved.");
+                    notificationHandler.error(
+                        "These clauses can't be resolved.",
+                    );
                 } else if (
                     instanceOfPropCandidateClause(candidateClause, calculus) &&
                     instanceOfPropResState(state, calculus)
@@ -397,8 +399,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 selectedClauses={selectedClauses}
                 setSelectedClauses={setSelectedClauses}
             />
-            
-            <HelpMenu calculus={calculus}/>
+
+            <HelpMenu calculus={calculus} />
         </Fragment>
     );
 };

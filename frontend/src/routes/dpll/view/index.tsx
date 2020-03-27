@@ -7,7 +7,7 @@ import DPLLModelInput from "../../../components/dpll/model";
 import DPLLTree from "../../../components/dpll/tree";
 import HelpMenu from "../../../components/help-menu";
 import OptionList from "../../../components/input/option-list";
-import {Calculus} from "../../../types/app";
+import { Calculus } from "../../../types/app";
 import { SelectedClauses } from "../../../types/clause";
 import { useAppState } from "../../../util/app-state";
 import { classMap } from "../../../util/class-map";
@@ -28,8 +28,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         dpll: cState,
         server,
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     } = useAppState();
 
     const [showTree, setShowTree] = useState(false);
@@ -84,8 +83,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 candidates[0],
                 setBranch,
                 onChange,
-                onError,
-                onWarning,
+                notificationHandler,
             );
             setSelectedClauses(undefined);
             return;
@@ -145,8 +143,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                         branch,
                         interpretation,
                         onChange,
-                        onError,
-                        onWarning,
+                        notificationHandler,
                     );
                     setShowModelDialog(false);
                 }}
@@ -160,7 +157,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 setShowModelDialog={setShowModelDialog}
                 setShowSplitDialog={setShowSplitDialog}
             />
-            <HelpMenu calculus={Calculus.dpll}/>
+            <HelpMenu calculus={Calculus.dpll} />
         </Fragment>
     );
 };

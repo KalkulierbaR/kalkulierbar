@@ -1,15 +1,14 @@
 import { createContext, h } from "preact";
 import { Reducer, useContext, useEffect, useReducer } from "preact/hooks";
 import {
-    AddNotification,
     AppState,
     AppStateAction,
     AppStateActionType,
     Calculus,
     CalculusType,
     DerivedAppState,
+    NotificationHandler,
     NotificationType,
-    RemoveNotification,
     Theme,
     TutorialMode,
 } from "../types/app";
@@ -71,27 +70,6 @@ const reducer: Reducer<AppState, AppStateAction> = (
     }
 };
 
-export const RemoveNotificationAction: RemoveNotification = {
-    type: AppStateActionType.REMOVE_NOTIFICATION,
-};
-
-export const createNotification = (
-    message: string,
-    type: NotificationType,
-): AddNotification => ({
-    type: AppStateActionType.ADD_NOTIFICATION,
-    value: { message, type },
-});
-
-export const createErrorNotification = (msg: string) =>
-    createNotification(msg, NotificationType.Error);
-
-export const createSuccessNotification = (msg: string) =>
-    createNotification(msg, NotificationType.Success);
-
-export const createWarningNotification = (msg: string) =>
-    createNotification(msg, NotificationType.Warning);
-
 export const updateCalculusState = <C extends CalculusType = CalculusType>(
     dispatch: (state: AppStateAction) => void,
 ) => (calculus: C, state: AppState[C]) => {
@@ -102,17 +80,38 @@ export const updateCalculusState = <C extends CalculusType = CalculusType>(
     });
 };
 
+const createNotificationHandler = (
+    dispatch: (a: AppStateAction) => void,
+): NotificationHandler => ({
+    message: (type: NotificationType, message: string) =>
+        dispatch({
+            type: AppStateActionType.ADD_NOTIFICATION,
+            value: { type, message },
+        }),
+    error: (message: string) =>
+        dispatch({
+            type: AppStateActionType.ADD_NOTIFICATION,
+            value: { type: NotificationType.Error, message },
+        }),
+    success: (message: string) =>
+        dispatch({
+            type: AppStateActionType.ADD_NOTIFICATION,
+            value: { type: NotificationType.Success, message },
+        }),
+    warning: (message: string) =>
+        dispatch({
+            type: AppStateActionType.ADD_NOTIFICATION,
+            value: { type: NotificationType.Warning, message },
+        }),
+    remove: () => dispatch({ type: AppStateActionType.REMOVE_NOTIFICATION }),
+});
+
 const derive = (
     state: AppState,
     dispatch: (a: AppStateAction) => void,
 ): DerivedAppState => ({
     ...state,
-    onError: (msg: string) => dispatch(createErrorNotification(msg)),
-    onSuccess: (msg: string) => dispatch(createSuccessNotification(msg)),
-    onWarning: (msg: string) => dispatch(createWarningNotification(msg)),
-    onMessage: (msg: string, type: NotificationType) =>
-        dispatch(createNotification(msg, type)),
-    removeNotification: () => dispatch(RemoveNotificationAction),
+    notificationHandler: createNotificationHandler(dispatch),
     onChange: updateCalculusState(dispatch),
     dispatch,
 });

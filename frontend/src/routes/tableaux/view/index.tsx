@@ -42,9 +42,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         server,
         [calculus]: cState,
         smallScreen,
-        onError,
+        notificationHandler,
         onChange,
-        onWarning,
     } = useAppState();
 
     let state = cState;
@@ -109,8 +108,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 server,
                 state!,
                 onChange,
-                onError,
-                onWarning,
+                notificationHandler,
                 selectedNodeId,
                 newClauseId,
             );
@@ -147,8 +145,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     server,
                     state!,
                     onChange,
-                    onError,
-                    onWarning,
+                    notificationHandler,
                     newNode.id,
                     selectedClauseId,
                 );
@@ -167,8 +164,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 server,
                 state!,
                 onChange,
-                onError,
-                onWarning,
+                notificationHandler,
                 selectedNodeId,
                 newNode.id,
             );
@@ -188,8 +184,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 server,
                 state!,
                 onChange,
-                onError,
-                onWarning,
+                notificationHandler,
                 newNodeIsLeaf ? newNode.id : selectedNodeId,
                 newNodeIsLeaf ? selectedNodeId : newNode.id,
             );
@@ -238,8 +233,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             server,
             state!,
             onChange,
-            onError,
-            onWarning,
+            notificationHandler,
             leaf,
             pred,
             autoAssign,
@@ -265,8 +259,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 server,
                 state!,
                 onChange,
-                onError,
-                onWarning,
+                notificationHandler,
             );
         };
 
@@ -275,7 +268,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [state, server, onChange, onError]);
+    }, [state, server, onChange, notificationHandler]);
 
     return (
         <Fragment>
@@ -338,7 +331,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog>
-            ) : undefined}
+            ) : (
+                undefined
+            )}
 
             <TableauxFAB
                 calculus={calculus}
@@ -351,7 +346,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 resetDragTransforms={resetDragTransforms}
             />
 
-            <HelpMenu calculus={calculus}/>
+            <HelpMenu calculus={calculus} />
         </Fragment>
     );
 };

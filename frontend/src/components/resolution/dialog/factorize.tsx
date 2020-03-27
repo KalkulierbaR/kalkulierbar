@@ -10,12 +10,10 @@ import {
     instanceOfPropResState,
     PropResolutionState,
 } from "../../../types/resolution";
-import {useAppState} from "../../../util/app-state";
-import {stringArrayToStringMap} from "../../../util/array-to-map";
-import {atomToString} from "../../../util/clause";
-import {
-    sendFactorize,
-} from "../../../util/resolution";
+import { useAppState } from "../../../util/app-state";
+import { stringArrayToStringMap } from "../../../util/array-to-map";
+import { atomToString } from "../../../util/clause";
+import { sendFactorize } from "../../../util/resolution";
 import Btn from "../../btn";
 
 interface Props {
@@ -53,8 +51,8 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
     selectedClauses,
     setSelectedClauses,
 }) => {
-    const { server, onError, onChange, onWarning } = useAppState();
-    const apiInfo = { onChange, onError, server, onWarning };
+    const { server, onChange, notificationHandler } = useAppState();
+    const apiInfo = { onChange, notificationHandler, server, state };
 
     const [factorizeAtomIndices, setFactorizeAtomIndices] = useState(
         new Set<number>(),
@@ -122,7 +120,7 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
                         selectedClauses![0],
                         factorizeAtomIndices,
                         calculus,
-                        { ...apiInfo, state },
+                        apiInfo,
                     );
                     setShowDialog(false);
                     factorizeAtomIndices.clear();

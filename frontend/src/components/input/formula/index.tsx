@@ -57,7 +57,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
 }) => {
     const {
         server,
-        onError,
+        notificationHandler,
         onChange,
         savedFormulas,
         dispatch,
@@ -85,14 +85,14 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 )}&params=${JSON.stringify(params)}`,
             });
             if (response.status !== 200) {
-                onError(await response.text());
+                notificationHandler.error(await response.text());
             } else {
                 const parsed = await response.json();
                 onChange(calculus, parsed);
                 route(`/${calculus}/view`);
             }
         } catch (e) {
-            onError((e as Error).message);
+            notificationHandler.error((e as Error).message);
         }
     };
 
