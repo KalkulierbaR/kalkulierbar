@@ -7,6 +7,11 @@ import { clauseToString } from "../clause";
 const HEIGHT_PADDING = 16;
 const WIDTH_PADDING = 64;
 
+/**
+ * Calculate the grid layout
+ * @param {Clause[]} clauses - The clauses to display in a grid
+ * @returns {ArrayLayout<Clause>} - The grid layout of the clauses
+ */
 export const gridLayout = (
     clauses: Array<Clause<string | FOLiteral>>,
 ): ArrayLayout<Clause<string | FOLiteral>> & {
