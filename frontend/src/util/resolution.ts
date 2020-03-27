@@ -44,14 +44,18 @@ export const groupCandidates = (
         (c) => c.candidateAtomMap.size !== 0 && c.index !== selectedClauseId,
     );
 
+    const indexInCircle = clauses.findIndex(
+        (c) => c.index === selectedClauseId,
+    );
+
     const cs = candidates.length;
-    const left = selectedClauseId - Math.floor(cs / 2);
+    const left = indexInCircle - Math.floor(cs / 2);
     const right = left + cs;
     const length = clauses.length;
     let nci = 0;
     let ci = 0;
     for (let i = 0; i < length; i++) {
-        if (selectedClauseId === i) {
+        if (indexInCircle === i) {
             continue;
         }
 
@@ -290,88 +294,126 @@ export const getSelectable = (
 };
 
 /**
+ * Get the initial candidate clauses
+ * @param {ClauseSet<string | FOLiteral>} clauseSet - The clause set to work on
+ * @param {ResolutionCalculusType} calculus - The current resolution calculus type
+ * @returns {CandidateClause[]} - The new candidate clauses
+ */
+export const getInitialCandidateClauses = (
+    clauseSet: ClauseSet<string | FOLiteral>,
+    calculus: ResolutionCalculusType,
+) => {
+    const newCandidateClauses: CandidateClause[] = [];
+    // Create default candidates
+    if (instanceOfPropClauseSet(clauseSet, calculus)) {
+        clauseSet.clauses.forEach((clause, clauseIndex) => {
+            newCandidateClauses[clauseIndex] = {
+                clause,
+                candidateAtomMap: new Map<number, number[]>(),
+                index: clauseIndex,
+            };
+        });
+    } else if (instanceOfFOClauseSet(clauseSet, calculus)) {
+        clauseSet.clauses.forEach((clause, clauseIndex) => {
+            newCandidateClauses[clauseIndex] = {
+                clause,
+                candidateAtomMap: new Map<number, number[]>(),
+                index: clauseIndex,
+            };
+        });
+    }
+
+    return newCandidateClauses;
+};
+
+/**
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
+ * @param {CandidateClause[]} clauses - The candidate clauses
  * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
  * @param {ResolutionCalculusType} calculus - The current calculus type
  * @param {number} selectedClauseId - Currently selected clause
  * @returns {CandidateClause[]} - The new candidate clauses
  */
-export const getCandidateClauses = (
+export const recalculateCandidateClauses = (
     clauseSet: ClauseSet<string | FOLiteral>,
+    clauses: CandidateClause[],
     visualHelp: VisualHelp,
     calculus: ResolutionCalculusType,
     selectedClauseId?: number,
 ) => {
     const newCandidateClauses: CandidateClause[] = [];
-
     if (selectedClauseId === undefined) {
         // Create default candidates
         if (instanceOfPropClauseSet(clauseSet, calculus)) {
-            clauseSet.clauses.forEach((clause, clauseIndex) => {
+            clauses.forEach((clause, clauseIndex) => {
                 newCandidateClauses[clauseIndex] = {
-                    clause,
+                    clause: clause.clause as Clause<string>,
                     candidateAtomMap: new Map<number, number[]>(),
-                    index: clauseIndex,
+                    index: clause.index,
                 };
             });
         } else if (instanceOfFOClauseSet(clauseSet, calculus)) {
-            clauseSet.clauses.forEach((clause, clauseIndex) => {
+            clauses.forEach((clause, clauseIndex) => {
                 newCandidateClauses[clauseIndex] = {
-                    clause,
+                    clause: clause.clause as Clause<FOLiteral>,
                     candidateAtomMap: new Map<number, number[]>(),
-                    index: clauseIndex,
+                    index: clause.index,
                 };
             });
         }
     } else {
         // Get selected clause
-        const selectedClause = clauseSet.clauses[selectedClauseId];
+        const selectedClause = clauseSet.clauses[selectedClauseId] as Clause<
+            string | FOLiteral
+        >;
 
         // Filter for possible resolve candidates
-        clauseSet.clauses.forEach((clause, clauseIndex) => {
+        clauses.forEach((clause, clauseIndex) => {
             const candidateAtomMap: Map<number, number[]> = new Map<
                 number,
                 number[]
             >();
             selectedClause.atoms.forEach((atom1, atom1Index) => {
                 const resolventAtomIndices: number[] = [];
-                clause.atoms.forEach((atom2, atom2Index) => {
-                    if (
-                        atom1.negated !== atom2.negated &&
-                        ((instanceOfPropAtom(atom1, calculus) &&
-                            instanceOfPropAtom(atom2, calculus) &&
-                            atom1.lit === atom2.lit) ||
-                            (instanceOfFOAtom(atom1, calculus) &&
-                                instanceOfFOAtom(atom2, calculus) &&
-                                atom1.lit.spelling === atom2.lit.spelling &&
-                                atom1.lit.arguments.length ===
-                                    atom2.lit.arguments.length))
-                    ) {
-                        resolventAtomIndices.push(atom2Index);
-                    }
-                });
+                (clause.clause as Clause<string | FOLiteral>).atoms.forEach(
+                    (atom2, atom2Index) => {
+                        if (
+                            atom1.negated !== atom2.negated &&
+                            ((instanceOfPropAtom(atom1, calculus) &&
+                                instanceOfPropAtom(atom2, calculus) &&
+                                atom1.lit === atom2.lit) ||
+                                (instanceOfFOAtom(atom1, calculus) &&
+                                    instanceOfFOAtom(atom2, calculus) &&
+                                    atom1.lit.spelling === atom2.lit.spelling &&
+                                    atom1.lit.arguments.length ===
+                                        atom2.lit.arguments.length))
+                        ) {
+                            resolventAtomIndices.push(atom2Index);
+                        }
+                    },
+                );
                 if (resolventAtomIndices.length > 0) {
                     candidateAtomMap.set(atom1Index, resolventAtomIndices);
                 }
             });
             if (
                 instanceOfPropClauseSet(clauseSet, calculus) &&
-                instanceOfPropClause(clause, calculus)
+                instanceOfPropClause(clause.clause, calculus)
             ) {
                 newCandidateClauses[clauseIndex] = {
-                    clause,
+                    clause: clause.clause,
                     candidateAtomMap,
-                    index: clauseIndex,
+                    index: clause.index,
                 };
             } else if (
                 instanceOfFOClauseSet(clauseSet, calculus) &&
-                instanceOfFOClause(clause, calculus)
+                instanceOfFOClause(clause.clause, calculus)
             ) {
                 newCandidateClauses[clauseIndex] = {
-                    clause,
+                    clause: clause.clause,
                     candidateAtomMap,
-                    index: clauseIndex,
+                    index: clause.index,
                 };
             }
         });
@@ -383,12 +425,49 @@ export const getCandidateClauses = (
     return newCandidateClauses;
 };
 
+/**
+ * Add a clause to the clause set
+ * @param {ClauseSet<string | FOLiteral>} clauseSet - The clause set to work on
+ * @param {CandidateClause[]} clauses - The candidate clauses
+ * @param {number} newClauseId - The id of the new clause (might be changed if already occupied)
+ * @returns {void}
+ */
+export const addClause = (
+    clauseSet: ClauseSet<string | FOLiteral>,
+    clauses: CandidateClause[],
+    newClauseId: number,
+) => {
+    const newClause = clauseSet.clauses[newClauseId];
+
+    let newIndex: number = newClauseId;
+
+    for (let i = 0; i < clauses.length; i++) {
+        const c = clauses[i];
+        if (c.index === newClauseId) {
+            newIndex = i;
+        }
+        if (c.index >= newClauseId) {
+            c.index++;
+        }
+    }
+
+    clauses.splice(newIndex, 0, {
+        clause: newClause as any,
+        index: newClauseId,
+        candidateAtomMap: new Map(),
+    });
+};
+
+/**
+ * @param {ClauseSet<string | FOLiteral>} cs - The clause set to work on
+ * @returns {boolean} - Whether the clause set contains the empty clause
+ */
 export const containsEmptyClause = (cs: ClauseSet<string | FOLiteral>) => {
     return cs.clauses.filter((c) => c.atoms.length === 0).length > 0;
 };
 
 /**
- * The function to call when the user hides a clause
+ * Send a resolve move (propositional) to the backend
  * @param {number} c1 - The id of the first clause
  * @param {number} c2 - The id of the second clause
  * @param {string} literal - The literal to resolve
@@ -396,6 +475,7 @@ export const containsEmptyClause = (cs: ClauseSet<string | FOLiteral>) => {
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendResolve = (
@@ -421,7 +501,7 @@ export const sendResolve = (
     );
 
 /**
- * The function to call when the user hides a clause
+ * Send a resolve unify move (FO logic) to the backend
  * @param {number} c1 - The id of the first clause
  * @param {number} c2 - The id of the second clause
  * @param {number} l1 - The id of the first atom
@@ -430,6 +510,7 @@ export const sendResolve = (
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendResolveUnify = (
@@ -455,6 +536,20 @@ export const sendResolveUnify = (
         onWarning,
     );
 
+/**
+ * Send a resolve move with variable assignments (FO logic) to the backend
+ * @param {number} c1 - The id of the first clause
+ * @param {number} c2 - The id of the second clause
+ * @param {number} l1 - The id of the first atom
+ * @param {number} l2 - The id of the second atom
+ * @param {VarAssign} varAssign - The variable assignments
+ * @param {string} server - The server to send a request to
+ * @param {AppState} state - The apps state
+ * @param {AppStateUpdater} onChange - The AppStateUpdater
+ * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
+ * @returns {void}
+ */
 export const sendResolveCustom = (
     c1: number,
     c2: number,
@@ -487,6 +582,7 @@ export const sendResolveCustom = (
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const hideClause = <
@@ -524,6 +620,7 @@ export const hideClause = <
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const showHiddenClauses = <
@@ -561,6 +658,7 @@ export const showHiddenClauses = <
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendFactorize = <
