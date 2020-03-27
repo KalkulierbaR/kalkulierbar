@@ -66,7 +66,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         onChange(calculus, state);
     }
 
-    const showGrid = useState<boolean>(true);
+    const [showGrid, setShowGrid] = useState<boolean>(true);
 
     const [hyperRes, setHyperRes] = useState<HyperResolutionMove | undefined>(
         undefined,
@@ -376,6 +376,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 hyperRes={hyperRes}
                 setHyperRes={setHyperRes}
                 setShowFactorizeDialog={setShowFactorizeDialog}
+                showGrid={showGrid}
+                setShowGrid={setShowGrid}
             />
 
             <Dialog

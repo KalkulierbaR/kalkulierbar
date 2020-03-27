@@ -31,6 +31,8 @@ import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
 import Tutorial from "../../tutorial";
+import CircleIcon from "../../icons/circle";
+import GridIcon from "../../icons/grid";
 
 interface Props {
     /**
@@ -61,6 +63,8 @@ interface Props {
      * Set the visibility of the factorize dialog
      */
     setShowFactorizeDialog: (b: boolean) => void;
+    showGrid: boolean;
+    setShowGrid: (v: boolean) => void;
 }
 
 const ResolutionFAB: preact.FunctionalComponent<Props> = ({
@@ -71,6 +75,8 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
     hyperRes,
     setHyperRes,
     setShowFactorizeDialog,
+    showGrid,
+    setShowGrid,
 }) => {
     const {
         server,
@@ -167,7 +173,17 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         )}
                     </Fragment>
                 ) : (
-                    <DownloadFAB state={state} name={calculus} />
+                    <Fragment>
+                        <FAB
+                            label={showGrid ? "Show Circle" : "Show Grid"}
+                            icon={showGrid ? <CircleIcon /> : <GridIcon />}
+                            showIconAtEnd
+                            mini
+                            extended
+                            onClick={() => setShowGrid(!showGrid)}
+                        />
+                        <DownloadFAB state={state} name={calculus} />
+                    </Fragment>
                 )}
 
                 {state!.hiddenClauses.clauses.length > 0 ? (
