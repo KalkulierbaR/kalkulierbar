@@ -14,6 +14,7 @@ import Page404 from "./404";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
+import { useTitle } from "../util/title";
 
 const SMALL_SCREEN_THRESHOLD = 700;
 
@@ -65,6 +66,8 @@ const App: preact.FunctionalComponent = () => {
             smallScreen,
         });
     const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
+
+    useTitle(currentUrl);
 
     /**
      * Execute actions based upon if the route changed
