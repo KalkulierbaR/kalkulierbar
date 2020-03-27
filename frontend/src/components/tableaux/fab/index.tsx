@@ -95,6 +95,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
+                checkFABPositionFromBottom={2}
             >
                 {selectedNodeId === undefined ? (
                     <Fragment>

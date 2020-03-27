@@ -90,6 +90,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
+                checkFABPositionFromBottom={1}
             >
                 {selectedClauseId !== undefined ?
                     <Fragment>
