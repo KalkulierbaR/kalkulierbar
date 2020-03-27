@@ -44,14 +44,18 @@ export const groupCandidates = (
         (c) => c.candidateAtomMap.size !== 0 && c.index !== selectedClauseId,
     );
 
+    const indexInCircle = clauses.findIndex(
+        (c) => c.index === selectedClauseId,
+    );
+
     const cs = candidates.length;
-    const left = selectedClauseId - Math.floor(cs / 2);
+    const left = indexInCircle - Math.floor(cs / 2);
     const right = left + cs;
     const length = clauses.length;
     let nci = 0;
     let ci = 0;
     for (let i = 0; i < length; i++) {
-        if (selectedClauseId === i) {
+        if (indexInCircle === i) {
             continue;
         }
 
