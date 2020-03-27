@@ -1,8 +1,8 @@
 import { Clause, FOLiteral } from "../../types/clause";
 import { ArrayLayout, LayoutItem } from "../../types/layout";
+import { clauseToString } from "../clause";
 import { maxBy } from "../max-by";
 import { estimateSVGTextWidth } from "../text-width";
-import { clauseToString } from "../clause";
 
 const HEIGHT_PADDING = 16;
 const WIDTH_PADDING = 64;
@@ -20,7 +20,7 @@ export const gridLayout = (
     rowHeight: number;
     columnWidth: number;
 } => {
-    if (clauses.length === 0)
+    if (clauses.length === 0) {
         return {
             width: 0,
             height: 0,
@@ -30,6 +30,7 @@ export const gridLayout = (
             rowHeight: 0,
             columnWidth: 0,
         };
+    }
 
     // Guess clause width by the length of the longest string
     const width =
@@ -37,7 +38,7 @@ export const gridLayout = (
         WIDTH_PADDING;
 
     // The height is constant. The value here has no special meaning
-    let height = 35 + HEIGHT_PADDING;
+    const height = 35 + HEIGHT_PADDING;
 
     // Calculate the optimal column number to match the window aspect ratio
     const columns = findOptimalColumnNumber(width, height, clauses.length);
@@ -87,8 +88,10 @@ const findOptimalColumnNumber = (
         getRatio(cWidth, cHeight, cHigh, length) - windowRatio,
     );
 
-    if (rLow < rHigh) return cLow;
-    else return cHigh;
+    if (rLow < rHigh) { 
+        return cLow; 
+    }
+    return cHigh;
 };
 
 const getRatio = (
