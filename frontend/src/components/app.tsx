@@ -9,6 +9,7 @@ import Confetti from "../util/confetti";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
+import Page404 from "./404";
 
 const SMALL_SCREEN_THRESHOLD = 700;
 
@@ -193,6 +194,7 @@ const App: preact.FunctionalComponent = () => {
                             import("../routes/dpll/view").then((m) => m.default)
                         }
                     />
+                    <Page404 default />
                 </Router>
             </main>
             <div class={style.notifications}>

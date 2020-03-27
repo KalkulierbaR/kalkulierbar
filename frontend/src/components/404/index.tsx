@@ -1,0 +1,15 @@
+import { h } from "preact";
+
+import * as style from "./style.scss";
+
+const Page404: preact.FunctionalComponent = () => (
+    <div class="card">
+        <h2 class={style.title}>Error 404</h2>
+        <p class={style.large}>Looks like this page does not exists.</p>
+        <p>
+            You better head back <a href="/">Home</a>.
+        </p>
+    </div>
+);
+
+export default Page404;
