@@ -4,20 +4,19 @@ import FAB from "../../../components/fab";
 import AddIcon from "../../../components/icons/add";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
-import {
-    AppStateActionType,
-    TableauxCalculusType,
-    TutorialMode,
-} from "../../../types/app";
+import { TableauxCalculusType, TutorialMode } from "../../../types/app";
 import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
+import {
+    disableTutorial,
+    getHighlightCheck,
+} from "../../../util/tutorial-mode";
 import DownloadFAB from "../../btn/download";
 import ExploreIcon from "../../icons/explore";
 import LemmaIcon from "../../icons/lemma";
 import UndoIcon from "../../icons/undo";
-import Tutorial from "../../tutorial";
 
 interface Props {
     /**
@@ -96,13 +95,14 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
+                checkFABPositionFromBottom={2}
             >
                 {selectedNodeId === undefined ? (
                     <Fragment>
                         {resetView}
                         <DownloadFAB state={state} name={calculus} />
-                        {state!.nodes.filter((node) => !node.isClosed).length >
-                        0 ? (
+                        {state.nodes.filter((node) => !node.isClosed).length >
+                            0 && (
                             <FAB
                                 icon={<ExploreIcon />}
                                 label="Next Leaf"
@@ -121,8 +121,6 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                     );
                                 }}
                             />
-                        ) : (
-                            undefined
                         )}
                         <FAB
                             icon={<CheckCircleIcon />}
@@ -131,16 +129,12 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                if (
-                                    tutorialMode & TutorialMode.HighlightCheck
-                                ) {
-                                    dispatch({
-                                        type:
-                                            AppStateActionType.SET_TUTORIAL_MODE,
-                                        value:
-                                            tutorialMode ^
-                                            TutorialMode.HighlightCheck,
-                                    });
+                                if (getHighlightCheck(tutorialMode)) {
+                                    disableTutorial(
+                                        dispatch,
+                                        tutorialMode,
+                                        TutorialMode.HighlightCheck,
+                                    );
                                 }
                                 checkClose(
                                     server,
@@ -151,7 +145,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 );
                             }}
                         />
-                        {state!.backtracking ? (
+                        {state.backtracking && state.moveHistory.length > 0 && (
                             <FAB
                                 icon={<UndoIcon />}
                                 label="Undo"
@@ -181,8 +175,6 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                     );
                                 }}
                             />
-                        ) : (
-                            undefined
                         )}
                     </Fragment>
                 ) : (
@@ -206,33 +198,24 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 onClick={lemmaCallback}
                                 active={true}
                             />
-                        ) : state!.nodes[selectedNodeId].children.length ===
-                              0 &&
-                          state!.nodes.filter((node) => node.isClosed).length >
-                              0 ? (
-                            <FAB
-                                icon={<LemmaIcon />}
-                                label="Lemma"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={lemmaCallback}
-                            />
                         ) : (
-                            undefined
+                            state!.nodes[selectedNodeId].children.length ===
+                                0 &&
+                            state!.nodes.filter((node) => node.isClosed)
+                                .length > 0 && (
+                                <FAB
+                                    icon={<LemmaIcon />}
+                                    label="Lemma"
+                                    mini={true}
+                                    extended={true}
+                                    showIconAtEnd={true}
+                                    onClick={lemmaCallback}
+                                />
+                            )
                         )}
                     </Fragment>
                 )}
             </ControlFAB>
-            {!smallScreen &&
-                couldShowCheckCloseHint &&
-                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
-                    <Tutorial
-                        text="Check if the proof is complete"
-                        right="205px"
-                        bottom="115px"
-                    />
-                )}
         </Fragment>
     );
 };
