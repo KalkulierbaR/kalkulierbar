@@ -69,17 +69,20 @@ const findOptimalColumnNumber = (
     length: number,
 ) => {
     const windowRatio = window.innerWidth / window.innerHeight;
-    let best = 1;
-    let bestValue = Infinity;
-    for (let i = 1; i <= length; i++) {
-        const ratio = getRatio(cWidth, cHeight, i, length);
-        const diff = Math.abs(windowRatio - ratio);
-        if (diff < bestValue) {
-            best = i;
-            bestValue = diff;
-        }
-    }
-    return best;
+    const c = Math.sqrt((length * windowRatio * cHeight) / cWidth);
+
+    const cLow = Math.floor(c);
+    const cHigh = Math.ceil(c);
+
+    const rLow = Math.abs(
+        getRatio(cWidth, cHeight, cLow, length) - windowRatio,
+    );
+    const rHigh = Math.abs(
+        getRatio(cWidth, cHeight, cHigh, length) - windowRatio,
+    );
+
+    if (rLow < rHigh) return cLow;
+    else return cHigh;
 };
 
 const getRatio = (
