@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import { CalculusType, ResolutionCalculus, TableauxCalculus, TutorialMode } from "../../types/app";
+import {Calculus, CalculusType, ResolutionCalculus, TableauxCalculus, TutorialMode} from "../../types/app";
 import { useAppState } from "../../util/app-state";
 import Dialog from "../dialog";
 import FAB from "../fab";
@@ -99,6 +99,97 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 You can resolve multiple clauses at once with the hyper resolution.
                                 The main clause is selected first.
                                 Then you can add side premises which only contain positive atoms.
+                            </p>
+                        </div>
+                    </div>
+                )}
+                {calculus === Calculus.dpll && (
+                    <div class={style.container}>
+                        <div class={style.child}>
+                            <h3>Resolve Move</h3>
+                            <Video
+                                src="../../assets/videos/dpll_resolve.mp4"
+                                alt="DPLL Resolve Move"
+                            />
+                            <p>
+                                Choose two clauses with complementary atoms to resolve them.
+                                The proof is complete when the empty clause has been resolved in all paths of the tree.
+                            </p>
+                        </div>
+                        <div class={style.child}>
+                            <h3>Split Move</h3>
+                            <Video
+                                src="../../assets/videos/dpll_split.mp4"
+                                alt="DPLL Split Move"
+                            />
+                            <p>
+                                You can split the tree by selecting a node and a literal.
+                                Now you need to proof both paths separately.
+                            </p>
+                        </div>
+                        <div class={style.child}>
+                            <h3>Prune Move</h3>
+                            <Video
+                                src="../../assets/videos/dpll_prune.mp4"
+                                alt="DPLL Prune Move"
+                            />
+                            <p>
+                                Select a node and apply the prune rule to undo all steps below that node.
+                            </p>
+                        </div>
+                    </div>
+                )}
+                {calculus === Calculus.ncTableaux && (
+                    <div class={style.container}>
+                        <div class={style.child}>
+                            <h3>Alpha Move</h3>
+                            <Video
+                                src="../../assets/videos/nc_tableaux_alpha.mp4"
+                                alt="NC Tableaux Alpha Move"
+                            />
+                            <p>
+                                This splits a formula on it's conjunctions into multiple nodes, which are chained onto the current tree path.
+                            </p>
+                        </div>
+                        <div class={style.child}>
+                            <h3>Beta Move</h3>
+                            <Video
+                                src="../../assets/videos/nc_tableaux_beta.mp4"
+                                alt="NC Tableaux Beta Move"
+                            />
+                            <p>
+                                This splits a formula on it's disjunctions into multiple child nodes of the current node.
+                            </p>
+                        </div>
+                        <div class={style.child}>
+                            <h3>Gamma Move</h3>
+                            <Video
+                                src="../../assets/videos/nc_tableaux_gamma.mp4"
+                                alt="NC Tableaux Gamma Move"
+                            />
+                            <p>
+                                This resolves the outermost universal quantifier of a formula and adds a new child to the current node.
+                            </p>
+                        </div>
+                        <div class={style.child}>
+                            <h3>Delta Move</h3>
+                            <Video
+                                src="../../assets/videos/nc_tableaux_delta.mp4"
+                                alt="NC Tableaux Delta Move"
+                            />
+                            <p>
+                                This resolves the outermost existential quantifier of a formula and adds a new child to the current node.
+                            </p>
+                        </div>
+                        <div class={style.child}>
+                            <h3>Close Move</h3>
+                            <Video
+                                src="../../assets/videos/nc_tableaux_close.mp4"
+                                alt="NC Tableaux Close Move"
+                            />
+                            <p>
+                                Choose two clauses with complementary atoms to resolve them.
+                                The proof is complete when the empty clause has been resolved in all paths of the tree.
                             </p>
                         </div>
                     </div>
