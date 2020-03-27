@@ -359,25 +359,29 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
 }) => {
     const { dispatch, isAdmin, adminKey, onError, server } = useAppState();
 
-    const [newAdminKey, setAdminKey] = useState(adminKey);
+    const [adminKeyInput, setAdminKeyInput] = useState(adminKey);
 
     const dispatchAdminKey = useCallback(() => {
         dispatch({
             type: AppStateActionType.SET_ADMIN_KEY,
-            value: newAdminKey,
+            value: adminKeyInput,
         });
-    }, [newAdminKey]);
+    }, [adminKeyInput]);
 
     const onSubmit = useCallback(() => {
         dispatchAdminKey();
         checkCredentials(
             server,
-            newAdminKey,
-            (userIsAdmin) =>
+            adminKeyInput,
+            (userIsAdmin) => {
                 dispatch({
                     type: AppStateActionType.SET_ADMIN,
                     value: userIsAdmin,
-                }),
+                });
+                if (userIsAdmin) {
+                   setAdminKeyInput("");
+                }
+            },
             onError,
         );
         if (document.activeElement) {
@@ -422,7 +426,7 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                     <TextInput
                         class={style.settingsInput}
                         label={showLabel ? "Admin Login" : undefined}
-                        onChange={setAdminKey}
+                        onChange={setAdminKeyInput}
                         value={adminKey}
                         type="password"
                         autoComplete={true}
