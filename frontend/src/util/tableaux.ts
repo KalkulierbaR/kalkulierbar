@@ -68,7 +68,7 @@ export const sendClose = (
             onError,
             onWarning,
         );
-    } else if (instanceOfFOTabState(state, calculus)) {
+    } else if (instanceOfFOTabState(state, calculus) && varAssignments !== undefined) {
         sendMove(
             server,
             calculus,
@@ -77,15 +77,15 @@ export const sendClose = (
                 type: "tableaux-close-assign",
                 id1: leaf,
                 id2: pred,
-                varAssign: varAssignments!,
+                varAssign: varAssignments,
             },
             stateChanger,
             onError,
             onWarning,
         );
-        if (callback !== undefined) {
-            callback();
-        }
+    }
+    if (callback !== undefined) {
+        callback();
     }
 };
 

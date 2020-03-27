@@ -91,7 +91,6 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
     );
 
     const couldShowCheckCloseHint = state.nodes[0].isClosed;
-    console.log(state.nodes);
 
     return (
         <ControlFAB
