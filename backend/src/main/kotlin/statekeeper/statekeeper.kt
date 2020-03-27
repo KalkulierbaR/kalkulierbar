@@ -14,6 +14,7 @@ import org.komputing.khash.keccak.extensions.digestKeccak
 
 @Suppress("TooGenericExceptionCaught")
 class StateKeeper {
+    @Suppress("TooManyFunctions")
     companion object {
 
         private val serializer = Json(JsonConfiguration.Stable)
@@ -159,6 +160,17 @@ class StateKeeper {
             }
 
             return "true"
+        }
+
+        /**
+         * Resets singleton
+         * NOTE: At the moment for testing purpose only
+         */
+        fun reset() {
+            availableCalculi = listOf<String>()
+            storage.delete()
+            state.disabledCalculi.clear()
+            state.examples.clear()
         }
 
         /**
