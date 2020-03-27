@@ -301,14 +301,14 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     close,
 }) => {
     const { dispatch, server } = useAppState();
-    const [newServer, setServer] = useState(server);
+    const [serverInput, setServerInput] = useState(server);
 
     const dispatchServer = useCallback(() => {
         dispatch({
             type: AppStateActionType.SET_SERVER,
-            value: newServer.trim(),
+            value: serverInput.trim(),
         });
-    }, [newServer]);
+    }, [serverInput]);
 
     const onSubmit = useCallback(() => {
         dispatchServer();
@@ -335,8 +335,8 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
             <TextInput
                 class={style.settingsInput}
                 label={showLabel ? "Server" : undefined}
-                onChange={setServer}
-                value={server}
+                onChange={setServerInput}
+                syncValue={serverInput}
                 type="url"
                 autoComplete={true}
                 onKeyDown={handleEnter}
@@ -378,12 +378,11 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                     type: AppStateActionType.SET_ADMIN,
                     value: userIsAdmin,
                 });
-                if (userIsAdmin) {
-                   setAdminKeyInput("");
-                }
             },
             onError,
         );
+        setAdminKeyInput("");
+
         if (document.activeElement) {
             (document.activeElement as HTMLElement).blur();
         }
@@ -427,7 +426,7 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                         class={style.settingsInput}
                         label={showLabel ? "Admin Login" : undefined}
                         onChange={setAdminKeyInput}
-                        value={adminKey}
+                        syncValue={adminKeyInput}
                         type="password"
                         autoComplete={true}
                         onKeyDown={handleEnter}
