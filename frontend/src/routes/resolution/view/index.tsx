@@ -39,6 +39,7 @@ import {
     sendResolveUnify,
 } from "../../../util/resolution";
 import { foExample, propExample } from "./example";
+import ResolutionGrid from "../../../components/resolution/grid";
 
 interface Props {
     /**
@@ -64,6 +65,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         state = calculus === Calculus.propResolution ? propExample : foExample;
         onChange(calculus, state);
     }
+
+    const showGrid = useState<boolean>(true);
 
     const [hyperRes, setHyperRes] = useState<HyperResolutionMove | undefined>(
         undefined,
@@ -340,16 +343,30 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <h2>Resolution View</h2>
-            <ResolutionCircle
-                clauses={candidateClauses}
-                selectClauseCallback={selectClauseCallback}
-                selectedClauseId={selectedClauseId}
-                visualHelp={state.visualHelp}
-                newestNode={state.newestNode}
-                semiSelected={semiSelected}
-                selectable={selectable}
-                shiftCandidateClause={shiftCandidateClause}
-            />
+
+            {showGrid ? (
+                <ResolutionGrid
+                    clauses={candidateClauses}
+                    selectClauseCallback={selectClauseCallback}
+                    selectedClauseId={selectedClauseId}
+                    visualHelp={state.visualHelp}
+                    newestNode={state.newestNode}
+                    semiSelected={semiSelected}
+                    selectable={selectable}
+                    shiftCandidateClause={shiftCandidateClause}
+                />
+            ) : (
+                <ResolutionCircle
+                    clauses={candidateClauses}
+                    selectClauseCallback={selectClauseCallback}
+                    selectedClauseId={selectedClauseId}
+                    visualHelp={state.visualHelp}
+                    newestNode={state.newestNode}
+                    semiSelected={semiSelected}
+                    selectable={selectable}
+                    shiftCandidateClause={shiftCandidateClause}
+                />
+            )}
 
             <ResolutionFAB
                 calculus={calculus}
