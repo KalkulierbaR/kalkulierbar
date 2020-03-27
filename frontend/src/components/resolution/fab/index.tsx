@@ -145,7 +145,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         />
 
                         {state.clauseSet.clauses[selectedClauseId].atoms
-                            .length > 0 ? (
+                            .length > 0 && (
                             <FAB
                                 mini={true}
                                 extended={true}
@@ -174,7 +174,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                     setSelectedClauses(undefined);
                                 }}
                             />
-                        ) : undefined}
+                        )}
                     </Fragment>
                 ) : (
                     <Fragment>
@@ -190,7 +190,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 )}
 
-                {state!.hiddenClauses.clauses.length > 0 ? (
+                {state!.hiddenClauses.clauses.length > 0 && (
                     <FAB
                         mini={true}
                         extended={true}
@@ -202,7 +202,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             setSelectedClauses(undefined);
                         }}
                     />
-                ) : undefined}
+                )}
                 <FAB
                     mini={true}
                     extended={true}
