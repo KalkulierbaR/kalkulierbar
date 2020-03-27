@@ -74,8 +74,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     } = useAppState();
 
     const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
-    const [exampleName, setExampleName] = useState("");
-    const [exampleDescription, setExampleDescription] = useState("");
+    const [exampleNameInput, setExampleNameInput] = useState("");
+    const [exampleDescriptionInput, setExampleDescriptionInput] = useState("");
     const [showCreateExampleDialog, setShowCreateExampleDialog] = useState(false);
 
     /**
@@ -107,8 +107,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     addExample(
                         server,
                         {
-                            name: exampleName,
-                            description: exampleDescription,
+                            name: exampleNameInput,
+                            description: exampleDescriptionInput,
                             calculus,
                             formula: normalizeInput(savedFormulas[calculus]),
                             params: (params ? JSON.stringify(params) : ""),
@@ -119,6 +119,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         onSuccess,
                     );
                     setShowCreateExampleDialog(false);
+                    setExampleNameInput("");
+                    setExampleDescriptionInput("");
                 } else {
                     onChange(calculus, parsed);
                     route(`/${calculus}/view`);
@@ -258,14 +260,16 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     <p>The name and description are optional. The parameters will be saved how you currently have set them.</p>
                     <TextInput
                         label="Name"
-                        onChange={(value) => setExampleName(value)}
+                        syncValue={exampleNameInput}
+                        onChange={setExampleNameInput}
                         autoComplete={true}
                         required={true}
                     />
                     <br/>
                     <TextInput
                         label="Description"
-                        onChange={(value) => setExampleDescription(value)}
+                        syncValue={exampleDescriptionInput}
+                        onChange={setExampleDescriptionInput}
                         autoComplete={true}
                         required={true}
                     />
