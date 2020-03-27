@@ -63,7 +63,13 @@ interface Props {
      * Set the visibility of the factorize dialog
      */
     setShowFactorizeDialog: (b: boolean) => void;
+    /**
+     * Whether the grid view is active
+     */
     showGrid: boolean;
+    /**
+     * Setter for the grid view
+     */
     setShowGrid: (v: boolean) => void;
 }
 

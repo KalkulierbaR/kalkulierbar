@@ -69,6 +69,13 @@ export const gridLayout = (
     };
 };
 
+/**
+ * Calculates the number of columns for which the grid is closest to the ratio of the window
+ * @param {number} cWidth - Max width of a clause
+ * @param {number} cHeight - Height of a clause
+ * @param {number} length - Number of clauses
+ * @returns {number} - The optimal number of columns
+ */
 const findOptimalColumnNumber = (
     cWidth: number,
     cHeight: number,
@@ -91,6 +98,14 @@ const findOptimalColumnNumber = (
     else return cHigh;
 };
 
+/**
+ * Calculates the ratio of the grid
+ * @param {number} cWidth - Max width of a clause
+ * @param {number} cHeight - Height of a clause
+ * @param {number} columns - Number of columns
+ * @param {number} length - Number of clauses
+ * @returns {number} - The ratio of the grid
+ */
 const getRatio = (
     cWidth: number,
     cHeight: number,
