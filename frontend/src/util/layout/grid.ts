@@ -34,8 +34,9 @@ export const gridLayout = (
     // The height is constant. The value here has no special meaning
     let height = 35 + HEIGHT_PADDING;
 
+    // Calculate the optimal column number to match the window aspect ratio
     const columns = findOptimalColumnNumber(width, height, clauses.length);
-    console.log(columns);
+
     let rows = 0;
 
     const data: LayoutItem<Clause<string | FOLiteral>>[] = [];

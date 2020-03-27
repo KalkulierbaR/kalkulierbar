@@ -7,10 +7,7 @@ import { gridLayout } from "../../../util/layout/grid";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import { DragTransform } from "../../../types/ui";
-
-const normalize = (value: number, min: number, max: number) => {
-    return Math.max(min, Math.min(max, value));
-};
+import { normalize } from "../../../util/normalize";
 
 interface Props {
     /**
@@ -67,6 +64,12 @@ const ResolutionGrid: preact.FunctionalComponent<Props> = ({
         columnWidth,
     } = gridLayout(clauses.map((c) => c.clause));
 
+    /**
+     * Handler for the drag part of drag&drop
+     * @param {number} id - the index of the clause in the circle
+     * @param {DragTransform} dt - how much the clause is dragged
+     * @returns {void} - nothing
+     */
     const onDrop = (id: number, dt: DragTransform) => {
         const clause = data[id];
 
@@ -75,8 +78,10 @@ const ResolutionGrid: preact.FunctionalComponent<Props> = ({
         const x = x0 + dt.x;
         const y = y0 + dt.y;
 
+        // Calculate the column of the new position
         const column = normalize(Math.floor(x / columnWidth), 0, columns - 1);
 
+        // Calculate the row of the new position
         const row = normalize(
             Math.floor((y + rowHeight / 4) / rowHeight),
             0,
