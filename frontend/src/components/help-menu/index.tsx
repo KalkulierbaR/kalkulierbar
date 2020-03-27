@@ -5,6 +5,7 @@ import { useAppState } from "../../util/app-state";
 import Dialog from "../dialog";
 import FAB from "../fab";
 import InfoIcon from "../icons/info";
+import Video from "../video";
 import * as style from "./style.scss";
 
 interface Props {
@@ -41,26 +42,22 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 {TableauxCalculus.includes(calculus) && (
                     <div class={style.container}>
                         <div class={style.child}>
-                            <h3>Expand move</h3>
-                            <video autoPlay={true} loop={true} alt="Tableaux Expand Move">
-                                <source
-                                    src="../../assets/videos/prop_tableaux_expand.mp4"
-                                    type="video/mp4"
-                                />
-                            </video>
+                            <h3>Expand Move</h3>
+                            <Video
+                                src="../../assets/videos/prop_tableaux_expand.mp4"
+                                alt="Tableaux Expand Move"
+                            />
                             <p>
                                 You can expand the tree by choosing a leaf and a
                                 clause.
                             </p>
                         </div>
                         <div class={style.child}>
-                            <h3>Close move</h3>
-                            <video autoPlay={true} loop={true} alt="Tableaux Close Move">
-                                <source
-                                    src="../../assets/videos/prop_tableaux_close.mp4"
-                                    type="video/mp4"
-                                />
-                            </video>
+                            <h3>Close Move</h3>
+                            <Video
+                                src="../../assets/videos/prop_tableaux_close.mp4"
+                                alt="Tableaux Close Move"
+                            />
                             <p>
                                 Close a leaf with a complementary node on the
                                 path to the root. The proof is complete when all
@@ -72,38 +69,32 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 {ResolutionCalculus.includes(calculus) && (
                     <div class={style.container}>
                         <div class={style.child}>
-                            <h3>Resolve move</h3>
-                            <video autoPlay={true} loop={true} alt="Resolution Resolve Move">
-                                <source
-                                    src="../../assets/videos/prop_resolution_resolve.mp4"
-                                    type="video/mp4"
-                                />
-                            </video>
+                            <h3>Resolve Move</h3>
+                            <Video
+                                src="../../assets/videos/prop_resolution_resolve.mp4"
+                                alt="Resolution Resolve Move"
+                            />
                             <p>
                                 Choose two clauses with complementary atoms to resolve them.
                                 The proof is complete when the empty clause has been resolved.
                             </p>
                         </div>
                         <div class={style.child}>
-                            <h3>Factorize move</h3>
-                            <video autoPlay={true} loop={true} alt="Resolution Factorize Move">
-                                <source
-                                    src="../../assets/videos/prop_resolution_factorize.mp4"
-                                    type="video/mp4"
-                                />
-                            </video>
+                            <h3>Factorize Move</h3>
+                            <Video
+                                src="../../assets/videos/prop_resolution_factorize.mp4"
+                                alt="Resolution Factorize Move"
+                            />
                             <p>
                                 If a clause has multiple identical atoms, you can factorize it.
                             </p>
                         </div>
                         <div class={style.child}>
-                            <h3>Hyper Resolution move</h3>
-                            <video autoPlay={true} loop={true} alt="Hyper Resolution Move">
-                                <source
-                                    src="../../assets/videos/prop_resolution_hyper.mp4"
-                                    type="video/mp4"
-                                />
-                            </video>
+                            <h3>Hyper Resolution Move</h3>
+                            <Video
+                                src="../../assets/videos/prop_resolution_hyper.mp4"
+                                alt="Hyper Resolution Move"
+                            />
                             <p>
                                 You can resolve multiple clauses at once with the hyper resolution.
                                 The main clause is selected first.
