@@ -6,6 +6,11 @@ import * as style from "./style.scss";
 import { gridLayout } from "../../../util/layout/grid";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
+import { DragTransform } from "../../../types/ui";
+
+const normalize = (value: number, min: number, max: number) => {
+    return Math.max(min, Math.min(max, value));
+};
 
 interface Props {
     /**
@@ -50,10 +55,38 @@ const ResolutionGrid: preact.FunctionalComponent<Props> = ({
     selectClauseCallback,
     newestNode,
     semiSelected,
+    shiftCandidateClause,
 }) => {
-    const { width, height, data } = gridLayout(clauses.map((c) => c.clause));
+    const {
+        width,
+        height,
+        data,
+        columns,
+        rows,
+        rowHeight,
+        columnWidth,
+    } = gridLayout(clauses.map((c) => c.clause));
 
-    const onDrop = () => {};
+    const onDrop = (id: number, dt: DragTransform) => {
+        const clause = data[id];
+
+        const { x: x0, y: y0 } = clause;
+
+        const x = x0 + dt.x;
+        const y = y0 + dt.y;
+
+        const column = normalize(Math.floor(x / columnWidth), 0, columns - 1);
+
+        const row = normalize(
+            Math.floor((y + rowHeight / 4) / rowHeight),
+            0,
+            rows - 1,
+        );
+
+        const newIndex = normalize(row * columns + column, 0, clauses.length);
+
+        shiftCandidateClause(id, newIndex);
+    };
 
     return (
         <div class={`card ${style.noPad}`}>
@@ -62,7 +95,7 @@ const ResolutionGrid: preact.FunctionalComponent<Props> = ({
                 width="100%"
                 height="calc(100vh - 172px)"
                 style="min-height: 60vh"
-                viewBox={`0 0 ${width} ${height}`}
+                viewBox={`-16 0 ${width + 32} ${height}`}
                 preserveAspectRatio="xMidyMid meet"
             >
                 {(transform) => (
