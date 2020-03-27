@@ -84,36 +84,5 @@ const findOptimalColumnNumber = (
     const windowRatio = window.innerWidth / window.innerHeight;
     const c = Math.sqrt((length * windowRatio * cHeight) / cWidth);
 
-    const cLow = Math.floor(c);
-    const cHigh = Math.ceil(c);
-
-    const rLow = Math.abs(
-        getRatio(cWidth, cHeight, cLow, length) - windowRatio,
-    );
-    const rHigh = Math.abs(
-        getRatio(cWidth, cHeight, cHigh, length) - windowRatio,
-    );
-
-    if (rLow < rHigh) return cLow;
-    else return cHigh;
-};
-
-/**
- * Calculates the ratio of the grid
- * @param {number} cWidth - Max width of a clause
- * @param {number} cHeight - Height of a clause
- * @param {number} columns - Number of columns
- * @param {number} length - Number of clauses
- * @returns {number} - The ratio of the grid
- */
-const getRatio = (
-    cWidth: number,
-    cHeight: number,
-    columns: number,
-    length: number,
-) => {
-    const width = cWidth * columns;
-    const height = Math.ceil(length / columns) * cHeight;
-
-    return width / height;
+    return Math.round(c);
 };
