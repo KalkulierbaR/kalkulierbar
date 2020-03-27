@@ -34,7 +34,8 @@ export const gridLayout = (
     // The height is constant. The value here has no special meaning
     let height = 35 + HEIGHT_PADDING;
 
-    const columns = 5;
+    const columns = findOptimalColumnNumber(width, height, clauses.length);
+    console.log(columns);
     let rows = 0;
 
     const data: LayoutItem<Clause<string | FOLiteral>>[] = [];
@@ -46,13 +47,13 @@ export const gridLayout = (
 
         data.push({
             x: (i % columns) * width + width / 2,
-            y: (rows - 1) * height,
+            y: (rows - 1) * height + height / 2 + HEIGHT_PADDING / 2,
             data: clauses[i],
         });
     }
 
     return {
-        height: rows * (height + HEIGHT_PADDING),
+        height: rows * height,
         width: columns * width,
         data,
         rows,
@@ -60,4 +61,35 @@ export const gridLayout = (
         rowHeight: height,
         columnWidth: width,
     };
+};
+
+const findOptimalColumnNumber = (
+    cWidth: number,
+    cHeight: number,
+    length: number,
+) => {
+    const windowRatio = window.innerWidth / window.innerHeight;
+    let best = 1;
+    let bestValue = Infinity;
+    for (let i = 1; i <= length; i++) {
+        const ratio = getRatio(cWidth, cHeight, i, length);
+        const diff = Math.abs(windowRatio - ratio);
+        if (diff < bestValue) {
+            best = i;
+            bestValue = diff;
+        }
+    }
+    return best;
+};
+
+const getRatio = (
+    cWidth: number,
+    cHeight: number,
+    columns: number,
+    length: number,
+) => {
+    const width = cWidth * columns;
+    const height = Math.ceil(length / columns) * cHeight;
+
+    return width / height;
 };
