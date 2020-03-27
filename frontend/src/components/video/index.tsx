@@ -16,7 +16,7 @@ interface Props {
     /**
      * Whether the video should start automatically
      */
-    autoplay?: boolean;
+    autoPlay?: boolean;
     /**
      * Whether the video should play in a loop
      */
@@ -31,16 +31,16 @@ const Video: preact.FunctionalComponent<Props> = ({
     src,
     alt,
     type = "video/mp4",
-    autoplay = true,
+    autoPlay = true,
     loop = true,
     muted = true,
 }) => {
     return (
         <video
-            autoplay={autoplay}
             loop={loop}
             muted={muted}
             alt={alt}
+            autoPlay={autoPlay}
         >
             <source
                 src={src}
