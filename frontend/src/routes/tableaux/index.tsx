@@ -6,13 +6,13 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
 import Switch from "../../components/switch";
-import { Calculus, TableauxCalculusType } from "../../types/app";
+import { Calculus, TableauxCalculusType } from "../../types/calculus";
 import {
     CnfStrategy,
     FOTableauxParams,
     PropTableauxParams,
     TableauxType,
-} from "../../types/tableaux";
+} from "../../types/calculus/tableaux";
 import { useAppState } from "../../util/app-state";
 
 interface Props {

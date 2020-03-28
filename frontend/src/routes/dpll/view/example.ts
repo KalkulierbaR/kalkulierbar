@@ -1,4 +1,4 @@
-import { DPLLNodeType, DPLLState } from "../../../types/dpll";
+import { DPLLNodeType, DPLLState } from "../../../types/calculus/dpll";
 
 const dpllExampleState: DPLLState = {
     clauseSet: {

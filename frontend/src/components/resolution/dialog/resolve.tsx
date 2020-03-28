@@ -2,20 +2,20 @@ import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import Dialog from "../../../components/dialog";
 import OptionList from "../../../components/input/option-list";
-import { ResolutionCalculusType } from "../../../types/app";
+import { ResolutionCalculusType } from "../../../types/calculus";
 import {
     CandidateClause,
     Clause,
     SelectedClauses,
-} from "../../../types/clause";
+} from "../../../types/calculus/clause";
 import {
     FOResolutionState,
     HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
     PropResolutionState,
-} from "../../../types/resolution";
-import { VarAssign } from "../../../types/tableaux";
+} from "../../../types/calculus/resolution";
+import { VarAssign } from "../../../types/calculus/tableaux";
 import { useAppState } from "../../../util/app-state";
 import {
     atomToString,

@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useMemo } from "preact/hooks";
-import { ClauseSet } from "../../../types/clause";
-import { DPLLState } from "../../../types/dpll";
+import { ClauseSet } from "../../../types/calculus/clause";
+import { DPLLState } from "../../../types/calculus/dpll";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { getAllLits, sendSplit } from "../../../util/dpll";

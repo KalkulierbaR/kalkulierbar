@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { ClauseSet } from "../../../types/clause";
+import { ClauseSet } from "../../../types/calculus/clause";
 import { getAllLits } from "../../../util/dpll";
 import Btn from "../../btn";
 import Dialog from "../../dialog";

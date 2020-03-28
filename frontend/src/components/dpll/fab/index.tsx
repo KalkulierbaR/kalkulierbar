@@ -1,6 +1,5 @@
 import { Fragment, h } from "preact";
-import { AppStateActionType, TutorialMode } from "../../../types/app";
-import { DPLLNodeType, DPLLState } from "../../../types/dpll";
+import { DPLLNodeType, DPLLState } from "../../../types/calculus/dpll";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { sendPrune, stateIsClosed } from "../../../util/dpll";
@@ -12,6 +11,8 @@ import CheckCircleFilledIcon from "../../icons/check-circle-filled";
 import DeleteIcon from "../../icons/delete";
 import SplitIcon from "../../icons/split";
 import SwitchIcon from "../../icons/switch";
+import { TutorialMode } from "../../../types/app/tutorial";
+import { AppStateActionType } from "../../../types/app/action";
 
 interface Props {
     /**

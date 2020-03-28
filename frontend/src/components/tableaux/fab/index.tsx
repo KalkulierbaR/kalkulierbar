@@ -4,8 +4,10 @@ import FAB from "../../../components/fab";
 import AddIcon from "../../../components/icons/add";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
-import { TableauxCalculusType, TutorialMode } from "../../../types/app";
-import { FOTableauxState, PropTableauxState } from "../../../types/tableaux";
+import {
+    FOTableauxState,
+    PropTableauxState,
+} from "../../../types/calculus/tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../util/tableaux";
@@ -17,6 +19,8 @@ import DownloadFAB from "../../btn/download";
 import ExploreIcon from "../../icons/explore";
 import LemmaIcon from "../../icons/lemma";
 import UndoIcon from "../../icons/undo";
+import { TableauxCalculusType } from "../../../types/calculus";
+import { TutorialMode } from "../../../types/app/tutorial";
 
 interface Props {
     /**

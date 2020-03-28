@@ -7,20 +7,20 @@ import ResolutionCircle from "../../../components/resolution/circle";
 import ResolutionFactorizeDialog from "../../../components/resolution/dialog/factorize";
 import ResolutionResolveDialog from "../../../components/resolution/dialog/resolve";
 import ResolutionFAB from "../../../components/resolution/fab";
-import { Calculus, ResolutionCalculusType } from "../../../types/app";
+import { Calculus, ResolutionCalculusType } from "../../../types/calculus";
 import {
     CandidateClause,
     getCandidateCount,
     instanceOfPropCandidateClause,
     PropCandidateClause,
     SelectedClauses,
-} from "../../../types/clause";
+} from "../../../types/calculus/clause";
 import {
     HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
-} from "../../../types/resolution";
-import { VarAssign } from "../../../types/tableaux";
+} from "../../../types/calculus/resolution";
+import { VarAssign } from "../../../types/calculus/tableaux";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { checkAtomsForVar, getCandidateClause } from "../../../util/clause";

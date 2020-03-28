@@ -1,6 +1,6 @@
 import { createRef, h } from "preact";
 import { useState } from "preact/hooks";
-import { CandidateClause } from "../../../types/clause";
+import { CandidateClause } from "../../../types/calculus/clause";
 import { DragTransform, Point } from "../../../types/ui";
 import { classMap } from "../../../util/class-map";
 import { clauseToString } from "../../../util/clause";

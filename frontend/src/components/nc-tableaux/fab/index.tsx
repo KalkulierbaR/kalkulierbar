@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { NCTableauxState } from "../../../types/nc-tableaux";
+import { NCTableauxState } from "../../../types/calculus/nc-tableaux";
 import { checkClose } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import {

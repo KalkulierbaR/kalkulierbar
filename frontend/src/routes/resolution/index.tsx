@@ -6,9 +6,9 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
 import Switch from "../../components/switch";
-import { Calculus, ResolutionCalculusType } from "../../types/app";
-import { VisualHelp } from "../../types/resolution";
-import { CnfStrategy } from "../../types/tableaux";
+import { Calculus, ResolutionCalculusType } from "../../types/calculus";
+import { VisualHelp } from "../../types/calculus/resolution";
+import { CnfStrategy } from "../../types/calculus/tableaux";
 import { useAppState } from "../../util/app-state";
 
 interface Props {

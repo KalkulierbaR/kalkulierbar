@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { Route } from ".";
-import { Calculus } from "../../types/app";
+import { Calculus } from "../../types/calculus";
 import { circle } from "../../components/resolution/circle/style.scss";
 
 import * as style from "./style.scss";

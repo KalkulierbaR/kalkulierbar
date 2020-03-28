@@ -1,5 +1,5 @@
 import { h, VNode } from "preact";
-import { Calculus } from "../../types/app";
+import { Calculus } from "../../types/calculus";
 import * as style from "./style.scss";
 
 import ROUTES from "./routes";

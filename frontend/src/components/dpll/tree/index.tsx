@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { DPLLTreeNode } from "../../../types/dpll";
+import { DPLLTreeNode } from "../../../types/calculus/dpll";
 import { dpllTreeLayout } from "../../../util/dpll";
 import Zoomable from "../../zoomable";
 

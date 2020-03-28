@@ -2,7 +2,7 @@ import { Fragment, h } from "preact";
 import UploadFAB from "../../components/btn/upload";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
-import { Calculus } from "../../types/app";
+import { Calculus } from "../../types/calculus";
 
 const NCTableaux: preact.FunctionalComponent = () => {
     return (

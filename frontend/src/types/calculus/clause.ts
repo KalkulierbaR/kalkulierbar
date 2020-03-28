@@ -1,4 +1,4 @@
-import { FOCalculus, PropCalculus } from "./app";
+import { PropCalculus, FOCalculus } from ".";
 
 /**
  * The Atom object received from the backend

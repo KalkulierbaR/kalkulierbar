@@ -2,7 +2,7 @@ import {
     FOResolutionState,
     PropResolutionState,
     VisualHelp,
-} from "../../../types/resolution";
+} from "../../../types/calculus/resolution";
 
 export const propExample: PropResolutionState = {
     clauseSet: {

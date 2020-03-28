@@ -1,9 +1,4 @@
-import { StateUpdater } from "preact/hooks/src";
-import {
-    AppStateUpdater,
-    NotificationHandler,
-    TableauxCalculusType,
-} from "../types/app";
+import { StateUpdater } from "preact/hooks";
 import {
     FOTableauxState,
     instanceOfFOTabState,
@@ -12,12 +7,15 @@ import {
     TableauxNode,
     TableauxTreeLayoutNode,
     VarAssign,
-} from "../types/tableaux";
+} from "../types/calculus/tableaux";
 import { Tree, TreeLayout } from "../types/tree";
 import { DragTransform } from "../types/ui";
 import { sendMove } from "./api";
 import { tree, treeFind, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
+import { TableauxCalculusType } from "../types/calculus";
+import { AppStateUpdater } from "../types/app/app-state";
+import { NotificationHandler } from "../types/app/notification";
 
 /**
  * Finds the first open leaf and returns its id.

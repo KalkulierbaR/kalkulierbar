@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useMemo } from "preact/hooks";
-import { CandidateClause } from "../../../types/clause";
-import { VisualHelp } from "../../../types/resolution";
+import { CandidateClause } from "../../../types/calculus/clause";
+import { VisualHelp } from "../../../types/calculus/resolution";
 import { DragTransform } from "../../../types/ui";
 import { circleLayout } from "../../../util/layout/resolution";
 import Zoomable from "../../zoomable";

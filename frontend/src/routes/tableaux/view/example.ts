@@ -2,7 +2,7 @@ import {
     FOTableauxState,
     PropTableauxState,
     TableauxType,
-} from "../../../types/tableaux";
+} from "../../../types/calculus/tableaux";
 
 export const propExample: PropTableauxState = {
     clauseSet: {

@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { TableauxTreeLayoutNode } from "../../../types/tableaux";
+import { TableauxTreeLayoutNode } from "../../../types/calculus/tableaux";
 import { Tree } from "../../../types/tree";
 import { DragTransform } from "../../../types/ui";
 import TableauxTreeNode from "../node";

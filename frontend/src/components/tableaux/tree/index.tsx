@@ -3,7 +3,7 @@ import {
     SelectNodeOptions,
     TableauxNode,
     TableauxTreeLayoutNode,
-} from "../../../types/tableaux";
+} from "../../../types/calculus/tableaux";
 import { DragTransform } from "../../../types/ui";
 import {
     findSubTree,

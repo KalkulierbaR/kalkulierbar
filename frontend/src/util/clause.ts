@@ -7,8 +7,8 @@ import {
     FOArgumentType,
     FOAtom,
     FOLiteral,
-} from "../types/clause";
-import { FORelation } from "../types/tableaux";
+} from "../types/calculus/clause";
+import { FORelation } from "../types/calculus/tableaux";
 import { stringArrayToStringMap } from "./array-to-map";
 import { maxBy } from "./max-by";
 

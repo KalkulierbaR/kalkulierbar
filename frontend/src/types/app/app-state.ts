@@ -1,0 +1,80 @@
+import { PropTableauxState, FOTableauxState } from "../calculus/tableaux";
+import { PropResolutionState, FOResolutionState } from "../calculus/resolution";
+import { DPLLState } from "../calculus/dpll";
+import { AppStateAction } from "./action";
+import { Formulas, CalculusType } from "../calculus";
+import { NotificationHandler } from "./notification";
+import { Theme } from "./theme";
+import { TutorialMode } from "./tutorial";
+import { NCTableauxState } from "../calculus/nc-tableaux";
+
+/**
+ * The state of the application
+ */
+export interface AppState {
+    /**
+     * The server we are connected to
+     */
+    server: string;
+    /**
+     * The current notification
+     */
+    notification?: Notification;
+    /**
+     * Whether the screen is currently small (< 700px width)
+     */
+    smallScreen: boolean;
+    /**
+     * The current theme
+     */
+    theme: Theme;
+    /**
+     * The currently saved formulas for each calculus
+     */
+    savedFormulas: Formulas;
+    /**
+     * The current prop-tableaux state
+     */
+    "prop-tableaux"?: PropTableauxState;
+    /**
+     * The current prop-resolution state
+     */
+    "prop-resolution"?: PropResolutionState;
+    /**
+     * The current fo-tableaux state
+     */
+    "fo-tableaux"?: FOTableauxState;
+    /**
+     * The current fo-resolution state
+     */
+    "fo-resolution"?: FOResolutionState;
+    /**
+     * The current nc-tableaux state
+     */
+    "nc-tableaux"?: NCTableauxState;
+    /**
+     * The current dpll state
+     */
+    dpll?: DPLLState;
+    /**
+     * The current tutorial mode
+     */
+    tutorialMode: TutorialMode;
+}
+
+/**
+ * The app state expanded by functions to change it
+ */
+export interface DerivedAppState extends AppState {
+    notificationHandler: NotificationHandler;
+    onChange: <C extends CalculusType = CalculusType>(
+        calculus: C,
+        state: AppState[C],
+    ) => void;
+    dispatch: (a: AppStateAction) => void;
+}
+
+export type AppStateUpdater = <C extends CalculusType = CalculusType>(
+    id: C,
+    newState: AppState[C],
+) => void;

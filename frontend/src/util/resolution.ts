@@ -1,10 +1,4 @@
 import {
-    APIInformation,
-    AppState,
-    Calculus,
-    ResolutionCalculusType,
-} from "../types/app";
-import {
     Atom,
     CandidateClause,
     Clause,
@@ -17,15 +11,18 @@ import {
     instanceOfPropAtom,
     instanceOfPropClause,
     instanceOfPropClauseSet,
-} from "../types/clause";
+} from "../types/calculus/clause";
 import {
     FOResolutionState,
     HyperResolutionMove,
     PropResolutionState,
     VisualHelp,
-} from "../types/resolution";
-import { VarAssign } from "../types/tableaux";
+} from "../types/calculus/resolution";
+import { VarAssign } from "../types/calculus/tableaux";
 import { sendMove } from "./api";
+import { ResolutionCalculusType, Calculus } from "../types/calculus";
+import { APIInformation } from "../types/app/api";
+import { AppState } from "../types/app/app-state";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible

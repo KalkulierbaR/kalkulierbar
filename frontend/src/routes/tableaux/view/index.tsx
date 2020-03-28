@@ -13,7 +13,7 @@ import {
     SelectNodeOptions,
     TableauxTreeLayoutNode,
     VarAssign,
-} from "../../../types/tableaux";
+} from "../../../types/calculus/tableaux";
 import { DragTransform } from "../../../types/ui";
 import { useAppState } from "../../../util/app-state";
 import {
@@ -331,7 +331,9 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog>
-            ) : undefined}
+            ) : (
+                undefined
+            )}
 
             <TableauxFAB
                 calculus={calculus}

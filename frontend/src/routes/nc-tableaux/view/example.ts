@@ -1,4 +1,4 @@
-import { NCTableauxState } from "../../../types/nc-tableaux";
+import { NCTableauxState } from "../../../types/calculus/nc-tableaux";
 
 const exampleState: NCTableauxState = {
     formula: {

@@ -1,4 +1,4 @@
-import { Clause, FOLiteral } from "../../types/clause";
+import { Clause, FOLiteral } from "../../types/calculus/clause";
 import { ArrayLayout } from "../../types/layout";
 import { clauseToString } from "../clause";
 import { maxBy } from "../max-by";

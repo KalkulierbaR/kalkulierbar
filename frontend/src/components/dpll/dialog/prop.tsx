@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { ClauseSet, SelectedClauses } from "../../../types/clause";
-import { DPLLState } from "../../../types/dpll";
+import { ClauseSet, SelectedClauses } from "../../../types/calculus/clause";
+import { DPLLState } from "../../../types/calculus/dpll";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { atomToString } from "../../../util/clause";

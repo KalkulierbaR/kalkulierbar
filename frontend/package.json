@@ -71,7 +71,7 @@
         "tslint": ">5.0.0"
     },
     "husky": {
-        "hooks":{
+        "hooks": {
             "pre-commit": "lint-staged",
             "pre-push": "lint-staged"
         }

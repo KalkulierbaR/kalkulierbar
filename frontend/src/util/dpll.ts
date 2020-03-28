@@ -1,16 +1,17 @@
-import { AppStateUpdater, NotificationHandler } from "../types/app";
-import { Atom, Clause, ClauseSet } from "../types/clause";
+import { Atom, Clause, ClauseSet } from "../types/calculus/clause";
 import {
     DPLLCsDiff,
     DPLLNodeType,
     DPLLState,
     DPLLTreeLayoutNode,
     DPLLTreeNode,
-} from "../types/dpll";
+} from "../types/calculus/dpll";
 import { Tree, TreeLayout } from "../types/tree";
 import { sendMove } from "./api";
 import { tree, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
+import { AppStateUpdater } from "../types/app/app-state";
+import { NotificationHandler } from "../types/app/notification";
 
 /**
  * Creates a tree layout for the nodes

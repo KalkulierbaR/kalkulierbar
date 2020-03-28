@@ -4,14 +4,13 @@ import FAB from "../../../components/fab";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import * as style from "../../../routes/resolution/view/style.scss";
-import { ResolutionCalculusType, TutorialMode } from "../../../types/app";
-import { SelectedClauses } from "../../../types/clause";
+import { SelectedClauses } from "../../../types/calculus/clause";
 import {
     FOResolutionState,
     HyperResolutionMove,
     instanceOfPropResState,
     PropResolutionState,
-} from "../../../types/resolution";
+} from "../../../types/calculus/resolution";
 import { checkClose, sendMove } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import {
@@ -30,6 +29,8 @@ import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
+import { ResolutionCalculusType } from "../../../types/calculus";
+import { TutorialMode } from "../../../types/app/tutorial";
 
 interface Props {
     /**

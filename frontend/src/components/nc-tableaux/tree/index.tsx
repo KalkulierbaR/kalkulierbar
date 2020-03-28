@@ -1,5 +1,8 @@
 import { h } from "preact";
-import { NCTableauxNode, NCTabTreeNode } from "../../../types/nc-tableaux";
+import {
+    NCTableauxNode,
+    NCTabTreeNode,
+} from "../../../types/calculus/nc-tableaux";
 import { DragTransform } from "../../../types/ui";
 import { findSubTree, getClosedLeaves } from "../../../util/layout/tree";
 import { ncTabTreeLayout } from "../../../util/nc-tableaux";

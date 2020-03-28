@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useRef } from "preact/hooks";
 import { LayoutItem } from "../../../types/layout";
-import { TableauxTreeLayoutNode } from "../../../types/tableaux";
+import { TableauxTreeLayoutNode } from "../../../types/calculus/tableaux";
 import { DragTransform } from "../../../types/ui";
 import { classMap } from "../../../util/class-map";
 import Draggable from "../../draggable";

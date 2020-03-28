@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import { VarAssign } from "../../../types/tableaux";
+import { VarAssign } from "../../../types/calculus/tableaux";
 import Btn from "../../btn";
 import TextInput from "../text";
 
@@ -129,7 +129,9 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                 <Btn onClick={() => secondSubmitEvent(true)}>
                     {secondSubmitLabel}
                 </Btn>
-            ) : undefined}
+            ) : (
+                undefined
+            )}
         </div>
     );
 };
