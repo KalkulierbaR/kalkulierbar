@@ -1,5 +1,10 @@
 import { useState } from "preact/hooks";
 
+/**
+ * Gets the value for `key` out of local storage
+ * @param {string} key - the key for local storage
+ * @returns {V} - the value in local storage
+ */
 export const localStorageGet = <V>(key: string): V | null => {
     try {
         const value = (localStorage.getItem(key) as unknown) as V | null;
@@ -11,6 +16,11 @@ export const localStorageGet = <V>(key: string): V | null => {
     }
 };
 
+/**
+ * Sets a value in local storage
+ * @param {string} key - the key to use
+ * @param {any} value - the value to save
+ */
 export const localStorageSet = (key: string, value: any) => {
     try {
         localStorage.setItem(key, value);

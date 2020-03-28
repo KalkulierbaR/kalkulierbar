@@ -8,8 +8,17 @@ import DPLLNode from "../node";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * The nodes to render
+     */
     nodes: DPLLTreeNode[];
+    /**
+     * The id of the currently selected node
+     */
     selectedNode: number | undefined;
+    /**
+     * Function to select a node
+     */
     onSelect: (nr: number) => void;
 }
 

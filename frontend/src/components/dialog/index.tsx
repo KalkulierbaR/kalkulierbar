@@ -23,6 +23,9 @@ interface Props {
      * Defaults to `false`.
      */
     onConfirm?: () => void;
+    /**
+     * Additional classes to add
+     */
     class?: string;
 }
 

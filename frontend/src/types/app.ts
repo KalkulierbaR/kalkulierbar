@@ -50,6 +50,9 @@ export const ResolutionCalculus: CalculusType[] = [
     Calculus.foResolution,
 ];
 
+/**
+ * Maps calculi to their respective moves
+ */
 export interface Move {
     "prop-tableaux": TableauxMove;
     "prop-resolution": PropResolutionMove;
@@ -59,6 +62,9 @@ export interface Move {
     dpll: DPLLMove;
 }
 
+/**
+ * Maps calculi to their respective params
+ */
 export interface Params {
     "prop-tableaux": PropTableauxParams;
     "prop-resolution": PropResolutionParams;
@@ -68,6 +74,9 @@ export interface Params {
     dpll: null;
 }
 
+/**
+ * Maps calculi to their respective formula types
+ */
 export type Formulas = Record<Calculus, string>;
 
 export enum Theme {
@@ -76,29 +85,89 @@ export enum Theme {
     auto = "auto",
 }
 
+/**
+ * The state of the application
+ */
 export interface AppState {
+    /**
+     * The server we are connected to
+     */
     server: string;
+    /**
+     * The current notification
+     */
     notification?: Notification;
+    /**
+     * Whether the screen is currently small (< 700px width)
+     */
     smallScreen: boolean;
+    /**
+     * The current theme
+     */
     theme: Theme;
+    /**
+     * The currently saved formulas for each calculus
+     */
     savedFormulas: Formulas;
+    /**
+     * The current prop-tableaux state
+     */
     "prop-tableaux"?: PropTableauxState;
+    /**
+     * The current prop-resolution state
+     */
     "prop-resolution"?: PropResolutionState;
+    /**
+     * The current fo-tableaux state
+     */
     "fo-tableaux"?: FOTableauxState;
+    /**
+     * The current fo-resolution state
+     */
     "fo-resolution"?: FOResolutionState;
+    /**
+     * The current nc-tableaux state
+     */
     "nc-tableaux"?: NCTableauxState;
+    /**
+     * The current dpll state
+     */
     dpll?: DPLLState;
+    /**
+     * The current tutorial mode
+     */
     tutorialMode: TutorialMode;
 }
 
+/**
+ * An object that has methods to dispatch notifications
+ */
 export interface NotificationHandler {
+    /**
+     * Dispatches a message of type `type`
+     */
     message: (type: NotificationType, msg: string) => void;
+    /**
+     * Dispatches an error message
+     */
     error: (msg: string) => void;
+    /**
+     * Dispatches an success message
+     */
     success: (msg: string) => void;
+    /**
+     * Dispatches an warning message
+     */
     warning: (msg: string) => void;
+    /**
+     * Removes the current message
+     */
     remove: () => void;
 }
 
+/**
+ * The app state expanded by functions to change it
+ */
 export interface DerivedAppState extends AppState {
     notificationHandler: NotificationHandler;
     onChange: <C extends CalculusType = CalculusType>(

@@ -16,20 +16,35 @@ import TextInput from "../input/text";
 import * as style from "./style.scss";
 
 interface HeaderProps {
+    /**
+     * The current URL
+     */
     currentUrl: string;
 }
 
 interface SingleLink {
+    /**
+     * The name for the link
+     */
     name: string;
+    /**
+     * The path to which it links
+     */
     path: string;
 }
 
 interface LinkGroup {
+    /**
+     * The name for the link group
+     */
     name: string;
+    /**
+     * The routes of this group
+     */
     routes: SingleLink[];
 }
 
-const routes: LinkGroup[] = [
+const ROUTES: LinkGroup[] = [
     {
         name: "Propositional",
         routes: [
@@ -105,7 +120,13 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
 };
 
 interface HamburgerProps {
+    /**
+     * Whether the hamburger menu is open
+     */
     open: boolean;
+    /**
+     * Handler for click
+     */
     onClick?: () => void;
 }
 
@@ -124,8 +145,17 @@ const Hamburger: preact.FunctionalComponent<HamburgerProps> = ({
 );
 
 interface NavProps {
+    /**
+     * Whether or not the hamburger is shown
+     */
     hamburger: boolean;
+    /**
+     * Handler for clicking on links
+     */
     onLinkClick: () => void;
+    /**
+     * The current URL
+     */
     currentUrl: string;
 }
 
@@ -136,7 +166,7 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
 }) => {
     return (
         <nav class={style.nav}>
-            {routes.map((r) => (
+            {ROUTES.map((r) => (
                 <NavGroup
                     group={r}
                     onLinkClick={onLinkClick}
@@ -149,13 +179,28 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
 };
 
 interface NavGroupProps {
+    /**
+     * The group to render
+     */
     group: LinkGroup;
+    /**
+     * Handler for clicking on links
+     */
     onLinkClick: (e: MouseEvent) => void;
+    /**
+     * The current URL
+     */
     currentUrl: string;
+    /**
+     * Whether or not the hamburger is shown
+     */
     hamburger: boolean;
 }
 
 interface NavGroupState {
+    /**
+     * Whether the group is opened
+     */
     open: boolean;
 }
 
@@ -271,7 +316,13 @@ const Settings: preact.FunctionalComponent = () => {
 };
 
 interface ServerInputProps {
+    /**
+     * Whether to show the label
+     */
     showLabel?: boolean;
+    /**
+     * Function for closing the surrounding dialog
+     */
     close?: () => void;
 }
 
@@ -377,8 +428,17 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
 };
 
 interface DrawerProps {
+    /**
+     * Whether the drawer is opened
+     */
     open: boolean;
+    /**
+     * Handler for clicking on links
+     */
     onLinkClick: () => void;
+    /**
+     * The current URL
+     */
     currentUrl: string;
 }
 

@@ -48,6 +48,9 @@ export const Hint: preact.FunctionalComponent<HintProps> = ({
 );
 
 interface Props {
+    /**
+     * The hint text to display
+     */
     hint: string;
 }
 

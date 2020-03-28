@@ -6,7 +6,13 @@ import DownloadIcon from "../icons/download";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * The state to save
+     */
     state: any;
+    /**
+     * The name of the file
+     */
     name: string;
 }
 

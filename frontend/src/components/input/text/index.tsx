@@ -5,21 +5,76 @@ import { classMap } from "../../../util/class-map";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * Id for the input
+     */
     id?: string;
+    /**
+     * Label to display
+     */
     label?: string;
+    /**
+     * A submit button to render
+     */
     submitButton?: ComponentChild;
+    /**
+     * Handler for changes of the input value
+     */
     onChange?: (value: string) => void;
+    /**
+     * Handler for key event
+     */
     onKeyDown?: (event: KeyboardEvent) => void;
+    /**
+     * Handler for focus event
+     */
     onFocus?: (event: FocusEvent) => void;
+    /**
+     * Additional classes for styling
+     */
     class?: string;
+    /**
+     * The value of the input
+     */
     value?: string;
+    /**
+     * Whether input is required
+     */
     required?: boolean;
+    /**
+     * Whether to display the label inline.
+     * Default: `false`
+     */
     inline?: boolean;
+    /**
+     * Whether to use autocomplete.
+     * Default: `false`
+     */
     autoComplete?: boolean;
+    /**
+     * Whether to use autocorrect.
+     * Default: `false`
+     */
     autoCorrect?: boolean;
+    /**
+     * Whether to auto capitalize the first word.
+     * Default: `false`
+     */
     autoCapitalize?: boolean;
+    /**
+     * The type of the input.
+     * Default: `"text"`
+     */
     type?: string;
+    /**
+     * Whether to automatically apply focus
+     * Default: `false`
+     */
     autoFocus?: boolean;
+    /**
+     * Whether to enable spellcheck.
+     * Default: `false`
+     */
     spellcheck?: boolean;
 }
 

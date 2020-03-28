@@ -9,10 +9,25 @@ import Dialog from "../../dialog";
 import OptionList from "../../input/option-list";
 
 interface Props {
+    /**
+     * Whether or not the dialog is open
+     */
     open: boolean;
+    /**
+     * The current state
+     */
     state: DPLLState;
+    /**
+     * The current active branch
+     */
     branch: number;
+    /**
+     * The current clause set
+     */
     clauseSet: ClauseSet;
+    /**
+     * Setter to close this dialog
+     */
     setOpen: (v: boolean) => void;
 }
 

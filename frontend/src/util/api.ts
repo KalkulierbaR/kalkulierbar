@@ -56,6 +56,14 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     }
 };
 
+/**
+ * Checks that a state is valid for the given calculus
+ * @param {string} server - the server
+ * @param {NotificationHandler} notificationHandler - Notification handler
+ * @param {CalculusType} calculus - the calculus for which to check
+ * @param {string} state - string of the state to check
+ * @returns {Promise<boolean>} - resolves to the validity of the state
+ */
 export const checkValid = async <C extends CalculusType = CalculusType>(
     server: string,
     notificationHandler: NotificationHandler,

@@ -33,6 +33,12 @@ const INIT_APP_STATE: AppState = {
     tutorialMode: TutorialMode.HighlightAll,
 };
 
+/**
+ * Takes the old state and an action and produces a new state
+ * @param {AppState} state - the old state
+ * @param {AppStateAction} action - the action to apply
+ * @returns {AppState} - the new state
+ */
 const reducer: Reducer<AppState, AppStateAction> = (
     state,
     action,
@@ -70,6 +76,11 @@ const reducer: Reducer<AppState, AppStateAction> = (
     }
 };
 
+/**
+ * Creates a function to update calculus states
+ * @param {Function} dispatch - dispatch function
+ * @returns {Function} - calculus state setter
+ */
 export const updateCalculusState = <C extends CalculusType = CalculusType>(
     dispatch: (state: AppStateAction) => void,
 ) => (calculus: C, state: AppState[C]) => {
@@ -80,6 +91,11 @@ export const updateCalculusState = <C extends CalculusType = CalculusType>(
     });
 };
 
+/**
+ * Creates a notification handler
+ * @param {Function} dispatch - dispatch function
+ * @returns {NotificationHandler} - the new notification handler
+ */
 const createNotificationHandler = (
     dispatch: (a: AppStateAction) => void,
 ): NotificationHandler => ({
@@ -106,6 +122,12 @@ const createNotificationHandler = (
     remove: () => dispatch({ type: AppStateActionType.REMOVE_NOTIFICATION }),
 });
 
+/**
+ * Creates a derived app state from an app state
+ * @param {AppState} state - the original app state
+ * @param {Function} dispatch - dispatch function
+ * @returns {DerivedAppState} - the extended app state
+ */
 const derive = (
     state: AppState,
     dispatch: (a: AppStateAction) => void,
@@ -120,6 +142,10 @@ export const AppStateCtx = createContext<DerivedAppState>(
     derive(INIT_APP_STATE, () => {}),
 );
 
+/**
+ * Hook to use the app state
+ * @returns {DerivedAppState} - the current app state
+ */
 export const useAppState = () => useContext(AppStateCtx);
 
 export const AppStateProvider = (

@@ -1,5 +1,10 @@
 import { useEffect } from "preact/hooks";
 
+/**
+ * Hook to update the title
+ * @param {string} url - current URL
+ * @returns {void} - void
+ */
 export const useTitle = (url: string) =>
     useEffect(() => {
         const title = getTitle(url);
@@ -10,8 +15,14 @@ export const useTitle = (url: string) =>
         }
     }, [url]);
 
+/**
+ * Gets the title for the current URL
+ * @param {string} url - the current URL
+ * @returns {string} - title
+ */
 const getTitle = (url: string) => {
     switch (url.toLowerCase()) {
+        case "":
         case "/":
             return;
         case "/prop-tableaux":

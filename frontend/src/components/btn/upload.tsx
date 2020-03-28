@@ -9,6 +9,9 @@ import FAB from "../fab";
 import UploadIcon from "../icons/upload";
 
 interface Props {
+    /**
+     * The calculus to which the file belongs
+     */
     calculus: CalculusType;
 }
 

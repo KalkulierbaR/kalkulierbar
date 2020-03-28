@@ -8,9 +8,21 @@ import Switch from "../../switch";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * The current clause set
+     */
     clauseSet: ClauseSet;
+    /**
+     * Whether or not the dialog is open
+     */
     open: boolean;
+    /**
+     * Send handler
+     */
     onSend: (model: Record<string, boolean>) => void;
+    /**
+     * Close handler
+     */
     onClose: () => void;
 }
 

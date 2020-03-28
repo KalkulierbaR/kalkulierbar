@@ -3,8 +3,17 @@ import { h } from "preact";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * The text for the tutorial
+     */
     text: string;
+    /**
+     * The value for the css `bottom` property
+     */
     bottom: string;
+    /**
+     * The value for the css `right` property
+     */
     right: string;
 }
 

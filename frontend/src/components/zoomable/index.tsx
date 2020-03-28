@@ -32,12 +32,33 @@ interface Props {
      * Transformer to handle GoToEvents
      */
     transformGoTo?: (detail: any) => [number, number];
+    /**
+     * Additional class for styling
+     */
     class?: string;
+    /**
+     * The width of the SVG element
+     */
     width?: string;
+    /**
+     * The height of the SVG element
+     */
     height?: string;
+    /**
+     * The style for the SVG element
+     */
     style?: string;
+    /**
+     * The viewBox of the SVG element
+     */
     viewBox?: string;
+    /**
+     * See the SVG attribute
+     */
     preserveAspectRatio?: string;
+    /**
+     * A function that maps a transform to children
+     */
     children: (transform: Transform) => ComponentChildren;
 }
 

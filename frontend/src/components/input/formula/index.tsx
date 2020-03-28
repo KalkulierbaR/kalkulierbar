@@ -30,6 +30,9 @@ interface Props {
      * Additional params for the calculus
      */
     params?: Params[CalculusType];
+    /**
+     * Whether or not we are in FO logic
+     */
     foLogic: boolean;
 }
 
