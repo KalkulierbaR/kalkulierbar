@@ -10,7 +10,7 @@ import { estimateSVGTextWidth } from "../text-width";
  * @returns {ArrayLayout<Clause>} - The circle layout of the clauses
  */
 export const circleLayout = (
-    clauses: Array<Clause<string | FOLiteral>>,
+    clauses: Clause<string | FOLiteral>[],
 ): ArrayLayout<Clause<string | FOLiteral>> & { radius: number } => {
     if (clauses.length === 0) {
         return { width: 0, height: 0, data: [], radius: 0 };

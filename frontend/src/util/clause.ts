@@ -75,7 +75,7 @@ export const clauseSetToStringMap = (
  * @param {Clause[]} clauses - The clauses
  * @returns {Clause} - The longest clause
  */
-export const maxLengthClause = (clauses: Array<Clause<string | FOLiteral>>) =>
+export const maxLengthClause = (clauses: Clause<string | FOLiteral>[]) =>
     maxBy(clauses, (c) => clauseToString(c).length);
 
 /**

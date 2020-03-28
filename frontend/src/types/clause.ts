@@ -26,7 +26,7 @@ export function instanceOfFOAtom(
  * Clause is a list of Atoms
  */
 export interface Clause<L = string> {
-    atoms: Array<Atom<L>>;
+    atoms: Atom<L>[];
 }
 
 export function instanceOfPropClause(
@@ -47,7 +47,7 @@ export function instanceOfFOClause(
  * Clause sets are sets of Clauses
  */
 export interface ClauseSet<L = string> {
-    clauses: Array<Clause<L>>;
+    clauses: Clause<L>[];
 }
 
 export function instanceOfPropClauseSet(

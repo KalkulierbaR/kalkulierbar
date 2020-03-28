@@ -11,7 +11,7 @@ export const tree = <T>(
     height: number,
     y: number,
     data: T,
-    children: Array<Tree<T>>,
+    children: Tree<T>[],
 ): Tree<T> => ({
     width,
     height,
@@ -99,7 +99,7 @@ export const findSubTree = <T, V>(
  * @returns {Array<Tree<T>>} - The result array
  */
 export const filterTree = <T>(t: Tree<T>, p: (tree: Tree<T>) => boolean) => {
-    const res: Array<Tree<T>> = [];
+    const res: Tree<T>[] = [];
 
     preOrderTraverseTree(t, (c) => {
         if (p(c)) {
@@ -112,8 +112,8 @@ export const filterTree = <T>(t: Tree<T>, p: (tree: Tree<T>) => boolean) => {
 
 export const treeToLayoutItem = <T extends { id: number }>(
     t: Tree<T>,
-): Array<LayoutItem<T>> => {
-    const items: Array<LayoutItem<T>> = [];
+): LayoutItem<T>[] => {
+    const items: LayoutItem<T>[] = [];
 
     preOrderTraverseTree(t, ({ x, y, data }) => {
         items[data.id] = { x, y, data };
@@ -161,7 +161,7 @@ export const getAbsoluteDragTransform = <T extends { id: number }>(
  */
 export const getClosedLeaves = <T extends { closeRef: number | null }>(
     t: Tree<T>,
-): Array<Tree<T>> => filterTree(t, (c) => c.data.closeRef !== null);
+): Tree<T>[] => filterTree(t, (c) => c.data.closeRef !== null);
 
 const getLinks = <T extends { id: number }>(t: Tree<T>): Link[] => {
     const links: Link[] = t.children.map((c) => ({

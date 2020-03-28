@@ -159,7 +159,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
             // Update hyper-res move with new clause
 
-            let candidates: Array<[number, number]> = [];
+            let candidates: [number, number][] = [];
 
             if (instanceOfPropResState(state, calculus)) {
                 const mainClause = state!.clauseSet.clauses[hyperRes.mainID];

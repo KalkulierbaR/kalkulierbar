@@ -98,8 +98,8 @@ export const groupCandidates = (
 export const getPropHyperCandidates = (
     c1: Clause,
     c2: Clause,
-): Array<[number, number]> => {
-    const lits: Array<[number, number]> = [];
+): [number, number][] => {
+    const lits: [number, number][] = [];
     const strings: string[] = [];
 
     for (let i1 = 0; i1 < c1.atoms.length; i1++) {
@@ -129,8 +129,8 @@ export const getPropHyperCandidates = (
 export const getFOHyperCandidates = (
     c1: FOClause,
     c2: FOClause,
-): Array<[number, number]> => {
-    const lits: Array<[number, number]> = [];
+): [number, number][] => {
+    const lits: [number, number][] = [];
     for (let i1 = 0; i1 < c1.atoms.length; i1++) {
         const l1 = c1.atoms[i1];
         for (let i2 = 0; i2 < c2.atoms.length; i2++) {
