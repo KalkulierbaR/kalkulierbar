@@ -34,6 +34,7 @@ class PropositionalResolution : GenericResolution<String>,
             is MoveFactorize -> factorize(state, move.c1)
             else -> throw IllegalMove("Unknown move")
         }
+        state.lastMove = move
         return state
     }
 
@@ -171,6 +172,8 @@ class ResolutionState(
 ) : GenericResolutionState<String>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<String>()
+
+    var lastMove: ResolutionMove? = null
 
     override var seal = ""
 

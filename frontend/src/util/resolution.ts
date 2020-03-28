@@ -458,6 +458,43 @@ export const addClause = (
     });
 };
 
+export const removeClause = (clauses: CandidateClause[], id: number) => {
+    let candidateIndex: number = id;
+
+    for (let i = 0; i < clauses.length; i++) {
+        const c = clauses[i];
+        if (c.index === id) {
+            candidateIndex = i;
+        }
+        if (c.index >= id) {
+            c.index--;
+        }
+    }
+
+    clauses.splice(candidateIndex, 1);
+};
+
+export const replaceClause = (
+    clauses: CandidateClause[],
+    id: number,
+    newClause: Clause<string | FOLiteral>,
+) => {
+    let candidateIndex: number = id;
+
+    for (let i = 0; i < clauses.length; i++) {
+        const c = clauses[i];
+        if (c.index === id) {
+            candidateIndex = i;
+        }
+    }
+
+    clauses.splice(candidateIndex, 1, {
+        clause: newClause as any,
+        index: id,
+        candidateAtomMap: new Map(),
+    });
+};
+
 /**
  * @param {ClauseSet<string | FOLiteral>} cs - The clause set to work on
  * @returns {boolean} - Whether the clause set contains the empty clause

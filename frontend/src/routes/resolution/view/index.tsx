@@ -20,6 +20,8 @@ import {
     HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
+    PropResolutionMove,
+    FOResolutionMove,
 } from "../../../types/resolution";
 import { VarAssign } from "../../../types/tableaux";
 import { useAppState } from "../../../util/app-state";
@@ -39,6 +41,8 @@ import {
     sendResolve,
     sendResolveCustom,
     sendResolveUnify,
+    removeClause,
+    replaceClause,
 } from "../../../util/resolution";
 import { foExample, propExample } from "./example";
 
@@ -114,11 +118,37 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     }, [setCandidateClauses, selectedClauseId]);
 
     useEffect(() => {
-        if (state!.newestNode === -1) {
-            return;
+        const lastMove = state!.lastMove;
+
+        if (!lastMove) return;
+
+        if (
+            lastMove.type === "res-hyper" ||
+            lastMove.type === "res-resolve" ||
+            lastMove.type === "res-resolvecustom" ||
+            lastMove.type === "res-resolveunify"
+        ) {
+            addClause(state!.clauseSet, candidateClauses, state!.newestNode);
+            setCandidateClauses([...candidateClauses]);
         }
-        addClause(state!.clauseSet, candidateClauses, state!.newestNode);
-        setCandidateClauses([...candidateClauses]);
+        // I have no idea, how to do this better
+        if (lastMove.type === "res-show") {
+            setCandidateClauses(
+                getInitialCandidateClauses(state!.clauseSet, calculus),
+            );
+        }
+        if (lastMove.type === "res-factorize") {
+            replaceClause(
+                candidateClauses,
+                lastMove.c1,
+                state!.clauseSet.clauses[lastMove.c1] as any,
+            );
+            setCandidateClauses([...candidateClauses]);
+        }
+        if (lastMove.type === "res-hide") {
+            removeClause(candidateClauses, lastMove.c1);
+            setCandidateClauses([...candidateClauses]);
+        }
     }, [state.clauseSet]);
 
     /**
@@ -416,8 +446,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 selectedClauses={selectedClauses}
                 setSelectedClauses={setSelectedClauses}
             />
-            
-            <HelpMenu calculus={calculus}/>
+
+            <HelpMenu calculus={calculus} />
         </Fragment>
     );
 };

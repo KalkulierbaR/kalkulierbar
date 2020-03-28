@@ -97,6 +97,8 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
 
     const couldShowCheckCloseHint = containsEmptyClause(state.clauseSet);
 
+    console.log(selectedClauseId, state);
+
     return (
         <Fragment>
             <ControlFAB
@@ -134,7 +136,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             label="Hide clause"
                             showIconAtEnd={true}
-                            icon={<HideIcon/>}
+                            icon={<HideIcon />}
                             onClick={() => {
                                 hideClause(selectedClauseId!, calculus, {
                                     ...apiInfo,
@@ -150,7 +152,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                 extended={true}
                                 label="Factorize"
                                 showIconAtEnd={true}
-                                icon={<FactorizeIcon/>}
+                                icon={<FactorizeIcon />}
                                 onClick={() => {
                                     if (
                                         !instanceOfPropResState(
@@ -159,7 +161,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                         ) &&
                                         state.clauseSet.clauses[
                                             selectedClauseId
-                                            ].atoms.length !== 2
+                                        ].atoms.length !== 2
                                     ) {
                                         setShowFactorizeDialog(true);
                                         return;
@@ -168,7 +170,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                         selectedClauseId!,
                                         new Set<number>([0, 1]),
                                         calculus,
-                                        {...apiInfo, state},
+                                        { ...apiInfo, state },
                                     );
                                     setSelectedClauses(undefined);
                                 }}
