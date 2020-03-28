@@ -5,7 +5,7 @@ import { maxBy } from "../max-by";
 import { estimateSVGTextWidth } from "../text-width";
 
 const HEIGHT_PADDING = 16;
-const WIDTH_PADDING = 64;
+const WIDTH_PADDING = 96;
 
 /**
  * Calculate the grid layout

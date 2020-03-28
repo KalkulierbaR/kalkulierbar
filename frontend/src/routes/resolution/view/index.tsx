@@ -127,7 +127,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             lastMove.type === "res-hyper" ||
             lastMove.type === "res-resolve" ||
             lastMove.type === "res-resolvecustom" ||
-            lastMove.type === "res-resolveunify"
+            lastMove.type === "res-resolveunify" ||
+            (lastMove.type === "res-factorize" &&
+                instanceOfFOResState(state, calculus))
         ) {
             addClause(state!.clauseSet, candidateClauses, state!.newestNode);
             setCandidateClauses([...candidateClauses]);
@@ -138,7 +140,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 getInitialCandidateClauses(state!.clauseSet, calculus),
             );
         }
-        if (lastMove.type === "res-factorize") {
+        if (
+            lastMove.type === "res-factorize" &&
+            instanceOfPropResState(state, calculus)
+        ) {
             replaceClause(
                 candidateClauses,
                 lastMove.c1,
