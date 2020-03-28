@@ -49,7 +49,7 @@ export const invert = ({ k, x, y }: Transform, p: Point = [0, 0]): Point => [
 
 /**
  * Applies the inverse of a transform to an x value
- * @param {Transform} param0 - the transform
+ * @param {Transform} t - the transform
  * @param {number} x - the x value
  * @returns {number} the new x value
  */
@@ -57,7 +57,7 @@ export const invertX = (t: Transform, x: number) => invert(t, [x, 0])[0];
 
 /**
  * Applies the inverse of a transform to an y value
- * @param {Transform} param0 - the transform
+ * @param {Transform} t - the transform
  * @param {number} y - the y value
  * @returns {number} the new y value
  */

@@ -20,6 +20,7 @@ export const localStorageGet = <V>(key: string): V | null => {
  * Sets a value in local storage
  * @param {string} key - the key to use
  * @param {any} value - the value to save
+ * @returns {void} - void
  */
 export const localStorageSet = (key: string, value: any) => {
     try {

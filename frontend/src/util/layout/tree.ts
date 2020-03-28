@@ -66,6 +66,7 @@ export const treeLayout = <N, T extends { id: number }>(
  * Traverses a tree in pre order
  * @param {Tree} t - The tree to traverse
  * @param {Function} f - The function to apply
+ * @returns {void} - void
  */
 export const preOrderTraverseTree = <T>(
     t: Tree<T>,
@@ -202,6 +203,7 @@ const getLinks = <T extends { id: number }>(t: Tree<T>): Link[] => {
 /**
  * Handles the actual layout
  * @param {Tree} t - the tree
+ * @returns {void} - void
  */
 export const layout = <T>(t: Tree<T>) => {
     firstWalk(t);
@@ -211,6 +213,7 @@ export const layout = <T>(t: Tree<T>) => {
 /**
  * The first walk over the tree
  * @param {Tree} t - The tree to walk
+ * @returns {void} - void
  */
 const firstWalk = <T>(t: Tree<T>) => {
     if (!t.children.length) {
@@ -235,6 +238,7 @@ const firstWalk = <T>(t: Tree<T>) => {
 /**
  * Sets the extremes of the tree
  * @param {Tree} t - The tree
+ * @returns {void} - void
  */
 const setExtremes = <T>(t: Tree<T>) => {
     if (t.children.length) {
@@ -304,6 +308,7 @@ const separate = <T>(t: Tree<T>, i: number, ih: LeftSiblingList) => {
  * @param {number} i - the index of the subtree
  * @param {number} si - shift index
  * @param {number} dist - the dist to shift
+ * @returns {void} - void
  */
 const moveSubTree = <T>(t: Tree<T>, i: number, si: number, dist: number) => {
     t.children[i].mod += dist;
@@ -317,6 +322,7 @@ const moveSubTree = <T>(t: Tree<T>, i: number, si: number, dist: number) => {
 /**
  * Gets the left contour
  * @param {Tree} t - the tree
+ * @returns {void} - void
  */
 const nextLeftContour = <T>(t: Tree<T>) =>
     t.children.length ? t.children[0] : t.tl;
@@ -324,6 +330,7 @@ const nextLeftContour = <T>(t: Tree<T>) =>
 /**
  * Gets the right contour
  * @param {Tree} t - the tree
+ * @returns {void} - void
  */
 const nextRightContour = <T>(t: Tree<T>) =>
     t.children.length ? t.children[t.children.length - 1] : t.tr;
@@ -331,6 +338,7 @@ const nextRightContour = <T>(t: Tree<T>) =>
 /**
  * Calculates the bottom coordinate of the tree
  * @param {Tree} t - the tree
+ * @returns {void} - void
  */
 const bottom = <T>(t: Tree<T>) => t.y + t.height;
 
@@ -340,6 +348,7 @@ const bottom = <T>(t: Tree<T>) => t.y + t.height;
  * @param {number} i - index of the thread
  * @param {Tree} cl - left contour
  * @param {number} modSumCl - sum of the mods for the left contour
+ * @returns {void} - void
  */
 const setLeftThread = <T>(
     t: Tree<T>,
@@ -360,8 +369,9 @@ const setLeftThread = <T>(
  * Updates values for the right thread
  * @param {Tree} t - the tree
  * @param {number} i - index of the thread
- * @param {Tree} cl - right contour
- * @param {number} modSumCl - sum of the mods for the right contour
+ * @param {Tree} sr - right contour
+ * @param {number} modSumSr - sum of the mods for the right contour
+ * @returns {void} - void
  */
 const setRightThread = <T>(
     t: Tree<T>,
@@ -381,6 +391,7 @@ const setRightThread = <T>(
 /**
  * Calculates the position of the root
  * @param {Tree} t - the tree
+ * @returns {void} - void
  */
 const positionRoot = <T>(t: Tree<T>) => {
     t.prelim =
@@ -397,6 +408,7 @@ const positionRoot = <T>(t: Tree<T>) => {
  * The second walk over the tree. Adds spacing between children
  * @param {Tree} t - the tree
  * @param {number} modSum - The sum of the mods
+ * @returns {void} - void
  */
 const secondWalk = <T>(t: Tree<T>, modSum: number) => {
     modSum += t.mod;
@@ -413,6 +425,7 @@ const secondWalk = <T>(t: Tree<T>, modSum: number) => {
  * @param {number} i - index of the child
  * @param {number} si - sibling index
  * @param {number} dist - distance to distribute
+ * @returns {void} - void
  */
 const distributeExtra = <T>(
     t: Tree<T>,
@@ -432,6 +445,7 @@ const distributeExtra = <T>(
 /**
  * Adds spacing to the children
  * @param {Tree} t - the tree
+ * @returns {void} - void
  */
 const addChildSpacing = <T>(t: Tree<T>) => {
     let d = 0;
@@ -449,6 +463,7 @@ const addChildSpacing = <T>(t: Tree<T>) => {
  * @param {number} lowY - the lowest y value
  * @param {number} idx - current index
  * @param {LeftSiblingList} next - the rest of the list
+ * @returns {void} - void
  */
 const iyl = (
     lowY: number,
@@ -461,6 +476,7 @@ const iyl = (
  * @param {number} minY - the minimal y value
  * @param {number} i - the index
  * @param {LeftSiblingList} ih - the left sibling list to iterate over
+ * @returns {void} - void
  */
 const updateIYL = (
     minY: number,
@@ -477,6 +493,7 @@ const updateIYL = (
  * Calculates the width of the tree
  * @param {Tree} t - the tree
  * @returns {number} - the width
+ * @returns {void} - void
  */
 const treeWidth = <T>(t: Tree<T>): number => {
     const width = t.x + t.width / 2;
