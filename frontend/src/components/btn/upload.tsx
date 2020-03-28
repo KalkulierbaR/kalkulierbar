@@ -1,7 +1,7 @@
 import { Fragment, h } from "preact";
 import { route } from "preact-router";
 import { useRef } from "preact/hooks";
-import { CalculusType } from "../../types/app";
+import { CalculusType } from "../../types/calculus";
 import { checkValid } from "../../util/api";
 import { useAppState } from "../../util/app-state";
 import { readFile } from "../../util/file";

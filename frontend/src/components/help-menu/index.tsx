@@ -1,18 +1,18 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import {
-    Calculus,
-    CalculusType,
-    ResolutionCalculus,
-    TableauxCalculus,
-    TutorialMode,
-} from "../../types/app";
 import { useAppState } from "../../util/app-state";
 import Dialog from "../dialog";
 import FAB from "../fab";
 import InfoIcon from "../icons/info";
 import Video from "../video";
 import * as style from "./style.scss";
+import {
+    CalculusType,
+    TableauxCalculus,
+    ResolutionCalculus,
+    Calculus,
+} from "../../types/calculus";
+import { TutorialMode } from "../../types/app/tutorial";
 
 interface Props {
     /**

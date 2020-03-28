@@ -2,6 +2,7 @@ import { CalculusType } from "../calculus";
 import { AppState } from "./app-state";
 import { Theme } from "./theme";
 import { TutorialMode } from "./tutorial";
+import { Notification } from "./notification";
 
 interface AppStateActionBase {
     type: AppStateActionType;

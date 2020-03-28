@@ -1,18 +1,15 @@
 import { createContext, h } from "preact";
 import { Reducer, useContext, useEffect, useReducer } from "preact/hooks";
+import { localStorageGet, localStorageSet } from "./local-storage";
+import { AppState, DerivedAppState } from "../types/app/app-state";
+import { Calculus, CalculusType } from "../types/calculus";
+import { Theme } from "../types/app/theme";
+import { TutorialMode } from "../types/app/tutorial";
+import { AppStateAction, AppStateActionType } from "../types/app/action";
 import {
-    AppState,
-    AppStateAction,
-    AppStateActionType,
-    Calculus,
-    CalculusType,
-    DerivedAppState,
     NotificationHandler,
     NotificationType,
-    Theme,
-    TutorialMode,
-} from "../types/app";
-import { localStorageGet, localStorageSet } from "./local-storage";
+} from "../types/app/notification";
 
 const isDeployed = location.port !== "8080";
 

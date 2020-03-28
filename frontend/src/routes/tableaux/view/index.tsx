@@ -6,7 +6,7 @@ import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxFAB from "../../../components/tableaux/fab";
 import TableauxTreeView from "../../../components/tableaux/tree";
-import { Calculus, TableauxCalculusType } from "../../../types/app";
+import { Calculus, TableauxCalculusType } from "../../../types/calculus";
 import {
     instanceOfFOTabState,
     instanceOfPropTabState,
@@ -331,9 +331,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog>
-            ) : (
-                undefined
-            )}
+            ) : undefined}
 
             <TableauxFAB
                 calculus={calculus}

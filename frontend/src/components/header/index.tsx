@@ -1,7 +1,6 @@
 import { Component, Fragment, h } from "preact";
 import { Link } from "preact-router";
 import { useCallback, useState } from "preact/hooks";
-import { AppStateActionType, Calculus, Theme } from "../../types/app";
 import { useAppState } from "../../util/app-state";
 import { classMap } from "../../util/class-map";
 import Btn from "../btn";
@@ -14,6 +13,9 @@ import ThemeDark from "../icons/theme-dark";
 import ThemeLight from "../icons/theme-light";
 import TextInput from "../input/text";
 import * as style from "./style.scss";
+import { Calculus } from "../../types/calculus";
+import { AppStateActionType } from "../../types/app/action";
+import { Theme } from "../../types/app/theme";
 
 interface HeaderProps {
     /**

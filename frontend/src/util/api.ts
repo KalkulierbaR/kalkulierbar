@@ -1,11 +1,7 @@
-import {
-    AppState,
-    AppStateUpdater,
-    CalculusType,
-    CheckCloseResponse,
-    Move,
-    NotificationHandler,
-} from "../types/app";
+import { CalculusType, Move } from "../types/calculus";
+import { AppState, AppStateUpdater } from "../types/app/app-state";
+import { NotificationHandler } from "../types/app/notification";
+import { CheckCloseResponse } from "../types/app/api";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,

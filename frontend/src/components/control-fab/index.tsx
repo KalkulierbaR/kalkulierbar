@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import { TutorialMode } from "../../types/app";
+import { TutorialMode } from "../../types/app/tutorial";
 import { useAppState } from "../../util/app-state";
 import { disableTutorial, getHighlightFAB } from "../../util/tutorial-mode";
 import FAB from "../fab";

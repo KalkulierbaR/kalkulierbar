@@ -3,7 +3,7 @@ import { PropResolutionState, FOResolutionState } from "../calculus/resolution";
 import { DPLLState } from "../calculus/dpll";
 import { AppStateAction } from "./action";
 import { Formulas, CalculusType } from "../calculus";
-import { NotificationHandler } from "./notification";
+import { Notification, NotificationHandler } from "./notification";
 import { Theme } from "./theme";
 import { TutorialMode } from "./tutorial";
 import { NCTableauxState } from "../calculus/nc-tableaux";

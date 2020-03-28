@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
-import { TutorialMode } from "../../../types/app";
+import { TutorialMode } from "../../../types/app/tutorial";
 import { useAppState } from "../../../util/app-state";
 import { classMap } from "../../../util/class-map";
 import ChevronRightIcon from "../../icons/chevron-right";

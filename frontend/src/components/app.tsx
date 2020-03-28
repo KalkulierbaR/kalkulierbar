@@ -2,11 +2,6 @@ import { h } from "preact";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
-import {
-    AppStateActionType,
-    Calculus,
-    NotificationHandler,
-} from "../types/app";
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
 import Page404 from "./404";
@@ -23,6 +18,9 @@ import NCTableaux from "async!../routes/nc-tableaux";
 import NCTableauxView from "async!../routes/nc-tableaux/view";
 import DPLL from "async!../routes/dpll";
 import DPLLView from "async!../routes/dpll/view";
+import { NotificationHandler } from "../types/app/notification";
+import { AppStateActionType } from "../types/app/action";
+import { Calculus } from "../types/calculus";
 
 const SMALL_SCREEN_THRESHOLD = 700;
 
