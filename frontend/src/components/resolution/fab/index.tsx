@@ -104,7 +104,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
                 checkFABPositionFromBottom={1}
             >
-                {selectedClauseId !== undefined ?
+                {selectedClauseId !== undefined ? (
                     <Fragment>
                         <FAB
                             mini={true}
