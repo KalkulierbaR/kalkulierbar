@@ -1,4 +1,5 @@
 import { h } from "preact";
+import Icon from "./icon";
 
 interface Props {
     /**
@@ -13,17 +14,7 @@ interface Props {
 
 const AddIcon: preact.FunctionalComponent<Props> = ({
     size = 24,
-    fill = "#fff"
-}) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-    >
-        <path fill="none" d="M0 0h24v24H0V0z" />
-        <path fill={fill} d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-    </svg>
-);
+    fill = "#fff",
+}) => <Icon size={size} fill={fill} d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />;
 
 export default AddIcon;

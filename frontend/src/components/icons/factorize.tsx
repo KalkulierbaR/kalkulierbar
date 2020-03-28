@@ -11,7 +11,7 @@ interface Props {
     fill?: string;
 }
 
-const FactoriseIcon: preact.FunctionalComponent<Props> = ({
+const FactorizeIcon: preact.FunctionalComponent<Props> = ({
     size = 24,
     fill = "#fff",
 }) => (
@@ -31,4 +31,4 @@ const FactoriseIcon: preact.FunctionalComponent<Props> = ({
     </svg>
 );
 
-export default FactoriseIcon;
+export default FactorizeIcon;
