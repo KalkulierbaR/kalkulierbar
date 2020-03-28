@@ -45,7 +45,7 @@ export const gridLayout = (
 
     let rows = 0;
 
-    const data: LayoutItem<Clause<string | FOLiteral>>[] = [];
+    const data: Array<LayoutItem<Clause<string | FOLiteral>>> = [];
 
     for (let i = 0; i < clauses.length; i++) {
         if (i % columns === 0) {

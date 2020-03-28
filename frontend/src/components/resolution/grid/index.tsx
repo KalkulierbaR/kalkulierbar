@@ -1,13 +1,12 @@
 import { h } from "preact";
 import { CandidateClause } from "../../../types/clause";
 import { VisualHelp } from "../../../types/resolution";
-
-import * as style from "./style.scss";
+import { DragTransform } from "../../../types/ui";
 import { gridLayout } from "../../../util/layout/grid";
+import { normalize } from "../../../util/normalize";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
-import { DragTransform } from "../../../types/ui";
-import { normalize } from "../../../util/normalize";
+import * as style from "./style.scss";
 
 interface Props {
     /**

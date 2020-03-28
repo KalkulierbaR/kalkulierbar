@@ -6,6 +6,7 @@ import ResolutionCircle from "../../../components/resolution/circle";
 import ResolutionFactorizeDialog from "../../../components/resolution/dialog/factorize";
 import ResolutionResolveDialog from "../../../components/resolution/dialog/resolve";
 import ResolutionFAB from "../../../components/resolution/fab";
+import ResolutionGrid from "../../../components/resolution/grid";
 import { Calculus, ResolutionCalculusType } from "../../../types/app";
 import {
     CandidateClause,
@@ -39,7 +40,6 @@ import {
     sendResolveUnify,
 } from "../../../util/resolution";
 import { foExample, propExample } from "./example";
-import ResolutionGrid from "../../../components/resolution/grid";
 
 interface Props {
     /**
