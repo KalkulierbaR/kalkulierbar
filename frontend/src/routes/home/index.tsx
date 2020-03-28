@@ -1,4 +1,5 @@
 import { h, VNode } from "preact";
+import { useRef } from "preact/hooks";
 import { circle } from "../../components/resolution/circle/style.scss";
 import Switch from "../../components/switch";
 import { Calculus } from "../../types/app";
@@ -1053,32 +1054,49 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
 }) => {
     const { config, server, onError, adminKey, setConfig } = useAppState();
 
+    const link = useRef<HTMLAnchorElement>();
+
     const handleChange = (checked: boolean) => {
         setCalculusState(server, href, checked, adminKey, setConfig, onError);
     };
 
     return (
-        <a href={`/${href}`}>
-            <div class={style.calculusItem}>
+        <div
+            class={style.calculusItem}
+            onClick={(e) => {
+                if (
+                    !link.current ||
+                    !e.target ||
+                    (e.target as HTMLElement).tagName === "INPUT"
+                ) {
+                    return;
+                }
+
+                link.current.click();
+            }}
+        >
+            <a href={`/${href}`} ref={link}>
                 <svg class={style.calculusItemImage} viewBox={viewBox}>
                     {image}
                 </svg>
-                <div
-                    class={`${style.calculusItemTitleWrapper} ${showSwitch &&
-                        style.calculusItemTitleWrapperShowSwitch}`}
-                >
+            </a>
+            <div
+                class={`${style.calculusItemTitleWrapper} ${showSwitch &&
+                    style.calculusItemTitleWrapperShowSwitch}`}
+            >
+                <a href={`/${href}`}>
                     <h3 class={style.calculusItemTitle}>{name}</h3>
-                    <span onClick={(e) => e.stopImmediatePropagation()}>
-                        {showSwitch && (
-                            <Switch
-                                initialState={!config.disabled.includes(href)}
-                                onChange={handleChange}
-                            />
-                        )}
-                    </span>
-                </div>
+                </a>
+                <span>
+                    {showSwitch && (
+                        <Switch
+                            initialState={!config.disabled.includes(href)}
+                            onChange={handleChange}
+                        />
+                    )}
+                </span>
             </div>
-        </a>
+        </div>
     );
 };
 
@@ -1093,7 +1111,9 @@ const Home: preact.FunctionalComponent = () => {
                     {ROUTES.map((r) =>
                         isAdmin ? (
                             <CalculusItem route={r} showSwitch={true} />
-                        ) : config.disabled.includes(r.href) ? undefined : (
+                        ) : config.disabled.includes(r.href) ? (
+                            undefined
+                        ) : (
                             <CalculusItem route={r} />
                         ),
                     )}
