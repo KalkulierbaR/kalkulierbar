@@ -1682,7 +1682,6 @@ __metadata:
     node-sass: ^4.13.0
     per-env: ^1.0.2
     preact: ^10.3.4
-    preact-async-route: ^2.2.1
     preact-cli: 3.0.0-rc.7
     preact-jsx-chai: ^3.0.0
     preact-markup: ^2.0.0
@@ -10710,13 +10709,6 @@ __metadata:
     source-map: ^0.6.1
     supports-color: ^6.1.0
   checksum: 2/4ad75d21cccd93759cc9c58307886c4b78c0521e03217561e54c48a86ab1199ccc3c9f8364d495db993a08a00008973f2a9cffc46208b632ee8f999c96ce57bb
-  languageName: node
-  linkType: hard
-
-"preact-async-route@npm:^2.2.1":
-  version: 2.2.1
-  resolution: "preact-async-route@npm:2.2.1"
-  checksum: 2/142df9482083eec7629468705d28ec8db3403bc67e0fa9291598878568c820dffd4eb61c265a8908957e01dc988902ce309cfe161dfc175e6ecc6961cbe37584
   languageName: node
   linkType: hard
 
