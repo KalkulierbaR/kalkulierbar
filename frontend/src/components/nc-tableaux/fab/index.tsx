@@ -90,8 +90,14 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
         />
     );
 
+    const couldShowCheckCloseHint = state.nodes[0].isClosed;
+
     return (
-        <ControlFAB alwaysOpen={!smallScreen}>
+        <ControlFAB
+            alwaysOpen={!smallScreen}
+            checkFABPositionFromBottom={2}
+            couldShowCheckCloseHint={couldShowCheckCloseHint}
+        >
             {selectedNodeId === undefined ? (
                 <Fragment>
                     {resetView}

@@ -60,7 +60,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
                 <div class="flex-container">
-                    <div class="radios">
+                    <div class="first">
                         <Radio
                             id={VisualHelp.none}
                             group="visualHelp"

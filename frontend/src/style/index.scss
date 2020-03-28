@@ -113,12 +113,12 @@ h4 {
     flex-flow: row;
 }
 
-.flex-container > div.radios {
+.flex-container > div.first {
     flex: 3 1 50%;
     order: 1;
 }
 
-.flex-container > div.switches {
+.flex-container > div.second {
     flex: 3 1 50%;
     order: 2;
 }
@@ -128,8 +128,8 @@ h4 {
         flex-direction: column;
     }
 
-    .flex-container > div.radios,
-    .flex-container > div.switches {
+    .flex-container > div.first,
+    .flex-container > div.second {
         /* Return them to document order */
         min-height: 50px;
         order: 0;
