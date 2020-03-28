@@ -4,11 +4,7 @@ import FAB from "../../../components/fab";
 import CenterIcon from "../../../components/icons/center";
 import CheckCircleIcon from "../../../components/icons/check-circle";
 import * as style from "../../../routes/resolution/view/style.scss";
-import {
-    AppStateActionType,
-    ResolutionCalculusType,
-    TutorialMode,
-} from "../../../types/app";
+import { ResolutionCalculusType, TutorialMode } from "../../../types/app";
 import { SelectedClauses } from "../../../types/clause";
 import {
     FOResolutionState,
@@ -24,6 +20,10 @@ import {
     sendFactorize,
     showHiddenClauses,
 } from "../../../util/resolution";
+import {
+    disableTutorial,
+    getHighlightCheck,
+} from "../../../util/tutorial-mode";
 import DownloadFAB from "../../btn/download";
 import CircleIcon from "../../icons/circle";
 import FactorizeIcon from "../../icons/factorize";
@@ -32,7 +32,6 @@ import HideIcon from "../../icons/hide";
 import HyperIcon from "../../icons/hyper";
 import SendIcon from "../../icons/send";
 import ShowIcon from "../../icons/show";
-import Tutorial from "../../tutorial";
 
 interface Props {
     /**
@@ -103,8 +102,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
+                checkFABPositionFromBottom={1}
             >
-                {selectedClauseId !== undefined ? (
+                {selectedClauseId !== undefined ?
                     <Fragment>
                         <FAB
                             mini={true}
@@ -134,7 +134,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             label="Hide clause"
                             showIconAtEnd={true}
-                            icon={<HideIcon />}
+                            icon={<HideIcon/>}
                             onClick={() => {
                                 hideClause(selectedClauseId!, calculus, {
                                     ...apiInfo,
@@ -143,15 +143,14 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                 setSelectedClauses(undefined);
                             }}
                         />
-
                         {state.clauseSet.clauses[selectedClauseId].atoms
-                            .length > 0 && (
+                            .length > 1 && (
                             <FAB
                                 mini={true}
                                 extended={true}
                                 label="Factorize"
                                 showIconAtEnd={true}
-                                icon={<FactorizeIcon />}
+                                icon={<FactorizeIcon/>}
                                 onClick={() => {
                                     if (
                                         !instanceOfPropResState(
@@ -160,7 +159,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                         ) &&
                                         state.clauseSet.clauses[
                                             selectedClauseId
-                                        ].atoms.length !== 2
+                                            ].atoms.length !== 2
                                     ) {
                                         setShowFactorizeDialog(true);
                                         return;
@@ -169,7 +168,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                         selectedClauseId!,
                                         new Set<number>([0, 1]),
                                         calculus,
-                                        { ...apiInfo, state },
+                                        {...apiInfo, state},
                                     );
                                     setSelectedClauses(undefined);
                                 }}
@@ -189,8 +188,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         <DownloadFAB state={state} name={calculus} />
                     </Fragment>
                 )}
-
-                {state!.hiddenClauses.clauses.length > 0 && (
+                {state.hiddenClauses.clauses.length > 0 && (
                     <FAB
                         mini={true}
                         extended={true}
@@ -218,12 +216,12 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     extended={true}
                     showIconAtEnd={true}
                     onClick={() => {
-                        if (tutorialMode & TutorialMode.HighlightCheck) {
-                            dispatch({
-                                type: AppStateActionType.SET_TUTORIAL_MODE,
-                                value:
-                                    tutorialMode ^ TutorialMode.HighlightCheck,
-                            });
+                        if (getHighlightCheck(tutorialMode)) {
+                            disableTutorial(
+                                dispatch,
+                                tutorialMode,
+                                TutorialMode.HighlightCheck,
+                            );
                         }
                         checkClose(server, onError, onSuccess, calculus, state);
                     }}
@@ -252,16 +250,6 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     }}
                 />
             )}
-
-            {!smallScreen &&
-                couldShowCheckCloseHint &&
-                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
-                    <Tutorial
-                        text="Check if the proof is complete"
-                        right="205px"
-                        bottom="68px"
-                    />
-                )}
         </Fragment>
     );
 };

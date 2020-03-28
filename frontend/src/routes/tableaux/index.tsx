@@ -115,7 +115,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
                 <div class="flex-container">
-                    <div class="radios">
+                    <div class="first">
                         <Radio
                             id={TableauxType.unconnected}
                             group="tableauxType"
@@ -143,7 +143,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         />
                         <HintIcon hint="A strongly connected tableaux enforces that every inner node in the proof tree has at least one child that is closed with its parent node." />
                     </div>
-                    <div class="switches">
+                    <div class="second">
                         <Switch
                             label="Backtracking"
                             onChange={setBacktracking}

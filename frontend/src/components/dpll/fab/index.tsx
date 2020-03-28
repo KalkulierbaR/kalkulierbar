@@ -12,7 +12,6 @@ import CheckCircleFilledIcon from "../../icons/check-circle-filled";
 import DeleteIcon from "../../icons/delete";
 import SplitIcon from "../../icons/split";
 import SwitchIcon from "../../icons/switch";
-import Tutorial from "../../tutorial";
 
 interface Props {
     /**
@@ -67,6 +66,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
+                checkFABPositionFromBottom={3}
             >
                 {smallScreen && (
                     <FAB
@@ -131,15 +131,6 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                     onClick={() => setShowSplitDialog(true)}
                 />
             </ControlFAB>
-            {!smallScreen &&
-                couldShowCheckCloseHint &&
-                (tutorialMode & TutorialMode.HighlightCheck) !== 0 && (
-                    <Tutorial
-                        text="Check if the proof is complete"
-                        right="205px"
-                        bottom="165px"
-                    />
-                )}
         </Fragment>
     );
 };
