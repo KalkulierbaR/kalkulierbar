@@ -58,7 +58,7 @@
         "@material/radio": "^4.0.0",
         "@material/switch": "^4.0.0",
         "@yarnpkg/pnpify": "^2.0.0-rc.18",
-        "preact": "^10.0.0",
+        "preact": "^10.3.4",
         "preact-async-route": "^2.2.1",
         "preact-jsx-chai": "^3.0.0",
         "preact-markup": "^2.0.0",
