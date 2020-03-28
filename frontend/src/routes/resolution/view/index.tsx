@@ -20,6 +20,7 @@ import {
     HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
+    VisualHelp,
 } from "../../../types/resolution";
 import { VarAssign } from "../../../types/tableaux";
 import { useAppState } from "../../../util/app-state";
@@ -69,7 +70,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         onChange(calculus, state);
     }
 
-    const [showGrid, setShowGrid] = useState<boolean>(true);
+    const [showGrid, setShowGrid] = useState<boolean>(false);
 
     const [hyperRes, setHyperRes] = useState<HyperResolutionMove | undefined>(
         undefined,
@@ -108,7 +109,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             recalculateCandidateClauses(
                 state!.clauseSet,
                 candidateClauses,
-                state!.visualHelp,
+                state!.visualHelp === VisualHelp.rearrange && !showGrid,
                 calculus,
                 selectedClauseId,
             ),
@@ -118,7 +119,9 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     useEffect(() => {
         const lastMove = state!.lastMove;
 
-        if (!lastMove) { return; }
+        if (!lastMove) {
+            return;
+        }
 
         if (
             lastMove.type === "res-hyper" ||

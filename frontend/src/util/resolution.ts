@@ -22,7 +22,6 @@ import {
     FOResolutionState,
     HyperResolutionMove,
     PropResolutionState,
-    VisualHelp,
 } from "../types/resolution";
 import { VarAssign } from "../types/tableaux";
 import { sendMove } from "./api";
@@ -330,7 +329,7 @@ export const getInitialCandidateClauses = (
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
  * @param {CandidateClause[]} clauses - The candidate clauses
- * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
+ * @param {boolean} group - Whether to help user visually to find resolution partners
  * @param {ResolutionCalculusType} calculus - The current calculus type
  * @param {number} selectedClauseId - Currently selected clause
  * @returns {CandidateClause[]} - The new candidate clauses
@@ -338,7 +337,7 @@ export const getInitialCandidateClauses = (
 export const recalculateCandidateClauses = (
     clauseSet: ClauseSet<string | FOLiteral>,
     clauses: CandidateClause[],
-    visualHelp: VisualHelp,
+    group: boolean,
     calculus: ResolutionCalculusType,
     selectedClauseId?: number,
 ) => {
@@ -418,7 +417,7 @@ export const recalculateCandidateClauses = (
             }
         });
 
-        if (visualHelp === VisualHelp.rearrange) {
+        if (group) {
             groupCandidates(newCandidateClauses, selectedClauseId);
         }
     }

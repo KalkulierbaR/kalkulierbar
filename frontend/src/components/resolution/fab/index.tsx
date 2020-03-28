@@ -97,8 +97,6 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
 
     const couldShowCheckCloseHint = containsEmptyClause(state.clauseSet);
 
-    console.log(selectedClauseId, state);
-
     return (
         <Fragment>
             <ControlFAB
