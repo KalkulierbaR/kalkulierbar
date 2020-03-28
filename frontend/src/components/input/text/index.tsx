@@ -1,7 +1,7 @@
-import {ComponentChild, h} from "preact";
+import { ComponentChild, h } from "preact";
 import { useRef, useState } from "preact/hooks";
 
-import {classMap} from "../../../util/class-map";
+import { classMap } from "../../../util/class-map";
 import * as style from "./style.scss";
 
 interface Props {
@@ -52,26 +52,26 @@ const TextInput: preact.FunctionalComponent<Props> = ({
             <label
                 for={id ? id : randomId}
                 class={classMap({
-                    [style.inline]: inline
+                    [style.inline]: inline,
                 })}
-                >
+            >
                 {label}
             </label>
             <div
                 class={classMap({
                     [style.row]: true,
-                    [style.inline]: inline
+                    [style.inline]: inline,
                 })}
-                >
+            >
                 <input
                     id={id ? id : randomId}
                     class={classMap({
                         [style.input]: true,
-                        [style.inline]: inline
+                        [style.inline]: inline,
                     })}
                     ref={input}
                     value={text}
-                    onInput={e => {
+                    onInput={(e) => {
                         const res = (e.target as HTMLInputElement).value;
                         setText(res);
                         if (onChange) {

@@ -197,9 +197,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                             suggestionMap.size > 0 ? undefined : style.hide
                         }
                     />
-                ) : (
-                    undefined
-                )}
+                ) : undefined}
                 <Btn type="submit" disabled={textareaValue.length === 0}>
                     Start proof
                 </Btn>

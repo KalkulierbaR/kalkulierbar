@@ -41,7 +41,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
         box.height += 8;
         box.y -= 4;
         setDims(box);
-    }, );
+    });
 
     return (
         <rect

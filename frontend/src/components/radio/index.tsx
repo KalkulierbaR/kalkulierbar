@@ -30,7 +30,7 @@ const Radio: preact.FunctionalComponent<Props> = ({
     label,
     checked = false,
     onSelect,
-    id
+    id,
 }) => {
     return (
         <div class={style.container}>

@@ -11,7 +11,7 @@ export const estimateSVGTextWidth = (txt: string) => {
 
     const svgElement = document.createElementNS(
         svgNS,
-        "text"
+        "text",
     ) as SVGTextElement;
     svgElement.appendChild(data);
 

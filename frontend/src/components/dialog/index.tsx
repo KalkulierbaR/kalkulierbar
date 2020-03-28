@@ -32,7 +32,7 @@ const Dialog: preact.FunctionalComponent<Props> = ({
     label,
     onClose,
     onConfirm,
-    class: className
+    class: className,
 }) => {
     /**
      * Handle the click event

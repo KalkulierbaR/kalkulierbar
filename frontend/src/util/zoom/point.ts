@@ -7,7 +7,7 @@ export const getPoint = (node: SVGElement, e: Touch | MouseEvent): Point => {
     p.x = e.clientX;
     p.y = e.clientY;
     p = p.matrixTransform(
-        (node as SVGGraphicsElement).getScreenCTM()!.inverse()
+        (node as SVGGraphicsElement).getScreenCTM()!.inverse(),
     );
     return [p.x, p.y];
 };

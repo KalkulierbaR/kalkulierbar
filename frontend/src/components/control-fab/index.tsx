@@ -63,7 +63,7 @@ const ControlFAB: preact.FunctionalComponent<ControlFABProps> = ({
     children,
     alwaysOpen = false,
     couldShowCheckCloseHint = false,
-    checkFABPositionFromBottom= 2,
+    checkFABPositionFromBottom = 2,
 }) => {
     const { smallScreen, tutorialMode, dispatch } = useAppState();
     const [show, setShow] = useState(alwaysOpen);
@@ -107,7 +107,8 @@ const ControlFAB: preact.FunctionalComponent<ControlFABProps> = ({
                         text="Check if proof is complete"
                         right={smallScreen ? "125px" : "205px"}
                         bottom={
-                            smallScreen ? "0px"
+                            smallScreen
+                                ? "0px"
                                 : checkHintBottomBigScreen + "px"
                         }
                     />

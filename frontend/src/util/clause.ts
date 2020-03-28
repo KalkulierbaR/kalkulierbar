@@ -1,12 +1,15 @@
 import {
-    Atom, CandidateClause,
+    Atom,
+    CandidateClause,
     Clause,
     ClauseSet,
-    FOArgument, FOArgumentType, FOAtom,
+    FOArgument,
+    FOArgumentType,
+    FOAtom,
     FOLiteral,
 } from "../types/clause";
-import {FORelation} from "../types/tableaux";
-import {stringArrayToStringMap} from "./array-to-map";
+import { FORelation } from "../types/tableaux";
+import { stringArrayToStringMap } from "./array-to-map";
 import { maxBy } from "./max-by";
 
 /**
@@ -54,25 +57,26 @@ export const clauseToString = (clause: Clause<string | FOLiteral>) => {
  * @param {ClauseSet} clauseSet - A set of clauses
  * @returns {string[]} - The clauses as string array
  */
-export const clauseSetToStringArray = (clauseSet: ClauseSet<string | FOLiteral>) =>
-    clauseSet.clauses.map(clauseToString);
+export const clauseSetToStringArray = (
+    clauseSet: ClauseSet<string | FOLiteral>,
+) => clauseSet.clauses.map(clauseToString);
 
 /**
  * Transforms a clause set to a string map
  * @param {ClauseSet} clauseSet - A set of clauses
  * @returns {Map<number, string>} - The clauses as string map
  */
-export const clauseSetToStringMap = (clauseSet: ClauseSet<string | FOLiteral>) =>
-    stringArrayToStringMap(clauseSetToStringArray(clauseSet));
+export const clauseSetToStringMap = (
+    clauseSet: ClauseSet<string | FOLiteral>,
+) => stringArrayToStringMap(clauseSetToStringArray(clauseSet));
 
 /**
  * Determine the longest clause
  * @param {Clause[]} clauses - The clauses
  * @returns {Clause} - The longest clause
  */
-export const maxLengthClause = (
-    clauses: Array<Clause<string | FOLiteral>>,
-) => maxBy(clauses, (c) => clauseToString(c).length);
+export const maxLengthClause = (clauses: Array<Clause<string | FOLiteral>>) =>
+    maxBy(clauses, (c) => clauseToString(c).length);
 
 /**
  * Get a candidate clause matching the index property
@@ -80,7 +84,10 @@ export const maxLengthClause = (
  * @param {CandidateClause[]} candidateClauses - The candidates to search in
  * @returns {CandidateClause | null} - The candidate clause matching the index
  */
-export const getCandidateClause = (searchIndex: number, candidateClauses: CandidateClause[]) => {
+export const getCandidateClause = (
+    searchIndex: number,
+    candidateClauses: CandidateClause[],
+) => {
     const candidateClauseHits = candidateClauses.filter(
         (c) => c.index === searchIndex,
     );
@@ -106,8 +113,8 @@ export const checkRelationsForVar = (relations: FORelation[]) => {
             argument.arguments.forEach(checkArgumentForVar);
         }
     };
-    relations.forEach(relation => {
-        relation.arguments.forEach(checkArgumentForVar)
+    relations.forEach((relation) => {
+        relation.arguments.forEach(checkArgumentForVar);
     });
 
     return vars;
@@ -129,10 +136,9 @@ export const checkAtomsForVar = (atoms: FOAtom[]) => {
             argument.arguments.forEach(checkArgumentForVar);
         }
     };
-    atoms.forEach(atom => {
-        atom.lit.arguments.forEach(checkArgumentForVar)
+    atoms.forEach((atom) => {
+        atom.lit.arguments.forEach(checkArgumentForVar);
     });
 
     return vars;
 };
-

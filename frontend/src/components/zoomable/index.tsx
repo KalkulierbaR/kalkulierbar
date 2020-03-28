@@ -76,12 +76,12 @@ const wheelDelta = (event: WheelEvent) =>
 const scaleExtent = [0, Infinity];
 const translateExtent: Extent = [
     [-Infinity, -Infinity],
-    [Infinity, Infinity]
+    [Infinity, Infinity],
 ];
 
 export default class Zoomable extends Component<Props, State> {
     public state: State = {
-        transform: IDENTITY
+        transform: IDENTITY,
     };
 
     public ref = createRef<SVGSVGElement>();
@@ -102,7 +102,7 @@ export default class Zoomable extends Component<Props, State> {
         // The new scale
         const k = Math.max(
             scaleExtent[0],
-            Math.min(scaleExtent[1], t.k * Math.pow(2, wheelDelta(e)))
+            Math.min(scaleExtent[1], t.k * Math.pow(2, wheelDelta(e))),
         );
 
         // If we already have a wheel event in g, reuse it
@@ -123,7 +123,7 @@ export default class Zoomable extends Component<Props, State> {
         t = constrain(
             translate(scale(t, k), g.mouse![0], g.mouse![1]),
             ext,
-            translateExtent
+            translateExtent,
         );
         // Save it on our gesture
         g.zoom("mouse", t);
@@ -178,7 +178,7 @@ export default class Zoomable extends Component<Props, State> {
             const newT = constrain(
                 translate(t, g.mouse![0], g.mouse![1]),
                 ext,
-                translateExtent
+                translateExtent,
             );
             g.zoom("mouse", newT);
             this.setState({ transform: newT, gesture: g });
@@ -231,7 +231,7 @@ export default class Zoomable extends Component<Props, State> {
             const t0: [Point, Point, number] = [
                 p,
                 invert(t, p),
-                touch.identifier
+                touch.identifier,
             ];
             // If we have no touch stored, store it as the first
             if (!g.touch0) {
@@ -254,7 +254,7 @@ export default class Zoomable extends Component<Props, State> {
         if (started && g.taps < 2) {
             this.touchStarting = (setTimeout(
                 () => (this.touchStarting = undefined),
-                500
+                500,
             ) as unknown) as number;
         }
 
@@ -328,7 +328,7 @@ export default class Zoomable extends Component<Props, State> {
 
         this.setState({
             gesture: g,
-            transform: constrain(translate(t, p, l), g.extent, translateExtent)
+            transform: constrain(translate(t, p, l), g.extent, translateExtent),
         });
     };
 
@@ -353,7 +353,7 @@ export default class Zoomable extends Component<Props, State> {
 
         this.touchEnding = (setTimeout(
             () => (this.touchEnding = undefined),
-            500
+            500,
         ) as unknown) as number;
 
         // Delete saved touches, that are gone
@@ -378,7 +378,7 @@ export default class Zoomable extends Component<Props, State> {
     };
 
     public setTransform = (t: Transform) =>
-        this.setState(s => ({ ...s, transform: t }));
+        this.setState((s) => ({ ...s, transform: t }));
 
     /**
      * Handle the GoToEvent

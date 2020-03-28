@@ -331,9 +331,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         secondSubmitLabel="Automatic assignment"
                     />
                 </Dialog>
-            ) : (
-                undefined
-            )}
+            ) : undefined}
 
             <TableauxFAB
                 calculus={calculus}

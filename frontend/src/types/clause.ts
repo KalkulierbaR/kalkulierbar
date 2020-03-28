@@ -1,4 +1,4 @@
-import {FOCalculus, PropCalculus} from "./app";
+import { FOCalculus, PropCalculus } from "./app";
 
 /**
  * The Atom object received from the backend
@@ -75,7 +75,9 @@ export interface BaseCandidateClause<L> {
 
 export function getCandidateCount(clause: BaseCandidateClause<any>) {
     let length = 0;
-    clause.candidateAtomMap.forEach((atomIndices) => length += atomIndices.length);
+    clause.candidateAtomMap.forEach(
+        (atomIndices) => (length += atomIndices.length),
+    );
     return length;
 }
 

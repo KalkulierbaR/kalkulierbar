@@ -120,9 +120,7 @@ export interface TableauxCloseAssignMove {
     varAssign: VarAssign;
 }
 
-export type FOTableauxMove =
-    | TableauxMove
-    | TableauxCloseAssignMove
+export type FOTableauxMove = TableauxMove | TableauxCloseAssignMove;
 
 export interface FORelation {
     spelling: string;

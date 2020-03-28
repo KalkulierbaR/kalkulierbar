@@ -36,16 +36,8 @@ const Video: preact.FunctionalComponent<Props> = ({
     muted = true,
 }) => {
     return (
-        <video
-            loop={loop}
-            muted={muted}
-            alt={alt}
-            autoPlay={autoPlay}
-        >
-            <source
-                src={src}
-                type={type}
-            />
+        <video loop={loop} muted={muted} alt={alt} autoPlay={autoPlay}>
+            <source src={src} type={type} />
         </video>
     );
 };
