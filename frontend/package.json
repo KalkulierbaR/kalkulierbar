@@ -34,7 +34,7 @@
         "@types/jest": "^23.3.10",
         "@types/webpack-env": "^1.13.9",
         "css-loader": "^1.0.1",
-        "husky": "^1.2.0",
+        "husky": "^4.2.3",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^23.6.0",
         "lint-staged": "^10.0.8",
@@ -72,7 +72,9 @@
         "tslint": ">5.0.0"
     },
     "husky": {
-        "pre-commit": "lint-staged"
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
     },
     "jest": {
         "transform": {

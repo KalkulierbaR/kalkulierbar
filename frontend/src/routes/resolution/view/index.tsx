@@ -20,8 +20,6 @@ import {
     HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
-    PropResolutionMove,
-    FOResolutionMove,
 } from "../../../types/resolution";
 import { VarAssign } from "../../../types/tableaux";
 import { useAppState } from "../../../util/app-state";
@@ -37,12 +35,12 @@ import {
     getPropHyperCandidates,
     getSelectable,
     recalculateCandidateClauses,
+    removeClause,
     removeHyperSidePremiss,
+    replaceClause,
     sendResolve,
     sendResolveCustom,
     sendResolveUnify,
-    removeClause,
-    replaceClause,
 } from "../../../util/resolution";
 import { foExample, propExample } from "./example";
 
@@ -120,7 +118,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     useEffect(() => {
         const lastMove = state!.lastMove;
 
-        if (!lastMove) return;
+        if (!lastMove) { return; }
 
         if (
             lastMove.type === "res-hyper" ||
