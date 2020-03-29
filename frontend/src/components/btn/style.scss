@@ -6,9 +6,14 @@
     color: #fff;
     font-size: 1em;
     border-radius: 5px;
-    padding: 0 8px;
+    padding: 8px 16px;
     transition: opacity 0.2s ease-in;
     cursor: pointer;
+    text-transform: uppercase;
+    font-size: 1.02em;
+
+    display: inline-flex;
+    align-items: center;
 
     margin-top: 10px;
     margin-right: 10px;
@@ -24,6 +29,10 @@
     svg {
         vertical-align: middle;
     }
+}
+
+.icon {
+    margin-right: 8px;
 }
 
 .no-underline {

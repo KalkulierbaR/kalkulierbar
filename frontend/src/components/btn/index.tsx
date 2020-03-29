@@ -1,4 +1,4 @@
-import {ComponentChild, h} from "preact";
+import { ComponentChild, h } from "preact";
 import * as style from "./style.scss";
 
 interface Props {
@@ -56,7 +56,7 @@ const Btn: preact.FunctionalComponent<Props> = ({
     value,
     label,
     icon,
-    showIconAtEnd= false,
+    showIconAtEnd = false,
     ariaLabel,
     disabled = false,
     className,
@@ -73,7 +73,9 @@ const Btn: preact.FunctionalComponent<Props> = ({
             class={`${style.btn} ${className}`}
         >
             {showIconAtEnd && label}
-            {icon}
+            {icon && (
+                <span class={(label && style.icon) || undefined}>{icon}</span>
+            )}
             {!showIconAtEnd && label}
         </button>
     );

@@ -8,7 +8,6 @@ import { readFile } from "../../util/file";
 import UploadIcon from "../icons/upload";
 import Btn from "./index";
 
-
 interface Props {
     calculus: CalculusType;
 }
@@ -19,8 +18,8 @@ const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const input = useRef<HTMLInputElement>();
 
     const handleClick = () => {
-        if (!input.current) { 
-            return; 
+        if (!input.current) {
+            return;
         }
         input.current.click();
     };
@@ -58,7 +57,7 @@ const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
             <Btn
                 onClick={handleClick}
                 label="Load proof"
-                icon={<UploadIcon size={18}/>}
+                icon={<UploadIcon />}
             />
         </Fragment>
     );
