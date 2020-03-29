@@ -116,7 +116,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                         ) : (
                             undefined
                         )}
-                        <p class="">
+                        <p>
                             {decodeURIComponent(example.formula)
                                 .split(/\n/)
                                 .join("; ")}
