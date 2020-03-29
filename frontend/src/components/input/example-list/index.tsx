@@ -110,7 +110,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                                 <Btn
                                     onClick={(e) => onDelete(e, index)}
                                     label="Delete"
-                                    icon={<DeleteIcon size={18} />}
+                                    icon={<DeleteIcon size={22} />}
                                 />
                             </Fragment>
                         }

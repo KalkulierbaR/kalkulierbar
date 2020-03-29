@@ -22,7 +22,6 @@ import {
     FOResolutionState,
     HyperResolutionMove,
     PropResolutionState,
-    VisualHelp,
 } from "../types/resolution";
 import { VarAssign } from "../types/tableaux";
 import { sendMove } from "./api";
@@ -330,7 +329,7 @@ export const getInitialCandidateClauses = (
  * Creates an array of candidate clauses based on if a clause is selected
  * @param {ClauseSet} clauseSet - The clause set
  * @param {CandidateClause[]} clauses - The candidate clauses
- * @param {VisualHelp} visualHelp - Whether to help user visually to find resolution partners
+ * @param {boolean} group - Whether to help user visually to find resolution partners
  * @param {ResolutionCalculusType} calculus - The current calculus type
  * @param {number} selectedClauseId - Currently selected clause
  * @returns {CandidateClause[]} - The new candidate clauses
@@ -338,7 +337,7 @@ export const getInitialCandidateClauses = (
 export const recalculateCandidateClauses = (
     clauseSet: ClauseSet<string | FOLiteral>,
     clauses: CandidateClause[],
-    visualHelp: VisualHelp,
+    group: boolean,
     calculus: ResolutionCalculusType,
     selectedClauseId?: number,
 ) => {
@@ -418,7 +417,7 @@ export const recalculateCandidateClauses = (
             }
         });
 
-        if (visualHelp === VisualHelp.rearrange) {
+        if (group) {
             groupCandidates(newCandidateClauses, selectedClauseId);
         }
     }
@@ -454,6 +453,43 @@ export const addClause = (
     clauses.splice(newIndex, 0, {
         clause: newClause as any,
         index: newClauseId,
+        candidateAtomMap: new Map(),
+    });
+};
+
+export const removeClause = (clauses: CandidateClause[], id: number) => {
+    let candidateIndex: number = id;
+
+    for (let i = 0; i < clauses.length; i++) {
+        const c = clauses[i];
+        if (c.index === id) {
+            candidateIndex = i;
+        }
+        if (c.index >= id) {
+            c.index--;
+        }
+    }
+
+    clauses.splice(candidateIndex, 1);
+};
+
+export const replaceClause = (
+    clauses: CandidateClause[],
+    id: number,
+    newClause: Clause<string | FOLiteral>,
+) => {
+    let candidateIndex: number = id;
+
+    for (let i = 0; i < clauses.length; i++) {
+        const c = clauses[i];
+        if (c.index === id) {
+            candidateIndex = i;
+        }
+    }
+
+    clauses.splice(candidateIndex, 1, {
+        clause: newClause as any,
+        index: id,
         candidateAtomMap: new Map(),
     });
 };

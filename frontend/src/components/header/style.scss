@@ -273,11 +273,6 @@ $hamburgerBreakpoint: 700px;
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-    cursor: pointer;
-
-    label{
-        cursor: pointer;
-    }
 
     @media (max-width: $hamburgerBreakpoint) {
         &:hover,

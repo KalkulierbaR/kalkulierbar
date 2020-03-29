@@ -404,18 +404,18 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
 
     return (isAdmin ?
                 <div
-                    onClick={
-                        () => dispatch({
-                            type: AppStateActionType.SET_ADMIN,
-                            value: false,
-                        })
-                    }
                     class={style.buttonContainer}
                 >
                     <Btn
                         className={style.themeSwitcher}
                         icon={<LogOutIcon/>}
                         label="Logout"
+                        onClick={
+                            () => dispatch({
+                                type: AppStateActionType.SET_ADMIN,
+                                value: false,
+                            })
+                        }
                     />
                 </div>
             :
@@ -473,8 +473,9 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
     };
 
     return (
-        <div onClick={onClick} class={style.buttonContainer}>
+        <div class={style.buttonContainer}>
             <Btn
+                onClick={onClick}
                 className={style.themeSwitcher}
                 icon={themeSwitcherIcon()}
                 label={`Theme:  ${theme}`}

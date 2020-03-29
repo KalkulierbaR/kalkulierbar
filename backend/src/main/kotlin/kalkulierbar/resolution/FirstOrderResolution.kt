@@ -48,6 +48,8 @@ class FirstOrderResolution :
             else -> throw IllegalMove("Unknown move type")
         }
 
+        state.lastMove = move
+
         return state
     }
 
@@ -109,6 +111,8 @@ class FoResolutionState(
     override val hiddenClauses = ClauseSet<Relation>()
     var clauseCounter = 0
     var statusMessage: String? = null
+
+    var lastMove: ResolutionMove? = null
 
     override var seal = ""
 

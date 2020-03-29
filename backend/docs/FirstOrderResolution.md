@@ -73,7 +73,7 @@ This term has to be parsed first, so that correct syntax is used.
 
 ### Hyperresolution
 
-To resolve more than one clause at the same time, the _hyperresolution_ rule could be usefull.
+To resolve more than one clause at the same time, the _hyperresolution_ rule could be useful.
 It takes a main premiss clause and a list of different side premiss clauses in the `clauses` list
 and adds a new clause. While the main premiss can have both positive and negative literals,
 the side premisses contain only positive literals.
@@ -96,13 +96,11 @@ The map has the form `{1: {2, 3}, 2: {42, 13}, ...}`
 ### Factorize
 
 The second important rule of the FO resolution calculus is the factorization rule.
-Within a clause, several atoms can be unified, creating a new clause with less atoms
-and potentially changed variable instantiations.
+Within a clause, several atoms can be unified, creating a new clause with less atoms and potentially changed variable instantiations.
 The most general unifier for selected atoms is generated and applied automatically.
 The factorization move can only be applied if a unifier exists for the two selected atoms.
 The original clause remains in the clause set and will NOT be hidden by default.
 The factorized clause will be added to the set.
-NOTE: The order of selected atoms DOES make a difference, because of the instantiation for each removed atom.
 
 Factorization moves are encoded as 
 ```json

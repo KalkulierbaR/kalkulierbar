@@ -63,7 +63,7 @@ The map has the form `{1: {2, 3}, 2: {42, 13}, ...}`
 ### Factorize
 
 Also available is the _factorize_ rule, which removes all duplicate literals from a clause.
-The original clause without the factorization applied will remain in the clause set, but is hidden by default.
+As the original clause is entirely redundant, it will be removed from the clause set and replaced by the factorized clause.
 Factorization moves are encoded as
 ```json
 {
