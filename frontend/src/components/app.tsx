@@ -2,8 +2,8 @@ import { h } from "preact";
 import AsyncRoute from "preact-async-route";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
-
 import { AppStateActionType, Calculus } from "../types/app";
+import { checkCredentials, getConfig } from "../util/admin";
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
 import Header from "./header";
@@ -51,6 +51,8 @@ const App: preact.FunctionalComponent = () => {
         dispatch,
         onError,
         removeNotification,
+        setConfig,
+        adminKey,
     } = useAppState();
     const saveScreenSize = (smallScreen: boolean) =>
         dispatch({
@@ -71,6 +73,20 @@ const App: preact.FunctionalComponent = () => {
 
     useEffect(() => {
         checkServer(server, onError);
+
+        getConfig(server, setConfig, onError);
+
+        if(adminKey) {
+            checkCredentials(
+                server,
+                adminKey,
+                (userIsAdmin) =>
+                    dispatch({
+                        type: AppStateActionType.SET_ADMIN,
+                        value: userIsAdmin,
+                    }),
+            );
+        }
 
         const cf = new Confetti({ speed: 10, maxCount: 150 });
 

@@ -1,7 +1,13 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import {Calculus, CalculusType, ResolutionCalculus, TableauxCalculus, TutorialMode} from "../../types/app";
+import {
+    Calculus,
+    CalculusType,
+    ResolutionCalculus,
+    TableauxCalculus
+} from "../../types/app";
 import { useAppState } from "../../util/app-state";
+import { getHighlightCheck } from "../../util/tutorial-mode";
 import Dialog from "../dialog";
 import FAB from "../fab";
 import InfoIcon from "../icons/info";
@@ -18,7 +24,7 @@ interface Props {
 const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const { tutorialMode } = useAppState();
     const [showDialog, setShowDialog] = useState(
-        tutorialMode !== TutorialMode.None,
+        getHighlightCheck(tutorialMode)
     );
 
     return (
@@ -158,7 +164,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 alt="NC Tableaux Beta Move"
                             />
                             <p>
-                                This splits a formula on it's disjunctions into multiple child nodes of the current node.
+                                This splits a formula on it's disjunctions and adds multiple leafs to the current tree path.
                             </p>
                         </div>
                         <div class={style.child}>
@@ -168,7 +174,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 alt="NC Tableaux Gamma Move"
                             />
                             <p>
-                                This resolves the outermost universal quantifier of a formula and adds a new child to the current node.
+                                This resolves the outermost universal quantifier of a formula and adds a leaf to the current tree path.
                             </p>
                         </div>
                         <div class={style.child}>
@@ -178,7 +184,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 alt="NC Tableaux Delta Move"
                             />
                             <p>
-                                This resolves the outermost existential quantifier of a formula and adds a new child to the current node.
+                                This resolves the outermost existential quantifier of a formula and adds a leaf to the current tree path.
                             </p>
                         </div>
                         <div class={style.child}>
@@ -189,7 +195,7 @@ const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             />
                             <p>
                                 Choose two clauses with complementary atoms to resolve them.
-                                The proof is complete when the empty clause has been resolved in all paths of the tree.
+                                The proof is complete if the empty clause has been resolved in all paths of the tree.
                             </p>
                         </div>
                     </div>

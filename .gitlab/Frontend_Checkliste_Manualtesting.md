@@ -16,18 +16,20 @@ Alle Verfügbaren Kalkühle sind auswählbar:
 * [ ]  Prop-Resolution
 * [ ]  FO-Resolution
 * [ ]  DPLL
+* [ ]  NC-Tableaux
 
 ## Admin Interface
 Einloggen:
 * [ ]  das wechseln in die Admin Einstellung ist nur mit dem richtigen Key möglich (definiert in kbar-state.json im Backend)
 
 Eingeloggt:
-* [ ]  die Formel eingabe wurde um den Button `???` erweitert.
-* [ ]  Klick auf `???` öffnet einen Dialog in dem Name und Beschreibung des Beispiels angegeben werden können.
-* [ ]  die Beispiele wurde um den Button `???` erweitert.
+* [ ]  die Formel eingabe wurde um den Button `add Example` erweitert.
+* [ ]  Klick auf `add Example` öffnet einen Dialog in dem Name und Beschreibung des Beispiels angegeben werden können.
+* [ ]  die Beispiele wurde um den Button `delete` erweitert.
+* [ ]  Klick auf `delete` entfernt das Beispiel.
 * [ ]  gespeicherte Beispiele können gelöscht werden.
 * [ ]  Kalküle können aus bzw angeschaltet werden.
-
+* [ ]  das ausloggen ist möglich.
 
 
 ## Formeleingabe

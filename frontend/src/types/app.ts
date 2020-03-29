@@ -51,6 +51,14 @@ export const ResolutionCalculus: CalculusType[] = [
     Calculus.foResolution,
 ];
 
+export interface Example {
+    name: string;
+    description: string;
+    calculus: CalculusType;
+    formula: string;
+    params: string;
+}
+
 export interface Move {
     "prop-tableaux": TableauxMove;
     "prop-resolution": PropResolutionMove;
@@ -90,6 +98,9 @@ export interface AppState {
     "nc-tableaux"?: NCTableauxState;
     dpll?: DPLLState;
     tutorialMode: TutorialMode;
+    isAdmin: boolean;
+    adminKey: string;
+    config: Config;
 }
 
 export interface DerivedAppState extends AppState {
@@ -102,6 +113,7 @@ export interface DerivedAppState extends AppState {
         calculus: C,
         state: AppState[C],
     ) => void;
+    setConfig: (cfg: Config) => void;
     dispatch: (a: AppStateAction) => void;
 }
 
@@ -118,6 +130,9 @@ export enum AppStateActionType {
     SET_SERVER,
     UPDATE_SAVED_FORMULA,
     SET_TUTORIAL_MODE,
+    SET_CONFIG,
+    SET_ADMIN_KEY,
+    SET_ADMIN,
 }
 
 export interface UpdateScreenSize extends AppStateActionBase {
@@ -163,6 +178,20 @@ export interface SetTutorialMode extends AppStateActionBase {
     value: TutorialMode;
 }
 
+export interface SetConfig extends AppStateActionBase {
+    type: AppStateActionType.SET_CONFIG;
+    value: Config;
+}
+
+export interface SetAdminKey extends AppStateActionBase {
+    type: AppStateActionType.SET_ADMIN_KEY;
+    value: string;
+}
+export interface SetAdmin extends AppStateActionBase {
+    type: AppStateActionType.SET_ADMIN;
+    value: boolean;
+}
+
 export type AppStateAction =
     | UpdateScreenSize
     | AddNotification
@@ -171,12 +200,20 @@ export type AppStateAction =
     | SetTheme
     | SetServer
     | UpdateSavedFormula
-    | SetTutorialMode;
+    | SetTutorialMode
+    | SetConfig
+    | SetAdminKey
+    | SetAdmin;
 
 export type AppStateUpdater = <C extends CalculusType = CalculusType>(
     id: C,
     newState: AppState[C],
 ) => void;
+
+export interface Config {
+    disabled: CalculusType[];
+    examples: Example[];
+}
 
 export enum NotificationType {
     Error,

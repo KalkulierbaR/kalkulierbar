@@ -1,12 +1,15 @@
-import { Component, Fragment, h } from "preact";
-import { Link } from "preact-router";
-import { useCallback, useState } from "preact/hooks";
-import { AppStateActionType, Calculus, Theme } from "../../types/app";
-import { useAppState } from "../../util/app-state";
-import { classMap } from "../../util/class-map";
+import {Component, Fragment, h} from "preact";
+import {Link} from "preact-router";
+import {useCallback, useState} from "preact/hooks";
+import {AppStateActionType, Calculus, TableauxCalculusType, Theme} from "../../types/app";
+import {checkCredentials} from "../../util/admin";
+import {useAppState} from "../../util/app-state";
+import {classMap} from "../../util/class-map";
 import Btn from "../btn";
 import Dialog from "../dialog";
 import FAB from "../fab";
+import LogInIcon from "../icons/log-in";
+import LogOutIcon from "../icons/log-out";
 import SaveIcon from "../icons/save";
 import SettingsIcon from "../icons/settings";
 import ThemeAuto from "../icons/theme-auto";
@@ -69,9 +72,11 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
                 onLinkClick={setClosed}
                 currentUrl={currentUrl}
             />
-            <Btn class={style.settingsBtn} onClick={toggle}>
-                <SettingsIcon />
-            </Btn>
+            <Btn
+                className={style.settingsBtn}
+                onClick={toggle}
+                icon={<SettingsIcon />}
+            />
         </Fragment>
     );
 
@@ -134,16 +139,26 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
     onLinkClick,
     currentUrl,
 }) => {
+    const { config } = useAppState();
+
     return (
         <nav class={style.nav}>
-            {routes.map((r) => (
-                <NavGroup
-                    group={r}
-                    onLinkClick={onLinkClick}
-                    currentUrl={currentUrl}
-                    hamburger={hamburger}
-                />
-            ))}
+            {routes.map((r) => {
+                const filteredRoutes = r.routes.filter((l) =>
+                    config.disabled.includes(l.path as TableauxCalculusType)
+                );
+
+                return filteredRoutes.length === r.routes.length ?
+                    undefined
+                : (
+                    <NavGroup
+                        group={r}
+                        onLinkClick={onLinkClick}
+                        currentUrl={currentUrl}
+                        hamburger={hamburger}
+                    />
+                );
+            })}
         </nav>
     );
 };
@@ -160,6 +175,7 @@ interface NavGroupState {
 }
 
 class NavGroup extends Component<NavGroupProps, NavGroupState> {
+
     public state = { open: false };
 
     public close = () => {
@@ -207,6 +223,8 @@ class NavGroup extends Component<NavGroupProps, NavGroupState> {
         { group, onLinkClick, currentUrl, hamburger }: NavGroupProps,
         { open }: NavGroupState,
     ) {
+
+        const { config } = useAppState();
         const isCurrent =
             !hamburger &&
             group.routes.find((r) => currentUrl.includes(r.path)) !== undefined;
@@ -235,11 +253,15 @@ class NavGroup extends Component<NavGroupProps, NavGroupState> {
                     aria-hidden={`${!open}`}
                 >
                     {group.routes.map((r) => (
-                        <NavLink
-                            link={r}
-                            onClick={onLinkClick}
-                            currentUrl={currentUrl}
-                        />
+                        (config.disabled.includes(r.path as TableauxCalculusType) ?
+                            undefined
+                        :
+                            (<NavLink
+                                link={r}
+                                onClick={onLinkClick}
+                                currentUrl={currentUrl}
+                            />)
+                        )
                     ))}
                 </nav>
             </div>
@@ -266,6 +288,7 @@ const Settings: preact.FunctionalComponent = () => {
         <div class={style.settings}>
             <ThemeSwitcher />
             <ServerInput />
+            <AdminKeyInput />
         </div>
     );
 };
@@ -280,14 +303,14 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     close,
 }) => {
     const { dispatch, server } = useAppState();
-    const [newServer, setServer] = useState(server);
+    const [serverInput, setServerInput] = useState(server);
 
     const dispatchServer = useCallback(() => {
         dispatch({
             type: AppStateActionType.SET_SERVER,
-            value: newServer.trim(),
+            value: serverInput.trim(),
         });
-    }, [newServer]);
+    }, [serverInput]);
 
     const onSubmit = useCallback(() => {
         dispatchServer();
@@ -309,13 +332,13 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     );
 
     return (
-        <div class={style.serverInputWrapper}>
+        <div class={style.settingsInputWrapper}>
             <div class={style.overlay} />
             <TextInput
-                class={style.serverInput}
+                class={style.settingsInput}
                 label={showLabel ? "Server" : undefined}
-                onChange={setServer}
-                value={server}
+                onChange={setServerInput}
+                syncValue={serverInput}
                 type="url"
                 autoComplete={true}
                 onKeyDown={handleEnter}
@@ -329,6 +352,93 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                 }
             />
         </div>
+    );
+};
+
+const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
+    showLabel = true,
+    close,
+}) => {
+    const { dispatch, isAdmin, adminKey, onError, server } = useAppState();
+
+    const [adminKeyInput, setAdminKeyInput] = useState(adminKey);
+
+    const dispatchAdminKey = useCallback(() => {
+        dispatch({
+            type: AppStateActionType.SET_ADMIN_KEY,
+            value: adminKeyInput,
+        });
+    }, [adminKeyInput]);
+
+    const onSubmit = useCallback(() => {
+        dispatchAdminKey();
+        checkCredentials(
+            server,
+            adminKeyInput,
+            (userIsAdmin) => {
+                dispatch({
+                    type: AppStateActionType.SET_ADMIN,
+                    value: userIsAdmin,
+                });
+            },
+            onError,
+        );
+        setAdminKeyInput("");
+
+        if (document.activeElement) {
+            (document.activeElement as HTMLElement).blur();
+        }
+        if (close) {
+            close();
+        }
+    }, [dispatchAdminKey]);
+
+    const handleEnter = useCallback(
+        (e: KeyboardEvent) => {
+            if (e.keyCode === 13) {
+                onSubmit();
+            }
+        },
+        [dispatchAdminKey],
+    );
+
+    return (isAdmin ?
+                <div
+                    class={style.buttonContainer}
+                >
+                    <Btn
+                        className={style.themeSwitcher}
+                        icon={<LogOutIcon/>}
+                        label="Logout"
+                        onClick={
+                            () => dispatch({
+                                type: AppStateActionType.SET_ADMIN,
+                                value: false,
+                            })
+                        }
+                    />
+                </div>
+            :
+                <div class={style.settingsInputWrapper}>
+                    <div class={style.overlay}/>
+                    <TextInput
+                        class={style.settingsInput}
+                        label={showLabel ? "Admin Login" : undefined}
+                        onChange={setAdminKeyInput}
+                        syncValue={adminKeyInput}
+                        type="password"
+                        autoComplete={true}
+                        onKeyDown={handleEnter}
+                        submitButton={
+                            <FAB
+                                icon={<LogInIcon/>}
+                                label="Login"
+                                mini={true}
+                                onClick={onSubmit}
+                            />
+                        }
+                    />
+                </div>
     );
 };
 
@@ -363,15 +473,13 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
     };
 
     return (
-        <div onClick={onClick} class={style.themeContainer}>
+        <div class={style.buttonContainer}>
             <Btn
-                class={style.themeSwitcher}
-                title="Change color theme"
-                id="theme-switcher"
-            >
-                {themeSwitcherIcon()}
-            </Btn>
-            <label for="theme-switcher">Current theme: {theme}</label>
+                onClick={onClick}
+                className={style.themeSwitcher}
+                icon={themeSwitcherIcon()}
+                label={`Theme:  ${theme}`}
+            />
         </div>
     );
 };

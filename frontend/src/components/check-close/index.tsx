@@ -17,7 +17,10 @@ const CheckCloseBtn: preact.FunctionalComponent<Props> = ({ calculus }) => {
         closeHelper(server, onError, onSuccess, calculus, state);
     return (
         <div class="card">
-            <Btn onClick={checkClose}>Check</Btn>
+            <Btn
+                onClick={checkClose}
+                label="Check"
+            />
         </div>
     );
 };

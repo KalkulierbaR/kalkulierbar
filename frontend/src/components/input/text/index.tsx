@@ -12,7 +12,8 @@ interface Props {
     onKeyDown?: (event: KeyboardEvent) => void;
     onFocus?: (event: FocusEvent) => void;
     class?: string;
-    value?: string;
+    startValue?: string;
+    syncValue?: string;
     required?: boolean;
     inline?: boolean;
     autoComplete?: boolean;
@@ -28,7 +29,8 @@ const TextInput: preact.FunctionalComponent<Props> = ({
     label,
     onChange,
     submitButton,
-    value,
+    startValue,
+    syncValue,
     onKeyDown,
     onFocus,
     required,
@@ -43,7 +45,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
 }) => {
     const input = useRef<HTMLInputElement>();
 
-    const [text, setText] = useState(value);
+    const [text, setText] = useState(startValue);
 
     const randomId = `txt-input-${Math.random()}`;
 
@@ -70,7 +72,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
                         [style.inline]: inline
                     })}
                     ref={input}
-                    value={text}
+                    value={syncValue !== undefined ? syncValue : text}
                     onInput={e => {
                         const res = (e.target as HTMLInputElement).value;
                         setText(res);
