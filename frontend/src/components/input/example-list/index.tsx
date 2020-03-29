@@ -4,6 +4,7 @@ import { AppStateActionType, CalculusType, Example } from "../../../types/app";
 import { delExample } from "../../../util/admin";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../btn";
+import DeleteIcon from "../../icons/delete";
 import * as style from "./style.scss";
 
 interface Props {
@@ -109,6 +110,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                                 <Btn
                                     onClick={(e) => onDelete(e, index)}
                                     label="Delete"
+                                    icon={<DeleteIcon size={18} />}
                                 />
                             </Fragment>
                         }

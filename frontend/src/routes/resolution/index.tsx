@@ -88,7 +88,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         <HintIcon hint="When you select a clause, all valid resolution partners will be highlighted and grouped around the selected clause." />
                     </div>
                     {!fo && (
-                        <div class="switches">
+                        <div class="second">
                             <Switch
                                 label="Naive CNF transformation"
                                 onChange={strategySelect}
