@@ -1,7 +1,13 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import {Calculus, CalculusType, ResolutionCalculus, TableauxCalculus, TutorialMode} from "../../types/app";
+import {
+    Calculus,
+    CalculusType,
+    ResolutionCalculus,
+    TableauxCalculus
+} from "../../types/app";
 import { useAppState } from "../../util/app-state";
+import { getHighlightCheck } from "../../util/tutorial-mode";
 import Dialog from "../dialog";
 import FAB from "../fab";
 import InfoIcon from "../icons/info";
@@ -18,7 +24,7 @@ interface Props {
 const HelpMenu: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const { tutorialMode } = useAppState();
     const [showDialog, setShowDialog] = useState(
-        tutorialMode !== TutorialMode.None,
+        getHighlightCheck(tutorialMode)
     );
 
     return (
