@@ -1,5 +1,4 @@
 import { Fragment, h } from "preact";
-import UploadFAB from "../../components/btn/upload";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
@@ -14,7 +13,6 @@ const NCTableaux: preact.FunctionalComponent = () => {
                 params={null}
                 foLogic={true}
             />
-            <UploadFAB calculus={Calculus.ncTableaux} />
             <ExampleList calculus={Calculus.ncTableaux} />
         </Fragment>
     );

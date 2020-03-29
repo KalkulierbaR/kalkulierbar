@@ -123,13 +123,16 @@ const VarAssignList: preact.FunctionalComponent<Props> = ({
                     />
                 </p>
             ))}
-            <Btn onClick={submitManualVarAssign}>{submitLabel}</Btn>
-
-            {!manualVarAssignOnly && secondSubmitLabel && secondSubmitEvent ? (
-                <Btn onClick={() => secondSubmitEvent(true)}>
-                    {secondSubmitLabel}
-                </Btn>
-            ) : undefined}
+            <Btn
+                onClick={submitManualVarAssign}
+                label={submitLabel}
+            />
+            {!manualVarAssignOnly && secondSubmitLabel && secondSubmitEvent && (
+                <Btn
+                    onClick={() => secondSubmitEvent(true)}
+                    label={secondSubmitLabel}
+                />
+            )}
         </div>
     );
 };

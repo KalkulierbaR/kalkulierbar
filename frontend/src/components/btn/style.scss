@@ -1,11 +1,12 @@
 .btn {
+    line-height: 28px;
     border: none;
     box-shadow: none;
     background-color: var(--kbar-accent-color);
     color: #fff;
     font-size: 1em;
     border-radius: 5px;
-    padding: 4px 8px;
+    padding: 0 8px;
     transition: opacity 0.2s ease-in;
     cursor: pointer;
 
@@ -18,6 +19,10 @@
 
     &[disabled] {
         opacity: 0.6;
+    }
+
+    svg {
+        vertical-align: middle;
     }
 }
 

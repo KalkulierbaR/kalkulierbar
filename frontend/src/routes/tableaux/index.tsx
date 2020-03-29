@@ -1,6 +1,5 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import UploadFAB from "../../components/btn/upload";
 import HintIcon, { Hint } from "../../components/hint";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
@@ -164,7 +163,6 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
-            <UploadFAB calculus={calculus} />
             <ExampleList calculus={calculus}/>
         </Fragment>
     );

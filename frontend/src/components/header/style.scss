@@ -253,7 +253,6 @@ $hamburgerBreakpoint: 700px;
 
 .theme-switcher {
     display: none;
-    color: inherit;
     cursor: pointer;
 
     @supports (--foo: green) {

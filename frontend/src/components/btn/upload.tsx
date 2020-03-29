@@ -5,14 +5,15 @@ import { CalculusType } from "../../types/app";
 import { checkValid } from "../../util/api";
 import { useAppState } from "../../util/app-state";
 import { readFile } from "../../util/file";
-import FAB from "../fab";
+import Btn from "./index";
 import UploadIcon from "../icons/upload";
+
 
 interface Props {
     calculus: CalculusType;
 }
 
-const UploadFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
+const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const { server, onChange, onError } = useAppState();
 
     const input = useRef<HTMLInputElement>();
@@ -54,16 +55,13 @@ const UploadFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 accept="application/json"
                 style="display: none;"
             />
-            <FAB
+            <Btn
                 onClick={handleClick}
-                label="Load Proof"
-                icon={<UploadIcon />}
-                showIconAtEnd={true}
-                extended={true}
-                mini={true}
+                label="Load proof"
+                icon={<UploadIcon size={18}/>}
             />
         </Fragment>
     );
 };
 
-export default UploadFAB;
+export default UploadButton;

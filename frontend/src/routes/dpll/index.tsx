@@ -1,5 +1,4 @@
 import { Fragment, h } from "preact";
-import UploadFAB from "../../components/btn/upload";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
@@ -12,7 +11,6 @@ const DPLL: preact.FunctionalComponent<Props> = () => {
         <Fragment>
             <Format foLogic={false} />
             <FormulaInput calculus={Calculus.dpll} foLogic={false} />
-            <UploadFAB calculus="dpll" />
             <ExampleList calculus={Calculus.dpll}/>
         </Fragment>
     );

@@ -72,9 +72,11 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
                 onLinkClick={setClosed}
                 currentUrl={currentUrl}
             />
-            <Btn class={style.settingsBtn} onClick={toggle}>
-                <SettingsIcon />
-            </Btn>
+            <Btn
+                className={style.settingsBtn}
+                onClick={toggle}
+                icon={<SettingsIcon />}
+            />
         </Fragment>
     );
 
@@ -411,13 +413,10 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                     class={style.buttonContainer}
                 >
                     <Btn
-                        class={style.themeSwitcher}
-                        title="Logout"
-                        id="logout-button"
-                    >
-                        <LogOutIcon/>
-                    </Btn>
-                    <label for="logout-button">Logout</label>
+                        className={style.themeSwitcher}
+                        icon={<LogOutIcon/>}
+                        label="Logout"
+                    />
                 </div>
             :
                 <div class={style.settingsInputWrapper}>
@@ -476,13 +475,10 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
     return (
         <div onClick={onClick} class={style.buttonContainer}>
             <Btn
-                class={style.themeSwitcher}
-                title="Change color theme"
-                id="theme-switcher"
-            >
-                {themeSwitcherIcon()}
-            </Btn>
-            <label for="theme-switcher">Current theme: {theme}</label>
+                className={style.themeSwitcher}
+                icon={themeSwitcherIcon()}
+                label={`Theme:  ${theme}`}
+            />
         </div>
     );
 };

@@ -106,9 +106,10 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                         {isAdmin &&
                             <Fragment>
                                 <p class={style.params} >{example.params}</p>
-                                <Btn onClick={(e) => onDelete(e, index)}>
-                                    Delete
-                                </Btn>
+                                <Btn
+                                    onClick={(e) => onDelete(e, index)}
+                                    label="Delete"
+                                />
                             </Fragment>
                         }
                     </div>

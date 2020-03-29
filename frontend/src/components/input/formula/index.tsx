@@ -1,4 +1,4 @@
-import { createRef, h } from "preact";
+import {createRef, h} from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 import {
@@ -15,6 +15,10 @@ import Dialog from "../../dialog";
 import OptionList from "../option-list";
 import TextInput from "../text";
 import * as style from "./style.scss";
+import SendIcon from "../../icons/send";
+import AddIcon from "../../icons/add";
+import SaveIcon from "../../icons/save";
+import UploadButton from "../../btn/upload";
 
 declare module "preact" {
     namespace JSX {
@@ -233,23 +237,24 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         }
                     />
                 }
-                <Btn
-                    type="submit"
-                    name="action"
-                    value="parse"
-                    disabled={textareaValue.length === 0}
-                >
-                    Start proof
-                </Btn>
-                {isAdmin &&
                     <Btn
-                        type="button"
-                        onClick={() => setShowCreateExampleDialog(true)}
+                        type="submit"
+                        name="action"
+                        value="parse"
                         disabled={textareaValue.length === 0}
-                    >
-                        Add example
-                    </Btn>
-                }
+                        label="Start proof"
+                        icon={<SendIcon size={18}/>}
+                    />
+                    {isAdmin &&
+                        <Btn
+                            type="button"
+                            onClick={() => setShowCreateExampleDialog(true)}
+                            disabled={textareaValue.length === 0}
+                            label="Add example"
+                            icon={<AddIcon size={22}/>}
+                        />
+                    }
+                    <UploadButton calculus={calculus} />
             </form>
             {isAdmin &&
                 <Dialog
@@ -278,9 +283,9 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         type="button"
                         onClick={() => onSubmit()}
                         disabled={textareaValue.length === 0}
-                    >
-                        Save like this
-                    </Btn>
+                        label="Save like this"
+                        icon={<SaveIcon size={16}/>}
+                    />
                 </Dialog>
             }
         </div>
