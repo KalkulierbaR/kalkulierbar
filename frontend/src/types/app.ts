@@ -40,6 +40,7 @@ export const PropCalculus: CalculusType[] = [
 export const FOCalculus: CalculusType[] = [
     Calculus.foTableaux,
     Calculus.foResolution,
+    Calculus.ncTableaux,
 ];
 export const TableauxCalculus: CalculusType[] = [
     Calculus.propTableaux,
