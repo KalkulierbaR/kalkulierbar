@@ -11,14 +11,14 @@ import { addExample } from "../../../util/admin";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import Btn from "../../btn";
+import UploadButton from "../../btn/upload";
 import Dialog from "../../dialog";
+import AddIcon from "../../icons/add";
+import SaveIcon from "../../icons/save";
+import SendIcon from "../../icons/send";
 import OptionList from "../option-list";
 import TextInput from "../text";
 import * as style from "./style.scss";
-import SendIcon from "../../icons/send";
-import AddIcon from "../../icons/add";
-import SaveIcon from "../../icons/save";
-import UploadButton from "../../btn/upload";
 
 declare module "preact" {
     namespace JSX {

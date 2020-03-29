@@ -5,8 +5,8 @@ import { CalculusType } from "../../types/app";
 import { checkValid } from "../../util/api";
 import { useAppState } from "../../util/app-state";
 import { readFile } from "../../util/file";
-import Btn from "./index";
 import UploadIcon from "../icons/upload";
+import Btn from "./index";
 
 
 interface Props {
