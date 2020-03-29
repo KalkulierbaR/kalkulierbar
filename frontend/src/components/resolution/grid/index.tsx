@@ -1,9 +1,9 @@
 import { h } from "preact";
-import { useMemo } from "preact/hooks";
 import { CandidateClause } from "../../../types/clause";
 import { VisualHelp } from "../../../types/resolution";
 import { DragTransform } from "../../../types/ui";
-import { circleLayout } from "../../../util/layout/circle";
+import { gridLayout } from "../../../util/layout/grid";
+import { normalize } from "../../../util/normalize";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
@@ -43,20 +43,25 @@ interface Props {
     shiftCandidateClause: (oldIdx: number, newIdx: number) => void;
 }
 
-const ResolutionCircle: preact.FunctionalComponent<Props> = ({
+const ResolutionGrid: preact.FunctionalComponent<Props> = ({
     clauses,
-    selectClauseCallback,
-    selectedClauseId,
     visualHelp,
+    selectedClauseId,
+    selectable,
+    selectClauseCallback,
     newestNode,
     semiSelected,
-    selectable,
     shiftCandidateClause,
 }) => {
-    const { width, height, data, radius } = useMemo(
-        () => circleLayout(clauses.map((c) => c.clause)),
-        [clauses],
-    );
+    const {
+        width,
+        height,
+        data,
+        columns,
+        rows,
+        rowHeight,
+        columnWidth,
+    } = gridLayout(clauses.map((c) => c.clause));
 
     /**
      * Handler for the drag part of drag&drop
@@ -72,20 +77,17 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
         const x = x0 + dt.x;
         const y = y0 + dt.y;
 
-        // Calculate distance to (0,0) (hypotenuse)
-        const distToCenter = Math.sqrt(x * x + y * y);
+        // Calculate the column of the new position
+        const column = normalize(Math.floor(x / columnWidth), 0, columns - 1);
 
-        // Calculate the angle for the right half
-        // (we shift by Math.Pi / 2 because we did the same in the layout)
-        const alpha = Math.asin(y / distToCenter) + Math.PI / 2;
+        // Calculate the row of the new position
+        const row = normalize(
+            Math.floor((y + rowHeight / 4) / rowHeight),
+            0,
+            rows - 1,
+        );
 
-        // Calculate the angle for the whole circle
-        const angle = x < 0 ? 2 * Math.PI - alpha : alpha;
-
-        // Calculate the new index and do modulo to prevent an index > length
-        const newIndex =
-            Math.round((angle / (2 * Math.PI)) * clauses.length) %
-            clauses.length;
+        const newIndex = normalize(row * columns + column, 0, clauses.length);
 
         shiftCandidateClause(id, newIndex);
     };
@@ -97,14 +99,13 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 width="100%"
                 height="calc(100vh - 172px)"
                 style="min-height: 60vh"
-                viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
+                viewBox={`-16 0 ${width + 32} ${height}`}
                 preserveAspectRatio="xMidYMid meet"
             >
                 {(transform) => (
                     <g
                         transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
-                        <circle class={style.circle} cx="0" cy="0" r={radius} />
                         {data.map(({ x, y }, index) => {
                             const clause = clauses[index];
                             const disabled =
@@ -139,4 +140,4 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
     );
 };
 
-export default ResolutionCircle;
+export default ResolutionGrid;
