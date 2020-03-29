@@ -1,0 +1,77 @@
+@import "../vars";
+
+.settings {
+    padding: 0 16px;
+
+    @media (min-width: $hamburgerBreakpoint) {
+        padding: 0;
+    }
+}
+
+.theme-switcher {
+    display: none;
+    color: inherit;
+    cursor: pointer;
+
+    @supports (--foo: green) {
+        display: inline;
+        border: none;
+        transition: all 0.3s;
+        outline: none;
+        height: 100%;
+        margin-right: 16px;
+
+        img {
+            width: 1.6rem;
+        }
+    }
+}
+
+.theme-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 0 10px 0;
+    margin-bottom: 15px;
+    cursor: pointer;
+
+    @media (max-width: $hamburgerBreakpoint) {
+        &:hover,
+        &:active,
+        &:focus {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: background-color 0.2s ease;
+    @media (max-width: $hamburgerBreakpoint) {
+        .server-input-wrapper:focus-within & {
+            opacity: 0.5;
+        }
+    }
+}
+
+.server-input {
+    overflow-scrolling: unset;
+    transition: all 0.2s ease;
+
+    @media (max-width: $hamburgerBreakpoint) {
+        &:focus-within {
+            transform: translateY(-256px);
+            background-color: var(--kbar-8dp-color);
+            margin: 0 -16px;
+            padding: 8px;
+            border-radius: var(--kbar-border-radius);
+            box-shadow: var(--kbar-shadow-3dp);
+        }
+    }
+}

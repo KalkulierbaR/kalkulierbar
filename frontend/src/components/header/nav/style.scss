@@ -1,0 +1,98 @@
+@import "../vars";
+
+.nav {
+    display: none;
+    font-size: 100%;
+    justify-self: flex-end;
+    padding: 0 16px;
+
+    a,
+    button {
+        display: inline-block;
+        height: 56px;
+        line-height: 56px;
+        padding: 0 16px;
+        min-width: 50px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0);
+        text-decoration: none;
+        color: #fff;
+        will-change: background-color;
+
+        &:hover,
+        &:active {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    button {
+        min-width: 128px;
+    }
+
+    a.current {
+        background: rgba(0, 0, 0, 0.2);
+
+        @media (min-width: $hamburgerBreakpoint) {
+            background-size: 0.3rem 100%;
+            background-position: left;
+            background-repeat: no-repeat;
+            background-image: linear-gradient(#ad80ff, #ad80ff);
+        }
+    }
+
+    button.current {
+        background: rgba(0, 0, 0, 0.2);
+
+        @media (min-width: $hamburgerBreakpoint) {
+            background-size: 100% 0.3rem;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            background-image: linear-gradient(#ad80ff, #ad80ff);
+        }
+    }
+
+    @media (min-width: 700px) {
+        display: block;
+    }
+}
+
+.linkGroup {
+    display: inline-block;
+    position: relative;
+
+    &-name {
+        margin: 16px 0 0 0;
+    }
+
+    &-btn {
+        background: none;
+        box-shadow: none;
+        border: none;
+        color: #fff;
+        font-size: 1em;
+        display: inline-block;
+        height: 56px;
+        cursor: pointer;
+    }
+
+    &-nav {
+        @media (min-width: $hamburgerBreakpoint) {
+            display: none;
+            background-color: var(--kbar-3dp-color);
+            box-shadow: var(--kbar-shadow-3dp);
+            border-radius: 0 0 var(--kbar-border-radius)
+                var(--kbar-border-radius);
+
+            &--open {
+                display: block;
+                position: absolute;
+            }
+
+            a {
+                width: 100%;
+                text-align: left;
+                color: var(--kbar-primary-text-color);
+            }
+        }
+    }
+}
