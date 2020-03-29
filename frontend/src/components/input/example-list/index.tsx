@@ -119,7 +119,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                         <p class="">
                             {decodeURIComponent(example.formula)
                                 .split(/\n/)
-                                .join(" ; ")}
+                                .join("; ")}
                         </p>
                         {isAdmin && (
                             <Fragment>
