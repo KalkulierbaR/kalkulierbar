@@ -1,4 +1,4 @@
-import {createRef, h} from "preact";
+import { createRef, h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 import {
@@ -80,7 +80,9 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
     const [exampleNameInput, setExampleNameInput] = useState("");
     const [exampleDescriptionInput, setExampleDescriptionInput] = useState("");
-    const [showCreateExampleDialog, setShowCreateExampleDialog] = useState(false);
+    const [showCreateExampleDialog, setShowCreateExampleDialog] = useState(
+        false,
+    );
 
     /**
      * Handle the Submit event of the form
@@ -88,7 +90,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const onSubmit = async (event?: Event) => {
-        if(event) {
+        if (event) {
             event.preventDefault();
         }
         const url = `${server}/${calculus}/parse`;
@@ -115,7 +117,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                             description: exampleDescriptionInput,
                             calculus,
                             formula: normalizeInput(savedFormulas[calculus]),
-                            params: (params ? JSON.stringify(params) : ""),
+                            params: params ? JSON.stringify(params) : "",
                         },
                         adminKey,
                         setConfig,
@@ -228,7 +230,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                             : "!a, c; a; !c"
                     }
                 />
-                {FOCalculus.includes(calculus) &&
+                {FOCalculus.includes(calculus) && (
                     <OptionList
                         options={suggestionMap}
                         selectOptionCallback={selectSuggestion}
@@ -236,33 +238,36 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                             suggestionMap.size > 0 ? undefined : style.hide
                         }
                     />
-                }
+                )}
+                <Btn
+                    type="submit"
+                    name="action"
+                    value="parse"
+                    disabled={textareaValue.length === 0}
+                    label="Start proof"
+                    icon={<SendIcon size={20} />}
+                />
+                {isAdmin && (
                     <Btn
-                        type="submit"
-                        name="action"
-                        value="parse"
+                        type="button"
+                        onClick={() => setShowCreateExampleDialog(true)}
                         disabled={textareaValue.length === 0}
-                        label="Start proof"
-                        icon={<SendIcon size={18}/>}
+                        label="Add example"
+                        icon={<AddIcon />}
                     />
-                    {isAdmin &&
-                        <Btn
-                            type="button"
-                            onClick={() => setShowCreateExampleDialog(true)}
-                            disabled={textareaValue.length === 0}
-                            label="Add example"
-                            icon={<AddIcon size={22}/>}
-                        />
-                    }
-                    <UploadButton calculus={calculus} />
+                )}
+                <UploadButton calculus={calculus} />
             </form>
-            {isAdmin &&
+            {isAdmin && (
                 <Dialog
                     open={showCreateExampleDialog}
                     label="Add example"
                     onClose={() => setShowCreateExampleDialog(false)}
                 >
-                    <p>The name and description are optional. The parameters will be saved how you currently have set them.</p>
+                    <p>
+                        The name and description are optional. The parameters
+                        will be saved how you currently have set them.
+                    </p>
                     <TextInput
                         label="Name"
                         syncValue={exampleNameInput}
@@ -270,7 +275,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         autoComplete={true}
                         required={true}
                     />
-                    <br/>
+                    <br />
                     <TextInput
                         label="Description"
                         syncValue={exampleDescriptionInput}
@@ -278,16 +283,16 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         autoComplete={true}
                         required={true}
                     />
-                    <br/>
+                    <br />
                     <Btn
                         type="button"
                         onClick={() => onSubmit()}
                         disabled={textareaValue.length === 0}
                         label="Save like this"
-                        icon={<SaveIcon size={16}/>}
+                        icon={<SaveIcon />}
                     />
                 </Dialog>
-            }
+            )}
         </div>
     );
 };

@@ -67,9 +67,7 @@ const useExample = async (example: Example) => {
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `formula=${(example.formula)}&params=${
-                example.params
-            }`,
+            body: `formula=${example.formula}&params=${example.params}`,
         });
         if (response.status !== 200) {
             onError(await response.text());
@@ -89,7 +87,9 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
 }) => {
     const { config, isAdmin } = useAppState();
 
-    const examples = config.examples.filter(example => example.calculus === calculus);
+    const examples = config.examples.filter(
+        (example) => example.calculus === calculus,
+    );
 
     if (!examples.length) {
         return null;
@@ -100,22 +100,41 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
             <h3>Examples</h3>
             {config.examples.map((example, index) =>
                 example.calculus === calculus ? (
-                    <div class={`card  ${style.example}`} onClick={() => useExample(example)}>
-                        {example.name ? <h3 class="">{example.name}</h3> : undefined}
-                        {example.description ? <p class={style.description}>{example.description}</p> : undefined}
-                        <p class="">{decodeURIComponent(example.formula).split(/\n/).join(" ; ")}</p>
-                        {isAdmin &&
+                    <div
+                        class={`card  ${style.example}`}
+                        onClick={() => useExample(example)}
+                    >
+                        {example.name ? (
+                            <h3 class="">{example.name}</h3>
+                        ) : (
+                            undefined
+                        )}
+                        {example.description ? (
+                            <p class={style.description}>
+                                {example.description}
+                            </p>
+                        ) : (
+                            undefined
+                        )}
+                        <p class="">
+                            {decodeURIComponent(example.formula)
+                                .split(/\n/)
+                                .join(" ; ")}
+                        </p>
+                        {isAdmin && (
                             <Fragment>
-                                <p class={style.params} >{example.params}</p>
+                                <p class={style.params}>{example.params}</p>
                                 <Btn
                                     onClick={(e) => onDelete(e, index)}
                                     label="Delete"
-                                    icon={<DeleteIcon size={18} />}
+                                    icon={<DeleteIcon />}
                                 />
                             </Fragment>
-                        }
+                        )}
                     </div>
-                ) : undefined,
+                ) : (
+                    undefined
+                ),
             )}
         </div>
     );
