@@ -100,7 +100,7 @@ const ResolutionGrid: preact.FunctionalComponent<Props> = ({
                 height="calc(100vh - 172px)"
                 style="min-height: 60vh"
                 viewBox={`-16 0 ${width + 32} ${height}`}
-                preserveAspectRatio="xMidyMid meet"
+                preserveAspectRatio="xMidYMid meet"
             >
                 {(transform) => (
                     <g

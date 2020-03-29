@@ -5,7 +5,7 @@ import { maxBy } from "../max-by";
 import { estimateSVGTextWidth } from "../text-width";
 
 const HEIGHT_PADDING = 16;
-const WIDTH_PADDING = 96;
+const WIDTH_PADDING = 32;
 
 /**
  * Calculate the grid layout
@@ -34,7 +34,7 @@ export const gridLayout = (
 
     // Guess clause width by the length of the longest string
     const width =
-        maxBy(clauses, (c) => estimateSVGTextWidth(clauseToString(c))) +
+        maxBy(clauses, (c) => estimateSVGTextWidth(clauseToString(c))) * 1.5 +
         WIDTH_PADDING;
 
     // The height is constant. The value here has no special meaning

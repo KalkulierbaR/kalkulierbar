@@ -98,7 +98,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 height="calc(100vh - 172px)"
                 style="min-height: 60vh"
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
-                preserveAspectRatio="xMidyMid meet"
+                preserveAspectRatio="xMidYMid meet"
             >
                 {(transform) => (
                     <g

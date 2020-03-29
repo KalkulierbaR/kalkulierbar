@@ -29,7 +29,7 @@ const DPLLTree: preact.FunctionalComponent<Props> = ({
                 width="100%"
                 height="calc(100vh - 192px)"
                 style="min-height: 60vh"
-                preserveAspectRatio="xMidyMid meet"
+                preserveAspectRatio="xMidYMid meet"
                 viewBox={`0 -16 ${width} ${height}`}
             >
                 {(transform) => (
