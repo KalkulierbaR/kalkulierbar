@@ -16,7 +16,7 @@ interface Props {
 }
 
 const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
-    const { server, onChange, onError } = useAppState();
+    const { server, onChange, notificationHandler } = useAppState();
 
     const input = useRef<HTMLInputElement>();
 

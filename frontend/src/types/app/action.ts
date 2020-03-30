@@ -3,6 +3,7 @@ import { AppState } from "./app-state";
 import { Theme } from "./theme";
 import { TutorialMode } from "./tutorial";
 import { Notification } from "./notification";
+import { Config } from "./config";
 
 interface AppStateActionBase {
     type: AppStateActionType;
@@ -17,6 +18,9 @@ export enum AppStateActionType {
     SET_SERVER,
     UPDATE_SAVED_FORMULA,
     SET_TUTORIAL_MODE,
+    SET_CONFIG,
+    SET_ADMIN_KEY,
+    SET_ADMIN,
 }
 
 export interface UpdateScreenSize extends AppStateActionBase {
@@ -62,6 +66,20 @@ export interface SetTutorialMode extends AppStateActionBase {
     value: TutorialMode;
 }
 
+export interface SetConfig extends AppStateActionBase {
+    type: AppStateActionType.SET_CONFIG;
+    value: Config;
+}
+
+export interface SetAdminKey extends AppStateActionBase {
+    type: AppStateActionType.SET_ADMIN_KEY;
+    value: string;
+}
+export interface SetAdmin extends AppStateActionBase {
+    type: AppStateActionType.SET_ADMIN;
+    value: boolean;
+}
+
 export type AppStateAction =
     | UpdateScreenSize
     | AddNotification
@@ -70,4 +88,7 @@ export type AppStateAction =
     | SetTheme
     | SetServer
     | UpdateSavedFormula
-    | SetTutorialMode;
+    | SetTutorialMode
+    | SetConfig
+    | SetAdminKey
+    | SetAdmin;

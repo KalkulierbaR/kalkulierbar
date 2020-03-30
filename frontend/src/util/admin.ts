@@ -1,18 +1,21 @@
-import { CalculusType, Config, Example } from "../types/app";
 import { calcMac, getCurrentDate } from "./mac";
+import { Config } from "../types/app/config";
+import { CalculusType } from "../types/calculus";
+import { Example } from "../types/app/example";
+import { NotificationHandler } from "../types/app/notification";
 
 /**
  * Pulls the current config (kbar-state.json) of the backend sever
  *
  * @param {string} server - Server
  * @param {CallableFunction} changeConfig - Change-Config handler
- * @param {CallableFunction} onError - Error handler
+ * @param {NotificationHandler} notificationHandler - notification handler
  * @returns {void}
  */
 export const getConfig = async (
     server: string,
     changeConfig: (cfg: Config) => void,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) => {
     const url = `${server}/config`;
     try {
@@ -24,13 +27,13 @@ export const getConfig = async (
             method: "GET",
         });
         if (res.status !== 200) {
-            onError(await res.text());
+            notificationHandler.error(await res.text());
         }
 
         const parsed = await res.json();
         changeConfig(parsed);
     } catch (e) {
-        onError((e as Error).message);
+        notificationHandler.error((e as Error).message);
     }
 };
 
@@ -41,14 +44,14 @@ export const getConfig = async (
  * @param {string} server - Server
  * @param {string} adminKey - the key to be checked
  * @param {CallableFunction} setAdmin - Unlock admin options handler
- * @param {CallableFunction} onError - Error handler
+ * @param {NotificationHandler} notificationHandler - notification handler
  * @returns {void}
  */
 export const checkCredentials = async (
     server: string,
     adminKey: string,
     setAdmin: (isAdmin: boolean) => void,
-    onError?: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) => {
     const url = `${server}/admin/checkCredentials`;
 
@@ -63,23 +66,19 @@ export const checkCredentials = async (
             body: `mac=${calcMac(payload)}`,
         });
         if (res.status !== 200) {
-            if(onError){
-                onError(await res.text());
-            }
+            notificationHandler.error(await res.text());
+
             setAdmin(false);
         } else {
             const parsed = await res.json();
             if (!parsed) {
                 setAdmin(false);
-            }
-            else {
+            } else {
                 setAdmin(parsed);
             }
         }
     } catch (e) {
-        if(onError) {
-            onError((e as Error).message);
-        }
+        notificationHandler.error((e as Error).message);
     }
 };
 
@@ -92,7 +91,7 @@ export const checkCredentials = async (
  * @param {boolean} disabled - whether the calculus should be disabled
  * @param {string} adminKey - the admin key to proof authenticity of the request
  * @param {CallableFunction} changeConfig - Change config handler
- * @param {CallableFunction} onError - Error handler
+ * @param {NotificationHandler} notificationHandler - notification handler
  * @returns {void}
  */
 export const setCalculusState = async (
@@ -101,7 +100,7 @@ export const setCalculusState = async (
     disabled: boolean,
     adminKey: string,
     changeConfig: (cfg: Config) => void,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) => {
     const url = `${server}/admin/setCalculusState`;
 
@@ -115,16 +114,18 @@ export const setCalculusState = async (
             method: "POST",
             body: `calculus=${encodeURIComponent(
                 calculus,
-            )}&enable=${encodeURIComponent(JSON.stringify(disabled))}&mac=${calcMac(payload)}`,
+            )}&enable=${encodeURIComponent(
+                JSON.stringify(disabled),
+            )}&mac=${calcMac(payload)}`,
         });
         if (res.status !== 200) {
-            onError(await res.text());
+            notificationHandler.error(await res.text());
             return;
         }
 
-        getConfig(server, changeConfig, onError);
+        getConfig(server, changeConfig, notificationHandler);
     } catch (e) {
-        onError((e as Error).message);
+        notificationHandler.error((e as Error).message);
     }
 };
 
@@ -136,8 +137,7 @@ export const setCalculusState = async (
  * @param {Example} example - the Example object
  * @param {string} adminKey - the admin key to proof authenticity of the request
  * @param {CallableFunction} changeConfig - Change config handler
- * @param {CallableFunction} onError - Error handler
- * @param {CallableFunction} onSuccess - Success handler
+ * @param {NotificationHandler} notificationHandler - notification handler
  * @returns {void}
  */
 export const addExample = async (
@@ -145,12 +145,13 @@ export const addExample = async (
     example: Example,
     adminKey: string,
     changeConfig: (cfg: Config) => void,
-    onError: (msg: string) => void,
-    onSuccess: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) => {
     const url = `${server}/admin/addExample`;
 
-    const payload = `kbae|${JSON.stringify(example)}|${getCurrentDate()}|${adminKey}`;
+    const payload = `kbae|${JSON.stringify(
+        example,
+    )}|${getCurrentDate()}|${adminKey}`;
 
     try {
         const res = await fetch(url, {
@@ -163,13 +164,13 @@ export const addExample = async (
             )}&mac=${calcMac(payload)}`,
         });
         if (res.status !== 200) {
-            onError(await res.text());
+            notificationHandler.error(await res.text());
             return;
         }
-        getConfig(server, changeConfig, onError);
-        onSuccess("Example added");
+        getConfig(server, changeConfig, notificationHandler);
+        notificationHandler.success("Example added");
     } catch (e) {
-        onError((e as Error).message);
+        notificationHandler.error((e as Error).message);
     }
 };
 
@@ -181,8 +182,7 @@ export const addExample = async (
  * @param {number} exampleID - the ID of the example to be deleted
  * @param {string} adminKey - the admin key to proof authenticity of the request
  * @param {CallableFunction} changeConfig - Change config handler
- * @param {CallableFunction} onError - Error handler
- * @param {CallableFunction} onSuccess - Success handler
+ * @param {NotificationHandler} notificationHandler - notification handler
  * @returns {void}
  */
 export const delExample = async (
@@ -190,8 +190,7 @@ export const delExample = async (
     exampleID: number,
     adminKey: string,
     changeConfig: (cfg: Config) => void,
-    onError: (msg: string) => void,
-    onSuccess: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) => {
     const url = `${server}/admin/delExample`;
 
@@ -208,12 +207,12 @@ export const delExample = async (
             )}&mac=${calcMac(payload)}`,
         });
         if (res.status !== 200) {
-            onError(await res.text());
+            notificationHandler.error(await res.text());
             return;
         }
-        getConfig(server, changeConfig, onError);
-        onSuccess("Example deleted");
+        getConfig(server, changeConfig, notificationHandler);
+        notificationHandler.success("Example deleted");
     } catch (e) {
-        onError((e as Error).message);
+        notificationHandler.error((e as Error).message);
     }
 };

@@ -4,6 +4,8 @@ import * as style from "./style.scss";
 import { ROUTES, LinkGroup, SingleLink } from "./routes";
 import { classMap } from "../../../util/class-map";
 import { Link } from "preact-router";
+import { useAppState } from "../../../util/app-state";
+import { TableauxCalculusType } from "../../../types/calculus";
 
 interface NavProps {
     /**
@@ -25,16 +27,24 @@ const Nav: preact.FunctionalComponent<NavProps> = ({
     onLinkClick,
     currentUrl,
 }) => {
+    const { config } = useAppState();
+
     return (
         <nav class={style.nav}>
-            {ROUTES.map((r) => (
-                <NavGroup
-                    group={r}
-                    onLinkClick={onLinkClick}
-                    currentUrl={currentUrl}
-                    hamburger={hamburger}
-                />
-            ))}
+            {ROUTES.map((r) => {
+                const filteredRoutes = r.routes.filter((l) =>
+                    config.disabled.includes(l.path as TableauxCalculusType),
+                );
+
+                return filteredRoutes.length === r.routes.length ? undefined : (
+                    <NavGroup
+                        group={r}
+                        onLinkClick={onLinkClick}
+                        currentUrl={currentUrl}
+                        hamburger={hamburger}
+                    />
+                );
+            })}
         </nav>
     );
 };
@@ -113,6 +123,8 @@ class NavGroup extends Component<NavGroupProps, NavGroupState> {
         { group, onLinkClick, currentUrl, hamburger }: NavGroupProps,
         { open }: NavGroupState,
     ) {
+        const { config } = useAppState();
+
         const isCurrent =
             !hamburger &&
             group.routes.find((r) => currentUrl.includes(r.path)) !== undefined;
@@ -140,13 +152,17 @@ class NavGroup extends Component<NavGroupProps, NavGroupState> {
                     aria-label="submenu"
                     aria-hidden={`${!open}`}
                 >
-                    {group.routes.map((r) => (
-                        <NavLink
-                            link={r}
-                            onClick={onLinkClick}
-                            currentUrl={currentUrl}
-                        />
-                    ))}
+                    {group.routes.map((r) =>
+                        config.disabled.includes(
+                            r.path as TableauxCalculusType,
+                        ) ? undefined : (
+                            <NavLink
+                                link={r}
+                                onClick={onLinkClick}
+                                currentUrl={currentUrl}
+                            />
+                        ),
+                    )}
                 </nav>
             </div>
         );

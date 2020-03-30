@@ -1,8 +1,7 @@
 import { h, VNode } from "preact";
 import { useRef } from "preact/hooks";
-import { circle } from "../../components/resolution/circle/style.scss";
 import Switch from "../../components/switch";
-import { Calculus } from "../../types/app";
+import { Calculus } from "../../types/calculus";
 import { setCalculusState } from "../../util/admin";
 import { useAppState } from "../../util/app-state";
 import * as style from "./style.scss";
@@ -40,12 +39,25 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
     route: { href, name, image, viewBox },
     showSwitch = false,
 }) => {
-    const { config, server, onError, adminKey, setConfig } = useAppState();
+    const {
+        config,
+        server,
+        notificationHandler,
+        adminKey,
+        setConfig,
+    } = useAppState();
 
     const link = useRef<HTMLAnchorElement>();
 
     const handleChange = (checked: boolean) => {
-        setCalculusState(server, href, checked, adminKey, setConfig, onError);
+        setCalculusState(
+            server,
+            href,
+            checked,
+            adminKey,
+            setConfig,
+            notificationHandler,
+        );
     };
 
     return (
@@ -69,8 +81,9 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
                 </svg>
             </a>
             <div
-                class={`${style.calculusItemTitleWrapper} ${showSwitch &&
-                    style.calculusItemTitleWrapperShowSwitch}`}
+                class={`${style.calculusItemTitleWrapper} ${
+                    showSwitch && style.calculusItemTitleWrapperShowSwitch
+                }`}
             >
                 <a href={`/${href}`}>
                     <h3 class={style.calculusItemTitle}>{name}</h3>
@@ -99,9 +112,7 @@ const Home: preact.FunctionalComponent = () => {
                     {ROUTES.map((r) =>
                         isAdmin ? (
                             <CalculusItem route={r} showSwitch={true} />
-                        ) : config.disabled.includes(r.href) ? (
-                            undefined
-                        ) : (
+                        ) : config.disabled.includes(r.href) ? undefined : (
                             <CalculusItem route={r} />
                         ),
                     )}

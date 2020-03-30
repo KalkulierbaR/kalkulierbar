@@ -21,6 +21,7 @@ import DPLLView from "async!../routes/dpll/view";
 import { NotificationHandler } from "../types/app/notification";
 import { AppStateActionType } from "../types/app/action";
 import { Calculus } from "../types/calculus";
+import { getConfig, checkCredentials } from "../util/admin";
 
 const SMALL_SCREEN_THRESHOLD = 700;
 
@@ -65,6 +66,8 @@ const App: preact.FunctionalComponent = () => {
         server,
         dispatch,
         notificationHandler,
+        setConfig,
+        adminKey,
     } = useAppState();
     const saveScreenSize = (smallScreen: boolean) =>
         dispatch({
@@ -88,9 +91,9 @@ const App: preact.FunctionalComponent = () => {
     useEffect(() => {
         checkServer(server, notificationHandler);
 
-        getConfig(server, setConfig, onError);
+        getConfig(server, setConfig, notificationHandler);
 
-        if(adminKey) {
+        if (adminKey) {
             checkCredentials(
                 server,
                 adminKey,
@@ -99,6 +102,7 @@ const App: preact.FunctionalComponent = () => {
                         type: AppStateActionType.SET_ADMIN,
                         value: userIsAdmin,
                     }),
+                notificationHandler,
             );
         }
 

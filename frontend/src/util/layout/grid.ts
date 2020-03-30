@@ -1,8 +1,8 @@
-import { Clause, FOLiteral } from "../../types/clause";
 import { ArrayLayout, LayoutItem } from "../../types/layout";
 import { clauseToString } from "../clause";
 import { maxBy } from "../max-by";
 import { estimateSVGTextWidth } from "../text-width";
+import { Clause, FOLiteral } from "../../types/calculus/clause";
 
 const HEIGHT_PADDING = 16;
 const WIDTH_PADDING = 32;

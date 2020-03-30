@@ -1,11 +1,13 @@
 import { Fragment, h } from "preact";
 import { route } from "preact-router";
-import { AppStateActionType, CalculusType, Example } from "../../../types/app";
 import { delExample } from "../../../util/admin";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../btn";
 import DeleteIcon from "../../icons/delete";
 import * as style from "./style.scss";
+import { CalculusType } from "../../../types/calculus";
+import { Example } from "../../../types/app/example";
+import { AppStateActionType } from "../../../types/app/action";
 
 interface Props {
     /**
@@ -26,8 +28,8 @@ interface Props {
  */
 const onDelete = (e: Event, index: number) => {
     e.stopImmediatePropagation();
-    const { server, onError, adminKey, setConfig, onSuccess } = useAppState();
-    delExample(server, index, adminKey, setConfig, onError, onSuccess);
+    const { server, notificationHandler, adminKey, setConfig } = useAppState();
+    delExample(server, index, adminKey, setConfig, notificationHandler);
 };
 
 /**
@@ -48,7 +50,7 @@ const normalizeInput = (input: string) => {
  * @returns {void}
  */
 const useExample = async (example: Example) => {
-    const { server, onError, onChange, dispatch } = useAppState();
+    const { server, notificationHandler, onChange, dispatch } = useAppState();
     const calculus = example.calculus;
     const url = `${server}/${example.calculus}/parse`;
 
@@ -70,14 +72,14 @@ const useExample = async (example: Example) => {
             body: `formula=${example.formula}&params=${example.params}`,
         });
         if (response.status !== 200) {
-            onError(await response.text());
+            notificationHandler.error(await response.text());
         } else {
             const parsed = await response.json();
             onChange(calculus, parsed);
             route(`/${calculus}/view`);
         }
     } catch (e) {
-        onError((e as Error).message);
+        notificationHandler.error((e as Error).message);
     }
 };
 
@@ -106,16 +108,12 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                     >
                         {example.name ? (
                             <h3 class="">{example.name}</h3>
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                         {example.description ? (
                             <p class={style.description}>
                                 {example.description}
                             </p>
-                        ) : (
-                            undefined
-                        )}
+                        ) : undefined}
                         <p>
                             {decodeURIComponent(example.formula)
                                 .split(/\n/)
@@ -132,9 +130,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                             </Fragment>
                         )}
                     </div>
-                ) : (
-                    undefined
-                ),
+                ) : undefined,
             )}
         </div>
     );

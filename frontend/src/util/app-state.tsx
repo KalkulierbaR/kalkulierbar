@@ -10,6 +10,7 @@ import {
     NotificationHandler,
     NotificationType,
 } from "../types/app/notification";
+import { Config } from "../types/app/config";
 
 const isDeployed = location.port !== "8080";
 
@@ -81,7 +82,7 @@ const reducer: Reducer<AppState, AppStateAction> = (
         case AppStateActionType.SET_ADMIN_KEY:
             return { ...state, adminKey: action.value };
         case AppStateActionType.SET_ADMIN:
-            if(!action.value){
+            if (!action.value) {
                 return {
                     ...state,
                     isAdmin: action.value,

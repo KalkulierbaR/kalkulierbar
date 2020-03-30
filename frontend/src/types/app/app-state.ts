@@ -7,6 +7,7 @@ import { Notification, NotificationHandler } from "./notification";
 import { Theme } from "./theme";
 import { TutorialMode } from "./tutorial";
 import { NCTableauxState } from "../calculus/nc-tableaux";
+import { Config } from "./config";
 
 /**
  * The state of the application
@@ -60,6 +61,9 @@ export interface AppState {
      * The current tutorial mode
      */
     tutorialMode: TutorialMode;
+    isAdmin: boolean;
+    adminKey: string;
+    config: Config;
 }
 
 /**
@@ -71,6 +75,7 @@ export interface DerivedAppState extends AppState {
         calculus: C,
         state: AppState[C],
     ) => void;
+    setConfig: (cfg: Config) => void;
     dispatch: (a: AppStateAction) => void;
 }
 

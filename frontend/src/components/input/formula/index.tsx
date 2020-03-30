@@ -14,6 +14,7 @@ import TextInput from "../text";
 import * as style from "./style.scss";
 import { CalculusType, Params, FOCalculus } from "../../../types/calculus";
 import { AppStateActionType } from "../../../types/app/action";
+import { addExample } from "../../../util/admin";
 
 declare module "preact" {
     namespace JSX {
@@ -115,8 +116,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         },
                         adminKey,
                         setConfig,
-                        onError,
-                        onSuccess,
+                        notificationHandler,
                     );
                     setShowCreateExampleDialog(false);
                     setExampleNameInput("");

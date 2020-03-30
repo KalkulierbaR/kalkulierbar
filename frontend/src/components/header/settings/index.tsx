@@ -12,12 +12,16 @@ import ThemeLight from "../../icons/theme-light";
 import ThemeDark from "../../icons/theme-dark";
 import ThemeAuto from "../../icons/theme-auto";
 import Btn from "../../btn";
+import { checkCredentials } from "../../../util/admin";
+import LogOutIcon from "../../icons/log-out";
+import LogInIcon from "../../icons/log-in";
 
 const Settings: preact.FunctionalComponent = () => {
     return (
         <div class={style.settings}>
             <ThemeSwitcher />
             <ServerInput />
+            <AdminKeyInput />
         </div>
     );
 };
@@ -38,14 +42,14 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     close,
 }) => {
     const { dispatch, server } = useAppState();
-    const [newServer, setServer] = useState(server);
+    const [serverInput, setServerInput] = useState(server);
 
     const dispatchServer = useCallback(() => {
         dispatch({
             type: AppStateActionType.SET_SERVER,
-            value: newServer.trim(),
+            value: serverInput.trim(),
         });
-    }, [newServer]);
+    }, [serverInput]);
 
     const onSubmit = useCallback(() => {
         dispatchServer();
@@ -67,13 +71,13 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     );
 
     return (
-        <div class={style.serverInputWrapper}>
+        <div class={style.settingsInputWrapper}>
             <div class={style.overlay} />
             <TextInput
-                class={style.serverInput}
+                class={style.settingsInput}
                 label={showLabel ? "Server" : undefined}
-                onChange={setServer}
-                value={server}
+                onChange={setServerInput}
+                syncValue={serverInput}
                 type="url"
                 autoComplete={true}
                 onKeyDown={handleEnter}
@@ -81,6 +85,97 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                     <FAB
                         icon={<SaveIcon />}
                         label="Save Server URL"
+                        mini={true}
+                        onClick={onSubmit}
+                    />
+                }
+            />
+        </div>
+    );
+};
+
+const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
+    showLabel = true,
+    close,
+}) => {
+    const {
+        dispatch,
+        isAdmin,
+        adminKey,
+        notificationHandler,
+        server,
+    } = useAppState();
+
+    const [adminKeyInput, setAdminKeyInput] = useState(adminKey);
+
+    const dispatchAdminKey = useCallback(() => {
+        dispatch({
+            type: AppStateActionType.SET_ADMIN_KEY,
+            value: adminKeyInput,
+        });
+    }, [adminKeyInput]);
+
+    const onSubmit = useCallback(() => {
+        dispatchAdminKey();
+        checkCredentials(
+            server,
+            adminKeyInput,
+            (userIsAdmin) => {
+                dispatch({
+                    type: AppStateActionType.SET_ADMIN,
+                    value: userIsAdmin,
+                });
+            },
+            notificationHandler,
+        );
+        setAdminKeyInput("");
+
+        if (document.activeElement) {
+            (document.activeElement as HTMLElement).blur();
+        }
+        if (close) {
+            close();
+        }
+    }, [dispatchAdminKey]);
+
+    const handleEnter = useCallback(
+        (e: KeyboardEvent) => {
+            if (e.keyCode === 13) {
+                onSubmit();
+            }
+        },
+        [dispatchAdminKey],
+    );
+
+    return isAdmin ? (
+        <div class={style.buttonContainer}>
+            <Btn
+                className={style.themeSwitcher}
+                icon={<LogOutIcon />}
+                label="Logout"
+                onClick={() =>
+                    dispatch({
+                        type: AppStateActionType.SET_ADMIN,
+                        value: false,
+                    })
+                }
+            />
+        </div>
+    ) : (
+        <div class={style.settingsInputWrapper}>
+            <div class={style.overlay} />
+            <TextInput
+                class={style.settingsInput}
+                label={showLabel ? "Admin Login" : undefined}
+                onChange={setAdminKeyInput}
+                syncValue={adminKeyInput}
+                type="password"
+                autoComplete={true}
+                onKeyDown={handleEnter}
+                submitButton={
+                    <FAB
+                        icon={<LogInIcon />}
+                        label="Login"
                         mini={true}
                         onClick={onSubmit}
                     />
@@ -121,15 +216,13 @@ const ThemeSwitcher: preact.FunctionalComponent = () => {
     };
 
     return (
-        <div onClick={onClick} class={style.themeContainer}>
+        <div class={style.buttonContainer}>
             <Btn
-                class={style.themeSwitcher}
-                title="Change color theme"
-                id="theme-switcher"
-            >
-                {themeSwitcherIcon()}
-            </Btn>
-            <label for="theme-switcher">Current theme: {theme}</label>
+                onClick={onClick}
+                className={style.themeSwitcher}
+                icon={themeSwitcherIcon()}
+                label={`Theme:  ${theme}`}
+            />
         </div>
     );
 };

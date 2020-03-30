@@ -33,4 +33,6 @@ export {
     getInitialCandidateClauses,
     recalculateCandidateClauses,
     addClause,
+    removeClause,
+    replaceClause,
 } from "./candidate-clauses";

@@ -20,6 +20,7 @@ import {
     HyperResolutionMove,
     instanceOfFOResState,
     instanceOfPropResState,
+    VisualHelp,
 } from "../../../types/calculus/resolution";
 import { VarAssign } from "../../../types/calculus/tableaux";
 import { useAppState } from "../../../util/app-state";
