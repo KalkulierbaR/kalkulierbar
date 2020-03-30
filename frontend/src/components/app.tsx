@@ -37,6 +37,7 @@ async function checkServer(
 ) {
     try {
         await fetch(url);
+        notificationHandler.success(`Server ${url} is available`);
     } catch (e) {
         notificationHandler.error(`Server ${url} appears to be offline`);
     }
@@ -90,7 +91,9 @@ const App: preact.FunctionalComponent = () => {
 
     useEffect(() => {
         checkServer(server, notificationHandler);
+    }, [server]);
 
+    useEffect(() => {
         getConfig(server, setConfig, notificationHandler);
 
         if (adminKey) {
