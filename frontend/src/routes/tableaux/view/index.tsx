@@ -6,7 +6,7 @@ import OptionList from "../../../components/input/option-list";
 import VarAssignList from "../../../components/input/var-assign-list";
 import TableauxFAB from "../../../components/tableaux/fab";
 import TableauxTreeView from "../../../components/tableaux/tree";
-import { Calculus, TableauxCalculusType } from "../../../types/calculus";
+import { TableauxCalculusType } from "../../../types/calculus";
 import {
     instanceOfFOTabState,
     instanceOfPropTabState,
@@ -27,8 +27,8 @@ import {
     sendLemma,
     updateDragTransform,
 } from "../../../util/tableaux";
-import { foExample, propExample } from "./example";
 import * as style from "./style.scss";
+import { route } from "preact-router";
 
 interface Props {
     /**
@@ -46,12 +46,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         onChange,
     } = useAppState();
 
-    let state = cState;
+    const state = cState;
     if (!state) {
-        // return <p>Keine Daten vorhanden</p>;
-        // Default state for easy testing
-        state = calculus === Calculus.propTableaux ? propExample : foExample;
-        onChange(calculus, state);
+        route(`/${calculus}`);
+        return null;
     }
 
     const [dragTransforms, setDragTransforms] = useState<

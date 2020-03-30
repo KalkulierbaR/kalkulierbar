@@ -8,7 +8,7 @@ import ResolutionFactorizeDialog from "../../../components/resolution/dialog/fac
 import ResolutionResolveDialog from "../../../components/resolution/dialog/resolve";
 import ResolutionFAB from "../../../components/resolution/fab";
 import ResolutionGrid from "../../../components/resolution/grid";
-import { Calculus, ResolutionCalculusType } from "../../../types/calculus";
+import { ResolutionCalculusType } from "../../../types/calculus";
 import {
     CandidateClause,
     getCandidateCount,
@@ -43,7 +43,7 @@ import {
     sendResolveCustom,
     sendResolveUnify,
 } from "../../../util/resolution";
-import { foExample, propExample } from "./example";
+import { route } from "preact-router";
 
 interface Props {
     /**
@@ -60,12 +60,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         onChange,
     } = useAppState();
 
-    let state = cState;
+    const state = cState;
     if (!state) {
-        // return <p>Keine Daten vorhanden</p>;
-        // Default state for easy testing
-        state = calculus === Calculus.propResolution ? propExample : foExample;
-        onChange(calculus, state);
+        route(`/${calculus}`);
+        return null;
     }
 
     const apiInfo = { onChange, notificationHandler, server };

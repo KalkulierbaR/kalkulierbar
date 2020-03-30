@@ -18,8 +18,8 @@ import {
     sendModelCheck,
     sendProp,
 } from "../../../util/dpll";
-import dpllExampleState from "./example";
 import * as style from "./style.scss";
+import { route } from "preact-router";
 
 interface Props {}
 
@@ -48,7 +48,12 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
 
     const [showModelDialog, setShowModelDialog] = useState(false);
 
-    const state = cState || dpllExampleState;
+    if (!cState) {
+        route(`/${Calculus.dpll}`);
+        return null;
+    }
+
+    const state = cState;
 
     const clauseSet = calculateClauseSet(state, branch);
 

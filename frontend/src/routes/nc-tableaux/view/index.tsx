@@ -12,7 +12,7 @@ import { DragTransform } from "../../../types/ui";
 import { useAppState } from "../../../util/app-state";
 import { collectVarsFromNode, sendClose } from "../../../util/nc-tableaux";
 import { updateDragTransform } from "../../../util/tableaux";
-import exampleState from "./example";
+import { route } from "preact-router";
 
 const NCTableauxView: preact.FunctionalComponent = () => {
     const {
@@ -22,11 +22,11 @@ const NCTableauxView: preact.FunctionalComponent = () => {
         notificationHandler,
     } = useAppState();
 
-    let state = cState;
+    const state = cState;
 
     if (!state) {
-        state = exampleState;
-        onChange(Calculus.ncTableaux, state);
+        route(`/${Calculus.ncTableaux}`);
+        return null;
     }
 
     const [selectedNodeId, setSelectedNode] = useState<number | undefined>(
