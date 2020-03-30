@@ -2,7 +2,11 @@ import { h } from "preact";
 import { useState } from "preact/hooks";
 import Dialog from "../../../../components/dialog";
 import OptionList from "../../../../components/input/option-list";
-import { Atom, FOAtom, SelectedClauses } from "../../../../types/calculus/clause";
+import {
+    Atom,
+    FOAtom,
+    SelectedClauses,
+} from "../../../../types/calculus/clause";
 import {
     FOResolutionState,
     instanceOfFOResState,

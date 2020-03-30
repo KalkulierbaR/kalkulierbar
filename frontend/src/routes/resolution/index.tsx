@@ -99,7 +99,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     )}
                 </div>
             </div>
-            <ExampleList calculus={calculus}/>
+            <ExampleList calculus={calculus} />
         </Fragment>
     );
 };

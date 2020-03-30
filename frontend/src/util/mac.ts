@@ -16,9 +16,7 @@ export const getCurrentDate = () => {
  * @param {string} payload - The payload to hash
  * @returns {string} - The keccak-256 hash of the payload
  */
-export const calcMac = (
-    payload: string,
-) => {
+export const calcMac = (payload: string) => {
     const keccak = new Keccak(256);
-    return keccak.update(payload).digest('hex');
+    return keccak.update(payload).digest("hex");
 };

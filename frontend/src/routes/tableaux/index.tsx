@@ -163,7 +163,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
-            <ExampleList calculus={calculus}/>
+            <ExampleList calculus={calculus} />
         </Fragment>
     );
 };

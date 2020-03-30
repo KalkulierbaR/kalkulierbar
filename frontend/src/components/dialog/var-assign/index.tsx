@@ -55,13 +55,13 @@ interface Props {
 
 const VarAssignDialog: preact.FunctionalComponent<Props> = ({
     open,
-    dialogLabel= "Variable assignments",
+    dialogLabel = "Variable assignments",
     onClose,
     vars,
     manualVarAssignOnly = false,
     submitVarAssignCallback,
-    submitLabel= "Assign variables",
-    secondSubmitLabel= "Automatic assignment",
+    submitLabel = "Assign variables",
+    secondSubmitLabel = "Automatic assignment",
     secondSubmitEvent,
     className,
 }) => {
@@ -127,11 +127,7 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
     };
 
     return (
-        <Dialog
-            open={open}
-            label={dialogLabel}
-            onClose={onClose}
-        >
+        <Dialog open={open} label={dialogLabel} onClose={onClose}>
             <div class={`card ${className}`}>
                 {vars.map((variable, index) => (
                     <p key={variable}>
@@ -146,16 +142,15 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
                         />
                     </p>
                 ))}
-                <Btn
-                    onClick={submitManualVarAssign}
-                    label={submitLabel}
-                />
-                {!manualVarAssignOnly && secondSubmitLabel && secondSubmitEvent && (
-                    <Btn
-                        onClick={() => secondSubmitEvent(true)}
-                        label={secondSubmitLabel}
-                    />
-                )}
+                <Btn onClick={submitManualVarAssign} label={submitLabel} />
+                {!manualVarAssignOnly &&
+                    secondSubmitLabel &&
+                    secondSubmitEvent && (
+                        <Btn
+                            onClick={() => secondSubmitEvent(true)}
+                            label={secondSubmitLabel}
+                        />
+                    )}
             </div>
         </Dialog>
     );

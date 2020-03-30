@@ -77,10 +77,14 @@ const TutorialDialog: preact.FunctionalComponent<Props> = ({ calculus }) => {
                                 alt="Tableaux Lemma Move"
                             />
                             <p>
-                                Select a node which you want to expand with a lemma and choose the lemma rule.
-                                Now all closed nodes are highlighted yellow.
-                                You can only use a lemma node, which is no leaf and who's immediate parent is a transitive parent of your selected node.
-                                If you choose an appropriate lemma node, your selected node is expanded with the negation of the lemma node.
+                                Select a node which you want to expand with a
+                                lemma and choose the lemma rule. Now all closed
+                                nodes are highlighted yellow. You can only use a
+                                lemma node, which is no leaf and who's immediate
+                                parent is a transitive parent of your selected
+                                node. If you choose an appropriate lemma node,
+                                your selected node is expanded with the negation
+                                of the lemma node.
                             </p>
                         </div>
                     </div>
