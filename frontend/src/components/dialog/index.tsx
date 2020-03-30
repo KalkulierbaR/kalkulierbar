@@ -59,8 +59,15 @@ const Dialog: preact.FunctionalComponent<Props> = ({
 
     // Suppress click, when we are actually just releasing the mouse outside the dialog
     const handleMouseDown = () => {
+        const start = new Date();
+
         const handleMouseUp = () => {
-            enableDrag(true);
+            const now = new Date();
+
+            const time = now.valueOf() - start.valueOf();
+
+            if (time >= 500) enableDrag(true);
+
             window.removeEventListener("mouseup", handleMouseUp);
         };
 
