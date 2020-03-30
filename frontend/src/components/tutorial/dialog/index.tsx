@@ -14,14 +14,50 @@ import {
     Calculus,
 } from "../../../types/calculus";
 
-interface Props {
+
+interface VideoTutorialProps {
+    /**
+     * The tutorial title
+     */
+    title: string;
+    /**
+     * The video`s source
+     */
+    videoSrc: string;
+    /**
+     * The tutorial text
+     */
+    text: string;
+    /**
+     * The video`s alternative text
+     */
+    videoAlt?: string;
+}
+
+const VideoTutorial: preact.FunctionalComponent<VideoTutorialProps> = ({
+    title,
+    videoSrc,
+    text,
+    videoAlt= title,
+}) => (
+<div class={style.child}>
+    <h3>{title}</h3>
+    <Video
+        src={videoSrc}
+        alt={videoAlt}
+    />
+    <p>{text}</p>
+</div>
+);
+
+interface TutorialDialogProps {
     /**
      * The currently active calculus
      */
     calculus: CalculusType;
 }
 
-const TutorialDialog: preact.FunctionalComponent<Props> = ({ calculus }) => {
+const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({ calculus }) => {
     const { tutorialMode } = useAppState();
     const [showDialog, setShowDialog] = useState(
         getHighlightCheck(tutorialMode),
@@ -47,190 +83,119 @@ const TutorialDialog: preact.FunctionalComponent<Props> = ({ calculus }) => {
             >
                 {TableauxCalculus.includes(calculus) && (
                     <div class={style.container}>
-                        <div class={style.child}>
-                            <h3>Expand Move</h3>
-                            <Video
-                                src="../../../assets/videos/prop_tableaux_expand.mp4"
-                                alt="Tableaux Expand Move"
-                            />
-                            <p>
-                                You can expand the tree by choosing a leaf and a
-                                clause.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Close Move</h3>
-                            <Video
-                                src="../../../assets/videos/prop_tableaux_close.mp4"
-                                alt="Tableaux Close Move"
-                            />
-                            <p>
-                                Close a leaf with a complementary node on the
+                        <VideoTutorial
+                            title="Expand Move"
+                            videoSrc="../../../assets/videos/prop_tableaux_expand.mp4"
+                            text="You can expand the tree by choosing a leaf and a clause."
+                        />
+                        <VideoTutorial
+                            title="Close Move"
+                            videoSrc="../../../assets/videos/prop_tableaux_close.mp4"
+                            text="Close a leaf with a complementary node on the
                                 path to the root. The proof is complete when all
-                                leafs are closed.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Lemma Move</h3>
-                            <Video
-                                src="../../../assets/videos/prop_tableaux_lemma.mp4"
-                                alt="Tableaux Lemma Move"
-                            />
-                            <p>
-                                Select a node which you want to expand with a
+                                leafs are closed."
+                        />
+                        <VideoTutorial
+                            title="Lemma Move"
+                            videoSrc="../../../assets/videos/prop_tableaux_lemma.mp4"
+                            text="Select a node which you want to expand with a
                                 lemma and choose the lemma rule. Now all closed
                                 nodes are highlighted yellow. You can only use a
                                 lemma node, which is no leaf and who's immediate
                                 parent is a transitive parent of your selected
                                 node. If you choose an appropriate lemma node,
                                 your selected node is expanded with the negation
-                                of the lemma node.
-                            </p>
-                        </div>
+                                of the lemma node."
+                        />
                     </div>
                 )}
                 {ResolutionCalculus.includes(calculus) && (
                     <div class={style.container}>
-                        <div class={style.child}>
-                            <h3>Resolve Move</h3>
-                            <Video
-                                src="../../../assets/videos/prop_resolution_resolve.mp4"
-                                alt="Resolution Resolve Move"
-                            />
-                            <p>
-                                Choose two clauses with complementary atoms to
+                        <VideoTutorial
+                            title="Resolve Move"
+                            videoSrc="../../../assets/videos/prop_resolution_resolve.mp4"
+                            text="Choose two clauses with complementary atoms to
                                 resolve them. The proof is complete when the
-                                empty clause has been resolved.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Factorize Move</h3>
-                            <Video
-                                src="../../../assets/videos/prop_resolution_factorize.mp4"
-                                alt="Resolution Factorize Move"
-                            />
-                            <p>
-                                If a clause has multiple identical atoms, you
-                                can factorize it.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Hyper Resolution Move</h3>
-                            <Video
-                                src="../../../assets/videos/prop_resolution_hyper.mp4"
-                                alt="Hyper Resolution Move"
-                            />
-                            <p>
-                                You can resolve multiple clauses at once with
+                                empty clause has been resolved."
+                        />
+                        <VideoTutorial
+                            title="Factorize Move"
+                            videoSrc="../../../assets/videos/prop_resolution_factorize.mp4"
+                            text="If a clause has multiple identical atoms, you
+                                can factorize it."
+                        />
+                        <VideoTutorial
+                            title="Hyper Resolution Move"
+                            videoSrc="../../../assets/videos/prop_resolution_hyper.mp4"
+                            text="You can resolve multiple clauses at once with
                                 the hyper resolution. The main clause is
                                 selected first. Then you can add side premises
-                                which only contain positive atoms.
-                            </p>
-                        </div>
+                                which only contain positive atoms."
+                        />
                     </div>
                 )}
                 {calculus === Calculus.dpll && (
                     <div class={style.container}>
-                        <div class={style.child}>
-                            <h3>Resolve Move</h3>
-                            <Video
-                                src="../../../assets/videos/dpll_resolve.mp4"
-                                alt="DPLL Resolve Move"
-                            />
-                            <p>
-                                Choose two clauses with complementary atoms to
+                        <VideoTutorial
+                            title="Resolve Move"
+                            videoSrc="../../../assets/videos/dpll_resolve.mp4"
+                            text="Choose two clauses with complementary atoms to
                                 resolve them. The proof is complete when the
                                 empty clause has been resolved in all paths of
-                                the tree.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Split Move</h3>
-                            <Video
-                                src="../../../assets/videos/dpll_split.mp4"
-                                alt="DPLL Split Move"
-                            />
-                            <p>
-                                You can split the tree by selecting a node and a
+                                the tree."
+                        />
+                        <VideoTutorial
+                            title="Split Move"
+                            videoSrc="../../../assets/videos/dpll_split.mp4"
+                            text="You can split the tree by selecting a node and a
                                 literal. Now you need to proof both paths
-                                separately.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Prune Move</h3>
-                            <Video
-                                src="../../../assets/videos/dpll_prune.mp4"
-                                alt="DPLL Prune Move"
-                            />
-                            <p>
-                                Select a node and apply the prune rule to undo
-                                all steps below that node.
-                            </p>
-                        </div>
+                                separately."
+                        />
+                        <VideoTutorial
+                            title="Prune Move"
+                            videoSrc="../../../assets/videos/dpll_prune.mp4"
+                            text="Select a node and apply the prune rule to undo
+                                all steps below that node."
+                        />
                     </div>
                 )}
                 {calculus === Calculus.ncTableaux && (
                     <div class={style.container}>
-                        <div class={style.child}>
-                            <h3>Alpha Move</h3>
-                            <Video
-                                src="../../../assets/videos/nc_tableaux_alpha.mp4"
-                                alt="NC Tableaux Alpha Move"
-                            />
-                            <p>
-                                This splits a formula on it's conjunctions into
+                        <VideoTutorial
+                            title="Alpha Move"
+                            videoSrc="../../../assets/videos/nc_tableaux_alpha.mp4"
+                            text="This splits a formula on it's conjunctions into
                                 multiple nodes, which are chained onto the
-                                current tree path.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Beta Move</h3>
-                            <Video
-                                src="../../../assets/videos/nc_tableaux_beta.mp4"
-                                alt="NC Tableaux Beta Move"
-                            />
-                            <p>
-                                This splits a formula on it's disjunctions and
-                                adds multiple leafs to the current tree path.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Gamma Move</h3>
-                            <Video
-                                src="../../../assets/videos/nc_tableaux_gamma.mp4"
-                                alt="NC Tableaux Gamma Move"
-                            />
-                            <p>
-                                This resolves the outermost universal quantifier
+                                current tree path."
+                        />
+                        <VideoTutorial
+                            title="Beta Move"
+                            videoSrc="../../../assets/videos/nc_tableaux_beta.mp4"
+                            text="This splits a formula on it's disjunctions and
+                                adds multiple leafs to the current tree path."
+                        />
+                        <VideoTutorial
+                            title="Gamma Move"
+                            videoSrc="../../../assets/videos/nc_tableaux_gamma.mp4"
+                            text="This resolves the outermost universal quantifier
                                 of a formula and adds a leaf to the current tree
-                                path.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Delta Move</h3>
-                            <Video
-                                src="../../../assets/videos/nc_tableaux_delta.mp4"
-                                alt="NC Tableaux Delta Move"
-                            />
-                            <p>
-                                This resolves the outermost existential
+                                path."
+                        />
+                        <VideoTutorial
+                            title="Delta Move"
+                            videoSrc="../../../assets/videos/nc_tableaux_delta.mp4"
+                            text="This resolves the outermost existential
                                 quantifier of a formula and adds a leaf to the
-                                current tree path.
-                            </p>
-                        </div>
-                        <div class={style.child}>
-                            <h3>Close Move</h3>
-                            <Video
-                                src="../../../assets/videos/nc_tableaux_close.mp4"
-                                alt="NC Tableaux Close Move"
-                            />
-                            <p>
-                                Choose two clauses with complementary atoms to
+                                current tree path."
+                        />
+                        <VideoTutorial
+                            title="Close Move"
+                            videoSrc="../../../assets/videos/nc_tableaux_close.mp4"
+                            text="Choose two clauses with complementary atoms to
                                 resolve them. The proof is complete if the empty
                                 clause has been resolved in all paths of the
-                                tree.
-                            </p>
-                        </div>
+                                tree."
+                        />
                     </div>
                 )}
             </Dialog>
