@@ -8,6 +8,7 @@
         "start:production": "npm run -s serve",
         "start:development": "npm run -s dev",
         "build": "preact build --prerender=false",
+        "format": "prettier src/\\{components,routes,style,types,util\\}/**/* --write",
         "serve": "preact build --prerender=false && serve build/ -s -l ${PORT:-8080}",
         "serve-only": "serve build/ -s -l ${PORT:-8080}",
         "dev": "preact watch",
