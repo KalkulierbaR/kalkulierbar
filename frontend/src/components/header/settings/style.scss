@@ -54,6 +54,7 @@
     transition: background-color 0.2s ease;
     @media (max-width: $hamburgerBreakpoint) {
         .settings-input-wrapper:focus-within & {
+            pointer-events: all;
             opacity: 0.5;
         }
     }
@@ -69,7 +70,7 @@
 
     @media (max-width: $hamburgerBreakpoint) {
         &:focus-within {
-            transform: translateY(-256px);
+            //transform: translateY(-312px);
             background-color: var(--kbar-8dp-color);
             margin: 0 -16px;
             padding: 8px;

@@ -7,6 +7,7 @@
 .notifications {
     position: fixed;
     bottom: 16px;
+    z-index: 999;
 }
 
 :global {

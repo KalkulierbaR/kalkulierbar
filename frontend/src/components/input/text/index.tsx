@@ -30,6 +30,10 @@ interface Props {
      */
     onFocus?: (event: FocusEvent) => void;
     /**
+     * Handler for blur event
+     */
+    onBlur?: (event: FocusEvent) => void;
+    /**
      * Additional classes for styling
      */
     class?: string;
@@ -82,6 +86,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
     syncValue,
     onKeyDown,
     onFocus,
+    onBlur,
     required,
     inline = false,
     autoComplete = false,
@@ -122,7 +127,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
                     })}
                     ref={input}
                     value={syncValue !== undefined ? syncValue : text}
-                    onInput={e => {
+                    onInput={(e) => {
                         const res = (e.target as HTMLInputElement).value;
                         setText(res);
                         if (onChange) {
@@ -131,6 +136,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
                     }}
                     onKeyDown={onKeyDown}
                     onFocus={onFocus}
+                    onBlur={onBlur}
                     required={required}
                     autocomplete={autoComplete ? "on" : "nope"}
                     autocorrect={autoCorrect ? "on" : "off"}
