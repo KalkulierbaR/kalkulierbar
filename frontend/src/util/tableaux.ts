@@ -173,6 +173,18 @@ export const sendLemma = (
         notificationHandler,
     );
 
+/**
+ * @param {TableauxNode} node - The node
+ * @returns {string} - The name
+ */
+export const nodeName = (node: TableauxNode) => {
+    return `${node.negated ? "¬" : ""}${node.spelling}`;
+};
+
+/**
+ * @param {TableauxNode[]} nodes - The nodes to work on
+ * @returns {TreeLayout<TableauxTreeLayoutNode>} - The tree layout
+ */
 export const tableauxTreeLayout = (
     nodes: TableauxNode[],
 ): TreeLayout<TableauxTreeLayoutNode> => {
@@ -193,8 +205,7 @@ const tabNodeToTree = (
     i: number = 0,
     y: number = 16,
 ): Tree<TableauxTreeLayoutNode> => {
-    const width =
-        estimateSVGTextWidth(`${n.negated ? "¬" : ""}${n.spelling}`) + 56;
+    const width = estimateSVGTextWidth(nodeName(n)) + 56;
     return tree(
         width,
         72,

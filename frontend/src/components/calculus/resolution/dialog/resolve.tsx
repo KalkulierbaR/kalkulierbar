@@ -241,7 +241,7 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
             const atom2 = state.clauseSet.clauses[selectedClauses[1]].atoms[
                 clickedOnClauseIsFirstClause ? otherClauseAtomIndex : atomIndex
             ];
-            const vars = checkAtomsForVars([atom1, atom2,]);
+            const vars = checkAtomsForVars([atom1, atom2]);
             if (vars.length > 0) {
                 setVarOrigins([
                     atomToString(atom1),

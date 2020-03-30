@@ -21,6 +21,7 @@ import {
     clauseSetToStringMap,
 } from "../../../util/clause";
 import {
+    nodeName,
     sendBacktrack,
     sendClose,
     sendExtend,
@@ -76,12 +77,15 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
         undefined,
     );
+    const [showClauseDialog, setShowClauseDialog] = useState(false);
+
+    const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varAssignSecondNodeId, setVarAssignSecondNodeId] = useState<
         number | undefined
-    >(undefined);
-    const [showClauseDialog, setShowClauseDialog] = useState(false);
-    const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
+        >(undefined);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+    const [varOrigins, setVarOrigins] = useState<string[]>([]);
+
     const [lemmaMode, setLemmaMode] = useState(false);
 
     const selectedNode =
@@ -198,6 +202,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 sendFOClose(false, {});
                 return;
             }
+            setVarOrigins([
+                nodeName(selectedNode!),
+                nodeName(newNode),
+            ]);
             setVarsToAssign(vars);
             setShowVarAssignDialog(true);
         }
@@ -211,15 +219,6 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
      * @returns {void | Error} - Error if the two nodes for the close move can't be identified
      */
     const sendFOClose = (autoAssign: boolean, varAssign: VarAssign = {}) => {
-        if (
-            selectedNodeId === undefined ||
-            varAssignSecondNodeId === undefined
-        ) {
-            // Error for debugging
-            throw new Error(
-                "Close move went wrong, since selected nodes could not be identified.",
-            );
-        }
         const leaf = selectedNodeIsLeaf
             ? selectedNodeId
             : varAssignSecondNodeId;
@@ -232,8 +231,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             state!,
             onChange,
             notificationHandler,
-            leaf,
-            pred,
+            leaf!,
+            pred!,
             autoAssign,
             varAssign,
             () => {
@@ -318,6 +317,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 <VarAssignDialog
                     open={showVarAssignDialog}
                     onClose={() => setShowVarAssignDialog(false)}
+                    varOrigins={varOrigins}
                     vars={varsToAssign}
                     manualVarAssignOnly={state.manualVarAssign}
                     submitVarAssignCallback={sendFOClose}

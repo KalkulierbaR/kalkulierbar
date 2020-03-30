@@ -7,6 +7,7 @@ import { classMap } from "../../../../util/class-map";
 import Draggable from "../../../svg/draggable";
 import Rectangle from "../../../svg/rectangle";
 import * as style from "./style.scss";
+import { nodeName } from "../../../../util/tableaux";
 
 interface Props {
     /**
@@ -50,9 +51,6 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
     zoomFactor,
 }) => {
     const textRef = useRef<SVGTextElement>();
-
-    // The nodes name which is displayed
-    const name = `${node.data.negated ? "¬" : ""}${node.data.spelling}`;
 
     // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
     const nodeIsClickable =
@@ -105,7 +103,7 @@ const TableauxTreeNode: preact.FunctionalComponent<Props> = ({
                 x={node.x}
                 y={node.y}
             >
-                {name}
+                {nodeName(node.data)}
             </text>
         </Draggable>
     );

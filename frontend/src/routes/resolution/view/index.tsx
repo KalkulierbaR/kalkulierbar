@@ -24,7 +24,7 @@ import {
 import { VarAssign } from "../../../types/calculus/tableaux";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
-import { checkAtomsForVars, getCandidateClause } from "../../../util/clause";
+import {atomToString, checkAtomsForVars, getCandidateClause} from "../../../util/clause";
 import {
     addClause,
     addHyperSidePremiss,
@@ -81,6 +81,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+    const [varOrigins, setVarOrigins] = useState<string[]>([]);
     const [selectedClauseAtomIndex, setSelectedClauseAtomIndex] = useState<
         number | undefined
     >(undefined);
@@ -259,15 +260,18 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         .values()
                         .next().value[0];
 
-                    const vars = checkAtomsForVars([
-                        state.clauseSet.clauses[selectedClauseId].atoms[
-                            newSelectedClauseAtomIndex
-                        ],
-                        state.clauseSet.clauses[newClauseId].atoms[
-                            newCandidateAtomIndex
-                        ],
-                    ]);
+                    const atom1 = state.clauseSet.clauses[selectedClauseId].atoms[
+                        newSelectedClauseAtomIndex
+                    ];
+                    const atom2 = state.clauseSet.clauses[newClauseId].atoms[
+                        newCandidateAtomIndex
+                    ];
+                    const vars = checkAtomsForVars([atom1, atom2]);
                     if (vars.length > 0) {
+                        setVarOrigins([
+                            atomToString(atom1),
+                            atomToString(atom2),
+                        ]);
                         setVarsToAssign(vars);
                         setShowVarAssignDialog(true);
                         setSelectedClauseAtomIndex(newSelectedClauseAtomIndex);
@@ -419,6 +423,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             <VarAssignDialog
                 open={showVarAssignDialog}
                 onClose={() => setShowVarAssignDialog(false)}
+                varOrigins={varOrigins}
                 vars={varsToAssign}
                 submitVarAssignCallback={sendFOResolve}
                 secondSubmitEvent={sendFOResolve}
