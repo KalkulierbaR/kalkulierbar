@@ -1,11 +1,11 @@
 import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
-import DPLLPropLitDialog from "../../../components/dpll/dialog/prop";
-import DPLLSplitDialog from "../../../components/dpll/dialog/split";
-import DPLLControlFAB from "../../../components/dpll/fab";
-import DPLLModelInput from "../../../components/dpll/model";
-import DPLLTree from "../../../components/dpll/tree";
-import HelpMenu from "../../../components/help-menu";
+import DPLLPropLitDialog from "../../../components/calculus/dpll/dialog/prop";
+import DPLLSplitDialog from "../../../components/calculus/dpll/dialog/split";
+import DPLLControlFAB from "../../../components/calculus/dpll/fab";
+import DPLLModelInput from "../../../components/calculus/dpll/model";
+import DPLLTree from "../../../components/calculus/dpll/tree";
+import TutorialDialog from "../../../components/tutorial/dialog";
 import OptionList from "../../../components/input/option-list";
 import { Calculus } from "../../../types/calculus";
 import { SelectedClauses } from "../../../types/calculus/clause";
@@ -162,7 +162,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 setShowModelDialog={setShowModelDialog}
                 setShowSplitDialog={setShowSplitDialog}
             />
-            <HelpMenu calculus={Calculus.dpll} />
+            <TutorialDialog calculus={Calculus.dpll} />
         </Fragment>
     );
 };

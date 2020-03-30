@@ -1,5 +1,4 @@
 import { h, Component } from "preact";
-
 import * as style from "./style.scss";
 import { ROUTES, LinkGroup, SingleLink } from "./routes";
 import { classMap } from "../../../util/class-map";

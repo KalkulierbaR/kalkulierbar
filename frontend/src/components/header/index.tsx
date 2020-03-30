@@ -1,7 +1,7 @@
 import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
 import { useAppState } from "../../util/app-state";
-import Btn from "../btn";
+import Btn from "../input/btn";
 import Dialog from "../dialog";
 import SettingsIcon from "../icons/settings";
 import * as style from "./style.scss";

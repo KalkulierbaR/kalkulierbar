@@ -1,10 +1,9 @@
 import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
-import Dialog from "../../../components/dialog";
-import HelpMenu from "../../../components/help-menu";
-import VarAssignList from "../../../components/input/var-assign-list";
-import NCTabFAB from "../../../components/nc-tableaux/fab";
-import NCTabTree from "../../../components/nc-tableaux/tree";
+import TutorialDialog from "../../../components/tutorial/dialog";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import NCTabFAB from "../../../components/calculus/nc-tableaux/fab";
+import NCTabTree from "../../../components/calculus/nc-tableaux/tree";
 import { Calculus } from "../../../types/calculus";
 import { NCTabTreeNode } from "../../../types/calculus/nc-tableaux";
 import { VarAssign } from "../../../types/calculus/tableaux";
@@ -124,20 +123,13 @@ const NCTableauxView: preact.FunctionalComponent = () => {
                     onDrag={onDrag}
                 />
             </div>
-            <Dialog
+            <VarAssignDialog
                 open={showVarAssignDialog}
-                label="Choose variable assignments or leave them blank"
                 onClose={() => setShowVarAssignDialog(false)}
-            >
-                <VarAssignList
-                    vars={varsToAssign}
-                    manualVarAssignOnly={false}
-                    submitVarAssignCallback={sendFOClose}
-                    submitLabel="Assign variables"
-                    secondSubmitEvent={sendFOClose}
-                    secondSubmitLabel="Automatic assignment"
-                />
-            </Dialog>
+                vars={varsToAssign}
+                submitVarAssignCallback={sendFOClose}
+                secondSubmitEvent={sendFOClose}
+            />
             <NCTabFAB
                 state={state}
                 selectedNodeId={selectedNodeId}
@@ -145,7 +137,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
                 resetDragTransform={resetDragTransform}
                 resetDragTransforms={resetDragTransforms}
             />
-            <HelpMenu calculus={Calculus.ncTableaux} />
+            <TutorialDialog calculus={Calculus.ncTableaux} />
         </Fragment>
     );
 };

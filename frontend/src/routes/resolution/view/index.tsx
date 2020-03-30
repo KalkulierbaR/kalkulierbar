@@ -1,13 +1,12 @@
 import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import Dialog from "../../../components/dialog";
-import HelpMenu from "../../../components/help-menu";
-import VarAssignList from "../../../components/input/var-assign-list";
-import ResolutionCircle from "../../../components/resolution/circle";
-import ResolutionFactorizeDialog from "../../../components/resolution/dialog/factorize";
-import ResolutionResolveDialog from "../../../components/resolution/dialog/resolve";
-import ResolutionFAB from "../../../components/resolution/fab";
-import ResolutionGrid from "../../../components/resolution/grid";
+import TutorialDialog from "../../../components/tutorial/dialog";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import ResolutionCircle from "../../../components/calculus/resolution/circle";
+import ResolutionFactorizeDialog from "../../../components/calculus/resolution/dialog/factorize";
+import ResolutionResolveDialog from "../../../components/calculus/resolution/dialog/resolve";
+import ResolutionFAB from "../../../components/calculus/resolution/fab";
+import ResolutionGrid from "../../../components/calculus/resolution/grid";
 import { ResolutionCalculusType } from "../../../types/calculus";
 import {
     CandidateClause,
@@ -417,20 +416,13 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setShowGrid={setShowGrid}
             />
 
-            <Dialog
+            <VarAssignDialog
                 open={showVarAssignDialog}
-                label="Variable assignments"
                 onClose={() => setShowVarAssignDialog(false)}
-            >
-                <VarAssignList
-                    vars={varsToAssign}
-                    manualVarAssignOnly={false}
-                    submitVarAssignCallback={sendFOResolve}
-                    submitLabel="Assign variables"
-                    secondSubmitEvent={sendFOResolve}
-                    secondSubmitLabel="Automatic assignment"
-                />
-            </Dialog>
+                vars={varsToAssign}
+                submitVarAssignCallback={sendFOResolve}
+                secondSubmitEvent={sendFOResolve}
+            />
 
             <ResolutionResolveDialog
                 showDialog={showResolveDialog}
@@ -453,7 +445,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 setSelectedClauses={setSelectedClauses}
             />
 
-            <HelpMenu calculus={calculus} />
+            <TutorialDialog calculus={calculus} />
         </Fragment>
     );
 };

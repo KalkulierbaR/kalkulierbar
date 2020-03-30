@@ -1,5 +1,5 @@
 import { h } from "preact";
-import Btn from "../btn";
+import Btn from "../input/btn";
 import CloseIcon from "../icons/close";
 import * as style from "./style.scss";
 import { enableDrag } from "../../util/zoom/drag";

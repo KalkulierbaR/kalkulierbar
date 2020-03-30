@@ -1,6 +1,6 @@
 import { h, VNode } from "preact";
 import { useRef } from "preact/hooks";
-import Switch from "../../components/switch";
+import Switch from "../../components/input/switch";
 import { Calculus } from "../../types/calculus";
 import { setCalculusState } from "../../util/admin";
 import { useAppState } from "../../util/app-state";

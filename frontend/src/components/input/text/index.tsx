@@ -37,8 +37,17 @@ interface Props {
      * Additional classes for styling
      */
     class?: string;
+    /**
+     * The default start value of the input
+     */
     startValue?: string;
+    /**
+     * This value is synced with the input (overwrites startValue)
+     */
     syncValue?: string;
+    /**
+     * Whether the input is required for the HTML form
+     */
     required?: boolean;
     /**
      * Whether to display the label inline.

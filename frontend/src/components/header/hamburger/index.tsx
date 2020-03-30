@@ -1,5 +1,4 @@
 import { h } from "preact";
-
 import * as style from "./style.scss";
 import { classMap } from "../../../util/class-map";
 

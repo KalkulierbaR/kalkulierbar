@@ -1,7 +1,6 @@
 import { h } from "preact";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
-
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
 import Page404 from "./404";

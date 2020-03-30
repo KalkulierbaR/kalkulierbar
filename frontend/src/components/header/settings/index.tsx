@@ -1,17 +1,16 @@
 import { h } from "preact";
-
 import * as style from "./style.scss";
 import { useAppState } from "../../../util/app-state";
 import { useState, useCallback } from "preact/hooks";
 import { AppStateActionType } from "../../../types/app/action";
 import TextInput from "../../input/text";
-import FAB from "../../fab";
+import FAB from "../../input/fab";
 import SaveIcon from "../../icons/save";
 import { Theme } from "../../../types/app/theme";
 import ThemeLight from "../../icons/theme-light";
 import ThemeDark from "../../icons/theme-dark";
 import ThemeAuto from "../../icons/theme-auto";
-import Btn from "../../btn";
+import Btn from "../../input/btn";
 import { checkCredentials } from "../../../util/admin";
 import LogOutIcon from "../../icons/log-out";
 import LogInIcon from "../../icons/log-in";

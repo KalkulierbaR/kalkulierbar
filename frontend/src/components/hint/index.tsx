@@ -1,9 +1,7 @@
 import { Component, h } from "preact";
-
 import ReactHintFactory from "react-hint";
 import "react-hint/css/index.css";
 import InfoIcon from "../icons/info";
-
 import * as style from "./style.scss";
 
 const ReactHint = ReactHintFactory({ createElement: h, Component });

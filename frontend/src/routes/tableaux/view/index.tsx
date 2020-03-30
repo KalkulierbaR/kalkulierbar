@@ -1,11 +1,11 @@
 import { Fragment, h } from "preact";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import Dialog from "../../../components/dialog";
-import HelpMenu from "../../../components/help-menu";
+import TutorialDialog from "../../../components/tutorial/dialog";
 import OptionList from "../../../components/input/option-list";
-import VarAssignList from "../../../components/input/var-assign-list";
-import TableauxFAB from "../../../components/tableaux/fab";
-import TableauxTreeView from "../../../components/tableaux/tree";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import TableauxFAB from "../../../components/calculus/tableaux/fab";
+import TableauxTreeView from "../../../components/calculus/tableaux/tree";
 import { TableauxCalculusType } from "../../../types/calculus";
 import {
     instanceOfFOTabState,
@@ -314,22 +314,16 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             </Dialog>
 
-            {instanceOfFOTabState(state, calculus) ? (
-                <Dialog
+            {instanceOfFOTabState(state, calculus) && (
+                <VarAssignDialog
                     open={showVarAssignDialog}
-                    label="Variable assignments"
                     onClose={() => setShowVarAssignDialog(false)}
-                >
-                    <VarAssignList
-                        vars={varsToAssign}
-                        manualVarAssignOnly={state.manualVarAssign}
-                        submitVarAssignCallback={sendFOClose}
-                        submitLabel="Assign variables"
-                        secondSubmitEvent={sendFOClose}
-                        secondSubmitLabel="Automatic assignment"
-                    />
-                </Dialog>
-            ) : undefined}
+                    vars={varsToAssign}
+                    manualVarAssignOnly={state.manualVarAssign}
+                    submitVarAssignCallback={sendFOClose}
+                    secondSubmitEvent={sendFOClose}
+                />
+            )}
 
             <TableauxFAB
                 calculus={calculus}
@@ -342,7 +336,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 resetDragTransforms={resetDragTransforms}
             />
 
-            <HelpMenu calculus={calculus} />
+            <TutorialDialog calculus={calculus} />
         </Fragment>
     );
 };

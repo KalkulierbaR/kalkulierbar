@@ -2,7 +2,7 @@ import { Fragment, h } from "preact";
 import { route } from "preact-router";
 import { delExample } from "../../../util/admin";
 import { useAppState } from "../../../util/app-state";
-import Btn from "../../btn";
+import Btn from "../btn";
 import DeleteIcon from "../../icons/delete";
 import * as style from "./style.scss";
 import { CalculusType } from "../../../types/calculus";
