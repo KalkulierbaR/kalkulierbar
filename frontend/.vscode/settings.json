@@ -10,6 +10,7 @@
         "kbar",
         "kbcc",
         "kbde",
+        "pnpify",
         "preact"
     ]
 }
