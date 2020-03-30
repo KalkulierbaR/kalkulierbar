@@ -10,10 +10,9 @@
 
 .theme-switcher {
     display: none;
-    cursor: pointer;
 
     @supports (--foo: green) {
-        display: inline;
+        display: inline-flex;
         border: none;
         transition: all 0.3s;
         outline: none;
@@ -31,7 +30,6 @@
     align-items: center;
     padding: 10px 0 10px 0;
     margin-bottom: 15px;
-    cursor: pointer;
 
     @media (max-width: $hamburgerBreakpoint) {
         &:hover,
