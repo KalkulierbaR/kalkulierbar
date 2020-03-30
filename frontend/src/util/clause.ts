@@ -125,7 +125,7 @@ export const checkRelationsForVar = (relations: FORelation[]) => {
  * @param {FOAtom[]} atoms - The atoms to search in
  * @returns {string[]} - The vars found
  */
-export const checkAtomsForVar = (atoms: FOAtom[]) => {
+export const checkAtomsForVars = (atoms: FOAtom[]) => {
     const vars: string[] = [];
 
     const checkArgumentForVar = (argument: FOArgument) => {

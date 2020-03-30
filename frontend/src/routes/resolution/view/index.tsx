@@ -24,7 +24,7 @@ import {
 import { VarAssign } from "../../../types/calculus/tableaux";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
-import { checkAtomsForVar, getCandidateClause } from "../../../util/clause";
+import { checkAtomsForVars, getCandidateClause } from "../../../util/clause";
 import {
     addClause,
     addHyperSidePremiss,
@@ -259,7 +259,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         .values()
                         .next().value[0];
 
-                    const vars = checkAtomsForVar([
+                    const vars = checkAtomsForVars([
                         state.clauseSet.clauses[selectedClauseId].atoms[
                             newSelectedClauseAtomIndex
                         ],

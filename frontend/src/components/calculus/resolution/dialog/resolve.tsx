@@ -19,7 +19,7 @@ import { VarAssign } from "../../../../types/calculus/tableaux";
 import { useAppState } from "../../../../util/app-state";
 import {
     atomToString,
-    checkAtomsForVar,
+    checkAtomsForVars,
     getCandidateClause,
 } from "../../../../util/clause";
 import {
@@ -84,14 +84,16 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
     const { server, onChange, notificationHandler } = useAppState();
     const apiInfo = { onChange, notificationHandler, server };
 
-    const [selectedClauseAtomOption, setSelectedClauseAtomOption] = useState<
+    const [firstClauseAtomIndex, setFirstClauseAtomIndex] = useState<
         number | undefined
     >(undefined);
-    const [candidateClauseAtomOption, setCandidateClauseAtomOption] = useState<
+    const [secondClauseAtomIndex, setSecondClauseAtomIndex] = useState<
         number | undefined
     >(undefined);
+
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+    const [varOrigins, setVarOrigins] = useState<string[]>([]);
 
     /**
      * Handler for the selection of a literal option in the propositional resolve dialog
@@ -188,8 +190,8 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const onCloseAtomDialog = () => {
-        setCandidateClauseAtomOption(undefined);
-        setSelectedClauseAtomOption(undefined);
+        setFirstClauseAtomIndex(undefined);
+        setSecondClauseAtomIndex(undefined);
         if (!hyperRes) {
             setSelectedClauses(undefined);
         } else {
@@ -200,46 +202,59 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
     /**
      * Handler for the selection of an atomOption in the FO resolve dialog (selectedClause's atoms section)
      * @param {[number, string]} optionKeyValuePair - The key value pair of the selected option
+     * @param {number | undefined} clickedOnClauseAtomIndex - The current atom index of the clause which was clicked on
+     * @param {VoidFunction} otherClauseAtomIndex - The other clause's current atom index
+     * @param {number | undefined} setClickedOnClauseAtomIndex - Function to set the atom index
+     * @param {number | undefined} clickedOnClauseIsFirstClause - Whether the clicked on clause is also the first clause
      * @returns {void}
      */
-    const selectSelectedClauseAtomOption = (
+    const selectAtomOption = (
         optionKeyValuePair: [number, string],
+        clickedOnClauseAtomIndex: number | undefined,
+        otherClauseAtomIndex: number | undefined,
+        setClickedOnClauseAtomIndex: (option: number | undefined) => void,
+        clickedOnClauseIsFirstClause: boolean,
     ) => {
         const atomIndex = optionKeyValuePair[0];
         if (!selectedClauses || selectedClauses.length !== 2) {
             return;
         }
-        if (selectedClauseAtomOption === atomIndex) {
-            setSelectedClauseAtomOption(undefined);
-        } else if (candidateClauseAtomOption === undefined) {
-            setSelectedClauseAtomOption(atomIndex);
+        if (clickedOnClauseAtomIndex === atomIndex) {
+            setClickedOnClauseAtomIndex(undefined);
+        } else if (otherClauseAtomIndex === undefined) {
+            setClickedOnClauseAtomIndex(atomIndex);
         } else if (hyperRes) {
             setHyperRes(
                 addHyperSidePremiss(
                     hyperRes,
-                    atomIndex,
+                    clickedOnClauseIsFirstClause ? atomIndex : otherClauseAtomIndex,
                     selectedClauses[1],
-                    candidateClauseAtomOption,
+                    clickedOnClauseIsFirstClause ? otherClauseAtomIndex : atomIndex,
                 ),
             );
             onCloseAtomDialog();
         } else if (instanceOfFOResState(state, calculus)) {
-            setSelectedClauseAtomOption(atomIndex);
-            const vars = checkAtomsForVar([
-                state.clauseSet.clauses[selectedClauses[0]].atoms[atomIndex],
-                state.clauseSet.clauses[selectedClauses[1]].atoms[
-                    candidateClauseAtomOption
-                ],
-            ]);
+            setClickedOnClauseAtomIndex(atomIndex);
+            const atom1 = state.clauseSet.clauses[selectedClauses[0]].atoms[
+                clickedOnClauseIsFirstClause ? atomIndex : otherClauseAtomIndex
+            ];
+            const atom2 = state.clauseSet.clauses[selectedClauses[1]].atoms[
+                clickedOnClauseIsFirstClause ? otherClauseAtomIndex : atomIndex
+            ];
+            const vars = checkAtomsForVars([atom1, atom2,]);
             if (vars.length > 0) {
+                setVarOrigins([
+                    atomToString(atom1),
+                    atomToString(atom2),
+                ]);
                 setVarsToAssign(vars);
                 setShowVarAssignDialog(true);
             } else {
                 sendResolveUnify(
                     selectedClauses[0],
                     selectedClauses[1],
-                    atomIndex,
-                    candidateClauseAtomOption,
+                    clickedOnClauseIsFirstClause ? atomIndex : otherClauseAtomIndex,
+                    clickedOnClauseIsFirstClause ? otherClauseAtomIndex : atomIndex,
                     { ...apiInfo, state },
                 );
                 onCloseAtomDialog();
@@ -248,53 +263,37 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
     };
 
     /**
+     * Handler for the selection of an atomOption in the FO resolve dialog (selectedClause's atoms section)
+     * @param {[number, string]} optionKeyValuePair - The key value pair of the selected option
+     * @returns {void}
+     */
+    const selectFirstClauseAtomOption = (
+        optionKeyValuePair: [number, string],
+    ) => {
+        selectAtomOption(
+            optionKeyValuePair,
+            firstClauseAtomIndex,
+            secondClauseAtomIndex,
+            setFirstClauseAtomIndex,
+            true
+        );
+    };
+
+    /**
      * Handler for the selection of an atomOption in the FO resolve dialog (candidateClause's atoms section)
      * @param {[number, string]} optionKeyValuePair - The key value pair of the selected option
      * @returns {void}
      */
-    const selectCandidateAtomOption = (
+    const selectSecondClauseAtomOption = (
         optionKeyValuePair: [number, string],
     ) => {
-        const atomIndex = optionKeyValuePair[0];
-        if (!selectedClauses || selectedClauses.length !== 2) {
-            return;
-        }
-        if (candidateClauseAtomOption === atomIndex) {
-            setCandidateClauseAtomOption(undefined);
-        } else if (selectedClauseAtomOption === undefined) {
-            setCandidateClauseAtomOption(atomIndex);
-        } else if (hyperRes) {
-            setHyperRes(
-                addHyperSidePremiss(
-                    hyperRes,
-                    selectedClauseAtomOption,
-                    selectedClauses[1],
-                    atomIndex,
-                ),
-            );
-            onCloseAtomDialog();
-        } else if (instanceOfFOResState(state, calculus)) {
-            setCandidateClauseAtomOption(atomIndex);
-            const vars = checkAtomsForVar([
-                state.clauseSet.clauses[selectedClauses[0]].atoms[
-                    selectedClauseAtomOption
-                ],
-                state.clauseSet.clauses[selectedClauses[1]].atoms[atomIndex],
-            ]);
-            if (vars.length > 0) {
-                setVarsToAssign(vars);
-                setShowVarAssignDialog(true);
-            } else {
-                sendResolveUnify(
-                    selectedClauses[0],
-                    selectedClauses[1],
-                    selectedClauseAtomOption,
-                    atomIndex,
-                    { ...apiInfo, state },
-                );
-                onCloseAtomDialog();
-            }
-        }
+        selectAtomOption(
+            optionKeyValuePair,
+            secondClauseAtomIndex,
+            firstClauseAtomIndex,
+            setSecondClauseAtomIndex,
+            false
+        );
     };
 
     /**
@@ -316,16 +315,16 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
             sendResolveUnify(
                 selectedClauses[0],
                 selectedClauses[1],
-                selectedClauseAtomOption!,
-                candidateClauseAtomOption!,
+                firstClauseAtomIndex!,
+                secondClauseAtomIndex!,
                 { ...apiInfo, state },
             );
         } else {
             sendResolveCustom(
                 selectedClauses[0],
                 selectedClauses[1],
-                selectedClauseAtomOption!,
-                candidateClauseAtomOption!,
+                firstClauseAtomIndex!,
+                secondClauseAtomIndex!,
                 varAssign,
                 { ...apiInfo, state },
             );
@@ -348,32 +347,35 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
         <Fragment>
             <Dialog
                 open={showDialog}
-                label="Choose two atoms to resolve"
+                label="Choose one atom of each clause to resolve them"
                 onClose={onCloseAtomDialog}
             >
+                <h3>1. Clause</h3>
                 <OptionList
                     options={foAtomOptions()[0]}
                     selectedOptionIds={
-                        selectedClauseAtomOption !== undefined
-                            ? [selectedClauseAtomOption]
+                        firstClauseAtomIndex !== undefined
+                            ? [firstClauseAtomIndex]
                             : undefined
                     }
-                    selectOptionCallback={selectSelectedClauseAtomOption}
+                    selectOptionCallback={selectFirstClauseAtomOption}
                 />
-                <hr />
+                <h3>2. Clause</h3>
                 <OptionList
                     options={foAtomOptions()[1]}
                     selectedOptionIds={
-                        candidateClauseAtomOption !== undefined
-                            ? [candidateClauseAtomOption]
+                        secondClauseAtomIndex !== undefined
+                            ? [secondClauseAtomIndex]
                             : undefined
                     }
-                    selectOptionCallback={selectCandidateAtomOption}
+                    selectOptionCallback={selectSecondClauseAtomOption}
                 />
             </Dialog>
+
             <VarAssignDialog
                 open={showVarAssignDialog}
                 onClose={() => setShowVarAssignDialog(false)}
+                varOrigins={varOrigins}
                 vars={varsToAssign}
                 submitVarAssignCallback={sendFOResolve}
                 secondSubmitEvent={sendFOResolve}

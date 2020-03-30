@@ -20,6 +20,10 @@ interface Props {
      */
     onClose: () => void;
     /**
+     * Which atoms are being combined
+     */
+    varOrigins?: string[];
+    /**
      * Which vars shall be assigned
      */
     vars: string[];
@@ -57,6 +61,7 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
     open,
     dialogLabel = "Variable assignments",
     onClose,
+    varOrigins = [],
     vars,
     manualVarAssignOnly = false,
     submitVarAssignCallback,
@@ -129,6 +134,7 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
     return (
         <Dialog open={open} label={dialogLabel} onClose={onClose}>
             <div class={`card ${className}`}>
+                <p>{varOrigins.join(" and ")}</p>
                 {vars.map((variable, index) => (
                     <p key={variable}>
                         <TextInput
