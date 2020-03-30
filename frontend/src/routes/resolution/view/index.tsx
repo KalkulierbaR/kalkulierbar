@@ -7,6 +7,7 @@ import ResolutionCircle from "../../../components/resolution/circle";
 import ResolutionFactorizeDialog from "../../../components/resolution/dialog/factorize";
 import ResolutionResolveDialog from "../../../components/resolution/dialog/resolve";
 import ResolutionFAB from "../../../components/resolution/fab";
+import ResolutionGrid from "../../../components/resolution/grid";
 import { Calculus, ResolutionCalculusType } from "../../../types/calculus";
 import {
     CandidateClause,
@@ -34,7 +35,9 @@ import {
     getPropHyperCandidates,
     getSelectable,
     recalculateCandidateClauses,
+    removeClause,
     removeHyperSidePremiss,
+    replaceClause,
     sendResolve,
     sendResolveCustom,
     sendResolveUnify,
@@ -65,6 +68,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     }
 
     const apiInfo = { onChange, notificationHandler, server };
+
+    const [showGrid, setShowGrid] = useState<boolean>(false);
 
     const [hyperRes, setHyperRes] = useState<HyperResolutionMove | undefined>(
         undefined,
@@ -103,7 +108,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             recalculateCandidateClauses(
                 state!.clauseSet,
                 candidateClauses,
-                state!.visualHelp,
+                state!.visualHelp === VisualHelp.rearrange && !showGrid,
                 calculus,
                 selectedClauseId,
             ),
@@ -111,11 +116,44 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     }, [setCandidateClauses, selectedClauseId]);
 
     useEffect(() => {
-        if (state!.newestNode === -1) {
+        const lastMove = state!.lastMove;
+
+        if (!lastMove) {
             return;
         }
-        addClause(state!.clauseSet, candidateClauses, state!.newestNode);
-        setCandidateClauses([...candidateClauses]);
+
+        if (
+            lastMove.type === "res-hyper" ||
+            lastMove.type === "res-resolve" ||
+            lastMove.type === "res-resolvecustom" ||
+            lastMove.type === "res-resolveunify" ||
+            (lastMove.type === "res-factorize" &&
+                instanceOfFOResState(state, calculus))
+        ) {
+            addClause(state!.clauseSet, candidateClauses, state!.newestNode);
+            setCandidateClauses([...candidateClauses]);
+        }
+        // I have no idea, how to do this better
+        if (lastMove.type === "res-show") {
+            setCandidateClauses(
+                getInitialCandidateClauses(state!.clauseSet, calculus),
+            );
+        }
+        if (
+            lastMove.type === "res-factorize" &&
+            instanceOfPropResState(state, calculus)
+        ) {
+            replaceClause(
+                candidateClauses,
+                lastMove.c1,
+                state!.clauseSet.clauses[lastMove.c1] as any,
+            );
+            setCandidateClauses([...candidateClauses]);
+        }
+        if (lastMove.type === "res-hide") {
+            removeClause(candidateClauses, lastMove.c1);
+            setCandidateClauses([...candidateClauses]);
+        }
     }, [state.clauseSet]);
 
     /**
@@ -343,16 +381,30 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <h2>Resolution View</h2>
-            <ResolutionCircle
-                clauses={candidateClauses}
-                selectClauseCallback={selectClauseCallback}
-                selectedClauseId={selectedClauseId}
-                visualHelp={state.visualHelp}
-                newestNode={state.newestNode}
-                semiSelected={semiSelected}
-                selectable={selectable}
-                shiftCandidateClause={shiftCandidateClause}
-            />
+
+            {showGrid ? (
+                <ResolutionGrid
+                    clauses={candidateClauses}
+                    selectClauseCallback={selectClauseCallback}
+                    selectedClauseId={selectedClauseId}
+                    visualHelp={state.visualHelp}
+                    newestNode={state.newestNode}
+                    semiSelected={semiSelected}
+                    selectable={selectable}
+                    shiftCandidateClause={shiftCandidateClause}
+                />
+            ) : (
+                <ResolutionCircle
+                    clauses={candidateClauses}
+                    selectClauseCallback={selectClauseCallback}
+                    selectedClauseId={selectedClauseId}
+                    visualHelp={state.visualHelp}
+                    newestNode={state.newestNode}
+                    semiSelected={semiSelected}
+                    selectable={selectable}
+                    shiftCandidateClause={shiftCandidateClause}
+                />
+            )}
 
             <ResolutionFAB
                 calculus={calculus}
@@ -362,6 +414,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 hyperRes={hyperRes}
                 setHyperRes={setHyperRes}
                 setShowFactorizeDialog={setShowFactorizeDialog}
+                showGrid={showGrid}
+                setShowGrid={setShowGrid}
             />
 
             <Dialog

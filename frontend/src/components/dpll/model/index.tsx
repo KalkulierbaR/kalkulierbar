@@ -51,7 +51,10 @@ const DPLLModelInput: preact.FunctionalComponent<Props> = ({
                 </div>
             ))}
             <div class={style.sendWrapper}>
-                <Btn onClick={() => onSend(model)}>Check Model</Btn>
+                <Btn
+                    onClick={() => onSend(model)}
+                    label="Check Model"
+                />
             </div>
         </Dialog>
     );

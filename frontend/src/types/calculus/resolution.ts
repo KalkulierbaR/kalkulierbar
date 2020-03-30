@@ -9,6 +9,7 @@ export interface PropResolutionState {
     hiddenClauses: ClauseSet;
     visualHelp: VisualHelp;
     newestNode: number;
+    lastMove: PropResolutionMove | null;
 }
 
 export enum VisualHelp {
@@ -111,6 +112,7 @@ export interface FOResolutionState {
     hiddenClauses: FOClauseSet;
     newestNode: number;
     clauseCounter: number;
+    lastMove: FOResolutionMove | null;
 }
 
 export function instanceOfFOResState(

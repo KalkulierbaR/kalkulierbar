@@ -69,7 +69,7 @@ const Dialog: preact.FunctionalComponent<Props> = ({
                 </button>
                 <div class={style.content}>{children}</div>
                 <div class={style.actions}>
-                    {onConfirm && <Btn onClick={onConfirm}>Okay</Btn>}
+                    {onConfirm && <Btn onClick={onConfirm} label="Okay"/>}
                 </div>
             </div>
         </div>

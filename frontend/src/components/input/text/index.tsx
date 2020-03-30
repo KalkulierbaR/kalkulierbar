@@ -33,13 +33,8 @@ interface Props {
      * Additional classes for styling
      */
     class?: string;
-    /**
-     * The value of the input
-     */
-    value?: string;
-    /**
-     * Whether input is required
-     */
+    startValue?: string;
+    syncValue?: string;
     required?: boolean;
     /**
      * Whether to display the label inline.
@@ -83,7 +78,8 @@ const TextInput: preact.FunctionalComponent<Props> = ({
     label,
     onChange,
     submitButton,
-    value,
+    startValue,
+    syncValue,
     onKeyDown,
     onFocus,
     required,
@@ -98,7 +94,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
 }) => {
     const input = useRef<HTMLInputElement>();
 
-    const [text, setText] = useState(value);
+    const [text, setText] = useState(startValue);
 
     const randomId = `txt-input-${Math.random()}`;
 
@@ -125,8 +121,8 @@ const TextInput: preact.FunctionalComponent<Props> = ({
                         [style.inline]: inline,
                     })}
                     ref={input}
-                    value={text}
-                    onInput={(e) => {
+                    value={syncValue !== undefined ? syncValue : text}
+                    onInput={e => {
                         const res = (e.target as HTMLInputElement).value;
                         setText(res);
                         if (onChange) {

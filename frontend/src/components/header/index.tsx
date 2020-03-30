@@ -32,9 +32,11 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
                 onLinkClick={setClosed}
                 currentUrl={currentUrl}
             />
-            <Btn class={style.settingsBtn} onClick={toggle}>
-                <SettingsIcon />
-            </Btn>
+            <Btn
+                className={style.settingsBtn}
+                onClick={toggle}
+                icon={<SettingsIcon />}
+            />
         </Fragment>
     );
 

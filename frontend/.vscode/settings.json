@@ -4,8 +4,12 @@
         "DPLLCs",
         "Hamburgler",
         "Kalkulierba",
+        "Keccak",
         "Zoomable",
-        "preact",
-        "skolem"
+        "kbae",
+        "kbar",
+        "kbcc",
+        "kbde",
+        "preact"
     ]
 }

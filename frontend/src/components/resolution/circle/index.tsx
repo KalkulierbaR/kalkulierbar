@@ -3,7 +3,7 @@ import { useMemo } from "preact/hooks";
 import { CandidateClause } from "../../../types/calculus/clause";
 import { VisualHelp } from "../../../types/calculus/resolution";
 import { DragTransform } from "../../../types/ui";
-import { circleLayout } from "../../../util/layout/resolution";
+import { circleLayout } from "../../../util/layout/circle";
 import Zoomable from "../../zoomable";
 import ResolutionNode from "../node";
 import * as style from "./style.scss";
@@ -98,7 +98,7 @@ const ResolutionCircle: preact.FunctionalComponent<Props> = ({
                 height="calc(100vh - 172px)"
                 style="min-height: 60vh"
                 viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
-                preserveAspectRatio="xMidyMid meet"
+                preserveAspectRatio="xMidYMid meet"
             >
                 {(transform) => (
                     <g

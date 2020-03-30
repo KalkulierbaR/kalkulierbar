@@ -5,6 +5,7 @@ import {
 } from "../../../types/calculus/resolution";
 
 export const propExample: PropResolutionState = {
+    lastMove: null,
     clauseSet: {
         clauses: [
             {
@@ -63,6 +64,7 @@ export const propExample: PropResolutionState = {
 
 // Used formula: R(b) & R(c) & R(a) & /all X: R(f(b, X)) & (!R(f(b, a)) | !R(f(b, b))) & (!R(a) | !R(b) | !R(c)) & /all Y: Q(Y) & !Q(c)
 export const foExample: FOResolutionState = {
+    lastMove: null,
     clauseSet: {
         clauses: [
             {

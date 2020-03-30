@@ -28,6 +28,12 @@ const INIT_APP_STATE: AppState = {
         : `http://${location.hostname}:7000`,
     theme: Theme.auto,
     tutorialMode: TutorialMode.HighlightAll,
+    isAdmin: false,
+    adminKey: "",
+    config: {
+        disabled: ["prop-tableaux"],
+        examples: [],
+    },
 };
 
 /**
@@ -70,6 +76,19 @@ const reducer: Reducer<AppState, AppStateAction> = (
             };
         case AppStateActionType.SET_TUTORIAL_MODE:
             return { ...state, tutorialMode: action.value };
+        case AppStateActionType.SET_CONFIG:
+            return { ...state, config: action.value };
+        case AppStateActionType.SET_ADMIN_KEY:
+            return { ...state, adminKey: action.value };
+        case AppStateActionType.SET_ADMIN:
+            if(!action.value){
+                return {
+                    ...state,
+                    isAdmin: action.value,
+                    adminKey: "",
+                };
+            }
+            return { ...state, isAdmin: action.value };
     }
 };
 
@@ -132,6 +151,8 @@ const derive = (
     ...state,
     notificationHandler: createNotificationHandler(dispatch),
     onChange: updateCalculusState(dispatch),
+    setConfig: (cfg: Config) =>
+        dispatch({ type: AppStateActionType.SET_CONFIG, value: cfg }),
     dispatch,
 });
 
@@ -153,10 +174,12 @@ export const AppStateProvider = (
     const tutorialMode =
         localStorageGet<TutorialMode>("tutorial_mode") ??
         TutorialMode.HighlightAll;
+    const adminKey = localStorageGet<string>("admin_key");
 
     INIT_APP_STATE.theme = storedTheme || INIT_APP_STATE.theme;
     INIT_APP_STATE.server = storedServer || INIT_APP_STATE.server;
     INIT_APP_STATE.tutorialMode = tutorialMode;
+    INIT_APP_STATE.adminKey = adminKey || INIT_APP_STATE.adminKey;
 
     const [state, dispatch] = useReducer<AppState, AppStateAction>(
         reducer,
@@ -174,6 +197,9 @@ export const AppStateProvider = (
     useEffect(() => {
         localStorageSet("tutorial_mode", derived.tutorialMode);
     }, [derived.tutorialMode]);
+    useEffect(() => {
+        localStorageSet("admin_key", derived.adminKey);
+    }, [derived.adminKey]);
 
     return (
         <AppStateCtx.Provider value={derived}>

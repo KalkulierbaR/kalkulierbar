@@ -4,7 +4,13 @@ import { useState } from "preact/hooks";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import Btn from "../../btn";
+import UploadButton from "../../btn/upload";
+import Dialog from "../../dialog";
+import AddIcon from "../../icons/add";
+import SaveIcon from "../../icons/save";
+import SendIcon from "../../icons/send";
 import OptionList from "../option-list";
+import TextInput from "../text";
 import * as style from "./style.scss";
 import { CalculusType, Params, FOCalculus } from "../../../types/calculus";
 import { AppStateActionType } from "../../../types/app/action";
@@ -27,7 +33,7 @@ interface Props {
      */
     params?: Params[CalculusType];
     /**
-     * Whether or not we are in FO logic
+     * Whether this is currently FO logic
      */
     foLogic: boolean;
 }
@@ -60,17 +66,27 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         onChange,
         savedFormulas,
         dispatch,
+        isAdmin,
+        adminKey,
+        setConfig,
     } = useAppState();
 
     const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
+    const [exampleNameInput, setExampleNameInput] = useState("");
+    const [exampleDescriptionInput, setExampleDescriptionInput] = useState("");
+    const [showCreateExampleDialog, setShowCreateExampleDialog] = useState(
+        false,
+    );
 
     /**
      * Handle the Submit event of the form
-     * @param {Event} event - The submit event
+     * @param {Event} event - The submit event (if none is provided we add an example)
      * @returns {void}
      */
-    const onSubmit = async (event: Event) => {
-        event.preventDefault();
+    const onSubmit = async (event?: Event) => {
+        if (event) {
+            event.preventDefault();
+        }
         const url = `${server}/${calculus}/parse`;
 
         try {
@@ -87,8 +103,28 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 notificationHandler.error(await response.text());
             } else {
                 const parsed = await response.json();
-                onChange(calculus, parsed);
-                route(`/${calculus}/view`);
+                if (!event) {
+                    addExample(
+                        server,
+                        {
+                            name: exampleNameInput,
+                            description: exampleDescriptionInput,
+                            calculus,
+                            formula: normalizeInput(savedFormulas[calculus]),
+                            params: params ? JSON.stringify(params) : "",
+                        },
+                        adminKey,
+                        setConfig,
+                        onError,
+                        onSuccess,
+                    );
+                    setShowCreateExampleDialog(false);
+                    setExampleNameInput("");
+                    setExampleDescriptionInput("");
+                } else {
+                    onChange(calculus, parsed);
+                    route(`/${calculus}/view`);
+                }
             }
         } catch (e) {
             notificationHandler.error((e as Error).message);
@@ -188,7 +224,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                             : "!a, c; a; !c"
                     }
                 />
-                {FOCalculus.includes(calculus) ? (
+                {FOCalculus.includes(calculus) && (
                     <OptionList
                         options={suggestionMap}
                         selectOptionCallback={selectSuggestion}
@@ -196,11 +232,61 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                             suggestionMap.size > 0 ? undefined : style.hide
                         }
                     />
-                ) : undefined}
-                <Btn type="submit" disabled={textareaValue.length === 0}>
-                    Start proof
-                </Btn>
+                )}
+                <Btn
+                    type="submit"
+                    name="action"
+                    value="parse"
+                    disabled={textareaValue.length === 0}
+                    label="Start proof"
+                    icon={<SendIcon size={20} />}
+                />
+                {isAdmin && (
+                    <Btn
+                        type="button"
+                        onClick={() => setShowCreateExampleDialog(true)}
+                        disabled={textareaValue.length === 0}
+                        label="Add example"
+                        icon={<AddIcon />}
+                    />
+                )}
+                <UploadButton calculus={calculus} />
             </form>
+            {isAdmin && (
+                <Dialog
+                    open={showCreateExampleDialog}
+                    label="Add example"
+                    onClose={() => setShowCreateExampleDialog(false)}
+                >
+                    <p>
+                        The name and description are optional. The parameters
+                        will be saved how you currently have set them.
+                    </p>
+                    <TextInput
+                        label="Name"
+                        syncValue={exampleNameInput}
+                        onChange={setExampleNameInput}
+                        autoComplete={true}
+                        required={true}
+                    />
+                    <br />
+                    <TextInput
+                        label="Description"
+                        syncValue={exampleDescriptionInput}
+                        onChange={setExampleDescriptionInput}
+                        autoComplete={true}
+                        required={true}
+                    />
+                    <br />
+                    <Btn
+                        type="button"
+                        onClick={() => onSubmit()}
+                        disabled={textareaValue.length === 0}
+                        label="Save like this"
+                        icon={<SaveIcon />}
+                    />
+                </Dialog>
+            )}
         </div>
     );
 };

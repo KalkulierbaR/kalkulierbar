@@ -1,7 +1,7 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
-import UploadFAB from "../../components/btn/upload";
 import HintIcon, { Hint } from "../../components/hint";
+import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/radio";
@@ -88,7 +88,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         <HintIcon hint="When you select a clause, all valid resolution partners will be highlighted and grouped around the selected clause." />
                     </div>
                     {!fo && (
-                        <div class="switches">
+                        <div class="second">
                             <Switch
                                 label="Naive CNF transformation"
                                 onChange={strategySelect}
@@ -99,7 +99,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     )}
                 </div>
             </div>
-            <UploadFAB calculus={calculus} />
+            <ExampleList calculus={calculus}/>
         </Fragment>
     );
 };

@@ -64,7 +64,8 @@
         "preact-render-to-string": "^5.0.6",
         "preact-router": "^3.0.1",
         "react-hint": "^3.2.0",
-        "serve": "^11.3.0"
+        "serve": "^11.3.0",
+        "sha3": "^2.1.1"
     },
     "peerDependencies": {
         "prettier": ">1.0.0",

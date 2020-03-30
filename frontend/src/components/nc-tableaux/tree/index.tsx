@@ -44,7 +44,7 @@ const NCTabTree: preact.FunctionalComponent<Props> = ({
             height="calc(100vh - 192px)"
             style="min-height: 60vh"
             viewBox={`0 -16 ${width} ${height}`}
-            preserveAspectRatio="xMidyMid meet"
+            preserveAspectRatio="xMidYMid meet"
         >
             {(transform) => (
                 <g

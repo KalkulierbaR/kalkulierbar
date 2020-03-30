@@ -126,9 +126,8 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
                     factorizeAtomIndices.clear();
                     setSelectedClauses(undefined);
                 }}
-            >
-                Factorize
-            </Btn>
+                label="Factorize"
+            />
         </Dialog>
     );
 };

@@ -88,6 +88,20 @@ const App: preact.FunctionalComponent = () => {
     useEffect(() => {
         checkServer(server, notificationHandler);
 
+        getConfig(server, setConfig, onError);
+
+        if(adminKey) {
+            checkCredentials(
+                server,
+                adminKey,
+                (userIsAdmin) =>
+                    dispatch({
+                        type: AppStateActionType.SET_ADMIN,
+                        value: userIsAdmin,
+                    }),
+            );
+        }
+
         const cf = new Confetti({ speed: 10, maxCount: 150 });
 
         window.addEventListener("kbar-confetti", () => {
