@@ -86,7 +86,7 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     showLabel = true,
     close,
 }) => {
-    const { dispatch, server } = useAppState();
+    const { dispatch, server, smallScreen } = useAppState();
     const [serverInput, setServerInput] = useState(server);
 
     const dispatchServer = useCallback(() => {
@@ -127,6 +127,7 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                 autoComplete={true}
                 onKeyDown={handleEnter}
                 onFocus={(e) =>
+                    smallScreen &&
                     pushUp(style.settingsInput, e.target as HTMLInputElement)
                 }
                 onBlur={(e) =>
@@ -158,6 +159,7 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
         adminKey,
         notificationHandler,
         server,
+        smallScreen,
     } = useAppState();
 
     const [adminKeyInput, setAdminKeyInput] = useState(adminKey);
@@ -227,6 +229,7 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                 autoComplete={true}
                 onKeyDown={handleEnter}
                 onFocus={(e) =>
+                    smallScreen &&
                     pushUp(style.settingsInput, e.target as HTMLInputElement)
                 }
                 onBlur={(e) =>
