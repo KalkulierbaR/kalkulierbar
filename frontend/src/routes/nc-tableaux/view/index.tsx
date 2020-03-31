@@ -77,15 +77,15 @@ const NCTableauxView: preact.FunctionalComponent = () => {
             setSelectedNode(node.id);
         } else {
             setVarAssignSecondNodeId(node.id);
-            const vars: string[] = [];
+            const vars = new Set<string>();
             collectVarsFromNode(vars, selectedNode!.formula);
             collectVarsFromNode(vars, node.formula);
-            if (vars.length <= 0) {
+            if (vars.size <= 0) {
                 sendFOClose(false, {}, node.id);
                 return;
             }
             setVarOrigins([selectedNode!.spelling, node.spelling]);
-            setVarsToAssign(vars);
+            setVarsToAssign(Array.from(vars));
             setShowVarAssignDialog(true);
         }
     };

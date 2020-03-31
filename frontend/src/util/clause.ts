@@ -99,15 +99,17 @@ export const getCandidateClause = (
 
 /**
  * Check an array of FO Relations for vars to assign
+ * @param {Set<string>} vars - The vars to add to
  * @param {FORelation[]} relations - The relations to search in
- * @returns {string[]} - The vars found
+ * @returns {void}
  */
-export const checkRelationsForVar = (relations: FORelation[]) => {
-    const vars: string[] = [];
-
+export const checkRelationsForVar = (
+    vars: Set<string>,
+    relations: FORelation[],
+) => {
     const checkArgumentForVar = (argument: FOArgument) => {
         if (argument.type === FOArgumentType.quantifiedVariable) {
-            vars.push(argument.spelling);
+            vars.add(argument.spelling);
         }
         if (argument.arguments) {
             argument.arguments.forEach(checkArgumentForVar);
@@ -116,21 +118,18 @@ export const checkRelationsForVar = (relations: FORelation[]) => {
     relations.forEach((relation) => {
         relation.arguments.forEach(checkArgumentForVar);
     });
-
-    return vars;
 };
 
 /**
  * Check an array of FO Atoms for vars to assign
+ * @param {Set<string>} vars - The vars to add to
  * @param {FOAtom[]} atoms - The atoms to search in
- * @returns {string[]} - The vars found
+ * @returns {void}
  */
-export const checkAtomsForVars = (atoms: FOAtom[]) => {
-    const vars: string[] = [];
-
+export const checkAtomsForVars = (vars: Set<string>, atoms: FOAtom[]) => {
     const checkArgumentForVar = (argument: FOArgument) => {
         if (argument.type === FOArgumentType.quantifiedVariable) {
-            vars.push(argument.spelling);
+            vars.add(argument.spelling);
         }
         if (argument.arguments) {
             argument.arguments.forEach(checkArgumentForVar);
@@ -139,6 +138,4 @@ export const checkAtomsForVars = (atoms: FOAtom[]) => {
     atoms.forEach((atom) => {
         atom.lit.arguments.forEach(checkArgumentForVar);
     });
-
-    return vars;
 };

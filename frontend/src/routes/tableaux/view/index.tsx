@@ -194,16 +194,17 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         } else if (instanceOfFOTabState(state, calculus)) {
             // Prepare dialog for automatic/manual unification
             setVarAssignSecondNodeId(newNode.id);
-            const vars = checkRelationsForVar([
+            const vars = new Set<string>();
+            checkRelationsForVar(vars, [
                 selectedNode!.relation!,
                 newNode.relation!,
             ]);
-            if (vars.length <= 0) {
+            if (vars.size <= 0) {
                 sendFOClose(false, {});
                 return;
             }
             setVarOrigins([nodeName(selectedNode!), nodeName(newNode)]);
-            setVarsToAssign(vars);
+            setVarsToAssign(Array.from(vars));
             setShowVarAssignDialog(true);
         }
         setLemmaMode(false);
@@ -315,7 +316,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     open={showVarAssignDialog}
                     onClose={() => setShowVarAssignDialog(false)}
                     varOrigins={varOrigins}
-                    vars={varsToAssign}
+                    vars={Array.from(varsToAssign)}
                     manualVarAssignOnly={state.manualVarAssign}
                     submitVarAssignCallback={sendFOClose}
                     secondSubmitEvent={sendFOClose}
