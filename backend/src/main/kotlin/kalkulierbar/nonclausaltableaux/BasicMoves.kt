@@ -289,7 +289,7 @@ private fun checkCloseRelation(nodeFormula: LogicNode, closeNodeFormula: LogicNo
             if (nodeFormula.child !is Relation)
                 throw IllegalMove("Node formula '$nodeFormula' is not a negated relation")
             if (closeNodeFormula !is Relation)
-                throw IllegalMove("Close node formula '$closeNodeFormula' is not a relation")
+                throw IllegalMove("Close node formula '$closeNodeFormula' has to be a positive relation")
             val nodeRelation = nodeFormula.child as Relation
             return Pair(nodeRelation, closeNodeFormula)
         }
@@ -297,7 +297,7 @@ private fun checkCloseRelation(nodeFormula: LogicNode, closeNodeFormula: LogicNo
             if (closeNodeFormula.child !is Relation)
                 throw IllegalMove("Close node formula '$closeNodeFormula' is not a negated relation")
             if (nodeFormula !is Relation)
-                throw IllegalMove("Node formula '$nodeFormula' is not a relation")
+                throw IllegalMove("Node formula '$nodeFormula' has to be a positive relation")
             val closeRelation = closeNodeFormula.child as Relation
             return Pair(nodeFormula, closeRelation)
         }
