@@ -141,6 +141,7 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                         label="Save Server URL"
                         mini={true}
                         onClick={onSubmit}
+                        disabled={serverInput.length === 0}
                     />
                 }
             />
@@ -243,6 +244,7 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                         label="Login"
                         mini={true}
                         onClick={onSubmit}
+                        disabled={adminKeyInput.length === 0}
                     />
                 }
             />

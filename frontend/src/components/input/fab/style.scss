@@ -12,6 +12,10 @@
     border-radius: 50%;
     cursor: pointer;
     box-shadow: var(--kbar-shadow-fab);
+
+    &[disabled] {
+        opacity: 0.6;
+    }
 }
 
 .active {
