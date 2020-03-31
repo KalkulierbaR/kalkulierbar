@@ -61,8 +61,17 @@ export interface AppState {
      * The current tutorial mode
      */
     tutorialMode: TutorialMode;
+    /**
+     * Whether the current user successfully logged in as admin
+     */
     isAdmin: boolean;
+    /**
+     * The login that the user provided
+     */
     adminKey: string;
+    /**
+     * The app configuration from backend (disabled calculi, examples, ..)
+     */
     config: Config;
 }
 

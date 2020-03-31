@@ -30,14 +30,6 @@
     align-items: center;
     padding: 10px 0 10px 0;
     margin-bottom: 15px;
-
-    @media (max-width: $hamburgerBreakpoint) {
-        &:hover,
-        &:active,
-        &:focus {
-            background: rgba(0, 0, 0, 0.2);
-        }
-    }
 }
 
 .overlay {

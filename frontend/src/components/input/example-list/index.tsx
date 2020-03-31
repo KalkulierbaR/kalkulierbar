@@ -107,7 +107,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                         onClick={() => useExample(example)}
                     >
                         {example.name ? (
-                            <h3 class="">{example.name}</h3>
+                            <h3>{example.name}</h3>
                         ) : undefined}
                         {example.description ? (
                             <p class={style.description}>
