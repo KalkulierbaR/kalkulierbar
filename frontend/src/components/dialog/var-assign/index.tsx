@@ -140,6 +140,7 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
                 <p class={style.originList}>
                     {varOrigins.map((origin, index) =>
                         <span key={index}>
+                            {index == 0 && "for "}
                             <code class={style.origin}>{origin}</code>
                             {index < (varOrigins.length - 1) && " and "}
                         </span>
