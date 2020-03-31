@@ -22,7 +22,7 @@ import { AppStateActionType } from "../types/app/action";
 import { Calculus } from "../types/calculus";
 import { getConfig, checkCredentials } from "../util/admin";
 
-const SMALL_SCREEN_THRESHOLD = 700;
+const SMALL_SCREEN_THRESHOLD = 740;
 
 /**
  * Check if server is online
@@ -36,6 +36,7 @@ async function checkServer(
 ) {
     try {
         await fetch(url);
+        // notificationHandler.success(`Server ${url} is available`);
     } catch (e) {
         notificationHandler.error(`Server ${url} appears to be offline`);
     }
@@ -89,11 +90,10 @@ const App: preact.FunctionalComponent = () => {
 
     useEffect(() => {
         checkServer(server, notificationHandler);
+        getConfig(server, setConfig, notificationHandler);
     }, [server]);
 
     useEffect(() => {
-        getConfig(server, setConfig, notificationHandler);
-
         if (adminKey) {
             checkCredentials(
                 server,
@@ -111,7 +111,6 @@ const App: preact.FunctionalComponent = () => {
 
         window.addEventListener("kbar-confetti", () => {
             cf.start();
-
             setTimeout(() => cf.stop(), 2000);
         });
 
