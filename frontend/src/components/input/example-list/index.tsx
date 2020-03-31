@@ -33,18 +33,6 @@ const onDelete = (e: Event, index: number) => {
 };
 
 /**
- * Normalizes the user input. It replaces multiple newlines with just one,
- * replaces newlines by semicolon and removes whitespace
- * @param {string} input - The user input
- * @returns {string} - Normalized clause string
- */
-const normalizeInput = (input: string) => {
-    input = input.replace(/\n+$/, "");
-    input = input.replace(/\n+/g, "\n");
-    return encodeURIComponent(input);
-};
-
-/**
  * Parses an example, and changes to the calculus/view
  * @param {Example} example - The example that should be used
  * @returns {void}
@@ -59,9 +47,6 @@ const useExample = async (example: Example) => {
         calculus,
         value: decodeURIComponent(example.formula),
     });
-
-    console.log(example.formula);
-    console.log(normalizeInput(example.formula));
 
     try {
         const response = await fetch(url, {

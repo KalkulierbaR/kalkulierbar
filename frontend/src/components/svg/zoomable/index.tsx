@@ -218,10 +218,6 @@ export default class Zoomable extends Component<Props, State> {
         window.addEventListener("mouseup", mouseUpped);
     };
 
-    public onDblClick = (e: MouseEvent) => {
-        console.log(e);
-    };
-
     public onTouchStart = (e: TouchEvent) => {
         e.stopImmediatePropagation();
         if (!this.ref.current) {
@@ -440,7 +436,6 @@ export default class Zoomable extends Component<Props, State> {
                 {...props}
                 onWheel={this.onWheel}
                 onMouseDown={this.onMouseDown}
-                onDblClick={this.onDblClick}
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}

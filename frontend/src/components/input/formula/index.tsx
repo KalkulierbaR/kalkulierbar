@@ -1,6 +1,6 @@
 import { createRef, h } from "preact";
 import { route } from "preact-router";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import Btn from "../btn";
@@ -70,14 +70,19 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         isAdmin,
         adminKey,
         setConfig,
+        smallScreen,
     } = useAppState();
 
-    const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
+    const [textareaValue, setTextareaValue] = useState("");
     const [exampleNameInput, setExampleNameInput] = useState("");
     const [exampleDescriptionInput, setExampleDescriptionInput] = useState("");
     const [showCreateExampleDialog, setShowCreateExampleDialog] = useState(
         false,
     );
+
+    useEffect(() => {
+        setTextareaValue(savedFormulas[calculus])
+    }, [savedFormulas[calculus]]);
 
     /**
      * Handle the Submit event of the form
@@ -213,7 +218,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     class={style.input}
                     value={textareaValue}
                     onInput={onInput}
-                    autofocus={true}
+                    autofocus={!smallScreen}
                     spellcheck={false}
                     autocomplete="nope"
                     autocapitalize="off"

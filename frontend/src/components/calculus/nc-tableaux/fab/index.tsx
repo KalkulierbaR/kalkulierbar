@@ -134,7 +134,6 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                                 onChange,
                                 notificationHandler,
                             ).then((s) => {
-                                console.log(s);
                                 if (!s) {
                                     return;
                                 }
