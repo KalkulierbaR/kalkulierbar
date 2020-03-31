@@ -119,7 +119,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
 
     return (
         <Fragment>
-            <h2>Non-Clausal Tableaux View</h2>
+            <h2>NC Tableaux View</h2>
 
             <div class="card no-pad">
                 <NCTabTree
