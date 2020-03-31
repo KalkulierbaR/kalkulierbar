@@ -121,32 +121,34 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                             );
                         }}
                     />
-                    <FAB
-                        icon={<UndoIcon />}
-                        label="Undo"
-                        mini={true}
-                        extended={true}
-                        showIconAtEnd={true}
-                        onClick={() => {
-                            sendUndo(
-                                server,
-                                state,
-                                onChange,
-                                notificationHandler,
-                            ).then((s) => {
-                                if (!s) {
-                                    return;
-                                }
-                                for (
-                                    let i = s.nodes.length;
-                                    i < state.nodes.length;
-                                    i++
-                                ) {
-                                    resetDragTransform(i);
-                                }
-                            });
-                        }}
-                    />
+                    {state.moveHistory.length > 0 && (
+                        <FAB
+                            icon={<UndoIcon />}
+                            label="Undo"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                sendUndo(
+                                    server,
+                                    state,
+                                    onChange,
+                                    notificationHandler,
+                                ).then((s) => {
+                                    if (!s) {
+                                        return;
+                                    }
+                                    for (
+                                        let i = s.nodes.length;
+                                        i < state.nodes.length;
+                                        i++
+                                    ) {
+                                        resetDragTransform(i);
+                                    }
+                                });
+                            }}
+                        />
+                    )}
                 </Fragment>
             ) : (
                 <Fragment>
