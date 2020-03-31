@@ -272,13 +272,14 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         state.clauseSet.clauses[newClauseId].atoms[
                             newCandidateAtomIndex
                         ];
-                    const vars = checkAtomsForVars([atom1, atom2]);
-                    if (vars.length > 0) {
+                    const vars = new Set<string>();
+                    checkAtomsForVars(vars, [atom1, atom2]);
+                    if (vars.size > 0) {
                         setVarOrigins([
                             atomToString(atom1),
                             atomToString(atom2),
                         ]);
-                        setVarsToAssign(vars);
+                        setVarsToAssign(Array.from(vars));
                         setShowVarAssignDialog(true);
                         setSelectedClauseAtomIndex(newSelectedClauseAtomIndex);
                         setCandidateAtomIndex(newCandidateAtomIndex);

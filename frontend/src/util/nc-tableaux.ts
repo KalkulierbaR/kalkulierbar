@@ -199,16 +199,16 @@ const ncTabNodeToTree = (
 
 /**
  * Collect vars from a term
- * @param {string[]} vars - The vars array to fill
+ * @param {Set<string>} vars - The vars array to fill
  * @param {FOTerm} term - The term to search in
  * @returns {void}
  */
-export const collectVarsFromTerm = (vars: string[], term: FOTerm) => {
+export const collectVarsFromTerm = (vars: Set<string>, term: FOTerm) => {
     switch (term.type) {
         case "Constant":
             break;
         case "QuantifiedVariable":
-            vars.push(term.spelling);
+            vars.add(term.spelling);
             break;
         case "Function":
             for (const arg of term.arguments) {
@@ -220,11 +220,11 @@ export const collectVarsFromTerm = (vars: string[], term: FOTerm) => {
 
 /**
  * Collect vars from a node
- * @param {string[]} vars - The vars array to fill
+ * @param {Set<string>} vars - The vars array to fill
  * @param {LogicNode} formula - The formula to search in
  * @returns {void}
  */
-export const collectVarsFromNode = (vars: string[], formula: LogicNode) => {
+export const collectVarsFromNode = (vars: Set<string>, formula: LogicNode) => {
     let node: LogicRelation;
     if (formula.type === "not" && formula.child.type === "relation") {
         node = formula.child;
@@ -237,5 +237,4 @@ export const collectVarsFromNode = (vars: string[], formula: LogicNode) => {
     for (const arg of node.arguments) {
         collectVarsFromTerm(vars, arg);
     }
-    return vars;
 };

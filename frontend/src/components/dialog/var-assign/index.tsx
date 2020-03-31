@@ -141,15 +141,17 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
             onClose={onClose}
             class={className}
         >
-            <p class={style.originList}>
-                {"For "}
-                {varOrigins.map((origin, index) => (
-                    <span key={index}>
-                        <code class={style.origin}>{origin}</code>
-                        {index < varOrigins.length - 1 && " and "}
-                    </span>
-                ))}
-            </p>
+            {varOrigins !== undefined && varOrigins.length > 0 && (
+                <p class={style.originList}>
+                    {"For "}
+                    {varOrigins.map((origin, index) => (
+                        <span key={index}>
+                            <code class={style.origin}>{origin}</code>
+                            {index < varOrigins.length - 1 && " and "}
+                        </span>
+                    ))}
+                </p>
+            )}
             {vars.map((variable, index) => (
                 <p key={variable}>
                     <TextInput

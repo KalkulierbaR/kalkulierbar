@@ -94,7 +94,8 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
     } = useAppState();
     const apiInfo = { onChange, server, notificationHandler, state };
 
-    const couldShowCheckCloseHint = containsEmptyClause(state.clauseSet);
+    const couldShowCheckCloseHint =
+        selectedClauseId === undefined && containsEmptyClause(state.clauseSet);
 
     return (
         <Fragment>
