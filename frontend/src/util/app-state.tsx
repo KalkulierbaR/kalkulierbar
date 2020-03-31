@@ -32,7 +32,7 @@ const INIT_APP_STATE: AppState = {
     isAdmin: false,
     adminKey: "",
     config: {
-        disabled: ["prop-tableaux"],
+        disabled: [],
         examples: [],
     },
 };
