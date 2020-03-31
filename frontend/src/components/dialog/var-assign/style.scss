@@ -1,5 +1,10 @@
-.var-origin {
+.origin-list {
+    word-spacing: 10px;
+}
+
+.origin {
     letter-spacing: 1px;
     color: var(--kbar-secondary-text-color);
     font-weight: bold;
+    font-size: 16px;
 }

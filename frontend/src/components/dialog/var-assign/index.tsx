@@ -137,10 +137,10 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
     return (
         <Dialog open={open} label={dialogLabel} onClose={onClose}>
             <div class={`card ${className}`}>
-                <p>
+                <p class={style.originList}>
                     {varOrigins.map((origin, index) =>
                         <span key={index}>
-                            <span class={style.varOrigin}>{origin}</span>
+                            <code class={style.origin}>{origin}</code>
                             {index < (varOrigins.length - 1) && " and "}
                         </span>
                     )}
