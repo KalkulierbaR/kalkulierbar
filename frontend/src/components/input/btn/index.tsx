@@ -15,6 +15,14 @@ interface Props {
      */
     onClick?: (e: Event) => void;
     /**
+     * Handler for focus
+     */
+    onFocus?: (e: FocusEvent) => void;
+    /**
+     * Handler for blur
+     */
+    onBlur?: (e: FocusEvent) => void;
+    /**
      * The button's name
      */
     name?: string;
@@ -52,6 +60,8 @@ const Btn: preact.FunctionalComponent<Props> = ({
     id,
     type = "button",
     onClick,
+    onBlur,
+    onFocus,
     name,
     value,
     label,
@@ -64,6 +74,8 @@ const Btn: preact.FunctionalComponent<Props> = ({
     return (
         <button
             onClick={onClick}
+            onFocus={onFocus}
+            onBlur={onBlur}
             id={id}
             type={type}
             name={name}

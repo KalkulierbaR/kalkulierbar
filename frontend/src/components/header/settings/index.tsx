@@ -21,7 +21,7 @@ import LogInIcon from "../../icons/log-in";
  * @param {HTMLInputElement} target - the element whose ancestors to search
  * @returns {HTMLElement} - the parent
  */
-const getParentWithClass = (className: string, target: HTMLInputElement) => {
+const getParentWithClass = (className: string, target: HTMLElement) => {
     let el: HTMLElement = target;
 
     while (!el.classList.contains(className)) {
@@ -36,12 +36,11 @@ const getParentWithClass = (className: string, target: HTMLInputElement) => {
 
 /**
  * Pushes up an element to 96px
- * @param {string} className - The class of the element to push
- * @param {HTMLInputElement} target - the target of the focus event
+ * @param {FocusEvent} e - the event to handle
  * @returns {void} - void
  */
-const pushUp = (className: string, target: HTMLInputElement) => {
-    const el = getParentWithClass(className, target);
+const pushUp = (e: FocusEvent) => {
+    const el = getParentWithClass(style.settingsInput, e.target as HTMLElement);
 
     const startPos = el.getBoundingClientRect();
 
@@ -50,12 +49,11 @@ const pushUp = (className: string, target: HTMLInputElement) => {
 
 /**
  * Removes transform
- * @param {string} className - The class of the element to push
- * @param {HTMLInputElement} target - the target of the focus event
+ * @param {FocusEvent} e - the event to handle
  * @returns {void} - void
  */
-const removeTransform = (className: string, target: HTMLInputElement) => {
-    const el = getParentWithClass(className, target);
+const removeTransform = (e: FocusEvent) => {
+    const el = getParentWithClass(style.settingsInput, e.target as HTMLElement);
 
     el.removeAttribute("style");
 };
@@ -125,22 +123,16 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                 type="url"
                 autoComplete={true}
                 onKeyDown={handleEnter}
-                onFocus={(e) =>
-                    smallScreen &&
-                    pushUp(style.settingsInput, e.target as HTMLInputElement)
-                }
-                onBlur={(e) =>
-                    removeTransform(
-                        style.settingsInput,
-                        e.target as HTMLInputElement,
-                    )
-                }
+                onFocus={(e) => smallScreen && pushUp(e)}
+                onBlur={removeTransform}
                 submitButton={
                     <FAB
                         icon={<SaveIcon />}
                         label="Save Server URL"
                         mini={true}
                         onClick={onSubmit}
+                        onFocus={(e) => smallScreen && pushUp(e)}
+                        onBlur={removeTransform}
                         disabled={serverInput.length === 0}
                     />
                 }
@@ -228,22 +220,16 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                 type="password"
                 autoComplete={true}
                 onKeyDown={handleEnter}
-                onFocus={(e) =>
-                    smallScreen &&
-                    pushUp(style.settingsInput, e.target as HTMLInputElement)
-                }
-                onBlur={(e) =>
-                    removeTransform(
-                        style.settingsInput,
-                        e.target as HTMLInputElement,
-                    )
-                }
+                onFocus={(e) => smallScreen && pushUp(e)}
+                onBlur={removeTransform}
                 submitButton={
                     <FAB
                         icon={<LogInIcon />}
                         label="Login"
                         mini={true}
                         onClick={onSubmit}
+                        onFocus={(e) => smallScreen && pushUp(e)}
+                        onBlur={removeTransform}
                         disabled={adminKeyInput.length === 0}
                     />
                 }

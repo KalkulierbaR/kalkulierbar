@@ -36,6 +36,14 @@ interface Props {
      */
     onClick?: (e: MouseEvent) => void;
     /**
+     * Handler for focus
+     */
+    onFocus?: (e: FocusEvent) => void;
+    /**
+     * Handler for blur
+     */
+    onBlur?: (e: FocusEvent) => void;
+    /**
      * Additional className for styling
      */
     class?: string;
@@ -53,6 +61,8 @@ const FAB: preact.FunctionalComponent<Props> = ({
     icon,
     showIconAtEnd = false,
     onClick,
+    onFocus,
+    onBlur,
     class: className,
     active = false,
 }) => {
@@ -70,6 +80,8 @@ const FAB: preact.FunctionalComponent<Props> = ({
             disabled={disabled}
             aria-label={label}
             onClick={onClick}
+            onFocus={onFocus}
+            onBlur={onBlur}
         >
             {showIconAtEnd && labelEl}
             {icon}
