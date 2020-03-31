@@ -14,8 +14,8 @@ import FAB from "../../../input/fab";
 import CenterIcon from "../../../icons/center";
 import CheckCircleIcon from "../../../icons/check-circle";
 import UndoIcon from "../../../icons/undo";
-
 import * as style from "./style.scss";
+import DownloadFAB from "../../../input/btn/download";
 
 interface Props {
     /**
@@ -106,6 +106,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
             {selectedNodeId === undefined ? (
                 <Fragment>
                     {resetView}
+                    <DownloadFAB state={state} name="nc-tableuax" />
                     <FAB
                         icon={<CheckCircleIcon />}
                         label="Check"
