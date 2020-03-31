@@ -22,7 +22,7 @@ export interface AppState {
      */
     notification?: Notification;
     /**
-     * Whether the screen is currently small (< 700px width)
+     * Whether the screen is currently small (< 750px width)
      */
     smallScreen: boolean;
     /**
