@@ -83,14 +83,23 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     showLabel = true,
     close,
 }) => {
-    const { dispatch, server, smallScreen } = useAppState();
+    const {
+        dispatch,
+        server,
+        smallScreen,
+        notificationHandler,
+    } = useAppState();
     const [serverInput, setServerInput] = useState(server);
 
     const dispatchServer = useCallback(() => {
+        const value = serverInput.trim();
         dispatch({
             type: AppStateActionType.SET_SERVER,
-            value: serverInput.trim(),
+            value,
         });
+        fetch(value).then(() =>
+            notificationHandler.success("Server was successfully changed"),
+        );
     }, [serverInput]);
 
     const onSubmit = useCallback(() => {
