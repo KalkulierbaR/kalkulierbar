@@ -1,11 +1,12 @@
 # Frontend Checkliste für Manuelles Testen
-Stand Iteration 9 und 10
+Stand Iteration 10
 
 ## Bearbeitete Dateien  
 Es wurden Dateien von **...** bearbeitet.
 * [ ]  Tableaux
 * [ ]  Resolution
 * [ ]  DPLL
+* [ ]  NC-Tableaux
 * [ ]  Components (betreffen alle Kalküle)
 
 
@@ -20,21 +21,20 @@ Alle Verfügbaren Kalkühle sind auswählbar:
 
 ## Admin Interface
 Einloggen:
-* [ ]  das wechseln in die Admin Einstellung ist nur mit dem richtigen Key möglich (definiert in kbar-state.json im Backend)
+* [ ]  das Wechseln in die Admin Einstellung ist nur mit dem richtigen Key möglich (definiert in kbar-state.json im Backend)
 
 Eingeloggt:
-* [ ]  die Formel eingabe wurde um den Button `add Example` erweitert.
-* [ ]  Klick auf `add Example` öffnet einen Dialog in dem Name und Beschreibung des Beispiels angegeben werden können.
-* [ ]  die Beispiele wurde um den Button `delete` erweitert.
+* [ ]  die Formeleingabe wird um den Button `Add Example` erweitert.
+* [ ]  Klick auf `Add Example` öffnet einen Dialog in dem Name und Beschreibung des Beispiels angegeben werden können.
+* [ ]  Die Beispiele werden um den Button `delete` erweitert.
 * [ ]  Klick auf `delete` entfernt das Beispiel.
-* [ ]  gespeicherte Beispiele können gelöscht werden.
-* [ ]  Kalküle können aus bzw angeschaltet werden.
-* [ ]  das ausloggen ist möglich.
+* [ ]  Kalküle können aus- bzw. angeschaltet werden.
+* [ ]  Das Ausloggen ist möglich.
 
 
 ## Formeleingabe
-Es werden die Richtigen Tooltipps für die angezeigt:
-* [ ]  Unconected
+Es werden die richtigen Tooltipps für Kalküloptionen angezeigt:
+* [ ]  Unconnected
 * [ ]  Weakly Connected
 * [ ]  Strongly Connected
 * [ ]  Regular
@@ -50,20 +50,16 @@ Beispiele
 
 Bei **FO-Kalkülen** wird die richtige Format-Erklärung gezeigt
 * [ ]  FO-Formeln
-* [ ]  Bei Eingabe von "/.." oder "\\.." im formular-input wird Autovervollständigung für Quantoren vorgeschlagen.
+* [ ]  Bei Eingabe von "/.." oder "\\.." im Formel-Input wird Autovervollständigung für Quantoren vorgeschlagen.
 
 Bei **Propositional-Kalkülen** wird die richtige Format-Erklärung gezeigt
 * [ ]  Clause Sets
 * [ ]  Propositional Formulas
 
 ## Kalkülspezifische Checklisten 
-Einheitliche Formel fürs Testen eines Kalküls spezifiziert unter: `/view`.
+Einheitliche Formel fürs Testen eines Kalküls spezifiziert als Beispiel.
 
 ### Tableaux
-Ein Tutorial mit allen Moves wird zu beginn angezeigt
-* [ ]  `Expand Move`
-* [ ]  `Close Move`
-* [ ]  `Lemma Move`
 
 View
 * [ ]  Prop-Testbaum wird richtig angezeigt
@@ -75,6 +71,7 @@ View
 ![image](/uploads/ab8f7ac0ff3ebc8fc3cb5e54d7f0db35/image.png)
 
 * [ ]  Nodes lassen sich auswählen.
+* [ ]  Nodes lassen sich verschieben.
 * [ ]  Nodes lassen sich durch erneutes auswählen der Node abwählen.
 
 *Bei ausgewählter Klausel:*  
@@ -104,10 +101,6 @@ Floating Action Button zeigt **...**
 *Bei FO-Tablaux:*
 * [ ]  Das automatische Belegen der Variablen ist nur als Option verfügbar wenn es als Parameter gesetzt wird.
 
-*Nur auf Desktop:*
-* [ ]  Der Beweisbaum lässt sich mit Klauseln aus der Liste am linken Rand erweitern
-* [ ]  Klick auf `CHECK` am linken Rand wirft Konfetti sofern der Beweis laut Backend geschlossen ist.
-
 *Darstellung:*
 * [ ]  Ausgewählte Nodes werden farblich anders markiert.
 * [ ]  Es wird eine zusätzliche Kante zwischen Blatt und der Node gezogen mit der geschlossen wurde.
@@ -118,10 +111,6 @@ Floating Action Button zeigt **...**
 
 
 ### Resolution
-Ein Tutorial mit allen Moves wird zu beginn angezeigt
-* [ ]  `Resolve Move`
-* [ ]  `Factorize Move`
-* [ ]  `Hyper Resolution Move`
 
 View
 * [ ]  Prop-Resolution Test wird richtig angezeigt
@@ -132,22 +121,23 @@ View
 
 ![image](/uploads/3e94c1096989330bdf4953c596d1c09d/image.png)
 
+
 * [ ]  Die Klauseln werden in einem Kreis angeordnet.
+* [ ]  man kann zwichen Kreis und Grid view wechseln
 * [ ]  Klauseln lassen sich auswählen.
 * [ ]  Klauseln lassen sich abwählen.
+* [ ]  Klauseln lassen sich verschieben.
 * [ ]  Beim Selektieren von 2 verschiedenen Klauseln werden diese resolviert.
 * [ ]  Falls mehr als 2 Literale dieser Klauseln sich resolvieren lassen öffnet sich ein Dialog in dem man eines der Literale auswählen kann.
 
 *Sowohl bei selektierter als auch nichtselektierter Node:*   
 Der Floating Action Button zeigt  **...**
-* [ ]  `RESET VIEW`
-* [ ]  Klick auf `RESET VIEW` zentriert den Beweisbaum.
-* [ ]  `CHECK`
-* [ ]  Klick auf `CHECK` wirft Konfetti sofern der Beweis laut Backend geschlossen ist.
+* [ ]  `CENTER`
+* [ ]  Klick auf `CENTER` zentriert den Kreis bzw das Grid.
 * [ ]  Falls mindestens eine Klausel ausgeblendet ist, `SHOW ALL`.
 * [ ]  Klick auf `SHOW ALL` blendet alle ausgebelndeten Klauseln ein.
 
-*Bei selectierter Node:*
+*Bei selektierter Node:*
 * [ ]  `FACTORIZE`
 * [ ]  Klick auf `FACTORIZE` faktorisiert doppelte Literale.
 * [ ]  `HYPER RESOLUTION`
@@ -155,19 +145,16 @@ Der Floating Action Button zeigt  **...**
 * [ ]  `HIDE CLAUSE`
 * [ ]  Klick auf `HIDE CLAUSE` blendet die Ausgewählte Klausel aus.
 
-*Bei nicht selectierter Node:*
+*Bei nicht selektierter Node:*
 * [ ]  `DOWNLOAD`
 * [ ]  Klick auf `DOWNLOAD` speichert den aktuellen State lokal.
+* [ ]  `CHECK`
+* [ ]  Klick auf `CHECK` wirft Konfetti sofern der Beweis laut Backend geschlossen ist.
 
 *Darstellung:*
 * [ ]  Die Zoom-Funktion funktioniert
 
 ### DPLL
-
-Ein Tutorial mit allen Moves wird zu beginn angezeigt
-* [ ]  `Resolve Move`
-* [ ]  `Split Move`
-* [ ]  `Prune Move`
 
 View
 * [ ]  DPLL Test wird richtig angezeigt
@@ -188,30 +175,24 @@ Der Floating Action Button zeigt  **...**
 * [ ]  `DOWNLOAD`
 * [ ]  Klick auf `DOWNLOAD` speichert den aktuellen State lokal.
 
-### NC-Tablauxe
-
-Ein Tutorial mit allen Moves wird zu beginn angezeigt
-* [ ]  `Alpha Move`
-* [ ]  `Gamma Move`
-* [ ]  `Delta Move`
-* [ ]  `Close Move`
+### NC-Tablaux
 
 View
-* [ ]  NC-Tablauxe Test wird richtig angezeigt, nach anwendung des Alpha moves
+* [ ]  NC-Tablaux Test wird richtig angezeigt, nach Anwendung des Alpha moves
 
 ![nc_tablauxe](/uploads/5d345edd8874ff3187ca280bc02e7f2b/nc_tablauxe.PNG)
 
-* [ ]  Nodes lassen sich auswählen
+* [ ]  Nodes lassen sich auswählen.
+* [ ]  Nodes lassen sich verschieben.
 * [ ]  Nodes lassen sich durch erneutes auswählen der Node abwählen.
 
 *Bei ausgewählter Klausel:*  
 Floating Action Button zeigt **...**
 * [ ]  `RESET VIEW`
 * [ ]  Klick auf `RESET VIEW` zentriert den Beweisbaum.
-* [ ]  bei auswahl von `(((∀X: ¬R(f(X))) ∧ (R(f(a)) ∨ ¬R(f(b)))) ∧ (∀X: R(f(X))))` `ALPHA`
-* [ ]  bei auswahl von `(R(f(a)) ∨ ¬R(f(b)))` `BETA`
-* [ ]  bei auswahl von `R(f(X_1))` `GAMMA`
-* [ ]  bei auswahl von `???` `DELTA`
+* [ ]  bei Auswahl von `(((∀X: ¬R(f(X))) ∧ (R(f(a)) ∨ ¬R(f(b)))) ∧ (∀X: R(f(X))))` `ALPHA`
+* [ ]  bei Auswahl von `(R(f(a)) ∨ ¬R(f(b)))` `BETA`
+* [ ]  bei Auswahl von `R(f(X_1))` `GAMMA`
 
 *Bei nicht ausgewählter Klausel:*  
 Floating Action Button zeigt **...**
@@ -226,6 +207,6 @@ Floating Action Button zeigt **...**
 
 *Darstellung:*
 * [ ]  Ausgewählte Nodes werden farblich anders markiert.
-* [ ]  Es wird eine zusätzliche Kante zwischen Blatt und der Node gezogen mit der geschlossen wurde.
+* [ ]  Es wird eine zusätzliche Kante zwischen Nodes gezogen mit denen geschlossen wurde.
 * [ ]  Der geschlossene Ast wird ausgegraut.
 * [ ]  Die Zoom-Funktion funktioniert.
