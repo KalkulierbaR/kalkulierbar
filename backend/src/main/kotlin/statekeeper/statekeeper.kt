@@ -69,7 +69,7 @@ class StateKeeper {
         fun checkCredentials(mac: String): String {
             val fingerprint = "kbcc"
             if (!verifyMAC(fingerprint, mac))
-                throw AuthenticationException("Invalid MAC")
+                throw AuthenticationException("Invalid password")
 
             return "true"
         }
@@ -87,7 +87,7 @@ class StateKeeper {
         fun setCalculusState(calculus: String, enableString: String, mac: String): String {
             val fingerprint = "kbsc|$calculus|$enableString"
             if (!verifyMAC(fingerprint, mac))
-                throw AuthenticationException("Invalid MAC")
+                throw AuthenticationException("Invalid password")
 
             val enable = (enableString == "true")
 
@@ -116,7 +116,7 @@ class StateKeeper {
             val parsedExample: Example
 
             if (!verifyMAC(fingerprint, mac))
-                throw AuthenticationException("Invalid MAC")
+                throw AuthenticationException("Invalid password")
 
             try {
                 parsedExample = serializer.parse(Example.serializer(), example)
@@ -146,7 +146,7 @@ class StateKeeper {
         fun delExample(exampleIdString: String, mac: String): String {
             val fingerprint = "kbde|$exampleIdString"
             if (!verifyMAC(fingerprint, mac))
-                throw AuthenticationException("Invalid MAC")
+                throw AuthenticationException("Invalid password")
 
             try {
                 val id = exampleIdString.toInt()

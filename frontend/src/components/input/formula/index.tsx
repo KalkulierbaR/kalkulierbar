@@ -1,17 +1,10 @@
 import { createRef, h } from "preact";
 import { route } from "preact-router";
-import { useState } from "preact/hooks";
-import {
-    AppStateActionType,
-    CalculusType,
-    FOCalculus,
-    Params,
-} from "../../../types/app";
-import { addExample } from "../../../util/admin";
+import { useEffect, useState } from "preact/hooks";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
-import Btn from "../../btn";
-import UploadButton from "../../btn/upload";
+import Btn from "../btn";
+import UploadButton from "../btn/upload";
 import Dialog from "../../dialog";
 import AddIcon from "../../icons/add";
 import SaveIcon from "../../icons/save";
@@ -19,6 +12,9 @@ import SendIcon from "../../icons/send";
 import OptionList from "../option-list";
 import TextInput from "../text";
 import * as style from "./style.scss";
+import { CalculusType, Params, FOCalculus } from "../../../types/calculus";
+import { AppStateActionType } from "../../../types/app/action";
+import { addExample } from "../../../util/admin";
 
 declare module "preact" {
     namespace JSX {
@@ -67,22 +63,26 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
 }) => {
     const {
         server,
-        onError,
-        onSuccess,
+        notificationHandler,
         onChange,
         savedFormulas,
         dispatch,
         isAdmin,
         adminKey,
         setConfig,
+        smallScreen,
     } = useAppState();
 
-    const [textareaValue, setTextareaValue] = useState(savedFormulas[calculus]);
+    const [textareaValue, setTextareaValue] = useState("");
     const [exampleNameInput, setExampleNameInput] = useState("");
     const [exampleDescriptionInput, setExampleDescriptionInput] = useState("");
     const [showCreateExampleDialog, setShowCreateExampleDialog] = useState(
         false,
     );
+
+    useEffect(() => {
+        setTextareaValue(savedFormulas[calculus]);
+    }, [savedFormulas[calculus]]);
 
     /**
      * Handle the Submit event of the form
@@ -106,7 +106,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 )}&params=${JSON.stringify(params)}`,
             });
             if (response.status !== 200) {
-                onError(await response.text());
+                notificationHandler.error(await response.text());
             } else {
                 const parsed = await response.json();
                 if (!event) {
@@ -121,8 +121,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                         },
                         adminKey,
                         setConfig,
-                        onError,
-                        onSuccess,
+                        notificationHandler,
                     );
                     setShowCreateExampleDialog(false);
                     setExampleNameInput("");
@@ -133,7 +132,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                 }
             }
         } catch (e) {
-            onError((e as Error).message);
+            notificationHandler.error((e as Error).message);
         }
     };
 
@@ -219,7 +218,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     class={style.input}
                     value={textareaValue}
                     onInput={onInput}
-                    autofocus={true}
+                    autofocus={!smallScreen}
                     spellcheck={false}
                     autocomplete="nope"
                     autocapitalize="off"

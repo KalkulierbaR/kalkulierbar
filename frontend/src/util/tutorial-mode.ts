@@ -1,4 +1,5 @@
-import { AppStateAction, AppStateActionType, TutorialMode } from "../types/app";
+import { TutorialMode } from "../types/app/tutorial";
+import { AppStateAction, AppStateActionType } from "../types/app/action";
 
 /**
  * Returns whether or not the current tutorial mode includes the check button

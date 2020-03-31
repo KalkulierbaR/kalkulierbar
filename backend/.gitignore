@@ -8,4 +8,3 @@ gradlew.bat
 .idea/*
 *.xml
 #gradle-wrapper.*
-kbar-state.json

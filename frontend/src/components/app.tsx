@@ -1,28 +1,44 @@
 import { h } from "preact";
-import AsyncRoute from "preact-async-route";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
-import { AppStateActionType, Calculus } from "../types/app";
-import { checkCredentials, getConfig } from "../util/admin";
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
+import Page404 from "./404";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
+import { useTitle } from "../util/title";
+import Home from "async!../routes/home";
+import Tableaux from "async!../routes/tableaux";
+import TableauxView from "async!../routes/tableaux/view";
+import Resolution from "async!../routes/resolution";
+import ResolutionView from "async!../routes/resolution/view";
+import NCTableaux from "async!../routes/nc-tableaux";
+import NCTableauxView from "async!../routes/nc-tableaux/view";
+import DPLL from "async!../routes/dpll";
+import DPLLView from "async!../routes/dpll/view";
+import { NotificationHandler } from "../types/app/notification";
+import { AppStateActionType } from "../types/app/action";
+import { Calculus } from "../types/calculus";
+import { getConfig, checkCredentials } from "../util/admin";
 
-const SMALL_SCREEN_THRESHOLD = 700;
+const SMALL_SCREEN_THRESHOLD = 750;
 
 /**
  * Check if server is online
  * @param {string} url - The url to send a request to
- * @param {Function} onError - Error handler
+ * @param {NotificationHandler} notificationHandler - Notification Handler
  * @returns {Promise} - Promise that resolves when check is done
  */
-async function checkServer(url: string, onError: (msg: string) => void) {
+async function checkServer(
+    url: string,
+    notificationHandler: NotificationHandler,
+) {
     try {
         await fetch(url);
+        // notificationHandler.success(`Server ${url} is available`);
     } catch (e) {
-        onError(`Server ${url} appears to be offline`);
+        notificationHandler.error(`Server ${url} appears to be offline`);
     }
 }
 
@@ -49,8 +65,7 @@ const App: preact.FunctionalComponent = () => {
         notification,
         server,
         dispatch,
-        onError,
-        removeNotification,
+        notificationHandler,
         setConfig,
         adminKey,
     } = useAppState();
@@ -61,6 +76,8 @@ const App: preact.FunctionalComponent = () => {
         });
     const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
 
+    useTitle(currentUrl);
+
     /**
      * Execute actions based upon if the route changed
      * @param {RouterOnChangeArgs} args - The arguments of the current route change
@@ -68,15 +85,16 @@ const App: preact.FunctionalComponent = () => {
      */
     const onChangeRoute = (args: RouterOnChangeArgs) => {
         setCurrentUrl(args.url);
-        removeNotification();
+        notificationHandler.remove();
     };
 
     useEffect(() => {
-        checkServer(server, onError);
+        checkServer(server, notificationHandler);
+        getConfig(server, setConfig, notificationHandler);
+    }, [server]);
 
-        getConfig(server, setConfig, onError);
-
-        if(adminKey) {
+    useEffect(() => {
+        if (adminKey) {
             checkCredentials(
                 server,
                 adminKey,
@@ -85,6 +103,7 @@ const App: preact.FunctionalComponent = () => {
                         type: AppStateActionType.SET_ADMIN,
                         value: userIsAdmin,
                     }),
+                notificationHandler,
             );
         }
 
@@ -92,7 +111,6 @@ const App: preact.FunctionalComponent = () => {
 
         window.addEventListener("kbar-confetti", () => {
             cf.start();
-
             setTimeout(() => cf.stop(), 2000);
         });
 
@@ -107,115 +125,51 @@ const App: preact.FunctionalComponent = () => {
             <Header currentUrl={currentUrl} />
             <main class={style.main}>
                 <Router onChange={onChangeRoute}>
-                    <AsyncRoute
-                        path="/"
-                        getComponent={() =>
-                            import("../routes/home").then((m) => m.default)
-                        }
-                    />
-                    <AsyncRoute
+                    <Home path="/" />
+                    <Tableaux
                         path={`/${Calculus.propTableaux}`}
                         calculus={Calculus.propTableaux}
-                        getComponent={() =>
-                            import("../routes/tableaux").then((m) => m.default)
-                        }
                     />
-                    <AsyncRoute
+                    <TableauxView
                         path={`/${Calculus.propTableaux}/view`}
                         calculus={Calculus.propTableaux}
-                        getComponent={() =>
-                            import("../routes/tableaux/view").then(
-                                (m) => m.default,
-                            )
-                        }
                     />
-                    <AsyncRoute
+                    <Tableaux
                         path="/fo-tableaux"
                         calculus={Calculus.foTableaux}
-                        getComponent={() =>
-                            import("../routes/tableaux").then((m) => m.default)
-                        }
                     />
-                    <AsyncRoute
+                    <TableauxView
                         path={`/${Calculus.foTableaux}/view`}
                         calculus={Calculus.foTableaux}
-                        getComponent={() =>
-                            import("../routes/tableaux/view").then(
-                                (m) => m.default,
-                            )
-                        }
                     />
-                    <AsyncRoute
+                    <Resolution
                         path={`/${Calculus.propResolution}`}
                         calculus={Calculus.propResolution}
-                        getComponent={() =>
-                            import("../routes/resolution").then(
-                                (m) => m.default,
-                            )
-                        }
                     />
-                    <AsyncRoute
+                    <ResolutionView
                         path={`/${Calculus.propResolution}/view`}
                         calculus={Calculus.propResolution}
-                        getComponent={() =>
-                            import("../routes/resolution/view").then(
-                                (m) => m.default,
-                            )
-                        }
                     />
-                    <AsyncRoute
+                    <Resolution
                         path={`/${Calculus.foResolution}`}
                         calculus={Calculus.foResolution}
-                        getComponent={() =>
-                            import("../routes/resolution").then(
-                                (m) => m.default,
-                            )
-                        }
                     />
-                    <AsyncRoute
+                    <ResolutionView
                         path={`/${Calculus.foResolution}/view`}
                         calculus={Calculus.foResolution}
-                        getComponent={() =>
-                            import("../routes/resolution/view").then(
-                                (m) => m.default,
-                            )
-                        }
                     />
-                    <AsyncRoute
-                        path={`/${Calculus.ncTableaux}`}
-                        getComponent={() =>
-                            import("../routes/nc-tableaux").then(
-                                (m) => m.default,
-                            )
-                        }
-                    />
-                    <AsyncRoute
-                        path={`/${Calculus.ncTableaux}/view`}
-                        getComponent={() =>
-                            import("../routes/nc-tableaux/view").then(
-                                (m) => m.default,
-                            )
-                        }
-                    />
-                    <AsyncRoute
-                        path={`/${Calculus.dpll}`}
-                        getComponent={() =>
-                            import("../routes/dpll").then((m) => m.default)
-                        }
-                    />
-                    <AsyncRoute
-                        path={`/${Calculus.dpll}/view`}
-                        getComponent={() =>
-                            import("../routes/dpll/view").then((m) => m.default)
-                        }
-                    />
+                    <NCTableaux path={`/${Calculus.ncTableaux}`} />
+                    <NCTableauxView path={`/${Calculus.ncTableaux}/view`} />
+                    <DPLL path={`/${Calculus.dpll}`} />
+                    <DPLLView path={`/${Calculus.dpll}/view`} />
+                    <Page404 default={true} />
                 </Router>
             </main>
             <div class={style.notifications}>
                 {notification && (
                     <Snackbar
                         notification={notification}
-                        onDelete={() => removeNotification()}
+                        onDelete={notificationHandler.remove}
                     />
                 )}
             </div>

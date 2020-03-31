@@ -1,8 +1,8 @@
-import { Clause, FOLiteral } from "../../types/clause";
 import { ArrayLayout, LayoutItem } from "../../types/layout";
 import { clauseToString } from "../clause";
 import { maxBy } from "../max-by";
 import { estimateSVGTextWidth } from "../text-width";
+import { Clause, FOLiteral } from "../../types/calculus/clause";
 
 const HEIGHT_PADDING = 16;
 const WIDTH_PADDING = 32;
@@ -13,7 +13,7 @@ const WIDTH_PADDING = 32;
  * @returns {ArrayLayout<Clause>} - The grid layout of the clauses
  */
 export const gridLayout = (
-    clauses: Array<Clause<string | FOLiteral>>,
+    clauses: Clause<string | FOLiteral>[],
 ): ArrayLayout<Clause<string | FOLiteral>> & {
     rows: number;
     columns: number;
@@ -45,7 +45,7 @@ export const gridLayout = (
 
     let rows = 0;
 
-    const data: Array<LayoutItem<Clause<string | FOLiteral>>> = [];
+    const data: LayoutItem<Clause<string | FOLiteral>>[] = [];
 
     for (let i = 0; i < clauses.length; i++) {
         if (i % columns === 0) {

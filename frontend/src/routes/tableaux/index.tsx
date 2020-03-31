@@ -4,15 +4,15 @@ import HintIcon, { Hint } from "../../components/hint";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
-import Radio from "../../components/radio";
-import Switch from "../../components/switch";
-import { Calculus, TableauxCalculusType } from "../../types/app";
+import Radio from "../../components/input/radio";
+import Switch from "../../components/input/switch";
+import { Calculus, TableauxCalculusType } from "../../types/calculus";
 import {
     CnfStrategy,
     FOTableauxParams,
     PropTableauxParams,
     TableauxType,
-} from "../../types/tableaux";
+} from "../../types/calculus/tableaux";
 import { useAppState } from "../../util/app-state";
 
 interface Props {
@@ -163,7 +163,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
-            <ExampleList calculus={calculus}/>
+            <ExampleList calculus={calculus} />
         </Fragment>
     );
 };

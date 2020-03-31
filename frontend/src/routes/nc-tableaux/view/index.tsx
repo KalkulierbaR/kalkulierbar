@@ -1,27 +1,31 @@
 import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
-import Dialog from "../../../components/dialog";
-import HelpMenu from "../../../components/help-menu";
-import VarAssignList from "../../../components/input/var-assign-list";
-import NCTabFAB from "../../../components/nc-tableaux/fab";
-import NCTabTree from "../../../components/nc-tableaux/tree";
-import {Calculus} from "../../../types/app";
-import { NCTabTreeNode } from "../../../types/nc-tableaux";
-import { VarAssign } from "../../../types/tableaux";
+import TutorialDialog from "../../../components/tutorial/dialog";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import NCTabFAB from "../../../components/calculus/nc-tableaux/fab";
+import NCTabTree from "../../../components/calculus/nc-tableaux/tree";
+import { Calculus } from "../../../types/calculus";
+import { NCTabTreeNode } from "../../../types/calculus/nc-tableaux";
+import { VarAssign } from "../../../types/calculus/tableaux";
 import { DragTransform } from "../../../types/ui";
 import { useAppState } from "../../../util/app-state";
 import { collectVarsFromNode, sendClose } from "../../../util/nc-tableaux";
 import { updateDragTransform } from "../../../util/tableaux";
-import exampleState from "./example";
+import { route } from "preact-router";
 
 const NCTableauxView: preact.FunctionalComponent = () => {
-    const { "nc-tableaux": cState, onChange, server, onError } = useAppState();
+    const {
+        "nc-tableaux": cState,
+        onChange,
+        server,
+        notificationHandler,
+    } = useAppState();
 
-    let state = cState;
+    const state = cState;
 
     if (!state) {
-        state = exampleState;
-        onChange(Calculus.ncTableaux, state);
+        route(`/${Calculus.ncTableaux}`);
+        return null;
     }
 
     const [selectedNodeId, setSelectedNode] = useState<number | undefined>(
@@ -45,6 +49,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
     >(undefined);
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+    const [varOrigins, setVarOrigins] = useState<string[]>([]);
 
     const selectedNode =
         selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
@@ -53,6 +58,11 @@ const NCTableauxView: preact.FunctionalComponent = () => {
             ? selectedNode.children.length === 0
             : undefined;
 
+    /**
+     * Handle the selection of a node
+     * @param {NCTabTreeNode} node - The being selected
+     * @returns {void}
+     */
     const handleNodeSelect = (node: NCTabTreeNode) => {
         const newNodeIsLeaf = node.children.length === 0;
         if (selectedNodeId === undefined) {
@@ -67,49 +77,50 @@ const NCTableauxView: preact.FunctionalComponent = () => {
             setSelectedNode(node.id);
         } else {
             setVarAssignSecondNodeId(node.id);
-            const vars: string[] = [];
+            const vars = new Set<string>();
             collectVarsFromNode(vars, selectedNode!.formula);
             collectVarsFromNode(vars, node.formula);
-            if (vars.length <= 0) {
+            if (vars.size <= 0) {
                 sendFOClose(false, {}, node.id);
                 return;
             }
-            setVarsToAssign(vars);
+            setVarOrigins([selectedNode!.spelling, node.spelling]);
+            setVarsToAssign(Array.from(vars));
             setShowVarAssignDialog(true);
         }
     };
 
+    /**
+     * Send a close move to backend
+     * @param {boolean} auto - Whether vars should be assigned automatically
+     * @param {VarAssign} varAssign - Variable assignments
+     * @param {number | undefined} secondID - The second node`s id
+     * @returns {void}
+     */
     const sendFOClose = (
         auto: boolean,
         varAssign: VarAssign = {},
         secondID: number | undefined = varAssignSecondNodeId,
     ) => {
-        if (selectedNodeId === undefined || secondID === undefined) {
-            // Error for debugging
-            throw new Error(
-                "Close move went wrong, since selected nodes could not be identified.",
-            );
-        }
         const leaf = selectedNodeIsLeaf ? selectedNodeId : secondID;
         const pred = selectedNodeIsLeaf ? secondID : selectedNodeId;
         sendClose(
             server,
             state!,
             onChange,
-            onError,
-            leaf,
-            pred,
+            notificationHandler,
+            leaf!,
+            pred!,
             auto ? null : varAssign,
         );
         setSelectedNode(undefined);
-        setVarAssignSecondNodeId(undefined);
-        setVarsToAssign([]);
         setShowVarAssignDialog(false);
     };
 
     return (
         <Fragment>
-            <h2>Non-Clausal Tableaux View</h2>
+            <h2>NC Tableaux View</h2>
+
             <div class="card no-pad">
                 <NCTabTree
                     nodes={state.nodes}
@@ -119,20 +130,16 @@ const NCTableauxView: preact.FunctionalComponent = () => {
                     onDrag={onDrag}
                 />
             </div>
-            <Dialog
+
+            <VarAssignDialog
                 open={showVarAssignDialog}
-                label="Choose variable assignments or leave them blank"
                 onClose={() => setShowVarAssignDialog(false)}
-            >
-                <VarAssignList
-                    vars={varsToAssign}
-                    manualVarAssignOnly={false}
-                    submitVarAssignCallback={sendFOClose}
-                    submitLabel="Assign variables"
-                    secondSubmitEvent={sendFOClose}
-                    secondSubmitLabel="Automatic assignment"
-                />
-            </Dialog>
+                varOrigins={varOrigins}
+                vars={varsToAssign}
+                submitVarAssignCallback={sendFOClose}
+                secondSubmitEvent={sendFOClose}
+            />
+
             <NCTabFAB
                 state={state}
                 selectedNodeId={selectedNodeId}
@@ -140,7 +147,8 @@ const NCTableauxView: preact.FunctionalComponent = () => {
                 resetDragTransform={resetDragTransform}
                 resetDragTransforms={resetDragTransforms}
             />
-            <HelpMenu calculus={Calculus.ncTableaux}/>
+
+            <TutorialDialog calculus={Calculus.ncTableaux} />
         </Fragment>
     );
 };

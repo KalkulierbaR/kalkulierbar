@@ -12,16 +12,16 @@ export function extent(e: HTMLElement | SVGSVGElement): Extent {
             const base = svg.viewBox.baseVal;
             return [
                 [base.x, base.y],
-                [base.x + base.width, base.y + base.height]
+                [base.x + base.width, base.y + base.height],
             ];
         }
         return [
             [0, 0],
-            [svg.width.baseVal.value, svg.height.baseVal.value]
+            [svg.width.baseVal.value, svg.height.baseVal.value],
         ];
     }
     return [
         [0, 0],
-        [e.clientWidth, e.clientHeight]
+        [e.clientWidth, e.clientHeight],
     ];
 }

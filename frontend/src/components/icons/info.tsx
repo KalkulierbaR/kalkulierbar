@@ -13,7 +13,7 @@ interface Props {
 
 const InfoIcon: preact.FunctionalComponent<Props> = ({
     size = 19,
-    fill = "var(--kbar-primary-text-color)"
+    fill = "var(--kbar-primary-text-color)",
 }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"

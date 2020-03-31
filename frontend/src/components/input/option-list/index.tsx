@@ -14,7 +14,7 @@ interface Props {
     /**
      * The function to call, when the user selects an option
      */
-    selectOptionCallback: ((keyValuePair: [number, string]) => void);
+    selectOptionCallback: (keyValuePair: [number, string]) => void;
     /**
      * Additional className for the element
      */
@@ -27,21 +27,23 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     selectOptionCallback,
     className,
 }) => {
-    return(
+    return (
         <div class={`card ${className}`}>
-            {Array.from(options).map((keyValuePair: [number, string]) =>(
+            {Array.from(options).map((keyValuePair: [number, string]) => (
                 <p
                     onClick={() => selectOptionCallback(keyValuePair)}
                     class={classMap({
                         [style.option]: true,
-                        [style.optionSelected]: selectedOptionIds.includes(keyValuePair[0]),
+                        [style.optionSelected]: selectedOptionIds.includes(
+                            keyValuePair[0],
+                        ),
                     })}
                 >
                     {keyValuePair[1]}
                 </p>
             ))}
         </div>
-    )
+    );
 };
 
 export default OptionList;

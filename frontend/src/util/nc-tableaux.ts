@@ -1,4 +1,3 @@
-import { AppStateUpdater } from "../types/app";
 import {
     FOTerm,
     LogicNode,
@@ -6,19 +5,21 @@ import {
     NCTableauxNode,
     NCTableauxState,
     NCTabTreeNode,
-} from "../types/nc-tableaux";
-import { VarAssign } from "../types/tableaux";
+} from "../types/calculus/nc-tableaux";
+import { VarAssign } from "../types/calculus/tableaux";
 import { Tree } from "../types/tree";
 import { sendMove } from "./api";
 import { tree, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
+import { AppStateUpdater } from "../types/app/app-state";
+import { NotificationHandler } from "../types/app/notification";
 
 /**
  * Send alpha move to backend
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @returns {void}
  */
@@ -26,7 +27,7 @@ export const sendAlpha = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
 ) =>
     sendMove(
@@ -35,7 +36,7 @@ export const sendAlpha = (
         state,
         { type: "alpha", nodeID },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -43,7 +44,7 @@ export const sendAlpha = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @returns {void}
  */
@@ -51,7 +52,7 @@ export const sendBeta = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
 ) =>
     sendMove(
@@ -60,7 +61,7 @@ export const sendBeta = (
         state,
         { type: "beta", nodeID },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -68,7 +69,7 @@ export const sendBeta = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @returns {void}
  */
@@ -76,7 +77,7 @@ export const sendGamma = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
 ) =>
     sendMove(
@@ -85,7 +86,7 @@ export const sendGamma = (
         state,
         { type: "gamma", nodeID },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -93,7 +94,7 @@ export const sendGamma = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @returns {void}
  */
@@ -101,7 +102,7 @@ export const sendDelta = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
 ) =>
     sendMove(
@@ -110,7 +111,7 @@ export const sendDelta = (
         state,
         { type: "delta", nodeID },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -118,7 +119,7 @@ export const sendDelta = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} nodeID - The node's id
  * @param {number} closeID - The second node's id
  * @param {VarAssign | null} varAssign - The variable assignments
@@ -128,7 +129,7 @@ export const sendClose = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     nodeID: number,
     closeID: number,
     varAssign: VarAssign | null,
@@ -139,7 +140,7 @@ export const sendClose = (
         state,
         { type: "close", nodeID, closeID, varAssign },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -147,14 +148,14 @@ export const sendClose = (
  * @param {string} server - The server to send a request to
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} stateChanger - The AppStateUpdater
- * @param {VoidFunction} onError - The function to call when an error is encountered
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @returns {void}
  */
 export const sendUndo = (
     server: string,
     state: NCTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ) =>
     sendMove(
         server,
@@ -162,7 +163,7 @@ export const sendUndo = (
         state,
         { type: "undo" },
         stateChanger,
-        onError,
+        notificationHandler,
     );
 
 /**
@@ -198,16 +199,16 @@ const ncTabNodeToTree = (
 
 /**
  * Collect vars from a term
- * @param {string[]} vars - The vars array to fill
+ * @param {Set<string>} vars - The vars array to fill
  * @param {FOTerm} term - The term to search in
  * @returns {void}
  */
-export const collectVarsFromTerm = (vars: string[], term: FOTerm) => {
+export const collectVarsFromTerm = (vars: Set<string>, term: FOTerm) => {
     switch (term.type) {
         case "Constant":
             break;
         case "QuantifiedVariable":
-            vars.push(term.spelling);
+            vars.add(term.spelling);
             break;
         case "Function":
             for (const arg of term.arguments) {
@@ -219,11 +220,11 @@ export const collectVarsFromTerm = (vars: string[], term: FOTerm) => {
 
 /**
  * Collect vars from a node
- * @param {string[]} vars - The vars array to fill
+ * @param {Set<string>} vars - The vars array to fill
  * @param {LogicNode} formula - The formula to search in
  * @returns {void}
  */
-export const collectVarsFromNode = (vars: string[], formula: LogicNode) => {
+export const collectVarsFromNode = (vars: Set<string>, formula: LogicNode) => {
     let node: LogicRelation;
     if (formula.type === "not" && formula.child.type === "relation") {
         node = formula.child;
@@ -236,5 +237,4 @@ export const collectVarsFromNode = (vars: string[], formula: LogicNode) => {
     for (const arg of node.arguments) {
         collectVarsFromTerm(vars, arg);
     }
-    return vars;
 };

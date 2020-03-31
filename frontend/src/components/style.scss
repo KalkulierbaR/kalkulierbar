@@ -7,11 +7,12 @@
 .notifications {
     position: fixed;
     bottom: 16px;
+    z-index: 999;
 }
 
 :global {
     #kbar-svg {
-        visibility: none;
+        visibility: hidden;
         position: absolute;
         top: 0;
         left: 0;

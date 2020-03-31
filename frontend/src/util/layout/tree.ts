@@ -6,12 +6,21 @@ import { maxBy } from "../max-by";
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
 // https://doi.org/10.1002/spe.2213
 
+/**
+ * Creates a tree
+ * @param {number} width - Width of the tree
+ * @param {number} height - Height of the tree
+ * @param {number} y - y coordinate of the tree
+ * @param {T} data - the data of the node
+ * @param {Tree<T>} children - children of the tree
+ * @returns {Tree<T>} - The tree
+ */
 export const tree = <T>(
     width: number,
     height: number,
     y: number,
     data: T,
-    children: Array<Tree<T>>,
+    children: Tree<T>[],
 ): Tree<T> => ({
     width,
     height,
@@ -28,6 +37,12 @@ export const tree = <T>(
     children,
 });
 
+/**
+ * Calculates the layout for the tree
+ * @param {N[]} nodes - The nodes for the tree
+ * @param {Function} nodesToTree - A function to transform the nodes to a tree
+ * @returns {TreeLayout<T>} - The layout for the tree
+ */
 export const treeLayout = <N, T extends { id: number }>(
     nodes: N[],
     nodesToTree: (nodes: N[]) => Tree<T>,
@@ -47,6 +62,12 @@ export const treeLayout = <N, T extends { id: number }>(
     return { width, height: root.treeHeight, root, links };
 };
 
+/**
+ * Traverses a tree in pre order
+ * @param {Tree} t - The tree to traverse
+ * @param {Function} f - The function to apply
+ * @returns {void} - void
+ */
 export const preOrderTraverseTree = <T>(
     t: Tree<T>,
     f: (t: Tree<T>) => void,
@@ -99,7 +120,7 @@ export const findSubTree = <T, V>(
  * @returns {Array<Tree<T>>} - The result array
  */
 export const filterTree = <T>(t: Tree<T>, p: (tree: Tree<T>) => boolean) => {
-    const res: Array<Tree<T>> = [];
+    const res: Tree<T>[] = [];
 
     preOrderTraverseTree(t, (c) => {
         if (p(c)) {
@@ -110,10 +131,15 @@ export const filterTree = <T>(t: Tree<T>, p: (tree: Tree<T>) => boolean) => {
     return res;
 };
 
+/**
+ * Converts a tree to a layout item
+ * @param {Tree} t - the tree to convert
+ * @returns {LayoutItem} - the converted tree
+ */
 export const treeToLayoutItem = <T extends { id: number }>(
     t: Tree<T>,
-): Array<LayoutItem<T>> => {
-    const items: Array<LayoutItem<T>> = [];
+): LayoutItem<T>[] => {
+    const items: LayoutItem<T>[] = [];
 
     preOrderTraverseTree(t, ({ x, y, data }) => {
         items[data.id] = { x, y, data };
@@ -161,7 +187,7 @@ export const getAbsoluteDragTransform = <T extends { id: number }>(
  */
 export const getClosedLeaves = <T extends { closeRef: number | null }>(
     t: Tree<T>,
-): Array<Tree<T>> => filterTree(t, (c) => c.data.closeRef !== null);
+): Tree<T>[] => filterTree(t, (c) => c.data.closeRef !== null);
 
 const getLinks = <T extends { id: number }>(t: Tree<T>): Link[] => {
     const links: Link[] = t.children.map((c) => ({
@@ -174,11 +200,21 @@ const getLinks = <T extends { id: number }>(t: Tree<T>): Link[] => {
     return links.concat(...t.children.map((c) => getLinks(c)));
 };
 
+/**
+ * Handles the actual layout
+ * @param {Tree} t - the tree
+ * @returns {void} - void
+ */
 export const layout = <T>(t: Tree<T>) => {
     firstWalk(t);
     secondWalk(t, 0);
 };
 
+/**
+ * The first walk over the tree
+ * @param {Tree} t - The tree to walk
+ * @returns {void} - void
+ */
 const firstWalk = <T>(t: Tree<T>) => {
     if (!t.children.length) {
         setExtremes(t);
@@ -199,6 +235,11 @@ const firstWalk = <T>(t: Tree<T>) => {
     setExtremes(t);
 };
 
+/**
+ * Sets the extremes of the tree
+ * @param {Tree} t - The tree
+ * @returns {void} - void
+ */
 const setExtremes = <T>(t: Tree<T>) => {
     if (t.children.length) {
         t.extremeLeft = t.children[0].extremeLeft;
@@ -261,6 +302,14 @@ const separate = <T>(t: Tree<T>, i: number, ih: LeftSiblingList) => {
     }
 };
 
+/**
+ * Moves a subtree
+ * @param {Tree} t - the parent tree
+ * @param {number} i - the index of the subtree
+ * @param {number} si - shift index
+ * @param {number} dist - the dist to shift
+ * @returns {void} - void
+ */
 const moveSubTree = <T>(t: Tree<T>, i: number, si: number, dist: number) => {
     t.children[i].mod += dist;
     t.children[i].modsEl += dist;
@@ -270,14 +319,37 @@ const moveSubTree = <T>(t: Tree<T>, i: number, si: number, dist: number) => {
 
 // A contour are just the children you can see from the side
 
+/**
+ * Gets the left contour
+ * @param {Tree} t - the tree
+ * @returns {void} - void
+ */
 const nextLeftContour = <T>(t: Tree<T>) =>
     t.children.length ? t.children[0] : t.tl;
 
+/**
+ * Gets the right contour
+ * @param {Tree} t - the tree
+ * @returns {void} - void
+ */
 const nextRightContour = <T>(t: Tree<T>) =>
     t.children.length ? t.children[t.children.length - 1] : t.tr;
 
+/**
+ * Calculates the bottom coordinate of the tree
+ * @param {Tree} t - the tree
+ * @returns {void} - void
+ */
 const bottom = <T>(t: Tree<T>) => t.y + t.height;
 
+/**
+ * Updates values for the left thread
+ * @param {Tree} t - the tree
+ * @param {number} i - index of the thread
+ * @param {Tree} cl - left contour
+ * @param {number} modSumCl - sum of the mods for the left contour
+ * @returns {void} - void
+ */
 const setLeftThread = <T>(
     t: Tree<T>,
     i: number,
@@ -293,6 +365,14 @@ const setLeftThread = <T>(
     t.children[0].modsEl = t.children[i].modsEl;
 };
 
+/**
+ * Updates values for the right thread
+ * @param {Tree} t - the tree
+ * @param {number} i - index of the thread
+ * @param {Tree} sr - right contour
+ * @param {number} modSumSr - sum of the mods for the right contour
+ * @returns {void} - void
+ */
 const setRightThread = <T>(
     t: Tree<T>,
     i: number,
@@ -308,6 +388,11 @@ const setRightThread = <T>(
     t.children[i].modsEr = t.children[i - 1].modsEr;
 };
 
+/**
+ * Calculates the position of the root
+ * @param {Tree} t - the tree
+ * @returns {void} - void
+ */
 const positionRoot = <T>(t: Tree<T>) => {
     t.prelim =
         (t.children[0].prelim +
@@ -319,6 +404,12 @@ const positionRoot = <T>(t: Tree<T>) => {
         t.width / 2;
 };
 
+/**
+ * The second walk over the tree. Adds spacing between children
+ * @param {Tree} t - the tree
+ * @param {number} modSum - The sum of the mods
+ * @returns {void} - void
+ */
 const secondWalk = <T>(t: Tree<T>, modSum: number) => {
     modSum += t.mod;
     t.x = t.prelim + modSum + t.width / 2;
@@ -328,6 +419,14 @@ const secondWalk = <T>(t: Tree<T>, modSum: number) => {
     }
 };
 
+/**
+ * Distributes extra space
+ * @param {Tree} t - the tree
+ * @param {number} i - index of the child
+ * @param {number} si - sibling index
+ * @param {number} dist - distance to distribute
+ * @returns {void} - void
+ */
 const distributeExtra = <T>(
     t: Tree<T>,
     i: number,
@@ -343,6 +442,11 @@ const distributeExtra = <T>(
     t.children[i].change -= dist - dist / nr;
 };
 
+/**
+ * Adds spacing to the children
+ * @param {Tree} t - the tree
+ * @returns {void} - void
+ */
 const addChildSpacing = <T>(t: Tree<T>) => {
     let d = 0;
     let modSumDelta = 0;
@@ -354,12 +458,26 @@ const addChildSpacing = <T>(t: Tree<T>) => {
     }
 };
 
+/**
+ * Creates a list of left siblings
+ * @param {number} lowY - the lowest y value
+ * @param {number} idx - current index
+ * @param {LeftSiblingList} next - the rest of the list
+ * @returns {void} - void
+ */
 const iyl = (
     lowY: number,
     idx: number,
     next?: LeftSiblingList,
 ): LeftSiblingList => ({ lowY, idx, next });
 
+/**
+ * Updates the left sibling list
+ * @param {number} minY - the minimal y value
+ * @param {number} i - the index
+ * @param {LeftSiblingList} ih - the left sibling list to iterate over
+ * @returns {void} - void
+ */
 const updateIYL = (
     minY: number,
     i: number,
@@ -371,6 +489,12 @@ const updateIYL = (
     return iyl(minY, i, ih);
 };
 
+/**
+ * Calculates the width of the tree
+ * @param {Tree} t - the tree
+ * @returns {number} - the width
+ * @returns {void} - void
+ */
 const treeWidth = <T>(t: Tree<T>): number => {
     const width = t.x + t.width / 2;
     if (t.children.length) {

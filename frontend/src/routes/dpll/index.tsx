@@ -2,7 +2,7 @@ import { Fragment, h } from "preact";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
-import { Calculus } from "../../types/app";
+import { Calculus } from "../../types/calculus";
 
 interface Props {}
 
@@ -11,7 +11,7 @@ const DPLL: preact.FunctionalComponent<Props> = () => {
         <Fragment>
             <Format foLogic={false} />
             <FormulaInput calculus={Calculus.dpll} foLogic={false} />
-            <ExampleList calculus={Calculus.dpll}/>
+            <ExampleList calculus={Calculus.dpll} />
         </Fragment>
     );
 };
