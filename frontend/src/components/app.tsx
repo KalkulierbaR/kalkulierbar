@@ -22,7 +22,7 @@ import { AppStateActionType } from "../types/app/action";
 import { Calculus } from "../types/calculus";
 import { getConfig, checkCredentials } from "../util/admin";
 
-const SMALL_SCREEN_THRESHOLD = 740;
+const SMALL_SCREEN_THRESHOLD = 750;
 
 /**
  * Check if server is online
