@@ -14,8 +14,8 @@ import FAB from "../../../input/fab";
 import CenterIcon from "../../../icons/center";
 import CheckCircleIcon from "../../../icons/check-circle";
 import UndoIcon from "../../../icons/undo";
-
 import * as style from "./style.scss";
+import DownloadFAB from "../../../input/btn/download";
 
 interface Props {
     /**
@@ -106,6 +106,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
             {selectedNodeId === undefined ? (
                 <Fragment>
                     {resetView}
+                    <DownloadFAB state={state} name="nc-tableuax" />
                     <FAB
                         icon={<CheckCircleIcon />}
                         label="Check"
@@ -121,32 +122,34 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                             );
                         }}
                     />
-                    <FAB
-                        icon={<UndoIcon />}
-                        label="Undo"
-                        mini={true}
-                        extended={true}
-                        showIconAtEnd={true}
-                        onClick={() => {
-                            sendUndo(
-                                server,
-                                state,
-                                onChange,
-                                notificationHandler,
-                            ).then((s) => {
-                                if (!s) {
-                                    return;
-                                }
-                                for (
-                                    let i = s.nodes.length;
-                                    i < state.nodes.length;
-                                    i++
-                                ) {
-                                    resetDragTransform(i);
-                                }
-                            });
-                        }}
-                    />
+                    {state.moveHistory.length > 0 && (
+                        <FAB
+                            icon={<UndoIcon />}
+                            label="Undo"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                sendUndo(
+                                    server,
+                                    state,
+                                    onChange,
+                                    notificationHandler,
+                                ).then((s) => {
+                                    if (!s) {
+                                        return;
+                                    }
+                                    for (
+                                        let i = s.nodes.length;
+                                        i < state.nodes.length;
+                                        i++
+                                    ) {
+                                        resetDragTransform(i);
+                                    }
+                                });
+                            }}
+                        />
+                    )}
                 </Fragment>
             ) : (
                 <Fragment>

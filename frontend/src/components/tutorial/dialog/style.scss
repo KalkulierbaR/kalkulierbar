@@ -7,7 +7,8 @@
 .container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: flex-start;
+    align-content: center;
 
     @media (min-width: 870px) {
         display: grid;
@@ -19,7 +20,6 @@
 
 .child {
     max-width: 400px;
-    align-self: flex-start;
     margin-bottom: 16px;
 
     @media (min-width: 870px) {

@@ -208,28 +208,30 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     icon={<CenterIcon />}
                     onClick={() => dispatchEvent(new CustomEvent("center"))}
                 />
-                <FAB
-                    icon={<CheckCircleIcon />}
-                    label="Check"
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() => {
-                        if (getHighlightCheck(tutorialMode)) {
-                            disableTutorial(
-                                dispatch,
-                                tutorialMode,
-                                TutorialMode.HighlightCheck,
+                {selectedClauseId === undefined && (
+                    <FAB
+                        icon={<CheckCircleIcon />}
+                        label="Check"
+                        mini={true}
+                        extended={true}
+                        showIconAtEnd={true}
+                        onClick={() => {
+                            if (getHighlightCheck(tutorialMode)) {
+                                disableTutorial(
+                                    dispatch,
+                                    tutorialMode,
+                                    TutorialMode.HighlightCheck,
+                                );
+                            }
+                            checkClose(
+                                server,
+                                notificationHandler,
+                                calculus,
+                                state,
                             );
-                        }
-                        checkClose(
-                            server,
-                            notificationHandler,
-                            calculus,
-                            state,
-                        );
-                    }}
-                />
+                        }}
+                    />
+                )}
             </ControlFAB>
 
             {hyperRes && hyperRes.atomMap && (

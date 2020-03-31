@@ -81,7 +81,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     );
 
     useEffect(() => {
-        setTextareaValue(savedFormulas[calculus])
+        setTextareaValue(savedFormulas[calculus]);
     }, [savedFormulas[calculus]]);
 
     /**
