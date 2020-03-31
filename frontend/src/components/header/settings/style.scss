@@ -68,4 +68,14 @@
             box-shadow: var(--kbar-shadow-3dp);
         }
     }
+
+    @supports (-webkit-touch-callout: none) {
+        /*
+            iOS is smart enough to push text inputs up by themselves,
+            unlike others (looking at you android).
+            Anyway, because we push it up for android that gets annoying for iOS,
+            so we disable it here
+        */
+        transform: translateY(0px) !important;
+    }
 }
