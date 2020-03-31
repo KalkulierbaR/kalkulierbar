@@ -135,39 +135,38 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
     };
 
     return (
-        <Dialog open={open} label={dialogLabel} onClose={onClose}>
-            <div class={`card ${className}`}>
-                <p class={style.originList}>
-                    {varOrigins.map((origin, index) =>
-                        <span key={index}>
-                            {index == 0 && "for "}
-                            <code class={style.origin}>{origin}</code>
-                            {index < (varOrigins.length - 1) && " and "}
-                        </span>
-                    )}
+        <Dialog open={open} label={dialogLabel} onClose={onClose} class={className}>
+            <p class={style.originList}>
+                {"For "}
+                {varOrigins.map((origin, index) =>
+                    <span key={index}>
+                        <code class={style.origin}>{origin}</code>
+                        {index < (varOrigins.length - 1) && " and "}
+                    </span>
+                )}
+            </p>
+            {vars.map((variable, index) => (
+                <p key={variable}>
+                    <TextInput
+                        id={variable}
+                        label={variable + " := "}
+                        inline={true}
+                        onKeyDown={onKeyDown}
+                        onFocus={onFocus}
+                        autoFocus={index === 0 && (!smallScreen || manualVarAssignOnly)}
+                    />
                 </p>
-                {vars.map((variable, index) => (
-                    <p key={variable}>
-                        <TextInput
-                            id={variable}
-                            label={variable + " := "}
-                            inline={true}
-                            onKeyDown={onKeyDown}
-                            onFocus={onFocus}
-                            autoFocus={index === 0 && (!smallScreen || manualVarAssignOnly)}
-                        />
-                    </p>
-                ))}
-                <Btn onClick={submitManualVarAssign} label={submitLabel} />
-                {!manualVarAssignOnly &&
-                    secondSubmitLabel &&
-                    secondSubmitEvent && (
-                        <Btn
-                            onClick={() => secondSubmitEvent(true)}
-                            label={secondSubmitLabel}
-                        />
-                    )}
-            </div>
+            ))}
+            <Btn onClick={submitManualVarAssign} label={submitLabel} />
+            {!manualVarAssignOnly &&
+                secondSubmitLabel &&
+                secondSubmitEvent && (
+                    <Btn
+                        onClick={() => secondSubmitEvent(true)}
+                        label={secondSubmitLabel}
+                    />
+                )
+            }
         </Dialog>
     );
 };
