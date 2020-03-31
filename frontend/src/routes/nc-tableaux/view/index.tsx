@@ -84,10 +84,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
                 sendFOClose(false, {}, node.id);
                 return;
             }
-            setVarOrigins([
-                selectedNode!.spelling,
-                node.spelling,
-            ]);
+            setVarOrigins([selectedNode!.spelling, node.spelling]);
             setVarsToAssign(vars);
             setShowVarAssignDialog(true);
         }

@@ -82,7 +82,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
     const [varAssignSecondNodeId, setVarAssignSecondNodeId] = useState<
         number | undefined
-        >(undefined);
+    >(undefined);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
     const [varOrigins, setVarOrigins] = useState<string[]>([]);
 
@@ -202,10 +202,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 sendFOClose(false, {});
                 return;
             }
-            setVarOrigins([
-                nodeName(selectedNode!),
-                nodeName(newNode),
-            ]);
+            setVarOrigins([nodeName(selectedNode!), nodeName(newNode)]);
             setVarsToAssign(vars);
             setShowVarAssignDialog(true);
         }

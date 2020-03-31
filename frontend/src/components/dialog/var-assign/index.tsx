@@ -4,7 +4,7 @@ import { VarAssign } from "../../../types/calculus/tableaux";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
 import Dialog from "../index";
-import {useAppState} from "../../../util/app-state";
+import { useAppState } from "../../../util/app-state";
 import * as style from "./style.scss";
 
 interface Props {
@@ -72,7 +72,7 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
     secondSubmitEvent,
     className,
 }) => {
-    const {smallScreen} = useAppState();
+    const { smallScreen } = useAppState();
     const varAssign: VarAssign = {};
     const [focusedInputElement, setFocusedInputElement] = useState<string>(
         vars[0],
@@ -135,15 +135,20 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
     };
 
     return (
-        <Dialog open={open} label={dialogLabel} onClose={onClose} class={className}>
+        <Dialog
+            open={open}
+            label={dialogLabel}
+            onClose={onClose}
+            class={className}
+        >
             <p class={style.originList}>
                 {"For "}
-                {varOrigins.map((origin, index) =>
+                {varOrigins.map((origin, index) => (
                     <span key={index}>
                         <code class={style.origin}>{origin}</code>
-                        {index < (varOrigins.length - 1) && " and "}
+                        {index < varOrigins.length - 1 && " and "}
                     </span>
-                )}
+                ))}
             </p>
             {vars.map((variable, index) => (
                 <p key={variable}>
@@ -153,20 +158,19 @@ const VarAssignDialog: preact.FunctionalComponent<Props> = ({
                         inline={true}
                         onKeyDown={onKeyDown}
                         onFocus={onFocus}
-                        autoFocus={index === 0 && (!smallScreen || manualVarAssignOnly)}
+                        autoFocus={
+                            index === 0 && (!smallScreen || manualVarAssignOnly)
+                        }
                     />
                 </p>
             ))}
             <Btn onClick={submitManualVarAssign} label={submitLabel} />
-            {!manualVarAssignOnly &&
-                secondSubmitLabel &&
-                secondSubmitEvent && (
-                    <Btn
-                        onClick={() => secondSubmitEvent(true)}
-                        label={secondSubmitLabel}
-                    />
-                )
-            }
+            {!manualVarAssignOnly && secondSubmitLabel && secondSubmitEvent && (
+                <Btn
+                    onClick={() => secondSubmitEvent(true)}
+                    label={secondSubmitLabel}
+                />
+            )}
         </Dialog>
     );
 };

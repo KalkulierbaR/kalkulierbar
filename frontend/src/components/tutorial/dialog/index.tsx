@@ -14,7 +14,6 @@ import {
     Calculus,
 } from "../../../types/calculus";
 
-
 interface VideoTutorialProps {
     /**
      * The tutorial title
@@ -38,16 +37,13 @@ const VideoTutorial: preact.FunctionalComponent<VideoTutorialProps> = ({
     title,
     videoSrc,
     text,
-    videoAlt= title,
+    videoAlt = title,
 }) => (
-<div class={style.child}>
-    <h3>{title}</h3>
-    <Video
-        src={videoSrc}
-        alt={videoAlt}
-    />
-    <p>{text}</p>
-</div>
+    <div class={style.child}>
+        <h3>{title}</h3>
+        <Video src={videoSrc} alt={videoAlt} />
+        <p>{text}</p>
+    </div>
 );
 
 interface TutorialDialogProps {
@@ -57,7 +53,9 @@ interface TutorialDialogProps {
     calculus: CalculusType;
 }
 
-const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({ calculus }) => {
+const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
+    calculus,
+}) => {
     const { tutorialMode } = useAppState();
     const [showDialog, setShowDialog] = useState(
         getHighlightCheck(tutorialMode),

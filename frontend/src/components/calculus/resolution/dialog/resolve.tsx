@@ -227,34 +227,45 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
             setHyperRes(
                 addHyperSidePremiss(
                     hyperRes,
-                    clickedOnClauseIsFirstClause ? atomIndex : otherClauseAtomIndex,
+                    clickedOnClauseIsFirstClause
+                        ? atomIndex
+                        : otherClauseAtomIndex,
                     selectedClauses[1],
-                    clickedOnClauseIsFirstClause ? otherClauseAtomIndex : atomIndex,
+                    clickedOnClauseIsFirstClause
+                        ? otherClauseAtomIndex
+                        : atomIndex,
                 ),
             );
             onCloseAtomDialog();
         } else if (instanceOfFOResState(state, calculus)) {
             setClickedOnClauseAtomIndex(atomIndex);
-            const atom1 = state.clauseSet.clauses[selectedClauses[0]].atoms[
-                clickedOnClauseIsFirstClause ? atomIndex : otherClauseAtomIndex
-            ];
-            const atom2 = state.clauseSet.clauses[selectedClauses[1]].atoms[
-                clickedOnClauseIsFirstClause ? otherClauseAtomIndex : atomIndex
-            ];
+            const atom1 =
+                state.clauseSet.clauses[selectedClauses[0]].atoms[
+                    clickedOnClauseIsFirstClause
+                        ? atomIndex
+                        : otherClauseAtomIndex
+                ];
+            const atom2 =
+                state.clauseSet.clauses[selectedClauses[1]].atoms[
+                    clickedOnClauseIsFirstClause
+                        ? otherClauseAtomIndex
+                        : atomIndex
+                ];
             const vars = checkAtomsForVars([atom1, atom2]);
             if (vars.length > 0) {
-                setVarOrigins([
-                    atomToString(atom1),
-                    atomToString(atom2),
-                ]);
+                setVarOrigins([atomToString(atom1), atomToString(atom2)]);
                 setVarsToAssign(vars);
                 setShowVarAssignDialog(true);
             } else {
                 sendResolveUnify(
                     selectedClauses[0],
                     selectedClauses[1],
-                    clickedOnClauseIsFirstClause ? atomIndex : otherClauseAtomIndex,
-                    clickedOnClauseIsFirstClause ? otherClauseAtomIndex : atomIndex,
+                    clickedOnClauseIsFirstClause
+                        ? atomIndex
+                        : otherClauseAtomIndex,
+                    clickedOnClauseIsFirstClause
+                        ? otherClauseAtomIndex
+                        : atomIndex,
                     { ...apiInfo, state },
                 );
                 onCloseAtomDialog();
@@ -275,7 +286,7 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
             firstClauseAtomIndex,
             secondClauseAtomIndex,
             setFirstClauseAtomIndex,
-            true
+            true,
         );
     };
 
@@ -292,7 +303,7 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
             secondClauseAtomIndex,
             firstClauseAtomIndex,
             setSecondClauseAtomIndex,
-            false
+            false,
         );
     };
 
