@@ -3,8 +3,8 @@ stages:
   - test
   - deploy
 
-# Frontend: yarn build
-yarn:
+# Frontend yarn build & test
+test-frontend:
   stage: test
   image: node
   before_script:
@@ -15,8 +15,8 @@ yarn:
   after_script:
     - cd ..
 
-# Backend: gradle build
-gradle:
+# Backend gradle build & test
+test-backend:
   stage: test
   image: gradle:jdk11
   before_script:

@@ -32,6 +32,9 @@ interface CalculusItemProps {
      * The route to render
      */
     route: Route;
+    /**
+     * Whether on/off switch should be shown
+     */
     showSwitch?: boolean;
 }
 
