@@ -82,19 +82,19 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                 {TableauxCalculus.includes(calculus) && (
                     <div class={style.container}>
                         <VideoTutorial
-                            title="Expand Move"
+                            title="Expand Rule"
                             videoSrc="../../../assets/videos/prop_tableaux_expand.mp4"
                             text="You can expand the tree by choosing a leaf and a clause."
                         />
                         <VideoTutorial
-                            title="Close Move"
+                            title="Close Rule"
                             videoSrc="../../../assets/videos/prop_tableaux_close.mp4"
                             text="Close a leaf with a complementary node on the
                                 path to the root. The proof is complete when all
                                 leafs are closed."
                         />
                         <VideoTutorial
-                            title="Lemma Move"
+                            title="Lemma Rule"
                             videoSrc="../../../assets/videos/prop_tableaux_lemma.mp4"
                             text="Select a node which you want to expand with a
                                 lemma and choose the lemma rule. Now all closed
@@ -110,20 +110,20 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                 {ResolutionCalculus.includes(calculus) && (
                     <div class={style.container}>
                         <VideoTutorial
-                            title="Resolve Move"
+                            title="Resolve Rule"
                             videoSrc="../../../assets/videos/prop_resolution_resolve.mp4"
                             text="Choose two clauses with complementary atoms to
                                 resolve them. The proof is complete when the
                                 empty clause has been resolved."
                         />
                         <VideoTutorial
-                            title="Factorize Move"
+                            title="Factorize Rule"
                             videoSrc="../../../assets/videos/prop_resolution_factorize.mp4"
                             text="If a clause has multiple identical atoms, you
                                 can factorize it."
                         />
                         <VideoTutorial
-                            title="Hyper Resolution Move"
+                            title="Hyper Resolution Rule"
                             videoSrc="../../../assets/videos/prop_resolution_hyper.mp4"
                             text="You can resolve multiple clauses at once with
                                 the hyper resolution. The main clause is
@@ -135,7 +135,7 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                 {calculus === Calculus.dpll && (
                     <div class={style.container}>
                         <VideoTutorial
-                            title="Resolve Move"
+                            title="Resolve Rule"
                             videoSrc="../../../assets/videos/dpll_resolve.mp4"
                             text="Choose two clauses with complementary atoms to
                                 resolve them. The proof is complete when the
@@ -143,14 +143,14 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                                 the tree."
                         />
                         <VideoTutorial
-                            title="Split Move"
+                            title="Split Rule"
                             videoSrc="../../../assets/videos/dpll_split.mp4"
                             text="You can split the tree by selecting a node and a
                                 literal. Now you need to proof both paths
                                 separately."
                         />
                         <VideoTutorial
-                            title="Prune Move"
+                            title="Prune Rule"
                             videoSrc="../../../assets/videos/dpll_prune.mp4"
                             text="Select a node and apply the prune rule to undo
                                 all steps below that node."
@@ -160,34 +160,34 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                 {calculus === Calculus.ncTableaux && (
                     <div class={style.container}>
                         <VideoTutorial
-                            title="Alpha Move"
+                            title="Alpha Rule"
                             videoSrc="../../../assets/videos/nc_tableaux_alpha.mp4"
                             text="This splits a formula on it's conjunctions into
                                 multiple nodes, which are chained onto the
                                 current tree path."
                         />
                         <VideoTutorial
-                            title="Beta Move"
+                            title="Beta Rule"
                             videoSrc="../../../assets/videos/nc_tableaux_beta.mp4"
                             text="This splits a formula on it's disjunctions and
                                 adds multiple leafs to the current tree path."
                         />
                         <VideoTutorial
-                            title="Gamma Move"
+                            title="Gamma Rule"
                             videoSrc="../../../assets/videos/nc_tableaux_gamma.mp4"
                             text="This resolves the outermost universal quantifier
                                 of a formula and adds a leaf to the current tree
                                 path."
                         />
                         <VideoTutorial
-                            title="Delta Move"
+                            title="Delta Rule"
                             videoSrc="../../../assets/videos/nc_tableaux_delta.mp4"
                             text="This resolves the outermost existential
                                 quantifier of a formula and adds a leaf to the
                                 current tree path."
                         />
                         <VideoTutorial
-                            title="Close Move"
+                            title="Close Rule"
                             videoSrc="../../../assets/videos/nc_tableaux_close.mp4"
                             text="Choose two clauses with complementary atoms to
                                 resolve them. The proof is complete if the empty
