@@ -106,7 +106,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
             {selectedNodeId === undefined ? (
                 <Fragment>
                     {resetView}
-                    <DownloadFAB state={state} name="nc-tableuax" />
+                    <DownloadFAB state={state} name="nc-tableaux" />
                     <FAB
                         icon={<CheckCircleIcon />}
                         label="Check"
