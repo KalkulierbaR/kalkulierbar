@@ -31,7 +31,7 @@ import HideIcon from "../../../icons/hide";
 import HyperIcon from "../../../icons/hyper";
 import SendIcon from "../../../icons/send";
 import ShowIcon from "../../../icons/show";
-import { ResolutionCalculusType, Calculus } from "../../../../types/calculus";
+import { ResolutionCalculusType } from "../../../../types/calculus";
 import { TutorialMode } from "../../../../types/app/tutorial";
 
 interface Props {
