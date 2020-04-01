@@ -102,7 +102,11 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                 {selectedNodeId === undefined ? (
                     <Fragment>
                         {resetView}
-                        <DownloadFAB state={state} name={calculus} />
+                        <DownloadFAB
+                            state={state}
+                            name={calculus}
+                            type={calculus}
+                        />
                         {state.nodes.filter((node) => !node.isClosed).length >
                             0 && (
                             <FAB
