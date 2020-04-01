@@ -9,7 +9,9 @@ export const getCurrentDate = () => {
     const month = newDate.getUTCMonth() + 1;
     const year = newDate.getUTCFullYear();
 
-    return `${year}${month < 10 ? `0${month}` : `${month}`}${date}`;
+    return `${year}${month < 10 ? `0${month}` : `${month}`}${
+        date < 10 ? `0${date}` : date
+    }`;
 };
 
 /**
