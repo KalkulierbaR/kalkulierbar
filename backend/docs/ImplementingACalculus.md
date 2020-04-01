@@ -1,6 +1,5 @@
 # Implementing your own Calculus
-KalkulierbaR comes with a whole set of features to help you implement your own Calculi
-- let's see how you might want to get started!
+KalkulierbaR comes with a whole set of features to help you implement your own Calculi - let's see how you might want to get started!
 
 ## The Bare Metal
 At their core, calculi are just classes implementing the `Calculus` interface.
@@ -41,11 +40,9 @@ As you have probably noticed, all these functions operate on plain old strings,
 meaning you have both the freedom and the obligation to define your own data interchange format
 that you'd like to use for this calculus.
 
-Also note how the calculus is completely stateless
-- state information is always supplied by the user to the function.
+Also note how the calculus is completely stateless - state information is always supplied by the user to the function.
 
-This means you won't have to worry about keeping tabs on who's currently using the calculus
-- a user might even change servers mid-proof without noticing a thing.
+This means you won't have to worry about keeping tabs on who's currently using the calculus - a user might even change servers mid-proof without noticing a thing.
 
 ## A bit more structured
 Most of the time, you'll probably want to use an established data format like JSON
@@ -53,8 +50,7 @@ for your calculus instead of rolling your own.
 To do so, just implement the `JSONCalculus` instead! Using this interface, you can define your own classes
 to represent proof states, moves, and parameters.
  
-You can then operate on these classes when implementing the calculus logic
-- the corresponding parsing and serialization functions will be called automatically.
+You can then operate on these classes when implementing the calculus logic - the corresponding parsing and serialization functions will be called automatically.
 
 ```kotlin
 class CommonCalculus : JSONCalculus<State, Move, Param>() {
@@ -109,7 +105,7 @@ you can use the `ProtectedState` abstract class we provide for this reason. To m
 it needs to override the `seal` field and the `getHash` function.
 The `getHash` function should transform the state (or at least the parts that you care about not being changed)
 into a string fingerprint deterministically.
-With that in place, you can now user the `stateObj.computeSeal()` and `stateObj.verifySeal()` functions.
+With that in place, you can now use the `stateObj.computeSeal()` and `stateObj.verifySeal()` functions.
 The compute seal function will generate a cryptographic checksum of the state fingerprint and
 store it in the `seal` variable.
 You should always call this before serializing your state.
