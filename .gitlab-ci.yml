@@ -26,24 +26,21 @@ gradle:
   after_script:
     - cd ..
 
-deploy:
-  type: deploy
+#Frontend: deploy to firebase
+deploy-frontend:
   stage: deploy
   image: node
   before_script:
-    - apt-get update -y
-    - apt-get install ruby-dev -y
-    - gem install dpl
     - cd frontend
   script:
-    - dpl --provider=heroku --app=$HEROKU_APP_FRONTEND --api-key=$HEROKU_API_KEY
+    - firebase deploy --token $FIREBASE_TOKEN
   after_script:
     - cd ..
   only:
     - tags
 
-deploy-api:
-  type: deploy
+#Backend: deploy to google cloud
+deploy-backend:
   stage: deploy
   image: gradle:jdk11
   before_script:
