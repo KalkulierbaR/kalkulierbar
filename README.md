@@ -10,7 +10,9 @@ Check out the latest version of Kalkulierbar right here in your browser at [kbar
 
 Host your own instance of KalkulierbaR, whereever you might need it. All you need is some way to serve a static website and some place to run a _jar_.
 Find the frontend and backend builds for the latest release, then simply run the backend jar (with the `--global` flag if you want to use the app from different devices and not just localhost) and point the frontend to your backend server in the settings. Done!
-Or take a look at the backend and frontend directories for more info on how to build KalkulierbaR yourself.
+Or take a look at the backend and frontend directories for more info on how to build KalkulierbaR yourself.  
+
+For information on how to use the admin interface to add examples or disable calculi, see [Admin Interface](./backend/docs/AdminInterface.md).
 
 ## Hack it
 
