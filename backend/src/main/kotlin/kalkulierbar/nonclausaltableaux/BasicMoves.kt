@@ -88,8 +88,8 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
             workList.add(subFormula.rightChild)
             workList.add(subFormula.leftChild)
         } else {
-            // Append the split nodes to every leaf
-            branchLeaveIDs.forEach {
+            // Append the split nodes to every leaf that is not closed
+            branchLeaveIDs.filter { !nodes[it].isClosed }.forEach {
                 nodes.add(NcTableauxNode(it, subFormula.clone()))
                 nodes[it].children.add(nodes.size - 1)
             }
