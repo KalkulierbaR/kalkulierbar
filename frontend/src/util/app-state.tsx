@@ -25,7 +25,7 @@ const INIT_APP_STATE: AppState = {
         [Calculus.dpll]: "",
     },
     server: isDeployed
-        ? "https://kalkulierbar-api.herokuapp.com"
+        ? "https://api.kbar.app"
         : `http://${location.hostname}:7000`,
     theme: Theme.auto,
     tutorialMode: TutorialMode.HighlightAll,
