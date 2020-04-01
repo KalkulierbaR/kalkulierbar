@@ -1,6 +1,5 @@
 import { Fragment, h } from "preact";
 import { NCTableauxState } from "../../../../types/calculus/nc-tableaux";
-import { checkClose } from "../../../../util/api";
 import { useAppState } from "../../../../util/app-state";
 import {
     sendAlpha,
@@ -12,11 +11,11 @@ import {
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
 import CenterIcon from "../../../icons/center";
-import CheckCircleIcon from "../../../icons/check-circle";
 import UndoIcon from "../../../icons/undo";
 import * as style from "./style.scss";
 import DownloadFAB from "../../../input/btn/download";
 import { Calculus } from "../../../../types/calculus";
+import CheckCloseFAB from "../../../input/fab/check-close";
 
 interface Props {
     /**
@@ -112,21 +111,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         name="nc-tableaux"
                         type={Calculus.ncTableaux}
                     />
-                    <FAB
-                        icon={<CheckCircleIcon />}
-                        label="Check"
-                        showIconAtEnd={true}
-                        mini={true}
-                        extended={true}
-                        onClick={() => {
-                            checkClose(
-                                server,
-                                notificationHandler,
-                                "nc-tableaux",
-                                state,
-                            );
-                        }}
-                    />
+                    <CheckCloseFAB calculus={Calculus.ncTableaux}/>
                     {state.moveHistory.length > 0 && (
                         <FAB
                             icon={<UndoIcon />}

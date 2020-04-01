@@ -2,7 +2,6 @@ import { Fragment, h } from "preact";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
 import CenterIcon from "../../../icons/center";
-import CheckCircleIcon from "../../../icons/check-circle";
 import * as style from "../../../../routes/resolution/view/style.scss";
 import { SelectedClauses } from "../../../../types/calculus/clause";
 import {
@@ -11,7 +10,7 @@ import {
     instanceOfPropResState,
     PropResolutionState,
 } from "../../../../types/calculus/resolution";
-import { checkClose, sendMove } from "../../../../util/api";
+import { sendMove } from "../../../../util/api";
 import { useAppState } from "../../../../util/app-state";
 import {
     containsEmptyClause,
@@ -19,10 +18,6 @@ import {
     sendFactorize,
     showHiddenClauses,
 } from "../../../../util/resolution";
-import {
-    disableTutorial,
-    getHighlightCheck,
-} from "../../../../util/tutorial-mode";
 import DownloadFAB from "../../../input/btn/download";
 import CircleIcon from "../../../icons/circle";
 import FactorizeIcon from "../../../icons/factorize";
@@ -32,7 +27,7 @@ import HyperIcon from "../../../icons/hyper";
 import SendIcon from "../../../icons/send";
 import ShowIcon from "../../../icons/show";
 import { ResolutionCalculusType } from "../../../../types/calculus";
-import { TutorialMode } from "../../../../types/app/tutorial";
+import CheckCloseFAB from "../../../input/fab/check-close";
 
 interface Props {
     /**
@@ -88,8 +83,6 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
         server,
         smallScreen,
         onChange,
-        tutorialMode,
-        dispatch,
         notificationHandler,
     } = useAppState();
     const apiInfo = { onChange, server, notificationHandler, state };
@@ -214,28 +207,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     onClick={() => dispatchEvent(new CustomEvent("center"))}
                 />
                 {selectedClauseId === undefined && (
-                    <FAB
-                        icon={<CheckCircleIcon />}
-                        label="Check"
-                        mini={true}
-                        extended={true}
-                        showIconAtEnd={true}
-                        onClick={() => {
-                            if (getHighlightCheck(tutorialMode)) {
-                                disableTutorial(
-                                    dispatch,
-                                    tutorialMode,
-                                    TutorialMode.HighlightCheck,
-                                );
-                            }
-                            checkClose(
-                                server,
-                                notificationHandler,
-                                calculus,
-                                state,
-                            );
-                        }}
-                    />
+                    <CheckCloseFAB calculus={calculus}/>
                 )}
             </ControlFAB>
 

@@ -3,24 +3,18 @@ import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
 import AddIcon from "../../../icons/add";
 import CenterIcon from "../../../icons/center";
-import CheckCircleIcon from "../../../icons/check-circle";
 import {
     FOTableauxState,
     PropTableauxState,
 } from "../../../../types/calculus/tableaux";
-import { checkClose } from "../../../../util/api";
 import { useAppState } from "../../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../../util/tableaux";
-import {
-    disableTutorial,
-    getHighlightCheck,
-} from "../../../../util/tutorial-mode";
 import DownloadFAB from "../../../input/btn/download";
 import ExploreIcon from "../../../icons/explore";
 import LemmaIcon from "../../../icons/lemma";
 import UndoIcon from "../../../icons/undo";
-import { TableauxCalculusType } from "../../../../types/calculus";
-import { TutorialMode } from "../../../../types/app/tutorial";
+import {Calculus, TableauxCalculusType} from "../../../../types/calculus";
+import CheckCloseFAB from "../../../input/fab/check-close";
 
 interface Props {
     /**
@@ -71,8 +65,6 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
         server,
         smallScreen,
         onChange,
-        tutorialMode,
-        dispatch,
         notificationHandler,
     } = useAppState();
 
@@ -128,28 +120,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 }}
                             />
                         )}
-                        <FAB
-                            icon={<CheckCircleIcon />}
-                            label="Check"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                if (getHighlightCheck(tutorialMode)) {
-                                    disableTutorial(
-                                        dispatch,
-                                        tutorialMode,
-                                        TutorialMode.HighlightCheck,
-                                    );
-                                }
-                                checkClose(
-                                    server,
-                                    notificationHandler,
-                                    calculus,
-                                    state,
-                                );
-                            }}
-                        />
+                        <CheckCloseFAB calculus={Calculus.ncTableaux}/>
                         {state.backtracking && state.moveHistory.length > 0 && (
                             <FAB
                                 icon={<UndoIcon />}
