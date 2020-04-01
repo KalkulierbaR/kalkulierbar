@@ -1,7 +1,6 @@
 import { Fragment, h } from "preact";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
-import CenterIcon from "../../../icons/center";
 import * as style from "../../../../routes/resolution/view/style.scss";
 import { SelectedClauses } from "../../../../types/calculus/clause";
 import {
@@ -28,6 +27,7 @@ import SendIcon from "../../../icons/send";
 import ShowIcon from "../../../icons/show";
 import { ResolutionCalculusType } from "../../../../types/calculus";
 import CheckCloseFAB from "../../../input/fab/check-close";
+import CenterFAB from "../../../input/fab/center";
 
 interface Props {
     /**
@@ -87,14 +87,13 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
     } = useAppState();
     const apiInfo = { onChange, server, notificationHandler, state };
 
-    const couldShowCheckCloseHint =
-        selectedClauseId === undefined && containsEmptyClause(state.clauseSet);
-
     return (
         <Fragment>
             <ControlFAB
                 alwaysOpen={!smallScreen}
-                couldShowCheckCloseHint={couldShowCheckCloseHint}
+                couldShowCheckCloseHint={
+                    selectedClauseId === undefined && containsEmptyClause(state.clauseSet)
+                }
                 checkFABPositionFromBottom={1}
             >
                 {selectedClauseId !== undefined ? (
@@ -198,14 +197,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         }}
                     />
                 )}
-                <FAB
-                    mini={true}
-                    extended={true}
-                    label="Center"
-                    showIconAtEnd={true}
-                    icon={<CenterIcon />}
-                    onClick={() => dispatchEvent(new CustomEvent("center"))}
-                />
+                <CenterFAB/>
                 {selectedClauseId === undefined && (
                     <CheckCloseFAB calculus={calculus}/>
                 )}

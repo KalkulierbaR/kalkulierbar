@@ -11,6 +11,7 @@ import SplitIcon from "../../../icons/split";
 import SwitchIcon from "../../../icons/switch";
 import { Calculus } from "../../../../types/calculus";
 import CheckCloseFAB from "../../../input/fab/check-close";
+import CenterFAB from "../../../input/fab/center";
 
 interface Props {
     /**
@@ -55,13 +56,14 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
     } = useAppState();
 
     const couldShowCheckCloseHint = stateIsClosed(state.tree);
+    const treeIsVisible = (!smallScreen || showTree);
 
     return (
         <Fragment>
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
-                checkFABPositionFromBottom={3}
+                checkFABPositionFromBottom={treeIsVisible ? 3 : 2}
             >
                 {smallScreen && (
                     <FAB
@@ -83,23 +85,28 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                     />
                 )}
                 <DownloadFAB state={state} name="dpll" type={Calculus.dpll} />
+                {treeIsVisible && (
+                    <CenterFAB/>
+                )}
                 <CheckCloseFAB calculus={Calculus.dpll}/>
-                <FAB
-                    label="Prune"
-                    icon={<DeleteIcon />}
-                    mini={true}
-                    extended={true}
-                    showIconAtEnd={true}
-                    onClick={() =>
-                        sendPrune(
-                            server,
-                            state,
-                            branch,
-                            onChange,
-                            notificationHandler,
-                        )
-                    }
-                />
+                {treeIsVisible && (
+                    <FAB
+                        label="Prune"
+                        icon={<DeleteIcon/>}
+                        mini={true}
+                        extended={true}
+                        showIconAtEnd={true}
+                        onClick={() =>
+                            sendPrune(
+                                server,
+                                state,
+                                branch,
+                                onChange,
+                                notificationHandler,
+                            )
+                        }
+                    />
+                )}
                 <FAB
                     label="Split"
                     icon={<SplitIcon />}

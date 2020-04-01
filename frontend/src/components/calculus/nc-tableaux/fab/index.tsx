@@ -10,12 +10,12 @@ import {
 } from "../../../../util/nc-tableaux";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
-import CenterIcon from "../../../icons/center";
 import UndoIcon from "../../../icons/undo";
 import * as style from "./style.scss";
 import DownloadFAB from "../../../input/btn/download";
 import { Calculus } from "../../../../types/calculus";
 import CheckCloseFAB from "../../../input/fab/check-close";
+import CenterFAB from "../../../input/fab/center";
 
 interface Props {
     /**
@@ -81,38 +81,24 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
             (selectedNode.formula.type === "not" &&
                 selectedNode.formula.child.type === "allquant"));
 
-    const resetView = (
-        <FAB
-            icon={<CenterIcon />}
-            label="Reset View"
-            mini={true}
-            extended={true}
-            showIconAtEnd={true}
-            onClick={() => {
-                dispatchEvent(new CustomEvent("center"));
-                resetDragTransforms();
-            }}
-        />
-    );
-
-    const couldShowCheckCloseHint = state.nodes[0].isClosed;
+    const showUndoFAB = state.moveHistory.length > 0;
 
     return (
         <ControlFAB
             alwaysOpen={!smallScreen}
-            checkFABPositionFromBottom={2}
-            couldShowCheckCloseHint={couldShowCheckCloseHint}
+            checkFABPositionFromBottom={showUndoFAB ? 2 : 1}
+            couldShowCheckCloseHint={state.nodes[0].isClosed}
         >
             {selectedNodeId === undefined ? (
                 <Fragment>
-                    {resetView}
                     <DownloadFAB
                         state={state}
                         name="nc-tableaux"
                         type={Calculus.ncTableaux}
                     />
+                    <CenterFAB resetDragTransforms={resetDragTransforms}/>
                     <CheckCloseFAB calculus={Calculus.ncTableaux}/>
-                    {state.moveHistory.length > 0 && (
+                    {showUndoFAB && (
                         <FAB
                             icon={<UndoIcon />}
                             label="Undo"
@@ -143,7 +129,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                 </Fragment>
             ) : (
                 <Fragment>
-                    {resetView}
+                    <CenterFAB resetDragTransforms={resetDragTransforms}/>
                     {showAlpha && (
                         <FAB
                             icon={<span class={style.greekLetter}>α</span>}

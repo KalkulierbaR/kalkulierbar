@@ -2,7 +2,6 @@ import { Fragment, h } from "preact";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
 import AddIcon from "../../../icons/add";
-import CenterIcon from "../../../icons/center";
 import {
     FOTableauxState,
     PropTableauxState,
@@ -13,8 +12,9 @@ import DownloadFAB from "../../../input/btn/download";
 import ExploreIcon from "../../../icons/explore";
 import LemmaIcon from "../../../icons/lemma";
 import UndoIcon from "../../../icons/undo";
-import {Calculus, TableauxCalculusType} from "../../../../types/calculus";
+import {TableauxCalculusType} from "../../../../types/calculus";
 import CheckCloseFAB from "../../../input/fab/check-close";
+import CenterFAB from "../../../input/fab/center";
 
 interface Props {
     /**
@@ -68,32 +68,17 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
         notificationHandler,
     } = useAppState();
 
-    const resetView = (
-        <FAB
-            icon={<CenterIcon />}
-            label="Reset View"
-            mini={true}
-            extended={true}
-            showIconAtEnd={true}
-            onClick={() => {
-                dispatchEvent(new CustomEvent("center"));
-                resetDragTransforms();
-            }}
-        />
-    );
-
-    const couldShowCheckCloseHint = state.nodes[0].isClosed;
+    const showUndoFAB = state.backtracking && state.moveHistory.length > 0;
 
     return (
         <Fragment>
             <ControlFAB
                 alwaysOpen={!smallScreen}
-                couldShowCheckCloseHint={couldShowCheckCloseHint}
-                checkFABPositionFromBottom={2}
+                couldShowCheckCloseHint={state.nodes[0].isClosed}
+                checkFABPositionFromBottom={showUndoFAB ? 2 : 1}
             >
                 {selectedNodeId === undefined ? (
                     <Fragment>
-                        {resetView}
                         <DownloadFAB
                             state={state}
                             name={calculus}
@@ -120,8 +105,9 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 }}
                             />
                         )}
-                        <CheckCloseFAB calculus={Calculus.ncTableaux}/>
-                        {state.backtracking && state.moveHistory.length > 0 && (
+                        <CenterFAB resetDragTransforms={resetDragTransforms}/>
+                        <CheckCloseFAB calculus={calculus}/>
+                        {showUndoFAB && (
                             <FAB
                                 icon={<UndoIcon />}
                                 label="Undo"
@@ -154,7 +140,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 ) : (
                     <Fragment>
-                        {resetView}
+                        <CenterFAB resetDragTransforms={resetDragTransforms}/>
                         <FAB
                             icon={<AddIcon />}
                             label="Expand"
