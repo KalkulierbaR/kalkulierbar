@@ -1,9 +1,9 @@
-#defines stages
+# Define stages
 stages:
   - test
   - deploy
 
-#Frontend: yarn build
+# Frontend: yarn build
 yarn:
   stage: test
   image: node
@@ -15,7 +15,7 @@ yarn:
   after_script:
     - cd ..
 
-#Backend: gradle build
+# Backend: gradle build
 gradle:
   stage: test
   image: gradle:jdk11
@@ -26,35 +26,17 @@ gradle:
   after_script:
     - cd ..
 
-deploy:
-  type: deploy
+# Frontend deploy to firebase
+deploy-frontend:
   stage: deploy
   image: node
   before_script:
-    - apt-get update -y
-    - apt-get install ruby-dev -y
-    - gem install dpl
     - cd frontend
   script:
-    - dpl --provider=heroku --app=$HEROKU_APP_FRONTEND --api-key=$HEROKU_API_KEY
+    - firebase deploy --token $FIREBASE_TOKEN
   after_script:
     - cd ..
   only:
     - tags
 
-deploy-api:
-  type: deploy
-  stage: deploy
-  image: gradle:jdk11
-  before_script:
-    - apt-get update -y
-    - apt-get install ruby-dev -y
-    - gem install dpl
-    - cd backend
-  script:
-    - gradle build --no-daemon
-    - dpl --provider=heroku --app=$HEROKU_APP_BACKEND --api-key=$HEROKU_API_KEY --skip-cleanup
-  after_script:
-    - cd ..
-  only:
-    - tags
+# Backend deploy needs to be made manually!
