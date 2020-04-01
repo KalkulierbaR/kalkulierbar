@@ -13,6 +13,7 @@ import SplitIcon from "../../../icons/split";
 import SwitchIcon from "../../../icons/switch";
 import { TutorialMode } from "../../../../types/app/tutorial";
 import { AppStateActionType } from "../../../../types/app/action";
+import { Calculus } from "../../../../types/calculus";
 
 interface Props {
     /**
@@ -86,7 +87,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                         onClick={() => setShowModelDialog(true)}
                     />
                 )}
-                <DownloadFAB state={state} name="dpll" />
+                <DownloadFAB state={state} name="dpll" type={Calculus.dpll} />
                 <FAB
                     icon={<CheckCircleIcon />}
                     label="Check"

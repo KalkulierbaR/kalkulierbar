@@ -36,11 +36,29 @@ const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
         try {
             const state = await readFile(file);
 
+            const jsonState = JSON.parse(state);
+
+            if (typeof jsonState.type !== "string") {
+                notificationHandler.error(
+                    "The uploaded state is missing the `type` field.",
+                );
+                return;
+            }
+
+            if (jsonState.type !== calculus) {
+                notificationHandler.error(
+                    `Expected a state for calculus ${calculus}. Instead got state for ${jsonState.type}.`,
+                );
+                return;
+            }
+
+            delete jsonState.type;
+
             const valid = await checkValid(
                 server,
                 notificationHandler,
                 calculus,
-                state,
+                JSON.stringify(jsonState),
             );
 
             if (valid) {

@@ -31,7 +31,7 @@ import HideIcon from "../../../icons/hide";
 import HyperIcon from "../../../icons/hyper";
 import SendIcon from "../../../icons/send";
 import ShowIcon from "../../../icons/show";
-import { ResolutionCalculusType } from "../../../../types/calculus";
+import { ResolutionCalculusType, Calculus } from "../../../../types/calculus";
 import { TutorialMode } from "../../../../types/app/tutorial";
 
 interface Props {
@@ -185,7 +185,11 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             onClick={() => setShowGrid(!showGrid)}
                         />
-                        <DownloadFAB state={state} name={calculus} />
+                        <DownloadFAB
+                            state={state}
+                            name={calculus}
+                            type={calculus}
+                        />
                     </Fragment>
                 )}
                 {state.hiddenClauses.clauses.length > 0 && (

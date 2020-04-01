@@ -3,6 +3,7 @@ import { useMemo } from "preact/hooks";
 import FAB from "../fab";
 import DownloadIcon from "../../icons/download";
 import * as style from "./style.scss";
+import { CalculusType } from "../../../types/calculus";
 
 interface Props {
     /**
@@ -13,12 +14,21 @@ interface Props {
      * The name of the file
      */
     name: string;
+    /**
+     *
+     */
+    type: CalculusType;
 }
 
-const DownloadFAB: preact.FunctionalComponent<Props> = ({ state, name }) => {
-    const finalJSON = useMemo(() => encodeURIComponent(JSON.stringify(state)), [
-        state,
-    ]);
+const DownloadFAB: preact.FunctionalComponent<Props> = ({
+    state,
+    name,
+    type,
+}) => {
+    const finalJSON = useMemo(() => {
+        state = { ...state, type };
+        return encodeURIComponent(JSON.stringify(state));
+    }, [state]);
 
     return (
         <a
