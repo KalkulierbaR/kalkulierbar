@@ -80,7 +80,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showClauseDialog, setShowClauseDialog] = useState(false);
 
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
-    const [varAssignSecondNodeId, setVarAssignSecondNodeId] = useState<
+    const [foCloseSecondNodeId, setFoCloseSecondNodeId] = useState<
         number | undefined
     >(undefined);
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
@@ -193,16 +193,16 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             setSelectedNodeId(undefined);
         } else if (instanceOfFOTabState(state, calculus)) {
             // Prepare dialog for automatic/manual unification
-            setVarAssignSecondNodeId(newNode.id);
             const vars = new Set<string>();
             checkRelationsForVar(vars, [
                 selectedNode!.relation!,
                 newNode.relation!,
             ]);
             if (vars.size <= 0) {
-                sendFOClose(false, {});
+                sendFOClose(true, {}, newNode.id);
                 return;
             }
+            setFoCloseSecondNodeId(newNode.id);
             setVarOrigins([nodeName(selectedNode!), nodeName(newNode)]);
             setVarsToAssign(Array.from(vars));
             setShowVarAssignDialog(true);
@@ -214,14 +214,18 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
      * FO Tableaux: Submit a close move containing variable assignment rules
      * @param {boolean} autoAssign - Automatically assign variables if this is set to true
      * @param {VarAssign} varAssign - Variable assignments by the user
+     * @param {number | undefined} overwriteSecondNodeId - The second node's id (overwrites foCloseSecondNodeId)
      * @returns {void | Error} - Error if the two nodes for the close move can't be identified
      */
-    const sendFOClose = (autoAssign: boolean, varAssign: VarAssign = {}) => {
+    const sendFOClose = (autoAssign: boolean, varAssign: VarAssign = {}, overwriteSecondNodeId? : number) => {
+        const secondNodeId = overwriteSecondNodeId !== undefined
+            ? overwriteSecondNodeId
+            : foCloseSecondNodeId;
         const leaf = selectedNodeIsLeaf
             ? selectedNodeId
-            : varAssignSecondNodeId;
+            : secondNodeId;
         const pred = selectedNodeIsLeaf
-            ? varAssignSecondNodeId
+            ? secondNodeId
             : selectedNodeId;
         sendClose(
             calculus,
@@ -235,7 +239,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             varAssign,
             () => {
                 setSelectedNodeId(undefined);
-                setVarAssignSecondNodeId(undefined);
+                setFoCloseSecondNodeId(undefined);
                 setShowVarAssignDialog(false);
             },
         );
