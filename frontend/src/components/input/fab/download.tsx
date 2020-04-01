@@ -1,8 +1,8 @@
 import { h } from "preact";
 import { useMemo } from "preact/hooks";
-import FAB from "../fab";
+import FAB from "./index";
 import DownloadIcon from "../../icons/download";
-import * as style from "./style.scss";
+import * as style from "../btn/style.scss";
 import { CalculusType } from "../../../types/calculus";
 
 interface Props {

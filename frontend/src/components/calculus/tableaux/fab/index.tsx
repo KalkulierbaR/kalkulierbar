@@ -8,7 +8,7 @@ import {
 } from "../../../../types/calculus/tableaux";
 import { useAppState } from "../../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../../util/tableaux";
-import DownloadFAB from "../../../input/btn/download";
+import DownloadFAB from "../../../input/fab/download";
 import ExploreIcon from "../../../icons/explore";
 import LemmaIcon from "../../../icons/lemma";
 import UndoIcon from "../../../icons/undo";
@@ -130,7 +130,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                     sendBacktrack(
                                         calculus,
                                         server,
-                                        state!,
+                                        state,
                                         onChange,
                                         notificationHandler,
                                     );

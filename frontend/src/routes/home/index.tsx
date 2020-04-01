@@ -74,8 +74,6 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
                 ) {
                     return;
                 }
-
-                link.current.click();
             }}
         >
             <a href={`/${href}`} ref={link}>

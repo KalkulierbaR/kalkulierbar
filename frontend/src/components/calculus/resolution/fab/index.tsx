@@ -17,7 +17,7 @@ import {
     sendFactorize,
     showHiddenClauses,
 } from "../../../../util/resolution";
-import DownloadFAB from "../../../input/btn/download";
+import DownloadFAB from "../../../input/fab/download";
 import CircleIcon from "../../../icons/circle";
 import FactorizeIcon from "../../../icons/factorize";
 import GridIcon from "../../../icons/grid";
