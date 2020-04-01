@@ -1,9 +1,9 @@
-#defines stages
+# Define stages
 stages:
   - test
   - deploy
 
-#Frontend: yarn build
+# Frontend: yarn build
 yarn:
   stage: test
   image: node
@@ -15,7 +15,7 @@ yarn:
   after_script:
     - cd ..
 
-#Backend: gradle build
+# Backend: gradle build
 gradle:
   stage: test
   image: gradle:jdk11
@@ -26,7 +26,7 @@ gradle:
   after_script:
     - cd ..
 
-#Frontend: deploy to firebase
+# Frontend deploy to firebase
 deploy-frontend:
   stage: deploy
   image: node
@@ -38,3 +38,5 @@ deploy-frontend:
     - cd ..
   only:
     - tags
+
+# Backend deploy needs to be made manually!
