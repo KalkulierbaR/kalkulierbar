@@ -79,7 +79,6 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
 
     return (
         <div class={style.settingsInputWrapper}>
-            <div class={style.overlay} />
             <TextInput
                 class={style.settingsInput}
                 label={showLabel ? "Server" : undefined}
@@ -171,7 +170,6 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
         </div>
     ) : (
         <div class={style.settingsInputWrapper}>
-            <div class={style.overlay} />
             <TextInput
                 class={style.settingsInput}
                 label={showLabel ? "Admin Login" : undefined}

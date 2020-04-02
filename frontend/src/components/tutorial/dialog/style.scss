@@ -34,9 +34,8 @@
 
 .dialog {
     @media (max-height: 799px) {
-        margin-top: 112px;
-        padding-bottom: 112px;
-        min-height: 100%;
+        margin-top: 56px;
+        min-height: calc(100vh - 56px);
     }
     @media (min-height: 800px) {
         min-height: 690px;
