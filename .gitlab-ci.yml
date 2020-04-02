@@ -32,6 +32,8 @@ deploy-frontend:
   image: node
   before_script:
     - cd frontend
+    - yarn
+    - yarn build
     - npm install -g firebase-tools
   script:
     - firebase deploy --token $FIREBASE_TOKEN
