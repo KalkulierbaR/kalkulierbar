@@ -15,49 +15,6 @@ import { checkCredentials } from "../../../util/admin";
 import LogOutIcon from "../../icons/log-out";
 import LogInIcon from "../../icons/log-in";
 
-/**
- * Finds the first parent of `target` with class `className`
- * @param {string} className - The class to look for
- * @param {HTMLInputElement} target - the element whose ancestors to search
- * @returns {HTMLElement} - the parent
- */
-const getParentWithClass = (className: string, target: HTMLElement) => {
-    let el: HTMLElement = target;
-
-    while (!el.classList.contains(className)) {
-        if (!el.parentElement) {
-            throw new Error(`Expected a parent width class name ${className}`);
-        }
-        el = el.parentElement;
-    }
-
-    return el;
-};
-
-/**
- * Pushes up an element to 96px
- * @param {FocusEvent} e - the event to handle
- * @returns {void} - void
- */
-const pushUp = (e: FocusEvent) => {
-    const el = getParentWithClass(style.settingsInput, e.target as HTMLElement);
-
-    const startPos = el.getBoundingClientRect();
-
-    el.style.transform = `translateY(${96 - startPos.top}px)`;
-};
-
-/**
- * Removes transform
- * @param {FocusEvent} e - the event to handle
- * @returns {void} - void
- */
-const removeTransform = (e: FocusEvent) => {
-    const el = getParentWithClass(style.settingsInput, e.target as HTMLElement);
-
-    el.removeAttribute("style");
-};
-
 const Settings: preact.FunctionalComponent = () => {
     return (
         <div class={style.settings}>
@@ -86,7 +43,6 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     const {
         dispatch,
         server,
-        smallScreen,
         notificationHandler,
     } = useAppState();
     const [serverInput, setServerInput] = useState(server);
@@ -123,7 +79,6 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
 
     return (
         <div class={style.settingsInputWrapper}>
-            <div class={style.overlay} />
             <TextInput
                 class={style.settingsInput}
                 label={showLabel ? "Server" : undefined}
@@ -132,16 +87,12 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
                 type="url"
                 autoComplete={true}
                 onKeyDown={handleEnter}
-                onFocus={(e) => smallScreen && pushUp(e)}
-                onBlur={removeTransform}
                 submitButton={
                     <FAB
                         icon={<SaveIcon />}
                         label="Save Server URL"
                         mini={true}
                         onClick={onSubmit}
-                        onFocus={(e) => smallScreen && pushUp(e)}
-                        onBlur={removeTransform}
                         disabled={serverInput.length === 0}
                     />
                 }
@@ -160,7 +111,6 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
         adminKey,
         notificationHandler,
         server,
-        smallScreen,
     } = useAppState();
 
     const [adminKeyInput, setAdminKeyInput] = useState(adminKey);
@@ -220,7 +170,6 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
         </div>
     ) : (
         <div class={style.settingsInputWrapper}>
-            <div class={style.overlay} />
             <TextInput
                 class={style.settingsInput}
                 label={showLabel ? "Admin Login" : undefined}
@@ -229,16 +178,12 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
                 type="password"
                 autoComplete={true}
                 onKeyDown={handleEnter}
-                onFocus={(e) => smallScreen && pushUp(e)}
-                onBlur={removeTransform}
                 submitButton={
                     <FAB
                         icon={<LogInIcon />}
                         label="Login"
                         mini={true}
                         onClick={onSubmit}
-                        onFocus={(e) => smallScreen && pushUp(e)}
-                        onBlur={removeTransform}
                         disabled={adminKeyInput.length === 0}
                     />
                 }

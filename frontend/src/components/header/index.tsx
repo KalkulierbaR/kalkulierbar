@@ -42,7 +42,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
 
     return (
         <header class={style.header}>
-            <a href="/" class={style.mainLink}>
+            <a href="/" class={style.mainLink} onClick={() => setOpen(false)}>
                 <img
                     class={style.logo}
                     src="/assets/icons/logo-plain.svg"

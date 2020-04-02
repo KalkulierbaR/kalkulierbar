@@ -32,50 +32,10 @@
     margin-bottom: 15px;
 }
 
-.overlay {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: #000;
-    opacity: 0;
-    pointer-events: none;
-    transition: background-color 0.2s ease;
-    @media (max-width: $hamburgerBreakpoint) {
-        .settings-input-wrapper:focus-within & {
-            opacity: 0.5;
-            pointer-events: all;
-        }
-    }
-}
-
 .settings-input-wrapper {
     margin-bottom: 20px;
 }
 
 .settings-input {
     overflow-scrolling: unset;
-    transition: all 0.2s ease;
-
-    @media (max-width: $hamburgerBreakpoint) {
-        &:focus-within {
-            //transform: translateY(-312px);
-            background-color: var(--kbar-8dp-color);
-            margin: 0 -16px;
-            padding: 8px;
-            border-radius: var(--kbar-border-radius);
-            box-shadow: var(--kbar-shadow-3dp);
-        }
-    }
-
-    @supports (-webkit-touch-callout: none) {
-        /*
-            iOS is smart enough to push text inputs up by themselves,
-            unlike others (looking at you android).
-            Anyway, because we push it up for android that gets annoying for iOS,
-            so we disable it here
-        */
-        transform: translateY(0px) !important;
-    }
 }

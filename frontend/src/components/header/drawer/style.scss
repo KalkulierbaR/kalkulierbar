@@ -1,28 +1,30 @@
 @import "../vars";
 
 .drawer {
+    display: none;
     position: absolute;
-
+    z-index: 12;
     top: 56px;
     left: 0;
-    right: 0;
     height: calc(100vh - 56px);
-    overflow: hidden;
+    width: 100%;
     max-height: 0;
+    overflow: hidden;
     transition: max-height 250ms ease;
     color: var(--kbar-primary-text-color);
     background-color: var(--kbar-card-color);
 
-    @media (min-width: $hamburgerBreakpoint) {
-        display: none;
-    }
-
-    &.open {
-        max-height: calc(100vh - 56px);
+    @media (max-width: $hamburgerBreakpoint) {
+        &.open {
+            display: block;
+            overflow-y: scroll;
+            max-height: calc(100vh - 56px);
+        }
     }
 
     .inner {
-        padding: 16px;
+        z-index: 13;
+        padding: 16px 16px 300px 16px;
 
         & > nav {
             display: flex;
