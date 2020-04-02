@@ -27,13 +27,14 @@ class PropositionalResolution : GenericResolution<String>,
 
     override fun applyMoveOnState(state: ResolutionState, move: ResolutionMove): ResolutionState {
         when (move) {
-            is MoveResolve -> resolve(state, move.c1, move.c2, move.literal)
-            is MoveHide -> hide(state, move.c1)
-            is MoveShow -> show(state)
+            is MoveResolve -> state.resolve(move.c1, move.c2, move.literal)
+            is MoveHide -> state.hide(move.c1)
+            is MoveShow -> state.show()
             is MoveHyper -> hyper(state, move.mainID, move.atomMap)
             is MoveFactorize -> factorize(state, move.c1)
             else -> throw IllegalMove("Unknown move")
         }
+        state.lastMove = move
         return state
     }
 
@@ -74,7 +75,7 @@ class PropositionalResolution : GenericResolution<String>,
      */
     @Suppress("ThrowsCount")
     fun hyper(
-        state: GenericResolutionState<String>,
+        state: ResolutionState,
         mainID: Int,
         atomMap: Map<Int, Pair<Int, Int>>
     ) {
@@ -115,7 +116,7 @@ class PropositionalResolution : GenericResolution<String>,
         state.newestNode = clauses.size - 1
     }
 
-    override fun checkCloseOnState(state: ResolutionState) = getCloseMessage(state)
+    override fun checkCloseOnState(state: ResolutionState) = state.getCloseMessage()
 
     @Suppress("TooGenericExceptionCaught")
     override fun jsonToState(json: String): ResolutionState {
@@ -171,6 +172,8 @@ class ResolutionState(
 ) : GenericResolutionState<String>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<String>()
+
+    var lastMove: ResolutionMove? = null
 
     override var seal = ""
 

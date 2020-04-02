@@ -19,5 +19,5 @@ export interface ArrayLayout<T> extends Layout {
     /**
      * The array of items with their coordinates
      */
-    data: Array<LayoutItem<T>>;
+    data: LayoutItem<T>[];
 }

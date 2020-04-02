@@ -1,6 +1,4 @@
-import { StateUpdater } from "preact/hooks/src";
-import { AppStateUpdater, TableauxCalculusType } from "../types/app";
-import { LayoutItem } from "../types/layout";
+import { StateUpdater } from "preact/hooks";
 import {
     FOTableauxState,
     instanceOfFOTabState,
@@ -9,12 +7,15 @@ import {
     TableauxNode,
     TableauxTreeLayoutNode,
     VarAssign,
-} from "../types/tableaux";
+} from "../types/calculus/tableaux";
 import { Tree, TreeLayout } from "../types/tree";
 import { DragTransform } from "../types/ui";
 import { sendMove } from "./api";
-import { filterTree, tree, treeFind, treeLayout } from "./layout/tree";
+import { tree, treeFind, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
+import { TableauxCalculusType } from "../types/calculus";
+import { AppStateUpdater } from "../types/app/app-state";
+import { NotificationHandler } from "../types/app/notification";
 
 /**
  * Finds the first open leaf and returns its id.
@@ -37,8 +38,7 @@ export const nextOpenLeaf = (nodes: TableauxNode[]) => {
  * @param {string} server - URL of server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {Function} onWarning - Warning handler
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} leaf - The selected leaf
  * @param {number} pred - The selected predecessor
  * @param {boolean} autoClose - The server should decide about the variable assignment
@@ -51,42 +51,42 @@ export const sendClose = (
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     leaf: number,
     pred: number,
     autoClose?: boolean,
     varAssignments?: VarAssign,
     callback?: CallableFunction,
 ) => {
-    if (instanceOfPropTabState(state, calculus)) {
+    if (instanceOfPropTabState(state, calculus) || autoClose) {
         sendMove(
             server,
             calculus,
             state,
-            { type: "CLOSE", id1: leaf, id2: pred },
+            { type: "tableaux-close", id1: leaf, id2: pred },
             stateChanger,
-            onError,
-            onWarning,
+            notificationHandler,
         );
-    } else if (instanceOfFOTabState(state, calculus)) {
+    } else if (
+        instanceOfFOTabState(state, calculus) &&
+        varAssignments !== undefined
+    ) {
         sendMove(
             server,
             calculus,
             state,
             {
-                type: autoClose ? "AUTOCLOSE" : "CLOSE",
+                type: "tableaux-close-assign",
                 id1: leaf,
                 id2: pred,
-                varAssign: varAssignments!,
+                varAssign: varAssignments,
             },
             stateChanger,
-            onError,
-            onWarning,
+            notificationHandler,
         );
-        if (callback !== undefined) {
-            callback();
-        }
+    }
+    if (callback !== undefined) {
+        callback();
     }
 };
 
@@ -96,8 +96,7 @@ export const sendClose = (
  * @param {string} server - URL of the server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {Function} onWarning - Warning handler
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 export const sendBacktrack = (
@@ -105,31 +104,16 @@ export const sendBacktrack = (
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
-) => {
-    if (instanceOfPropTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "UNDO", id1: -1, id2: -1 },
-            stateChanger,
-            onError,
-            onWarning,
-        );
-    } else if (instanceOfFOTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "UNDO", id1: -1, id2: -1, varAssign: {} },
-            stateChanger,
-            onError,
-            onWarning,
-        );
-    }
-};
+    notificationHandler: NotificationHandler,
+) =>
+    sendMove(
+        server,
+        calculus,
+        state,
+        { type: "tableaux-undo" },
+        stateChanger,
+        notificationHandler,
+    );
 
 /**
  * Wrapper to send move request
@@ -137,8 +121,7 @@ export const sendBacktrack = (
  * @param {string} server - URL of the server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {Function} onWarning - Warning handler
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} leaf - The selected leaf
  * @param {number} clause - The selected clause
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
@@ -148,33 +131,18 @@ export const sendExtend = (
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     leaf: number,
     clause: number,
-) => {
-    if (instanceOfPropTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "EXPAND", id1: leaf, id2: clause },
-            stateChanger,
-            onError,
-            onWarning,
-        );
-    } else if (instanceOfFOTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "EXPAND", id1: leaf, id2: clause, varAssign: {} },
-            stateChanger,
-            onError,
-            onWarning,
-        );
-    }
-};
+) =>
+    sendMove(
+        server,
+        calculus,
+        state,
+        { type: "tableaux-expand", id1: leaf, id2: clause },
+        stateChanger,
+        notificationHandler,
+    );
 
 /**
  * Wrapper to send move request
@@ -182,8 +150,7 @@ export const sendExtend = (
  * @param {string} server - URL of the server
  * @param {PropTableauxState} state - The current State
  * @param {AppStateUpdater} stateChanger - The state update function
- * @param {Function} onError - Error handler
- * @param {Function} onWarning - Warning handler
+ * @param {NotificationHandler} notificationHandler - The notification handler
  * @param {number} leaf - The selected leaf
  * @param {number} lemma - The selected Node to be used as lemma
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
@@ -193,34 +160,31 @@ export const sendLemma = (
     server: string,
     state: PropTableauxState | FOTableauxState,
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     leaf: number,
     lemma: number,
-) => {
-    if (instanceOfPropTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "LEMMA", id1: leaf, id2: lemma },
-            stateChanger,
-            onError,
-            onWarning,
-        );
-    } else if (instanceOfFOTabState(state, calculus)) {
-        sendMove(
-            server,
-            calculus,
-            state,
-            { type: "LEMMA", id1: leaf, id2: lemma, varAssign: {} },
-            stateChanger,
-            onError,
-            onWarning,
-        );
-    }
+) =>
+    sendMove(
+        server,
+        calculus,
+        state,
+        { type: "tableaux-lemma", id1: leaf, id2: lemma },
+        stateChanger,
+        notificationHandler,
+    );
+
+/**
+ * @param {TableauxNode} node - The node
+ * @returns {string} - The name
+ */
+export const nodeName = (node: TableauxNode) => {
+    return `${node.negated ? "¬" : ""}${node.spelling}`;
 };
 
+/**
+ * @param {TableauxNode[]} nodes - The nodes to work on
+ * @returns {TreeLayout<TableauxTreeLayoutNode>} - The tree layout
+ */
 export const tableauxTreeLayout = (
     nodes: TableauxNode[],
 ): TreeLayout<TableauxTreeLayoutNode> => {
@@ -241,8 +205,7 @@ const tabNodeToTree = (
     i: number = 0,
     y: number = 16,
 ): Tree<TableauxTreeLayoutNode> => {
-    const width =
-        estimateSVGTextWidth(`${n.negated ? "¬" : ""}${n.spelling}`) + 56;
+    const width = estimateSVGTextWidth(nodeName(n)) + 56;
     return tree(
         width,
         72,
@@ -262,20 +225,6 @@ export const getNode = (t: Tree<TableauxTreeLayoutNode>, id: number) =>
     treeFind(t, (s) => s.data.id === id)!;
 
 /**
- * Gets all closed leaves
- * @param {Tree<TableauxTreeLayoutNode>} t - The tree
- * @returns {Array<LayoutItem<TableauxTreeLayoutNode>>} - All closed leaves
- */
-export const getClosedLeaves = (
-    t: Tree<TableauxTreeLayoutNode>,
-): Array<LayoutItem<TableauxTreeLayoutNode>> =>
-    filterTree(t, (c) => c.data.closeRef !== null).map((c) => ({
-        x: c.x,
-        y: c.y,
-        data: c.data,
-    }));
-
-/**
  * Gives a function that sets a specific drag
  * @param {StateUpdater<Record<number, DragTransform>>} setDragTransform - The update function
  * @returns {Function} - Drag handler
@@ -287,36 +236,4 @@ export const updateDragTransform = (
         ...prev,
         [id]: dt,
     }));
-};
-
-/**
- * Computes the absolute dt of a node
- * @param {Tree<TableauxTreeLayoutNode>} t - Tree
- * @param {number} id - The id to look for
- * @param {Record<number, DragTransform>} dts - All dts
- * @param {DragTransform} dt - Current dt
- * @returns {DragTransform} - Absolute dt
- */
-export const getAbsoluteDragTransform = (
-    t: Tree<TableauxTreeLayoutNode>,
-    id: number,
-    dts: Record<number, DragTransform>,
-    dt: DragTransform = dts[t.data.id] ?? { x: 0, y: 0 },
-): DragTransform | undefined => {
-    if (t.data.id === id) {
-        return dt;
-    }
-
-    for (const c of t.children) {
-        const cdt = dts[c.data.id] ?? { x: 0, y: 0 };
-        const res = getAbsoluteDragTransform(c, id, dts, {
-            x: dt.x + cdt.x,
-            y: dt.y + cdt.y,
-        });
-        if (res !== undefined) {
-            return res;
-        }
-    }
-
-    return;
 };

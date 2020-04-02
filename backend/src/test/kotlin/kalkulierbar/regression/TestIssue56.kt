@@ -1,12 +1,10 @@
 package kalkulierbar.tests.regression
 
 import kalkulierbar.tableaux.FirstOrderTableaux
-import kalkulierbar.tableaux.FoMoveType
-import kalkulierbar.tableaux.FoTableauxMove
 import kalkulierbar.tableaux.FoTableauxParam
-import kalkulierbar.tableaux.MoveType
+import kalkulierbar.tableaux.MoveAutoClose
+import kalkulierbar.tableaux.MoveExpand
 import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxMove
 import kalkulierbar.tableaux.TableauxParam
 import kalkulierbar.tableaux.TableauxType
 import kalkulierbar.tableaux.checkRegularity
@@ -21,9 +19,9 @@ class TestIssue56 {
         val params = TableauxParam(TableauxType.UNCONNECTED, true, false)
         var state = instance.parseFormulaToState(formula, params)
 
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 0, 0))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 1, 1))
-        state = instance.applyMoveOnState(state, TableauxMove(MoveType.EXPAND, 3, 2))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(3, 2))
 
         assert(checkRegularity(state))
     }
@@ -35,11 +33,11 @@ class TestIssue56 {
         val params = FoTableauxParam(TableauxType.UNCONNECTED, true, false, false)
         var state = instance.parseFormulaToState(formula, params)
 
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 0, 0, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 1, 1, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.EXPAND, 3, 2, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 4, 1, mapOf()))
-        state = instance.applyMoveOnState(state, FoTableauxMove(FoMoveType.AUTOCLOSE, 2, 1, mapOf()))
+        state = instance.applyMoveOnState(state, MoveExpand(0, 0))
+        state = instance.applyMoveOnState(state, MoveExpand(1, 1))
+        state = instance.applyMoveOnState(state, MoveExpand(3, 2))
+        state = instance.applyMoveOnState(state, MoveAutoClose(4, 1))
+        state = instance.applyMoveOnState(state, MoveAutoClose(2, 1))
 
         assert(checkRegularity(state))
         assert(instance.checkCloseOnState(state).closed)

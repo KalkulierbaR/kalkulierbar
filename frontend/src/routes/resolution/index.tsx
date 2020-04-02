@@ -1,13 +1,14 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 import HintIcon, { Hint } from "../../components/hint";
+import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
-import Radio from "../../components/radio";
-import Switch from "../../components/switch";
-import { Calculus, ResolutionCalculusType } from "../../types/app";
-import { VisualHelp } from "../../types/resolution";
-import { CnfStrategy } from "../../types/tableaux";
+import Radio from "../../components/input/radio";
+import Switch from "../../components/input/switch";
+import { Calculus, ResolutionCalculusType } from "../../types/calculus";
+import { VisualHelp } from "../../types/calculus/resolution";
+import { CnfStrategy } from "../../types/calculus/tableaux";
 import { useAppState } from "../../util/app-state";
 
 interface Props {
@@ -53,12 +54,12 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format foLogic={fo} />
-            <FormulaInput calculus={calculus} params={params} />
+            <FormulaInput calculus={calculus} params={params} foLogic={fo} />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
                 <div class="flex-container">
-                    <div class="radios">
+                    <div class="first">
                         <Radio
                             id={VisualHelp.none}
                             group="visualHelp"
@@ -87,17 +88,18 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         <HintIcon hint="When you select a clause, all valid resolution partners will be highlighted and grouped around the selected clause." />
                     </div>
                     {!fo && (
-                        <div class="switches">
-                                <Switch
-                                    label="Naive CNF transformation"
-                                    onChange={strategySelect}
-                                />
+                        <div class="second">
+                            <Switch
+                                label="Naive CNF transformation"
+                                onChange={strategySelect}
+                            />
 
-                                <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
+                            <HintIcon hint="New variables may be introduced when converting a formula to CNF for efficiency. Enable this to enforce the naive transformation without extra variables." />
                         </div>
                     )}
                 </div>
             </div>
+            <ExampleList calculus={calculus} />
         </Fragment>
     );
 };

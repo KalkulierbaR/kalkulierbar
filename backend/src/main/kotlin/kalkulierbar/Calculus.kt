@@ -21,6 +21,13 @@ interface Calculus {
     fun parseFormula(formula: String, params: String?): String
 
     /**
+     * Takes a state representation and evaluates whether it is a valid state
+     * @param state The representation of the current state
+     * @return string representation of whether or not it is valid
+     */
+    fun validate(state: String): String
+
+    /**
      * Takes in a state representation and a move and applies the move on the state if possible.
      * Throws an exception explaining why the move is illegal otherwise.
      * @param state state representation of the current (pre-)state

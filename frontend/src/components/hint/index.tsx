@@ -1,9 +1,7 @@
 import { Component, h } from "preact";
-
 import ReactHintFactory from "react-hint";
 import "react-hint/css/index.css";
 import InfoIcon from "../icons/info";
-
 import * as style from "./style.scss";
 
 const ReactHint = ReactHintFactory({ createElement: h, Component });
@@ -17,7 +15,7 @@ interface HintProps {
 }
 
 export const Hint: preact.FunctionalComponent<HintProps> = ({
-    top = false
+    top = false,
 }) => (
     <ReactHint
         autoPosition={true}
@@ -32,7 +30,7 @@ export const Hint: preact.FunctionalComponent<HintProps> = ({
             const availTop = Math.min(availLeft, availRight) * 2; // Space available if using top positioning
             const maxWidth = Math.min(
                 Math.max(availRight, availLeft, availTop) * 0.9,
-                290
+                290,
             ); // Cap max width at 290px
             const minWidth = content && content.length > 50 ? maxWidth : 0; // Only set min width if there's enough text to fill it
             return (
@@ -48,6 +46,9 @@ export const Hint: preact.FunctionalComponent<HintProps> = ({
 );
 
 interface Props {
+    /**
+     * The hint text to display
+     */
     hint: string;
 }
 

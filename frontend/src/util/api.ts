@@ -1,10 +1,7 @@
-import {
-    AppState,
-    AppStateUpdater,
-    CalculusType,
-    CheckCloseResponse,
-    Move,
-} from "../types/app";
+import { CalculusType, Move } from "../types/calculus";
+import { AppState, AppStateUpdater } from "../types/app/app-state";
+import { NotificationHandler } from "../types/app/notification";
+import { CheckCloseResponse } from "../types/app/api";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
@@ -16,16 +13,14 @@ export type checkCloseFn<C extends CalculusType = CalculusType> = (
  * shows the result to the user
  *
  * @param {string} server - Server
- * @param {Function} onError - Error handler
- * @param {Function} onSuccess - Success handler
+ * @param {NotificationHandler} notificationHandler - Notification handler
  * @param {C} calculus - Calculus endpoint
  * @param {any} state - Current state for the calculus
  * @returns {Promise<void>} - Resolves when the request is done
  */
 export const checkClose = async <C extends CalculusType = CalculusType>(
     server: string,
-    onError: (msg: string) => void,
-    onSuccess: (msg: string) => void,
+    notificationHandler: NotificationHandler,
     calculus: C,
     state: AppState[C],
 ) => {
@@ -39,22 +34,60 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
             body: `state=${encodeURIComponent(JSON.stringify(state))}`,
         });
         if (response.status !== 200) {
-            onError(await response.text());
+            notificationHandler.error(await response.text());
         } else {
             const {
                 closed,
                 msg,
             } = (await response.json()) as CheckCloseResponse;
             if (closed) {
-                onSuccess(msg);
+                notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));
             } else {
-                onError(msg);
+                notificationHandler.error(msg);
             }
         }
     } catch (e) {
-        onError((e as Error).message);
+        notificationHandler.error((e as Error).message);
     }
+};
+
+/**
+ * Checks that a state is valid for the given calculus
+ * @param {string} server - the server
+ * @param {NotificationHandler} notificationHandler - Notification handler
+ * @param {CalculusType} calculus - the calculus for which to check
+ * @param {string} state - string of the state to check
+ * @returns {Promise<boolean>} - resolves to the validity of the state
+ */
+export const checkValid = async <C extends CalculusType = CalculusType>(
+    server: string,
+    notificationHandler: NotificationHandler,
+    calculus: C,
+    state: string,
+) => {
+    const url = `${server}/${calculus}/validate`;
+    try {
+        const response = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `state=${encodeURIComponent(state)}`,
+        });
+        if (response.status !== 200) {
+            notificationHandler.error(await response.text());
+        } else {
+            const valid = (await response.json()) as boolean;
+            if (!valid) {
+                notificationHandler.error("The uploaded state is invalid");
+            }
+            return valid;
+        }
+    } catch (e) {
+        notificationHandler.error((e as Error).message);
+    }
+    return false;
 };
 
 /**
@@ -65,8 +98,7 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
  * @param {any} state - Current state for the calculus
  * @param {any} move - Move to send
  * @param {AppStateUpdater} stateChanger - Function to update the state
- * @param {Function} onError - error handler
- * @param {Function} onWarning - warning handler
+ * @param {NotificationHandler} notificationHandler - Notification handler
  * @returns {Promise<void>} - Promise that resolves after the request has been handled
  */
 export const sendMove = async <C extends CalculusType = CalculusType>(
@@ -75,8 +107,7 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
     state: AppState[C],
     move: Move[C],
     stateChanger: AppStateUpdater,
-    onError: (msg: string) => void,
-    onWarning: (msg: string) => void,
+    notificationHandler: NotificationHandler,
 ): Promise<AppState[C]> => {
     const url = `${server}/${calculus}/move`;
     try {
@@ -91,17 +122,17 @@ export const sendMove = async <C extends CalculusType = CalculusType>(
             )}&state=${encodeURIComponent(JSON.stringify(state))}`,
         });
         if (res.status !== 200) {
-            onError(await res.text());
+            notificationHandler.error(await res.text());
             return state;
         }
         const parsed = await res.json();
         stateChanger(calculus, parsed);
         if ("statusMessage" in parsed && parsed.statusMessage) {
-            onWarning(parsed.statusMessage);
+            notificationHandler.warning(parsed.statusMessage);
         }
         return parsed;
     } catch (e) {
-        onError((e as Error).message);
+        notificationHandler.error((e as Error).message);
         return state;
     }
 };

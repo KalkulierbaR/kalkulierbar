@@ -1,0 +1,49 @@
+.help-menu {
+    position: fixed;
+    top: 86px;
+    right: 16px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: center;
+
+    @media (min-width: 870px) {
+        display: grid;
+        grid-template-columns: 400px 400px;
+        grid-auto-flow: row;
+        gap: 16px;
+    }
+}
+
+.child {
+    max-width: 400px;
+    margin-bottom: 16px;
+
+    @media (min-width: 870px) {
+        margin: 0;
+    }
+
+    video {
+        width: 100%;
+        height: auto;
+    }
+}
+
+.dialog {
+    @media (max-height: 799px) {
+        margin-top: 56px;
+        min-height: calc(100% - 56px);
+    }
+    @media (min-height: 800px) {
+        min-height: 690px;
+    }
+}
+
+@media (min-width: 700px) {
+    .help-menu {
+        right: 32px;
+    }
+}

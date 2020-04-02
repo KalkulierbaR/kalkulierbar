@@ -1,12 +1,14 @@
 import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
-import DPLLPropLitDialog from "../../../components/dpll/dialog/prop";
-import DPLLSplitDialog from "../../../components/dpll/dialog/split";
-import DPLLControlFAB from "../../../components/dpll/fab";
-import DPLLModelInput from "../../../components/dpll/model";
-import DPLLTree from "../../../components/dpll/tree";
+import DPLLPropLitDialog from "../../../components/calculus/dpll/dialog/prop";
+import DPLLSplitDialog from "../../../components/calculus/dpll/dialog/split";
+import DPLLControlFAB from "../../../components/calculus/dpll/fab";
+import DPLLModelInput from "../../../components/calculus/dpll/model";
+import DPLLTree from "../../../components/calculus/dpll/tree";
+import TutorialDialog from "../../../components/tutorial/dialog";
 import OptionList from "../../../components/input/option-list";
-import { SelectedClauses } from "../../../types/clause";
+import { Calculus } from "../../../types/calculus";
+import { SelectedClauses } from "../../../types/calculus/clause";
 import { useAppState } from "../../../util/app-state";
 import { classMap } from "../../../util/class-map";
 import { clauseSetToStringMap } from "../../../util/clause";
@@ -16,8 +18,8 @@ import {
     sendModelCheck,
     sendProp,
 } from "../../../util/dpll";
-import dpllExampleState from "./example";
 import * as style from "./style.scss";
+import { route } from "preact-router";
 
 interface Props {}
 
@@ -26,8 +28,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
         dpll: cState,
         server,
         onChange,
-        onError,
-        onWarning,
+        notificationHandler,
     } = useAppState();
 
     const [showTree, setShowTree] = useState(false);
@@ -47,7 +48,12 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
 
     const [showModelDialog, setShowModelDialog] = useState(false);
 
-    const state = cState || dpllExampleState;
+    if (!cState) {
+        route(`/${Calculus.dpll}`);
+        return null;
+    }
+
+    const state = cState;
 
     const clauseSet = calculateClauseSet(state, branch);
 
@@ -82,8 +88,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 candidates[0],
                 setBranch,
                 onChange,
-                onError,
-                onWarning,
+                notificationHandler,
             );
             setSelectedClauses(undefined);
             return;
@@ -143,8 +148,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                         branch,
                         interpretation,
                         onChange,
-                        onError,
-                        onWarning,
+                        notificationHandler,
                     );
                     setShowModelDialog(false);
                 }}
@@ -158,6 +162,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 setShowModelDialog={setShowModelDialog}
                 setShowSplitDialog={setShowSplitDialog}
             />
+            <TutorialDialog calculus={Calculus.dpll} />
         </Fragment>
     );
 };

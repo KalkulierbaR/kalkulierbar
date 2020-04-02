@@ -1,7 +1,8 @@
 import { h } from "preact";
-import Btn from "../btn";
+import Btn from "../input/btn";
 import CloseIcon from "../icons/close";
 import * as style from "./style.scss";
+import { enableDrag } from "../../util/zoom/drag";
 
 interface Props {
     /**
@@ -23,6 +24,9 @@ interface Props {
      * Defaults to `false`.
      */
     onConfirm?: () => void;
+    /**
+     * Additional classes to add
+     */
     class?: string;
 }
 
@@ -32,7 +36,7 @@ const Dialog: preact.FunctionalComponent<Props> = ({
     label,
     onClose,
     onConfirm,
-    class: className
+    class: className,
 }) => {
     /**
      * Handle the click event
@@ -53,9 +57,29 @@ const Dialog: preact.FunctionalComponent<Props> = ({
     // Choose styles
     const c = `${style.dialog} ${open ? style.open : ""}`;
 
+    // Suppress click, when we are actually just releasing the mouse outside the dialog
+    const handleMouseDown = () => {
+        const start = new Date();
+
+        const handleMouseUp = () => {
+            const now = new Date();
+
+            const time = now.valueOf() - start.valueOf();
+
+            if (time >= 500) enableDrag(true);
+
+            window.removeEventListener("mouseup", handleMouseUp);
+        };
+
+        window.addEventListener("mouseup", handleMouseUp);
+    };
+
     return (
         <div class={c} onClick={handleClick}>
-            <div class={`card  ${style.container} ${className}`}>
+            <div
+                class={`card  ${style.container} ${className}`}
+                onMouseDown={handleMouseDown}
+            >
                 <h2 class={style.label}>{label}</h2>
                 <button
                     class={style.closeBtn}
@@ -65,9 +89,11 @@ const Dialog: preact.FunctionalComponent<Props> = ({
                     <CloseIcon />
                 </button>
                 <div class={style.content}>{children}</div>
-                <div class={style.actions}>
-                    {onConfirm && <Btn onClick={onConfirm}>OK</Btn>}
-                </div>
+                {onConfirm && (
+                    <div class={style.actions}>
+                        {onConfirm && <Btn onClick={onConfirm} label="Okay"/>}
+                    </div>
+                )}
             </div>
         </div>
     );

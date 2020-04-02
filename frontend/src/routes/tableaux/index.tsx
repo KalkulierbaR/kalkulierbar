@@ -1,19 +1,18 @@
 import { Fragment, h } from "preact";
-
-import Switch from "../../components/switch";
-
 import { useState } from "preact/hooks";
 import HintIcon, { Hint } from "../../components/hint";
+import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
-import Radio from "../../components/radio";
-import { Calculus, TableauxCalculusType } from "../../types/app";
+import Radio from "../../components/input/radio";
+import Switch from "../../components/input/switch";
+import { Calculus, TableauxCalculusType } from "../../types/calculus";
 import {
     CnfStrategy,
     FOTableauxParams,
     PropTableauxParams,
     TableauxType,
-} from "../../types/tableaux";
+} from "../../types/calculus/tableaux";
 import { useAppState } from "../../util/app-state";
 
 interface Props {
@@ -107,12 +106,16 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format foLogic={calculus === Calculus.foTableaux} />
-            <FormulaInput calculus={calculus} params={params} />
+            <FormulaInput
+                calculus={calculus}
+                params={params}
+                foLogic={calculus === Calculus.foTableaux}
+            />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />
                 <div class="flex-container">
-                    <div class="radios">
+                    <div class="first">
                         <Radio
                             id={TableauxType.unconnected}
                             group="tableauxType"
@@ -140,7 +143,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         />
                         <HintIcon hint="A strongly connected tableaux enforces that every inner node in the proof tree has at least one child that is closed with its parent node." />
                     </div>
-                    <div class="switches">
+                    <div class="second">
                         <Switch
                             label="Backtracking"
                             onChange={setBacktracking}
@@ -160,6 +163,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 </div>
             </div>
+            <ExampleList calculus={calculus} />
         </Fragment>
     );
 };

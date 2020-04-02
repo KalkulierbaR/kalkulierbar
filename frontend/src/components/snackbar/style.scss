@@ -11,6 +11,8 @@
     color: hsla(0, 0%, 100%, 0.87);
     max-width: calc(100vw - 96px);
 
+    z-index: 999;
+
     &:last-child {
         margin-bottom: 0;
     }

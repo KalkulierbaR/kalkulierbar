@@ -38,7 +38,7 @@ export interface Tree<T> {
      */
     modsEr: number;
 
-    children: Array<Tree<T>>;
+    children: Tree<T>[];
 
     treeHeight: number;
 

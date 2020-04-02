@@ -364,8 +364,8 @@ def testUndo(trq, depth = 20, verbose = false)
 	state = trq.getPostResponse('/prop-tableaux/parse', "formula=#{formula}&params={\"type\":\"WEAKLYCONNECTED\",\"regular\":false,\"backtracking\":true}")
 
 	# Set used flag to true so states are comparable
-	state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={\"type\":\"EXPAND\",\"id1\":0,\"id2\":0}")
-	state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={\"type\":\"tableaux-expand\",\"id1\":0,\"id2\":0}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={\"type\":\"tableaux-undo\"}")
 
 	history.push(state)
 
@@ -382,7 +382,7 @@ def testUndo(trq, depth = 20, verbose = false)
 			success = false
 			logError "Expected: #{history[-1]}\nGot     : #{state}"
 		end
-		state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0}")
+		state = trq.getPostResponse('/prop-tableaux/move', "state=#{state}&move={\"type\":\"tableaux-undo\"}")
 		history.pop
 		logMsg state if verbose
 	}
@@ -435,8 +435,8 @@ def testUndoFO(trq, depth = 20, verbose = false)
 	state = trq.getPostResponse('/fo-tableaux/parse', "formula=#{CGI.escape(formula)}&params={\"type\":\"WEAKLYCONNECTED\",\"regular\":false,\"backtracking\":true,\"manualVarAssign\":false}")
 
 	# Set used flag to true so states are comparable
-	state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":0,\"id2\":0,\"varAssign\":{}}")
-	state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0,\"varAssign\":{}}")
+	state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-expand\",\"id1\":0,\"id2\":0}")
+	state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-undo\"}")
 
 	history.push(state)
 
@@ -453,7 +453,7 @@ def testUndoFO(trq, depth = 20, verbose = false)
 			success = false
 			logError "Expected: #{history[-1]}\nGot     : #{state}"
 		end
-		state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"UNDO\",\"id1\":0,\"id2\":0,\"varAssign\":{}}")
+		state = trq.getPostResponse('/fo-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-undo\"}")
 		history.pop
 		logMsg state if verbose
 	}
@@ -470,12 +470,12 @@ def testLemma(trq, iterations = 5, verbose = true)
 	formula = "a,a,a,a,a,a,d; !a,b,c,d; !b; !c,b; !d,c;"
 
 	state = trq.getPostResponse('/prop-tableaux/parse', "formula=#{CGI.escape(formula)}&params={\"type\":\"STRONGLYCONNECTED\",\"regular\":false,\"backtracking\":true}")
-	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":0,\"id2\":2}")
-	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":1,\"id2\":3}")
-	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"CLOSE\",\"id1\":3,\"id2\":1}")
-	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":2,\"id2\":4}")
-	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"CLOSE\",\"id1\":5,\"id2\":2}")
-	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"EXPAND\",\"id1\":4,\"id2\":0}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-expand\",\"id1\":0,\"id2\":2}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-expand\",\"id1\":1,\"id2\":3}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-close\",\"id1\":3,\"id2\":1}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-expand\",\"id1\":2,\"id2\":4}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-close\",\"id1\":5,\"id2\":2}")
+	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-expand\",\"id1\":4,\"id2\":0}")
 
 	16.times() {
 		state = bogoATPapplyRandomMove(state, trq)
