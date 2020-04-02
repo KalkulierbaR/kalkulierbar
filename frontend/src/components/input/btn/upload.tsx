@@ -62,7 +62,7 @@ const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
             );
 
             if (valid) {
-                onChange(calculus, JSON.parse(state));
+                onChange(calculus, jsonState);
                 route(`/${calculus}/view`);
             }
         } catch (e) {
