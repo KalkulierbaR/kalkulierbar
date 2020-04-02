@@ -89,9 +89,11 @@ const Dialog: preact.FunctionalComponent<Props> = ({
                     <CloseIcon />
                 </button>
                 <div class={style.content}>{children}</div>
-                <div class={style.actions}>
-                    {onConfirm && <Btn onClick={onConfirm} label="Okay" />}
-                </div>
+                {onConfirm && (
+                    <div class={style.actions}>
+                        {onConfirm && <Btn onClick={onConfirm} label="Okay"/>}
+                    </div>
+                )}
             </div>
         </div>
     );
