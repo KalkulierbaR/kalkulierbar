@@ -15,7 +15,7 @@ import { NotificationHandler } from "../types/app/notification";
 export const getConfig = async (
     server: string,
     changeConfig: (cfg: Config) => void,
-    notificationHandler: NotificationHandler,
+    notificationHandler?: NotificationHandler,
 ) => {
     const url = `${server}/config`;
     try {
@@ -26,14 +26,16 @@ export const getConfig = async (
             },
             method: "GET",
         });
-        if (res.status !== 200) {
+        if (res.status !== 200 && notificationHandler) {
             notificationHandler.error(await res.text());
         }
 
         const parsed = await res.json();
         changeConfig(parsed);
     } catch (e) {
-        notificationHandler.error((e as Error).message);
+        if(notificationHandler){
+            notificationHandler.error((e as Error).message);
+        }
     }
 };
 

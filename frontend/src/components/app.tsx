@@ -89,7 +89,7 @@ const App: preact.FunctionalComponent = () => {
 
     useEffect(() => {
         checkServer(server, notificationHandler);
-        getConfig(server, setConfig, notificationHandler);
+        getConfig(server, setConfig);
     }, [server]);
 
     useEffect(() => {
