@@ -26,7 +26,7 @@ class ClauseSetParser {
         fun parseGeneric(formula: String, clauseSeparator: String, atomSeparator: String): ClauseSet<String> {
 
             // Preprocessing: Remove whitespace & newlines
-            var processedFormula = formula.replace("\n", clauseSeparator).replace(Regex("\\s"), "").replace(Regex(";$"), "")
+            var pf = formula.replace("\n", clauseSeparator).replace(Regex("\\s"), "").replace(Regex(";$"), "")
 
             // Yes, I know, regex
             // The code could technically deal with weirder variable names, but let's keep things simple here
@@ -39,12 +39,12 @@ class ClauseSetParser {
             val cSep = Regex.escape(clauseSeparator)
             val formulaFormat = "(!)?[a-zA-Z]+($aSep(!)?[a-zA-Z]+)*($cSep(!)?[a-zA-Z]+($aSep(!)?[a-zA-Z]+)*)*"
 
-            if (!(Regex(formulaFormat) matches processedFormula))
+            if (!(Regex(formulaFormat) matches pf))
                 throw InvalidFormulaFormat("Please use alphanumeric variables only, " +
                     "separate atoms with '$atomSeparator' and clauses with '$clauseSeparator'.")
 
             val parsed = ClauseSet<String>()
-            val clauses = processedFormula.split(clauseSeparator)
+            val clauses = pf.split(clauseSeparator)
 
             for (clause in clauses) {
                 val members = clause.split(atomSeparator)
