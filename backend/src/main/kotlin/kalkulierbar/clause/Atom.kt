@@ -4,19 +4,14 @@ import kalkulierbar.logic.SyntacticEquality
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Atom<AtomType>(val lit: AtomType, val negated: Boolean = false) {
+data class Atom<AtomType>(val lit: AtomType, val negated: Boolean = false) : SyntacticEquality {
     operator fun not() = Atom(lit, !negated)
 
     override fun toString(): String {
         return if (negated) "!$lit" else lit.toString()
     }
 
-    /**
-     * Override equality to match syntactic equality intuition
-     * @param other Atom to compare against
-     * @return true iff the two atoms are syntactically equal
-     */
-    override fun equals(other: Any?): Boolean {
+    override fun synEq(other: Any?): Boolean {
         var eq = false
 
         if (other is Atom<*> && other.negated == negated) {
@@ -29,6 +24,21 @@ data class Atom<AtomType>(val lit: AtomType, val negated: Boolean = false) {
 
         return eq
     }
+
+    override fun clone(): Atom<AtomType> {
+        return if (lit is SyntacticEquality)
+            @Suppress("UNCHECKED_CAST")
+            Atom(lit.clone() as AtomType, negated)
+        else
+            Atom(lit, negated)
+    }
+
+    /**
+     * Override equality to match syntactic equality intuition
+     * @param other Atom to compare against
+     * @return true iff the two atoms are syntactically equal
+     */
+    override fun equals(other: Any?) = synEq(other)
 
     override fun hashCode() = lit.toString().hashCode() + negated.toString().hashCode()
 }

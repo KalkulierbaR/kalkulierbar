@@ -12,11 +12,10 @@ class Clause<AtomType>(var atoms: MutableList<Atom<AtomType>> = mutableListOf())
         c.forEach { add(it) }
     }
 
-    // TODO: Properly clone atoms
     fun clone(): Clause<AtomType> {
         val newClause = Clause<AtomType>()
         for (c in atoms) {
-            newClause.add(c.copy())
+            newClause.add(c.clone())
         }
         return newClause
     }
