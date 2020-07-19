@@ -14,26 +14,26 @@ class ClauseSetParser {
          * @param formula set of clauses of logical variables, format: a,b;!b,c;d,!e,!f where variables are [a-zA-Z]+
          * @return ClauseSet representing the input formula
          */
-        fun parse(formula: String) = parseGeneric(formula, ";", ",", "!")
+        fun parse(formula: String) = parseGeneric(formula, ";", ",", '!')
 
         /**
          * Parses a set of clauses from text into a ClauseSet with flexible separators
          * @param formula set of clauses of logical variables in textual form
          * @param clauseSeparator string separating clauses from each other, e.g. ";"
          * @param atomSeparator string separating atoms (variables) from each other, e.g. ","
-         * @param negSign string indicating a negated atom
+         * @param negSign char indicating a negated atom
          * @return ClauseSet representing the input formula
          */
         fun parseGeneric(
             formula: String,
             clauseSeparator: String,
             atomSeparator: String,
-            negSign: String
+            negSign: Char
         ): ClauseSet<String> {
 
             val aSep = Regex.escape(atomSeparator)
             val cSep = Regex.escape(clauseSeparator)
-            val nSig = Regex.escape(negSign)
+            val nSig = Regex.escape(negSign.toString())
 
             // Preprocessing: Remove whitespace & newlines
             var pf = formula.replace("\n", clauseSeparator).replace(Regex("\\s"), "").replace(Regex("$cSep$"), "")
@@ -64,7 +64,7 @@ class ClauseSetParser {
                     // true -> positive variable / false -> negated variable
                     val atom: Atom<String>
 
-                    if (member[0] == '!')
+                    if (member[0] == negSign)
                         atom = Atom(member.substring(1), true)
                     else
                         atom = Atom(member)

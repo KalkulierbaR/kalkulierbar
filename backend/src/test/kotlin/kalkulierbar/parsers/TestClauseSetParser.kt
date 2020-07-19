@@ -24,10 +24,10 @@ class TestClauseSetParser {
 
     val validNonGeneric = listOf(
         Pair("a", "{a}"),
-        Pair("!a", "{!a}"),
+        Pair("-a", "{!a}"),
         Pair("a|b", "{a}, {b}"),
         Pair("a&b", "{a, b}"),
-        Pair("fUnkYvAR|!McVariable&thefirst", "{fUnkYvAR}, {!McVariable, thefirst}")
+        Pair("fUnkYvAR|-McVariable&thefirst", "{fUnkYvAR}, {!McVariable, thefirst}")
         )
 
     @Test
@@ -49,7 +49,7 @@ class TestClauseSetParser {
     @Test
     fun testValidNonGeneric() {
         for (tv: Pair<String, String> in validNonGeneric) {
-            assertEquals(tv.second, ClauseSetParser.parseGeneric(tv.first, "|", "&", "!").toString())
+            assertEquals(tv.second, ClauseSetParser.parseGeneric(tv.first, "|", "&", '-').toString())
         }
     }
 }
