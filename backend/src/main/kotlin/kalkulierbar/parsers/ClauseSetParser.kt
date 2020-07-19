@@ -11,7 +11,7 @@ class ClauseSetParser {
 
         /**
          * Parses a set of clauses from text into a ClauseSet using default clause and atom separators
-         * @param formula set of clauses of logical variables, format: a,b;!b,c;d,!e,!f where variables are [a-zA-Z]+
+         * @param formula set of clauses of logical variables, format: a,b;!b,c;d,!e,!f where variables are [a-zA-Z0-9]+
          * @return ClauseSet representing the input formula
          */
         fun parse(formula: String) = parseGeneric(formula, ";", ",", '!')
