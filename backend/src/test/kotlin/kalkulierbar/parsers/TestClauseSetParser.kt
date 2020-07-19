@@ -49,7 +49,7 @@ class TestClauseSetParser {
     @Test
     fun testValidNonGeneric() {
         for (tv: Pair<String, String> in validNonGeneric) {
-            assertEquals(tv.second, ClauseSetParser.parseGeneric(tv.first, "|", "&").toString())
+            assertEquals(tv.second, ClauseSetParser.parseGeneric(tv.first, "|", "&", "!").toString())
         }
     }
 }
