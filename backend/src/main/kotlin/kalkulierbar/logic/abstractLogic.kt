@@ -66,4 +66,10 @@ interface SyntacticEquality {
      * @return true iff the terms are equal
      */
     fun synEq(other: Any?): Boolean
+
+    /**
+     * Create a deep copy of the object
+     * @return copy of the current object
+     */
+    fun clone(): SyntacticEquality
 }

@@ -81,6 +81,9 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Synt
         return Relation(spelling, args)
     }
 
+    // Implement simple clone function required by SynEq
+    override fun clone() = clone(mapOf())
+
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
     /**

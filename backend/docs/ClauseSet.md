@@ -16,7 +16,7 @@ A single trailing `;` or line break at the end of the formula will be removed.
 ### Atoms
 
 An atom, a propositional variable that may or may not be negated,
-is represented by the variable name (strictly latin characters, lower or upper case).
+is represented by the variable name (strictly alphanumerical characters, lower or upper case).
 Optionally preceeded by a `!` to indicate negation.
 
 ### Clauses
