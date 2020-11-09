@@ -119,6 +119,7 @@ const Home: preact.FunctionalComponent = () => {
                     )}
                 </div>
             </div>
+            <div className="card" style="text-align: center;">— check out <a href="https://github.com/kalkulierbar/kalkulierbar" target="_blank">KalkulierbaR on GitHub</a> or contact us at <a href="mailto:hi@kbar.app">hi@kbar.app</a> —</div>
         </div>
     );
 };
