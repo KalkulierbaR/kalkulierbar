@@ -4,11 +4,14 @@ on:
   push:
     branches:
     - master
+    - main
     paths-ignore:
     - 'frontend/**'
+    - 'README.md'
   pull_request:
     branches:
     - master
+    - backend-workflow
 
 jobs:
   setup-build-publish-deploy:
@@ -28,4 +31,9 @@ jobs:
       run: cd backend && ./gradlew build
 
     - name: Copy
-      run: echo '${{ secrets.GCE_RSA_KEY }}' > /tmp/id_rsa && scp -i /tmp/id_rsa build/libs/kalkulierbar-backend-all.jar user@gce.kbar.app:kalkulierbar/fresh.jar
+      run: echo 'gce.kbar.app ${{ secrets.GCE_SSH_FINGERPRINT }}' > /tmp/host_fingerprint
+      run: echo '${{ secrets.GCE_RSA_KEY }}' > /tmp/id_rsa
+      run: scp -i /tmp/id_rsa build/libs/kalkulierbar-backend-all.jar -o "UserKnownHostsFile /tmp/host_fingerprint" user@gce.kbar.app:kalkulierbar/fresh.jar
+
+    - name: Activate
+      run: scp -i /tmp/id_rsa build/libs/kalkulierbar-backend-all.jar -o "UserKnownHostsFile /tmp/host_fingerprint" user@gce.kbar.app 'mv kalkulierbar/fresh.jar kalkulierbar/kalkulierbar-backend-all.jar && sudo systemctl restart kalkulierbar'
