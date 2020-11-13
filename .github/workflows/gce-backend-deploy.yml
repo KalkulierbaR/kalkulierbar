@@ -22,9 +22,9 @@ jobs:
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh/
-        echo "{{ secrets.GCE_RSA_KEY }}" > /tmp/id_rsa
+        echo "${{ secrets.GCE_RSA_KEY }}" > /tmp/id_rsa
         sudo chmod 600 /tmp/id_rsa
-        echo "{{ secrets.GCE_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+        echo "${{ secrets.GCE_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
         ssh -i /tmp/id_rsa user@gce.kbar.app 'touch kalkulierbar/flag'
 
     - name: Set up JDK 1.8
