@@ -28,12 +28,15 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build
-      run: cd backend && ./gradlew build
+      run: |
+        cd backend 
+        ./gradlew build
 
     - name: Copy
-      run: echo 'gce.kbar.app ${{ secrets.GCE_SSH_FINGERPRINT }}' > /tmp/host_fingerprint
-      run: echo '${{ secrets.GCE_RSA_KEY }}' > /tmp/id_rsa
-      run: scp -i /tmp/id_rsa build/libs/kalkulierbar-backend-all.jar -o "UserKnownHostsFile /tmp/host_fingerprint" user@gce.kbar.app:kalkulierbar/fresh.jar
+      run: |
+        echo 'gce.kbar.app ${{ secrets.GCE_SSH_FINGERPRINT }}' > /tmp/host_fingerprint
+        echo '${{ secrets.GCE_RSA_KEY }}' > /tmp/id_rsa
+        scp -i /tmp/id_rsa build/libs/kalkulierbar-backend-all.jar -o "UserKnownHostsFile /tmp/host_fingerprint" user@gce.kbar.app:kalkulierbar/fresh.jar
 
     - name: Activate
       run: scp -i /tmp/id_rsa build/libs/kalkulierbar-backend-all.jar -o "UserKnownHostsFile /tmp/host_fingerprint" user@gce.kbar.app 'mv kalkulierbar/fresh.jar kalkulierbar/kalkulierbar-backend-all.jar && sudo systemctl restart kalkulierbar'
