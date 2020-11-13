@@ -34,9 +34,8 @@ jobs:
 
     - name: Copy
       run: |
-        echo 'gce.kbar.app ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBIU0jMhR6jRwA0mkY1GetpGdIR88KaCaGXOfypJxdNXpxkHSIseWwbTiibJV7Bb0OjjT/orQEyJpmb9OPvJyRV8=' > /tmp/host_fingerprint
         echo '${{ secrets.GCE_RSA_KEY }}' > /tmp/id_rsa
-        scp -i /tmp/id_rsa build/libs/kalkulierbar-backend-all.jar -o "UserKnownHostsFile /tmp/host_fingerprint" user@gce.kbar.app:kalkulierbar/fresh.jar
+        scp -i /tmp/id_rsa build/libs/kalkulierbar-backend-all.jar -o "StrictHostKeyChecking=no" user@gce.kbar.app:kalkulierbar/fresh.jar
 
     - name: Activate
-      run: ssh -i /tmp/id_rsa -o "UserKnownHostsFile /tmp/host_fingerprint" user@gce.kbar.app 'mv kalkulierbar/fresh.jar kalkulierbar/kalkulierbar-backend-all.jar && sudo systemctl restart kalkulierbar'
+      run: ssh -i /tmp/id_rsa -o "StrictHostKeyChecking=no" user@gce.kbar.app 'mv kalkulierbar/fresh.jar kalkulierbar/kalkulierbar-backend-all.jar && sudo systemctl restart kalkulierbar'
