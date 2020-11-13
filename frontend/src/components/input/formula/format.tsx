@@ -146,7 +146,12 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false }) => {
                                     {"{{a, ¬b}, {¬a}, {b}}"}
                                 </code>
                                 needs to be entered as{" "}
-                                <code class={style.padLeft}>a,!b;!a;b</code>
+                                <code class={classMap({
+                                    [style.padLeft]: true,
+                                    [style.padRight]: true,
+                                })}>a,!b;!a;b</code>
+                                {" "}or in DIMACS format{" "}
+                                <code class={style.padLeft}>a -b 0 -a 0 b</code>
                             </p>
                             <p>
                                 Separate variables with commas, use a semicolon
