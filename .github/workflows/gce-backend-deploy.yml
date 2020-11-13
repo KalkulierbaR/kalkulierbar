@@ -4,11 +4,12 @@ on:
   push:
     branches:
     - master
+    - main
     paths-ignore:
     - 'frontend/**'
-  pull_request:
-    branches:
-    - master
+    - '.github/**'
+    - 'scripts/**'
+    - 'README.md'
 
 jobs:
   setup-build-publish-deploy:
@@ -16,6 +17,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.GCE_RSA_KEY }}" > /tmp/id_rsa
+        sudo chmod 600 /tmp/id_rsa
+        echo "${{ secrets.GCE_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -25,7 +33,12 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build
-      run: cd backend && ./gradlew build
+      run: |
+        cd backend 
+        ./gradlew build
 
     - name: Copy
-      run: echo '${{ secrets.GCE_RSA_KEY }}' > /tmp/id_rsa && scp -i /tmp/id_rsa build/libs/kalkulierbar-backend-all.jar user@gce.kbar.app:kalkulierbar/fresh.jar
+      run: scp -i /tmp/id_rsa backend/build/libs/kalkulierbar-backend-all.jar user@gce.kbar.app:kalkulierbar/fresh.jar
+
+    - name: Activate
+      run: ssh -i /tmp/id_rsa user@gce.kbar.app 'mv kalkulierbar/fresh.jar kalkulierbar/production.jar && sudo systemctl restart kalkulierbar'
