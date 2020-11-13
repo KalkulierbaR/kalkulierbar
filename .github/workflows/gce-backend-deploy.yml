@@ -7,11 +7,9 @@ on:
     - main
     paths-ignore:
     - 'frontend/**'
+    - '.github/**'
+    - 'scripts/**'
     - 'README.md'
-  pull_request:
-    branches:
-    - master
-    - backend-workflow
 
 jobs:
   setup-build-publish-deploy:
