@@ -26,6 +26,7 @@ export enum Calculus {
     foResolution = "fo-resolution",
     ncTableaux = "nc-tableaux",
     dpll = "dpll",
+    myHipCalculus = "my-hip-calculus"
 }
 
 export const PropCalculus: CalculusType[] = [

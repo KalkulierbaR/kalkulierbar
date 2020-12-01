@@ -1032,6 +1032,135 @@ const ROUTES: Route[] = [
             </g>
         ),
     },
+    {
+        href: Calculus.myHipCalculus,
+        name: "My Hip Calculus",
+        viewBox: "0 -16 138.25 216",
+        image: (
+            <g transform="translate(0 0) scale(1)">
+                <g>
+                    <line
+                        class={style.link}
+                        x1="64.44999980926514"
+                        y1="22"
+                        x2="32.44999980926514"
+                        y2="72"
+                    />
+                    <line
+                        class={style.link}
+                        x1="64.44999980926514"
+                        y1="22"
+                        x2="101.57499980926514"
+                        y2="72"
+                    />
+                    <line
+                        class={style.link}
+                        x1="32.44999980926514"
+                        y1="94"
+                        x2="32.44999980926514"
+                        y2="144"
+                    />
+                    <line
+                        class={style.link}
+                        x1="101.57499980926514"
+                        y1="94"
+                        x2="101.57499980926514"
+                        y2="144"
+                    />
+                    <g class="_1ZnpjejWKO66ftvJ7Jgr8C">
+                        <rect
+                            class={style.rect}
+                            x="42.66440963745117"
+                            y="-2.7458908557891846"
+                            width="43.57117462158203"
+                            height="26.295827865600586"
+                            rx="4"
+                        />
+                        <text
+                            text-anchor="middle"
+                            class=""
+                            x="64.44999980926514"
+                            y="16"
+                        >
+                            penis
+                        </text>
+                    </g>
+                    <g class="_1ZnpjejWKO66ftvJ7Jgr8C">
+                        <rect
+                            class={style.rect}
+                            x="15.32939338684082"
+                            y="69.25411224365234"
+                            width="34.241214752197266"
+                            height="26.295827865600586"
+                            rx="4"
+                        />
+                        <text
+                            text-anchor="middle"
+                            class=""
+                            x="32.44999980926514"
+                            y="88"
+                        >
+                            ball
+                        </text>
+                    </g>
+                    <g class="_1ZnpjejWKO66ftvJ7Jgr8C">
+                        <rect
+                            class={style.rect}
+                            x="89.57449340820312"
+                            y="69.25411224365234"
+                            width="24.00101089477539"
+                            height="26.295827865600586"
+                            rx="4"
+                        />
+                        <text
+                            text-anchor="middle"
+                            class=""
+                            x="101.57499980926514"
+                            y="88"
+                        >
+                            ball
+                        </text>
+                    </g>
+                    <g class="_1ZnpjejWKO66ftvJ7Jgr8C">
+                        <rect
+                            class={style.rect}
+                            x="20.001201629638672"
+                            y="141.2541046142578"
+                            width="24.897598266601562"
+                            height="26.295827865600586"
+                            rx="4"
+                        />
+                        <text
+                            text-anchor="middle"
+                            class=""
+                            x="32.44999980926514"
+                            y="160"
+                        >
+                            semen
+                        </text>
+                    </g>
+                    <g class="_1ZnpjejWKO66ftvJ7Jgr8C">
+                        <rect
+                            class={style.rect}
+                            x="84.9026870727539"
+                            y="141.2541046142578"
+                            width="33.344627380371094"
+                            height="26.295827865600586"
+                            rx="4"
+                        />
+                        <text
+                            text-anchor="middle"
+                            class=""
+                            x="101.57499980926514"
+                            y="160"
+                        >
+                            semen
+                        </text>
+                    </g>
+                </g>
+            </g>
+        ),
+    }
 ];
 
 export default ROUTES;
