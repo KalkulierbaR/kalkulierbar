@@ -21,7 +21,7 @@ import { NotificationHandler } from "../types/app/notification";
 import { AppStateActionType } from "../types/app/action";
 import { Calculus } from "../types/calculus";
 import { getConfig, checkCredentials } from "../util/admin";
-import MyHipCalculus from "async!../routes/my-hip-calculus";
+import SequentCalculus from "async!../routes/sequent-calculus";
 
 const SMALL_SCREEN_THRESHOLD = 750;
 
@@ -162,7 +162,7 @@ const App: preact.FunctionalComponent = () => {
                     <NCTableauxView path={`/${Calculus.ncTableaux}/view`} />
                     <DPLL path={`/${Calculus.dpll}`} />
                     <DPLLView path={`/${Calculus.dpll}/view`} />
-                    <MyHipCalculus path="/my-hip-calculus" />
+                    <SequentCalculus path="/sequent-calculus" />
                     <Page404 default={true} />
                 </Router>
             </main>

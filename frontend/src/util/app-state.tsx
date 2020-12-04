@@ -23,6 +23,7 @@ const INIT_APP_STATE: AppState = {
         [Calculus.foTableaux]: "",
         [Calculus.ncTableaux]: "",
         [Calculus.dpll]: "",
+        [Calculus.sequentCalculus]: "",
     },
     server: isDeployed
         ? "https://api.kbar.app"
