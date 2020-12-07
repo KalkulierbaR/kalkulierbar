@@ -15,7 +15,7 @@ import { DPLLMove } from "./dpll";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
-export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll";
+export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll" | "psc";
 export type FOCalculusType = "fo-tableaux" | "fo-resolution" | "nc-tableaux";
 export type CalculusType = FOCalculusType | PropCalculusType;
 
@@ -26,13 +26,14 @@ export enum Calculus {
     foResolution = "fo-resolution",
     ncTableaux = "nc-tableaux",
     dpll = "dpll",
-    sequentCalculus = "sequent-calculus"
+    psc = "psc",
 }
 
 export const PropCalculus: CalculusType[] = [
     Calculus.propTableaux,
     Calculus.propResolution,
     Calculus.dpll,
+    Calculus.psc,
 ];
 export const FOCalculus: CalculusType[] = [
     Calculus.foTableaux,
@@ -58,6 +59,7 @@ export interface Move {
     "fo-resolution": FOResolutionMove;
     "nc-tableaux": NCTableauxMove;
     dpll: DPLLMove;
+    psc: null;
 }
 
 /**
@@ -70,6 +72,7 @@ export interface Params {
     "fo-resolution": FOResolutionParams;
     "nc-tableaux": null;
     dpll: null;
+    psc: null;
 }
 
 /**

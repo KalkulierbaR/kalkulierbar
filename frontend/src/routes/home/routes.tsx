@@ -1033,8 +1033,8 @@ const ROUTES: Route[] = [
         ),
     },
     {
-        href: Calculus.sequentCalculus,
-        name: "Sequent Calculus",
+        href: Calculus.psc,
+        name: "Propositional Sequent Calculus",
         viewBox: "0 -16 450.015625 360",
         image: (
             <g transform="translate(0 0) scale(1)">

@@ -4,20 +4,21 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import { Calculus } from "../../types/calculus";
 
-const SequentCalculus: preact.FunctionalComponent = () => {
+interface Props{}
+
+const PSC: preact.FunctionalComponent<Props> = () => {
     
     return (
         <Fragment>
-            <h2>Sequent Calculus</h2>
-            <Format foLogic={true} />
+            <h2>Propositional Sequent Calculus</h2>
+            <Format foLogic={false} />
             <FormulaInput
-                calculus={Calculus.ncTableaux}
+                calculus={Calculus.psc}
                 params={null}
-                foLogic={true}
-            />
-            <ExampleList calculus={Calculus.ncTableaux} />            
+                foLogic={false}
+            />                       
         </Fragment>
     );
 };
 
-export default SequentCalculus;
+export default PSC;
