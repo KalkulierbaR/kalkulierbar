@@ -104,7 +104,7 @@ class PSCState(
         val historyH = moveHistory.joinToString(",")
         val identifiersH = identifiers.joinToString(",")
         val variousH = "$backtracking|$usedBacktracking|$gammaSuffixCounter|$skolemCounter|$formula"
-        return "nctableaux|$variousH|$identifiersH|$nodeH|$historyH"
+        return "psc|$variousH|$identifiersH|$nodeH|$historyH"
     }
 }
 

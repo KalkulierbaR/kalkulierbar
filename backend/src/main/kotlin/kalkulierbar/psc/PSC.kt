@@ -18,9 +18,7 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
     override val identifier = "psc"
 
     override fun parseFormulaToState(formula: String, params: Unit?): PSCState {
-//        val parsedFormula = NegationNormalForm.transform(PropositionalParser.parse(formula))
         val parsedFormula = PropositionalParser().parse(formula)
-        println(parsedFormula)
         return PSCState(parsedFormula)
     }
 
@@ -30,10 +28,7 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
 
         // Pass moves to relevant subfunction
         return when (move) {
-            is AlphaMove -> applyAlpha(state, move.nodeID)
-            is BetaMove -> applyBeta(state, move.nodeID)
-            is GammaMove -> applyGamma(state, move.nodeID)
-            is DeltaMove -> applyDelta(state, move.nodeID)
+            is NotLeft -> applyNotLeft(state, move.nodeID)
             is CloseMove -> applyClose(state, move.nodeID, move.closeID, move.getVarAssignTerms())
             is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")

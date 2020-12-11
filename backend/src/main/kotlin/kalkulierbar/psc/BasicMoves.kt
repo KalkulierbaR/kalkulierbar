@@ -19,6 +19,10 @@ import kalkulierbar.nonclausaltableaux.DeltaSkolemization
 import kalkulierbar.nonclausaltableaux.NcTableauxNode
 import kalkulierbar.nonclausaltableaux.NcTableauxState
 
+fun applyNotLeft(state: PSCState, nodeId: Int): PSCState {
+    return state;
+}
+
 /**
  * While the outermost LogicNode is an AND:
  * Split into subformulae, chain onto a single branch
@@ -62,143 +66,6 @@ fun applyAlpha(state: PSCState, nodeID: Int): PSCState {
 }
 
 /**
- * While the outermost LogicNode is an OR:
- * Split into subformulae and add to node
- * @param state: non clausal tableaux state to apply move on
- * @param nodeID: ID of node to apply move on
- * @return new state after applying move
- */
-fun applyBeta(state: PSCState, nodeID: Int): PSCState {
-//    val nodes = state.nodes
-//    checkNodeRestrictions(nodes, nodeID)
-//
-//    val node = nodes[nodeID]
-//
-//    if (node.formula !is Or)
-//        throw IllegalMove("Outermost logic operator is not OR")
-//
-//    // Collect all leaves in the current branch where the split nodes
-//    // will have to be appended
-//    // If the node is a leaf, this will only be the nodeID
-//    val branchLeaveIDs = state.childLeavesOf(nodeID)
-//
-//    val workList = mutableListOf(node.formula)
-//
-//    while (workList.isNotEmpty()) {
-//        val subFormula = workList.removeAt(0)
-//        // Further decompose the formula
-//        if (subFormula is Or) {
-//            workList.add(subFormula.rightChild)
-//            workList.add(subFormula.leftChild)
-//        } else {
-//            // Append the split nodes to every leaf that is not closed
-//            branchLeaveIDs.filter { !nodes[it].isClosed }.forEach {
-//                nodes.add(PSCNode(it, subFormula.clone()))
-//                nodes[it].children.add(nodes.size - 1)
-//            }
-//        }
-//    }
-//
-//    // Add move to history
-//    if (state.backtracking)
-//        state.moveHistory.add(BetaMove(nodeID))
-    return state
-}
-
-/**
- * If outermost LogicNode is a universal quantifier:
- * Remove quantifier and instantiate with fresh variable
- * @param state: non clausal tableaux state to apply move on
- * @param nodeID: ID of node to apply move on
- * @return new state after applying move
- */
-fun applyGamma(state: PSCState, nodeID: Int): PSCState {
-//    val nodes = state.nodes
-//    checkNodeRestrictions(nodes, nodeID)
-//
-//    val node = nodes[nodeID]
-//    // Note: This clone() is important as it restores quantifier linking
-//    //       Which cannot be recovered from deserialization
-//    val formula = node.formula.clone()
-//
-//    if (formula !is UniversalQuantifier)
-//        throw IllegalMove("Outermost logic operator is not a universal quantifier")
-//
-//    // Prepare the selected node for insertion of new nodes
-//    val savedChildren = node.children.toMutableList()
-//    node.children.clear()
-//
-//    // Transform new Formula + remove UniversalQuantifier
-//    val vars = formula.boundVariables
-//    state.gammaSuffixCounter += 1
-//    val suffix = "_${state.gammaSuffixCounter}"
-//    val newFormula = SelectiveSuffixAppender.transform(formula.child, vars, suffix)
-//
-//    // Add new identifiers to the set
-//    // This is not strictly speaking necessary as skolem term names can never be in
-//    // conflict with suffixed variable names, but we'll do it still to ensure
-//    // that state.identifiers contains _all_ identifiers in the tableaux
-//    state.identifiers.addAll(IdentifierCollector.collect(newFormula))
-//
-//    // Add new node to tree
-//    val newNode = PSCNode(nodeID, newFormula)
-//    newNode.children.addAll(savedChildren)
-//
-//    nodes.add(newNode)
-//    node.children.add(nodes.size - 1)
-//    state.setParent(savedChildren, nodes.size - 1)
-//    // Add move to history
-//    if (state.backtracking)
-//        state.moveHistory.add(GammaMove(nodeID))
-
-    return state
-}
-
-/**
- * If outermost LogicNode is an existantial quantifier:
- * Remove quantifier and instantiate with Skolem term
- * -> Iff free variables in current node: term = firstOrderTerm (free variables)
- * -> Iff no free variables: term = constant
- * @param state: non clausal tableaux state to apply move on
- * @param nodeID: ID of node to apply move on
- * @return new state after applying move
- */
-fun applyDelta(state: PSCState, nodeID: Int): PSCState{
-//    val nodes = state.nodes
-//    checkNodeRestrictions(nodes, nodeID)
-//
-//    val node = nodes[nodeID]
-//    // Note: This clone() is important as it restores quantifier linking
-//    //       Which cannot be recovered from deserialization
-//    val formula = node.formula.clone()
-//
-//    // Check node == UniversalQuantifier
-//    if (formula !is ExistentialQuantifier)
-//        throw IllegalMove("The outermost logic operator is not an existential quantifier")
-//
-//    // Prepare the selected node for insertion of new nodes
-//    val savedChildren = node.children.toMutableList()
-//    node.children.clear()
-//
-//    // Apply skolemization to the top-level existential quantifier
-//    // This adds the newly created skolem term identifier to the state.identifiers set
-//    state.skolemCounter++
-//    val newFormula = DeltaSkolemization.transform(formula, state.identifiers, state.skolemCounter)
-//
-//    // Add new node to tree
-//    val newNode = PSCNode(nodeID, newFormula)
-//    newNode.children.addAll(savedChildren)
-//    nodes.add(newNode)
-//    node.children.add(nodes.size - 1)
-//    state.setParent(savedChildren, nodes.size - 1)
-//
-//    // Add move to history
-//    if (state.backtracking)
-//        state.moveHistory.add(DeltaMove(nodeID))
-    return state
-}
-
-/**
  * Applies close move by following constraints:
  * 1. The outermost LogicNode is a NOT for one and RELATION for the other
  * 2. The child of the NOT node is a RELATION (think this is already covered by converting to NNF)
@@ -216,7 +83,7 @@ fun applyClose(
         closeID: Int,
         varAssign: Map<String, FirstOrderTerm>?
 ): PSCState{
-    checkCloseIDRestrictions(state, nodeID, closeID)
+    // checkCloseIDRestrictions(state, nodeID, closeID)
 
 //    val node = state.nodes[nodeID]
 //    val closeNode = state.nodes[closeID]
@@ -261,64 +128,4 @@ fun applyClose(
 //    }
 //
     return state
-}
-
-/**
- * Check restrictions for nodeID and closeID
- */
-private fun checkCloseIDRestrictions(state: PSCState, nodeID: Int, closeID: Int) {
-//    val nodes = state.nodes
-//
-//    checkNodeRestrictions(nodes, nodeID)
-//
-//    if (closeID >= nodes.size || closeID < 0)
-//        throw IllegalMove("Node with ID $closeID does not exist")
-//
-//    val node = state.nodes[nodeID]
-//    val closeNode = state.nodes[closeID]
-//    // Verify that closeNode is transitive parent of node
-//    if (!state.nodeIsParentOf(closeID, nodeID))
-//        throw IllegalMove("Node '$closeNode' is not an ancestor of node '$node'")
-}
-
-/**
- * Iff node and closeNode are (negated) Relations of compatible polarity then
- * @return Relations in input formulae
- */
-@Suppress("ThrowsCount")
-private fun checkCloseRelation(nodeFormula: LogicNode, closeNodeFormula: LogicNode): Pair<Relation, Relation> {
-//    when {
-//        nodeFormula is Not -> {
-//            if (nodeFormula.child !is Relation)
-//                throw IllegalMove("Node formula '$nodeFormula' is not a negated relation")
-//            if (closeNodeFormula !is Relation)
-//                throw IllegalMove("Close node formula '$closeNodeFormula' has to be a positive relation")
-//            val nodeRelation = nodeFormula.child as Relation
-//            return Pair(nodeRelation, closeNodeFormula)
-//        }
-//        closeNodeFormula is Not -> {
-//            if (closeNodeFormula.child !is Relation)
-//                throw IllegalMove("Close node formula '$closeNodeFormula' is not a negated relation")
-//            if (nodeFormula !is Relation)
-//                throw IllegalMove("Node formula '$nodeFormula' has to be a positive relation")
-//            val closeRelation = closeNodeFormula.child as Relation
-//            return Pair(nodeFormula, closeRelation)
-//        }
-//        else -> {
-//            throw IllegalMove("Neither '$nodeFormula' nor '$closeNodeFormula' are negated")
-//        }
-//    }
-    throw IllegalMove("Neither '$nodeFormula' nor '$closeNodeFormula' are negated")
-}
-
-/**
- * Check nodeID valid + already closed
- */
-fun checkNodeRestrictions(nodes: List<PSCState>, nodeID: Int) {
-//    if (nodeID < 0 || nodeID >= nodes.size)
-//        throw IllegalMove("Node with ID $nodeID does not exist")
-//    // Verify that node is not already closed
-//    val node = nodes[nodeID]
-//    if (node.isClosed)
-//        throw IllegalMove("Node '$node' is already closed")
 }

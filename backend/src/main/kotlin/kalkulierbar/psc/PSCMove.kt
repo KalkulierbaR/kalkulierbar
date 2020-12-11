@@ -8,13 +8,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 
 // Context object for move serialization
-// Tells kotlinx.serialize about child types of NcTableauxMove
+// Tells kotlinx.serialize about child types of PSCMove
 val PSCMoveModule = SerializersModule {
     polymorphic(PSCMove::class) {
-        AlphaMove::class with AlphaMove.serializer()
-        BetaMove::class with BetaMove.serializer()
-        GammaMove::class with GammaMove.serializer()
-        DeltaMove::class with DeltaMove.serializer()
+        NotLeft::class with NotLeft.serializer()
         CloseMove::class with CloseMove.serializer()
         UndoMove::class with UndoMove.serializer()
     }
@@ -23,30 +20,13 @@ val PSCMoveModule = SerializersModule {
 @Serializable
 abstract class PSCMove
 
-@Serializable
-@SerialName("alpha")
-class AlphaMove(val nodeID: Int) : PSCMove() {
-    override fun toString() = "(alpha|$nodeID)"
-}
 
 @Serializable
-@SerialName("beta")
-class BetaMove(val nodeID: Int) : PSCMove() {
-    override fun toString() = "(beta|$nodeID)"
+@SerialName("notLeft")
+class NotLeft(
+    val nodeID: Int
+) : PSCMove() {
 }
-
-@Serializable
-@SerialName("gamma")
-class GammaMove(val nodeID: Int) : PSCMove() {
-    override fun toString() = "(gamma|$nodeID)"
-}
-
-@Serializable
-@SerialName("delta")
-class DeltaMove(val nodeID: Int) : PSCMove() {
-    override fun toString() = "(delta|$nodeID)"
-}
-
 @Serializable
 @SerialName("close")
 class CloseMove(
