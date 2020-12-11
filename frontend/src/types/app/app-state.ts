@@ -58,6 +58,10 @@ export interface AppState {
      */
     dpll?: DPLLState;
     /**
+     * The current psc state
+     */
+    "psc"?: PSCState;
+    /**
      * The current tutorial mode
      */
     tutorialMode: TutorialMode;
