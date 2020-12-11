@@ -1,196 +1,324 @@
 package kalkulierbar.psc
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.clause.Atom
-import kalkulierbar.clause.Clause
-import kalkulierbar.parsers.TokenType
-import kalkulierbar.parsers.Tokenizer
+import kalkulierbar.UnificationImpossible
+import kalkulierbar.logic.And
+import kalkulierbar.logic.ExistentialQuantifier
+import kalkulierbar.logic.FirstOrderTerm
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.Not
+import kalkulierbar.logic.Or
+import kalkulierbar.logic.Relation
+import kalkulierbar.logic.UniversalQuantifier
+import kalkulierbar.logic.transform.IdentifierCollector
+import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
+import kalkulierbar.logic.transform.SelectiveSuffixAppender
+import kalkulierbar.logic.util.Unification
+import kalkulierbar.logic.util.UnifierEquivalence
+import kalkulierbar.nonclausaltableaux.DeltaSkolemization
+import kalkulierbar.nonclausaltableaux.NcTableauxNode
+import kalkulierbar.nonclausaltableaux.NcTableauxState
 
 /**
- * Applies a propagation rule on a leaf node of the proof tree
- * This can either be removing a clause known to be satisfied
- * or removing an atom from a clause that is known to be false
- * @param state State the rule is to be applied in
- * @param branchID Node of the proof tree the rule is to be applied on
- * @param baseID ID of the clause to be used for propagation (single-atom clause)
- * @param propID ID of the clause that will be simplified by the rule
- * @param atomID Index of the atom used for propagation in the propID clause
+ * While the outermost LogicNode is an AND:
+ * Split into subformulae, chain onto a single branch
+ * @param state: Non clausal tableaux state to apply move on
+ * @param nodeID: node ID to apply move on
+ * @return new state after applying move
  */
-@Suppress("ComplexMethod")
-fun propagate(state: PSCState, branchID: Int, baseID: Int, propID: Int, atomID: Int) {
-    // Checks all Restrictions according to propagate
-    checkPropagateRestrictions(state, branchID, baseID, propID, atomID)
-
-    val branch = state.tree[branchID]
-    val clauseSet = state.getClauseSet(branchID)
-    val clauses = clauseSet.clauses
-    val baseAtom = clauses[baseID].atoms[0]
-    val propAtom = clauses[propID].atoms[atomID]
-    val diff: CsDiff
-
-    // If the selected clause contains the atom which we know must be true,
-    // the whole clause is trivially true and we can remove it from the set
-    if (baseAtom == propAtom)
-        diff = RemoveClause(propID)
-    // If the selected clause contains the negation of the atom known to be true,
-    // that atom cannot be true and can be removed from the clause
-    else if (baseAtom == propAtom.not())
-        diff = RemoveAtom(propID, atomID)
-    else
-        throw IllegalMove("Selected atom '$propAtom' is not compatible with '$baseAtom'")
-
-    val propNode = TreeNode(branchID, NodeType.PROP, "prop", diff)
-    val propNodeID = state.tree.size
-    state.tree.add(propNode)
-    branch.children.add(propNodeID)
-
-    // Add proper annotations if the node created by propagation is closed or represents a model
-    val newClauses = diff.apply(clauseSet).clauses
-
-    // A node is considered closed if the clause set associated with it contains an empty clause
-    if (newClauses.any { it.isEmpty() }) {
-        state.tree.add(TreeNode(propNodeID, NodeType.CLOSED, "closed", Identity()))
-        propNode.children.add(state.tree.size - 1)
-    }
-    // A node is considered a model if it contains only single-atom clauses
-    // that do not contradict each other and contain no duplicates
-    else if (
-            newClauses.all { it.size == 1 } &&
-            newClauses.map { it.atoms[0].lit }.distinct().size == newClauses.size
-    ) {
-        state.tree.add(TreeNode(propNodeID, NodeType.MODEL, "model", Identity()))
-        propNode.children.add(state.tree.size - 1)
-    }
+fun applyAlpha(state: PSCState, nodeID: Int): PSCState {
+//    val nodes = state.nodes
+//    checkNodeRestrictions(nodes , nodeID)
+//
+//    val node = nodes[nodeID]
+//    val savedChildren = node.children.toMutableList() // Save a copy of the node's children
+//    node.children.clear() // We will insert new nodes between the node and its children
+//
+//    if (node.formula !is And)
+//        throw IllegalMove("Outermost logic operator is not AND")
+//
+//    val workList = mutableListOf(node.formula)
+//    var parentID = nodeID
+//
+//    while (workList.isNotEmpty()) {
+//        val subFormula = workList.removeAt(0)
+//        if (subFormula is And) {
+//            workList.add(subFormula.rightChild)
+//            workList.add(subFormula.leftChild)
+//        } else {
+//            nodes.add(PSCNode(parentID, subFormula))
+//            nodes[parentID].children.add(nodes.size - 1)
+//            parentID = nodes.size - 1
+//        }
+//    }
+//
+//    // Add the node's children to the last inserted node to restore the tree structure
+//    nodes[parentID].children.addAll(savedChildren)
+//    state.setParent(savedChildren, nodes.size - 1)
+//    // Add move to history
+//    if (state.backtracking)
+//        state.moveHistory.add(AlphaMove(nodeID))
+    return state
 }
 
+/**
+ * While the outermost LogicNode is an OR:
+ * Split into subformulae and add to node
+ * @param state: non clausal tableaux state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @return new state after applying move
+ */
+fun applyBeta(state: PSCState, nodeID: Int): PSCState {
+//    val nodes = state.nodes
+//    checkNodeRestrictions(nodes, nodeID)
+//
+//    val node = nodes[nodeID]
+//
+//    if (node.formula !is Or)
+//        throw IllegalMove("Outermost logic operator is not OR")
+//
+//    // Collect all leaves in the current branch where the split nodes
+//    // will have to be appended
+//    // If the node is a leaf, this will only be the nodeID
+//    val branchLeaveIDs = state.childLeavesOf(nodeID)
+//
+//    val workList = mutableListOf(node.formula)
+//
+//    while (workList.isNotEmpty()) {
+//        val subFormula = workList.removeAt(0)
+//        // Further decompose the formula
+//        if (subFormula is Or) {
+//            workList.add(subFormula.rightChild)
+//            workList.add(subFormula.leftChild)
+//        } else {
+//            // Append the split nodes to every leaf that is not closed
+//            branchLeaveIDs.filter { !nodes[it].isClosed }.forEach {
+//                nodes.add(PSCNode(it, subFormula.clone()))
+//                nodes[it].children.add(nodes.size - 1)
+//            }
+//        }
+//    }
+//
+//    // Add move to history
+//    if (state.backtracking)
+//        state.moveHistory.add(BetaMove(nodeID))
+    return state
+}
+
+/**
+ * If outermost LogicNode is a universal quantifier:
+ * Remove quantifier and instantiate with fresh variable
+ * @param state: non clausal tableaux state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @return new state after applying move
+ */
+fun applyGamma(state: PSCState, nodeID: Int): PSCState {
+//    val nodes = state.nodes
+//    checkNodeRestrictions(nodes, nodeID)
+//
+//    val node = nodes[nodeID]
+//    // Note: This clone() is important as it restores quantifier linking
+//    //       Which cannot be recovered from deserialization
+//    val formula = node.formula.clone()
+//
+//    if (formula !is UniversalQuantifier)
+//        throw IllegalMove("Outermost logic operator is not a universal quantifier")
+//
+//    // Prepare the selected node for insertion of new nodes
+//    val savedChildren = node.children.toMutableList()
+//    node.children.clear()
+//
+//    // Transform new Formula + remove UniversalQuantifier
+//    val vars = formula.boundVariables
+//    state.gammaSuffixCounter += 1
+//    val suffix = "_${state.gammaSuffixCounter}"
+//    val newFormula = SelectiveSuffixAppender.transform(formula.child, vars, suffix)
+//
+//    // Add new identifiers to the set
+//    // This is not strictly speaking necessary as skolem term names can never be in
+//    // conflict with suffixed variable names, but we'll do it still to ensure
+//    // that state.identifiers contains _all_ identifiers in the tableaux
+//    state.identifiers.addAll(IdentifierCollector.collect(newFormula))
+//
+//    // Add new node to tree
+//    val newNode = PSCNode(nodeID, newFormula)
+//    newNode.children.addAll(savedChildren)
+//
+//    nodes.add(newNode)
+//    node.children.add(nodes.size - 1)
+//    state.setParent(savedChildren, nodes.size - 1)
+//    // Add move to history
+//    if (state.backtracking)
+//        state.moveHistory.add(GammaMove(nodeID))
+
+    return state
+}
+
+/**
+ * If outermost LogicNode is an existantial quantifier:
+ * Remove quantifier and instantiate with Skolem term
+ * -> Iff free variables in current node: term = firstOrderTerm (free variables)
+ * -> Iff no free variables: term = constant
+ * @param state: non clausal tableaux state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @return new state after applying move
+ */
+fun applyDelta(state: PSCState, nodeID: Int): PSCState{
+//    val nodes = state.nodes
+//    checkNodeRestrictions(nodes, nodeID)
+//
+//    val node = nodes[nodeID]
+//    // Note: This clone() is important as it restores quantifier linking
+//    //       Which cannot be recovered from deserialization
+//    val formula = node.formula.clone()
+//
+//    // Check node == UniversalQuantifier
+//    if (formula !is ExistentialQuantifier)
+//        throw IllegalMove("The outermost logic operator is not an existential quantifier")
+//
+//    // Prepare the selected node for insertion of new nodes
+//    val savedChildren = node.children.toMutableList()
+//    node.children.clear()
+//
+//    // Apply skolemization to the top-level existential quantifier
+//    // This adds the newly created skolem term identifier to the state.identifiers set
+//    state.skolemCounter++
+//    val newFormula = DeltaSkolemization.transform(formula, state.identifiers, state.skolemCounter)
+//
+//    // Add new node to tree
+//    val newNode = PSCNode(nodeID, newFormula)
+//    newNode.children.addAll(savedChildren)
+//    nodes.add(newNode)
+//    node.children.add(nodes.size - 1)
+//    state.setParent(savedChildren, nodes.size - 1)
+//
+//    // Add move to history
+//    if (state.backtracking)
+//        state.moveHistory.add(DeltaMove(nodeID))
+    return state
+}
+
+/**
+ * Applies close move by following constraints:
+ * 1. The outermost LogicNode is a NOT for one and RELATION for the other
+ * 2. The child of the NOT node is a RELATION (think this is already covered by converting to NNF)
+ * 3. Both RELATION nodes are syntactically equal after (global) variable instantiation
+ * @param state State to apply close move on
+ * @param nodeID Node to close
+ * @param closeID Node to close with
+ * @param varAssign variable assignment to instantiate variables
+ * @return state after applying move
+ */
+@Suppress("ThrowsCount", "ComplexMethod", "LongMethod")
+fun applyClose(
+        state: PSCState,
+        nodeID: Int,
+        closeID: Int,
+        varAssign: Map<String, FirstOrderTerm>?
+): PSCState{
+    checkCloseIDRestrictions(state, nodeID, closeID)
+
+//    val node = state.nodes[nodeID]
+//    val closeNode = state.nodes[closeID]
+//    val nodeFormula = node.formula
+//    val closeNodeFormula = closeNode.formula
+//
+//    // Verify that node and closeNode are (negated) Relations of compatible polarity
+//    val (nodeRelation, closeRelation) = checkCloseRelation(nodeFormula, closeNodeFormula)
+//
+//    // Use user-supplied variable assignment if given, calculate MGU otherwise
+//    val unifier: Map<String, FirstOrderTerm>
+//    unifier = varAssign
+//            ?: try {
+//                Unification.unify(nodeRelation, closeRelation)
+//            } catch (e: UnificationImpossible) {
+//                throw IllegalMove("Cannot unify '$nodeRelation' and '$closeRelation': ${e.message}")
+//            }
+//
+//    if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, nodeRelation, closeRelation))
+//        state.statusMessage = "The unifier you specified is not an MGU"
+//
+//    // Apply all specified variable instantiations globally
+//    val instantiator = LogicNodeVariableInstantiator(unifier)
+//    state.nodes.forEach {
+//        it.formula = it.formula.accept(instantiator)
+//    }
+//
+//    // Check relations after instantiation
+//    if (!nodeRelation.synEq(closeRelation))
+//        throw IllegalMove("Relations '$nodeRelation' and '$closeRelation' are" +
+//                " not equal after variable instantiation")
+//
+//    // Close branch
+//    node.closeRef = closeID
+//    state.setClosed(nodeID)
+//
+//    // Record close move for backtracking purposes
+//    if (state.backtracking) {
+//        val varAssignStrings = unifier.mapValues { it.value.toString() }
+//        val move = CloseMove(nodeID, closeID, varAssignStrings)
+//        state.moveHistory.add(move)
+//    }
+//
+    return state
+}
+
+/**
+ * Check restrictions for nodeID and closeID
+ */
+private fun checkCloseIDRestrictions(state: PSCState, nodeID: Int, closeID: Int) {
+//    val nodes = state.nodes
+//
+//    checkNodeRestrictions(nodes, nodeID)
+//
+//    if (closeID >= nodes.size || closeID < 0)
+//        throw IllegalMove("Node with ID $closeID does not exist")
+//
+//    val node = state.nodes[nodeID]
+//    val closeNode = state.nodes[closeID]
+//    // Verify that closeNode is transitive parent of node
+//    if (!state.nodeIsParentOf(closeID, nodeID))
+//        throw IllegalMove("Node '$closeNode' is not an ancestor of node '$node'")
+}
+
+/**
+ * Iff node and closeNode are (negated) Relations of compatible polarity then
+ * @return Relations in input formulae
+ */
 @Suppress("ThrowsCount")
-private fun checkPropagateRestrictions(state: PSCState, branchID: Int, baseID: Int, propID: Int, atomID: Int) {
-    // Check branch validity
-    if (branchID < 0 || branchID >= state.tree.size)
-        throw IllegalMove("Branch with ID $branchID does not exist")
-    val branch = state.tree[branchID]
-    if (!branch.isLeaf)
-        throw IllegalMove("ID $branchID does not reference a leaf")
-    if (branch.isAnnotation)
-        throw IllegalMove("Cannot propagate on annotation '$branch'")
-
-    val clauseSet = state.getClauseSet(branchID)
-    val clauses = clauseSet.clauses
-
-    // Check baseID, propID, atomID validity
-    if (baseID < 0 || baseID >= clauses.size)
-        throw IllegalMove("Clause set $clauses has no clause with ID $baseID")
-    if (propID < 0 || propID >= clauses.size)
-        throw IllegalMove("Clause set $clauses has no clause with ID $propID")
-    if (atomID < 0 || atomID >= clauses[propID].size)
-        throw IllegalMove("Clause ${clauses[propID]} has no atom with ID $atomID")
-    if (baseID == propID)
-        throw IllegalMove("Base and propagation clauses have to be different")
-
-    val base = clauses[baseID]
-    if (base.size != 1)
-        throw IllegalMove("Base clause $base may only have exactly one atom")
+private fun checkCloseRelation(nodeFormula: LogicNode, closeNodeFormula: LogicNode): Pair<Relation, Relation> {
+//    when {
+//        nodeFormula is Not -> {
+//            if (nodeFormula.child !is Relation)
+//                throw IllegalMove("Node formula '$nodeFormula' is not a negated relation")
+//            if (closeNodeFormula !is Relation)
+//                throw IllegalMove("Close node formula '$closeNodeFormula' has to be a positive relation")
+//            val nodeRelation = nodeFormula.child as Relation
+//            return Pair(nodeRelation, closeNodeFormula)
+//        }
+//        closeNodeFormula is Not -> {
+//            if (closeNodeFormula.child !is Relation)
+//                throw IllegalMove("Close node formula '$closeNodeFormula' is not a negated relation")
+//            if (nodeFormula !is Relation)
+//                throw IllegalMove("Node formula '$nodeFormula' has to be a positive relation")
+//            val closeRelation = closeNodeFormula.child as Relation
+//            return Pair(nodeFormula, closeRelation)
+//        }
+//        else -> {
+//            throw IllegalMove("Neither '$nodeFormula' nor '$closeNodeFormula' are negated")
+//        }
+//    }
+    throw IllegalMove("Neither '$nodeFormula' nor '$closeNodeFormula' are negated")
 }
 
 /**
- * Applies a case distinction / split rule on a branch in the proof tree
- * @param state Proof state to apply the rule in
- * @param branchID The leaf node in the tree to apply the rule on
- * @param literal The variable to use for case distinction
+ * Check nodeID valid + already closed
  */
-fun split(state: PSCState, branchID: Int, literal: String) {
-    // Check Restrictions according to split
-    checkSplitRestrictions(state, branchID, literal)
-
-    val tokenized = Tokenizer.tokenize(literal)
-    val varToken = tokenized[0]
-    val lit = varToken.spelling
-    val branch = state.tree[branchID]
-
-    // Add a case distinction for $literal
-    val trueClause = Clause(mutableListOf(Atom(lit, false)))
-    val falseClause = Clause(mutableListOf(Atom(lit, true)))
-    val nodeTrue = TreeNode(branchID, NodeType.SPLIT, "$lit", AddClause(trueClause))
-    val nodeFalse = TreeNode(branchID, NodeType.SPLIT, "¬$lit", AddClause(falseClause))
-
-    state.tree.add(nodeTrue)
-    branch.children.add(state.tree.size - 1)
-    state.tree.add(nodeFalse)
-    branch.children.add(state.tree.size - 1)
-}
-
-@Suppress("ThrowsCount")
-private fun checkSplitRestrictions(state: PSCState, branchID: Int, literal: String) {
-    if (branchID < 0 || branchID >= state.tree.size)
-        throw IllegalMove("Branch with ID $branchID does not exist")
-
-    val branch = state.tree[branchID]
-    if (!branch.isLeaf)
-        throw IllegalMove("ID $branchID does not reference a leaf")
-    if (branch.isAnnotation)
-        throw IllegalMove("Cannot split on annotation '$branch'")
-
-    val tokenized = Tokenizer.tokenize(literal)
-
-    if (tokenized.size != 1)
-        throw IllegalMove("Invalid variable name '$literal'")
-
-    val varToken = tokenized[0]
-
-    if (varToken.type != TokenType.CAPID && varToken.type != TokenType.LOWERID)
-        throw IllegalMove("Invalid variable name '$literal'")
-}
-
-/**
- * Applies a prune rule on the proof tree
- * This removes all child nodes of a selected node, effectively resetting part
- * of the proof tree
- * @param state State to apply the rule in
- * @branchID ID of the node whose children will be pruned
- */
-fun prune(state: PSCState, branchID: Int) {
-    if (branchID < 0 || branchID >= state.tree.size)
-        throw IllegalMove("Branch with ID $branchID does not exist")
-
-    val node = state.tree[branchID]
-
-    // Weird things would happen if we would allow removing annotations
-    if (node.children.size == 1 && state.tree[node.children[0]].isAnnotation)
-        throw IllegalMove("Cannot prune annotation '${state.tree[node.children[0]]}'")
-
-    state.pruneBranch(branchID)
-}
-
-/**
- * Checks if a given variable interpretation satisfies the clause set associated with a node
- * @param state State to apply the check in
- * @param branchID ID of a model node for which the interpretation should be checked
- * @param interpretation A map assigning truth values to variables
- */
-@Suppress("ThrowsCount")
-fun checkModel(state: PSCState, branchID: Int, interpretation: Map<String, Boolean>) {
-    if (branchID < 0 || branchID >= state.tree.size)
-        throw IllegalMove("Branch with ID $branchID does not exist")
-
-    val branch = state.tree[branchID]
-
-    if (branch.type != NodeType.MODEL)
-        throw IllegalMove("Node '$branch' is not a model node")
-
-    if (branch.modelVerified ?: false)
-        throw IllegalMove("This node has already been checked")
-
-    val clauseSet = state.getClauseSet(branchID)
-
-    // Check that the mapping satisfies every clause
-    clauseSet.clauses.forEach {
-        val atoms = it.atoms
-        // Check if any atom in the clause is satisfied by the interpretation
-        // (-> the atom's negated value is the opposite of the interp. truth value)
-        if (!atoms.any { !it.negated == interpretation[it.lit] })
-            throw IllegalMove("The given interpretation does not satisfy any atom of clause $it")
-    }
-
-    branch.modelVerified = true
-    branch.label += " ✓"
+fun checkNodeRestrictions(nodes: List<PSCState>, nodeID: Int) {
+//    if (nodeID < 0 || nodeID >= nodes.size)
+//        throw IllegalMove("Node with ID $nodeID does not exist")
+//    // Verify that node is not already closed
+//    val node = nodes[nodeID]
+//    if (node.isClosed)
+//        throw IllegalMove("Node '$node' is already closed")
 }

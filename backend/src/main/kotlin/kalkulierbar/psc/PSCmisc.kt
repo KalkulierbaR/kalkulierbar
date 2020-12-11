@@ -1,114 +1,131 @@
 package kalkulierbar.psc
 
-import kalkulierbar.clause.ClauseSet
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
 @Serializable
-class PSCState(val clauseSet: ClauseSet<String>) : ProtectedState() {
-    val tree = mutableListOf<TreeNode>()
-
-    /**
-     * Remove all children of a node from the proof tree
-     * This requires some index shifting magic due to the list representation
-     * of the tree, but I figure it's still better than figuring out a way to
-     * serialize doubly-linked trees and define IDs on that
-     * @param id ID of the node whose children are to be pruned
-     */
-    fun pruneBranch(id: Int) {
-        // Collect all transitive children of the node
-        // (not deleting anything yet to keep index structures intact)
-        val queue = mutableListOf<Int>()
-        val toDelete = mutableListOf<Int>()
-        queue.addAll(tree[id].children)
-
-        while (queue.isNotEmpty()) {
-            val index = queue.removeAt(0)
-            val node = tree[index]
-            queue.addAll(node.children)
-            toDelete.add(index)
-        }
-
-        // Remove each identified child, keeping parent references but not children references
-        // We remove items from the largest index to the smallest to keep the indices of the other
-        // items in the list consistent
-        toDelete.sorted().asReversed().forEach {
-            removeNodeInconsistent(it)
-        }
-
-        // Re-compute children references
-        rebuildChildRefs()
-    }
-
-    /**
-     * Removes a node from the proof tree, keeping parent references intact
-     * NOTE: This will most likely leave the children references in an INCONSISTENT state
-     *       Use rebuildChildRefs() to ensure valid children references
-     * @param id ID of the node to remove
-     */
-    private fun removeNodeInconsistent(id: Int) {
-        tree.removeAt(id)
-        tree.forEach {
-            if (it.parent != null && it.parent!! > id)
-                it.parent = it.parent!! - 1
-        }
-    }
-
-    /**
-     * Rebuilds children references in the entire proof tree from parent references
-     */
-    private fun rebuildChildRefs() {
-        tree.forEach { it.children.clear() }
-
-        for (i in tree.indices) {
-            if (tree[i].parent != null)
-                tree[tree[i].parent!!].children.add(i)
-        }
-    }
-
-    /**
-     * Applies the clause set deltas stored in the proof tree to 'check out'
-     * the full clause set of a node in the tree
-     * @param branch ID of the node/branch whose clause set should be computed
-     * @return Full clause set associated with the given node
-     */
-    fun getClauseSet(branch: Int): ClauseSet<String> {
-        var node = tree[branch]
-        val diffs = mutableListOf<CsDiff>()
-        var res = clauseSet
-
-        while (node.parent != null) {
-            diffs.add(node.diff)
-            node = tree[node.parent!!]
-        }
-
-        diffs.asReversed().forEach {
-            res = it.apply(res)
-        }
-
-        return res
-    }
+class PSCState(
+        val formula: LogicNode,
+        val backtracking: Boolean = true
+) : ProtectedState() {
+    val nodes = mutableListOf<PSCNode>(PSCNode(null, formula.clone()))
+    val moveHistory = mutableListOf<PSCMove>()
+    val identifiers = IdentifierCollector.collect(formula).toMutableSet()
+    var usedBacktracking = false
+    var gammaSuffixCounter = 0
+    var skolemCounter = 0
+    var statusMessage: String? = null
 
     override var seal = ""
-    override fun getHash() = "ppsc|$clauseSet|${tree.map{it.getHash()}}"
+
+    /**
+     * Check whether a node is a (transitive) parent of another node
+     * @param parentID Node to check parenthood of
+     * @param childID Child node of suspected parent
+     * @return true iff the parentID is a true ancestor of the childID
+     */
+    @Suppress("ReturnCount")
+    fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
+        val child = nodes[childID]
+        if (child.parent == parentID)
+            return true
+        if (child.parent == 0 || child.parent == null)
+            return false
+        return nodeIsParentOf(parentID, child.parent!!)
+    }
+
+    /**
+     * Marks a tree node and its ancestry as closed
+     * NOTE: This does NOT set the closeRef of the closed node
+     *       so make sure the closeRef is set before calling this
+     * @param nodeID The node to mark as closed
+     */
+    fun setClosed(nodeID: Int) {
+        var node = nodes[nodeID]
+        // Set isClosed to true for all nodes dominated by node in reverse tree
+        while (node == nodes[nodeID] || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
+            node.isClosed = true
+            if (node.parent == null)
+                break
+            node = nodes[node.parent!!]
+        }
+
+        // Set isClosed for all descendants of the node
+        val worklist = mutableListOf<Int>(nodeID)
+        while (worklist.isNotEmpty()) {
+            val elem = nodes[worklist.removeAt(0)]
+            worklist.addAll(elem.children)
+            elem.isClosed = true
+        }
+    }
+
+    /**
+     * Overwrite parent reference for some nodes
+     * @param children List of nodes to update
+     * @param parent New parent reference
+     */
+    fun setParent(children: List<Int>, parent: Int) {
+        children.forEach {
+            nodes[it].parent = parent
+        }
+    }
+
+    /**
+     * Collect leaves from below a given node in the tree
+     * If the given node is a leaf, only its ID will be returned
+     * @param parent ID of the common parent of all leaves
+     * @return List of Leaf IDs
+     */
+    fun childLeavesOf(parent: Int): List<Int> {
+        val worklist = mutableListOf(parent)
+        val leaves = mutableListOf<Int>()
+
+        while (worklist.isNotEmpty()) {
+            val index = worklist.removeAt(0)
+            val node = nodes[index]
+            worklist.addAll(node.children)
+            if (node.isLeaf)
+                leaves.add(index)
+        }
+
+        return leaves
+    }
+
+    fun render() {
+        nodes.forEach {
+            it.render()
+        }
+    }
+
+    override fun getHash(): String {
+        val nodeH = nodes.joinToString(",") { it.getHash() }
+        val historyH = moveHistory.joinToString(",")
+        val identifiersH = identifiers.joinToString(",")
+        val variousH = "$backtracking|$usedBacktracking|$gammaSuffixCounter|$skolemCounter|$formula"
+        return "nctableaux|$variousH|$identifiersH|$nodeH|$historyH"
+    }
 }
 
 @Serializable
-class TreeNode(var parent: Int?, val type: NodeType, var label: String, val diff: CsDiff) {
+class PSCNode(
+        var parent: Int?,
+        var formula: LogicNode
+) {
+
+    var isClosed = false
+    var closeRef: Int? = null
     val children = mutableListOf<Int>()
+    var spelling = formula.toString()
     val isLeaf
         get() = children.size == 0
-    val isAnnotation
-        get() = (type == NodeType.MODEL || type == NodeType.CLOSED)
-    var modelVerified: Boolean? = null
 
-    fun getHash(): String {
-        return "($parent|$children|$type|$label|$diff|$modelVerified)"
+    override fun toString() = formula.toString()
+
+    fun render() {
+        spelling = formula.toString()
     }
 
-    override fun toString() = label
-}
-
-enum class NodeType {
-    ROOT, PROP, SPLIT, MODEL, CLOSED
+    fun getHash() = "($parent|$children|$isClosed|$closeRef|$formula)"
 }
