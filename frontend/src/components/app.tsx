@@ -21,6 +21,7 @@ import { NotificationHandler } from "../types/app/notification";
 import { AppStateActionType } from "../types/app/action";
 import { Calculus } from "../types/calculus";
 import { getConfig, checkCredentials } from "../util/admin";
+import PSC from "async!../routes/psc";
 
 const SMALL_SCREEN_THRESHOLD = 750;
 
@@ -161,6 +162,7 @@ const App: preact.FunctionalComponent = () => {
                     <NCTableauxView path={`/${Calculus.ncTableaux}/view`} />
                     <DPLL path={`/${Calculus.dpll}`} />
                     <DPLLView path={`/${Calculus.dpll}/view`} />
+                    <PSC path="/psc" />
                     <Page404 default={true} />
                 </Router>
             </main>
