@@ -73,7 +73,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             setSelectedRuleId(newRuleId);
         }
     };
-    /*
+    
     return (
         <Fragment>
             <h2>PSC View</h2>
@@ -83,7 +83,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     <div>
                         <OptionList
                             options={ruleOptions}
-                            selectedOptionsIds={
+                            selectedOptionIds={
                                 selectedRuleId !== undefined
                                     ? [selectedRuleId]
                                     : undefined
@@ -98,13 +98,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         </Fragment>
 
     );
-    */
-
-    return (
-        <Fragment>
-            <h2>PSC View</h2>
-        </Fragment>
-    )
+    
 };
 
 export default PSCView;
