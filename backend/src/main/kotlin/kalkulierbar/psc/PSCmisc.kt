@@ -20,8 +20,9 @@ class PSCState(
 
 @Serializable
 class TreeNode(val parent: Int?, var leftChild: Int?, var rightChild: Int?, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) {
-    val isLeaf
-        get() = leftChild == null
+    fun isLeaf(): Boolean {
+        return leftChild == null;
+    }
 
     override fun toString() = leftFormula.toString() + " ==> " + rightFormula.toString()
 }

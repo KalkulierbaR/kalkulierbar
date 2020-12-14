@@ -28,7 +28,8 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
 
         // Pass moves to relevant subfunction
         return when (move) {
-            is NotRight -> applyNotRight(state, move.leafID, move.listIndex)
+            is NotRight -> applyNotRight(state, move.nodeID, move.listIndex)
+            is NotLeft -> applyNotLeft(state, move.nodeID, move.listIndex)
             is CloseMove -> applyClose(state, move.nodeID, move.closeID, move.getVarAssignTerms())
             is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")

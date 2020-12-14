@@ -22,12 +22,12 @@ import kalkulierbar.psc.PSCMove
 import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
 
-fun applyNotRight(state: PSCState, leafID: Int, listIndex: Int): PSCState {
-    var leaf = state.tree[leafID];
-    if (leaf.isLeaf == false)
+fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
+    var leaf = state.tree[nodeID];
+    if (leaf.isLeaf() == false)
         throw IllegalMove("Rule notRight can only be aplied to a leaf of the sequent calculus.")
 
-    if (leaf.rightFormula.size <= listIndex || listIndex < 0)
+    if (listIndex < 0 || leaf.rightFormula.size <= listIndex)
         throw IllegalMove("Rule notRight must be applied on a valid formula of the selected Leaf.")
 
     val formula = leaf.rightFormula.get(listIndex)
@@ -40,7 +40,31 @@ fun applyNotRight(state: PSCState, leafID: Int, listIndex: Int): PSCState {
     val newRightFormula = leaf.rightFormula.toMutableList();
     newRightFormula.removeAt(listIndex);
 
-    var newLeaf = TreeNode(leafID, null, null, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList())
+    var newLeaf = TreeNode(nodeID, null, null, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList())
+    state.tree.add(newLeaf);
+    leaf.leftChild = state.tree.size - 1;
+    return state;
+}
+
+fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
+    var leaf = state.tree[nodeID];
+    if (leaf.isLeaf() == false)
+        throw IllegalMove("Rule notRight can only be aplied to a leaf of the sequent calculus.")
+
+    if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
+        throw IllegalMove("Rule notRight must be applied on a valid formula of the selected Leaf.")
+
+    val formula = leaf.rightFormula.get(listIndex)
+
+    if (formula !is UnaryOp)
+        throw IllegalMove("The rule notRight cannot be applied on BinaryOp")
+        
+    val newLeftFormula = leaf.leftFormula.toMutableList();
+    newLeftFormula.removeAt(listIndex);
+    val newRightFormula = leaf.rightFormula.toMutableList();
+    newRightFormula.add(formula.child);
+
+    var newLeaf = TreeNode(nodeID, null, null, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList())
     state.tree.add(newLeaf);
     leaf.leftChild = state.tree.size - 1;
     return state;

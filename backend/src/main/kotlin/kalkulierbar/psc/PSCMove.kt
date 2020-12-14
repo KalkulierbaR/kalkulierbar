@@ -24,7 +24,15 @@ abstract class PSCMove
 @Serializable
 @SerialName("notRight")
 class NotRight(
-    val leafID: Int,
+    val nodeID: Int,
+    val listIndex: Int
+) : PSCMove() {
+}
+
+@Serializable
+@SerialName("notLeft")
+class NotLeft(
+    val nodeID: Int,
     val listIndex: Int
 ) : PSCMove() {
 }
