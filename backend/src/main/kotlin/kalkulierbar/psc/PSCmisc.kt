@@ -19,31 +19,9 @@ class PSCState(
 }
 
 @Serializable
-class TreeNode(var parent: Int?, val leftChild: Int?, val rightChild: Int?, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) {
+class TreeNode(val parent: Int?, var leftChild: Int?, var rightChild: Int?, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) {
     val isLeaf
         get() = leftChild == null
 
     override fun toString() = leftFormula.toString() + " ==> " + rightFormula.toString()
-}
-
-@Serializable
-class PSCNode(
-        var parent: Int?,
-        var formula: LogicNode
-) {
-
-    var isClosed = false
-    var closeRef: Int? = null
-    val children = mutableListOf<Int>()
-    var spelling = formula.toString()
-    val isLeaf
-        get() = children.size == 0
-
-    override fun toString() = formula.toString()
-
-    fun render() {
-        spelling = formula.toString()
-    }
-
-    fun getHash() = "($parent|$children|$isClosed|$closeRef|$formula)"
 }

@@ -22,12 +22,27 @@ import kalkulierbar.psc.PSCMove
 import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
 
-fun applyNotRight(state: PSCState): PSCState {
-    val formula = state.tree[0].rightFormula.removeAt(0)
+fun applyNotRight(state: PSCState, leafID: Int, listIndex: Int): PSCState {
+    var leaf = state.tree[leafID];
+    if (leaf.isLeaf == false)
+        throw IllegalMove("Rule notRight can only be aplied to a leaf of the sequent calculus.")
+
+    if (leaf.rightFormula.size <= listIndex || listIndex < 0)
+        throw IllegalMove("Rule notRight must be applied on a valid formula of the selected Leaf.")
+
+    val formula = leaf.rightFormula.get(listIndex)
 
     if (formula !is UnaryOp)
-        throw IllegalMove("HEllo there")
-    state.tree[0].leftFormula.add(formula.child);
+        throw IllegalMove("The rule notRight cannot be applied on BinaryOp")
+        
+    val newLeftFormula = leaf.leftFormula.toMutableList();
+    newLeftFormula.add(formula.child);
+    val newRightFormula = leaf.rightFormula.toMutableList();
+    newRightFormula.removeAt(listIndex);
+
+    var newLeaf = TreeNode(leafID, null, null, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList())
+    state.tree.add(newLeaf);
+    leaf.leftChild = state.tree.size - 1;
     return state;
 }
 
