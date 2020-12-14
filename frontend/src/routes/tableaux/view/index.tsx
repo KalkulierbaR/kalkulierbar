@@ -48,10 +48,12 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     } = useAppState();
 
     const state = cState;
+    
     if (!state) {
         route(`/${calculus}`);
         return null;
     }
+    
 
     const [dragTransforms, setDragTransforms] = useState<
         Record<number, DragTransform>

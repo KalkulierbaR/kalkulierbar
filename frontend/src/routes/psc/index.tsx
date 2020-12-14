@@ -2,7 +2,8 @@ import { Fragment, h } from "preact";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
-import { Calculus } from "../../types/calculus";
+import { Calculus, PropCalculusType } from "../../types/calculus";
+import { route } from "preact-router";
 
 interface Props{}
 
@@ -16,7 +17,7 @@ const PSC: preact.FunctionalComponent<Props> = () => {
                 calculus={Calculus.psc}
                 params={null}
                 foLogic={false}
-            />                       
+            />                     
         </Fragment>
     );
 };
