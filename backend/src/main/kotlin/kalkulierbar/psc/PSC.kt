@@ -24,11 +24,11 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
 
     override fun applyMoveOnState(state: PSCState, move: PSCMove): PSCState {
         // Clear status message
-        state.statusMessage = null
+        // state.statusMessage = null
 
         // Pass moves to relevant subfunction
         return when (move) {
-            is NotLeft -> applyNotLeft(state, move.nodeID)
+            is NotRight -> applyNotRight(state)
             is CloseMove -> applyClose(state, move.nodeID, move.closeID, move.getVarAssignTerms())
             is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")
@@ -41,37 +41,39 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
      * @return Equivalent state with the most recent rule application removed
      */
     private fun applyUndo(state: PSCState): PSCState {
-        if (!state.backtracking)
-            throw IllegalMove("Backtracking is not enabled for this proof")
+        // if (!state.backtracking)
+        //     throw IllegalMove("Backtracking is not enabled for this proof")
 
-        // Can't undo any more moves in initial state
-        if (state.moveHistory.isEmpty())
-            return state
+        // // Can't undo any more moves in initial state
+        // if (state.moveHistory.isEmpty())
+        //     return state
 
-        // Create a fresh clone-state with the same parameters and input formula
-        var freshState = kalkulierbar.psc.PSCState(state.formula)
-        freshState.usedBacktracking = true
+        // // Create a fresh clone-state with the same parameters and input formula
+        // var freshState = kalkulierbar.psc.PSCState(state.formula)
+        // freshState.usedBacktracking = true
 
-        // We don't want to re-do the last move
-        state.moveHistory.removeAt(state.moveHistory.size - 1)
+        // // We don't want to re-do the last move
+        // state.moveHistory.removeAt(state.moveHistory.size - 1)
 
-        // Re-build the proof tree in the clone state
-        state.moveHistory.forEach {
-            freshState = applyMoveOnState(freshState, it)
-        }
+        // // Re-build the proof tree in the clone state
+        // state.moveHistory.forEach {
+        //     freshState = applyMoveOnState(freshState, it)
+        // }
 
-        return freshState
+        // return freshState
+        return state;
     }
 
     override fun checkCloseOnState(state: PSCState): CloseMessage {
-        var msg = "The proof tree is not closed"
+        // var msg = "The proof tree is not closed"
 
-        if (state.nodes[0].isClosed) {
-            val withWithoutBT = if (state.usedBacktracking) "with" else "without"
-            msg = "The proof is closed and valid in non-clausal tableaux $withWithoutBT backtracking"
-        }
+        // if (state.nodes[0].isClosed) {
+        //     val withWithoutBT = if (state.usedBacktracking) "with" else "without"
+        //     msg = "The proof is closed and valid in non-clausal tableaux $withWithoutBT backtracking"
+        // }
 
-        return CloseMessage(state.nodes[0].isClosed, msg)
+        // return CloseMessage(state.nodes[0].isClosed, msg)
+        return CloseMessage(false, "2ajsdjkasdn")
     }
 
     /**
@@ -85,8 +87,8 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
             val parsed = serializer.parse(PSCState.serializer(), json)
 
             // Ensure valid, unmodified state object
-            if (!parsed.verifySeal())
-                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
+            // if (!parsed.verifySeal())
+            //     throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
 
             return parsed
         } catch (e: Exception) {
@@ -101,8 +103,8 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
      * @return JSON state representation
      */
     override fun stateToJson(state: PSCState): String {
-        state.render()
-        state.computeSeal()
+        // state.render()
+        // state.computeSeal()
         return serializer.stringify(PSCState.serializer(), state)
     }
 

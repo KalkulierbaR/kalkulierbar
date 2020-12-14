@@ -18,8 +18,16 @@ import kalkulierbar.logic.util.UnifierEquivalence
 import kalkulierbar.nonclausaltableaux.DeltaSkolemization
 import kalkulierbar.nonclausaltableaux.NcTableauxNode
 import kalkulierbar.nonclausaltableaux.NcTableauxState
+import kalkulierbar.psc.PSCMove
+import kalkulierbar.psc.PSC
+import kalkulierbar.logic.UnaryOp
 
-fun applyNotLeft(state: PSCState, nodeId: Int): PSCState {
+fun applyNotRight(state: PSCState): PSCState {
+    val formula = state.tree[0].rightFormula.removeAt(0)
+
+    if (formula !is UnaryOp)
+        throw IllegalMove("HEllo there")
+    state.tree[0].leftFormula.add(formula.child);
     return state;
 }
 

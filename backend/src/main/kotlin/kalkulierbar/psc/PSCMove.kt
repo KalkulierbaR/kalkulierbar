@@ -11,7 +11,7 @@ import kotlinx.serialization.modules.SerializersModule
 // Tells kotlinx.serialize about child types of PSCMove
 val PSCMoveModule = SerializersModule {
     polymorphic(PSCMove::class) {
-        NotLeft::class with NotLeft.serializer()
+        NotRight::class with NotRight.serializer()
         CloseMove::class with CloseMove.serializer()
         UndoMove::class with UndoMove.serializer()
     }
@@ -22,9 +22,8 @@ abstract class PSCMove
 
 
 @Serializable
-@SerialName("notLeft")
-class NotLeft(
-    val nodeID: Int
+@SerialName("notRight")
+class NotRight(
 ) : PSCMove() {
 }
 @Serializable
