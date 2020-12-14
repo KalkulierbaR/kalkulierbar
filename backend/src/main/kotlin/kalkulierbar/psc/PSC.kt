@@ -13,7 +13,7 @@ import kotlinx.serialization.modules.plus
 
 class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
 
-    private val serializer = Json(context = FoTermModule + LogicModule + PSCMoveModule)
+    private val serializer = Json(context = FoTermModule + LogicModule + PSCMoveModule + PSCTreeNodeModule)
 
     override val identifier = "psc"
 

@@ -4,6 +4,8 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.modules.SerializersModule
 
 @Serializable
 class PSCState(
@@ -14,15 +16,41 @@ class PSCState(
         val leftFormula = mutableListOf<LogicNode>();
         var rightFormula = mutableListOf<LogicNode>();
         rightFormula.add(formula)
-        tree.add(TreeNode(null, null, null, leftFormula, rightFormula))
+        tree.add(Leaf(null, leftFormula, rightFormula))
+    }
+}
+
+val PSCTreeNodeModule = SerializersModule {
+    polymorphic(TreeNode::class) {
+        Leaf::class with Leaf.serializer()
+        OneChildNode::class with OneChildNode.serializer()
+        TwoChildNode::class with TwoChildNode.serializer()
     }
 }
 
 @Serializable
-class TreeNode(val parent: Int?, var leftChild: Int?, var rightChild: Int?, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) {
-    fun isLeaf(): Boolean {
-        return leftChild == null;
-    }
+abstract class TreeNode
 
-    override fun toString() = leftFormula.toString() + " ==> " + rightFormula.toString()
+@Serializable
+@SerialName("leaf")
+class Leaf(val parent: Int?, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
+    override fun toString(): String {
+        return leftFormula.toString() + " ==> " + rightFormula.toString()
+    }
+}
+
+@Serializable
+@SerialName("oneChildNode")
+class OneChildNode(val parent: Int?, val child: Int, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
+    override fun toString(): String {
+        return leftFormula.toString() + " ==> " + rightFormula.toString()
+    }
+}
+
+@Serializable
+@SerialName("twoChildNode")
+class TwoChildNode(val parent: Int?, val leftChild: Int, val rightChild: Int, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
+    override fun toString(): String {
+        return leftFormula.toString() + " ==> " + rightFormula.toString()
+    }
 }

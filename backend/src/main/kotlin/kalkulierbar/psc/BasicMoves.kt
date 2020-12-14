@@ -24,7 +24,7 @@ import kalkulierbar.logic.UnaryOp
 
 fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     var leaf = state.tree[nodeID];
-    if (leaf.isLeaf() == false)
+    if (leaf !is Leaf)
         throw IllegalMove("Rule notRight can only be aplied to a leaf of the sequent calculus.")
 
     if (listIndex < 0 || leaf.rightFormula.size <= listIndex)
@@ -40,15 +40,15 @@ fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     val newRightFormula = leaf.rightFormula.toMutableList();
     newRightFormula.removeAt(listIndex);
 
-    var newLeaf = TreeNode(nodeID, null, null, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList())
+    var newLeaf = Leaf(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList())
     state.tree.add(newLeaf);
-    leaf.leftChild = state.tree.size - 1;
+    state.tree[nodeID] = OneChildNode(leaf.parent, state.tree.size - 1, leaf.leftFormula, leaf.rightFormula);
     return state;
 }
 
 fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     var leaf = state.tree[nodeID];
-    if (leaf.isLeaf() == false)
+    if (leaf !is Leaf)
         throw IllegalMove("Rule notRight can only be aplied to a leaf of the sequent calculus.")
 
     if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
@@ -64,52 +64,10 @@ fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     val newRightFormula = leaf.rightFormula.toMutableList();
     newRightFormula.add(formula.child);
 
-    var newLeaf = TreeNode(nodeID, null, null, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList())
+    var newLeaf = Leaf(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList())
     state.tree.add(newLeaf);
-    leaf.leftChild = state.tree.size - 1;
+    state.tree[nodeID] = OneChildNode(leaf.parent, state.tree.size - 1, leaf.leftFormula, leaf.rightFormula)
     return state;
-}
-
-/**
- * While the outermost LogicNode is an AND:
- * Split into subformulae, chain onto a single branch
- * @param state: Non clausal tableaux state to apply move on
- * @param nodeID: node ID to apply move on
- * @return new state after applying move
- */
-fun applyAlpha(state: PSCState, nodeID: Int): PSCState {
-//    val nodes = state.nodes
-//    checkNodeRestrictions(nodes , nodeID)
-//
-//    val node = nodes[nodeID]
-//    val savedChildren = node.children.toMutableList() // Save a copy of the node's children
-//    node.children.clear() // We will insert new nodes between the node and its children
-//
-//    if (node.formula !is And)
-//        throw IllegalMove("Outermost logic operator is not AND")
-//
-//    val workList = mutableListOf(node.formula)
-//    var parentID = nodeID
-//
-//    while (workList.isNotEmpty()) {
-//        val subFormula = workList.removeAt(0)
-//        if (subFormula is And) {
-//            workList.add(subFormula.rightChild)
-//            workList.add(subFormula.leftChild)
-//        } else {
-//            nodes.add(PSCNode(parentID, subFormula))
-//            nodes[parentID].children.add(nodes.size - 1)
-//            parentID = nodes.size - 1
-//        }
-//    }
-//
-//    // Add the node's children to the last inserted node to restore the tree structure
-//    nodes[parentID].children.addAll(savedChildren)
-//    state.setParent(savedChildren, nodes.size - 1)
-//    // Add move to history
-//    if (state.backtracking)
-//        state.moveHistory.add(AlphaMove(nodeID))
-    return state
 }
 
 /**
