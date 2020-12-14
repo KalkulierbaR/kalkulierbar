@@ -30,7 +30,6 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
         return when (move) {
             is NotRight -> applyNotRight(state, move.nodeID, move.listIndex)
             is NotLeft -> applyNotLeft(state, move.nodeID, move.listIndex)
-            is CloseMove -> applyClose(state, move.nodeID, move.closeID, move.getVarAssignTerms())
             is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")
         }
@@ -66,15 +65,15 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
     }
 
     override fun checkCloseOnState(state: PSCState): CloseMessage {
-        // var msg = "The proof tree is not closed"
-
-        // if (state.nodes[0].isClosed) {
-        //     val withWithoutBT = if (state.usedBacktracking) "with" else "without"
-        //     msg = "The proof is closed and valid in non-clausal tableaux $withWithoutBT backtracking"
-        // }
-
-        // return CloseMessage(state.nodes[0].isClosed, msg)
-        return CloseMessage(false, "2ajsdjkasdn")
+        for (node in state.tree) {
+            if (node is Leaf) {
+                if (node.leftFormula.size != 0 || node.rightFormula.size != 0) {
+                    return CloseMessage(false, "Not all branches of the proof tree are closed.")
+                }
+            }
+        }
+        
+        return CloseMessage(true, "The proof is closed and valid in propositional Logic")
     }
 
     /**
