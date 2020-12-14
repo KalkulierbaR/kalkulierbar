@@ -3,8 +3,7 @@ import { PropCalculusType, Calculus } from ".";
 
 export interface PSCNode {
     parent: number | null;
-    leftChild: number | null;
-    rightChild: number | null;
+    Children: number[] | null;
     leftClauses: string[];
     rightClause: string[];
 }

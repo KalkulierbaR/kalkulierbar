@@ -4,22 +4,21 @@ import { useCallback, useEffect, useState } from "preact/hooks";
 import OptionList from "../../../components/input/option-list";
 import { DragTransform } from "../../../types/ui";
 import { useAppState } from "../../../util/app-state";
+import { ruleSetToStringArray } from "../../../util/rule";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
+import { getRuleSet } from "../../../types/calculus/rules";
 
 import * as style from "./style.scss";
 import { route } from "preact-router";
 
-import {  } from "../../../types/calculus"
 
+interface Props {}
 
-interface Props {
-    calculus: PropCalculusType;
-}
-
-const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
+const PSCView: preact.FunctionalComponent<Props> = () => {
+    
     const {
         server,
-        [calculus]: cState,
+        psc: cState,
         smallScreen,
         notificationHandler,
         onChange,
@@ -32,15 +31,17 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         route(`/${calculus}`);
         return null;
     }
-    */
+    
 
     const [dragTransforms, setDragTransforms] = useState<
             Record<number, DragTransform>
         >({});
 
+    
     const onDrag = useCallback(updateDragTransform(setDragTransforms), [
          setDragTransforms,
     ]);
+    
 
     const resetDragTransform = useCallback(
          (id: number) => onDrag(id, { x: 0, y: 0 }),
@@ -49,14 +50,16 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const resetDragTransforms = useCallback(() => setDragTransforms({}), [
         setDragTransforms,
     ]);
+    
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
          undefined,
     );
 
     const selectedNode =
          selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
+    */
 
-    const ruleOptions = stringArrayToStringMap(state.ruleSet);
+    const ruleOptions = stringArrayToStringMap(ruleSetToStringArray(getRuleSet()));
 
     const [selectedRuleId, setSelectedRuleId] = useState<
         number | undefined
@@ -66,13 +69,11 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         if(newRuleId === selectedRuleId){
             // The same Rule was selected again => deselect it
             setSelectedRuleId(undefined);
-            setSelectedNodeId(undefined);
-        }else if(selectedNodeId !== undefined){
-        //care about if one node is selected
         }else{
             setSelectedRuleId(newRuleId);
         }
     };
+    
     
     return (
         <Fragment>
@@ -99,6 +100,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     );
     
+
 };
 
 export default PSCView;
