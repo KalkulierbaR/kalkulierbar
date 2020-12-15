@@ -12,6 +12,7 @@ import kotlinx.serialization.modules.SerializersModule
 val PSCMoveModule = SerializersModule {
     polymorphic(PSCMove::class) {
         NotRight::class with NotRight.serializer()
+        NotLeft::class with NotLeft.serializer()
         UndoMove::class with UndoMove.serializer()
     }
 }
