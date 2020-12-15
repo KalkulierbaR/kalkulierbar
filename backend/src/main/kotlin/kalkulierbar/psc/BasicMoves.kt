@@ -20,17 +20,22 @@ import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
 
 fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
+
+    if (nodeID < 0 || state.tree.size <= nodeID)
+        throw IllegalMove("nodeID out of bounds.")
+    
     var leaf = state.tree[nodeID];
+    
     if (leaf !is Leaf)
-        throw IllegalMove("Rule notRight can only be aplied to a leaf of the sequent calculus.")
+        throw IllegalMove("Rules must be applied on leaf level.")
 
     if (listIndex < 0 || leaf.rightFormula.size <= listIndex)
-        throw IllegalMove("Rule notRight must be applied on a valid formula of the selected Leaf.")
+        throw IllegalMove("listIndex out of bounds.")
 
     val formula = leaf.rightFormula.get(listIndex)
 
-    if (formula !is UnaryOp)
-        throw IllegalMove("The rule notRight cannot be applied on BinaryOp")
+    if (formula !is Not)
+        throw IllegalMove("The rule notRight must be applied on '!'")
         
     val newLeftFormula = leaf.leftFormula.toMutableList();
     newLeftFormula.add(formula.child);
@@ -44,17 +49,22 @@ fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 }
 
 fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
+
+    if (nodeID < 0 || state.tree.size <= nodeID)
+        throw IllegalMove("nodeID out of bounds.")
+
     var leaf = state.tree[nodeID];
+
     if (leaf !is Leaf)
-        throw IllegalMove("Rule notRight can only be aplied to a leaf of the sequent calculus.")
+        throw IllegalMove("Rules must be applied on leaf level.")
 
     if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
-        throw IllegalMove("Rule notRight must be applied on a valid formula of the selected Leaf.")
+        throw IllegalMove("listIndex out of bounds.")
 
     val formula = leaf.rightFormula.get(listIndex)
 
-    if (formula !is UnaryOp)
-        throw IllegalMove("The rule notRight cannot be applied on BinaryOp")
+    if (formula !is Not)
+        throw IllegalMove("The rule notLeft must be applied on '!'")
         
     val newLeftFormula = leaf.leftFormula.toMutableList();
     newLeftFormula.removeAt(listIndex);
