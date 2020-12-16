@@ -13,6 +13,8 @@ val PSCMoveModule = SerializersModule {
     polymorphic(PSCMove::class) {
         NotRight::class with NotRight.serializer()
         NotLeft::class with NotLeft.serializer()
+        OrRight::class with OrRight.serializer()
+        OrLeft::class with OrLeft.serializer()
         UndoMove::class with UndoMove.serializer()
     }
 }
@@ -34,6 +36,22 @@ class NotRight(
 class NotLeft(
     val nodeID: Int,
     val listIndex: Int
+) : PSCMove() {
+}
+
+@Serializable
+@SerialName("orRight")
+class OrRight(
+        val nodeID: Int,
+        val listIndex: Int
+) : PSCMove() {
+}
+
+@Serializable
+@SerialName("orLeft")
+class OrLeft(
+        val nodeID: Int,
+        val listIndex: Int
 ) : PSCMove() {
 }
 

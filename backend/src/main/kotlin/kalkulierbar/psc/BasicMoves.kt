@@ -20,7 +20,12 @@ import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
 
 fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
+
+
+
+
     var leaf = state.tree[nodeID];
+
     if (leaf !is Leaf)
         throw IllegalMove("Rule notRight can only be aplied to a leaf of the sequent calculus.")
 
@@ -28,7 +33,6 @@ fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
         throw IllegalMove("Rule notRight must be applied on a valid formula of the selected Leaf.")
 
     val formula = leaf.rightFormula.get(listIndex)
-
     if (formula !is UnaryOp)
         throw IllegalMove("The rule notRight cannot be applied on BinaryOp")
         
@@ -64,5 +68,65 @@ fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     var newLeaf = Leaf(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList())
     state.tree.add(newLeaf);
     state.tree[nodeID] = OneChildNode(leaf.parent, state.tree.size - 1, leaf.leftFormula, leaf.rightFormula)
+    return state;
+}
+
+fun applyOrRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
+    if (nodeID < 0 || state.tree.size <= nodeID)
+        throw IllegalMove("nodeID out of bounds");
+    var leaf = state.tree[nodeID]
+    if (leaf !is Leaf)
+        throw IllegalMove("Rule orRight can only be aplied to a leaf of the sequent calculus.")
+
+    if (listIndex < 0 || leaf.rightFormula.size <= listIndex)
+        throw IllegalMove("Rule orRight must be applied on a valid formula of the selected Leaf.")
+
+    val formula = leaf.rightFormula.get(listIndex);
+
+    if (formula !is Or)
+        throw IllegalMove("The rule orRight msut be applied on '|' ")
+
+    val newLeftFormula = leaf.leftFormula.toMutableList();
+    val newRightFormula = leaf.rightFormula.toMutableList();
+    newRightFormula.removeAt(listIndex)
+    newRightFormula.add(listIndex,formula.leftChild)
+    newRightFormula.add(listIndex + 1, formula.rightChild)
+    val newLeaf = Leaf(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList());
+    state.tree.add(newLeaf)
+    state.tree[nodeID] = OneChildNode(leaf.parent, state.tree.size -1 , leaf.leftFormula, leaf.rightFormula);
+    return state;
+}
+
+fun applyOrLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
+    if (nodeID < 0 || state.tree.size <= nodeID)
+        throw IllegalMove("nodeID out of bounds");
+    var leaf = state.tree[nodeID]
+    if (leaf !is Leaf)
+        throw IllegalMove("Rule orLeft can only be aplied to a leaf of the sequent calculus.")
+
+    if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
+        throw IllegalMove("Rule orLeft must be applied on a valid formula of the selected Leaf.")
+
+    val formula = leaf.leftFormula.get(listIndex);
+
+    if (formula !is Or)
+        throw IllegalMove("The rule orLeft msut be applied on a '|' ")
+
+    val newLeftFormulaOnLeftChild =leaf.leftFormula.toMutableList();
+    newLeftFormulaOnLeftChild.removeAt(listIndex)
+    newLeftFormulaOnLeftChild.add(listIndex,formula.leftChild)
+    val newRightFormulaOnLeftChild = leaf.rightFormula.toMutableList();
+
+    val newLeftFormulaOnRightChild = leaf.leftFormula.toMutableList();
+    newLeftFormulaOnRightChild.removeAt(listIndex)
+    newLeftFormulaOnRightChild.add(listIndex,formula.rightChild)
+    val newRightFormulaOnRightChild =leaf.rightFormula.toMutableList();
+
+    val newLeftLeaf = Leaf(nodeID,newLeftFormulaOnLeftChild.distinct().toMutableList(),newRightFormulaOnLeftChild.distinct().toMutableList());
+    val newRightLeaf = Leaf(nodeID,newLeftFormulaOnRightChild.distinct().toMutableList(),newRightFormulaOnRightChild.distinct().toMutableList());
+
+    state.tree.add(newLeftLeaf);
+    state.tree.add(newRightLeaf);
+    state.tree[nodeID] = TwoChildNode(leaf.parent , state.tree.size -2, state.tree.size-1 , leaf.leftFormula, leaf.rightFormula);
     return state;
 }
