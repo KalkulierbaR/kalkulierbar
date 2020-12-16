@@ -19,6 +19,27 @@ import kalkulierbar.psc.PSCMove
 import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
 
+fun applyAx(state: PSCState, nodeID: Int) : PSCState {
+
+    if (nodeID < 0 || state.tree.size <= nodeID)
+        throw IllegalMove("nodeID out of bounds.")
+    
+    var leaf = state.tree[nodeID];
+    
+    if (leaf !is Leaf)
+        throw IllegalMove("Rules must be applied on leaf level.")
+
+    for (leftFormula in leaf.leftFormula) {
+        if (leaf.rightFormula.contains(leftFormula)) {
+            val newLeaf = Leaf(nodeID, mutableListOf<LogicNode>(), mutableListOf<LogicNode>());
+            state.tree.add(newLeaf);
+            state.tree[nodeID] = OneChildNode(leaf.parent, state.tree.size - 1, leaf.leftFormula, leaf.rightFormula)
+            return state;
+        }
+    }    
+    throw IllegalMove("Rule 'Ax' needs two nodes of the same kind on both sides to be applied.")
+}
+
 fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 
     if (nodeID < 0 || state.tree.size <= nodeID)
