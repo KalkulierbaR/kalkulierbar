@@ -20,12 +20,7 @@ import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
 
 fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
-
-
-
-
     var leaf = state.tree[nodeID];
-
     if (leaf !is Leaf)
         throw IllegalMove("Rule notRight can only be aplied to a leaf of the sequent calculus.")
 
@@ -33,6 +28,7 @@ fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
         throw IllegalMove("Rule notRight must be applied on a valid formula of the selected Leaf.")
 
     val formula = leaf.rightFormula.get(listIndex)
+
     if (formula !is UnaryOp)
         throw IllegalMove("The rule notRight cannot be applied on BinaryOp")
         
