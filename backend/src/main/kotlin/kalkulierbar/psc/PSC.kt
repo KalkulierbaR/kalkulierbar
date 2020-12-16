@@ -32,6 +32,8 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
             is NotLeft -> applyNotLeft(state, move.nodeID, move.listIndex)
             is OrRight -> applyOrRight(state, move.nodeID, move.listIndex)
             is OrLeft -> applyOrLeft(state, move.nodeID, move.listIndex)
+            is AndRight -> applyAndRight(state, move.nodeID, move.listIndex)
+            is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex)
             is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")
         }
