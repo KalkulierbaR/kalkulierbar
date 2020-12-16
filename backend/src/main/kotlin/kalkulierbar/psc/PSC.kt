@@ -28,6 +28,7 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
 
         // Pass moves to relevant subfunction
         return when (move) {
+            is Ax -> applyAx(state, move.nodeID)
             is NotRight -> applyNotRight(state, move.nodeID, move.listIndex)
             is NotLeft -> applyNotLeft(state, move.nodeID, move.listIndex)
             is OrRight -> applyOrRight(state, move.nodeID, move.listIndex)
