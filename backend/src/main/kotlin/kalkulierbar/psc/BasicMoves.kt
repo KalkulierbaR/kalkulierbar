@@ -75,12 +75,12 @@ fun applyOrRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
         throw IllegalMove("Rule orRight can only be aplied to a leaf of the sequent calculus.")
 
     if (listIndex < 0 || leaf.rightFormula.size <= listIndex)
-        throw IllegalMove("Rule orRight must be applied on a valid formula of the selected Leaf.")
+        throw IllegalMove("listIndex out of bounds.")
 
     val formula = leaf.rightFormula.get(listIndex);
 
     if (formula !is Or)
-        throw IllegalMove("The rule orRight msut be applied on '|' ")
+        throw IllegalMove("The rule orRight must be applied on '|' ")
 
     val newLeftFormula = leaf.leftFormula.toMutableList();
     val newRightFormula = leaf.rightFormula.toMutableList();
@@ -101,14 +101,14 @@ fun applyOrLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
         throw IllegalMove("Rule orLeft can only be aplied to a leaf of the sequent calculus.")
 
     if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
-        throw IllegalMove("Rule orLeft must be applied on a valid formula of the selected Leaf.")
+        throw IllegalMove("listIndex out of bounds.")
 
     val formula = leaf.leftFormula.get(listIndex);
 
     if (formula !is Or)
-        throw IllegalMove("The rule orLeft msut be applied on a '|' ")
+        throw IllegalMove("The rule orLeft must be applied on a '|' ")
 
-    val newLeftFormulaOnLeftChild =leaf.leftFormula.toMutableList();
+    val newLeftFormulaOnLeftChild = leaf.leftFormula.toMutableList();
     newLeftFormulaOnLeftChild.removeAt(listIndex)
     newLeftFormulaOnLeftChild.add(listIndex,formula.leftChild)
     val newRightFormulaOnLeftChild = leaf.rightFormula.toMutableList();
@@ -116,7 +116,7 @@ fun applyOrLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     val newLeftFormulaOnRightChild = leaf.leftFormula.toMutableList();
     newLeftFormulaOnRightChild.removeAt(listIndex)
     newLeftFormulaOnRightChild.add(listIndex,formula.rightChild)
-    val newRightFormulaOnRightChild =leaf.rightFormula.toMutableList();
+    val newRightFormulaOnRightChild = leaf.rightFormula.toMutableList();
 
     val newLeftLeaf = Leaf(nodeID,newLeftFormulaOnLeftChild.distinct().toMutableList(),newRightFormulaOnLeftChild.distinct().toMutableList());
     val newRightLeaf = Leaf(nodeID,newLeftFormulaOnRightChild.distinct().toMutableList(),newRightFormulaOnRightChild.distinct().toMutableList());
