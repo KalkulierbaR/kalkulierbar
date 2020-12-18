@@ -28,7 +28,7 @@ abstract class PSCMove
 @Serializable
 @SerialName("Ax")
 class Ax(
-    val nodeID: Int,
+    val nodeID: Int
 ) : PSCMove() {
 }
 
