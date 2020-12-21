@@ -3,9 +3,14 @@ import { PropCalculusType, Calculus } from ".";
 
 export interface PSCNode {
     parent: number | null;
-    Children: number[] | null;
-    leftClauses: string[];
-    rightClause: string[];
+    children: number[];
+    leftFormulas: FormulaNode[];
+    rightFormulas: FormulaNode[];
+}
+
+export interface FormulaNode {
+    parent: PSCNode;
+    name: string;
 }
 
 export type PSCTreeLayoutNode = PSCNode & { id: number};
