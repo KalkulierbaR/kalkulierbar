@@ -56,16 +56,6 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
                             type={calculus}
                         />
                         <CheckCloseFAB calculus={calculus}/>
-                        <FAB
-                            icon={<AddIcon />}
-                            label="Test"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                notificationHandler.message(NotificationType.None, "This is a Test");
-                            }}
-                        />
                     </Fragment>
                 ) : (
                     <Fragment>
@@ -76,16 +66,6 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={expandCallback}
-                        />
-                        <FAB
-                            icon={<AddIcon />}
-                            label="Test"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                notificationHandler.message(NotificationType.None, "This is a Test");
-                            }}
                         />
                     </Fragment>
                 )}   

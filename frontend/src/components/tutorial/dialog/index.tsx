@@ -201,27 +201,27 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                         <VideoTutorial
                             title="Test"
                             videoSrc="../../../assets/videos/nc_tableaux_alpha.mp4"
-                            text="Thsi is a Test"
+                            text="This is a Test"
                         />
                         <VideoTutorial
                             title="Test2"
                             videoSrc="../../../assets/videos/nc_tableaux_beta.mp4"
-                            text="Thsi is a Test"
+                            text="This is a Test"
                         />
                         <VideoTutorial
                             title="Test3"
                             videoSrc="../../../assets/videos/nc_tableaux_gamma.mp4"
-                            text="Thsi is a Test"
+                            text="This is a Test"
                         />
                         <VideoTutorial
-                            title="Mammut hauen"
+                            title="Test4"
                             videoSrc="../../../assets/videos/nc_tableaux_delta.mp4"
-                            text="HAU DAS MAMMUT"
+                            text="This is a Test"
                         />
                         <VideoTutorial
                             title="Test5"
                             videoSrc="../../../assets/videos/nc_tableaux_close.mp4"
-                            text="Thsi is a Test"
+                            text="This is a Test"
                         />
                     </div>
                 )}
