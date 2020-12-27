@@ -18,6 +18,7 @@ import kalkulierbar.logic.util.UnifierEquivalence
 import kalkulierbar.psc.PSCMove
 import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
+import java.io.Console
 
 fun applyAx(state: PSCState, nodeID: Int) : PSCState {
 
