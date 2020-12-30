@@ -31,27 +31,17 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
     } = useAppState();
 
     const state = cState;
-    /*
-     * sends you back if sequence is null
     if (!state) {
-        route(`/${calculus}`);
+        route(`/psc`);
         return null;
     }
-    */
-    
-
-
-    
-
-    
-
     
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
          undefined,
     );
 
     const selectedNode =
-         selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
+         selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined;
 
     const ruleOptions = stringArrayToStringMap(ruleSetToStringArray(getRuleSet()));
 
@@ -97,7 +87,7 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
                 )}
 
                 <PSCTreeView
-                    nodes={[] as PSCNode[]}
+                    nodes={state.tree}
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
                     selectedNodeCallback={selectedNodeCallback}

@@ -9,11 +9,23 @@ export const nodeName = (node: PSCNode) => {
 
 export const formulaNames = (formulas: FormulaNode[]) => {
     if(formulas == null) return "";
-    let result = formulas[0].name
+
+    let result = parseFormula(formulas[0],"");
 
     for (let index = 1; index < formulas.length; index++) {
-        result = result + "," + formulas[index].name;
+        result = result + "," + parseFormula(formulas[index],result);
     }
+    return result;
+}
+
+const parseFormula = (formula: FormulaNode, result: string) => {
+    switch (formula.type) {
+        case "not": result = result + "¬"; result = result + parseFormula(formula.leftChild!, result); break;
+        case "and": result = result + parseFormula(formula.leftChild!,result); result = result + "∧"; result = result + parseFormula(formula.rightChild!,result);break;
+        case "or": result = result + parseFormula(formula.leftChild!,result); result = result + "∨"; result = result + parseFormula(formula.rightChild!,result);break;
+        case "var": result = result + formula.spelling;
+    }
+
     return result;
 }
 
@@ -34,7 +46,7 @@ const pscNodeToTree = (
             0,
             -72,
             y,
-            {parent: null, children: [], leftFormulas: [], rightFormulas: [], id: i },
+            {type: "", parent: null, children: [], leftFormulas: [], rightFormulas: [], id: i },
             []
         );
     const width = estimateSVGTextWidth(nodeName(n))-56;
