@@ -21,7 +21,7 @@ val LogicModule = SerializersModule {
 }
 
 @Serializable
-abstract class LogicNode {
+abstract class LogicNode : SyntacticEquality {
 
     /**
      * Create a deep copy of a logic node
@@ -30,6 +30,8 @@ abstract class LogicNode {
     abstract fun clone(qm: Map<String, Quantifier> = mapOf()): LogicNode
 
     abstract fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>): ReturnType
+
+    abstract override fun synEq(other: Any?): Boolean
 }
 
 abstract class BinaryOp : LogicNode() {
@@ -40,6 +42,13 @@ abstract class BinaryOp : LogicNode() {
     override fun toString(): String {
         return "( $leftChild bop $rightChild)"
     }
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is BinaryOp)
+            return false;
+        
+        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
+    }
 }
 
 abstract class UnaryOp : LogicNode() {
@@ -48,11 +57,35 @@ abstract class UnaryOp : LogicNode() {
     override fun toString(): String {
         return "(uop $child)"
     }
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is UnaryOp)
+            return false;
+        
+        return this.child.synEq(other.child)
+    }
 }
 
 abstract class Quantifier : UnaryOp() {
     abstract var varName: String
     abstract val boundVariables: MutableList<QuantifiedVariable>
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Quantifier)
+            return false;
+        
+        if (this.varName != other.varName)
+            return false;
+        
+        if (this.boundVariables.size != other.boundVariables.size)
+            return false;
+
+        for (i in this.boundVariables.indices) {
+            if (!this.boundVariables[i].synEq(other.boundVariables[i]))
+                return false;
+        }
+        return true;
+    }
 }
 
 /**

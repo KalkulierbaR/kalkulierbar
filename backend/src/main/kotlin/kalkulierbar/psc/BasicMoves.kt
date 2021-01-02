@@ -1,20 +1,10 @@
 package kalkulierbar.psc
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.UnificationImpossible
 import kalkulierbar.logic.And
-import kalkulierbar.logic.ExistentialQuantifier
-import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
-import kalkulierbar.logic.transform.IdentifierCollector
-import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
-import kalkulierbar.logic.transform.SelectiveSuffixAppender
-import kalkulierbar.logic.util.Unification
-import kalkulierbar.logic.util.UnifierEquivalence
 import kalkulierbar.psc.PSCMove
 import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
@@ -30,7 +20,7 @@ fun applyAx(state: PSCState, nodeID: Int) : PSCState {
         throw IllegalMove("Rules must be applied on leaf level.")
 
     for (leftFormula in leaf.leftFormula) {
-        if (leaf.rightFormula.contains(leftFormula)) {
+        if (leaf.rightFormula.find { elem -> elem.synEq(leftFormula) } != null) {
             val newLeaf = Leaf(nodeID, mutableListOf<LogicNode>(), mutableListOf<LogicNode>());
             state.tree.add(newLeaf);
             state.tree[nodeID] = OneChildNode(leaf.parent, state.tree.size - 1, leaf.leftFormula, leaf.rightFormula)
