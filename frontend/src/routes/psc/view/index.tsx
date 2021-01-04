@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { PropCalculusType } from "../../../types/calculus";
+import { Calculus, PropCalculusType } from "../../../types/calculus";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import OptionList from "../../../components/input/option-list";
 import { DragTransform } from "../../../types/ui";
@@ -7,9 +7,15 @@ import { useAppState } from "../../../util/app-state";
 import { ruleSetToStringArray } from "../../../util/rule";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { getRuleSet } from "../../../types/calculus/rules";
+import PSCTreeView from "../../../components/calculus/psc/tree"
+import { PSCNode } from "../../../types/calculus/psc";
 
 import * as style from "./style.scss";
 import { route } from "preact-router";
+import { selected } from "../../../components/svg/rectangle/style.scss";
+import PSCFAB from "../../../components/calculus/psc/fab";
+import { NotificationType } from "../../../types/app/notification";
+import TutorialDialog from "../../../components/tutorial/dialog";
 
 
 interface Props {}
@@ -25,39 +31,17 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
     } = useAppState();
 
     const state = cState;
-    /*
-     * sends you back if sequence is null
     if (!state) {
-        route(`/${calculus}`);
+        route(`/psc`);
         return null;
     }
-    
-
-    const [dragTransforms, setDragTransforms] = useState<
-            Record<number, DragTransform>
-        >({});
-
-    
-    const onDrag = useCallback(updateDragTransform(setDragTransforms), [
-         setDragTransforms,
-    ]);
-    
-
-    const resetDragTransform = useCallback(
-         (id: number) => onDrag(id, { x: 0, y: 0 }),
-         [onDrag],
-    );
-    const resetDragTransforms = useCallback(() => setDragTransforms({}), [
-        setDragTransforms,
-    ]);
     
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
          undefined,
     );
 
     const selectedNode =
-         selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
-    */
+         selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined;
 
     const ruleOptions = stringArrayToStringMap(ruleSetToStringArray(getRuleSet()));
 
@@ -73,11 +57,17 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
             setSelectedRuleId(newRuleId);
         }
     };
+
+    const selectedNodeCallback = (
+
+    ) => {
+
+    };
     
     
     return (
         <Fragment>
-            <h2>PSC View</h2>
+            <h2>Propositional Sequent Calculus</h2>
 
             <div class={style.view}>
                 {!smallScreen && (
@@ -95,7 +85,23 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
                         />
                     </div>
                 )}
+
+                <PSCTreeView
+                    nodes={state.tree}
+                    smallScreen={smallScreen}
+                    selectedNodeId={selectedNodeId}
+                    selectedNodeCallback={selectedNodeCallback}
+                />
             </div>
+
+            <PSCFAB 
+                calculus={Calculus.psc}
+                state={state}
+                selectedNodeId={selectedNodeId}
+                expandCallback={() => {notificationHandler.error("This is not implemented yet")}}
+            />
+            <TutorialDialog calculus={Calculus.psc} />
+
         </Fragment>
 
     );

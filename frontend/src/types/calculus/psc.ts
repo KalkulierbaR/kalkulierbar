@@ -2,17 +2,24 @@ import { RuleSet } from "./rules";
 import { PropCalculusType, Calculus } from ".";
 
 export interface PSCNode {
+    type: string;
     parent: number | null;
-    Children: number[] | null;
-    leftClauses: string[];
-    rightClause: string[];
+    children: number[];
+    leftFormulas: FormulaNode[];
+    rightFormulas: FormulaNode[];
+}
+
+export interface FormulaNode {
+    type: string;
+    leftChild: FormulaNode | null;
+    rightChild: FormulaNode | null;
+    spelling: string | null;
 }
 
 export type PSCTreeLayoutNode = PSCNode & { id: number};
 
 export interface PSCState {
-    ruleSet: RuleSet;
-    nodes: PSCNode[];
+    tree: PSCNode[];
 }
 
 export function instanceOfPSCState(
