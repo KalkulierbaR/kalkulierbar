@@ -34,28 +34,32 @@ val PSCTreeNodeModule = SerializersModule {
 }
 
 @Serializable
-abstract class TreeNode
+abstract class TreeNode(){
+    abstract val parent: Int?
+    abstract val leftFormula: MutableList<LogicNode>
+    abstract val rightFormula: MutableList<LogicNode>
+}
 
 @Serializable
 @SerialName("leaf")
-class Leaf(val parent: Int?, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
+class Leaf(override val parent: Int?, override val leftFormula: MutableList<LogicNode>, override val rightFormula: MutableList<LogicNode>) : TreeNode() {
     override fun toString(): String {
-        return leftFormula.joinToString() + " ==> " + rightFormula.joinToString()
+        return leftFormula.joinToString() + " |- " + rightFormula.joinToString()
     }
 }
 
 @Serializable
 @SerialName("oneChildNode")
-class OneChildNode(val parent: Int?, val child: Int, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
+class OneChildNode(override val parent: Int?, val child: Int, override val leftFormula: MutableList<LogicNode>, override val rightFormula: MutableList<LogicNode>) : TreeNode() {
     override fun toString(): String {
-        return leftFormula.joinToString() + " ==> " + rightFormula.joinToString()
+        return leftFormula.joinToString() + " |- " + rightFormula.joinToString()
     }
 }
 
 @Serializable
 @SerialName("twoChildNode")
-class TwoChildNode(val parent: Int?, val leftChild: Int, val rightChild: Int, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
+class TwoChildNode(override val parent: Int?, val leftChild: Int, val rightChild: Int, override val leftFormula: MutableList<LogicNode>, override val rightFormula: MutableList<LogicNode>) : TreeNode() {
     override fun toString(): String {
-        return leftFormula.joinToString() + " ==> " + rightFormula.joinToString()
+        return leftFormula.joinToString() + " |- " + rightFormula.joinToString()
     }
 }

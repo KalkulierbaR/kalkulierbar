@@ -58,6 +58,7 @@ class TestUndo {
         state = instance.applyMoveOnState(state, NotRight(1, 1))
         val hash2 = state.getHash()
 
+        println(hash2)
         state = instance.applyMoveOnState(state, Ax(state.tree.size - 1))
 
 
