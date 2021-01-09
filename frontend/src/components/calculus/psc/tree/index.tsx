@@ -7,6 +7,8 @@ import { PSCState } from "../../../../types/calculus/psc";
 import Zoomable from "../../../svg/zoomable";
 import { findSubTree } from "../../../../util/layout/tree";
 import { pscTreeLayout } from "../../../../util/psc";
+import { SubTree } from "../tree/subtree";
+
 import * as style from "./style.scss";
 
 interface Props {
@@ -15,7 +17,7 @@ interface Props {
     // The id of the selected Node
     selectedNodeId: number | undefined;
     // The function to call, when user selects a node
-    selectedNodeCallback: (
+    selectNodeCallback: (
         node: PSCTreeLayoutNode,
         options?: SelectNodeOptions,
     ) => void;
@@ -25,7 +27,7 @@ interface Props {
 
 const PSCTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
-    selectedNodeCallback,
+    selectNodeCallback,
     selectedNodeId,
 }) => {
     const { root, height, width: treeWidth } = pscTreeLayout(nodes);
@@ -40,7 +42,7 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
             (t) => t.data.id === selectedNodeId,
             (t) => t,
         )!;
-        selectedNodeCallback(node.data,{ignoreClause:true});
+        selectNodeCallback(node.data,{ignoreClause:true});
 
         const{x,y}=node;
         return [treeWidth/2-x,treeHeight/2-y];
@@ -50,7 +52,7 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
 
     return(
         <div class="card">
-            {/* <Zoomable
+            <Zoomable
                 class={style.svg}
                 width="100%"
                 height="calc(100vh - 192px)"
@@ -59,8 +61,21 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
                 preserveAspectRatio="xMidYMid meet"
                 transformGoTo={transformGoTo}
             >
-                {(transform) => (<g transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}></g>)}
-            </Zoomable> */}
+                {(transform) => (<g transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}>
+                    <g>
+                        {
+                            //render nodes -> Recursively render each sub tree
+                            <SubTree
+                                node={root}
+                                selectedNodeId={selectedNodeId}
+                                selectNodeCallback={selectNodeCallback}
+                                zoomFactor={transform.k}
+                            />
+                        }
+                    </g>
+                </g>
+                )}
+            </Zoomable>
         </div>
         
     );

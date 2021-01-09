@@ -8,12 +8,12 @@ export interface  RuleSet<L=string>{
 export function getRuleSet(){
     const ruleSet: RuleSet<string> = {rules: [
         {name:"Ax",site:"both"},
-        {name:"NotRight",site:"right"},
-        {name:"NotLeft",site:"left"},
-        {name:"AndRight",site:"right"},
-        {name:"AndLeft",site:"left"},
-        {name:"OrRight",site:"right"},
-        {name:"OrLeft",site:"left"}
+        {name:"notRight",site:"right"},
+        {name:"notLeft",site:"left"},
+        {name:"andRight",site:"right"},
+        {name:"andLeft",site:"left"},
+        {name:"orRight",site:"right"},
+        {name:"orLeft",site:"left"}
     ]}
     return ruleSet;
 }

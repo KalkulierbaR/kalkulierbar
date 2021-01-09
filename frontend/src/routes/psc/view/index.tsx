@@ -8,7 +8,7 @@ import { ruleSetToStringArray } from "../../../util/rule";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { getRuleSet } from "../../../types/calculus/rules";
 import PSCTreeView from "../../../components/calculus/psc/tree"
-import { PSCNode } from "../../../types/calculus/psc";
+import { PSCNode, PSCTreeLayoutNode } from "../../../types/calculus/psc";
 
 import * as style from "./style.scss";
 import { route } from "preact-router";
@@ -16,6 +16,7 @@ import { selected } from "../../../components/svg/rectangle/style.scss";
 import PSCFAB from "../../../components/calculus/psc/fab";
 import { NotificationType } from "../../../types/app/notification";
 import TutorialDialog from "../../../components/tutorial/dialog";
+import { sendMove } from "../../../util/api";
 
 
 interface Props {}
@@ -37,7 +38,7 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
     }
     
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
-         undefined,
+         undefined
     );
 
     const selectedNode =
@@ -55,13 +56,47 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
             setSelectedRuleId(undefined);
         }else{
             setSelectedRuleId(newRuleId);
+            if(newRuleId !== undefined && selectedNode !== undefined && selectedNode.type === "leaf"){
+                if(newRuleId === 0){
+                    sendMove(
+                        server, Calculus.psc, state, {type: "Ax", nodeID: selectedNodeId!}, onChange,notificationHandler,
+                    )
+                } else {
+                    sendMove(
+                        server, Calculus.psc, state, {type: ruleOptions.get(newRuleId)!, nodeID: selectedNodeId!, listIndex: 0}, onChange,notificationHandler,
+                    )
+                }
+                setSelectedNodeId(undefined);
+                setSelectedRuleId(undefined);
+                
+            }
         }
     };
 
-    const selectedNodeCallback = (
-
+    const selectNodeCallback = (
+        newNode: PSCTreeLayoutNode,
     ) => {
+        const newNodeIsLeaf = newNode.type === "leaf";
 
+        if(newNode.id === selectedNodeId){
+            setSelectedNodeId(undefined);
+        }else if(selectedNodeId === undefined) {
+            setSelectedNodeId(newNode.id);
+            if(selectedRuleId !== undefined && newNodeIsLeaf){
+                if(selectedRuleId === 0){
+                    sendMove(
+                        server, Calculus.psc, state, {type: "Ax", nodeID: newNode.id}, onChange,notificationHandler,
+                    )
+                } else {
+                    sendMove(
+                        server, Calculus.psc, state, {type: ruleOptions.get(selectedRuleId)!, nodeID: newNode.id, listIndex: 0}, onChange,notificationHandler,
+                    )
+                }
+                setSelectedNodeId(undefined);
+                setSelectedRuleId(undefined);
+                
+            }
+        }
     };
     
     
@@ -90,7 +125,7 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
                     nodes={state.tree}
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
-                    selectedNodeCallback={selectedNodeCallback}
+                    selectNodeCallback={selectNodeCallback}
                 />
             </div>
 

@@ -4,13 +4,17 @@ import { PropCalculusType, Calculus } from ".";
 export interface PSCNode {
     type: string;
     parent: number | null;
-    children: number[];
-    leftFormulas: FormulaNode[];
-    rightFormulas: FormulaNode[];
+    child: number | null;
+    leftChild: number | null;
+    rightChild: number | null;
+    leftFormula: FormulaNode[];
+    rightFormula: FormulaNode[];
+    isClosed: boolean;
 }
 
 export interface FormulaNode {
     type: string;
+    child: FormulaNode | null;
     leftChild: FormulaNode | null;
     rightChild: FormulaNode | null;
     spelling: string | null;
@@ -29,6 +33,16 @@ export function instanceOfPSCState(
     return "ruleSet" in object && calculus === Calculus.psc;
 }
 
-export interface PSCMove {
-    type: "standard"
+export type PSCMove =
+    PSCAxMove | PSCRuleMove;
+
+export interface PSCRuleMove {
+    type: string
+    nodeID: number;
+    listIndex: number;
+}
+
+export interface PSCAxMove {
+    type: "Ax";
+    nodeID: number;
 }
