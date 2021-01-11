@@ -18,11 +18,22 @@ class PSCState() : ProtectedState() {
         tree.add(Leaf(null, leftFormula, rightFormula))
     }
 
+    constructor(left: LogicNode, right: LogicNode) : this() {
+        val leftFormula = mutableListOf<LogicNode>();
+        var rightFormula = mutableListOf<LogicNode>();
+        leftFormula.add(left);
+        rightFormula.add(right);
+        tree.add(Leaf(null, leftFormula, rightFormula))
+    }
+
+    constructor(leftFormula: MutableList<LogicNode>, rightFormula: MutableList<LogicNode>) : this() {
+        tree.add(Leaf(null, leftFormula.toMutableList(), rightFormula.toMutableList()))
+    }
+    
     override var seal = ""
 
     override fun getHash(): String {
         return "psc|${tree.map{it.toString()}}"
-    }
 }
 
 val PSCTreeNodeModule = SerializersModule {

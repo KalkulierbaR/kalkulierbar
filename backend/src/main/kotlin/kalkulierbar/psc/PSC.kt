@@ -8,6 +8,7 @@ import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.PropositionalParser
+import kalkulierbar.parsers.PropositionalSequentParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
@@ -18,8 +19,7 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
     override val identifier = "psc"
 
     override fun parseFormulaToState(formula: String, params: Unit?): PSCState {
-        val parsedFormula = PropositionalParser().parse(formula)
-        return PSCState(parsedFormula)
+        return PropositionalSequentParser().parse(formula);
     }
 
     override fun applyMoveOnState(state: PSCState, move: PSCMove): PSCState {

@@ -64,7 +64,7 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
                 {(transform) => (<g transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}>
                     <g>
                         {
-                            //render nodes -> Recursively render each sub tree
+                            // render nodes -> Recursively render each sub tree
                             <SubTree
                                 node={root}
                                 selectedNodeId={selectedNodeId}
