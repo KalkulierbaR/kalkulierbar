@@ -12,12 +12,15 @@ const PSC: preact.FunctionalComponent<Props> = () => {
     return (
         <Fragment>
             <h2>Propositional Sequent Calculus</h2>
-            <Format foLogic={false} />
+            <Format foLogic={false} 
+                    allowClauses ={false} 
+            />
             <FormulaInput
                 calculus={Calculus.psc}
                 params={null}
                 foLogic={false}
-            />                     
+                propPlaceholder={true}
+            />                       
         </Fragment>
     );
 };
