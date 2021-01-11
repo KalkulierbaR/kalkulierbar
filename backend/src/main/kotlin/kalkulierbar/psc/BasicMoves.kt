@@ -8,6 +8,7 @@ import kalkulierbar.logic.Or
 import kalkulierbar.psc.PSCMove
 import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
+import java.io.Console
 
 fun applyAx(state: PSCState, nodeID: Int) : PSCState {
 
@@ -72,7 +73,7 @@ fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
         throw IllegalMove("listIndex out of bounds.")
 
-    val formula = leaf.rightFormula.get(listIndex)
+    val formula = leaf.leftFormula.get(listIndex)
 
     if (formula !is Not)
         throw IllegalMove("The rule notLeft must be applied on '!'")

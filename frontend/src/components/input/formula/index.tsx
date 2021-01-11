@@ -60,6 +60,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params,
     foLogic,
+    propPlaceholder,
 }) => {
     const {
         server,
@@ -225,8 +226,9 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     autocorrect="off"
                     placeholder={
                         foLogic
-                            ? "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"
-                            : "!a, c; a; !c"
+                            ? "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"                            
+                            : propPlaceholder ? "!(a -> b) & (c <=> d | e) & !a"
+                                              : "!a, c; a; !c"                                               
                     }
                 />
                 {FOCalculus.includes(calculus) && (

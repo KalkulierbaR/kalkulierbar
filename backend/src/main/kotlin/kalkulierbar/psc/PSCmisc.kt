@@ -8,8 +8,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.modules.SerializersModule
 
 @Serializable
-class PSCState(
-) {
+class PSCState() : ProtectedState() {
     val tree = mutableListOf<TreeNode>();
 
     constructor(formula: LogicNode) : this() {
@@ -30,6 +29,11 @@ class PSCState(
     constructor(leftFormula: MutableList<LogicNode>, rightFormula: MutableList<LogicNode>) : this() {
         tree.add(Leaf(null, leftFormula.toMutableList(), rightFormula.toMutableList()))
     }
+    
+    override var seal = ""
+
+    override fun getHash(): String {
+        return "psc|${tree.map{it.toString()}}"
 }
 
 val PSCTreeNodeModule = SerializersModule {
@@ -47,7 +51,7 @@ abstract class TreeNode
 @SerialName("leaf")
 class Leaf(val parent: Int?, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
     override fun toString(): String {
-        return leftFormula.toString() + " ==> " + rightFormula.toString()
+        return leftFormula.joinToString() + " ==> " + rightFormula.joinToString()
     }
 }
 
@@ -55,7 +59,7 @@ class Leaf(val parent: Int?, val leftFormula: MutableList<LogicNode>, val rightF
 @SerialName("oneChildNode")
 class OneChildNode(val parent: Int?, val child: Int, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
     override fun toString(): String {
-        return leftFormula.toString() + " ==> " + rightFormula.toString()
+        return leftFormula.joinToString() + " ==> " + rightFormula.joinToString()
     }
 }
 
@@ -63,6 +67,6 @@ class OneChildNode(val parent: Int?, val child: Int, val leftFormula: MutableLis
 @SerialName("twoChildNode")
 class TwoChildNode(val parent: Int?, val leftChild: Int, val rightChild: Int, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
     override fun toString(): String {
-        return leftFormula.toString() + " ==> " + rightFormula.toString()
+        return leftFormula.joinToString() + " ==> " + rightFormula.joinToString()
     }
 }
