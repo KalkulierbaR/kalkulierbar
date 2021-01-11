@@ -8,6 +8,9 @@ import CheckCloseFAB from "../../../input/fab/check-close";
 import DownloadFAB from "../../../input/fab/download";
 import FAB from "../../../input/fab";
 import { NotificationType } from "../../../../types/app/notification";
+import UndoIcon from "../../../icons/undo";
+import { sendMove } from "../../../../util/api";
+import { PSCUndoMove } from "../../../../types/calculus/psc"
 
 interface Props {
     /**
@@ -56,6 +59,26 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
                             type={calculus}
                         />
                         <CheckCloseFAB calculus={calculus}/>
+                        <FAB
+                                icon={<UndoIcon />}
+                                label="Undo"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    // If the last move added a node, and we undo this, remove the corresponding drag
+                                    if (state.tree.length > 0) {
+                                        sendMove(
+                                            server,
+                                            calculus,
+                                            state,
+                                            {type: "undo"},
+                                            onChange,
+                                            notificationHandler
+                                        )
+                                    }
+                                }}
+                            />
                     </Fragment>
                 ) : (
                     <Fragment>

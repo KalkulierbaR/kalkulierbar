@@ -24,6 +24,7 @@ export type PSCTreeLayoutNode = PSCNode & { id: number};
 
 export interface PSCState {
     tree: PSCNode[];
+    moveHistory: PSCMove[];
 }
 
 export function instanceOfPSCState(
@@ -34,7 +35,7 @@ export function instanceOfPSCState(
 }
 
 export type PSCMove =
-    PSCAxMove | PSCRuleMove;
+    PSCAxMove | PSCRuleMove | PSCUndoMove;
 
 export interface PSCRuleMove {
     type: string
@@ -45,4 +46,8 @@ export interface PSCRuleMove {
 export interface PSCAxMove {
     type: "Ax";
     nodeID: number;
+}
+
+export interface PSCUndoMove {
+    type: "undo";
 }
