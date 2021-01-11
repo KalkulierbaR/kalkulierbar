@@ -23,12 +23,15 @@ interface Props {
     ) => void;
     // informs the element if the screen is small
     smallScreen: boolean;
+    // The id of the selected Rule
+    selectedRuleName: string;
 }
 
 const PSCTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
     selectNodeCallback,
     selectedNodeId,
+    selectedRuleName,
 }) => {
     const { root, height, width: treeWidth } = pscTreeLayout(nodes);
 
@@ -70,6 +73,7 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
                                 selectedNodeId={selectedNodeId}
                                 selectNodeCallback={selectNodeCallback}
                                 zoomFactor={transform.k}
+                                ruleName={selectedRuleName}
                             />
                         }
                     </g>

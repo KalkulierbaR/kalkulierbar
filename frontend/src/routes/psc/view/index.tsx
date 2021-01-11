@@ -31,6 +31,8 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
         onChange,
     } = useAppState();
 
+    let selectedRule: string = "";
+
     const state = cState;
     if (!state) {
         route(`/psc`);
@@ -125,6 +127,7 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
                     nodes={state.tree}
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
+                    selectedRuleName={selectedRule}
                     selectNodeCallback={selectNodeCallback}
                 />
             </div>
