@@ -34,6 +34,7 @@ class PSCState() : ProtectedState() {
 
     override fun getHash(): String {
         return "psc|${tree.map{it.toString()}}"
+    }
 }
 
 val PSCTreeNodeModule = SerializersModule {

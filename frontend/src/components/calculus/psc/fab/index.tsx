@@ -7,10 +7,8 @@ import ControlFAB from "../../../input/control-fab";
 import CheckCloseFAB from "../../../input/fab/check-close";
 import DownloadFAB from "../../../input/fab/download";
 import FAB from "../../../input/fab";
-import { NotificationType } from "../../../../types/app/notification";
 import UndoIcon from "../../../icons/undo";
 import { sendMove } from "../../../../util/api";
-import { PSCUndoMove } from "../../../../types/calculus/psc"
 
 interface Props {
     /**
