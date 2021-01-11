@@ -18,6 +18,7 @@ const PSC: preact.FunctionalComponent<Props> = () => {
                 calculus={Calculus.psc}
                 params={null}
                 foLogic={false}
+                propPlaceholder={true}
             />                       
         </Fragment>
     );
