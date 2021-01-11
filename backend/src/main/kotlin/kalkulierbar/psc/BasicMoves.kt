@@ -57,7 +57,14 @@ fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     checkLeft(state, nodeID, listIndex)
 
     var leaf = state.tree[nodeID];
-    val formula = leaf.rightFormula.get(listIndex)
+
+    if (leaf !is Leaf)
+        throw IllegalMove("Rules must be applied on leaf level.")
+
+    if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
+        throw IllegalMove("listIndex out of bounds.")
+
+    val formula = leaf.leftFormula.get(listIndex)
 
     if (formula !is Not)
         throw IllegalMove("The rule notLeft must be applied on '!'")
