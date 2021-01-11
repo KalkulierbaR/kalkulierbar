@@ -91,9 +91,9 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
         try {
             val parsed = serializer.parse(PSCState.serializer(), json)
 
-            // Ensure valid, unmodified state object
-            // if (!parsed.verifySeal())
-            //     throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
+            //Ensure valid, unmodified state object
+            if (!parsed.verifySeal())
+                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
 
             return parsed
         } catch (e: Exception) {
@@ -108,8 +108,7 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
      * @return JSON state representation
      */
     override fun stateToJson(state: PSCState): String {
-        // state.render()
-        // state.computeSeal()
+        state.computeSeal()
         return serializer.stringify(PSCState.serializer(), state)
     }
 
