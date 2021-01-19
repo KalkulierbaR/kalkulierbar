@@ -8,6 +8,7 @@ import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.PropositionalParser
+import kalkulierbar.parsers.PropositionalSequentParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
@@ -18,8 +19,7 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
     override val identifier = "psc"
 
     override fun parseFormulaToState(formula: String, params: Unit?): PSCState {
-        val parsedFormula = PropositionalParser().parse(formula)
-        return PSCState(parsedFormula)
+        return PropositionalSequentParser().parse(formula);
     }
 
     override fun applyMoveOnState(state: PSCState, move: PSCMove): PSCState {
@@ -46,26 +46,24 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
      * @return Equivalent state with the most recent rule application removed
      */
     private fun applyUndo(state: PSCState): PSCState {
-        // if (!state.backtracking)
-        //     throw IllegalMove("Backtracking is not enabled for this proof")
+        if(state.tree.size <= 1)
+            throw IllegalMove("No move to undo");
 
-        // // Can't undo any more moves in initial state
-        // if (state.moveHistory.isEmpty())
-        //     return state
+        val removedNode = state.tree.removeAt(state.tree.size - 1);
 
-        // // Create a fresh clone-state with the same parameters and input formula
-        // var freshState = kalkulierbar.psc.PSCState(state.formula)
-        // freshState.usedBacktracking = true
+        if (removedNode !is Leaf)
+            throw IllegalMove("Rules can only be applied on Leaf level.")
 
-        // // We don't want to re-do the last move
-        // state.moveHistory.removeAt(state.moveHistory.size - 1)
+        val parentID: Int? = removedNode.parent;
 
-        // // Re-build the proof tree in the clone state
-        // state.moveHistory.forEach {
-        //     freshState = applyMoveOnState(freshState, it)
-        // }
+        val parentNode = state.tree.elementAt(parentID!!);
 
-        // return freshState
+        if(parentNode is OneChildNode)
+            state.tree[parentID] = Leaf(parentNode.parent, parentNode.leftFormula, parentNode.rightFormula);
+        else if(parentNode is TwoChildNode){
+            state.tree.removeAt(state.tree.size - 1);
+            state.tree[parentID] = Leaf(parentNode.parent, parentNode.leftFormula, parentNode.rightFormula);
+        }
         return state;
     }
 
@@ -91,9 +89,9 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
         try {
             val parsed = serializer.parse(PSCState.serializer(), json)
 
-            // Ensure valid, unmodified state object
-            // if (!parsed.verifySeal())
-            //     throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
+            //Ensure valid, unmodified state object
+            if (!parsed.verifySeal())
+                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
 
             return parsed
         } catch (e: Exception) {
@@ -108,8 +106,7 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
      * @return JSON state representation
      */
     override fun stateToJson(state: PSCState): String {
-        // state.render()
-        // state.computeSeal()
+        state.computeSeal()
         return serializer.stringify(PSCState.serializer(), state)
     }
 

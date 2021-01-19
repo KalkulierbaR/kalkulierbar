@@ -37,11 +37,11 @@ class FirstOrderParser : PropositionalParser() {
      * @param formula input formula
      * @return LogicNode representing the formula
      */
-    override fun parse(formula: String): LogicNode {
+    override fun parse(formula: String, positionInBaseString: Int): LogicNode {
         // Clear quantifier scope to avoid problems on instance re-use
         quantifierScope.clear()
         bindQuantifiedVariables = true
-        return super.parse(formula)
+        return super.parse(formula, positionInBaseString)
     }
 
     /**

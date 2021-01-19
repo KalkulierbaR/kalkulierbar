@@ -9,7 +9,7 @@ export const nodeName = (node: PSCNode) => {
 
 export const formulaNames = (formulas: FormulaNode[]) => {
     if(formulas == null) return "";
-    if(formulas.length == 0) return "";
+    if(formulas.length === 0) return "";
 
     let result = parseFormula(formulas[0]);
 
@@ -61,13 +61,13 @@ const pscNodeToTree = (
         [],
     );
 
-    if (n.type == "leaf") {
+    if (n.type === "leaf") {
         
-    } else if (n.type == "oneChildNode") {
+    } else if (n.type === "oneChildNode") {
         resultTree.children.push(
             pscNodeToTree(nodes, nodes[n.child!], n.child!, y-42)
         );
-    } else if (n.type == "twoChildNode") {
+    } else if (n.type === "twoChildNode") {
         resultTree.children.push(
             pscNodeToTree(nodes, nodes[n.leftChild!], n.leftChild!, y-42)
         )

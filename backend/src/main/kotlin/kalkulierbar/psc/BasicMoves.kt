@@ -8,6 +8,7 @@ import kalkulierbar.logic.Or
 import kalkulierbar.psc.PSCMove
 import kalkulierbar.psc.PSC
 import kalkulierbar.logic.UnaryOp
+import java.io.Console
 
 fun applyAx(state: PSCState, nodeID: Int) : PSCState {
 
@@ -32,17 +33,9 @@ fun applyAx(state: PSCState, nodeID: Int) : PSCState {
 
 fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of bounds.")
-    
+    checkRight(state, nodeID, listIndex)
+
     var leaf = state.tree[nodeID];
-    
-    if (leaf !is Leaf)
-        throw IllegalMove("Rules must be applied on leaf level.")
-
-    if (listIndex < 0 || leaf.rightFormula.size <= listIndex)
-        throw IllegalMove("listIndex out of bounds.")
-
     val formula = leaf.rightFormula.get(listIndex)
 
     if (formula !is Not)
@@ -61,8 +54,7 @@ fun applyNotRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 
 fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of bounds.")
+    checkLeft(state, nodeID, listIndex)
 
     var leaf = state.tree[nodeID];
 
@@ -72,7 +64,7 @@ fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
         throw IllegalMove("listIndex out of bounds.")
 
-    val formula = leaf.rightFormula.get(listIndex)
+    val formula = leaf.leftFormula.get(listIndex)
 
     if (formula !is Not)
         throw IllegalMove("The rule notLeft must be applied on '!'")
@@ -89,15 +81,10 @@ fun applyNotLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 }
 
 fun applyOrRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of bounds");
+
+    checkRight(state, nodeID, listIndex)
+
     var leaf = state.tree[nodeID]
-    if (leaf !is Leaf)
-        throw IllegalMove("Rule orRight can only be aplied to a leaf of the sequent calculus.")
-
-    if (listIndex < 0 || leaf.rightFormula.size <= listIndex)
-        throw IllegalMove("listIndex out of bounds.")
-
     val formula = leaf.rightFormula.get(listIndex);
 
     if (formula !is Or)
@@ -115,15 +102,10 @@ fun applyOrRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 }
 
 fun applyOrLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of bounds");
+
+    checkLeft(state, nodeID, listIndex)
+
     var leaf = state.tree[nodeID]
-    if (leaf !is Leaf)
-        throw IllegalMove("Rule orLeft can only be aplied to a leaf of the sequent calculus.")
-
-    if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
-        throw IllegalMove("listIndex out of bounds.")
-
     val formula = leaf.leftFormula.get(listIndex);
 
     if (formula !is Or)
@@ -150,17 +132,9 @@ fun applyOrLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 
 fun applyAndRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of Bounds");
+    checkRight(state, nodeID, listIndex)
 
     var leaf = state.tree[nodeID];
-
-    if (leaf !is Leaf)
-        throw IllegalMove("Rules can only be applied on Leaf level.")
-    
-    if (listIndex < 0 || leaf.rightFormula.size <= listIndex)
-        throw IllegalMove("listIndex out of Bounds.")
-    
     val formula = leaf.rightFormula.get(listIndex);
 
     if (formula !is And)
@@ -187,17 +161,9 @@ fun applyAndRight(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 
 fun applyAndLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
 
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of Bounds");
+    checkLeft(state, nodeID, listIndex)
 
     var leaf = state.tree[nodeID];
-
-    if (leaf !is Leaf)
-        throw IllegalMove("Rules can only be applied on Leaf level.")
-    
-    if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
-        throw IllegalMove("listIndex out of Bounds.")
-    
     val formula = leaf.leftFormula.get(listIndex);
 
     if (formula !is And)
@@ -212,4 +178,35 @@ fun applyAndLeft(state: PSCState, nodeID: Int, listIndex: Int): PSCState {
     state.tree.add(newLeaf);
     state.tree[nodeID] = OneChildNode(leaf.parent, state.tree.size - 1, leaf.leftFormula, leaf.rightFormula);
     return state;
+}
+
+
+fun checkRight(state: PSCState, nodeID: Int, listIndex: Int){
+    if (nodeID < 0 || state.tree.size <= nodeID)
+        throw IllegalMove("nodeID out of Bounds");
+
+    var leaf = state.tree[nodeID];
+
+    if (leaf !is Leaf)
+        throw IllegalMove("Rules can only be applied on Leaf level.")
+
+    if (listIndex < 0 || leaf.rightFormula.size <= listIndex)
+        throw IllegalMove("listIndex out of Bounds.")
+
+    return
+}
+
+fun checkLeft(state: PSCState, nodeID: Int, listIndex: Int){
+    if (nodeID < 0 || state.tree.size <= nodeID)
+        throw IllegalMove("nodeID out of Bounds");
+
+    var leaf = state.tree[nodeID];
+
+    if (leaf !is Leaf)
+        throw IllegalMove("Rules can only be applied on Leaf level.")
+
+    if (listIndex < 0 || leaf.leftFormula.size <= listIndex)
+        throw IllegalMove("listIndex out of Bounds.")
+
+    return
 }

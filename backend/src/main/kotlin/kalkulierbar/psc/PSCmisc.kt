@@ -8,8 +8,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.modules.SerializersModule
 
 @Serializable
-class PSCState(
-) {
+class PSCState() : ProtectedState() {
     val tree = mutableListOf<TreeNode>();
 
     constructor(formula: LogicNode) : this() {
@@ -17,6 +16,24 @@ class PSCState(
         var rightFormula = mutableListOf<LogicNode>();
         rightFormula.add(formula)
         tree.add(Leaf(null, leftFormula, rightFormula))
+    }
+
+    constructor(left: LogicNode, right: LogicNode) : this() {
+        val leftFormula = mutableListOf<LogicNode>();
+        var rightFormula = mutableListOf<LogicNode>();
+        leftFormula.add(left);
+        rightFormula.add(right);
+        tree.add(Leaf(null, leftFormula, rightFormula))
+    }
+
+    constructor(leftFormula: MutableList<LogicNode>, rightFormula: MutableList<LogicNode>) : this() {
+        tree.add(Leaf(null, leftFormula.toMutableList(), rightFormula.toMutableList()))
+    }
+    
+    override var seal = ""
+
+    override fun getHash(): String {
+        return "psc|${tree.map{it.toString()}}"
     }
 }
 
@@ -29,28 +46,32 @@ val PSCTreeNodeModule = SerializersModule {
 }
 
 @Serializable
-abstract class TreeNode
+abstract class TreeNode(){
+    abstract val parent: Int?
+    abstract val leftFormula: MutableList<LogicNode>
+    abstract val rightFormula: MutableList<LogicNode>
+}
 
 @Serializable
 @SerialName("leaf")
-class Leaf(val parent: Int?, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
+class Leaf(override val parent: Int?, override val leftFormula: MutableList<LogicNode>, override val rightFormula: MutableList<LogicNode>) : TreeNode() {
     override fun toString(): String {
-        return leftFormula.toString() + " ==> " + rightFormula.toString()
+        return leftFormula.joinToString() + " |- " + rightFormula.joinToString()
     }
 }
 
 @Serializable
 @SerialName("oneChildNode")
-class OneChildNode(val parent: Int?, val child: Int, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
+class OneChildNode(override val parent: Int?, val child: Int, override val leftFormula: MutableList<LogicNode>, override val rightFormula: MutableList<LogicNode>) : TreeNode() {
     override fun toString(): String {
-        return leftFormula.toString() + " ==> " + rightFormula.toString()
+        return leftFormula.joinToString() + " |- " + rightFormula.joinToString()
     }
 }
 
 @Serializable
 @SerialName("twoChildNode")
-class TwoChildNode(val parent: Int?, val leftChild: Int, val rightChild: Int, val leftFormula: MutableList<LogicNode>, val rightFormula: MutableList<LogicNode>) : TreeNode() {
+class TwoChildNode(override val parent: Int?, val leftChild: Int, val rightChild: Int, override val leftFormula: MutableList<LogicNode>, override val rightFormula: MutableList<LogicNode>) : TreeNode() {
     override fun toString(): String {
-        return leftFormula.toString() + " ==> " + rightFormula.toString()
+        return leftFormula.joinToString() + " |- " + rightFormula.joinToString()
     }
 }
