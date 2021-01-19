@@ -37,6 +37,10 @@ interface Props {
      * Whether this is currently FO logic
      */
     foLogic: boolean;
+    /**
+     * Shows a Prop Placeholder
+     */
+    propPlaceholder?: boolean;
 }
 
 /**
@@ -60,7 +64,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params,
     foLogic,
-    propPlaceholder,
+    propPlaceholder = false,
 }) => {
     const {
         server,

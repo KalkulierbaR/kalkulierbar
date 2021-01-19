@@ -29,7 +29,7 @@ const PSC: preact.FunctionalComponent<Props> = () => {
         <Fragment>
             <h2>Propositional Sequent Calculus</h2>
             <Format foLogic={false} 
-                    allowClauses ={false} 
+                    allowClauses ={false}
             />
             <FormulaInput
                 calculus={Calculus.psc}
