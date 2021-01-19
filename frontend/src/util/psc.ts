@@ -23,8 +23,8 @@ const parseFormula = (formula: FormulaNode) => {
     let result = "";
     switch (formula.type) {
         case "not": result += "¬" + parseFormula(formula.child!); break;
-        case "and": result += parseFormula(formula.leftChild!) + " ∧ " + parseFormula(formula.rightChild!);break;
-        case "or":  result += parseFormula(formula.leftChild!) + " ∨ " + parseFormula(formula.rightChild!);break;
+        case "and": result += "(" + parseFormula(formula.leftChild!) + " ∧ " + parseFormula(formula.rightChild!) + ")";break;
+        case "or":  result += "(" + parseFormula(formula.leftChild!) + " ∨ " + parseFormula(formula.rightChild!) + ")";break;
         case "var": result += formula.spelling!;
     }
 

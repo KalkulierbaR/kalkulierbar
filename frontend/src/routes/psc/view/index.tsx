@@ -17,6 +17,7 @@ import PSCFAB from "../../../components/calculus/psc/fab";
 import { NotificationType } from "../../../types/app/notification";
 import TutorialDialog from "../../../components/tutorial/dialog";
 import { sendMove } from "../../../util/api";
+import Dialog from "../../../components/dialog";
 
 
 interface Props {}
@@ -51,6 +52,8 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
     const [selectedRuleId, setSelectedRuleId] = useState<
         number | undefined
     >(undefined);
+
+    const [showRuleDialog, setShowRuleDialog] = useState(false);
 
     const selectRuleCallback = (newRuleId: number) => {
         if(newRuleId === selectedRuleId){
@@ -132,11 +135,26 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
                 />
             </div>
 
+            <Dialog
+                open={showRuleDialog}
+                label="Choose Rule"
+                onClose={() => setShowRuleDialog(false)}
+            >
+                <OptionList
+                    options={ruleOptions}
+                    selectOptionCallback={(keyValuePair) => {
+                        setShowRuleDialog(false);
+                        selectRuleCallback(keyValuePair[0]);
+                    }}
+                />
+            </Dialog>
+
+
             <PSCFAB 
                 calculus={Calculus.psc}
                 state={state}
                 selectedNodeId={selectedNodeId}
-                expandCallback={() => {notificationHandler.error("This is not implemented yet")}}
+                ruleCallback={ () => setShowRuleDialog(true)}
             />
             <TutorialDialog calculus={Calculus.psc} />
 

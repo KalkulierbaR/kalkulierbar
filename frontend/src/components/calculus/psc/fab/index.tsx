@@ -11,6 +11,13 @@ import { NotificationType } from "../../../../types/app/notification";
 import UndoIcon from "../../../icons/undo";
 import { sendMove } from "../../../../util/api";
 import { PSCUndoMove } from "../../../../types/calculus/psc"
+import SplitIcon from "../../../icons/split";
+import LemmaIcon from "../../../icons/lemma";
+import { hyperFab } from "../../../../routes/resolution/view/style.scss";
+import HyperIcon from "../../../icons/hyper";
+import RouterIcon from "../../../icons/router";
+import SwitchIcon from "../../../icons/switch";
+import RuleIcon from "../../../icons/rule";
 
 interface Props {
     /**
@@ -26,16 +33,16 @@ interface Props {
      */
     selectedNodeId?: number;
     /**
-     * Callback if expand FAB is clicked
+     * Opens Rule Dialog
      */
-    expandCallback: () => void;
+    ruleCallback: () => void;
 }
 
 const PSCFAB: preact.FunctionalComponent<Props> = ({
     calculus,
     state,
     selectedNodeId,
-    expandCallback,
+    ruleCallback,
 }) => {
     const {
         server,
@@ -83,12 +90,14 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
                 ) : (
                     <Fragment>
                         <FAB
-                            icon={<AddIcon />}
-                            label="Expand"
+                            icon={<RuleIcon/>}
+                            label="Rules"
                             mini={true}
                             extended={true}
                             showIconAtEnd={true}
-                            onClick={expandCallback}
+                            onClick={() => {
+                                ruleCallback();
+                            }}
                         />
                     </Fragment>
                 )}   

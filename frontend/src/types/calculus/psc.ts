@@ -51,3 +51,11 @@ export interface PSCAxMove {
 export interface PSCUndoMove {
     type: "undo";
 }
+
+export enum PSCType {
+    help = "HELP"
+}
+
+export interface PSCParams {
+    help: boolean;
+}

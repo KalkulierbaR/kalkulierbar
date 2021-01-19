@@ -32,6 +32,7 @@ export const ROUTES: LinkGroup[] = [
             },
             { name: "Resolution", path: Calculus.propResolution },
             { name: "DPLL", path: Calculus.dpll },
+            { name: "PSC", path: Calculus.psc},
         ],
     },
     {

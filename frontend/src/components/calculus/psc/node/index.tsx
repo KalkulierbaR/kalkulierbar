@@ -66,8 +66,6 @@ const textNextToLine = (node: LayoutItem<PSCTreeLayoutNode>,ruleName: string) =>
         text = "Ax";
     }
 
-    console.log({ruleName})
-
     return (
         <text
             x={node.x + width + 20}
