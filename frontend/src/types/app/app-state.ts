@@ -1,7 +1,7 @@
 import { PropTableauxState, FOTableauxState } from "../calculus/tableaux";
 import { PropResolutionState, FOResolutionState } from "../calculus/resolution";
 import { DPLLState } from "../calculus/dpll";
-import { FOPSCState, PSCState } from "../calculus/psc";
+import {  FOSCState, PSCState } from "../calculus/psc";
 import { AppStateAction } from "./action";
 import { Formulas, CalculusType } from "../calculus";
 import { Notification, NotificationHandler } from "./notification";
@@ -65,7 +65,7 @@ export interface AppState {
     /**
      * The current fo-psc state
      */
-    "fo-psc"?: FOPSCState
+    "fo-sc"?: FOSCState
     /**
      * The current tutorial mode
      */

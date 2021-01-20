@@ -27,7 +27,7 @@ export interface PSCState {
     tree: PSCNode[];
     moveHistory: PSCMove[];
 }
-export interface FOPSCState{
+export interface FOSCState{
     tree: PSCNode[];
     moveHistory: PSCMove[];
 }
@@ -42,9 +42,9 @@ export function instanceOfPSCState(
 export type PSCMove =
     PSCAxMove | PSCRuleMove | PSCUndoMove;
 
-export type FOPSCMove = PSCMove | PSCCloseAssignMove;
+export type FOSCMove = PSCMove | SCCloseAssignMove;
 
-export interface PSCCloseAssignMove{
+export interface SCCloseAssignMove{
     type:"psc-close-assign";
     id1: number;
     id2: number;
