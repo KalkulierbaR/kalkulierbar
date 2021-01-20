@@ -12,7 +12,7 @@ import { useState } from "preact/hooks";
 import Switch from "../../components/input/switch";
 
 interface Props{
-    //calculus: PSCCalculusType;
+    calculus: PSCCalculusType;
 }
 
 const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
