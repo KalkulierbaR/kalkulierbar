@@ -1,5 +1,6 @@
 import { RuleSet } from "./rules";
 import { PropCalculusType, Calculus } from ".";
+import { VarAssign } from "./tableaux";
 
 export interface PSCNode {
     type: string;
@@ -41,6 +42,14 @@ export function instanceOfPSCState(
 export type PSCMove =
     PSCAxMove | PSCRuleMove | PSCUndoMove;
 
+export type FOPSCMove = PSCMove | PSCCloseAssignMove;
+
+export interface PSCCloseAssignMove{
+    type:"psc-close-assign";
+    id1: number;
+    id2: number;
+    varAssign: VarAssign;
+}
 export interface PSCRuleMove {
     type: string
     nodeID: number;
