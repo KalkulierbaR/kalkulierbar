@@ -28,6 +28,7 @@ export enum Calculus {
     ncTableaux = "nc-tableaux",
     dpll = "dpll",
     psc = "psc",
+    fopsc ="fo-psc",
 }
 
 export const PropCalculus: CalculusType[] = [

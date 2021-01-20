@@ -1169,6 +1169,19 @@ const ROUTES: Route[] = [
                 </g>
             </g>
         ),
+    },
+
+    {
+        href: Calculus.fopsc,
+        name: "First Order Propositional Sequent Calculus",
+        viewBox:"0 -16 450.015625 360",
+        image:(
+            <text
+            
+            >
+
+            </text>
+        ),
     }
 ];
 

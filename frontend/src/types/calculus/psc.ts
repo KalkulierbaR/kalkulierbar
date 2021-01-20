@@ -26,6 +26,10 @@ export interface PSCState {
     tree: PSCNode[];
     moveHistory: PSCMove[];
 }
+export interface FOPSCState{
+    tree: PSCNode[];
+    moveHistory: PSCMove[];
+}
 
 export function instanceOfPSCState(
     object: any,

@@ -2,7 +2,7 @@ import { Fragment, h } from "preact";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
-import { Calculus, PropCalculusType } from "../../types/calculus";
+import { Calculus, PropCalculusType, PSCCalculusType } from "../../types/calculus";
 import { route } from "preact-router";
 import { useAppState } from "../../util/app-state";
 import HintIcon, { Hint } from "../../components/hint";
@@ -11,9 +11,11 @@ import { PSCParams, PSCType } from "../../types/calculus/psc";
 import { useState } from "preact/hooks";
 import Switch from "../../components/input/switch";
 
-interface Props{}
+interface Props{
+    //calculus: PSCCalculusType;
+}
 
-const PSC: preact.FunctionalComponent<Props> = () => {
+const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
     
     const {smallScreen} = useAppState();
 
@@ -28,13 +30,13 @@ const PSC: preact.FunctionalComponent<Props> = () => {
     return (
         <Fragment>
             <h2>Propositional Sequent Calculus</h2>
-            <Format foLogic={false} 
+            <Format foLogic={calculus === Calculus.fopsc} 
                     allowClauses ={false}
             />
             <FormulaInput
                 calculus={Calculus.psc}
                 params={null}
-                foLogic={false}
+                foLogic={calculus === Calculus.fopsc}
 				propPlaceholder={true}
             />
 
