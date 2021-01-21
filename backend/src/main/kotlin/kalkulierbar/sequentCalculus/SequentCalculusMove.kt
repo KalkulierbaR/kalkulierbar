@@ -1,4 +1,4 @@
-package kalkulierbar.fosc
+package kalkulierbar.sequentCalculus
 
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.FirstOrderTerm
@@ -8,9 +8,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 
 // Context object for move serialization
-// Tells kotlinx.serialize about child types of FOSCMove
-val FOSCMoveModule = SerializersModule {
-    polymorphic(FOSCMove::class) {
+// Tells kotlinx.serialize about child types of PSCMove
+val SequentCalculusMoveModule = SerializersModule {
+    polymorphic(SequentCalculusMove::class) {
         Ax::class with Ax.serializer()
         NotRight::class with NotRight.serializer()
         NotLeft::class with NotLeft.serializer()
@@ -23,13 +23,13 @@ val FOSCMoveModule = SerializersModule {
 }
 
 @Serializable
-abstract class FOSCMove
+abstract class SequentCalculusMove
 
 @Serializable
 @SerialName("Ax")
 class Ax(
     val nodeID: Int
-) : FOSCMove() {
+) : SequentCalculusMove() {
 }
 
 @Serializable
@@ -37,7 +37,7 @@ class Ax(
 class NotRight(
     val nodeID: Int,
     val listIndex: Int
-) : FOSCMove() {
+) : SequentCalculusMove() {
 }
 
 @Serializable
@@ -45,7 +45,7 @@ class NotRight(
 class NotLeft(
     val nodeID: Int,
     val listIndex: Int
-) : FOSCMove() {
+) : SequentCalculusMove() {
 }
 
 @Serializable
@@ -53,7 +53,7 @@ class NotLeft(
 class OrRight(
         val nodeID: Int,
         val listIndex: Int
-) : FOSCMove() {
+) : SequentCalculusMove() {
 }
 
 @Serializable
@@ -61,7 +61,7 @@ class OrRight(
 class AndRight(
     val nodeID: Int,
     val listIndex: Int
-) : FOSCMove() {
+) : SequentCalculusMove() {
 }
 
 @Serializable
@@ -69,7 +69,7 @@ class AndRight(
 class OrLeft(
         val nodeID: Int,
         val listIndex: Int
-) : FOSCMove() {
+) : SequentCalculusMove() {
 }
 
 @Serializable
@@ -77,11 +77,11 @@ class OrLeft(
 class AndLeft(
     val nodeID: Int,
     val listIndex: Int
-) : FOSCMove() {
+) : SequentCalculusMove() {
 }
 
 @Serializable
 @SerialName("undo")
-class UndoMove : FOSCMove() {
+class UndoMove : SequentCalculusMove() {
     override fun toString() = "(undo)"
 }

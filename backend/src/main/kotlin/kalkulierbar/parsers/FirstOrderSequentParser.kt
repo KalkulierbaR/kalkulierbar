@@ -9,7 +9,7 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
-import kalkulierbar.fosc.FOSCState;
+import kalkulierbar.sequentCalculus.fosc.FOSCState;
 
 @Suppress("TooManyFunctions")
 open class FirstOrderSequentParser {

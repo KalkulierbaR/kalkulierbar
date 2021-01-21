@@ -1,4 +1,4 @@
-package kalkulierbar.psc
+package kalkulierbar.sequentCalculus.psc
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
@@ -12,9 +12,17 @@ import kalkulierbar.parsers.PropositionalSequentParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
+import kalkulierbar.sequentCalculus.GenericSequentCalculus
+import kalkulierbar.sequentCalculus.GenericSequentCalculusState
+import kalkulierbar.sequentCalculus.SequentCalculusMove
+import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
+import kalkulierbar.sequentCalculus.*
 
-    private val serializer = Json(context = FoTermModule + LogicModule + PSCMoveModule + PSCTreeNodeModule)
+import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
+
+class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, Unit>() {
+
+    private val serializer = Json(context = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
 
     override val identifier = "psc"
 
@@ -22,58 +30,33 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
         return PropositionalSequentParser().parse(formula);
     }
 
-    override fun applyMoveOnState(state: PSCState, move: PSCMove): PSCState {
+    override fun applyMoveOnState(state: PSCState, move: SequentCalculusMove): PSCState {
         // Clear status message
         // state.statusMessage = null
 
         // Pass moves to relevant subfunction
         return when (move) {
-            is Ax -> applyAx(state, move.nodeID)
-            is NotRight -> applyNotRight(state, move.nodeID, move.listIndex)
-            is NotLeft -> applyNotLeft(state, move.nodeID, move.listIndex)
-            is OrRight -> applyOrRight(state, move.nodeID, move.listIndex)
-            is OrLeft -> applyOrLeft(state, move.nodeID, move.listIndex)
-            is AndRight -> applyAndRight(state, move.nodeID, move.listIndex)
-            is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex)
-            is UndoMove -> applyUndo(state)
+            is Ax -> applyAx(state, move.nodeID) as PSCState
+            is NotRight -> applyNotRight(state, move.nodeID, move.listIndex) as PSCState
+            is NotLeft -> applyNotLeft(state, move.nodeID, move.listIndex) as PSCState
+            is OrRight -> applyOrRight(state, move.nodeID, move.listIndex) as PSCState
+            is OrLeft -> applyOrLeft(state, move.nodeID, move.listIndex) as PSCState
+            is AndRight -> applyAndRight(state, move.nodeID, move.listIndex) as PSCState
+            is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex) as PSCState
+            is UndoMove -> applyUndo(state) as PSCState
             else -> throw IllegalMove("Unknown move")
         }
     }
 
-    /**
-     * Undo a rule application by re-building the state from the move history
-     * @param state State in which to apply the undo
-     * @return Equivalent state with the most recent rule application removed
-     */
-    private fun applyUndo(state: PSCState): PSCState {
-        if(state.tree.size <= 1)
-            throw IllegalMove("No move to undo");
-
-        val removedNode = state.tree.removeAt(state.tree.size - 1);
-
-        if (removedNode !is Leaf)
-            throw IllegalMove("Rules can only be applied on Leaf level.")
-
-        val parentID: Int? = removedNode.parent;
-
-        val parentNode = state.tree.elementAt(parentID!!);
-
-        if(parentNode is OneChildNode)
-            state.tree[parentID] = Leaf(parentNode.parent, parentNode.leftFormula, parentNode.rightFormula);
-        else if(parentNode is TwoChildNode){
-            state.tree.removeAt(state.tree.size - 1);
-            state.tree[parentID] = Leaf(parentNode.parent, parentNode.leftFormula, parentNode.rightFormula);
-        }
-        return state;
-    }
-
     override fun checkCloseOnState(state: PSCState): CloseMessage {
         for (node in state.tree) {
-            if (node is Leaf) {
-                if (node.leftFormula.size != 0 || node.rightFormula.size != 0) {
-                    return CloseMessage(false, "Not all branches of the proof tree are closed.")
-                }
+            if (!node.isClosed) {
+                return CloseMessage(false, "Not all branches of the proof tree are closed.")
             }
+            // if (node is Leaf) {
+            //     if (node.leftFormula.size != 0 || node.rightFormula.size != 0) {
+            //     }
+            // }
         }
         
         return CloseMessage(true, "The proof is closed and valid in propositional Logic")
@@ -116,9 +99,9 @@ class PSC : JSONCalculus<PSCState, PSCMove, Unit>() {
      * @return parsed move object
      */
     @Suppress("TooGenericExceptionCaught")
-    override fun jsonToMove(json: String): PSCMove {
+    override fun jsonToMove(json: String): SequentCalculusMove {
         try {
-            return serializer.parse(PSCMove.serializer(), json)
+            return serializer.parse(SequentCalculusMove.serializer(), json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON move: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))

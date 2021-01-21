@@ -9,7 +9,7 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
-import kalkulierbar.psc.PSCState;
+import kalkulierbar.sequentCalculus.psc.PSCState;
 
 @Suppress("TooManyFunctions")
 open class PropositionalSequentParser {
