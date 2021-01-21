@@ -6,7 +6,6 @@ import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
-import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.FirstOrderSequentParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
@@ -15,7 +14,7 @@ import kalkulierbar.sequentCalculus.SequentCalculusMove
 import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
 import kalkulierbar.sequentCalculus.GenericSequentCalculus
 import kalkulierbar.sequentCalculus.*
-import kalkulierbar.sequentCalculus.psc.*
+import kalkulierbar.sequentCalculus.moveImplementations.*
 import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
 
 class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove, Unit>() {

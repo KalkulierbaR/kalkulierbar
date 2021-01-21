@@ -4,25 +4,20 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
-import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
-import kalkulierbar.logic.transform.NegationNormalForm
-import kalkulierbar.parsers.PropositionalParser
 import kalkulierbar.parsers.PropositionalSequentParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 import kalkulierbar.sequentCalculus.GenericSequentCalculus
-import kalkulierbar.sequentCalculus.GenericSequentCalculusState
-import kalkulierbar.sequentCalculus.SequentCalculusMove
 import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
 import kalkulierbar.sequentCalculus.*
-
+import kalkulierbar.sequentCalculus.moveImplementations.*
 import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
 
 class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, Unit>() {
 
-    private val serializer = Json(context = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
+    private val serializer = Json(context = LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
 
     override val identifier = "psc"
 
@@ -53,10 +48,6 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
             if (!node.isClosed) {
                 return CloseMessage(false, "Not all branches of the proof tree are closed.")
             }
-            // if (node is Leaf) {
-            //     if (node.leftFormula.size != 0 || node.rightFormula.size != 0) {
-            //     }
-            // }
         }
         
         return CloseMessage(true, "The proof is closed and valid in propositional Logic")
