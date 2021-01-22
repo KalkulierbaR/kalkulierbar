@@ -32,16 +32,21 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: St
     if (formula !is UniversalQuantifier)
         throw IllegalMove("The rule allRight must be applied on a 'UniversalQuantifier'");
 
+    //No need to check if swapVariable is already in use for rule allLeft
+
+    //When swapVariable is not defined try to automatically find a fitting variableName
     if (swapVariable == null)
         throw IllegalMove("Not yet implemented")
 
+    //The newFormula which will be added to the left side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone();
     
+    //Replace all occurances of the quantifiedVariable with swapVariable
     val replaceWith = Constant(swapVariable);
     val map = mapOf(formula.varName to replaceWith)
-    
     newFormula = LogicNodeVariableInstantiator.transform(newFormula, map);
 
+    //Add newFormula to the left hand side of the sequence
     var newLeftFormulas = node.leftFormulas.toMutableList();
     newLeftFormulas.add(newFormula);
     newLeftFormulas = newLeftFormulas.distinct().toMutableList();
@@ -62,6 +67,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: S
     if (formula !is UniversalQuantifier)
         throw IllegalMove("The rule allRight must be applied on a 'UniversalQuantifier'");
 
+    //When swapVariable is not defined try to automatically find a fitting variableName
     if (swapVariable == null)
         throw IllegalMove("Not yet implemented")
 
@@ -69,13 +75,15 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: S
     if (checkIfVariableNameIsAlreadyInUse(node, swapVariable))
         throw IllegalMove("Can't instatiate with an already existing identifier");
 
+    //The newFormula which will be added to the right side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone();
     
+    //Replace all occurances of the quantifiedVariable with swapVariable
     val replaceWith = Constant(swapVariable);
     val map = mapOf(formula.varName to replaceWith)
-    
     newFormula = LogicNodeVariableInstantiator.transform(newFormula, map);
 
+    //Add newFormula to the right hand side of the sequence
     var newRightFormulas = node.rightFormulas.toMutableList();
     newRightFormulas.add(newFormula);
     newRightFormulas = newRightFormulas.distinct().toMutableList();
