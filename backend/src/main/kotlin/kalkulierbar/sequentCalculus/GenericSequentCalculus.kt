@@ -79,6 +79,6 @@ class TreeNode(
     }
 
     override fun toString(): String {
-        return leftFormulas.joinToString() + " |- " + rightFormulas.joinToString();
+        return leftFormulas.joinToString() + " ⊢ " + rightFormulas.joinToString();
     }
 }

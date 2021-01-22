@@ -44,7 +44,7 @@ fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     val formula = leaf.rightFormulas.get(listIndex)
 
     if (formula !is Not)
-        throw IllegalMove("The rule notRight must be applied on '!'")
+        throw IllegalMove("The rule notRight must be applied on '¬'")
         
     val newLeftFormula = leaf.leftFormulas.toMutableList();
     newLeftFormula.add(formula.child);
@@ -66,7 +66,7 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val formula = leaf.leftFormulas.get(listIndex)
 
     if (formula !is Not)
-        throw IllegalMove("The rule notLeft must be applied on '!'")
+        throw IllegalMove("The rule notLeft must be applied on '¬'")
         
     val newLeftFormula = leaf.leftFormulas.toMutableList();
     newLeftFormula.removeAt(listIndex);
@@ -87,7 +87,7 @@ fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val formula = leaf.rightFormulas.get(listIndex);
 
     if (formula !is Or)
-        throw IllegalMove("The rule orRight must be applied on '|' ")
+        throw IllegalMove("The rule orRight must be applied on '∨' ")
 
     val newLeftFormula = leaf.leftFormulas.toMutableList();
     val newRightFormula = leaf.rightFormulas.toMutableList();
@@ -108,7 +108,7 @@ fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int)
     val formula = leaf.leftFormulas.get(listIndex);
 
     if (formula !is Or)
-        throw IllegalMove("The rule orLeft must be applied on a '|' ")
+        throw IllegalMove("The rule orLeft must be applied on a '∨' ")
 
     val newLeftFormulaOnLeftChild = leaf.leftFormulas.toMutableList();
     newLeftFormulaOnLeftChild.removeAt(listIndex)
@@ -137,7 +137,7 @@ fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     val formula = leaf.rightFormulas.get(listIndex);
 
     if (formula !is And)
-        throw IllegalMove("The rule andRight must be applied on a '&'");
+        throw IllegalMove("The rule andRight must be applied on a '∧'");
 
 
     val newLeftFormulaOnLeftChild = leaf.leftFormulas.toMutableList();
@@ -166,7 +166,7 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val formula = leaf.leftFormulas.get(listIndex);
 
     if (formula !is And)
-        throw IllegalMove("The rule andLeft must be applied on a '&'");
+        throw IllegalMove("The rule andLeft must be applied on a '∧'");
 
     val newLeftFormula = leaf.leftFormulas.toMutableList();
     newLeftFormula.removeAt(listIndex);

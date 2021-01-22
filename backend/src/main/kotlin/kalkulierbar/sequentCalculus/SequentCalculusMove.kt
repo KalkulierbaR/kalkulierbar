@@ -18,6 +18,10 @@ val SequentCalculusMoveModule = SerializersModule {
         OrLeft::class with OrLeft.serializer()
         AndRight::class with AndRight.serializer()
         AndLeft::class with AndLeft.serializer()
+        AllRight::class with AllRight.serializer()
+        AllLeft::class with AllLeft.serializer()
+        ExRight::class with ExRight.serializer()
+        ExLeft::class with ExLeft.serializer()
         UndoMove::class with UndoMove.serializer()
     }
 }
@@ -83,5 +87,41 @@ class AndLeft(
 @Serializable
 @SerialName("undo")
 class UndoMove : SequentCalculusMove() {
-    override fun toString() = "(undo)"
+}
+
+//FOSC MOVES
+@Serializable
+@SerialName("allLeft")
+class AllLeft(
+    val nodeID: Int,
+    val listIndex: Int,
+    val swapVariable: String?
+) : SequentCalculusMove() {
+}
+
+@Serializable
+@SerialName("allRight")
+class AllRight(
+    val nodeID: Int,
+    val listIndex: Int,
+    val swapVariable: String?
+) : SequentCalculusMove() {
+}
+
+@Serializable
+@SerialName("exLeft")
+class ExLeft(
+    val nodeID: Int,
+    val listIndex: Int,
+    val swapVariable: String?
+) : SequentCalculusMove() {
+}
+
+@Serializable
+@SerialName("exRight")
+class ExRight(
+    val nodeID: Int,
+    val listIndex: Int,
+    val swapVariable: String?
+) : SequentCalculusMove() {
 }

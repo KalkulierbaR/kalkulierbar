@@ -15,6 +15,7 @@ import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
 import kalkulierbar.sequentCalculus.GenericSequentCalculus
 import kalkulierbar.sequentCalculus.*
 import kalkulierbar.sequentCalculus.moveImplementations.*
+import kalkulierbar.sequentCalculus.fosc.moveImplementations.*
 import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
 
 class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove, Unit>() {
@@ -40,6 +41,8 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
             is OrLeft -> applyOrLeft(state, move.nodeID, move.listIndex) as FOSCState
             is AndRight -> applyAndRight(state, move.nodeID, move.listIndex) as FOSCState
             is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex) as FOSCState
+            is AllRight -> applyAllRight(state, move.nodeID, move.listIndex, move.swapVariable)
+            is AllLeft -> applyAllLeft(state, move.nodeID, move.listIndex, move.swapVariable)
             is UndoMove -> applyUndo(state) as FOSCState
             else -> throw IllegalMove("Unknown move")
         }
@@ -52,7 +55,7 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
             }
         }
         
-        return CloseMessage(true, "The proof is closed and valid in propositional Logic")
+        return CloseMessage(true, "The proof is closed and valid in First Order Logic")
     }
 
     /**
