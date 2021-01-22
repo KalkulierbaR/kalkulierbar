@@ -3,9 +3,9 @@ package kalkulierbar.psc
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.Var
 import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.psc.PSC
-import kalkulierbar.psc.PSCMove
-import kalkulierbar.psc.PSCState
+import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.sequentCalculus.*
+import kalkulierbar.sequentCalculus.psc.PSCState
 import kotlin.test.*
 
 class TestAndLeft {
@@ -25,11 +25,11 @@ class TestAndLeft {
 
 
 
-        assertTrue(node1.leftFormula[0].synEq(formula1))
-        assertTrue(node1.leftFormula[1].synEq(formula2))
+        assertTrue(node1.leftFormulas[0].synEq(formula1))
+        assertTrue(node1.leftFormulas[1].synEq(formula2))
 
-        assertTrue(node1.leftFormula[0] is Var)
-        assertTrue(node1.leftFormula[1] is Var)
+        assertTrue(node1.leftFormulas[0] is Var)
+        assertTrue(node1.leftFormulas[1] is Var)
 
     }
     fun testParent(){
@@ -39,7 +39,7 @@ class TestAndLeft {
 
         state = instance.applyMoveOnState(state, OrRight(0,0))
 
-        assertTrue(state.tree[0] is OneChildNode)
+        assertTrue(state.tree[0].children.size == 1)
         assertEquals(state.tree[1].parent, 0)
     }
 

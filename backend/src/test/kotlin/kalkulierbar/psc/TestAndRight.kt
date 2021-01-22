@@ -2,9 +2,8 @@ package kalkulierbar.psc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.psc.PSC
-import kalkulierbar.psc.PSCMove
-import kalkulierbar.psc.PSCState
+import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.sequentCalculus.*
 import kotlin.test.assertEquals
 import kotlin.test.*
 
@@ -28,8 +27,8 @@ class TestAndRight {
         val node2 = state.tree[state.tree.size - 1]
 
 
-        assertTrue(node1.rightFormula[0].synEq(formula1))
-        assertTrue(node2.rightFormula[0].synEq(formula2))
+        assertTrue(node1.rightFormulas[0].synEq(formula1))
+        assertTrue(node2.rightFormulas[0].synEq(formula2))
 
         assertEquals(treesize + 2, state.tree.size)
     }
@@ -44,7 +43,7 @@ class TestAndRight {
         val node1 = state.tree[state.tree.size - 2]
 
         assertNotNull(node1.parent)
-        assertTrue(state.tree[node1.parent!!] is TwoChildNode)
+        assertTrue(state.tree[node1.parent!!].children.size == 2)
     }
 
     fun testWrongNode() {

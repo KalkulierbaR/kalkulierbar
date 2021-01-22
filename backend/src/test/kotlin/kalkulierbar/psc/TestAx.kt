@@ -2,9 +2,8 @@ package kalkulierbar.psc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.psc.PSC
-import kalkulierbar.psc.PSCMove
-import kalkulierbar.psc.PSCState
+import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.sequentCalculus.*
 import kotlin.test.assertEquals
 import kotlin.test.*
 
@@ -22,10 +21,8 @@ class TestAx {
 
         state = instance.applyMoveOnState(state, Ax(2))
 
-        val node = state.tree[state.tree.size -1]
 
-        assertTrue(node.leftFormula.size == 0)
-        assertTrue(node.rightFormula.size == 0)
+        state.tree.forEach { assertTrue(it.isClosed) }
     }
 
     fun testParent() {
@@ -39,7 +36,7 @@ class TestAx {
         val node = state.tree[state.tree.size -1]
 
         assertNotNull(node.parent)
-        assert(state.tree[node.parent!!] is OneChildNode)
+        assert(state.tree[node.parent!!].children.size == 1)
     }
 
     fun testFail(){
