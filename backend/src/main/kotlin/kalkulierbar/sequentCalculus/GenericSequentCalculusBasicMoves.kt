@@ -1,11 +1,7 @@
 package kalkulierbar.sequentCalculus.moveImplementations
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.And
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.UnaryOp
+import kalkulierbar.logic.*
 import java.io.Console
 
 import kalkulierbar.sequentCalculus.GenericSequentCalculusState
@@ -174,6 +170,54 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     newLeftFormula.add(listIndex + 1, formula.rightChild);
     val newRightFormula = leaf.rightFormulas.toMutableList();
     val newLeaf = TreeNode(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList(), AndLeft(nodeID, listIndex));
+    state.tree.add(newLeaf);
+    state.tree[nodeID].children = arrayOf(state.tree.size - 1);
+    return state;
+}
+
+
+fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
+
+    checkLeft(state, nodeID, listIndex)
+
+    var leaf = state.tree[nodeID]
+    val formula = leaf.leftFormulas.get(listIndex);
+
+    if (formula !is Impl)
+        throw IllegalMove("The rule impLeft must be applied on a '->' ")
+    val newLeftFormulaOnLeftChild = leaf.leftFormulas.toMutableList();
+    newLeftFormulaOnLeftChild.removeAt(listIndex);
+    val newRightFormulaOnLeftChild = leaf.rightFormulas.toMutableList();
+    newRightFormulaOnLeftChild.add(formula.leftChild)
+
+    val newLeftFormulaOnRightChild = leaf.leftFormulas.toMutableList();
+    newLeftFormulaOnRightChild.removeAt(listIndex);
+    newLeftFormulaOnRightChild.add(formula.rightChild);
+    val newRightFormulaOnRightChild = leaf.rightFormulas.toMutableList();
+    val newLeftLeaf = TreeNode(nodeID,newLeftFormulaOnLeftChild.distinct().toMutableList(),newRightFormulaOnLeftChild.distinct().toMutableList(),ImpLeft(nodeID, listIndex));
+    val newRightLeaf = TreeNode(nodeID,newLeftFormulaOnRightChild.distinct().toMutableList(),newRightFormulaOnRightChild.distinct().toMutableList(),ImpLeft(nodeID, listIndex));
+
+    state.tree.add(newLeftLeaf);
+    state.tree.add(newRightLeaf);
+    state.tree[nodeID].children = arrayOf(state.tree.size - 2, state.tree.size - 1);
+    return state;
+}
+
+fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
+
+    checkLeft(state, nodeID, listIndex)
+
+    var leaf = state.tree[nodeID];
+    val formula = leaf.rightFormulas.get(listIndex);
+
+    if (formula !is Impl)
+        throw IllegalMove("The rule orLeft must be applied on a '->' ")
+    val newLeftFormula = leaf.leftFormulas.toMutableList();
+    newLeftFormula.add(listIndex+1,formula.leftChild);
+    val newRightFormula = leaf.rightFormulas.toMutableList();
+    newRightFormula.removeAt(listIndex);
+    newRightFormula.add(listIndex,formula.rightChild);
+    val newLeaf = TreeNode(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList(), ImpRight(nodeID, listIndex));
     state.tree.add(newLeaf);
     state.tree[nodeID].children = arrayOf(state.tree.size - 1);
     return state;

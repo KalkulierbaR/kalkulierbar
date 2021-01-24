@@ -18,6 +18,8 @@ val SequentCalculusMoveModule = SerializersModule {
         OrLeft::class with OrLeft.serializer()
         AndRight::class with AndRight.serializer()
         AndLeft::class with AndLeft.serializer()
+        ImpLeft::class with ImpLeft.serializer()
+        ImpRight::class with ImpRight.serializer()
         AllRight::class with AllRight.serializer()
         AllLeft::class with AllLeft.serializer()
         ExRight::class with ExRight.serializer()
@@ -84,6 +86,23 @@ class AndLeft(
     val listIndex: Int
 ) : SequentCalculusMove() {
 }
+
+@Serializable
+@SerialName("impLeft")
+class ImpLeft(
+        val nodeID: Int,
+        val listIndex: Int
+) : SequentCalculusMove() {
+}
+
+@Serializable
+@SerialName("impRight")
+class ImpRight(
+        val nodeID: Int,
+        val listIndex: Int
+) : SequentCalculusMove() {
+}
+
 
 @Serializable
 @SerialName("undo")
