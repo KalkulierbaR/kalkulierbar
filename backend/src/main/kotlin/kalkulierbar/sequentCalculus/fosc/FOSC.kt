@@ -44,6 +44,7 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
             is AllRight -> applyAllRight(state, move.nodeID, move.listIndex, move.swapVariable)
             is AllLeft -> applyAllLeft(state, move.nodeID, move.listIndex, move.swapVariable)
             is UndoMove -> applyUndo(state) as FOSCState
+            is PruneMove -> applyPrune(state, move.nodeID) as FOSCState
             else -> throw IllegalMove("Unknown move")
         }
     }

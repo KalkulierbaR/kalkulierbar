@@ -30,7 +30,7 @@ val GenericSequentCalculusNodeModule = SerializersModule {
 }
 
 interface GenericSequentCalculusNode {
-    val parent: Int?;
+    var parent: Int?;
     var children: Array<Int>;
     val leftFormulas: MutableList<LogicNode>;
     val rightFormulas: MutableList<LogicNode>;
@@ -47,7 +47,7 @@ interface GenericSequentCalculusNode {
 @Serializable
 @SerialName("TreeNode")
 class TreeNode(
-    override val parent: Int?,
+    override var parent: Int?,
     override var children: Array<Int>,
     override val leftFormulas: MutableList<LogicNode>,
     override val rightFormulas: MutableList<LogicNode>,

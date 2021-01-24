@@ -23,6 +23,7 @@ val SequentCalculusMoveModule = SerializersModule {
         ExRight::class with ExRight.serializer()
         ExLeft::class with ExLeft.serializer()
         UndoMove::class with UndoMove.serializer()
+        PruneMove::class with PruneMove.serializer()
     }
 }
 
@@ -87,6 +88,13 @@ class AndLeft(
 @Serializable
 @SerialName("undo")
 class UndoMove : SequentCalculusMove() {
+}
+
+@Serializable
+@SerialName("prune")
+class PruneMove(
+    val nodeID: Int
+) : SequentCalculusMove() {
 }
 
 //FOSC MOVES

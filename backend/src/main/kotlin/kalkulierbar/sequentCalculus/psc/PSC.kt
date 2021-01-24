@@ -39,6 +39,7 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
             is AndRight -> applyAndRight(state, move.nodeID, move.listIndex) as PSCState
             is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex) as PSCState
             is UndoMove -> applyUndo(state) as PSCState
+            is PruneMove -> applyPrune(state, move.nodeID) as PSCState
             else -> throw IllegalMove("Unknown move")
         }
     }

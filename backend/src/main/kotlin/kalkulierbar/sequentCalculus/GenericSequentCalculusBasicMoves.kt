@@ -219,29 +219,25 @@ fun applyUndo(state: GenericSequentCalculusState): GenericSequentCalculusState {
     if(state.tree.size <= 1)
         throw IllegalMove("No move to undo");
 
-    val removedNode = state.tree.removeAt(state.tree.size - 1);
+    val latestNode = state.tree.elementAt(state.tree.size - 1);
 
-    if (!removedNode.isLeaf)
+    if (!latestNode.isLeaf)
         throw IllegalMove("Rules can only be applied on Leaf level.")
 
-    val parentID: Int? = removedNode.parent;
+    val parentID: Int? = latestNode.parent;
 
     val parentNode = state.tree.elementAt(parentID!!);
 
-    if(parentNode.children.size == 1)
-        state.tree[parentID].children = emptyArray<Int>();
-    else if(parentNode.children.size == 2){
-        state.tree.removeAt(state.tree.size - 1);
-        state.tree[parentID].children = emptyArray<Int>();
+    for(i in 0..(parentNode.children.size - 1)){
+        state.tree.removeAt(parentNode.children[i]);
     }
+    state.tree[parentID].children = emptyArray<Int>();
 
-    if(removedNode.lastMove is Ax){
-        var currentNode = parentNode;
-        parentNode.isClosed = false;
-        while(currentNode.parent != null){
-            currentNode = state.tree.elementAt(currentNode.parent!!);
-            currentNode.isClosed = false;
-        }
+    var currentNode = parentNode;
+    parentNode.isClosed = false;
+    while(currentNode.parent != null){
+        currentNode = state.tree.elementAt(currentNode.parent!!);
+        currentNode.isClosed = false;
     }
     return state;
 }
@@ -255,23 +251,35 @@ fun applyPrune(state: GenericSequentCalculusState, nodeID: Int): GenericSequentC
 
     val node = state.tree.elementAt(nodeID);
 
-    for(Int child in node.children){
+    if (node.isLeaf)
+        throw IllegalMove("Nothing to Prune");
+
+    for(child: Int in node.children) {
         applyPrune(state, child);
         state.tree.removeAt(child);
-        for(Int i = 0; i < child; i++){
+        //Update left side of removalNode 
+        for (i in 0..(child - 1)) {
             var currentNode = state.tree.elementAt(i);
-            for(Int child in currentNode.children){
-                if(child > nodeID)
+            
+            for(j in 0..(currentNode.children.size - 1))
+            {               
+                if(currentNode.children[j] > child)
+                    currentNode.children[j] -= 1;
             }
         }
-        for(Int i = child; i < state.tree.size; i++){
+        //Update right side of removalNode
+        for (i in child..(state.tree.size - 1)) {
             var currentNode = state.tree.elementAt(i);
-            for(Int child in currentNode.children){
-        if(child > nodeID)
-    }
+            
+            for(j in 0..(currentNode.children.size - 1))
+            {               
+                currentNode.children[j] -= 1;
+                if(currentNode.parent != null && currentNode.parent!! > child)
+                    currentNode.parent = currentNode.parent!! - 1;
+            }
         }
     }
     node.children = emptyArray<Int>();
-
-    for(Int i = nodeID; i)
+    node.isClosed = false;
+    return state;
 }
