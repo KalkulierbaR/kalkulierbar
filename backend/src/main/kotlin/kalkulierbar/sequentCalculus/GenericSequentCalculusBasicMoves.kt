@@ -234,5 +234,44 @@ fun applyUndo(state: GenericSequentCalculusState): GenericSequentCalculusState {
         state.tree.removeAt(state.tree.size - 1);
         state.tree[parentID].children = emptyArray<Int>();
     }
+
+    if(removedNode.lastMove is Ax){
+        var currentNode = parentNode;
+        parentNode.isClosed = false;
+        while(currentNode.parent != null){
+            currentNode = state.tree.elementAt(currentNode.parent!!);
+            currentNode.isClosed = false;
+        }
+    }
     return state;
+}
+
+fun applyPrune(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalculusState {
+    if (nodeID < 0 || state.tree.size <= nodeID)
+        throw IllegalMove("nodeID out of Bounds");
+
+    if(state.tree.size <= 1)
+        throw IllegalMove("Nothing to Prune");
+
+    val node = state.tree.elementAt(nodeID);
+
+    for(Int child in node.children){
+        applyPrune(state, child);
+        state.tree.removeAt(child);
+        for(Int i = 0; i < child; i++){
+            var currentNode = state.tree.elementAt(i);
+            for(Int child in currentNode.children){
+                if(child > nodeID)
+            }
+        }
+        for(Int i = child; i < state.tree.size; i++){
+            var currentNode = state.tree.elementAt(i);
+            for(Int child in currentNode.children){
+        if(child > nodeID)
+    }
+        }
+    }
+    node.children = emptyArray<Int>();
+
+    for(Int i = nodeID; i)
 }
