@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { PSCTreeLayoutNode } from "../../../../types/calculus/psc";
+import { FormulaTreeLayoutNode, PSCTreeLayoutNode } from "../../../../types/calculus/psc";
 import { SelectNodeOptions } from "../../../../types/calculus/tableaux";
 import { selected } from "../../../svg/rectangle/style.scss";
 import { PSCNode } from "../../../../types/calculus/psc";
@@ -19,12 +19,16 @@ interface Props {
     // The function to call, when user selects a node
     selectNodeCallback: (
         node: PSCTreeLayoutNode,
-        options?: SelectNodeOptions,
+        selectValue?: boolean,
     ) => void;
     // informs the element if the screen is small
     smallScreen: boolean;
     // The id of the selected Rule
     selectedRuleName: string;
+    // The funktion to call, when user selects a Formula
+    selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
+    // The selected index of a formula
+    selectedListIndex?: string;
 }
 
 const PSCTreeView: preact.FunctionalComponent<Props> = ({
@@ -32,6 +36,9 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
     selectNodeCallback,
     selectedNodeId,
     selectedRuleName,
+    selectFormulaCallback,
+    selectedListIndex,
+    
 }) => {
     const { root, height, width: treeWidth } = pscTreeLayout(nodes);
 
@@ -45,13 +52,14 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
             (t) => t.data.id === selectedNodeId,
             (t) => t,
         )!;
-        selectNodeCallback(node.data,{ignoreClause:true});
+        selectNodeCallback(node.data,undefined);
 
         const{x,y}=node;
         return [treeWidth/2-x,treeHeight/2-y];
 
        
     };
+
 
     return(
         <div class="card">
@@ -74,6 +82,8 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
                                 selectNodeCallback={selectNodeCallback}
                                 zoomFactor={transform.k}
                                 ruleName={selectedRuleName}
+                                selectFormulaCallback={selectFormulaCallback}
+                                selectedListIndex={selectedListIndex}
                             />
                         }
                     </g>

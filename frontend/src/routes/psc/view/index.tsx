@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { Calculus, PropCalculusType } from "../../../types/calculus";
+import { Calculus, PropCalculusType, PSCCalculusType } from "../../../types/calculus";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import OptionList from "../../../components/input/option-list";
 import { DragTransform } from "../../../types/ui";
@@ -8,7 +8,7 @@ import { ruleSetToStringArray } from "../../../util/rule";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { getRuleSet } from "../../../types/calculus/rules";
 import PSCTreeView from "../../../components/calculus/psc/tree"
-import { PSCNode, PSCTreeLayoutNode } from "../../../types/calculus/psc";
+import { FormulaTreeLayoutNode, PSCNode, PSCTreeLayoutNode } from "../../../types/calculus/psc";
 
 import * as style from "./style.scss";
 import { route } from "preact-router";
@@ -20,13 +20,15 @@ import { sendMove } from "../../../util/api";
 import Dialog from "../../../components/dialog";
 
 
-interface Props {}
+interface Props {
+    calculus: PSCCalculusType;
+}
 
-const PSCView: preact.FunctionalComponent<Props> = () => {
+const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
     
     const {
         server,
-        psc: cState,
+        [calculus]: cState,
         smallScreen,
         notificationHandler,
         onChange,
@@ -36,12 +38,16 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
 
     const state = cState;
     if (!state) {
-        route(`/psc`);
+        route(`/${calculus}`);
         return null;
     }
     
     const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
          undefined
+    );
+
+    const [selectedListIndex, setSelectedListIndex] = useState<string | undefined>(
+        undefined
     );
 
     const selectedNode =
@@ -61,14 +67,14 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
             setSelectedRuleId(undefined);
         }else{
             setSelectedRuleId(newRuleId);
-            if(newRuleId !== undefined && selectedNode !== undefined && selectedNode.type === "leaf"){
+            if(newRuleId !== undefined && selectedNode !== undefined && selectedNode.type === "leaf" && selectedListIndex !== undefined){
                 if(newRuleId === 0){
                     sendMove(
-                        server, Calculus.psc, state, {type: "Ax", nodeID: selectedNodeId!}, onChange,notificationHandler,
+                        server, calculus, state, {type: "Ax", nodeID: selectedNodeId!}, onChange,notificationHandler,
                     )
                 } else {
                     sendMove(
-                        server, Calculus.psc, state, {type: ruleOptions.get(newRuleId)!, nodeID: selectedNodeId!, listIndex: 0}, onChange,notificationHandler,
+                        server, calculus, state, {type: ruleOptions.get(newRuleId)!, nodeID: selectedNodeId!, listIndex: parseStringToListIndex(selectedListIndex)}, onChange,notificationHandler,
                     )
                 }
                 setSelectedNodeId(undefined);
@@ -77,37 +83,66 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
             }
         }
     };
+
+    const parseStringToListIndex = (str: string) => {
+        return parseInt(str.substring(1));
+    }
 
     const selectNodeCallback = (
         newNode: PSCTreeLayoutNode,
+        selectValue?: boolean,
     ) => {
+        console.log("seleect Node");
         const newNodeIsLeaf = newNode.type === "leaf";
 
-        if(newNode.id === selectedNodeId){
-            setSelectedNodeId(undefined);
-        }else if(selectedNodeId === undefined) {
-            setSelectedNodeId(newNode.id);
-            if(selectedRuleId !== undefined && newNodeIsLeaf){
-                if(selectedRuleId === 0){
-                    sendMove(
-                        server, Calculus.psc, state, {type: "Ax", nodeID: newNode.id}, onChange,notificationHandler,
-                    )
-                } else {
-                    sendMove(
-                        server, Calculus.psc, state, {type: ruleOptions.get(selectedRuleId)!, nodeID: newNode.id, listIndex: 0}, onChange,notificationHandler,
-                    )
-                }
+        if (selectValue === undefined) {
+            if(newNode.id === selectedNodeId){
                 setSelectedNodeId(undefined);
-                setSelectedRuleId(undefined);
-                
+            }else {
+                setSelectedNodeId(newNode.id);
+                if(selectedRuleId !== undefined && newNodeIsLeaf && selectedListIndex !== undefined){
+                    if(selectedRuleId === 0){
+                        sendMove(
+                            server, calculus, state, {type: "Ax", nodeID: newNode.id}, onChange,notificationHandler,
+                        )
+                    } else {
+                        sendMove(
+                            server, calculus, state, {type: ruleOptions.get(selectedRuleId)!, nodeID: newNode.id, listIndex: parseStringToListIndex(selectedListIndex)}, onChange,notificationHandler,
+                        )
+                    }
+                    setSelectedNodeId(undefined);
+                    setSelectedRuleId(undefined);
+                    
+                }
+            }
+        }else{
+            if (selectValue === true) {
+                setSelectedNodeId(newNode.id);
+            } else {
+                setSelectedNodeId(undefined);
             }
         }
+        
     };
+
+    const selectFormulaCallback = (
+        newFormula: FormulaTreeLayoutNode,
+    ) => {
+        console.log("seleaked Formula");
+        event?.stopPropagation();
+        if(newFormula.id === selectedListIndex){
+            setSelectedListIndex(undefined);
+            setSelectedNodeId(undefined);
+        } else {
+            setSelectedListIndex(newFormula.id);
+        }
+        
+    }
     
     
     return (
         <Fragment>
-            <h2>Propositional Sequent Calculus</h2>
+            <h2>Sequent Calculus View</h2>
 
             <div class={style.view}>
                 {!smallScreen && (
@@ -132,6 +167,8 @@ const PSCView: preact.FunctionalComponent<Props> = () => {
                     selectedNodeId={selectedNodeId}
                     selectedRuleName={selectedRule}
                     selectNodeCallback={selectNodeCallback}
+                    selectFormulaCallback={selectFormulaCallback}
+                    selectedListIndex={selectedListIndex}
                 />
             </div>
 

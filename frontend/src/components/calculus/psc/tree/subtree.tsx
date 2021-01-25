@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { PSCTreeLayoutNode } from "../../../../types/calculus/psc";
+import { FormulaTreeLayoutNode, PSCTreeLayoutNode } from "../../../../types/calculus/psc";
 import { Tree } from "../../../../types/tree";
 import * as style from "./style.scss";
 import PSCTreeNode from "../node";
@@ -7,7 +7,9 @@ import PSCTreeNode from "../node";
 interface Props {
     node: Tree<PSCTreeLayoutNode>;
     selectedNodeId?: number;
-    selectNodeCallback: (n: PSCTreeLayoutNode) => void;
+    selectedListIndex?: string;
+    selectNodeCallback: (n: PSCTreeLayoutNode, selectValue?: boolean) => void;
+    selectFormulaCallback: (f: FormulaTreeLayoutNode) => void;
     zoomFactor: number;
     ruleName: string;
 }
@@ -15,7 +17,9 @@ interface Props {
 export const SubTree: preact.FunctionalComponent<Props> = ({
     node,
     selectNodeCallback,
+    selectFormulaCallback,
     selectedNodeId,
+    selectedListIndex,
     zoomFactor,
     ruleName,
 }) => {
@@ -32,6 +36,8 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
                             selectedNodeId={selectedNodeId}
                             zoomFactor={zoomFactor}
                             ruleName={ruleName}
+                            selectFormulaCallback={selectFormulaCallback}
+                            selectedListIndex={selectedListIndex}
                         />
                     </Fragment>
                 );
@@ -39,9 +45,12 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
             <PSCTreeNode
                 selectNodeCallback={selectNodeCallback}
                 node={node}
+                // selectedNodeId={selectedNodeId}
                 selected={node.data.id === selectedNodeId}
                 zoomFactor={zoomFactor}
                 ruleName={ruleName}
+                selectFormulaCallback={selectFormulaCallback}
+                selectedListIndex={selectedListIndex}
             />
         </g>
     )

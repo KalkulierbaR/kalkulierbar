@@ -22,7 +22,7 @@ interface Props {
     class?: string;
 }
 
-const Rectangle: preact.FunctionalComponent<Props> = ({
+const SmallRec: preact.FunctionalComponent<Props> = ({
     elementRef,
     disabled,
     selected,
@@ -32,14 +32,12 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
 
     useEffect(() => {
         if (!elementRef.current) {
-            return
+            return;
         }
 
         const box = elementRef.current.getBBox();
-        box.width += 16;
-        box.x -= 8;
-        box.height += 8;
-        box.y -= 4;
+        box.width += 4;
+        box.x -= 2;
         setDims(box);
     });
 
@@ -57,8 +55,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
             height={dims.height}
             rx="4"
         />
-        
     );
 };
 
-export default Rectangle;
+export default SmallRec;

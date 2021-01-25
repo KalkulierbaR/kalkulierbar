@@ -23,6 +23,8 @@ export interface FormulaNode {
 
 export type PSCTreeLayoutNode = PSCNode & { id: number};
 
+export type FormulaTreeLayoutNode = FormulaNode & { id: string};
+
 export interface PSCState {
     tree: PSCNode[];
     moveHistory: PSCMove[];

@@ -2,6 +2,7 @@ import {  FormulaNode, PSCNode, PSCTreeLayoutNode } from "../types/calculus/psc"
 import { Tree,TreeLayout } from "../types/tree";
 import { estimateSVGTextWidth } from "./text-width";
 import { tree, treeFind, treeLayout } from "./layout/tree";
+import formula from "../components/input/formula";
 
 export const nodeName = (node: PSCNode) => {
     return formulaNames(node.leftFormula) + " ⊢ " + formulaNames(node.rightFormula);
@@ -19,8 +20,9 @@ export const formulaNames = (formulas: FormulaNode[]) => {
     return result;
 }
 
-const parseFormula = (formula: FormulaNode) => {
+export const parseFormula = (formula: FormulaNode) => {
     let result = "";
+    if(formula === undefined) return result;
     switch (formula.type) {
         case "not": result += "¬" + parseFormula(formula.child!); break;
         case "and": result += "(" + parseFormula(formula.leftChild!) + " ∧ " + parseFormula(formula.rightChild!) + ")";break;
@@ -66,7 +68,7 @@ const pscNodeToTree = (
     } else if (n.type === "oneChildNode") {
         resultTree.children.push(
             pscNodeToTree(nodes, nodes[n.child!], n.child!, y-42)
-        );
+        )
     } else if (n.type === "twoChildNode") {
         resultTree.children.push(
             pscNodeToTree(nodes, nodes[n.leftChild!], n.leftChild!, y-42)

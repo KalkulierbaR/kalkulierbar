@@ -1,0 +1,11 @@
+.active {
+    fill: var(--kbar-accent-light-color);
+}
+
+.disabled {
+    fill: rgb(209, 209, 209);
+}
+
+.selected {
+    fill: var(--kbar-accent-color);
+}

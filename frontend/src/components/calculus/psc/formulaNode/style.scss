@@ -14,7 +14,7 @@
 .rect--selected {
     /* stroke: hsla(0, 0%, 26%, 1);
     stroke-width: 2; */
-    fill: var(--kbar-accent-trans-color);
+    fill: var(--kbar-accent-color);
 }
 
 .text--selected {
@@ -46,8 +46,4 @@
     fill: none;
     stroke: var(--kbar-link-color);
     stroke-width: 2px;
-}
-
-.trans {
-    fill: rgba(255, 0, 0, 0);
 }

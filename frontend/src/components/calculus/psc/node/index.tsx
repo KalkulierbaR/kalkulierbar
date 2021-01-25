@@ -1,13 +1,15 @@
-import { h } from "preact";
-import { useRef } from "preact/hooks";
-import { PSCTreeLayoutNode } from "../../../../types/calculus/psc";
+import { h, RefObject } from "preact";
+import { useRef, useState, useEffect } from "preact/hooks";
+import { FormulaTreeLayoutNode, PSCTreeLayoutNode } from "../../../../types/calculus/psc";
 import { LayoutItem } from "../../../../types/layout";
 import { classMap } from "../../../../util/class-map";
 import Rectangle from "../../../svg/rectangle";
+import SmallRec from "../../../svg/SmallRec";
 import { nodeName, pscTreeLayout } from "../../../../util/psc";
 import { estimateSVGTextWidth } from "../../../../util/text-width";
 
 import * as style from "./style.scss";
+import HorizontalList from "../../../svg/horizontalList";
 
 
 
@@ -19,18 +21,33 @@ interface Props {
     
     selected: boolean;
     
-    selectNodeCallback: (node:PSCTreeLayoutNode)=> void;
+    selectNodeCallback: (node:PSCTreeLayoutNode, selectValue?: boolean)=> void;
+
+    selectedListIndex?: string;
+
+    selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
 
     zoomFactor: number;
 
     ruleName: string;
 }
 
-const lineUnderNode = (node: LayoutItem<PSCTreeLayoutNode>) => {
+const lineUnderNode = (textRef: RefObject<SVGTextElement>, node:LayoutItem<PSCTreeLayoutNode>) => {
     if(node.data.parent !== null){
+        const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
-        const width = estimateSVGTextWidth(nodeName(node.data));
+    useEffect(() => {
+        if (!textRef.current) {
+            return
+        }
 
+        const box = textRef.current.getBBox();
+        box.height += 8;
+        box.y -= 4;
+        setDims(box);
+    });
+
+        const width = dims.width;
         return (
             <line
                 class={style.link}
@@ -81,7 +98,9 @@ const textNextToLine = (node: LayoutItem<PSCTreeLayoutNode>,ruleName: string) =>
 const PSCTreeNode: preact.FunctionalComponent<Props> = ({
     node,
     selected,
+    selectedListIndex,
     selectNodeCallback,
+    selectFormulaCallback,
     zoomFactor,
     ruleName,
 }) => {
@@ -104,31 +123,47 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
         <g
             onClick={handleClick}
         >
+            <text
+                    ref={textRef}
+                    class={style.trans}
+                    text-anchor="middle"
+                    x={node.x}
+                    y={node.y}
+                >
+                    {
+                        nodeName(node.data)
+                    }
+                </text>
             <Rectangle
                 elementRef={textRef}
-                disabled={node.data.isClosed}
+                disabled={true}
                 selected={selected}
-            />
-            <text
-                ref={textRef}
-                text-anchor="middle"
                 class={classMap({
-                    [style.textSelected]: selected,
-                    [style.textClosed]: node.data.isClosed,
-                })}
-                x={node.x}
-                y={node.y}
-            >
-                {nodeName(node.data)}
-            </text>
+                    [style.node]: !selected,
+                    [style.rectSelected]: selected,})}
+            />
+            <g>
+                
+                <HorizontalList
+                    textRef={textRef}
+                    node={node}
+                    leftFormulars={node.data.leftFormula}
+                    rightFormulars={node.data.rightFormula}
+                    selected={selected}
+                    selectNodeCallback={selectNodeCallback}
+                    selectFormulaCallback={selectFormulaCallback}
+                    selectedListIndex={selectedListIndex}
+                />
+            
             {
-                lineUnderNode(node)
+                lineUnderNode(textRef,node)
             }
             {      
                 textNextToLine(node,ruleName)
             }
-            
+            </g>
         </g>
+        
     )
 }
 

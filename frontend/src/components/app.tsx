@@ -176,7 +176,7 @@ const App: preact.FunctionalComponent = () => {
                         calculus = {Calculus.fosc}
                         />
                     <PSCView
-                        path={`/${Calculus.fosc}`}
+                        path={`/${Calculus.fosc}/view`}
                         calculus={Calculus.fosc}
                     />
                     <Page404 default={true} />
