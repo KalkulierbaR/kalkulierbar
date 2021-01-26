@@ -205,15 +205,15 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
 
 fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
 
-    checkLeft(state, nodeID, listIndex)
+    checkRight(state, nodeID, listIndex)
 
     var leaf = state.tree[nodeID];
     val formula = leaf.rightFormulas.get(listIndex);
 
     if (formula !is Impl)
-        throw IllegalMove("The rule orLeft must be applied on a '->' ")
+        throw IllegalMove("The rule ImpRight must be applied on a '->' ")
     val newLeftFormula = leaf.leftFormulas.toMutableList();
-    newLeftFormula.add(listIndex+1,formula.leftChild);
+    newLeftFormula.add(formula.leftChild);
     val newRightFormula = leaf.rightFormulas.toMutableList();
     newRightFormula.removeAt(listIndex);
     newRightFormula.add(listIndex,formula.rightChild);
