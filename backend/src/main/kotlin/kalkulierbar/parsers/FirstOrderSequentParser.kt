@@ -9,12 +9,12 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
-import kalkulierbar.sequentCalculus.psc.PSCState;
+import kalkulierbar.sequentCalculus.fosc.FOSCState;
 
 @Suppress("TooManyFunctions")
-open class PropositionalSequentParser {
+open class FirstOrderSequentParser {
 
-    open fun parse(formula: String): PSCState {
+    open fun parse(formula: String): FOSCState {
         val sides = formula.split("|-") 
         
         if (sides.size > 2) {
@@ -30,13 +30,13 @@ open class PropositionalSequentParser {
             val leftFormulas = mutableListOf<LogicNode>();
             val rightFormulas = mutableListOf<LogicNode>();
 
-            val leftArray = sides[0].split(",");
-            val rightArray = sides[1].split(",");
+            val leftArray = this.splitToFormulas(sides[0]);
+            val rightArray = this.splitToFormulas(sides[1]);
 
             var currentIndex = 0;
             for (strIndex in leftArray.indices) {
                 try {
-                    leftFormulas.add(PropositionalParser().parse(leftArray[strIndex], currentIndex))
+                    leftFormulas.add(FirstOrderParser().parse(leftArray[strIndex], currentIndex))
                 } catch(e: EmptyFormulaException) {
 
                 }
@@ -48,7 +48,7 @@ open class PropositionalSequentParser {
             currentIndex += 2;
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(PropositionalParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(FirstOrderParser().parse(rightArray[strIndex], currentIndex))
                 } catch(e: EmptyFormulaException) {
                     
                 }
@@ -58,18 +58,18 @@ open class PropositionalSequentParser {
                 }
             }
 
-            return PSCState(leftFormulas, rightFormulas);
+            return FOSCState(leftFormulas, rightFormulas);
         }
         else {
             val leftFormulas = mutableListOf<LogicNode>();
             val rightFormulas = mutableListOf<LogicNode>();
 
-            val rightArray = sides[0].split(",");
+            val rightArray = this.splitToFormulas(sides[0]);
 
             var currentIndex = 0;
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(PropositionalParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(FirstOrderParser().parse(rightArray[strIndex], currentIndex))
                 } catch(e: EmptyFormulaException) {
 
                 }
@@ -79,7 +79,33 @@ open class PropositionalSequentParser {
                 }
             }
             
-            return PSCState(leftFormulas, rightFormulas);
+            return FOSCState(leftFormulas, rightFormulas);
         }
+    }
+
+    private fun splitToFormulas(str: String): List<String> {
+        val foundFormulas = mutableListOf<String>();
+        val it = str.iterator();
+
+        var openParentheses = 0;
+        var startOfFormula = 0;
+        
+        for ((index, value) in it.withIndex()) {
+            if (value == '(')
+                openParentheses++;
+            if (value == ')')
+                openParentheses--;
+            
+            if (openParentheses != 0)
+                continue;
+
+            if (value == ',') {
+                foundFormulas.add(str.subSequence(startOfFormula, index).toString());
+                startOfFormula = index + 1;
+            }
+        }
+        foundFormulas.add(str.subSequence(startOfFormula, str.length).toString());
+        
+        return foundFormulas;
     }
 }

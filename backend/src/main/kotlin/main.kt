@@ -14,7 +14,8 @@ import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.StateKeeper
-import kalkulierbar.psc.PSC
+import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.sequentCalculus.fosc.FOSC
 
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
@@ -24,7 +25,8 @@ val endpoints: Set<Calculus> = setOf<Calculus>(
         FirstOrderResolution(),
         DPLL(),
         NonClausalTableaux(),
-        PSC()
+        PSC(),
+        FOSC()
 )
 
 fun main(args: Array<String>) {

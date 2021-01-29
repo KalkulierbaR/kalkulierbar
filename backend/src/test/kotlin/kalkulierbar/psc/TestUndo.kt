@@ -1,9 +1,8 @@
 package kalkulierbar.psc
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.psc.PSC
-import kalkulierbar.psc.PSCMove
-import kalkulierbar.psc.PSCState
+import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.sequentCalculus.*
 import kotlin.test.assertEquals
 import kotlin.test.Test
 import kotlin.test.assertEquals
