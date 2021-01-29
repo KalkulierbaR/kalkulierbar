@@ -67,19 +67,19 @@ const textNextToLine = (node: LayoutItem<PSCTreeLayoutNode>,ruleName: string) =>
     const width = estimateSVGTextWidth(nodeName(node.data));
     let text: string = "";
 
-    if(ruleName == "notRight"){
+    if(ruleName === "notRight"){
         text="¬R";
-    }else if (ruleName =="notLeft"){
+    }else if (ruleName ==="notLeft"){
         text="¬L";
-    }else if (ruleName == "andRight") {
+    }else if (ruleName === "andRight") {
         text = "∧R";
-    }else if(ruleName == "andLeft"){
+    }else if(ruleName === "andLeft"){
         text = "∧L";
-    }else if (ruleName == "orRight") {
+    }else if (ruleName === "orRight") {
         text = "∨R";
-    }else if (ruleName == "orLeft") {
+    }else if (ruleName === "orLeft") {
         text = "∨L";
-    }else if (ruleName == "Ax") {
+    }else if (ruleName === "Ax") {
         text = "Ax";
     }
 
@@ -87,9 +87,7 @@ const textNextToLine = (node: LayoutItem<PSCTreeLayoutNode>,ruleName: string) =>
         <text
             x={node.x + width + 20}
             y={node.y + 15}
-        >
-            
-        </text>
+        />
     )
     }
     return;
@@ -107,7 +105,7 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
     const textRef = useRef<SVGTextElement>();
     
     // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
-    const nodeIsClickable = true;
+    const nodeIsClickable = !node.data.isClosed;
 
     /**
      * Handle the onClick event of the node
@@ -118,6 +116,33 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
             selectNodeCallback(node.data);
         }
     };
+
+    if(node.data.leftFormulas.length === 0 && node.data.rightFormulas.length === 0 && node.data.isClosed ){
+        return (
+            <g>
+                <text
+                    ref={textRef}
+                    class={style.trans}
+                    text-anchor="middle"
+                    x={node.x}
+                    y={node.y}
+                >
+                    {
+                        nodeName(node.data)
+                    }
+                </text>
+                <g>
+                    {
+                         lineUnderNode(textRef,node)
+                    }   
+                    {      
+                        textNextToLine(node, node.data.lastMove!.type.toString())
+                    }
+                </g>
+            </g>
+
+        )
+    }
 
     return (
         <g
@@ -147,8 +172,8 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
                 <HorizontalList
                     textRef={textRef}
                     node={node}
-                    leftFormulars={node.data.leftFormula}
-                    rightFormulars={node.data.rightFormula}
+                    leftFormulas={node.data.leftFormulas}
+                    rightFormulas={node.data.rightFormulas}
                     selected={selected}
                     selectNodeCallback={selectNodeCallback}
                     selectFormulaCallback={selectFormulaCallback}

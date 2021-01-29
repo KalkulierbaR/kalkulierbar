@@ -15,11 +15,11 @@ interface Props
     /**
      * The Formulars to put in the left side
      */
-    leftFormulars: FormulaNode[];
+    leftFormulas: FormulaNode[];
     /**
      * The Formulars to put in the right side
      */
-    rightFormulars: FormulaNode[];
+    rightFormulas: FormulaNode[];
     /**
      * The Node the list will be inside
      */
@@ -50,8 +50,9 @@ const NODE_PUFFER = 16;
 
 /**
  * Draws a Comma at the given coordinates 
- * @param x the x coordinate on which the comma is drawn
- * @param y the y coordinate on which the comma is drawn
+ * @param {number} x the x coordinate on which the comma is drawn
+ * @param {number} y the y coordinate on which the comma is drawn
+ * @returns {any} HTML
  */
 const drawComma = (x: number, y: number) => {
     return (
@@ -66,10 +67,15 @@ const drawComma = (x: number, y: number) => {
 }
 /**
  * Draws the Formula for the given parameters
- * @param formula the FormulaNode which will be drawn by the method
- * @param node the big node in which the formula is drawn
- * @param selected the parameter which tell if the current node is selected or not 
- * @param xCoord the x coordinate in which the Formula is drawn
+ * @param {FormulaTreeLayoutNode} formula the FormulaNode which will be drawn by the method
+ * @param {LayoutItem<PSCTreeLayoutNode>} node the big node in which the formula is drawn
+ * @param {string | undefined} selectedListIndex string in the pattern of (r, l)[0-9]* indicating the side of the formula and its index
+ * @param {number} xCoord the x coordinate in which the Formula is drawn
+ * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
+ * @param {Function<PSCTreeLayoutNode>} selectNodeCallback KEKW
+ * @param {boolean} selected the parameter which tell if the current node is selected or not 
+ * @param {boolean} left shows if formula is on the left
+ * @returns {any} HTML
  */
 const drawFormula = (
     formula: FormulaTreeLayoutNode, 
@@ -97,8 +103,9 @@ const drawFormula = (
 
 /**
  * Draws the Seperator between the right and left Formulas 
- * @param x the x coordinate on which the seperator is drawn
- * @param y the y coordinate on which the seperator is drawn
+ * @param {number}x the x coordinate on which the seperator is drawn
+ * @param {number}y the y coordinate on which the seperator is drawn
+ * @returns {any} HTML
  */
 const drawSeperator = (x: number, y: number) => {
     return (
@@ -115,10 +122,15 @@ const drawSeperator = (x: number, y: number) => {
 
 /**
  * Creates an array which contains the htmlCode for the given Sequence. (formulas, commas and the sequenceSeperator)
- * @param leftFormulas the formulas on the left hand side of the sequence
- * @param rightFormulas the formulas on the right hand side of the sequence
- * @param node the overlaying node in which the sequence is to be drawn
- * @param selected I dont know what this is for..........................................................................................................................................
+ * @param {FormulaNode[]}leftFormulas the formulas on the left hand side of the sequence
+ * @param {FormulaNode[]}rightFormulas the formulas on the right hand side of the sequence
+ * @param {LayoutItem<PSCTreeLayoutNode>}node the overlaying node in which the sequence is to be drawn
+ * @param {string | undefined} selectedListIndex index
+ * @param {number} dimsX dimension
+ * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
+ * @param {Function<PSCTreeLayoutNode>} selectNodeCallback KEKW
+ * @param {boolean}selected I dont know what this is for..........................................................................................................................................
+ * @returns {any} HTML
  */
 const getSequence = (
     leftFormulas: FormulaNode[],
@@ -149,9 +161,9 @@ const getSequence = (
 
     totalSize = dimsX + NODE_PUFFER / 2;
 
-    let htmlArray: any[] = [];
+    const htmlArray: any[] = [];
         leftFormulas.forEach((elem, index) => {
-        let formulaLayoutNode: FormulaTreeLayoutNode = {...elem, id: "l" + index.toString()};
+        const formulaLayoutNode: FormulaTreeLayoutNode = {...elem, id: "l" + index.toString()};
         htmlArray.push(drawFormula(formulaLayoutNode, node, selectedListIndex, totalSize, selectFormulaCallback, selectNodeCallback,selected,true))
         totalSize += estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if(index < leftFormulas.length - 1){
@@ -165,7 +177,7 @@ const getSequence = (
     totalSize += SEPERATOR_SPACING;
     
     rightFormulas.forEach((elem, index) => {
-        let formulaLayoutNode: FormulaTreeLayoutNode = {...elem, id: "r" + index.toString()};
+        const formulaLayoutNode: FormulaTreeLayoutNode = {...elem, id: "r" + index.toString()};
         htmlArray.push(drawFormula(formulaLayoutNode, node, selectedListIndex, totalSize, selectFormulaCallback, selectNodeCallback,selected,false))
         totalSize += estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if(index < rightFormulas.length - 1){
@@ -181,33 +193,16 @@ const getSequence = (
 const formulaWidth = (formulas : FormulaNode[]) => {
     let totalSize = 0;
     formulas.forEach(elem => {
-        let elemSize = estimateSVGTextWidth(parseFormula(elem)) + NODE_SPACING;        
+        const elemSize = estimateSVGTextWidth(parseFormula(elem)) + NODE_SPACING;        
         totalSize += elemSize;
     })
     return totalSize;
 }
 
-//const drawNodes = (formulas: FormulaNode[], writePos : number) => { 
-//    if(formulas.length == 0)
-//        return;
-//    FormulaNode()
-//        return(
-//            <g>
-//            <FormulaTreeNode
-//                formula={el.formula}
-//                node={node}
-//                xCord={el.xCoord}
-//                selected={selected}
-//            />
-//            drawNode(formulas);
-//            </g>
-//        );
-//}
-
 const horizontalList: preact.FunctionalComponent<Props> = ({
     textRef,
-    leftFormulars,
-    rightFormulars,
+    leftFormulas,
+    rightFormulas,
     node,
     selected,
     selectFormulaCallback,
@@ -236,57 +231,9 @@ const horizontalList: preact.FunctionalComponent<Props> = ({
         <g>
             
             {
-                getSequence(leftFormulars, rightFormulars, node, selectedListIndex, dims.x,selectFormulaCallback,selectNodeCallback,selected).map((el) => (
+                getSequence(leftFormulas, rightFormulas, node, selectedListIndex, dims.x,selectFormulaCallback,selectNodeCallback,selected).map((el) => (
                     el
                 ))
-
-                // extendNodesWithXCoords(leftFormulars).map((el, index) => (
-                //     <g>
-                //         <FormulaTreeNode
-                //             formula={el.formula}
-                //             node={node}
-                //             xCord={el.xCoord + dims.x}
-                //             selected={selected}
-                //         />
-                //     </g>
-                // ))
-                // leftFormulars.map((el,index) => (
-                //     <g>
-                //         <FormulaTreeNode
-                //             formula={el}
-                //             node={node}
-                //             xCord={sizeToIndex(index,leftFormulars,rightFormulars,estimatedWidth,dims.x,true) - (medianXCord - dims.x - dims.width/2)}
-                //             selected={selected}
-                //         />
-                //         {
-                //             drawCommaIfNeeded(index,leftFormulars,sizeToIndex(index,leftFormulars,rightFormulars,estimatedWidth,dims.x,true) - (medianXCord - dims.x - dims.width/2),node.y)
-                //         }
-                        
-                //     </g>
-                // ))
-            }
-            
-            {
-                /*
-                drawSep(leftFormulars,rightFormulars,sizeToIndex(leftFormulars.length - 1,leftFormulars,rightFormulars,estimatedWidth,dims.x,true)- (medianXCord - dims.x - dims.width/2),node.y)
-                */
-            }
-            {
-                /*
-                rightFormulars.map((el,index) => (
-                    <g>
-                        <FormulaTreeNode
-                            formula={el}
-                            node={node}
-                            xCord={sizeToIndex(index,leftFormulars,rightFormulars,estimatedWidth,dims.x,false) - (medianXCord - dims.x - dims.width/2)}
-                            selected={selected}
-                        />
-                        {
-                            drawCommaIfNeeded(index,rightFormulars,sizeToIndex(index,leftFormulars,rightFormulars,estimatedWidth,dims.x,false) - (medianXCord - dims.x - dims.width/2),node.y)
-                        } 
-                    </g>
-                ))
-                */
             }
         </g>
     );

@@ -34,7 +34,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
         onChange,
     } = useAppState();
 
-    let selectedRule: string = "";
+    const selectedRule: string = "";
 
     const state = cState;
     if (!state) {
@@ -67,7 +67,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
             setSelectedRuleId(undefined);
         }else{
             setSelectedRuleId(newRuleId);
-            if(newRuleId !== undefined && selectedNode !== undefined && selectedNode.type === "leaf" && selectedListIndex !== undefined){
+            if(newRuleId !== undefined && selectedNode !== undefined && selectedNode.children.length === 0 && selectedListIndex !== undefined){
                 if(newRuleId === 0){
                     sendMove(
                         server, calculus, state, {type: "Ax", nodeID: selectedNodeId!}, onChange,notificationHandler,
@@ -92,15 +92,12 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
         newNode: PSCTreeLayoutNode,
         selectValue?: boolean,
     ) => {
-        console.log("seleect Node");
-        const newNodeIsLeaf = newNode.type === "leaf";
-
         if (selectValue === undefined) {
             if(newNode.id === selectedNodeId){
                 setSelectedNodeId(undefined);
             }else {
                 setSelectedNodeId(newNode.id);
-                if(selectedRuleId !== undefined && newNodeIsLeaf && selectedListIndex !== undefined){
+                if(selectedRuleId !== undefined && newNode.children.length === 0 && selectedListIndex !== undefined){
                     if(selectedRuleId === 0){
                         sendMove(
                             server, calculus, state, {type: "Ax", nodeID: newNode.id}, onChange,notificationHandler,
@@ -128,7 +125,6 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
     const selectFormulaCallback = (
         newFormula: FormulaTreeLayoutNode,
     ) => {
-        console.log("seleaked Formula");
         event?.stopPropagation();
         if(newFormula.id === selectedListIndex){
             setSelectedListIndex(undefined);
@@ -192,6 +188,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                 state={state}
                 selectedNodeId={selectedNodeId}
                 ruleCallback={ () => setShowRuleDialog(true)}
+                pruneCallback={ () => sendMove(server,calculus,state,{type: "prune", nodeID: selectedNodeId!},onChange,notificationHandler)}
             />
             <TutorialDialog calculus={Calculus.psc} />
 

@@ -290,6 +290,8 @@ fun applyPrune(state: GenericSequentCalculusState, nodeID: Int): GenericSequentC
     if (nodeID < 0 || state.tree.size <= nodeID)
         throw IllegalMove("nodeID out of Bounds");
 
+    println(state.tree.toString());
+    println(nodeID);
     if(state.tree.size <= 1)
         throw IllegalMove("Nothing to Prune");
 
@@ -299,7 +301,11 @@ fun applyPrune(state: GenericSequentCalculusState, nodeID: Int): GenericSequentC
         throw IllegalMove("Nothing to Prune");
 
     for(child: Int in node.children) {
-        applyPrune(state, child);
+        try {
+            applyPrune(state, child);
+        } catch(e: IllegalMove) {
+
+        }
         state.tree.removeAt(child);
         //Update left side of removalNode 
         for (i in 0..(child - 1)) {

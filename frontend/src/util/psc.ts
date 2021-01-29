@@ -2,10 +2,9 @@ import {  FormulaNode, PSCNode, PSCTreeLayoutNode } from "../types/calculus/psc"
 import { Tree,TreeLayout } from "../types/tree";
 import { estimateSVGTextWidth } from "./text-width";
 import { tree, treeFind, treeLayout } from "./layout/tree";
-import formula from "../components/input/formula";
 
 export const nodeName = (node: PSCNode) => {
-    return formulaNames(node.leftFormula) + " ⊢ " + formulaNames(node.rightFormula);
+    return formulaNames(node.leftFormulas) + " ⊢ " + formulaNames(node.rightFormulas);
 }
 
 export const formulaNames = (formulas: FormulaNode[]) => {
@@ -25,9 +24,11 @@ export const parseFormula = (formula: FormulaNode) => {
     if(formula === undefined) return result;
     switch (formula.type) {
         case "not": result += "¬" + parseFormula(formula.child!); break;
-        case "and": result += "(" + parseFormula(formula.leftChild!) + " ∧ " + parseFormula(formula.rightChild!) + ")";break;
-        case "or":  result += "(" + parseFormula(formula.leftChild!) + " ∨ " + parseFormula(formula.rightChild!) + ")";break;
-        case "var": result += formula.spelling!;
+        case "and": result += "(" + parseFormula(formula.leftChild!) + " ∧ " + parseFormula(formula.rightChild!) + ")"; break;
+        case "or":  result += "(" + parseFormula(formula.leftChild!) + " ∨ " + parseFormula(formula.rightChild!) + ")"; break;
+        case "var": result += formula.spelling!; break;
+        case "impl": result += "("+ parseFormula(formula.leftChild!)+ " -> " + parseFormula(formula.rightChild!) + ")"; break;
+        case "equiv": result += "("+ parseFormula(formula.leftChild!)+ " <-> " + parseFormula(formula.rightChild!) + ")"; break;
     }
 
     return result;
@@ -41,16 +42,17 @@ export const pscTreeLayout = (
 
 const pscNodeToTree = (
     nodes: PSCNode[],
-    n: PSCNode = nodes[0],
     i: number = 0,
     y: number = 160,
 ):Tree<PSCTreeLayoutNode> => {
+    const n = nodes[i];
+
     if (n == null)
         return tree(
             72,
             y,
             y,
-            {type: "", parent: null, child: null, leftChild: null, rightChild: null, leftFormula: [], rightFormula: [],isClosed: false, id: i },
+            {type: "", parent: null, children: [], leftFormulas: [], rightFormulas: [],isClosed: false, lastMove: null, id: i },
             []
         );
     const width = estimateSVGTextWidth(nodeName(n))+56;
@@ -62,29 +64,20 @@ const pscNodeToTree = (
         {...n, id: i },
         [],
     );
+    
+    n.children.forEach(childNode => {
+        resultTree.children.push(
+            pscNodeToTree(nodes, childNode, y-42)
+        )
+    })
 
-    if (n.type === "leaf") {
-        
-    } else if (n.type === "oneChildNode") {
-        resultTree.children.push(
-            pscNodeToTree(nodes, nodes[n.child!], n.child!, y-42)
-        )
-    } else if (n.type === "twoChildNode") {
-        resultTree.children.push(
-            pscNodeToTree(nodes, nodes[n.leftChild!], n.leftChild!, y-42)
-        )
-        resultTree.children.push(
-            pscNodeToTree(nodes, nodes[n.rightChild!], n.rightChild!, y-42)
-        )
-    } else {
-        return tree(
-            width,
-            72,
-            y,
-            {type: "", parent: null, child: null, leftChild: null, rightChild: null, leftFormula: [], rightFormula: [],isClosed: false, id: i },
-            []
-        );
-    }
+    // return tree(
+    //     width,
+    //     72,
+    //     y,
+    //     {type: "", parent: null, children: [], leftFormulas: [], rightFormulas: [],isClosed: false, lastMove: null, id: i },
+    //     []
+    // );
 
     return resultTree;
 };

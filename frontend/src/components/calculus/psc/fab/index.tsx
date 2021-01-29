@@ -17,6 +17,7 @@ import HyperIcon from "../../../icons/hyper";
 import RouterIcon from "../../../icons/router";
 import SwitchIcon from "../../../icons/switch";
 import RuleIcon from "../../../icons/rule";
+import DeleteIcon from "../../../icons/delete";
 
 interface Props {
     /**
@@ -35,6 +36,10 @@ interface Props {
      * Opens Rule Dialog
      */
     ruleCallback: () => void;
+    /**
+     * Deletes selected Branch
+     */
+    pruneCallback: () => void;
 }
 
 const PSCFAB: preact.FunctionalComponent<Props> = ({
@@ -42,6 +47,7 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
     state,
     selectedNodeId,
     ruleCallback,
+    pruneCallback,
 }) => {
     const {
         server,
@@ -82,11 +88,14 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
                                             onChange,
                                             notificationHandler
                                         )
+                                    } else {
+                                        return;
                                     }
                                 }}
                             />
                     </Fragment>
                 ) : (
+                    
                     <Fragment>
                         <FAB
                             icon={<RuleIcon/>}
@@ -98,7 +107,18 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
                                 ruleCallback();
                             }}
                         />
+                        <FAB
+                            icon={<DeleteIcon/>}
+                            label="Prune"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                pruneCallback();
+                            }}
+                            />
                     </Fragment>
+
                 )}   
             </ControlFAB>
                 

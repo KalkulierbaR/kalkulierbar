@@ -5,12 +5,11 @@ import { VarAssign } from "./tableaux";
 export interface PSCNode {
     type: string;
     parent: number | null;
-    child: number | null;
-    leftChild: number | null;
-    rightChild: number | null;
-    leftFormula: FormulaNode[];
-    rightFormula: FormulaNode[];
+    children: number[];
+    leftFormulas: FormulaNode[];
+    rightFormulas: FormulaNode[];
     isClosed: boolean;
+    lastMove: PSCMove | null;
 }
 
 export interface FormulaNode {
@@ -42,7 +41,7 @@ export function instanceOfPSCState(
 }
 
 export type PSCMove =
-    PSCAxMove | PSCRuleMove | PSCUndoMove;
+    PSCAxMove | PSCRuleMove | PSCUndoMove | PSCPruneMove;
 
 export type FOSCMove = PSCMove | SCCloseAssignMove;
 
@@ -65,6 +64,11 @@ export interface PSCAxMove {
 
 export interface PSCUndoMove {
     type: "undo";
+}
+
+export interface PSCPruneMove {
+    type: "prune"
+    nodeID: number;
 }
 
 export enum PSCType {

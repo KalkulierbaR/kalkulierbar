@@ -13,7 +13,9 @@ export function getRuleSet(){
         {name:"andRight",site:"right"},
         {name:"andLeft",site:"left"},
         {name:"orRight",site:"right"},
-        {name:"orLeft",site:"left"}
+        {name:"orLeft",site:"left"},
+        {name:"impLeft",site:"left"},
+        {name:"impRight",site:"right"}
     ]}
     return ruleSet;
 }

@@ -29,10 +29,13 @@ const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
 }) => {
     const textRef = useRef<SVGTextElement>();
 
+    const nodeIsClickable = !node.data.isClosed;
+
     const handleClick = () => {
-        selectNodeCallback(node.data,true);
-        selectFormulaCallback(formula);
-        
+        if(nodeIsClickable){
+            selectNodeCallback(node.data,true);
+            selectFormulaCallback(formula);
+        }
     }
 
     return (
