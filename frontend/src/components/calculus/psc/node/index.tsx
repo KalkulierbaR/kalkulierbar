@@ -18,6 +18,8 @@ interface Props {
      * The single tree node to represent
      */
     node: LayoutItem<PSCTreeLayoutNode>;
+
+    parent?: LayoutItem<PSCTreeLayoutNode>;
     
     selected: boolean;
     
@@ -32,11 +34,27 @@ interface Props {
     ruleName: string;
 }
 
-const lineUnderNode = (textRef: RefObject<SVGTextElement>, node:LayoutItem<PSCTreeLayoutNode>) => {
-    if(node.data.parent !== null){
-        const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
+const lineUnderNode = (node:LayoutItem<PSCTreeLayoutNode>, parent: LayoutItem<PSCTreeLayoutNode> | undefined, textRef: RefObject<SVGTextElement>, ruleName: string | undefined) => {
+    if(parent !== undefined){
+    const [parentDims, setParentDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
+    const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
+    const parentTextRef = useRef<SVGTextElement>();
+
+    parent.data.children.length == 2 
+    
     useEffect(() => {
+        if (!parentTextRef.current) {
+            return
+        }
+
+        const parentBox = parentTextRef.current.getBBox();
+        parentBox.height += 8;
+        parentBox.y -= 4;
+        parentBox.width += 16;
+        parentBox.x -= 8;
+        setParentDims(parentBox);
+
         if (!textRef.current) {
             return
         }
@@ -44,57 +62,104 @@ const lineUnderNode = (textRef: RefObject<SVGTextElement>, node:LayoutItem<PSCTr
         const box = textRef.current.getBBox();
         box.height += 8;
         box.y -= 4;
+        box.width += 16;
+        box.x -= 8;
         setDims(box);
+        
     });
 
-        const width = dims.width;
-        return (
-            <line
-                class={style.link}
-                x1={node.x - width}
-                y1={node.y + 15}
-                x2={node.x + width}
-                y2={node.y + 15}
-            />
-        )
-    }
-    return;
-}
-
-const textNextToLine = (node: LayoutItem<PSCTreeLayoutNode>,ruleName: string) => {
-    if(node.data.parent !== null){
-
-    const width = estimateSVGTextWidth(nodeName(node.data));
-    let text: string = "";
+    let lastMove: string = "";
 
     if(ruleName === "notRight"){
-        text="¬R";
+        lastMove="¬R";
     }else if (ruleName ==="notLeft"){
-        text="¬L";
+        lastMove="¬L";
     }else if (ruleName === "andRight") {
-        text = "∧R";
+        lastMove = "∧R";
     }else if(ruleName === "andLeft"){
-        text = "∧L";
+        lastMove = "∧L";
     }else if (ruleName === "orRight") {
-        text = "∨R";
+        lastMove = "∨R";
     }else if (ruleName === "orLeft") {
-        text = "∨L";
+        lastMove = "∨L";
     }else if (ruleName === "Ax") {
-        text = "Ax";
+        lastMove = "Ax";
     }
 
-    return (
-        <text
-            x={node.x + width + 20}
-            y={node.y + 15}
-        />
-    )
+        const parentWidth = parentDims.width;
+        const width = dims.width;
+
+    if(node.x < parent.x){
+        return (
+            <g>
+            <text
+                    ref={parentTextRef}
+                    class={style.trans}
+                    text-anchor="middle"
+                    x={parent.x}
+                    y={parent.y}
+                >
+                {
+                    nodeName(parent.data)
+                    
+                }     
+            </text>
+            <line
+                class={style.link}
+                x1={Math.min(parent.x - parentWidth/2,node.x - width/2)}
+                y1={node.y + 15}
+                x2={Math.max(parent.x + parentWidth/2,node.x + width/2)}
+                y2={node.y + 15}
+            />
+
+            </g>
+        )
+    }else{
+        
+        return (
+            <g>
+            <text
+                    ref={parentTextRef}
+                    class={style.trans}
+                    text-anchor="middle"
+                    x={parent.x}
+                    y={parent.y}
+                >
+                {
+                    nodeName(parent.data)
+                    
+                }     
+            </text>
+            <line
+                class={style.link}
+                x1={Math.min(parent.x - parentWidth/2,node.x - width/2)}
+                y1={node.y + 15}
+                x2={Math.max(parent.x + parentWidth/2,node.x + width/2)}
+                y2={node.y + 15}
+            />
+            <text
+                ref={textRef}
+                class={style.lineText}
+                text-anchor="middle"
+                x={Math.max(node.x+width/2,parent.x+parentWidth/2) + 15}
+                y={node.y+17}
+            >
+            {
+            lastMove
+            }   
+
+            </text>
+
+            </g>
+        )
     }
+}
     return;
 }
 
 const PSCTreeNode: preact.FunctionalComponent<Props> = ({
     node,
+    parent,
     selected,
     selectedListIndex,
     selectNodeCallback,
@@ -133,11 +198,8 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
                 </text>
                 <g>
                     {
-                         lineUnderNode(textRef,node)
+                         lineUnderNode(node,parent,textRef,node.data.lastMove?.type)
                     }   
-                    {      
-                        textNextToLine(node, node.data.lastMove!.type.toString())
-                    }
                 </g>
             </g>
 
@@ -181,10 +243,7 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
                 />
             
             {
-                lineUnderNode(textRef,node)
-            }
-            {      
-                textNextToLine(node,ruleName)
+                lineUnderNode(node,parent,textRef,node.data.lastMove?.type)
             }
             </g>
         </g>

@@ -6,6 +6,7 @@ import PSCTreeNode from "../node";
 
 interface Props {
     node: Tree<PSCTreeLayoutNode>;
+    parent?: Tree<PSCTreeLayoutNode>; 
     selectedNodeId?: number;
     selectedListIndex?: string;
     selectNodeCallback: (n: PSCTreeLayoutNode, selectValue?: boolean) => void;
@@ -16,6 +17,7 @@ interface Props {
 
 export const SubTree: preact.FunctionalComponent<Props> = ({
     node,
+    parent,
     selectNodeCallback,
     selectFormulaCallback,
     selectedNodeId,
@@ -32,6 +34,7 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
                     <Fragment key={i}>
                         <SubTree
                             node={c}
+                            parent={node}
                             selectNodeCallback={selectNodeCallback}
                             selectedNodeId={selectedNodeId}
                             zoomFactor={zoomFactor}
@@ -45,6 +48,7 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
             <PSCTreeNode
                 selectNodeCallback={selectNodeCallback}
                 node={node}
+                parent={parent}
                 // selectedNodeId={selectedNodeId}
                 selected={node.data.id === selectedNodeId}
                 zoomFactor={zoomFactor}
