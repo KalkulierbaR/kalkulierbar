@@ -272,10 +272,7 @@ fun applyUndo(state: GenericSequentCalculusState): GenericSequentCalculusState {
 
     val parentNode = state.tree.elementAt(parentID!!);
 
-    for(i in 0..(parentNode.children.size - 1)){
-        state.tree.removeAt(parentNode.children[i]);
-    }
-    state.tree[parentID].children = emptyArray<Int>();
+    applyPrune(state, parentID);
 
     var currentNode = parentNode;
     parentNode.isClosed = false;
