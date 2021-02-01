@@ -89,6 +89,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: S
     //Add newFormula to the right hand side of the sequence
     var newRightFormulas = node.rightFormulas.toMutableList();
     newRightFormulas.add(newFormula);
+    newRightFormulas.remove(formula);
     newRightFormulas = newRightFormulas.distinct().toMutableList();
     
     val newLeaf = TreeNode(nodeID, node.leftFormulas.distinct().toMutableList(), newRightFormulas, AllRight(nodeID, listIndex, swapVariable));
@@ -127,6 +128,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: Str
     //Add newFormula to the left hand side of the sequence
     var newLeftFormulas = node.leftFormulas.toMutableList();
     newLeftFormulas.add(newFormula);
+    newLeftFormulas.remove(formula);
     newLeftFormulas = newLeftFormulas.distinct().toMutableList();
     
     val newLeaf = TreeNode(nodeID, newLeftFormulas, node.rightFormulas.distinct().toMutableList(), ExLeft(nodeID, listIndex, swapVariable));
@@ -179,9 +181,9 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: St
  * @param varName The variable name to be compared with
  */
 private fun checkIfVariableNameIsAlreadyInUse(node: GenericSequentCalculusNode, varName: String): Boolean {
-    val set = mutableSetOf<String>()
-    node.leftFormulas.fold(set) { a, b -> a.addAll(IdentifierCollector.collect(b)); return@fold a.distinct().toMutableSet() };
-    node.rightFormulas.fold(set) { a, b -> a.addAll(IdentifierCollector.collect(b)); return@fold a.distinct().toMutableSet() };
+    var set = mutableSetOf<String>()
+    set = node.leftFormulas.fold(set) { a, b -> a.addAll(IdentifierCollector.collect(b)); return@fold a.distinct().toMutableSet() };
+    set = node.rightFormulas.fold(set) { a, b -> a.addAll(IdentifierCollector.collect(b)); return@fold a.distinct().toMutableSet() };
     return set.contains(varName);
 }
 

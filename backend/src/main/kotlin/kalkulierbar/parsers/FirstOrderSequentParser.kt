@@ -38,7 +38,9 @@ open class FirstOrderSequentParser {
                 try {
                     leftFormulas.add(FirstOrderParser().parse(leftArray[strIndex], currentIndex))
                 } catch(e: EmptyFormulaException) {
-
+                    if (strIndex != 0 || leftArray.size != 1) {
+                        throw InvalidFormulaFormat("Empty formula at char $currentIndex")
+                    }
                 }
                 currentIndex += leftArray[strIndex].length;
                 if (strIndex < leftArray.size - 1) {
@@ -50,7 +52,9 @@ open class FirstOrderSequentParser {
                 try {
                     rightFormulas.add(FirstOrderParser().parse(rightArray[strIndex], currentIndex))
                 } catch(e: EmptyFormulaException) {
-                    
+                    if (strIndex != 0 || rightArray.size != 1) {
+                        throw InvalidFormulaFormat("Empty formula at char $currentIndex")
+                    }
                 }
                 currentIndex += rightArray[strIndex].length;
                 if (strIndex < rightArray.size - 1) {
@@ -71,7 +75,9 @@ open class FirstOrderSequentParser {
                 try {
                     rightFormulas.add(FirstOrderParser().parse(rightArray[strIndex], currentIndex))
                 } catch(e: EmptyFormulaException) {
-
+                    if (strIndex != 0 || rightArray.size != 1) {
+                        throw InvalidFormulaFormat("Empty formula at char $currentIndex")
+                    }
                 }
                 currentIndex += rightArray[strIndex].length;
                 if (strIndex < rightArray.size - 1) {

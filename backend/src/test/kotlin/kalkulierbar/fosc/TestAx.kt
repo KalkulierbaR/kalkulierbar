@@ -1,20 +1,20 @@
-package kalkulierbar.psc
+package kalkulierbar.fosc
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.logic.Var
+import kalkulierbar.parsers.FirstOrderParser
+import kalkulierbar.sequentCalculus.fosc.FOSC
 import kalkulierbar.sequentCalculus.*
-import kotlin.test.assertEquals
 import kotlin.test.*
 
 class TestAx {
 
-    val instance = PSC()
-    val parser = PropositionalParser()
+    val instance = FOSC()
+    val parser = FirstOrderParser()
 
     @Test
     fun testBasic() {
-        var state = instance.parseFormulaToState("a | !a", null)
+        var state = instance.parseFormulaToState("P(a) | !P(a)", null)
 
         state = instance.applyMoveOnState(state, OrRight(0,0))
         state = instance.applyMoveOnState(state, NotRight(1,1))
@@ -27,7 +27,7 @@ class TestAx {
 
     @Test
     fun testParent() {
-        var state = instance.parseFormulaToState("a | !a", null)
+        var state = instance.parseFormulaToState("P(a) | !P(a)", null)
 
         state = instance.applyMoveOnState(state, OrRight(0,0))
         state = instance.applyMoveOnState(state, NotRight(1,1))
@@ -42,7 +42,7 @@ class TestAx {
 
     @Test
     fun testFail(){
-        var state = instance.parseFormulaToState("a | !a", null)
+        var state = instance.parseFormulaToState("P(a) | !P(a)", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, Ax(0))
