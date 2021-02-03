@@ -1,5 +1,5 @@
 import { RuleSet } from "./rules";
-import { PropCalculusType, Calculus } from ".";
+import { PropCalculusType, Calculus, FOCalculusType, PSCCalculusType } from ".";
 import { VarAssign } from "./tableaux";
 
 export interface PSCNode {
@@ -14,6 +14,7 @@ export interface PSCNode {
 
 export interface FormulaNode {
     type: string;
+    varName: string | null;
     child: FormulaNode | null;
     leftChild: FormulaNode | null;
     rightChild: FormulaNode | null;
@@ -35,9 +36,15 @@ export interface FOSCState{
 
 export function instanceOfPSCState(
     object: any,
-    calculus: PropCalculusType,
+    calculus: PSCCalculusType,
 ): object is PSCState {
     return "ruleSet" in object && calculus === Calculus.psc;
+}
+export function instanceOfFOSCState(
+    object: any,
+    calculus: PSCCalculusType,
+): object is FOSCState{
+    return "tree" in object && calculus === Calculus.fosc;
 }
 
 export type PSCMove =

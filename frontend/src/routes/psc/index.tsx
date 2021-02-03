@@ -33,7 +33,7 @@ const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
                     allowClauses ={false}
             />
             <FormulaInput
-                calculus={Calculus.psc}
+                calculus={calculus}
                 params={null}
                 foLogic={calculus === Calculus.fosc}
 				propPlaceholder={true}
