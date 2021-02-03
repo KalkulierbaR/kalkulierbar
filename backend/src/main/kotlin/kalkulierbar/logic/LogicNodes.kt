@@ -236,3 +236,39 @@ class ExistentialQuantifier(
         return true;
     }
 }
+
+@Serializable
+@SerialName("always")
+class Always(override var child: LogicNode) : UnaryOp() {
+
+    override fun toString() = "[]$child"
+
+    override fun clone(qm: Map<String, Quantifier>) = Always(child.clone(qm))
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Always)
+            return false;
+        
+        return this.child.synEq(other.child);
+    }
+}
+
+@Serializable
+@SerialName("sometimes")
+class Sometimes(override var child: LogicNode) : UnaryOp() {
+
+    override fun toString() = "<>$child"
+
+    override fun clone(qm: Map<String, Quantifier>) = Sometimes(child.clone(qm))
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Sometimes)
+            return false;
+        
+        return this.child.synEq(other.child);
+    }
+}
