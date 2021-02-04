@@ -84,6 +84,14 @@ const lineUnderNode = (node:LayoutItem<PSCTreeLayoutNode>, parent: LayoutItem<PS
         lastMove = "∨L";
     }else if (ruleName === "Ax") {
         lastMove = "Ax";
+    }else if (ruleName === "exLeft"){
+        lastMove = "∃L";
+    }else if (ruleName === "exRight"){
+        lastMove = "∃R";
+    }else if (ruleName === "allLeft"){
+        lastMove = "∀L";
+    }else if (ruleName === "allRight"){
+        lastMove = "∀R";
     }
 
         const parentWidth = parentDims.width;

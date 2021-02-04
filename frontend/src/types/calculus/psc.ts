@@ -1,6 +1,6 @@
 import { RuleSet } from "./rules";
 import { PropCalculusType, Calculus, FOCalculusType, PSCCalculusType } from ".";
-import { VarAssign } from "./tableaux";
+import { KStringMap } from "../kotlin";
 
 export interface PSCNode {
     type: string;
@@ -19,11 +19,14 @@ export interface FormulaNode {
     leftChild: FormulaNode | null;
     rightChild: FormulaNode | null;
     spelling: string | null;
+    arguments: FormulaNode[] | null;
 }
 
 export type PSCTreeLayoutNode = PSCNode & { id: number};
 
 export type FormulaTreeLayoutNode = FormulaNode & { id: string};
+
+export type VarAssign = KStringMap<string>;
 
 export interface PSCState {
     tree: PSCNode[];
@@ -53,7 +56,7 @@ export type PSCMove =
 export type FOSCMove = PSCMove | SCCloseAssignMove;
 
 export interface SCCloseAssignMove{
-    type:"psc-close-assign";
+    type:"sc-close-assign";
     id1: number;
     id2: number;
     varAssign: VarAssign;
@@ -62,6 +65,7 @@ export interface PSCRuleMove {
     type: string
     nodeID: number;
     listIndex: number;
+    swapVariable?: string;
 }
 
 export interface PSCAxMove {

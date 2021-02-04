@@ -18,7 +18,7 @@ export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
 export type PSCCalculusType ="psc"|"fosc";
 export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll" | "psc";
-export type FOCalculusType = "fo-tableaux" | "fo-resolution" | "nc-tableaux"|"fosc";
+export type FOCalculusType = "fo-tableaux" | "fo-resolution" | "nc-tableaux"| "fosc";
 export type CalculusType = FOCalculusType | PropCalculusType;
 
 export enum Calculus {
@@ -64,7 +64,7 @@ export interface Move {
     "nc-tableaux": NCTableauxMove;
     dpll: DPLLMove;
     psc: PSCMove;
-    "fosc":FOSCMove;
+    fosc:FOSCMove;
 }
 
 /**
@@ -78,7 +78,7 @@ export interface Params {
     "nc-tableaux": null;
     dpll: null;
     psc: null;
-    "fosc": null;
+    fosc: null;
 }
 
 /**

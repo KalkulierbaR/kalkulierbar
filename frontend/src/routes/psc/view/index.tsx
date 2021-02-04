@@ -6,9 +6,9 @@ import { DragTransform } from "../../../types/ui";
 import { useAppState } from "../../../util/app-state";
 import { ruleSetToStringArray } from "../../../util/rule";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
-import { getRuleSet } from "../../../types/calculus/rules";
+import { getNormalRuleSet, getFORuleSet } from "../../../types/calculus/rules";
 import PSCTreeView from "../../../components/calculus/psc/tree"
-import { FormulaTreeLayoutNode, instanceOfFOSCState, instanceOfPSCState, PSCNode, PSCTreeLayoutNode } from "../../../types/calculus/psc";
+import { FormulaTreeLayoutNode, instanceOfFOSCState, instanceOfPSCState, PSCNode, PSCTreeLayoutNode, VarAssign } from "../../../types/calculus/psc";
 
 import * as style from "./style.scss";
 import { route } from "preact-router";
@@ -55,7 +55,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
     const selectedNode =
          selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined;
 
-    const ruleOptions = stringArrayToStringMap(ruleSetToStringArray(getRuleSet()));
+    const ruleOptions = instanceOfPSCState(state, calculus) ? stringArrayToStringMap(ruleSetToStringArray(getNormalRuleSet())) : stringArrayToStringMap(ruleSetToStringArray(getFORuleSet()));
 
     const [selectedRuleId, setSelectedRuleId] = useState<
         number | undefined
@@ -79,17 +79,66 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                     sendMove(
                         server, calculus, state, {type: "Ax", nodeID: selectedNodeId!}, onChange,notificationHandler,
                     )
+                    setSelectedNodeId(undefined);
+                    setSelectedRuleId(undefined);
+                } else if (newRuleId >= 9 && newRuleId <= 12) {
+                    //Selected Rule is a Quantifier
+                    setVarOrigins([nodeName(selectedNode)]);
+                    //Open Popup to
+                    if (selectedListIndex.charAt(0) === "l") {
+                        let formula = selectedNode.leftFormulas[parseStringToListIndex(selectedListIndex)]
+                        if (formula.type === "allquant" || formula.type === "exquant") {
+                            setVarsToAssign([formula.varName!]);
+                            setShowVarAssignDialog(true);
+                        }
+                        
+                    } else {
+                        let formula = selectedNode.rightFormulas[parseStringToListIndex(selectedListIndex)]
+                        if (formula.type === "allquant" || formula.type === "exquant") {
+                            setVarsToAssign([formula.varName!]);
+                            setShowVarAssignDialog(true);
+                        }
+                    }
                 } else {
                     sendMove(
                         server, calculus, state, {type: ruleOptions.get(newRuleId)!, nodeID: selectedNodeId!, listIndex: parseStringToListIndex(selectedListIndex)}, onChange,notificationHandler,
                     )
+                    setSelectedNodeId(undefined);
+                    setSelectedRuleId(undefined);
                 }
-                setSelectedNodeId(undefined);
-                setSelectedRuleId(undefined);
+                
                 
             }
         }
     };
+
+    const quantifierCallback = ( autoAssign: boolean, varAssign: VarAssign= {}) => {
+        if (selectedRuleId !== undefined && selectedListIndex !== undefined) {
+            if (autoAssign) {
+                sendMove(
+                    server, 
+                    calculus, 
+                    state, 
+                    {type: ruleOptions.get(selectedRuleId)!, nodeID: selectedNodeId!, listIndex: parseStringToListIndex(selectedListIndex)}, 
+                    onChange,
+                    notificationHandler,
+                )
+            } else {
+                sendMove(
+                    server, 
+                    calculus, 
+                    state, 
+                    {type: ruleOptions.get(selectedRuleId)!, nodeID: selectedNodeId!, listIndex: parseStringToListIndex(selectedListIndex), swapVariable: "a"}, 
+                    onChange,
+                    notificationHandler,
+                )
+            }
+        }
+        setSelectedNodeId(undefined);
+        setSelectedListIndex(undefined);
+        setSelectedRuleId(undefined);
+        setShowVarAssignDialog(false);
+    }
 
     const parseStringToListIndex = (str: string) => {
         return parseInt(str.substring(1));
@@ -214,12 +263,12 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                     varOrigins={varOrigins}
                     vars={Array.from(varsToAssign)}
                     manualVarAssignOnly={false}
-                    submitVarAssignCallback={() => {}}
+                    submitVarAssignCallback={quantifierCallback}
                     secondSubmitEvent={() => {}}
                 />
             )}
 
-
+                
             <PSCFAB 
                 calculus={Calculus.psc}
                 state={state}
