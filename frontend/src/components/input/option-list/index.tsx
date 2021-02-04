@@ -27,11 +27,18 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     selectOptionCallback,
     className,
 }) => {
+
+    const handleClick = (keyValuePair: [number, string]) => {
+        if( true ){
+            selectOptionCallback(keyValuePair)
+        }
+    }
+
     return (
         <div class={`card ${className}`}>
             {Array.from(options).map((keyValuePair: [number, string]) => (
                 <p
-                    onClick={() => selectOptionCallback(keyValuePair)}
+                    onClick={() => handleClick(keyValuePair)}
                     class={classMap({
                         [style.option]: true,
                         [style.optionSelected]: selectedOptionIds.includes(
