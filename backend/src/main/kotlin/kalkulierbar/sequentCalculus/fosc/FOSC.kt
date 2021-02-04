@@ -54,7 +54,6 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
     override fun checkCloseOnState(state: FOSCState): CloseMessage {
         for (node in state.tree) {
             if (!node.isClosed) {
-                println(node.toString());
                 return CloseMessage(false, "Not all branches of the proof tree are closed.")
             }
         }
