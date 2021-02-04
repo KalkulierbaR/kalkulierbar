@@ -22,6 +22,8 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
     override val identifier = "psc"
 
     override fun parseFormulaToState(formula: String, params: Unit?): PSCState {
+        println(PropositionalSequentParser().parse(formula).tree.get(0).toString());
+        println(" ⊢ a, b");
         return PropositionalSequentParser().parse(formula);
     }
 

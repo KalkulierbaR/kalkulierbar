@@ -1,27 +1,27 @@
-package kalkulierbar.psc
+package kalkulierbar.fosc
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.logic.Var
+import kalkulierbar.parsers.FirstOrderParser
+import kalkulierbar.sequentCalculus.fosc.FOSC
 import kalkulierbar.sequentCalculus.*
-import kotlin.test.assertEquals
 import kotlin.test.*
 
 class TestAndRight {
 
-    val instance = PSC()
-    val parser = PropositionalParser()
+    val instance = FOSC()
+    val parser = FirstOrderParser()
 
     @Test
     fun testBasic() {
-        var state = instance.parseFormulaToState("(a & b) & (b |c)", null)
+        var state = instance.parseFormulaToState("(P(a) & P(b)) & (P(b) |P(c))", null)
 
         val treesize = state.tree.size;
 
         state = instance.applyMoveOnState(state, AndRight(0,0))
 
-        val formula1 = parser.parse("a & b")
-        val formula2 = parser.parse("b | c")
+        val formula1 = parser.parse("P(a) & P(b)")
+        val formula2 = parser.parse("P(b) | P(c)")
 
         val node1 = state.tree[state.tree.size - 2]
         val node2 = state.tree[state.tree.size - 1]
@@ -35,9 +35,7 @@ class TestAndRight {
 
     @Test
     fun testParent() {
-        var state = instance.parseFormulaToState("(a & b) & (b |c)", null)
-
-        val treesize = state.tree.size;
+        var state = instance.parseFormulaToState("(P(a) & P(b)) & (P(b) |P(c))", null)
 
         state = instance.applyMoveOnState(state, AndRight(0,0))
 
@@ -49,7 +47,7 @@ class TestAndRight {
 
     @Test
     fun testWrongNode() {
-        var state = instance.parseFormulaToState("(a & b) | (b |c)", null)
+        var state = instance.parseFormulaToState("P(a) | P(b)", null)
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, AndRight(0,0))
         }

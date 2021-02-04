@@ -32,18 +32,20 @@ class TestAndLeft {
         assertTrue(node1.leftFormulas[1] is Var)
 
     }
+
+    @Test
     fun testParent(){
-        var state = instance.parseFormulaToState("!(a | b)", null)
+        var state = instance.parseFormulaToState("!(a & b)", null)
         state = instance.applyMoveOnState(state, NotRight(0,0))
         assertTrue(state.tree[0].parent == null)
 
-        state = instance.applyMoveOnState(state, OrRight(0,0))
+        state = instance.applyMoveOnState(state, AndLeft(1,0))
 
         assertTrue(state.tree[0].children.size == 1)
         assertEquals(state.tree[1].parent, 0)
     }
 
-
+    @Test
     fun testWrongNode() {
         var state = instance.parseFormulaToState("a & b", null)
 
