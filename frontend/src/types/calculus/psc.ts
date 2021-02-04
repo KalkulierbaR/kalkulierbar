@@ -31,10 +31,12 @@ export type VarAssign = KStringMap<string>;
 export interface PSCState {
     tree: PSCNode[];
     moveHistory: PSCMove[];
+    showOnlyApplicableRules: boolean;
 }
 export interface FOSCState{
     tree: PSCNode[];
     moveHistory: PSCMove[];
+    showOnlyApplicableRules: boolean;
 }
 
 export function instanceOfPSCState(
@@ -86,5 +88,5 @@ export enum PSCType {
 }
 
 export interface PSCParams {
-    help: boolean;
+    showOnlyApplicableRules: boolean;
 }

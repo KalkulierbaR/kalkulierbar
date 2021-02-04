@@ -208,6 +208,30 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
         }
         
     }
+
+    const disableOptions = (
+        option: number 
+    ) => {
+        if (state.showOnlyApplicableRules === false)
+            return true;
+        const rules = getFORuleSet();
+        if (selectedListIndex === undefined || selectedNodeId === undefined || selectedNode === undefined)
+            return true;
+        if (rules.rules[option].applicableOn !== undefined) {
+            if (selectedListIndex.charAt(0) === 'l') {
+                if (rules.rules[option].site === 'left' || rules.rules[option].site === 'both') {
+                    return selectedNode.leftFormulas[parseStringToListIndex(selectedListIndex)].type === rules.rules[option].applicableOn;
+                }
+                return false;
+            } 
+                if (rules.rules[option].site === 'right' || rules.rules[option].site === 'both') {
+                    return selectedNode.rightFormulas[parseStringToListIndex(selectedListIndex)].type === rules.rules[option].applicableOn;
+                }
+                return false;
+            
+        } 
+        return true;
+    }
     
     
     return (
@@ -227,6 +251,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                             selectOptionCallback={(keyValuePair) =>
                                 selectRuleCallback(keyValuePair[0])
                             }
+                            disableOption={disableOptions}
                         />
                     </div>
                 )}
@@ -253,6 +278,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         setShowRuleDialog(false);
                         selectRuleCallback(keyValuePair[0]);
                     }}
+                    disableOption={disableOptions}
                 />
             </Dialog>
 

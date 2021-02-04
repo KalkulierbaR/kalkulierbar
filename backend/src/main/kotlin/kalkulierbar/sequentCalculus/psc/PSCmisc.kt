@@ -10,7 +10,8 @@ import kalkulierbar.sequentCalculus.TreeNode
 
 @Serializable
 class PSCState(
-    override val tree: MutableList<GenericSequentCalculusNode> = mutableListOf<GenericSequentCalculusNode>()
+    override val tree: MutableList<GenericSequentCalculusNode> = mutableListOf<GenericSequentCalculusNode>(),
+    override var showOnlyApplicableRules: Boolean = false
 ) : GenericSequentCalculusState, ProtectedState() {
 
     constructor(formula: LogicNode) : this() {
@@ -35,6 +36,6 @@ class PSCState(
     override var seal = ""
 
     override fun getHash(): String {
-        return "psc|${tree.map{it.toString()}}"
+        return "psc|${tree.map{it.toString()}}|$showOnlyApplicableRules"
     }
 }

@@ -19,11 +19,11 @@ const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
     
     const {smallScreen} = useAppState();
 
-    const [pscHelp, setPscHelp] = useState(false);
+    const [showOnlyApplicableRules, setShowOnlyApplicableRules] = useState(false);
 
     let params;
     const pscParams: PSCParams = {
-        help: pscHelp,
+        showOnlyApplicableRules,
     };
     params = pscParams;
 
@@ -34,7 +34,7 @@ const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
             />
             <FormulaInput
                 calculus={calculus}
-                params={null}
+                params={params}
                 foLogic={calculus === Calculus.fosc}
 				propPlaceholder={true}
             />
@@ -46,7 +46,7 @@ const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
                     <div class="first">
                         <Switch
                             label="With Help"
-                            onChange={setPscHelp}
+                            onChange={setShowOnlyApplicableRules}
                             initialState={false}
                         />
                         <HintIcon hint="Only enable rules that can be applied."/>

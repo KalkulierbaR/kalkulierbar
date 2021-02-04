@@ -18,14 +18,20 @@ import kalkulierbar.sequentCalculus.moveImplementations.*
 import kalkulierbar.sequentCalculus.fosc.moveImplementations.*
 import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
 
-class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove, Unit>() {
+class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>() {
 
     private val serializer = Json(context = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
 
     override val identifier = "fosc"
 
-    override fun parseFormulaToState(formula: String, params: Unit?): FOSCState {
-        return FirstOrderSequentParser().parse(formula);
+    override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): FOSCState {
+        if (params == null) {
+            return FirstOrderSequentParser().parse(formula);
+        } else {
+            val state = FirstOrderSequentParser().parse(formula);
+            state.showOnlyApplicableRules = params.showOnlyApplicableRules;
+            return state;
+        }
     }
 
     override fun applyMoveOnState(state: FOSCState, move: SequentCalculusMove): FOSCState {
@@ -112,5 +118,12 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
      * @param json JSON parameter representation
      * @return parsed param object
      */
-    override fun jsonToParam(json: String) = Unit
+    override fun jsonToParam(json: String): SequentCalculusParam {
+        try {
+            return serializer.parse(SequentCalculusParam.serializer(), json)
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON params"
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
+        }
+    }
 }
