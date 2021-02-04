@@ -41,10 +41,10 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
             is OrLeft -> applyOrLeft(state, move.nodeID, move.listIndex) as FOSCState
             is AndRight -> applyAndRight(state, move.nodeID, move.listIndex) as FOSCState
             is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex) as FOSCState
-            is AllRight -> applyAllRight(state, move.nodeID, move.listIndex, move.swapVariable)
-            is AllLeft -> applyAllLeft(state, move.nodeID, move.listIndex, move.swapVariable)
-            is ExRight -> applyExRight(state, move.nodeID, move.listIndex, move.swapVariable)
-            is ExLeft -> applyExLeft(state, move.nodeID, move.listIndex, move.swapVariable)
+            is AllRight -> applyAllRight(state, move.nodeID, move.listIndex, move.varAssign)
+            is AllLeft -> applyAllLeft(state, move.nodeID, move.listIndex, move.varAssign)
+            is ExRight -> applyExRight(state, move.nodeID, move.listIndex, move.varAssign)
+            is ExLeft -> applyExLeft(state, move.nodeID, move.listIndex, move.varAssign)
             is UndoMove -> applyUndo(state) as FOSCState
             is PruneMove -> applyPrune(state, move.nodeID) as FOSCState
             else -> throw IllegalMove("Unknown move")
@@ -54,6 +54,7 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
     override fun checkCloseOnState(state: FOSCState): CloseMessage {
         for (node in state.tree) {
             if (!node.isClosed) {
+                println(node.toString());
                 return CloseMessage(false, "Not all branches of the proof tree are closed.")
             }
         }

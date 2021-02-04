@@ -9,12 +9,13 @@ import kotlin.test.*
 class TestExLeft {
     val instance = FOSC()
     val parser = FirstOrderParser()
+    val varAssign = mapOf("X" to "a")
 
     @Test
     fun testBasic() {
         var state = instance.parseFormulaToState("\\ex X: R(X) |-", null)
 
-        state = instance.applyMoveOnState(state, ExLeft(0, 0, "a"));
+        state = instance.applyMoveOnState(state, ExLeft(0, 0, varAssign));
 
         assertTrue(state.tree.size == 2);
         assertTrue(state.tree[0].parent == null);
@@ -34,7 +35,7 @@ class TestExLeft {
         var state = instance.parseFormulaToState("\\ex X: R(X), P(a) |-", null)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, ExLeft(0, 0, "a"))
+            instance.applyMoveOnState(state, ExLeft(0, 0, varAssign))
         }
     }
 
@@ -43,7 +44,7 @@ class TestExLeft {
         var state = instance.parseFormulaToState("\\all X: R(X) |-", null)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, ExLeft(0,0, "a"))
+            instance.applyMoveOnState(state, ExLeft(0,0, varAssign))
         }
     }
     

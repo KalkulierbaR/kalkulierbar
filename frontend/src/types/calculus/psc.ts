@@ -56,16 +56,15 @@ export type PSCMove =
 export type FOSCMove = PSCMove | SCCloseAssignMove;
 
 export interface SCCloseAssignMove{
-    type:"sc-close-assign";
-    id1: number;
-    id2: number;
+    type: string;
+    nodeID: number;
+    listIndex: number;
     varAssign: VarAssign;
 }
 export interface PSCRuleMove {
     type: string
     nodeID: number;
     listIndex: number;
-    swapVariable?: string;
 }
 
 export interface PSCAxMove {
