@@ -28,10 +28,8 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
         return FirstOrderSequentParser().parse(formula);
     }
 
+    @Suppress("ComplexMethod")
     override fun applyMoveOnState(state: FOSCState, move: SequentCalculusMove): FOSCState {
-        // Clear status message
-        // state.statusMessage = null
-
         // Pass moves to relevant subfunction
         return when (move) {
             is Ax -> applyAx(state, move.nodeID) as FOSCState

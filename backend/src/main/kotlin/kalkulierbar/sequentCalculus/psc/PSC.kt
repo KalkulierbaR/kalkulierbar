@@ -25,10 +25,8 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
         return PropositionalSequentParser().parse(formula);
     }
 
+    @Suppress("ComplexMethod")
     override fun applyMoveOnState(state: PSCState, move: SequentCalculusMove): PSCState {
-        // Clear status message
-        // state.statusMessage = null
-
         // Pass moves to relevant subfunction
         return when (move) {
             is Ax -> applyAx(state, move.nodeID) as PSCState

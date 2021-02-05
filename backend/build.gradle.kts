@@ -8,6 +8,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.3.50"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("java")
+    id("jacoco")
 }
 
 repositories {
@@ -45,4 +46,5 @@ detekt {
     toolVersion = "1.1.1"
     input = files("src/main/kotlin")
     filters = ".*/resources/.*,.*/build/.*"
+    config = files("$projectDir/config/detekt/detekt.yml")
 }

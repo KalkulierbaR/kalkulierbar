@@ -14,9 +14,16 @@ import kalkulierbar.sequentCalculus.fosc.FOSCState;
 @Suppress("TooManyFunctions")
 open class FirstOrderSequentParser {
 
+    /**
+     * Parses a string directly into a FOSCState using the FirstOrderParser to parse single formulas seperated by ',' in the input string
+     * and seperated by '|-' to differentiate between left and right side;
+     */
+    @Suppress("ComplexMethod")
     open fun parse(formula: String): FOSCState {
+        //Find left and right formulas in the input string
         val sides = formula.split("|-") 
         
+        //If there is more than one '|-' in the input sting throw an error
         if (sides.size > 2) {
             var i = 0;
             i += sides[0].length;
@@ -26,6 +33,7 @@ open class FirstOrderSequentParser {
             }
             throw InvalidFormulaFormat("Incorrect formula syntax at char $i")
         }
+        //The Input String consists of exactly one '|-'
         else if (sides.size == 2) {
             val leftFormulas = mutableListOf<LogicNode>();
             val rightFormulas = mutableListOf<LogicNode>();
@@ -60,6 +68,7 @@ open class FirstOrderSequentParser {
 
             return FOSCState(leftFormulas, rightFormulas);
         }
+        //The input string doesn't contain '|-'. All Formulas will be added to the right side of the state.
         else {
             val leftFormulas = mutableListOf<LogicNode>();
             val rightFormulas = mutableListOf<LogicNode>();
@@ -83,6 +92,9 @@ open class FirstOrderSequentParser {
         }
     }
 
+    /**
+     * Splits a string into Formulas by splitting at ',' which are not bound within a paranthesis.
+     */
     private fun splitToFormulas(str: String): List<String> {
         val foundFormulas = mutableListOf<String>();
         val it = str.iterator();

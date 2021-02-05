@@ -1,13 +1,13 @@
-# Propositional Sequent Calculus
+# First Order Sequent Calculus
 
-The Propositional Sequent Calculus is a calculus which consists of sequences on which rules can be applied to be solved.
-A Sequence consists of a left and a right side seperated by `|-` and each side there may be multiple propositional formulas
+The First Order Sequent Calculus is a calculus which consists of sequences on which rules can be applied to be solved.
+A Sequence consists of a left and a right side seperated by `|-` and each side there may be multiple firstorder formulas
 seperated by a `,`
 
 ## Input Format Specification
 
-PSC can accept one or more Propositional Formulas (seperated by `,`) which it will put automatically on the right side of the sequence to proof validity.
-One can also input a whole sequence by using the `|-` symbol which will seperate the propositional Formulas on the left side from the formulas on the right side.
+FOSC can accept one or more FirstOrder Formulas (seperated by `,`) which it will put automatically on the right side of the sequence to proof validity.
+One can also input a whole sequence by using the `|-` symbol which will seperate the firstorder Formulas on the left side from the formulas on the right side.
 
 ## State Format Specification
 
@@ -23,7 +23,7 @@ The parent of the root TreeNode is `null`. Additionally, TreeNodes have an `isCl
 TreeNodes in a subtree that is completely closed will have the `isClosed` flag set.
 The `lastMove` property tracks which move was applied on the parent of a TreeNode to get to the current TreeNode. This can be used by the Frontend to visuallize which Rules were applied. 
 The `lastMove` property for the root is `null` as no move was applied on the root.
-A TreeNode also contains two MutableLists `leftFormulas` and `rightFormulas`. The lists consist of propositonal `LogicNode` and are kept distinct so that duplicate elements will be removed. The Lists contain the formulas which are on the left or right side of the sequence respectively.
+A TreeNode also contains two MutableLists `leftFormulas` and `rightFormulas`. The lists consist of `FirstOrderTerm` and are kept distinct so that duplicate elements will be removed. The Lists contain the formulas which are on the left or right side of the sequence respectively.
 
 ## Rule Specification
 
@@ -49,6 +49,19 @@ Ax is encoded as
 {
   "type": "Ax", 
   "nodeID": <ID of TreeNode to close>, 
+}
+```
+
+Additionaly to the PSC Moves FOSC has Moves for: `allLeft`, `allRight`, `exLeft`, `exRight`.
+These Moves can be used to assign a Constant to the BoundVariable of the respective Quantifier.
+
+These FOSC moves are encoded as 
+```json
+{
+  "type": <identifier for the move>, 
+  "nodeID": <ID of the TreeNode to to apply the move on>, 
+  "listIndex": <the index in the list `(left/right)Formulas`>, 
+  "varAssign": <assignment map>
 }
 ```
 

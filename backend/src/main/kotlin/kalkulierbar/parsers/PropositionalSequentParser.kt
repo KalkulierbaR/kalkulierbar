@@ -14,9 +14,16 @@ import kalkulierbar.sequentCalculus.psc.PSCState;
 @Suppress("TooManyFunctions")
 open class PropositionalSequentParser {
 
+    /**
+     * Parses a string directly into a PSCState using the PropositionalParser to parse single formulas seperated by ',' in the input string
+     * and seperated by '|-' to differentiate between left and right side;
+     */
+    @Suppress("ComplexMethod")
     open fun parse(formula: String): PSCState {
+        //Find left and right formulas in the input string
         val sides = formula.split("|-") 
         
+        //If there is more than one '|-' in the input sting throw an error
         if (sides.size > 2) {
             var i = 0;
             i += sides[0].length;
@@ -26,6 +33,7 @@ open class PropositionalSequentParser {
             }
             throw InvalidFormulaFormat("Incorrect formula syntax at char $i")
         }
+        //The Input String consists of exactly one '|-'
         else if (sides.size == 2) {
             val leftFormulas = mutableListOf<LogicNode>();
             val rightFormulas = mutableListOf<LogicNode>();
@@ -60,6 +68,7 @@ open class PropositionalSequentParser {
 
             return PSCState(leftFormulas, rightFormulas);
         }
+        //The input string doesn't contain '|-'. All Formulas will be added to the right side of the state.
         else {
             val leftFormulas = mutableListOf<LogicNode>();
             val rightFormulas = mutableListOf<LogicNode>();
