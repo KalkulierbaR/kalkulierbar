@@ -11,9 +11,11 @@ import kotlinx.serialization.modules.plus
 
 import kalkulierbar.sequentCalculus.GenericSequentCalculus
 import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
-import kalkulierbar.sequentCalculus.*
+import kalkulierbar.sequentCalculus.SequentCalculusMove
 import kalkulierbar.sequentCalculus.moveImplementations.*
 import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
+import kalkulierbar.sequentCalculus.SequentCalculusMove.*
+import kalkulierbar.sequentCalculus.*
 
 class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>() {
 
@@ -111,6 +113,7 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
      * @param json JSON parameter representation
      * @return parsed param object
      */
+    @Suppress("TooGenericExceptionCaught")
     override fun jsonToParam(json: String): SequentCalculusParam {
         try {
             return serializer.parse(SequentCalculusParam.serializer(), json)

@@ -171,6 +171,7 @@ class UniversalQuantifier(
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
+    @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is UniversalQuantifier)
             return false;
@@ -216,6 +217,7 @@ class ExistentialQuantifier(
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
+    @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is ExistentialQuantifier)
             return false;

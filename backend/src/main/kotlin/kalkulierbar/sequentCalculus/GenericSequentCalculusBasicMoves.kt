@@ -10,6 +10,7 @@ import kalkulierbar.sequentCalculus.*
 
 import kalkulierbar.sequentCalculus.TreeNode
 
+@Suppress("ThrowsCount")
 fun applyAx(state: GenericSequentCalculusState, nodeID: Int) : GenericSequentCalculusState {
 
     if (nodeID < 0 || state.tree.size <= nodeID)
@@ -22,7 +23,14 @@ fun applyAx(state: GenericSequentCalculusState, nodeID: Int) : GenericSequentCal
 
     for (leftFormula in leaf.leftFormulas) {
         if (leaf.rightFormulas.find { elem -> elem.synEq(leftFormula) } != null) {
-            val newLeaf = TreeNode(nodeID, emptyArray(), mutableListOf<LogicNode>(), mutableListOf<LogicNode>(), true, Ax(nodeID));
+            val newLeaf = TreeNode(
+                nodeID, 
+                emptyArray(),
+                mutableListOf<LogicNode>(), 
+                mutableListOf<LogicNode>(), 
+                true, 
+                Ax(nodeID)
+            );
             state.tree.add(newLeaf);
             state.tree[nodeID].children = arrayOf(state.tree.size - 1);
             state.setNodeClosed(newLeaf);
@@ -47,7 +55,12 @@ fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     val newRightFormula = leaf.rightFormulas.toMutableList();
     newRightFormula.removeAt(listIndex);
 
-    var newLeaf = TreeNode(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList(), NotRight(nodeID, listIndex))
+    var newLeaf = TreeNode(
+        nodeID, 
+        newLeftFormula.distinct().toMutableList(), 
+        newRightFormula.distinct().toMutableList(), 
+        NotRight(nodeID, listIndex)
+    )
     state.tree.add(newLeaf);
     state.tree[nodeID].children = arrayOf(state.tree.size - 1);
     return state;
@@ -69,7 +82,12 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val newRightFormula = leaf.rightFormulas.toMutableList();
     newRightFormula.add(formula.child);
 
-    var newLeaf = TreeNode(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList(), NotLeft(nodeID, listIndex))
+    var newLeaf = TreeNode(
+        nodeID, 
+        newLeftFormula.distinct().toMutableList(), 
+        newRightFormula.distinct().toMutableList(), 
+        NotLeft(nodeID, listIndex)
+    )
     state.tree.add(newLeaf);
     state.tree[nodeID].children = arrayOf(state.tree.size - 1);
     return state;
@@ -90,7 +108,12 @@ fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     newRightFormula.removeAt(listIndex)
     newRightFormula.add(listIndex,formula.leftChild)
     newRightFormula.add(listIndex + 1, formula.rightChild)
-    val newLeaf = TreeNode(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList(), OrRight(nodeID, listIndex));
+    val newLeaf = TreeNode(
+        nodeID, 
+        newLeftFormula.distinct().toMutableList(), 
+        newRightFormula.distinct().toMutableList(), 
+        OrRight(nodeID, listIndex)
+    );
     state.tree.add(newLeaf)
     state.tree[nodeID].children = arrayOf(state.tree.size - 1);
     return state;
@@ -116,8 +139,18 @@ fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int)
     newLeftFormulaOnRightChild.add(listIndex,formula.rightChild)
     val newRightFormulaOnRightChild = leaf.rightFormulas.toMutableList();
 
-    val newLeftLeaf = TreeNode(nodeID,newLeftFormulaOnLeftChild.distinct().toMutableList(),newRightFormulaOnLeftChild.distinct().toMutableList(), OrLeft(nodeID, listIndex));
-    val newRightLeaf = TreeNode(nodeID,newLeftFormulaOnRightChild.distinct().toMutableList(),newRightFormulaOnRightChild.distinct().toMutableList(), OrLeft(nodeID, listIndex));
+    val newLeftLeaf = TreeNode(
+        nodeID,
+        newLeftFormulaOnLeftChild.distinct().toMutableList(),
+        newRightFormulaOnLeftChild.distinct().toMutableList(), 
+        OrLeft(nodeID, listIndex)
+    );
+    val newRightLeaf = TreeNode(
+        nodeID,
+        newLeftFormulaOnRightChild.distinct().toMutableList(),
+        newRightFormulaOnRightChild.distinct().toMutableList(), 
+        OrLeft(nodeID, listIndex)
+    );
 
     state.tree.add(newLeftLeaf);
     state.tree.add(newRightLeaf);
@@ -146,8 +179,18 @@ fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     newRightFormulaOnRightChild.removeAt(listIndex);
     newRightFormulaOnRightChild.add(listIndex, formula.rightChild);
 
-    val newLeftLeaf = TreeNode(nodeID, newLeftFormulaOnLeftChild.distinct().toMutableList(), newRightFormulaOnLeftChild.distinct().toMutableList(), AndRight(nodeID, listIndex));
-    val newRightLeaf = TreeNode(nodeID, newLeftFormulaOnRightChild.distinct().toMutableList(), newRightFormulaOnRightChild.distinct().toMutableList(), AndRight(nodeID, listIndex));
+    val newLeftLeaf = TreeNode(
+        nodeID, 
+        newLeftFormulaOnLeftChild.distinct().toMutableList(), 
+        newRightFormulaOnLeftChild.distinct().toMutableList(), 
+        AndRight(nodeID, listIndex)
+    );
+    val newRightLeaf = TreeNode(
+        nodeID, 
+        newLeftFormulaOnRightChild.distinct().toMutableList(), 
+        newRightFormulaOnRightChild.distinct().toMutableList(), 
+        AndRight(nodeID, listIndex)
+    );
     state.tree.add(newLeftLeaf);
     state.tree.add(newRightLeaf);
     state.tree[nodeID].children = arrayOf(state.tree.size - 2, state.tree.size - 1);
@@ -169,7 +212,12 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     newLeftFormula.add(listIndex, formula.leftChild);
     newLeftFormula.add(listIndex + 1, formula.rightChild);
     val newRightFormula = leaf.rightFormulas.toMutableList();
-    val newLeaf = TreeNode(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList(), AndLeft(nodeID, listIndex));
+    val newLeaf = TreeNode(
+        nodeID, 
+        newLeftFormula.distinct().toMutableList(), 
+        newRightFormula.distinct().toMutableList(), 
+        AndLeft(nodeID, listIndex)
+    );
     state.tree.add(newLeaf);
     state.tree[nodeID].children = arrayOf(state.tree.size - 1);
     return state;
@@ -194,8 +242,18 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     newLeftFormulaOnRightChild.removeAt(listIndex);
     newLeftFormulaOnRightChild.add(formula.rightChild);
     val newRightFormulaOnRightChild = leaf.rightFormulas.toMutableList();
-    val newLeftLeaf = TreeNode(nodeID,newLeftFormulaOnLeftChild.distinct().toMutableList(),newRightFormulaOnLeftChild.distinct().toMutableList(),ImpLeft(nodeID, listIndex));
-    val newRightLeaf = TreeNode(nodeID,newLeftFormulaOnRightChild.distinct().toMutableList(),newRightFormulaOnRightChild.distinct().toMutableList(),ImpLeft(nodeID, listIndex));
+    val newLeftLeaf = TreeNode(
+        nodeID,
+        newLeftFormulaOnLeftChild.distinct().toMutableList(),
+        newRightFormulaOnLeftChild.distinct().toMutableList(),
+        ImpLeft(nodeID, listIndex)
+    );
+    val newRightLeaf = TreeNode(
+        nodeID,
+        newLeftFormulaOnRightChild.distinct().toMutableList(),
+        newRightFormulaOnRightChild.distinct().toMutableList(),
+        ImpLeft(nodeID, listIndex)
+    );
 
     state.tree.add(newLeftLeaf);
     state.tree.add(newRightLeaf);
@@ -217,13 +275,19 @@ fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     val newRightFormula = leaf.rightFormulas.toMutableList();
     newRightFormula.removeAt(listIndex);
     newRightFormula.add(listIndex,formula.rightChild);
-    val newLeaf = TreeNode(nodeID, newLeftFormula.distinct().toMutableList(), newRightFormula.distinct().toMutableList(), ImpRight(nodeID, listIndex));
+    val newLeaf = TreeNode(
+        nodeID, 
+        newLeftFormula.distinct().toMutableList(), 
+        newRightFormula.distinct().toMutableList(), 
+        ImpRight(nodeID, listIndex)
+    );
     state.tree.add(newLeaf);
     state.tree[nodeID].children = arrayOf(state.tree.size - 1);
     return state;
 }
 
 
+@Suppress("ThrowsCount")
 fun checkRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int){
     if (nodeID < 0 || state.tree.size <= nodeID)
         throw IllegalMove("nodeID out of Bounds");
@@ -239,6 +303,7 @@ fun checkRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int){
     return
 }
 
+@Suppress("ThrowsCount")
 fun checkLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int){
     if (nodeID < 0 || state.tree.size <= nodeID)
         throw IllegalMove("nodeID out of Bounds");
@@ -283,12 +348,11 @@ fun applyUndo(state: GenericSequentCalculusState): GenericSequentCalculusState {
     return state;
 }
 
+@Suppress("EmptyCatchBlock", "ComplexMethod", "NestedBlockDepth", "ThrowsCount")
 fun applyPrune(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalculusState {
     if (nodeID < 0 || state.tree.size <= nodeID)
         throw IllegalMove("nodeID out of Bounds");
 
-    println(state.tree.toString());
-    println(nodeID);
     if(state.tree.size <= 1)
         throw IllegalMove("Nothing to Prune");
 

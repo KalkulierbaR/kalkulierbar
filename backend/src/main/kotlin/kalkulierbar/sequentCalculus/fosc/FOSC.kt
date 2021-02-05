@@ -116,6 +116,7 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
      * @param json JSON parameter representation
      * @return parsed param object
      */
+    @Suppress("TooGenericExceptionCaught")
     override fun jsonToParam(json: String): SequentCalculusParam {
         try {
             return serializer.parse(SequentCalculusParam.serializer(), json)

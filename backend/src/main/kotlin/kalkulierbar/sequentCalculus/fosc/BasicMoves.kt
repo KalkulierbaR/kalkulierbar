@@ -53,7 +53,12 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: St
     newLeftFormulas.add(newFormula);
     newLeftFormulas = newLeftFormulas.distinct().toMutableList();
     
-    val newLeaf = TreeNode(nodeID, newLeftFormulas, node.rightFormulas.distinct().toMutableList(), AllLeft(nodeID, listIndex, swapVariable));
+    val newLeaf = TreeNode(
+        nodeID, 
+        newLeftFormulas, 
+        node.rightFormulas.distinct().toMutableList(), 
+        AllLeft(nodeID, listIndex, swapVariable)
+    );
     state.tree.add(newLeaf);
     node.children = arrayOf(state.tree.size - 1);
 
@@ -92,7 +97,12 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: S
     newRightFormulas.remove(formula);
     newRightFormulas = newRightFormulas.distinct().toMutableList();
     
-    val newLeaf = TreeNode(nodeID, node.leftFormulas.distinct().toMutableList(), newRightFormulas, AllRight(nodeID, listIndex, swapVariable));
+    val newLeaf = TreeNode(
+        nodeID,
+        node.leftFormulas.distinct().toMutableList(), 
+        newRightFormulas, 
+        AllRight(nodeID, listIndex, swapVariable)
+    );
     state.tree.add(newLeaf);
     node.children = arrayOf(state.tree.size - 1);
 
@@ -131,7 +141,12 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: Str
     newLeftFormulas.remove(formula);
     newLeftFormulas = newLeftFormulas.distinct().toMutableList();
     
-    val newLeaf = TreeNode(nodeID, newLeftFormulas, node.rightFormulas.distinct().toMutableList(), ExLeft(nodeID, listIndex, swapVariable));
+    val newLeaf = TreeNode(
+        nodeID, 
+        newLeftFormulas, 
+        node.rightFormulas.distinct().toMutableList(), 
+        ExLeft(nodeID, listIndex, swapVariable)
+    );
     state.tree.add(newLeaf);
     node.children = arrayOf(state.tree.size - 1);
 
@@ -167,7 +182,12 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: St
     newRightFormulas.add(newFormula);
     newRightFormulas = newRightFormulas.distinct().toMutableList();
     
-    val newLeaf = TreeNode(nodeID, node.leftFormulas.distinct().toMutableList(), newRightFormulas, ExRight(nodeID, listIndex, swapVariable));
+    val newLeaf = TreeNode(
+        nodeID, 
+        node.leftFormulas.distinct().toMutableList(), 
+        newRightFormulas, 
+        ExRight(nodeID, listIndex, swapVariable)
+    );
     state.tree.add(newLeaf);
     node.children = arrayOf(state.tree.size - 1);
 

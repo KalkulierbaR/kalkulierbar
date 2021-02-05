@@ -67,17 +67,13 @@ class TreeNode(
     constructor(
         leftFormulas: MutableList<LogicNode>, 
         rightFormulas: MutableList<LogicNode>
-    ) : this(null, emptyArray<Int>(), leftFormulas, rightFormulas, false, null) {
-
-    }
+    ) : this(null, emptyArray<Int>(), leftFormulas, rightFormulas, false, null)
 
     constructor(
         leftFormulas: MutableList<LogicNode>, 
         rightFormulas: MutableList<LogicNode>, 
         lastMove: SequentCalculusMove
-    ) : this(null, emptyArray<Int>(), leftFormulas, rightFormulas, false, lastMove) {
-
-    }
+    ) : this(null, emptyArray<Int>(), leftFormulas, rightFormulas, false, lastMove)
 
     override fun toString(): String {
         return leftFormulas.joinToString() + " ⊢ " + rightFormulas.joinToString();

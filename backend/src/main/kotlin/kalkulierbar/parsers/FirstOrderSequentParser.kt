@@ -15,10 +15,11 @@ import kalkulierbar.sequentCalculus.fosc.FOSCState;
 open class FirstOrderSequentParser {
 
     /**
-     * Parses a string directly into a FOSCState using the FirstOrderParser to parse single formulas seperated by ',' in the input string
+     * Parses a string directly into a FOSCState using the FirstOrderParser
+     * to parse single formulas seperated by ',' in the input string
      * and seperated by '|-' to differentiate between left and right side;
      */
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongMethod", "ThrowsCount")
     open fun parse(formula: String): FOSCState {
         //Find left and right formulas in the input string
         val sides = formula.split("|-") 

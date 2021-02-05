@@ -15,10 +15,11 @@ import kalkulierbar.sequentCalculus.psc.PSCState;
 open class PropositionalSequentParser {
 
     /**
-     * Parses a string directly into a PSCState using the PropositionalParser to parse single formulas seperated by ',' in the input string
+     * Parses a string directly into a PSCState using the PropositionalParser
+     * to parse single formulas seperated by ',' in the input string
      * and seperated by '|-' to differentiate between left and right side;
      */
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongMethod", "ThrowsCount")
     open fun parse(formula: String): PSCState {
         //Find left and right formulas in the input string
         val sides = formula.split("|-") 

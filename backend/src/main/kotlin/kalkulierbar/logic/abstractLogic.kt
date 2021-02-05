@@ -70,6 +70,7 @@ abstract class Quantifier : UnaryOp() {
     abstract var varName: String
     abstract val boundVariables: MutableList<QuantifiedVariable>
 
+    @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Quantifier)
             return false;
