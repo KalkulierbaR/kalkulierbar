@@ -1,7 +1,7 @@
 package kalkulierbar.parsers
 
-import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.EmptyFormulaException
+import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.And
 import kalkulierbar.logic.Equiv
 import kalkulierbar.logic.Impl

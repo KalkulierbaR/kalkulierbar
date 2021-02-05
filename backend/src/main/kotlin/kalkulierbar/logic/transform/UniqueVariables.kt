@@ -113,7 +113,7 @@ class UniqueVariables : DoNothingVisitor() {
  * @param strict Set to false to allow variables with no associated replacement
  */
 class VariableRenamer(
-    val replacementMap: Map<QuantifiedVariable, String>, 
+    val replacementMap: Map<QuantifiedVariable, String>,
     val strict: Boolean = true
 ) : FirstOrderTermVisitor<Unit>() {
     /**

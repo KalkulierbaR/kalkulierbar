@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestPSCParser {
-    private val parser = PropositionalSequentParser();
+    private val parser = PropositionalSequentParser()
 
     private val invalid = listOf(
         "-->a",

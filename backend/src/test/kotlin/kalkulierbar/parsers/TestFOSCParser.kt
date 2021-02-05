@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestFOSCParser {
-    private val parser = FirstOrderSequentParser();
+    private val parser = FirstOrderSequentParser()
 
     private val invalid = listOf(
         "-->a",
@@ -51,7 +51,7 @@ class TestFOSCParser {
         "!/ex X: (P(X) <-> !P(X))" to " ⊢ ¬(∃X: (P(X) <=> ¬P(X)))",
         "!(/ex X: (P(X) <-> !P(X)))" to " ⊢ ¬(∃X: (P(X) <=> ¬P(X)))",
         "/ex Xyz: P(Xyz) & /all X: P(X)" to " ⊢ ((∃Xyz: P(Xyz)) ∧ (∀X: P(X)))",
-        
+
         "|- P(c)" to " ⊢ P(c)",
         "|- \\all X: P(X)" to " ⊢ (∀X: P(X))",
         "|- \\all X:P(X)" to " ⊢ (∀X: P(X))",

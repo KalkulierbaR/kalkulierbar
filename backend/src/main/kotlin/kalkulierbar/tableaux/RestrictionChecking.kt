@@ -13,9 +13,9 @@ import kalkulierbar.clause.Clause
  * @param applyPreprocessing Whether to simulate expansion clause preprocessing or not
  */
 fun <AtomType> verifyExpandRegularity(
-    state: GenericTableauxState<AtomType>, 
-    leafID: Int, 
-    clause: Clause<AtomType>, 
+    state: GenericTableauxState<AtomType>,
+    leafID: Int,
+    clause: Clause<AtomType>,
     applyPreprocessing: Boolean = true
 ) {
     // Create list of predecessor

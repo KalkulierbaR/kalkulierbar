@@ -1,13 +1,11 @@
 package kalkulierbar.psc
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.sequentCalculus.psc.PSC
 import kalkulierbar.sequentCalculus.*
-import kotlin.test.assertEquals
+import kalkulierbar.sequentCalculus.psc.PSC
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-
 
 class TestUndo {
     val instance = PSC()
@@ -59,8 +57,6 @@ class TestUndo {
 
         println(hash2)
         state = instance.applyMoveOnState(state, Ax(state.tree.size - 1))
-
-
 
         state = instance.applyMoveOnState(state, UndoMove())
         assertEquals(hash2, state.getHash())

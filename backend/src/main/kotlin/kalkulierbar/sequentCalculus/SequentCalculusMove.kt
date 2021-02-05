@@ -1,8 +1,5 @@
 package kalkulierbar.sequentCalculus
 
-import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.FirstOrderTerm
-import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -55,8 +52,8 @@ class NotLeft(
 @Serializable
 @SerialName("orRight")
 class OrRight(
-        val nodeID: Int,
-        val listIndex: Int
+    val nodeID: Int,
+    val listIndex: Int
 ) : SequentCalculusMove()
 
 @Serializable
@@ -69,8 +66,8 @@ class AndRight(
 @Serializable
 @SerialName("orLeft")
 class OrLeft(
-        val nodeID: Int,
-        val listIndex: Int
+    val nodeID: Int,
+    val listIndex: Int
 ) : SequentCalculusMove()
 
 @Serializable
@@ -83,17 +80,16 @@ class AndLeft(
 @Serializable
 @SerialName("impLeft")
 class ImpLeft(
-        val nodeID: Int,
-        val listIndex: Int
+    val nodeID: Int,
+    val listIndex: Int
 ) : SequentCalculusMove()
 
 @Serializable
 @SerialName("impRight")
 class ImpRight(
-        val nodeID: Int,
-        val listIndex: Int
+    val nodeID: Int,
+    val listIndex: Int
 ) : SequentCalculusMove()
-
 
 @Serializable
 @SerialName("undo")
@@ -105,7 +101,7 @@ class PruneMove(
     val nodeID: Int
 ) : SequentCalculusMove()
 
-//FOSC MOVES
+// FOSC MOVES
 @Serializable
 @SerialName("allLeft")
 class AllLeft(

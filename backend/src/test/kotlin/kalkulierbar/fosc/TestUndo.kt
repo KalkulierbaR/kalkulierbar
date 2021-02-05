@@ -1,12 +1,9 @@
 package kalkulierbar.fosc
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.Var
-import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequentCalculus.fosc.FOSC
 import kalkulierbar.sequentCalculus.*
+import kalkulierbar.sequentCalculus.fosc.FOSC
 import kotlin.test.*
-
 
 class TestUndo {
     val instance = FOSC()
@@ -58,8 +55,6 @@ class TestUndo {
 
         println(hash2)
         state = instance.applyMoveOnState(state, Ax(state.tree.size - 1))
-
-
 
         state = instance.applyMoveOnState(state, UndoMove())
         assertEquals(hash2, state.getHash())

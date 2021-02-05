@@ -3,8 +3,8 @@ package kalkulierbar.fosc
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.Relation
 import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequentCalculus.fosc.FOSC
 import kalkulierbar.sequentCalculus.*
+import kalkulierbar.sequentCalculus.fosc.FOSC
 import kotlin.test.*
 
 class TestNotLeft {
@@ -12,12 +12,12 @@ class TestNotLeft {
     val parser = FirstOrderParser()
 
     @Test
-    fun testBasic(){
+    fun testBasic() {
         var state = instance.parseFormulaToState("!(!P(a))", null)
         println(state.getHash())
-        state = instance.applyMoveOnState(state, NotRight(0,0))
+        state = instance.applyMoveOnState(state, NotRight(0, 0))
         println(state.getHash())
-        state = instance.applyMoveOnState(state, NotLeft(1,0))
+        state = instance.applyMoveOnState(state, NotLeft(1, 0))
         println(state.getHash())
         val formula1 = parser.parse("P(a)")
         val node1 = state.tree[state.tree.size - 1]
@@ -28,12 +28,12 @@ class TestNotLeft {
     }
 
     @Test
-    fun testParent(){
+    fun testParent() {
         var state = instance.parseFormulaToState("!(!P(a)) ", null)
         assertTrue(state.tree[0].parent == null)
 
-        state = instance.applyMoveOnState(state, NotRight(0,0))
-        state = instance.applyMoveOnState(state, NotLeft(1,0))
+        state = instance.applyMoveOnState(state, NotRight(0, 0))
+        state = instance.applyMoveOnState(state, NotLeft(1, 0))
 
         assertTrue(state.tree[0].children.size == 1)
         assertEquals(state.tree[1].parent, 0)
@@ -44,7 +44,7 @@ class TestNotLeft {
         var state = instance.parseFormulaToState("P(a) & !P(a)", null)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, NotLeft(0,0))
+            instance.applyMoveOnState(state, NotLeft(0, 0))
         }
     }
 }

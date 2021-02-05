@@ -2,8 +2,8 @@ package kalkulierbar.fosc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequentCalculus.fosc.FOSC
 import kalkulierbar.sequentCalculus.*
+import kalkulierbar.sequentCalculus.fosc.FOSC
 import kotlin.test.*
 
 class TestAllLeft {
@@ -14,21 +14,21 @@ class TestAllLeft {
     fun testBasic() {
         var state = instance.parseFormulaToState("\\all X: R(X) |-", null)
 
-        state = instance.applyMoveOnState(state, AllLeft(0, 0, "a"));
+        state = instance.applyMoveOnState(state, AllLeft(0, 0, "a"))
 
-        assertTrue(state.tree.size == 2);
-        assertTrue(state.tree[0].parent == null);
-        assertTrue(state.tree[0].children.size == 1);
-        assertTrue(state.tree[0].children[0] == 1);
-        assertTrue(state.tree[1].parent == 0);
+        assertTrue(state.tree.size == 2)
+        assertTrue(state.tree[0].parent == null)
+        assertTrue(state.tree[0].children.size == 1)
+        assertTrue(state.tree[0].children[0] == 1)
+        assertTrue(state.tree[1].parent == 0)
 
-        val formula1 = parser.parse("\\all X: R(X)");
-        val formula2 = parser.parse("R(a)");
+        val formula1 = parser.parse("\\all X: R(X)")
+        val formula2 = parser.parse("R(a)")
 
-        assertTrue(state.tree[1].rightFormulas.size == 0);
-        assertTrue(state.tree[1].leftFormulas.size == 2);
-        assertTrue(state.tree[1].leftFormulas[0].synEq(formula1));
-        assertTrue(state.tree[1].leftFormulas[1].synEq(formula2));
+        assertTrue(state.tree[1].rightFormulas.size == 0)
+        assertTrue(state.tree[1].leftFormulas.size == 2)
+        assertTrue(state.tree[1].leftFormulas[0].synEq(formula1))
+        assertTrue(state.tree[1].leftFormulas[1].synEq(formula2))
     }
 
     @Test
@@ -36,8 +36,7 @@ class TestAllLeft {
         var state = instance.parseFormulaToState("\\ex X: R(X) |-", null)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, AllLeft(0,0, "a"))
+            instance.applyMoveOnState(state, AllLeft(0, 0, "a"))
         }
     }
-    
 }

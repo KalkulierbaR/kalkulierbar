@@ -1,10 +1,9 @@
 package kalkulierbar.sequentCalculus
 
 import kalkulierbar.logic.LogicNode
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
-
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
 
 interface GenericSequentCalculus
 
@@ -13,13 +12,13 @@ interface GenericSequentCalculusState {
     var showOnlyApplicableRules: Boolean
 
     fun setNodeClosed(leaf: GenericSequentCalculusNode) {
-        var node = leaf;
+        var node = leaf
         while (node.isLeaf || node.children.fold(true) { acc, elem -> acc && tree[elem].isClosed }) {
-            node.isClosed = true;
+            node.isClosed = true
             if (node.parent == null) {
-                break;
+                break
             }
-            node = tree.get(node.parent!!);
+            node = tree.get(node.parent!!)
         }
     }
 }
@@ -31,18 +30,17 @@ val GenericSequentCalculusNodeModule = SerializersModule {
 }
 
 interface GenericSequentCalculusNode {
-    var parent: Int?;
-    var children: Array<Int>;
-    val leftFormulas: MutableList<LogicNode>;
-    val rightFormulas: MutableList<LogicNode>;
-    var isClosed: Boolean;
-    val lastMove: SequentCalculusMove?;
+    var parent: Int?
+    var children: Array<Int>
+    val leftFormulas: MutableList<LogicNode>
+    val rightFormulas: MutableList<LogicNode>
+    var isClosed: Boolean
+    val lastMove: SequentCalculusMove?
 
     val isLeaf
-        get() = children.size == 0;
+        get() = children.size == 0
 
     override fun toString(): String
-
 }
 
 @Serializable
@@ -54,29 +52,29 @@ class TreeNode(
     override val rightFormulas: MutableList<LogicNode>,
     override var isClosed: Boolean,
     override val lastMove: SequentCalculusMove?
-    
+
 ) : GenericSequentCalculusNode {
 
     constructor(
         parent: Int,
-        leftFormulas: MutableList<LogicNode>, 
-        rightFormulas: MutableList<LogicNode>, 
+        leftFormulas: MutableList<LogicNode>,
+        rightFormulas: MutableList<LogicNode>,
         lastMove: SequentCalculusMove
     ) : this (parent, emptyArray<Int>(), leftFormulas, rightFormulas, false, lastMove)
 
     constructor(
-        leftFormulas: MutableList<LogicNode>, 
+        leftFormulas: MutableList<LogicNode>,
         rightFormulas: MutableList<LogicNode>
     ) : this(null, emptyArray<Int>(), leftFormulas, rightFormulas, false, null)
 
     constructor(
-        leftFormulas: MutableList<LogicNode>, 
-        rightFormulas: MutableList<LogicNode>, 
+        leftFormulas: MutableList<LogicNode>,
+        rightFormulas: MutableList<LogicNode>,
         lastMove: SequentCalculusMove
     ) : this(null, emptyArray<Int>(), leftFormulas, rightFormulas, false, lastMove)
 
     override fun toString(): String {
-        return leftFormulas.joinToString() + " ⊢ " + rightFormulas.joinToString();
+        return leftFormulas.joinToString() + " ⊢ " + rightFormulas.joinToString()
     }
 }
 
