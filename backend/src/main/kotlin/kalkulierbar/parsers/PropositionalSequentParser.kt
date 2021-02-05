@@ -10,6 +10,7 @@ import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
 import kalkulierbar.sequentCalculus.psc.PSCState;
+import main.kotlin.kalkulierbar.logic.transform.ChangeEquivalences
 
 @Suppress("TooManyFunctions")
 open class PropositionalSequentParser {
@@ -36,7 +37,7 @@ open class PropositionalSequentParser {
             var currentIndex = 0;
             for (strIndex in leftArray.indices) {
                 try {
-                    leftFormulas.add(PropositionalParser().parse(leftArray[strIndex], currentIndex))
+                    leftFormulas.add(ChangeEquivalences.transform(PropositionalParser().parse(leftArray[strIndex], currentIndex)))
                 } catch(e: EmptyFormulaException) {
 
                 }
@@ -48,7 +49,7 @@ open class PropositionalSequentParser {
             currentIndex += 2;
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(PropositionalParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(ChangeEquivalences.transform(PropositionalParser().parse(rightArray[strIndex], currentIndex)))
                 } catch(e: EmptyFormulaException) {
                     
                 }
@@ -69,7 +70,7 @@ open class PropositionalSequentParser {
             var currentIndex = 0;
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(PropositionalParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(ChangeEquivalences.transform(PropositionalParser().parse(rightArray[strIndex], currentIndex)))
                 } catch(e: EmptyFormulaException) {
 
                 }
