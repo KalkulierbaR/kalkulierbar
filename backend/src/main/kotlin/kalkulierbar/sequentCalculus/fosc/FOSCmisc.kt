@@ -10,7 +10,8 @@ import kalkulierbar.sequentCalculus.TreeNode
 
 @Serializable
 class FOSCState(
-    override val tree: MutableList<GenericSequentCalculusNode> = mutableListOf<GenericSequentCalculusNode>()
+    override val tree: MutableList<GenericSequentCalculusNode> = mutableListOf<GenericSequentCalculusNode>(),
+    override var showOnlyApplicableRules: Boolean = false
 ) : GenericSequentCalculusState, ProtectedState() {
 
     constructor(formula: LogicNode) : this() {
@@ -35,6 +36,6 @@ class FOSCState(
     override var seal = ""
 
     override fun getHash(): String {
-        return "fosc|${tree.map{it.toString()}}"
+        return "fosc|${tree.map{it.toString()}}|$showOnlyApplicableRules"
     }
 }

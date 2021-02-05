@@ -76,5 +76,5 @@ export enum PSCType {
 }
 
 export interface PSCParams {
-    help: boolean;
+    showOnlyApplicableRules: boolean;
 }

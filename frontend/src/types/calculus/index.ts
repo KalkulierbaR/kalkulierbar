@@ -12,7 +12,7 @@ import {
 } from "./resolution";
 import { NCTableauxMove } from "./nc-tableaux";
 import { DPLLMove } from "./dpll";
-import { FOSCMove, PSCMove } from "./psc";
+import { FOSCMove, PSCMove, PSCParams } from "./psc";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
@@ -77,8 +77,8 @@ export interface Params {
     "fo-resolution": FOResolutionParams;
     "nc-tableaux": null;
     dpll: null;
-    psc: null;
-    "fo-sc": null;
+    psc: PSCParams;
+    fosc: PSCParams;
 }
 
 /**
