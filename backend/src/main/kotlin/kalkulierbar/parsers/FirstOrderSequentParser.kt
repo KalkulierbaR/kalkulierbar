@@ -10,6 +10,7 @@ import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
 import kalkulierbar.sequentCalculus.fosc.FOSCState;
+import main.kotlin.kalkulierbar.logic.transform.ChangeEquivalences
 
 @Suppress("TooManyFunctions")
 open class FirstOrderSequentParser {
@@ -36,7 +37,7 @@ open class FirstOrderSequentParser {
             var currentIndex = 0;
             for (strIndex in leftArray.indices) {
                 try {
-                    leftFormulas.add(FirstOrderParser().parse(leftArray[strIndex], currentIndex))
+                    leftFormulas.add(ChangeEquivalences.transform(FirstOrderParser().parse(leftArray[strIndex], currentIndex)))
                 } catch(e: EmptyFormulaException) {
 
                 }
@@ -48,7 +49,7 @@ open class FirstOrderSequentParser {
             currentIndex += 2;
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(FirstOrderParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(ChangeEquivalences.transform(FirstOrderParser().parse(rightArray[strIndex], currentIndex)))
                 } catch(e: EmptyFormulaException) {
                     
                 }
@@ -69,7 +70,7 @@ open class FirstOrderSequentParser {
             var currentIndex = 0;
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(FirstOrderParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(ChangeEquivalences.transform(FirstOrderParser().parse(rightArray[strIndex], currentIndex)))
                 } catch(e: EmptyFormulaException) {
 
                 }
