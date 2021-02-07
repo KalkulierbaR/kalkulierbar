@@ -82,18 +82,18 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                     setSelectedNodeId(undefined);
                     setSelectedRuleId(undefined);
                 } else if (newRuleId >= 9 && newRuleId <= 12) {
-                    //Selected Rule is a Quantifier
+                    // Selected Rule is a Quantifier
                     setVarOrigins([nodeName(selectedNode)]);
-                    //Open Popup to
+                    // Open Popup to
                     if (selectedListIndex.charAt(0) === "l") {
-                        let formula = selectedNode.leftFormulas[parseStringToListIndex(selectedListIndex)]
+                        const formula = selectedNode.leftFormulas[parseStringToListIndex(selectedListIndex)]
                         if (formula.type === "allquant" || formula.type === "exquant") {
                             setVarsToAssign([formula.varName!]);
                             setShowVarAssignDialog(true);
                         }
                         
                     } else {
-                        let formula = selectedNode.rightFormulas[parseStringToListIndex(selectedListIndex)]
+                        const formula = selectedNode.rightFormulas[parseStringToListIndex(selectedListIndex)]
                         if (formula.type === "allquant" || formula.type === "exquant") {
                             setVarsToAssign([formula.varName!]);
                             setShowVarAssignDialog(true);
@@ -128,7 +128,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                     server, 
                     calculus, 
                     state, 
-                    {type: ruleOptions.get(selectedRuleId)!, nodeID: selectedNodeId!, listIndex: parseStringToListIndex(selectedListIndex), swapVariable: "a"}, 
+                    {type: ruleOptions.get(selectedRuleId)!, nodeID: selectedNodeId!, listIndex: parseStringToListIndex(selectedListIndex), varAssign}, 
                     onChange,
                     notificationHandler,
                 )
@@ -159,18 +159,18 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                                 server, calculus, state, {type: "Ax", nodeID: newNode.id}, onChange,notificationHandler,
                             )
                         } else if (selectedRuleId >= 9 && selectedRuleId <= 12) {
-                            //Selected Rule is a Quantifier
+                            // Selected Rule is a Quantifier
                             setVarOrigins([nodeName(newNode)]);
-                            //Open Popup to
+                            // Open Popup to
                             if (selectedListIndex.charAt(0) === "l") {
-                                let formula = newNode.leftFormulas[parseStringToListIndex(selectedListIndex)]
+                                const formula = newNode.leftFormulas[parseStringToListIndex(selectedListIndex)]
                                 if (formula.type === "allquant" || formula.type === "exquant") {
                                     setVarsToAssign([formula.varName!]);
                                     setShowVarAssignDialog(true);
                                 }
                                 
                             } else {
-                                let formula = newNode.rightFormulas[parseStringToListIndex(selectedListIndex)]
+                                const formula = newNode.rightFormulas[parseStringToListIndex(selectedListIndex)]
                                 if (formula.type === "allquant" || formula.type === "exquant") {
                                     setVarsToAssign([formula.varName!]);
                                     setShowVarAssignDialog(true);
@@ -208,6 +208,30 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
         }
         
     }
+
+    const disableOptions = (
+        option: number 
+    ) => {
+        if (state.showOnlyApplicableRules === false)
+            return true;
+        const rules = getFORuleSet();
+        if (selectedListIndex === undefined || selectedNodeId === undefined || selectedNode === undefined)
+            return true;
+        if (rules.rules[option].applicableOn !== undefined) {
+            if (selectedListIndex.charAt(0) === 'l') {
+                if (rules.rules[option].site === 'left' || rules.rules[option].site === 'both') {
+                    return selectedNode.leftFormulas[parseStringToListIndex(selectedListIndex)].type === rules.rules[option].applicableOn;
+                }
+                return false;
+            } 
+                if (rules.rules[option].site === 'right' || rules.rules[option].site === 'both') {
+                    return selectedNode.rightFormulas[parseStringToListIndex(selectedListIndex)].type === rules.rules[option].applicableOn;
+                }
+                return false;
+            
+        } 
+        return true;
+    }
     
     
     return (
@@ -227,6 +251,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                             selectOptionCallback={(keyValuePair) =>
                                 selectRuleCallback(keyValuePair[0])
                             }
+                            disableOption={disableOptions}
                         />
                     </div>
                 )}
@@ -254,6 +279,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         selectRuleCallback(keyValuePair[0]);
                     }}
                     node={selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined}
+                    disableOption={disableOptions}
                 />
             </Dialog>
 
@@ -271,7 +297,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
 
                 
             <PSCFAB 
-                calculus={Calculus.psc}
+                calculus={calculus}
                 state={state}
                 selectedNodeId={selectedNodeId}
                 ruleCallback={ () => setShowRuleDialog(true)}

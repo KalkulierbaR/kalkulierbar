@@ -26,6 +26,10 @@ interface Props {
      * If the current selected Node should be showed above
      */
     node?: PSCNode | undefined;
+    /**
+     * Function to decide if an option should be disabled
+     */
+    disableOption?: (option: number) => boolean;
 }
 
 const OptionList: preact.FunctionalComponent<Props> = ({
@@ -34,7 +38,15 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     selectOptionCallback,
     className,
     node,
+    disableOption = (option: number) => {return true},
 }) => {
+
+    const handleClick = (keyValuePair: [number, string]) => {
+        if(disableOption(keyValuePair[0])){
+            selectOptionCallback(keyValuePair)
+        }
+    }
+
     return (
         <div class={`card ${className}`}>
                 {node !== undefined && (
@@ -47,12 +59,13 @@ const OptionList: preact.FunctionalComponent<Props> = ({
                 )}
             {Array.from(options).map((keyValuePair: [number, string]) => (
                 <p
-                    onClick={() => selectOptionCallback(keyValuePair)}
+                    onClick={() => handleClick(keyValuePair)}
                     class={classMap({
                         [style.option]: true,
                         [style.optionSelected]: selectedOptionIds.includes(
                             keyValuePair[0],
                         ),
+                        [style.optionDisabled]: disableOption(keyValuePair[0]) === false,
                     })}
                 >
                     {keyValuePair[1]}

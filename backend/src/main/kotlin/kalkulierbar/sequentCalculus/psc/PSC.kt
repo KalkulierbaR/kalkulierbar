@@ -15,16 +15,20 @@ import kalkulierbar.sequentCalculus.*
 import kalkulierbar.sequentCalculus.moveImplementations.*
 import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
 
-class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, Unit>() {
+class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>() {
 
     private val serializer = Json(context = LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
 
     override val identifier = "psc"
 
-    override fun parseFormulaToState(formula: String, params: Unit?): PSCState {
-        println(PropositionalSequentParser().parse(formula).tree.get(0).toString());
-        println(" ⊢ a, b");
-        return PropositionalSequentParser().parse(formula);
+    override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): PSCState {
+        if (params == null) {
+            return PropositionalSequentParser().parse(formula);
+        } else {
+            val state = PropositionalSequentParser().parse(formula);
+            state.showOnlyApplicableRules = params.showOnlyApplicableRules;
+            return state;
+        }
     }
 
     override fun applyMoveOnState(state: PSCState, move: SequentCalculusMove): PSCState {
@@ -109,5 +113,12 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
      * @param json JSON parameter representation
      * @return parsed param object
      */
-    override fun jsonToParam(json: String) = Unit
+    override fun jsonToParam(json: String): SequentCalculusParam {
+        try {
+            return serializer.parse(SequentCalculusParam.serializer(), json)
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON params"
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
+        }
+    }
 }

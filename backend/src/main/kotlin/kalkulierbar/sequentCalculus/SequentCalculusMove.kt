@@ -122,7 +122,7 @@ class PruneMove(
 class AllLeft(
     val nodeID: Int,
     val listIndex: Int,
-    val swapVariable: String?
+    val varAssign: Map<String, String>
 ) : SequentCalculusMove() {
 }
 
@@ -131,7 +131,7 @@ class AllLeft(
 class AllRight(
     val nodeID: Int,
     val listIndex: Int,
-    val swapVariable: String?
+    val varAssign: Map<String, String>
 ) : SequentCalculusMove() {
 }
 
@@ -140,7 +140,7 @@ class AllRight(
 class ExLeft(
     val nodeID: Int,
     val listIndex: Int,
-    val swapVariable: String?
+    val varAssign: Map<String, String>
 ) : SequentCalculusMove() {
 }
 
@@ -149,6 +149,6 @@ class ExLeft(
 class ExRight(
     val nodeID: Int,
     val listIndex: Int,
-    val swapVariable: String?
+    val varAssign: Map<String, String>
 ) : SequentCalculusMove() {
 }
