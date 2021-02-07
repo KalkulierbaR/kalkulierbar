@@ -253,6 +253,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         setShowRuleDialog(false);
                         selectRuleCallback(keyValuePair[0]);
                     }}
+                    node={selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined}
                 />
             </Dialog>
 

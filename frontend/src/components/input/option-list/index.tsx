@@ -1,5 +1,8 @@
 import { h } from "preact";
+import { PSCNode, PSCTreeLayoutNode } from "../../../types/calculus/psc";
+import { LayoutItem } from "../../../types/layout";
 import { classMap } from "../../../util/class-map";
+import { nodeName } from "../../../util/psc";
 import * as style from "./style.scss";
 
 interface Props {
@@ -19,6 +22,10 @@ interface Props {
      * Additional className for the element
      */
     className?: string;
+    /**
+     * If the current selected Node should be showed above
+     */
+    node?: PSCNode | undefined;
 }
 
 const OptionList: preact.FunctionalComponent<Props> = ({
@@ -26,9 +33,18 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     selectedOptionIds = [],
     selectOptionCallback,
     className,
+    node,
 }) => {
     return (
         <div class={`card ${className}`}>
+                {node !== undefined && (
+                    <div class={`card ${className}`}>
+                        <p class={style.originList}>
+                            {"For "}
+                            <code class={style.origin}>{nodeName(node)}</code>    
+                        </p>
+                    </div>
+                )}
             {Array.from(options).map((keyValuePair: [number, string]) => (
                 <p
                     onClick={() => selectOptionCallback(keyValuePair)}
