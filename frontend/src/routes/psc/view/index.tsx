@@ -19,7 +19,7 @@ import TutorialDialog from "../../../components/tutorial/dialog";
 import { sendMove } from "../../../util/api";
 import Dialog from "../../../components/dialog";
 import VarAssignDialog from "../../../components/dialog/var-assign";
-import { nodeName } from "../../../util/psc";
+import { nodeName, parseStringToListIndex } from "../../../util/psc";
 
 
 interface Props {
@@ -138,10 +138,6 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
         setSelectedListIndex(undefined);
         setSelectedRuleId(undefined);
         setShowVarAssignDialog(false);
-    }
-
-    const parseStringToListIndex = (str: string) => {
-        return parseInt(str.substring(1));
     }
 
     const selectNodeCallback = (
@@ -279,6 +275,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         selectRuleCallback(keyValuePair[0]);
                     }}
                     node={selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined}
+                    listIndex={selectedListIndex}
                     disableOption={disableOptions}
                 />
             </Dialog>
