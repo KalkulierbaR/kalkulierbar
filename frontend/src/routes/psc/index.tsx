@@ -33,10 +33,10 @@ const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
                     allowClauses ={false}
             />
             <FormulaInput
-                calculus={Calculus.psc}
+                calculus={calculus}
                 params={params}
                 foLogic={calculus === Calculus.fosc}
-				propPlaceholder={true}
+				sequentPlaceholder={true}
             />
 
             <div class="card">
@@ -55,6 +55,7 @@ const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
                 </div>
             
             </div>             
+            <ExampleList calculus={calculus} />
                                  
         </Fragment>
     );

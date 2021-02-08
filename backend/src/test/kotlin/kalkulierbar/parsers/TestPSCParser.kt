@@ -37,8 +37,8 @@ class TestPSCParser {
         "a-> b" to " ⊢ (a --> b)",
         "a    ->b" to " ⊢ (a --> b)",
         "a->b" to " ⊢ (a --> b)",
-        "a<->(b -> (!(c)))" to " ⊢ (a <=> (b --> ¬c))",
-        "(b & a <-> (a) | !b)" to " ⊢ ((b ∧ a) <=> (a ∨ ¬b))",
+        "a<->(b -> (!(c)))" to " ⊢ ((a ∧ (b --> ¬c)) ∨ (¬a ∧ ¬(b --> ¬c)))",
+        "(b & a <-> (a) | !b)" to " ⊢ (((b ∧ a) ∧ (a ∨ ¬b)) ∨ (¬(b ∧ a) ∧ ¬(a ∨ ¬b)))",
         "|- a" to " ⊢ a",
         "|-!a" to " ⊢ ¬a",
         "    |-    a -> b" to " ⊢ (a --> b)",
@@ -50,11 +50,11 @@ class TestPSCParser {
         "a-> b |-" to "(a --> b) ⊢ ",
         "a    ->b |-" to "(a --> b) ⊢ ",
         "a->b |-" to "(a --> b) ⊢ ",
-        "a<->(b -> (!(c))) |-" to "(a <=> (b --> ¬c)) ⊢ ",
-        "(b & a <-> (a) | !b)                 |-" to "((b ∧ a) <=> (a ∨ ¬b)) ⊢ ",
+        "a<->(b -> (!(c))) |-" to "((a ∧ (b --> ¬c)) ∨ (¬a ∧ ¬(b --> ¬c))) ⊢ ",
+        "(b & a <-> (a) | !b)                 |-" to "(((b ∧ a) ∧ (a ∨ ¬b)) ∨ (¬(b ∧ a) ∧ ¬(a ∨ ¬b))) ⊢ ",
         " |- a,b" to " ⊢ a, b",
         "a,b,c,d,e,f |- g,h,i,j,k,l" to "a, b, c, d, e, f ⊢ g, h, i, j, k, l",
-        "a & b -> c, a | c |- d <-> e" to "((a ∧ b) --> c), (a ∨ c) ⊢ (d <=> e)"
+        "a & b -> c, a | c |- d <-> e" to "((a ∧ b) --> c), (a ∨ c) ⊢ ((d ∧ e) ∨ (¬d ∧ ¬e))"
     )
 
     @Test

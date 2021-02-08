@@ -4,6 +4,7 @@ import kalkulierbar.EmptyFormulaException
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.sequentCalculus.psc.PSCState
+import main.kotlin.kalkulierbar.logic.transform.ChangeEquivalences
 
 @Suppress("TooManyFunctions")
 open class PropositionalSequentParser {
@@ -39,7 +40,7 @@ open class PropositionalSequentParser {
             var currentIndex = 0
             for (strIndex in leftArray.indices) {
                 try {
-                    leftFormulas.add(PropositionalParser().parse(leftArray[strIndex], currentIndex))
+                    leftFormulas.add(ChangeEquivalences.transform(PropositionalParser().parse(leftArray[strIndex], currentIndex)))
                 } catch (e: EmptyFormulaException) {
                     if (strIndex != 0 || leftArray.size != 1) {
                         throw InvalidFormulaFormat("Empty formula at char $currentIndex")
@@ -53,7 +54,7 @@ open class PropositionalSequentParser {
             currentIndex += 2
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(PropositionalParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(ChangeEquivalences.transform(PropositionalParser().parse(rightArray[strIndex], currentIndex)))
                 } catch (e: EmptyFormulaException) {
                     if (strIndex != 0 || rightArray.size != 1) {
                         throw InvalidFormulaFormat("Empty formula at char $currentIndex")
@@ -77,7 +78,7 @@ open class PropositionalSequentParser {
             var currentIndex = 0
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(PropositionalParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(ChangeEquivalences.transform(PropositionalParser().parse(rightArray[strIndex], currentIndex)))
                 } catch (e: EmptyFormulaException) {
                     if (strIndex != 0 || rightArray.size != 1) {
                         throw InvalidFormulaFormat("Empty formula at char $currentIndex")

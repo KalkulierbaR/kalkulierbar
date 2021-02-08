@@ -4,6 +4,7 @@ import kalkulierbar.EmptyFormulaException
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.sequentCalculus.fosc.FOSCState
+import main.kotlin.kalkulierbar.logic.transform.ChangeEquivalences
 
 @Suppress("TooManyFunctions")
 open class FirstOrderSequentParser {
@@ -39,7 +40,7 @@ open class FirstOrderSequentParser {
             var currentIndex = 0
             for (strIndex in leftArray.indices) {
                 try {
-                    leftFormulas.add(FirstOrderParser().parse(leftArray[strIndex], currentIndex))
+                    leftFormulas.add(ChangeEquivalences.transform(FirstOrderParser().parse(leftArray[strIndex], currentIndex)))
                 } catch (e: EmptyFormulaException) {
                     if (strIndex != 0 || leftArray.size != 1) {
                         throw InvalidFormulaFormat("Empty formula at char $currentIndex")
@@ -53,7 +54,7 @@ open class FirstOrderSequentParser {
             currentIndex += 2
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(FirstOrderParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(ChangeEquivalences.transform(FirstOrderParser().parse(rightArray[strIndex], currentIndex)))
                 } catch (e: EmptyFormulaException) {
                     if (strIndex != 0 || rightArray.size != 1) {
                         throw InvalidFormulaFormat("Empty formula at char $currentIndex")
@@ -77,7 +78,7 @@ open class FirstOrderSequentParser {
             var currentIndex = 0
             for (strIndex in rightArray.indices) {
                 try {
-                    rightFormulas.add(FirstOrderParser().parse(rightArray[strIndex], currentIndex))
+                    rightFormulas.add(ChangeEquivalences.transform(FirstOrderParser().parse(rightArray[strIndex], currentIndex)))
                 } catch (e: EmptyFormulaException) {
                     if (strIndex != 0 || rightArray.size != 1) {
                         throw InvalidFormulaFormat("Empty formula at char $currentIndex")

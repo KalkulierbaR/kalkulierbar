@@ -14,7 +14,7 @@ import kalkulierbar.sequentCalculus.fosc.FOSCState
 import kalkulierbar.sequentCalculus.moveImplementations.checkLeft
 import kalkulierbar.sequentCalculus.moveImplementations.checkRight
 
-fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: String?): FOSCState {
+fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkLeft(state, nodeID, listIndex)
 
     val node: GenericSequentCalculusNode = state.tree[nodeID]
@@ -25,7 +25,7 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: St
 
     // No need to check if swapVariable is already in use for rule allLeft
 
-    var replaceWithString = swapVariable
+    var replaceWithString = varAssign.get(formula.varName)
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
         replaceWithString = findFittingVariableName(node)
@@ -47,7 +47,7 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: St
         nodeID,
         newLeftFormulas,
         node.rightFormulas.distinct().toMutableList(),
-        AllLeft(nodeID, listIndex, swapVariable)
+        AllLeft(nodeID, listIndex, varAssign)
     )
     state.tree.add(newLeaf)
     node.children = arrayOf(state.tree.size - 1)
@@ -55,7 +55,7 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: St
     return state
 }
 
-fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: String?): FOSCState {
+fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkRight(state, nodeID, listIndex)
 
     val node: GenericSequentCalculusNode = state.tree[nodeID]
@@ -64,7 +64,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: S
     if (formula !is UniversalQuantifier)
         throw IllegalMove("The rule allRight must be applied on a 'UniversalQuantifier'")
 
-    var replaceWithString = swapVariable
+    var replaceWithString = varAssign.get(formula.varName)
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
         replaceWithString = findFittingVariableName(node)
@@ -91,7 +91,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: S
         nodeID,
         node.leftFormulas.distinct().toMutableList(),
         newRightFormulas,
-        AllRight(nodeID, listIndex, swapVariable)
+        AllRight(nodeID, listIndex, varAssign)
     )
     state.tree.add(newLeaf)
     node.children = arrayOf(state.tree.size - 1)
@@ -99,7 +99,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: S
     return state
 }
 
-fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: String?): FOSCState {
+fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkLeft(state, nodeID, listIndex)
 
     val node: GenericSequentCalculusNode = state.tree[nodeID]
@@ -108,7 +108,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: Str
     if (formula !is ExistentialQuantifier)
         throw IllegalMove("The rule allRight must be applied on a 'UniversalQuantifier'")
 
-    var replaceWithString = swapVariable
+    var replaceWithString = varAssign.get(formula.varName)
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
         replaceWithString = findFittingVariableName(node)
@@ -135,7 +135,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: Str
         nodeID,
         newLeftFormulas,
         node.rightFormulas.distinct().toMutableList(),
-        ExLeft(nodeID, listIndex, swapVariable)
+        ExLeft(nodeID, listIndex, varAssign)
     )
     state.tree.add(newLeaf)
     node.children = arrayOf(state.tree.size - 1)
@@ -143,7 +143,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: Str
     return state
 }
 
-fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: String?): FOSCState {
+fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkRight(state, nodeID, listIndex)
 
     val node: GenericSequentCalculusNode = state.tree[nodeID]
@@ -152,7 +152,7 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: St
     if (formula !is ExistentialQuantifier)
         throw IllegalMove("The rule allRight must be applied on a 'UniversalQuantifier'")
 
-    var replaceWithString = swapVariable
+    var replaceWithString = varAssign.get(formula.varName)
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
         replaceWithString = findFittingVariableName(node)
@@ -176,7 +176,7 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, swapVariable: St
         nodeID,
         node.leftFormulas.distinct().toMutableList(),
         newRightFormulas,
-        ExRight(nodeID, listIndex, swapVariable)
+        ExRight(nodeID, listIndex, varAssign)
     )
     state.tree.add(newLeaf)
     node.children = arrayOf(state.tree.size - 1)

@@ -18,6 +18,25 @@
     }
 }
 
+.origin-list {
+    word-spacing: 10px;
+}
+
+.origin {
+    letter-spacing: 1px;
+    color: var(--kbar-secondary-text-color);
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.formula {
+    letter-spacing: 1px;
+    color: var(--kbar-secondary-text-color);
+    font-weight: bold;
+    font-size: 2em;
+}
+
 .option-Disabled {
-    background-color: var(--kbar-8dp-color);
+    background-color: #ff009d00;
+    color: rgb(109, 109, 109);
 }
