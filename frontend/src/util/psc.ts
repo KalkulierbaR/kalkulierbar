@@ -19,9 +19,14 @@ export const formulaNames = (formulas: FormulaNode[]) => {
     return result;
 }
 
+export const parseStringToListIndex = (str: string) => {
+    return parseInt(str.substring(1));
+}
+
 export const parseFormula = (formula: FormulaNode) => {
     let result = "";
-    if(formula === undefined) return result;
+    if(formula === undefined) 
+        return result;
     switch (formula.type) {
         case "not": result += "¬" + parseFormula(formula.child!); break;
         case "and": result += "(" + parseFormula(formula.leftChild!) + " ∧ " + parseFormula(formula.rightChild!) + ")"; break;
@@ -29,6 +34,22 @@ export const parseFormula = (formula: FormulaNode) => {
         case "var": result += formula.spelling!; break;
         case "impl": result += "("+ parseFormula(formula.leftChild!)+ " -> " + parseFormula(formula.rightChild!) + ")"; break;
         case "equiv": result += "("+ parseFormula(formula.leftChild!)+ " <-> " + parseFormula(formula.rightChild!) + ")"; break;
+        case "exquant" : result += "∃" + formula.varName + ": " + parseFormula(formula.child!); break;
+        case "allquant" : result += "∀" + formula.varName + ": " + parseFormula(formula.child!); break;
+        case "QuantifiedVariable": result += formula.spelling!; break;
+        case "Constant": result += formula.spelling!; break;
+        case "Function": 
+        case "relation" : {
+            result += formula.spelling! + "(";
+            formula.arguments!.forEach((argument, index) => {
+                result += parseFormula(argument);
+                if (index != formula.arguments!.length - 1) {
+                    result += ", ";
+                }
+            });
+            result += ")"; 
+            break;
+        }
     }
 
     return result;

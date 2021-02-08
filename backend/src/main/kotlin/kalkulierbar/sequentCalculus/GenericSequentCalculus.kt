@@ -10,6 +10,7 @@ interface GenericSequentCalculus
 
 interface GenericSequentCalculusState {
     val tree: MutableList<GenericSequentCalculusNode>
+    var showOnlyApplicableRules: Boolean
 
     fun setNodeClosed(leaf: GenericSequentCalculusNode) {
         var node = leaf;
@@ -82,3 +83,8 @@ class TreeNode(
         return leftFormulas.joinToString() + " ⊢ " + rightFormulas.joinToString();
     }
 }
+
+@Serializable
+data class SequentCalculusParam(
+    val showOnlyApplicableRules: Boolean
+)

@@ -65,7 +65,7 @@ export interface AppState {
     /**
      * The current fo-psc state
      */
-    "fo-sc"?: FOSCState
+    "fosc"?: FOSCState
     /**
      * The current tutorial mode
      */

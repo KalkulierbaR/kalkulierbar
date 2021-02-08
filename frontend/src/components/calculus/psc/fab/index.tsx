@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
-import { PropCalculusType } from "../../../../types/calculus";
-import { PSCState } from "../../../../types/calculus/psc";
+import { PropCalculusType, PSCCalculusType } from "../../../../types/calculus";
+import { FOSCState, PSCState } from "../../../../types/calculus/psc";
 import { useAppState } from "../../../../util/app-state";
 import AddIcon from "../../../icons/add";
 import ControlFAB from "../../../input/control-fab";
@@ -23,11 +23,11 @@ interface Props {
     /**
      * Which calculus to use
      */
-    calculus:PropCalculusType;
+    calculus:PSCCalculusType;
     /**
      * The current calculus state
      */
-    state: PSCState;
+    state: PSCState|FOSCState;
     /**
      * Which node is currently selected
      */

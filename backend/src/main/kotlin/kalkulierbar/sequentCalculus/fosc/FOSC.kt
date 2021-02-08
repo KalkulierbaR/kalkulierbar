@@ -18,14 +18,20 @@ import kalkulierbar.sequentCalculus.moveImplementations.*
 import kalkulierbar.sequentCalculus.fosc.moveImplementations.*
 import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
 
-class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove, Unit>() {
+class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>() {
 
     private val serializer = Json(context = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
 
     override val identifier = "fosc"
 
-    override fun parseFormulaToState(formula: String, params: Unit?): FOSCState {
-        return FirstOrderSequentParser().parse(formula);
+    override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): FOSCState {
+        if (params == null) {
+            return FirstOrderSequentParser().parse(formula);
+        } else {
+            val state = FirstOrderSequentParser().parse(formula);
+            state.showOnlyApplicableRules = params.showOnlyApplicableRules;
+            return state;
+        }
     }
 
     override fun applyMoveOnState(state: FOSCState, move: SequentCalculusMove): FOSCState {
@@ -41,8 +47,10 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
             is OrLeft -> applyOrLeft(state, move.nodeID, move.listIndex) as FOSCState
             is AndRight -> applyAndRight(state, move.nodeID, move.listIndex) as FOSCState
             is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex) as FOSCState
-            is AllRight -> applyAllRight(state, move.nodeID, move.listIndex, move.swapVariable)
-            is AllLeft -> applyAllLeft(state, move.nodeID, move.listIndex, move.swapVariable)
+            is AllRight -> applyAllRight(state, move.nodeID, move.listIndex, move.varAssign)
+            is AllLeft -> applyAllLeft(state, move.nodeID, move.listIndex, move.varAssign)
+            is ExRight -> applyExRight(state, move.nodeID, move.listIndex, move.varAssign)
+            is ExLeft -> applyExLeft(state, move.nodeID, move.listIndex, move.varAssign)
             is UndoMove -> applyUndo(state) as FOSCState
             is PruneMove -> applyPrune(state, move.nodeID) as FOSCState
             else -> throw IllegalMove("Unknown move")
@@ -110,5 +118,12 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
      * @param json JSON parameter representation
      * @return parsed param object
      */
-    override fun jsonToParam(json: String) = Unit
+    override fun jsonToParam(json: String): SequentCalculusParam {
+        try {
+            return serializer.parse(SequentCalculusParam.serializer(), json)
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON params"
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
+        }
+    }
 }
