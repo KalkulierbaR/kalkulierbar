@@ -10,7 +10,8 @@ import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.ModalLogicParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
-import kalkulierbar.signedtableaux.applyNotTrue
+import kalkulierbar.signedtableaux.Negation
+import kalkulierbar.signedtableaux.applyAlpha
 
 class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>() {
 
@@ -20,7 +21,7 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
 
     override fun parseFormulaToState(formula: String, params: Unit?): SignedModalTableauxState {
         val parsedFormula = ModalLogicParser().parse(formula)
-        return SignedModalTableauxState(parsedFormula, true)
+        return SignedModalTableauxState(parsedFormula)
     }
 
     override fun applyMoveOnState(state: SignedModalTableauxState, move:SignedModalTableauxMove): SignedModalTableauxState {
@@ -29,11 +30,11 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
 
         // Pass moves to relevant subfunction
         return when (move) {
-            is NotTrue -> applyNotTrue(state, move.nodeID, move.leafID)
-            //is AlphaMove -> applyAlpha(state, move.nodeID)
-            //is BetaMove -> applyBeta(state, move.nodeID)
-            //is GammaMove -> applyGamma(state, move.nodeID)
-            //is DeltaMove -> applyDelta(state, move.nodeID)
+            is Negation -> applyNegation(state, move.nodeID, move.leafID)
+            is AlphaMove -> applyAlpha(state, move.nodeID, move.leafID)
+            //is BetaMove -> applyBeta(state, move.nodeID, move.leafID)
+            //is NyMove -> applyNy(state, move.nodeID, move.leafID)
+            //is PiMove -> applyPi(state, move.nodeID, move.leafID)
             //is CloseMove -> applyClose(state, move.nodeID, move.closeID, move.getVarAssignTerms())
             //is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")

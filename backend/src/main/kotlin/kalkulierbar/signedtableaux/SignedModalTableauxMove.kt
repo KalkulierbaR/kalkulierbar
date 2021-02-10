@@ -11,18 +11,13 @@ import kotlinx.serialization.modules.SerializersModule
 // Tells kotlinx.serialize about child types of SignedModalTableaux
 val SignedModalTablueaxMoveModule = SerializersModule {
     polymorphic(SignedModalTableauxMove::class) {
-        NotTrue::class with NotTrue.serializer()
-        NotFalse::class with NotFalse.serializer()
-        OrTrue::class with OrTrue.serializer()
-        OrFalse::class with OrFalse.serializer()
-        AndTrue::class with AndTrue.serializer()
-        AndFalse::class with AndFalse.serializer()
-        AlwaysTrue::class with AlwaysTrue.serializer() 
-        AlwaysFalse::class with AlwaysFalse.serializer()
-        SometimesTrue::class with SometimesTrue.serializer()
-        SometimesFalse::class with SometimesFalse.serializer()
-        UndoMove::class with UndoMove.serializer()
+        Negation::class with Negation.serializer()
+        AlphaMove::class with AlphaMove.serializer()
+        BetaMove::class with BetaMove.serializer()
+        NyMove::class with NyMove.serializer()
+        PiMove::class with PiMove.serializer()
         CloseMove::class with CloseMove.serializer()
+        UndoMove::class with UndoMove.serializer()
     }
 }
 
@@ -30,63 +25,33 @@ val SignedModalTablueaxMoveModule = SerializersModule {
 abstract class SignedModalTableauxMove
 
 @Serializable
-@SerialName("notTrue")
-class NotTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(notTrue|$nodeID)"
+@SerialName("negation")
+class Negation(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
+    override fun toString() = "(negation|$nodeID)"
 }
 
 @Serializable
-@SerialName("notFalse")
-class NotFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(notFalse|$nodeID)"
+@SerialName("alphaMove")
+class AlphaMove(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
+    override fun toString() = "(alphaMove|$nodeID)"
 }
 
 @Serializable
-@SerialName("andTrue")
-class AndTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(andTrue|$nodeID)"
+@SerialName("betaMove")
+class BetaMove(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
+    override fun toString() = "(betaMove|$nodeID)"
 }
 
 @Serializable
-@SerialName("andFalse")
-class AndFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(andFalse|$nodeID)"
+@SerialName("nyMove")
+class NyMove(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
+    override fun toString() = "(nyMove|$nodeID)"
 }
 
 @Serializable
-@SerialName("orTrue")
-class OrTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(orTrue|$nodeID)"
-}
-
-@Serializable
-@SerialName("orFalse")
-class OrFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(orFalse|$nodeID)"
-}
-
-@Serializable
-@SerialName("alwaysTrue")
-class AlwaysTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(alwaysTrue|$nodeID)"
-}
-
-@Serializable
-@SerialName("alwaysFalse")
-class AlwaysFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(alwaysFalse|$nodeID)"
-}
-
-@Serializable
-@SerialName("sometimesTrue")
-class SometimesTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(sometimesTrue|$nodeID)"
-}
-
-@Serializable
-@SerialName("sometimesFalse")
-class SometimesFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(sometimesFalse|$nodeID)"
+@SerialName("piMove")
+class PiMove(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
+    override fun toString() = "(piMove|$nodeID)"
 }
 
 @Serializable
