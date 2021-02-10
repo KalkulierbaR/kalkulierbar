@@ -22,7 +22,6 @@ interface Props {
         selectedValue?: boolean,
     ) => void;
     selected: boolean;
-    left: boolean;
 }
 
 const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
@@ -33,7 +32,6 @@ const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
     selectFormulaCallback,
     selectNodeCallback,
     selected,
-    left,
 }) => {
     const textRef = useRef<SVGTextElement>();
 

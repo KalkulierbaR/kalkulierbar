@@ -31,10 +31,6 @@ interface Props {
     selectedListIndex?: string;
 
     selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
-
-    zoomFactor: number;
-
-    ruleName: string;
 }
 
 const lineUnderNode = (
@@ -191,8 +187,6 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
     selectedListIndex,
     selectNodeCallback,
     selectFormulaCallback,
-    zoomFactor,
-    ruleName,
 }) => {
     const textRef = useRef<SVGTextElement>();
 

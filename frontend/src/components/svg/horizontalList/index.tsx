@@ -75,7 +75,6 @@ const drawComma = (x: number, y: number) => {
  * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
  * @param {Function<PSCTreeLayoutNode>} selectNodeCallback KEKW
  * @param {boolean} selected the parameter which tell if the current node is selected or not
- * @param {boolean} left shows if formula is on the left
  * @returns {any} HTML
  */
 const drawFormula = (
@@ -86,7 +85,6 @@ const drawFormula = (
     selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void,
     selectNodeCallback: (node: PSCTreeLayoutNode) => void,
     selected: boolean,
-    left: boolean,
 ) => {
     return (
         <FormulaTreeNode
@@ -102,7 +100,6 @@ const drawFormula = (
             selectFormulaCallback={selectFormulaCallback}
             selectNodeCallback={selectNodeCallback}
             selected={selected}
-            left={left}
         />
     );
 };
@@ -181,7 +178,6 @@ const getSequence = (
                 selectFormulaCallback,
                 selectNodeCallback,
                 selected,
-                true,
             ),
         );
         totalSize +=
@@ -209,7 +205,6 @@ const getSequence = (
                 selectFormulaCallback,
                 selectNodeCallback,
                 selected,
-                false,
             ),
         );
         totalSize +=

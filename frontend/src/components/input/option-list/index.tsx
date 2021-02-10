@@ -48,7 +48,7 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     className,
     node,
     listIndex,
-    disableOption = (option: number) => {
+    disableOption = () => {
         return true;
     },
 }) => {

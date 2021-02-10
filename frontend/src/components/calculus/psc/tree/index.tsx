@@ -44,7 +44,7 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
 
     const treeHeight = Math.max(height, 200);
 
-    const transformGoTo = (d: any): [number, number] => {
+    const transformGoTo = (): [number, number] => {
         const node = findSubTree(
             root,
             (t) => t.data.id === selectedNodeId,

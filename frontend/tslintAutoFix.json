@@ -54,7 +54,8 @@
         "semicolon": [true, "always"],
         "ordered-imports": [true, { "grouped-imports": true }],
         "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type", "check-typecast", "check-preblock"],
-        "no-unused-declaration": true    
+        "no-unused-declaration": true,
+        "no-unused-variable": true    
     }
 
 }

@@ -53,8 +53,6 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
                 parent={parent}
                 // selectedNodeId={selectedNodeId}
                 selected={node.data.id === selectedNodeId}
-                zoomFactor={zoomFactor}
-                ruleName={ruleName}
                 selectFormulaCallback={selectFormulaCallback}
                 selectedListIndex={selectedListIndex}
             />
