@@ -1,17 +1,18 @@
 import { Fragment, h } from "preact";
+
+import { Calculus } from "../../../../types/calculus";
 import { DPLLNodeType, DPLLState } from "../../../../types/calculus/dpll";
 import { useAppState } from "../../../../util/app-state";
 import { sendPrune, stateIsClosed } from "../../../../util/dpll";
-import DownloadFAB from "../../../input/fab/download";
-import ControlFAB from "../../../input/control-fab";
-import FAB from "../../../input/fab";
 import CheckCircleFilledIcon from "../../../icons/check-circle-filled";
 import DeleteIcon from "../../../icons/delete";
 import SplitIcon from "../../../icons/split";
 import SwitchIcon from "../../../icons/switch";
-import { Calculus } from "../../../../types/calculus";
-import CheckCloseFAB from "../../../input/fab/check-close";
+import ControlFAB from "../../../input/control-fab";
+import FAB from "../../../input/fab";
 import CenterFAB from "../../../input/fab/center";
+import CheckCloseFAB from "../../../input/fab/check-close";
+import DownloadFAB from "../../../input/fab/download";
 
 interface Props {
     /**

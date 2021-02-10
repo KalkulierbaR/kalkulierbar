@@ -1,9 +1,11 @@
 import { Fragment, h } from "preact";
+import { route } from "preact-router";
 import { useCallback, useState } from "preact/hooks";
-import TutorialDialog from "../../../components/tutorial/dialog";
-import VarAssignDialog from "../../../components/dialog/var-assign";
+
 import NCTabFAB from "../../../components/calculus/nc-tableaux/fab";
 import NCTabTree from "../../../components/calculus/nc-tableaux/tree";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import TutorialDialog from "../../../components/tutorial/dialog";
 import { Calculus } from "../../../types/calculus";
 import { NCTabTreeNode } from "../../../types/calculus/nc-tableaux";
 import { VarAssign } from "../../../types/calculus/tableaux";
@@ -11,7 +13,6 @@ import { DragTransform } from "../../../types/ui";
 import { useAppState } from "../../../util/app-state";
 import { collectVarsFromNode, sendClose } from "../../../util/nc-tableaux";
 import { updateDragTransform } from "../../../util/tableaux";
-import { route } from "preact-router";
 
 const NCTableauxView: preact.FunctionalComponent = () => {
     const {

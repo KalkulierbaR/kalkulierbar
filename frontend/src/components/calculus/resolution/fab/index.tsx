@@ -1,7 +1,7 @@
 import { Fragment, h } from "preact";
-import ControlFAB from "../../../input/control-fab";
-import FAB from "../../../input/fab";
+
 import * as style from "../../../../routes/resolution/view/style.scss";
+import { ResolutionCalculusType } from "../../../../types/calculus";
 import { SelectedClauses } from "../../../../types/calculus/clause";
 import {
     FOResolutionState,
@@ -17,7 +17,6 @@ import {
     sendFactorize,
     showHiddenClauses,
 } from "../../../../util/resolution";
-import DownloadFAB from "../../../input/fab/download";
 import CircleIcon from "../../../icons/circle";
 import FactorizeIcon from "../../../icons/factorize";
 import GridIcon from "../../../icons/grid";
@@ -25,9 +24,11 @@ import HideIcon from "../../../icons/hide";
 import HyperIcon from "../../../icons/hyper";
 import SendIcon from "../../../icons/send";
 import ShowIcon from "../../../icons/show";
-import { ResolutionCalculusType } from "../../../../types/calculus";
-import CheckCloseFAB from "../../../input/fab/check-close";
+import ControlFAB from "../../../input/control-fab";
+import FAB from "../../../input/fab";
 import CenterFAB from "../../../input/fab/center";
+import CheckCloseFAB from "../../../input/fab/check-close";
+import DownloadFAB from "../../../input/fab/download";
 
 interface Props {
     /**

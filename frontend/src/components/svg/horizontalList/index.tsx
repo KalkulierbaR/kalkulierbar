@@ -1,17 +1,17 @@
 import { h, RefObject } from "preact";
+import { useEffect, useState } from "preact/hooks";
+
 import {
     FormulaNode,
     FormulaTreeLayoutNode,
-    PSCNode,
 } from "../../../types/calculus/psc";
-import { useEffect, useState, useRef } from "preact/hooks";
-import { estimateSVGTextWidth } from "../../../util/text-width";
-import { nodeName, formulaNames, parseFormula } from "../../../util/psc";
-import SmallRec from "../SmallRec";
 import { PSCTreeLayoutNode } from "../../../types/calculus/psc";
 import { LayoutItem } from "../../../types/layout";
-import * as style from "./style.scss";
+import { parseFormula } from "../../../util/psc";
+import { estimateSVGTextWidth } from "../../../util/text-width";
 import FormulaTreeNode from "../../calculus/psc/formulaNode";
+
+import * as style from "./style.scss";
 
 interface Props {
     textRef: RefObject<SVGTextElement>;
@@ -221,16 +221,6 @@ const getSequence = (
     });
 
     return htmlArray;
-};
-
-const formulaWidth = (formulas: FormulaNode[]) => {
-    let totalSize = 0;
-    formulas.forEach((elem) => {
-        const elemSize =
-            estimateSVGTextWidth(parseFormula(elem)) + NODE_SPACING;
-        totalSize += elemSize;
-    });
-    return totalSize;
 };
 
 const horizontalList: preact.FunctionalComponent<Props> = ({

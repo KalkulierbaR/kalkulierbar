@@ -1,7 +1,8 @@
 import { FormulaNode, PSCNode, PSCTreeLayoutNode } from "../types/calculus/psc";
 import { Tree, TreeLayout } from "../types/tree";
+
+import { tree, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
-import { tree, treeFind, treeLayout } from "./layout/tree";
 
 export const nodeName = (node: PSCNode) => {
     return (

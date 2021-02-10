@@ -1,11 +1,13 @@
 import { Fragment, h } from "preact";
 import { route } from "preact-router";
 import { useRef } from "preact/hooks";
+
 import { CalculusType } from "../../../types/calculus";
 import { checkValid } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { readFile } from "../../../util/file";
 import UploadIcon from "../../icons/upload";
+
 import Btn from "./index";
 
 interface Props {

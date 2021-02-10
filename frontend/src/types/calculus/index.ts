@@ -1,18 +1,18 @@
-import {
-    TableauxMove,
-    FOTableauxMove,
-    PropTableauxParams,
-    FOTableauxParams,
-} from "./tableaux";
-import {
-    PropResolutionMove,
-    FOResolutionMove,
-    PropResolutionParams,
-    FOResolutionParams,
-} from "./resolution";
-import { NCTableauxMove } from "./nc-tableaux";
 import { DPLLMove } from "./dpll";
+import { NCTableauxMove } from "./nc-tableaux";
 import { FOSCMove, PSCMove, PSCParams } from "./psc";
+import {
+    FOResolutionMove,
+    FOResolutionParams,
+    PropResolutionMove,
+    PropResolutionParams,
+} from "./resolution";
+import {
+    FOTableauxMove,
+    FOTableauxParams,
+    PropTableauxParams,
+    TableauxMove,
+} from "./tableaux";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";

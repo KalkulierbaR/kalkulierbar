@@ -6,8 +6,8 @@ export interface Rule<L = string> {
 export interface RuleSet<L = string> {
     rules: Rule<L>[];
 }
-export function getNormalRuleSet() {
-    const ruleSet: RuleSet<string> = {
+export function getNormalRuleSet(): RuleSet<string> {
+    return {
         rules: [
             { name: "Ax", site: "both" },
             { name: "notLeft", site: "left", applicableOn: "not" },
@@ -20,11 +20,10 @@ export function getNormalRuleSet() {
             { name: "impRight", site: "right", applicableOn: "impl" },
         ],
     };
-    return ruleSet;
 }
 
-export function getFORuleSet() {
-    const ruleSet: RuleSet<string> = {
+export function getFORuleSet(): RuleSet<string> {
+    return {
         rules: [
             { name: "Ax", site: "both" },
             { name: "notLeft", site: "left", applicableOn: "not" },
@@ -41,7 +40,6 @@ export function getFORuleSet() {
             { name: "exRight", site: "right", applicableOn: "exquant" },
         ],
     };
-    return ruleSet;
 }
 
 export type SelectedRule = undefined | [number];

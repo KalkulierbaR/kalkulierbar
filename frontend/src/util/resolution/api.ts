@@ -1,12 +1,12 @@
 import { APIInformation } from "../../types/app/api";
-import {
-    PropResolutionState,
-    FOResolutionState,
-} from "../../types/calculus/resolution";
-import { sendMove } from "../api";
-import { Calculus, ResolutionCalculusType } from "../../types/calculus";
-import { VarAssign } from "../../types/calculus/tableaux";
 import { AppState } from "../../types/app/app-state";
+import { Calculus, ResolutionCalculusType } from "../../types/calculus";
+import {
+    FOResolutionState,
+    PropResolutionState,
+} from "../../types/calculus/resolution";
+import { VarAssign } from "../../types/calculus/tableaux";
+import { sendMove } from "../api";
 
 /**
  * Send a resolve move (propositional) to the backend

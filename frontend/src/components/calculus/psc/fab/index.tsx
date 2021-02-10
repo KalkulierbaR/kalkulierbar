@@ -1,23 +1,16 @@
 import { Fragment, h } from "preact";
-import { PropCalculusType, PSCCalculusType } from "../../../../types/calculus";
+
+import { PSCCalculusType } from "../../../../types/calculus";
 import { FOSCState, PSCState } from "../../../../types/calculus/psc";
+import { sendMove } from "../../../../util/api";
 import { useAppState } from "../../../../util/app-state";
-import AddIcon from "../../../icons/add";
+import DeleteIcon from "../../../icons/delete";
+import RuleIcon from "../../../icons/rule";
+import UndoIcon from "../../../icons/undo";
 import ControlFAB from "../../../input/control-fab";
+import FAB from "../../../input/fab";
 import CheckCloseFAB from "../../../input/fab/check-close";
 import DownloadFAB from "../../../input/fab/download";
-import FAB from "../../../input/fab";
-import UndoIcon from "../../../icons/undo";
-import { sendMove } from "../../../../util/api";
-import { PSCUndoMove } from "../../../../types/calculus/psc";
-import SplitIcon from "../../../icons/split";
-import LemmaIcon from "../../../icons/lemma";
-import { hyperFab } from "../../../../routes/resolution/view/style.scss";
-import HyperIcon from "../../../icons/hyper";
-import RouterIcon from "../../../icons/router";
-import SwitchIcon from "../../../icons/switch";
-import RuleIcon from "../../../icons/rule";
-import DeleteIcon from "../../../icons/delete";
 
 interface Props {
     /**

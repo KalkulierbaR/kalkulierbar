@@ -1,5 +1,6 @@
-import { getPoint } from "./point";
 import { Point } from "../../types/ui";
+
+import { getPoint } from "./point";
 
 /**
  * Gets the position of a touch event

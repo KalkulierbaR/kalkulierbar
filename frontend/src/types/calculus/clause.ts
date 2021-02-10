@@ -1,4 +1,4 @@
-import { PropCalculus, FOCalculus } from ".";
+import { FOCalculus, PropCalculus } from ".";
 
 /**
  * The Atom object received from the backend

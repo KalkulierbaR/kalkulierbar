@@ -1,18 +1,17 @@
 import { h, RefObject } from "preact";
-import { useRef, useState, useEffect } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
+
 import {
     FormulaTreeLayoutNode,
     PSCTreeLayoutNode,
 } from "../../../../types/calculus/psc";
 import { LayoutItem } from "../../../../types/layout";
 import { classMap } from "../../../../util/class-map";
+import { nodeName } from "../../../../util/psc";
+import HorizontalList from "../../../svg/horizontalList";
 import Rectangle from "../../../svg/rectangle";
-import SmallRec from "../../../svg/SmallRec";
-import { nodeName, pscTreeLayout } from "../../../../util/psc";
-import { estimateSVGTextWidth } from "../../../../util/text-width";
 
 import * as style from "./style.scss";
-import HorizontalList from "../../../svg/horizontalList";
 
 interface Props {
     /**

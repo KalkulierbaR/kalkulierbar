@@ -1,11 +1,13 @@
 import { Fragment, h } from "preact";
+import { route } from "preact-router";
 import { useCallback, useEffect, useState } from "preact/hooks";
-import Dialog from "../../../components/dialog";
-import TutorialDialog from "../../../components/tutorial/dialog";
-import OptionList from "../../../components/input/option-list";
-import VarAssignDialog from "../../../components/dialog/var-assign";
+
 import TableauxFAB from "../../../components/calculus/tableaux/fab";
 import TableauxTreeView from "../../../components/calculus/tableaux/tree";
+import Dialog from "../../../components/dialog";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import OptionList from "../../../components/input/option-list";
+import TutorialDialog from "../../../components/tutorial/dialog";
 import { TableauxCalculusType } from "../../../types/calculus";
 import {
     instanceOfFOTabState,
@@ -28,8 +30,8 @@ import {
     sendLemma,
     updateDragTransform,
 } from "../../../util/tableaux";
+
 import * as style from "./style.scss";
-import { route } from "preact-router";
 
 interface Props {
     /**

@@ -1,14 +1,15 @@
-import { PropTableauxState, FOTableauxState } from "../calculus/tableaux";
-import { PropResolutionState, FOResolutionState } from "../calculus/resolution";
+import { CalculusType, Formulas } from "../calculus";
 import { DPLLState } from "../calculus/dpll";
+import { NCTableauxState } from "../calculus/nc-tableaux";
 import { FOSCState, PSCState } from "../calculus/psc";
+import { FOResolutionState, PropResolutionState } from "../calculus/resolution";
+import { FOTableauxState, PropTableauxState } from "../calculus/tableaux";
+
 import { AppStateAction } from "./action";
-import { Formulas, CalculusType } from "../calculus";
+import { Config } from "./config";
 import { Notification, NotificationHandler } from "./notification";
 import { Theme } from "./theme";
 import { TutorialMode } from "./tutorial";
-import { NCTableauxState } from "../calculus/nc-tableaux";
-import { Config } from "./config";
 
 /**
  * The state of the application

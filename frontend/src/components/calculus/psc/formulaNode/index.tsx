@@ -1,13 +1,14 @@
-import {
-    FormulaTreeLayoutNode,
-    FormulaNode,
-    PSCTreeLayoutNode,
-} from "../../../../types/calculus/psc";
 import { h } from "preact";
 import { useRef } from "preact/hooks";
-import SmallRec from "../../../svg/SmallRec";
+
+import {
+    FormulaTreeLayoutNode,
+    PSCTreeLayoutNode,
+} from "../../../../types/calculus/psc";
 import { LayoutItem } from "../../../../types/layout";
 import { parseFormula } from "../../../../util/psc";
+import SmallRec from "../../../svg/SmallRec";
+
 import * as style from "./style.scss";
 
 interface Props {

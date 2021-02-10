@@ -1,4 +1,5 @@
 import { Fragment, h } from "preact";
+
 import { NCTabTreeNode } from "../../../../types/calculus/nc-tableaux";
 import { Tree } from "../../../../types/tree";
 import { DragTransform } from "../../../../types/ui";

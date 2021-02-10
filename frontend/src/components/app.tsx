@@ -1,28 +1,30 @@
+import DPLL from "async!../routes/dpll";
+import DPLLView from "async!../routes/dpll/view";
+import Home from "async!../routes/home";
+import NCTableaux from "async!../routes/nc-tableaux";
+import NCTableauxView from "async!../routes/nc-tableaux/view";
+import PSC from "async!../routes/psc";
+import PSCView from "async!../routes/psc/view";
+import Resolution from "async!../routes/resolution";
+import ResolutionView from "async!../routes/resolution/view";
+import Tableaux from "async!../routes/tableaux";
+import TableauxView from "async!../routes/tableaux/view";
 import { h } from "preact";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
+
+import { AppStateActionType } from "../types/app/action";
+import { NotificationHandler } from "../types/app/notification";
+import { Calculus } from "../types/calculus";
+import { checkCredentials, getConfig } from "../util/admin";
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
+import { useTitle } from "../util/title";
+
 import Page404 from "./404";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
-import { useTitle } from "../util/title";
-import Home from "async!../routes/home";
-import Tableaux from "async!../routes/tableaux";
-import TableauxView from "async!../routes/tableaux/view";
-import Resolution from "async!../routes/resolution";
-import ResolutionView from "async!../routes/resolution/view";
-import NCTableaux from "async!../routes/nc-tableaux";
-import NCTableauxView from "async!../routes/nc-tableaux/view";
-import DPLL from "async!../routes/dpll";
-import DPLLView from "async!../routes/dpll/view";
-import { NotificationHandler } from "../types/app/notification";
-import { AppStateActionType } from "../types/app/action";
-import { Calculus } from "../types/calculus";
-import { getConfig, checkCredentials } from "../util/admin";
-import PSC from "async!../routes/psc";
-import PSCView from "async!../routes/psc/view";
 
 const SMALL_SCREEN_THRESHOLD = 750;
 
