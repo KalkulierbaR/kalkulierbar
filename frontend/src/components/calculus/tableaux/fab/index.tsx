@@ -12,7 +12,7 @@ import DownloadFAB from "../../../input/fab/download";
 import ExploreIcon from "../../../icons/explore";
 import LemmaIcon from "../../../icons/lemma";
 import UndoIcon from "../../../icons/undo";
-import {TableauxCalculusType} from "../../../../types/calculus";
+import { TableauxCalculusType } from "../../../../types/calculus";
 import CheckCloseFAB from "../../../input/fab/check-close";
 import CenterFAB from "../../../input/fab/center";
 
@@ -105,8 +105,8 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 }}
                             />
                         )}
-                        <CenterFAB resetDragTransforms={resetDragTransforms}/>
-                        <CheckCloseFAB calculus={calculus}/>
+                        <CenterFAB resetDragTransforms={resetDragTransforms} />
+                        <CheckCloseFAB calculus={calculus} />
                         {showUndoFAB && (
                             <FAB
                                 icon={<UndoIcon />}
@@ -140,7 +140,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 ) : (
                     <Fragment>
-                        <CenterFAB resetDragTransforms={resetDragTransforms}/>
+                        <CenterFAB resetDragTransforms={resetDragTransforms} />
                         <FAB
                             icon={<AddIcon />}
                             label="Expand"

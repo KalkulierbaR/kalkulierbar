@@ -1,6 +1,6 @@
 import FAB from "./index";
 import CenterIcon from "../../icons/center";
-import {h} from "preact";
+import { h } from "preact";
 
 interface Props {
     /**
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const CenterFAB: preact.FunctionalComponent<Props> = ({
-    resetDragTransforms
+    resetDragTransforms,
 }) => (
     <FAB
         mini={true}
@@ -20,7 +20,7 @@ const CenterFAB: preact.FunctionalComponent<Props> = ({
         icon={<CenterIcon />}
         onClick={() => {
             dispatchEvent(new CustomEvent("center"));
-            if(resetDragTransforms !== undefined){
+            if (resetDragTransforms !== undefined) {
                 resetDragTransforms();
             }
         }}

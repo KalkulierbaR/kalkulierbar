@@ -92,7 +92,8 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={
-                    selectedClauseId === undefined && containsEmptyClause(state.clauseSet)
+                    selectedClauseId === undefined &&
+                    containsEmptyClause(state.clauseSet)
                 }
                 checkFABPositionFromBottom={1}
             >
@@ -197,9 +198,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                         }}
                     />
                 )}
-                <CenterFAB/>
+                <CenterFAB />
                 {selectedClauseId === undefined && (
-                    <CheckCloseFAB calculus={calculus}/>
+                    <CheckCloseFAB calculus={calculus} />
                 )}
             </ControlFAB>
 

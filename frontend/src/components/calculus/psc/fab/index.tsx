@@ -9,7 +9,7 @@ import DownloadFAB from "../../../input/fab/download";
 import FAB from "../../../input/fab";
 import UndoIcon from "../../../icons/undo";
 import { sendMove } from "../../../../util/api";
-import { PSCUndoMove } from "../../../../types/calculus/psc"
+import { PSCUndoMove } from "../../../../types/calculus/psc";
 import SplitIcon from "../../../icons/split";
 import LemmaIcon from "../../../icons/lemma";
 import { hyperFab } from "../../../../routes/resolution/view/style.scss";
@@ -23,11 +23,11 @@ interface Props {
     /**
      * Which calculus to use
      */
-    calculus:PSCCalculusType;
+    calculus: PSCCalculusType;
     /**
      * The current calculus state
      */
-    state: PSCState|FOSCState;
+    state: PSCState | FOSCState;
     /**
      * Which node is currently selected
      */
@@ -53,10 +53,10 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
         server,
         smallScreen,
         onChange,
-        notificationHandler
+        notificationHandler,
     } = useAppState();
 
-    return(
+    return (
         <Fragment>
             <ControlFAB
                 alwaysOpen={!smallScreen}
@@ -70,35 +70,34 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
                             name={calculus}
                             type={calculus}
                         />
-                        <CheckCloseFAB calculus={calculus}/>
+                        <CheckCloseFAB calculus={calculus} />
                         <FAB
-                                icon={<UndoIcon />}
-                                label="Undo"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    // If the last move added a node, and we undo this, remove the corresponding drag
-                                    if (state.tree.length > 0) {
-                                        sendMove(
-                                            server,
-                                            calculus,
-                                            state,
-                                            {type: "undo"},
-                                            onChange,
-                                            notificationHandler
-                                        )
-                                    } else {
-                                        return;
-                                    }
-                                }}
-                            />
+                            icon={<UndoIcon />}
+                            label="Undo"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                // If the last move added a node, and we undo this, remove the corresponding drag
+                                if (state.tree.length > 0) {
+                                    sendMove(
+                                        server,
+                                        calculus,
+                                        state,
+                                        { type: "undo" },
+                                        onChange,
+                                        notificationHandler,
+                                    );
+                                } else {
+                                    return;
+                                }
+                            }}
+                        />
                     </Fragment>
                 ) : (
-                    
                     <Fragment>
                         <FAB
-                            icon={<RuleIcon/>}
+                            icon={<RuleIcon />}
                             label="Rules"
                             mini={true}
                             extended={true}
@@ -108,7 +107,7 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
                             }}
                         />
                         <FAB
-                            icon={<DeleteIcon/>}
+                            icon={<DeleteIcon />}
                             label="Prune"
                             mini={true}
                             extended={true}
@@ -116,14 +115,12 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
                             onClick={() => {
                                 pruneCallback();
                             }}
-                            />
+                        />
                     </Fragment>
-
-                )}   
+                )}
             </ControlFAB>
-                
         </Fragment>
     );
-}; 
+};
 
 export default PSCFAB;

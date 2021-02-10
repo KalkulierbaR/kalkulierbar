@@ -1,6 +1,10 @@
 import { h, RefObject } from "preact";
-import { FormulaNode, FormulaTreeLayoutNode, PSCNode } from "../../../types/calculus/psc";
-import { useEffect, useState ,useRef} from "preact/hooks";
+import {
+    FormulaNode,
+    FormulaTreeLayoutNode,
+    PSCNode,
+} from "../../../types/calculus/psc";
+import { useEffect, useState, useRef } from "preact/hooks";
 import { estimateSVGTextWidth } from "../../../util/text-width";
 import { nodeName, formulaNames, parseFormula } from "../../../util/psc";
 import SmallRec from "../SmallRec";
@@ -9,8 +13,7 @@ import { LayoutItem } from "../../../types/layout";
 import * as style from "./style.scss";
 import FormulaTreeNode from "../../calculus/psc/formulaNode";
 
-interface Props
- {
+interface Props {
     textRef: RefObject<SVGTextElement>;
     /**
      * The Formulars to put in the left side
@@ -39,8 +42,10 @@ interface Props
     /**
      * The Callback if the Node got selected
      */
-    selectNodeCallback: (node: PSCTreeLayoutNode, selectValue?: boolean) => void;
-    
+    selectNodeCallback: (
+        node: PSCTreeLayoutNode,
+        selectValue?: boolean,
+    ) => void;
 }
 
 const NODE_SPACING = 4;
@@ -49,22 +54,18 @@ const RECTANGLE_PUFFER = 4;
 const NODE_PUFFER = 16;
 
 /**
- * Draws a Comma at the given coordinates 
+ * Draws a Comma at the given coordinates
  * @param {number} x the x coordinate on which the comma is drawn
  * @param {number} y the y coordinate on which the comma is drawn
  * @returns {any} HTML
  */
 const drawComma = (x: number, y: number) => {
     return (
-        <text
-            class={style.textSelected}
-            text-anchor="left"
-            x={x}
-            y={y}
-        >,
+        <text class={style.textSelected} text-anchor="left" x={x} y={y}>
+            ,
         </text>
-    )
-}
+    );
+};
 /**
  * Draws the Formula for the given parameters
  * @param {FormulaTreeLayoutNode} formula the FormulaNode which will be drawn by the method
@@ -73,15 +74,15 @@ const drawComma = (x: number, y: number) => {
  * @param {number} xCoord the x coordinate in which the Formula is drawn
  * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
  * @param {Function<PSCTreeLayoutNode>} selectNodeCallback KEKW
- * @param {boolean} selected the parameter which tell if the current node is selected or not 
+ * @param {boolean} selected the parameter which tell if the current node is selected or not
  * @param {boolean} left shows if formula is on the left
  * @returns {any} HTML
  */
 const drawFormula = (
-    formula: FormulaTreeLayoutNode, 
-    node: LayoutItem<PSCTreeLayoutNode>, 
-    selectedListIndex: string | undefined, 
-    xCoord: number, 
+    formula: FormulaTreeLayoutNode,
+    node: LayoutItem<PSCTreeLayoutNode>,
+    selectedListIndex: string | undefined,
+    xCoord: number,
     selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void,
     selectNodeCallback: (node: PSCTreeLayoutNode) => void,
     selected: boolean,
@@ -91,34 +92,34 @@ const drawFormula = (
         <FormulaTreeNode
             formula={formula}
             node={node}
-            xCord={xCoord + (estimateSVGTextWidth(parseFormula(formula)) + RECTANGLE_PUFFER) / 2}
+            xCord={
+                xCoord +
+                (estimateSVGTextWidth(parseFormula(formula)) +
+                    RECTANGLE_PUFFER) /
+                    2
+            }
             selectedListIndex={selectedListIndex}
             selectFormulaCallback={selectFormulaCallback}
             selectNodeCallback={selectNodeCallback}
             selected={selected}
             left={left}
         />
-    )
-}
+    );
+};
 
 /**
- * Draws the Seperator between the right and left Formulas 
+ * Draws the Seperator between the right and left Formulas
  * @param {number}x the x coordinate on which the seperator is drawn
  * @param {number}y the y coordinate on which the seperator is drawn
  * @returns {any} HTML
  */
 const drawSeperator = (x: number, y: number) => {
     return (
-        <text
-                class={style.textSelected}
-                text-anchor="left"
-                x={x}
-                y={y}
-            >
-                ⊢
-            </text>
-    )
-}
+        <text class={style.textSelected} text-anchor="left" x={x} y={y}>
+            ⊢
+        </text>
+    );
+};
 
 /**
  * Creates an array which contains the htmlCode for the given Sequence. (formulas, commas and the sequenceSeperator)
@@ -144,60 +145,93 @@ const getSequence = (
 ) => {
     let totalSize = 0;
     leftFormulas.forEach((elem, index) => {
-        totalSize += estimateSVGTextWidth(parseFormula(elem) + RECTANGLE_PUFFER);
-        if(index < leftFormulas.length - 1){
+        totalSize += estimateSVGTextWidth(
+            parseFormula(elem) + RECTANGLE_PUFFER,
+        );
+        if (index < leftFormulas.length - 1) {
             totalSize += NODE_SPACING;
         }
-    })
+    });
 
     totalSize += SEPERATOR_SPACING;
 
     rightFormulas.forEach((elem, index) => {
-        totalSize += estimateSVGTextWidth(parseFormula(elem) + RECTANGLE_PUFFER);
-        if(index < rightFormulas.length - 1){
+        totalSize += estimateSVGTextWidth(
+            parseFormula(elem) + RECTANGLE_PUFFER,
+        );
+        if (index < rightFormulas.length - 1) {
             totalSize += NODE_SPACING;
         }
-    })
+    });
 
     totalSize = dimsX + NODE_PUFFER / 2;
 
     const htmlArray: any[] = [];
-        leftFormulas.forEach((elem, index) => {
-        const formulaLayoutNode: FormulaTreeLayoutNode = {...elem, id: "l" + index.toString()};
-        htmlArray.push(drawFormula(formulaLayoutNode, node, selectedListIndex, totalSize, selectFormulaCallback, selectNodeCallback,selected,true))
-        totalSize += estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
-        if(index < leftFormulas.length - 1){
+    leftFormulas.forEach((elem, index) => {
+        const formulaLayoutNode: FormulaTreeLayoutNode = {
+            ...elem,
+            id: "l" + index.toString(),
+        };
+        htmlArray.push(
+            drawFormula(
+                formulaLayoutNode,
+                node,
+                selectedListIndex,
+                totalSize,
+                selectFormulaCallback,
+                selectNodeCallback,
+                selected,
+                true,
+            ),
+        );
+        totalSize +=
+            estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
+        if (index < leftFormulas.length - 1) {
             htmlArray.push(drawComma(totalSize, node.y));
             totalSize += NODE_SPACING;
         }
-        
-    })
-    
+    });
+
     htmlArray.push(drawSeperator(totalSize, node.y));
     totalSize += SEPERATOR_SPACING;
-    
+
     rightFormulas.forEach((elem, index) => {
-        const formulaLayoutNode: FormulaTreeLayoutNode = {...elem, id: "r" + index.toString()};
-        htmlArray.push(drawFormula(formulaLayoutNode, node, selectedListIndex, totalSize, selectFormulaCallback, selectNodeCallback,selected,false))
-        totalSize += estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
-        if(index < rightFormulas.length - 1){
+        const formulaLayoutNode: FormulaTreeLayoutNode = {
+            ...elem,
+            id: "r" + index.toString(),
+        };
+        htmlArray.push(
+            drawFormula(
+                formulaLayoutNode,
+                node,
+                selectedListIndex,
+                totalSize,
+                selectFormulaCallback,
+                selectNodeCallback,
+                selected,
+                false,
+            ),
+        );
+        totalSize +=
+            estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
+        if (index < rightFormulas.length - 1) {
             htmlArray.push(drawComma(totalSize, node.y));
             totalSize += NODE_SPACING;
         }
-        
-    })
+    });
 
     return htmlArray;
-}
+};
 
-const formulaWidth = (formulas : FormulaNode[]) => {
+const formulaWidth = (formulas: FormulaNode[]) => {
     let totalSize = 0;
-    formulas.forEach(elem => {
-        const elemSize = estimateSVGTextWidth(parseFormula(elem)) + NODE_SPACING;        
+    formulas.forEach((elem) => {
+        const elemSize =
+            estimateSVGTextWidth(parseFormula(elem)) + NODE_SPACING;
         totalSize += elemSize;
-    })
+    });
     return totalSize;
-}
+};
 
 const horizontalList: preact.FunctionalComponent<Props> = ({
     textRef,
@@ -207,14 +241,11 @@ const horizontalList: preact.FunctionalComponent<Props> = ({
     selected,
     selectFormulaCallback,
     selectedListIndex,
-    selectNodeCallback
+    selectNodeCallback,
 }) => {
+    const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
-    
-
-    const [dims,setDims] = useState({x:0,y:0,height:0, width:0});
-
-    useEffect(() =>{
+    useEffect(() => {
         if (!textRef.current) {
             return;
         }
@@ -229,12 +260,16 @@ const horizontalList: preact.FunctionalComponent<Props> = ({
 
     return (
         <g>
-            
-            {
-                getSequence(leftFormulas, rightFormulas, node, selectedListIndex, dims.x,selectFormulaCallback,selectNodeCallback,selected).map((el) => (
-                    el
-                ))
-            }
+            {getSequence(
+                leftFormulas,
+                rightFormulas,
+                node,
+                selectedListIndex,
+                dims.x,
+                selectFormulaCallback,
+                selectNodeCallback,
+                selected,
+            ).map((el) => el)}
         </g>
     );
 };

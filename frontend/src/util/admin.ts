@@ -33,7 +33,7 @@ export const getConfig = async (
         const parsed = await res.json();
         changeConfig(parsed);
     } catch (e) {
-        if(notificationHandler){
+        if (notificationHandler) {
             notificationHandler.error((e as Error).message);
         }
     }

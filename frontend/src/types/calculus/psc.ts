@@ -22,9 +22,9 @@ export interface FormulaNode {
     arguments: FormulaNode[] | null;
 }
 
-export type PSCTreeLayoutNode = PSCNode & { id: number};
+export type PSCTreeLayoutNode = PSCNode & { id: number };
 
-export type FormulaTreeLayoutNode = FormulaNode & { id: string};
+export type FormulaTreeLayoutNode = FormulaNode & { id: string };
 
 export type VarAssign = KStringMap<string>;
 
@@ -33,7 +33,7 @@ export interface PSCState {
     moveHistory: PSCMove[];
     showOnlyApplicableRules: boolean;
 }
-export interface FOSCState{
+export interface FOSCState {
     tree: PSCNode[];
     moveHistory: PSCMove[];
     showOnlyApplicableRules: boolean;
@@ -48,23 +48,22 @@ export function instanceOfPSCState(
 export function instanceOfFOSCState(
     object: any,
     calculus: PSCCalculusType,
-): object is FOSCState{
+): object is FOSCState {
     return "tree" in object && calculus === Calculus.fosc;
 }
 
-export type PSCMove =
-    PSCAxMove | PSCRuleMove | PSCUndoMove | PSCPruneMove;
+export type PSCMove = PSCAxMove | PSCRuleMove | PSCUndoMove | PSCPruneMove;
 
 export type FOSCMove = PSCMove | SCCloseAssignMove;
 
-export interface SCCloseAssignMove{
+export interface SCCloseAssignMove {
     type: string;
     nodeID: number;
     listIndex: number;
     varAssign: VarAssign;
 }
 export interface PSCRuleMove {
-    type: string
+    type: string;
     nodeID: number;
     listIndex: number;
 }
@@ -79,12 +78,12 @@ export interface PSCUndoMove {
 }
 
 export interface PSCPruneMove {
-    type: "prune"
+    type: "prune";
     nodeID: number;
 }
 
 export enum PSCType {
-    help = "HELP"
+    help = "HELP",
 }
 
 export interface PSCParams {

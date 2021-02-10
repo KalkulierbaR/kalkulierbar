@@ -7,7 +7,6 @@ import ChevronRightIcon from "../../icons/chevron-right";
 import * as style from "./style.scss";
 
 interface Props {
-
     /**
      * Choose weather to allow clause sets or not
      */
@@ -18,7 +17,10 @@ interface Props {
     foLogic?: boolean;
 }
 
-const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClauses = true }) => {
+const Format: preact.FunctionalComponent<Props> = ({
+    foLogic = false,
+    allowClauses = true,
+}) => {
     const { tutorialMode, smallScreen } = useAppState();
 
     const firstVisit =
@@ -37,11 +39,10 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                 <b>FO Formula</b>
             </p>
             <p>
-                Use names starting in an uppercase letter for
-                variables and relations, names starting with a
-                lowercase letter or a number for constants and
-                functions.
-            <br />
+                Use names starting in an uppercase letter for variables and
+                relations, names starting with a lowercase letter or a number
+                for constants and functions.
+                <br />
                 Quantifiers can be used like this:{" "}
                 <code class={style.padRight}>
                     {"\\all X: R(f(X, a)) & \\ex Y: !R(f(Y, a))"}
@@ -75,8 +76,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                     <tr>
                         <td>Universal quantifiers</td>
                         <td>
-                            <code>\all X:</code> or{" "}
-                            <code>/all X:</code>
+                            <code>\all X:</code> or <code>/all X:</code>
                         </td>
                         <td>
                             <code>\all X: (R(X) & Q(X))</code>
@@ -85,8 +85,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                     <tr>
                         <td>Existential quantifiers</td>
                         <td>
-                            <code>\ex X:</code> or{" "}
-                            <code>/ex X:</code>
+                            <code>\ex X:</code> or <code>/ex X:</code>
                         </td>
                         <td>
                             <code>\ex X: (R(X) & Q(X))</code>
@@ -122,8 +121,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                     <tr>
                         <td>Equivalence</td>
                         <td>
-                            <code>{"<=>"}</code> or{" "}
-                            <code>{"<->"}</code>
+                            <code>{"<=>"}</code> or <code>{"<->"}</code>
                         </td>
                         <td>
                             <code>{"right <=> !left"}</code>
@@ -132,55 +130,50 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                 </table>
             </p>
             <p>
-                Unbound variables are not allowed. Quantifier scopes
-                are as small as possible, following the usual
-                conventions for first-order logic.
-                        </p>
+                Unbound variables are not allowed. Quantifier scopes are as
+                small as possible, following the usual conventions for
+                first-order logic.
+            </p>
         </li>
-    )
+    );
 
     const propClauseFormat = (
         <Fragment>
-             <li>
-            <p>
-                <b>Propositional Formula</b>
-            </p>
-            <p>
-                Use the usual ascii-notation like in this
-                                example:{" "}
-                <code class={style.padRight}>
-                    {"!(a -> b) & (c <=> d | e) & !a"}
-                </code>
-            </p>
-            <p>
-                <code class={style.padRight}>{"<=>"}</code>
-                                and
-                                <code class={style.padLeft}>{"<->"}</code> are
-                                synonymous, operator precedence follows the
-                                conventions for propositional logic. Whitespace
-                                is ignored.
-                            </p>
-        </li>
-        <br />
-        <li>
-            <p>
-                <b>Clause Set</b>
-            </p>
-            <p>
-                <code class={style.padRight}>
-                    {"{{a, ¬b}, {¬a}, {b}}"}
-                </code>
-                                needs to be entered as{" "}
-                <code class={style.padLeft}>a,!b;!a;b</code>
-            </p>
-            <p>
-                Separate variables with commas, use a semicolon
-                or linebreak to signal a new clause. Whitespace
-                is ignored.
-                            </p>
-        </li>
+            <li>
+                <p>
+                    <b>Propositional Formula</b>
+                </p>
+                <p>
+                    Use the usual ascii-notation like in this example:{" "}
+                    <code class={style.padRight}>
+                        {"!(a -> b) & (c <=> d | e) & !a"}
+                    </code>
+                </p>
+                <p>
+                    <code class={style.padRight}>{"<=>"}</code>
+                    and
+                    <code class={style.padLeft}>{"<->"}</code> are synonymous,
+                    operator precedence follows the conventions for
+                    propositional logic. Whitespace is ignored.
+                </p>
+            </li>
+            <br />
+            <li>
+                <p>
+                    <b>Clause Set</b>
+                </p>
+                <p>
+                    <code class={style.padRight}>{"{{a, ¬b}, {¬a}, {b}}"}</code>
+                    needs to be entered as{" "}
+                    <code class={style.padLeft}>a,!b;!a;b</code>
+                </p>
+                <p>
+                    Separate variables with commas, use a semicolon or linebreak
+                    to signal a new clause. Whitespace is ignored.
+                </p>
+            </li>
         </Fragment>
-    )
+    );
 
     const propFormat = (
         <li>
@@ -188,22 +181,20 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                 <b>Propositional Formula</b>
             </p>
             <p>
-                Use the usual ascii-notation like in this
-                                example:{" "}
+                Use the usual ascii-notation like in this example:{" "}
                 <code class={style.padRight}>
                     {"!(a -> b) & (c <=> d | e) & !a"}
                 </code>
             </p>
             <p>
                 <code class={style.padRight}>{"<=>"}</code>
-                                and
-                                <code class={style.padLeft}>{"<->"}</code> are
-                                synonymous, operator precedence follows the
-                                conventions for propositional logic. Whitespace
-                                is ignored.
-                            </p>
-        </li>          
-    )
+                and
+                <code class={style.padLeft}>{"<->"}</code> are synonymous,
+                operator precedence follows the conventions for propositional
+                logic. Whitespace is ignored.
+            </p>
+        </li>
+    );
 
     const content = (
         <div class={style.formatContent}>
@@ -212,14 +203,9 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                     foLogicFormat
                 ) : (
                     <Fragment>
-                        {allowClauses ? (
-                        propClauseFormat
-                    ) : (
-                        propFormat
-                    )}
-                    </Fragment>                   
-                )                               
-                }                                
+                        {allowClauses ? propClauseFormat : propFormat}
+                    </Fragment>
+                )}
             </ul>
         </div>
     );

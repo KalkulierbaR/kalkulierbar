@@ -1,12 +1,15 @@
 import { Fragment, h } from "preact";
-import { FormulaTreeLayoutNode, PSCTreeLayoutNode } from "../../../../types/calculus/psc";
+import {
+    FormulaTreeLayoutNode,
+    PSCTreeLayoutNode,
+} from "../../../../types/calculus/psc";
 import { Tree } from "../../../../types/tree";
 import * as style from "./style.scss";
 import PSCTreeNode from "../node";
 
 interface Props {
     node: Tree<PSCTreeLayoutNode>;
-    parent?: Tree<PSCTreeLayoutNode>; 
+    parent?: Tree<PSCTreeLayoutNode>;
     selectedNodeId?: number;
     selectedListIndex?: string;
     selectNodeCallback: (n: PSCTreeLayoutNode, selectValue?: boolean) => void;
@@ -25,11 +28,11 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
     zoomFactor,
     ruleName,
 }) => {
-    const dt = {x: 0,y: 0};
+    const dt = { x: 0, y: 0 };
     return (
         <g transform={`translate(${dt.x} ${dt.y})`}>
             {node.children.map((c, i) => {
-                const childDt = {x: 0,y: 0};
+                const childDt = { x: 0, y: 0 };
                 return (
                     <Fragment key={i}>
                         <SubTree
@@ -57,5 +60,5 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
                 selectedListIndex={selectedListIndex}
             />
         </g>
-    )
-}
+    );
+};

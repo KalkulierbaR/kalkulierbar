@@ -163,24 +163,17 @@ const App: preact.FunctionalComponent = () => {
                     <NCTableauxView path={`/${Calculus.ncTableaux}/view`} />
                     <DPLL path={`/${Calculus.dpll}`} />
                     <DPLLView path={`/${Calculus.dpll}/view`} />
-                    <PSC 
-                        path={`/${Calculus.psc}`}
-                        calculus = {Calculus.psc}
-                        />
-                    <PSCView 
+                    <PSC path={`/${Calculus.psc}`} calculus={Calculus.psc} />
+                    <PSCView
                         path={`/${Calculus.psc}/view`}
-                        calculus = {Calculus.psc}
-                        />
-                    <PSC 
-                        path={`/${Calculus.fosc}`}
-                        calculus = {Calculus.fosc}
-                        />
+                        calculus={Calculus.psc}
+                    />
+                    <PSC path={`/${Calculus.fosc}`} calculus={Calculus.fosc} />
                     <PSCView
                         path={`/${Calculus.fosc}/view`}
                         calculus={Calculus.fosc}
                     />
                     <Page404 default={true} />
-                    
                 </Router>
             </main>
             <div class={style.notifications}>

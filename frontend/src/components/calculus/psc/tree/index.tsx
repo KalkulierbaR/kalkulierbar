@@ -1,5 +1,8 @@
 import { h } from "preact";
-import { FormulaTreeLayoutNode, PSCTreeLayoutNode } from "../../../../types/calculus/psc";
+import {
+    FormulaTreeLayoutNode,
+    PSCTreeLayoutNode,
+} from "../../../../types/calculus/psc";
 import { SelectNodeOptions } from "../../../../types/calculus/tableaux";
 import { selected } from "../../../svg/rectangle/style.scss";
 import { PSCNode } from "../../../../types/calculus/psc";
@@ -38,7 +41,6 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
     selectedRuleName,
     selectFormulaCallback,
     selectedListIndex,
-    
 }) => {
     const { root, height, width: treeWidth } = pscTreeLayout(nodes);
 
@@ -52,16 +54,13 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
             (t) => t.data.id === selectedNodeId,
             (t) => t,
         )!;
-        selectNodeCallback(node.data,undefined);
+        selectNodeCallback(node.data, undefined);
 
-        const{x,y}=node;
-        return [treeWidth/2-x,treeHeight/2-y];
-
-       
+        const { x, y } = node;
+        return [treeWidth / 2 - x, treeHeight / 2 - y];
     };
 
-
-    return(
+    return (
         <div class="card">
             <Zoomable
                 class={style.svg}
@@ -72,28 +71,31 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
                 preserveAspectRatio="xMidYMid meet"
                 transformGoTo={transformGoTo}
             >
-                {(transform) => (<g transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}>
-                    <g>
-                        {
-                            // render nodes -> Recursively render each sub tree
-                            <SubTree
-                                node={root}
-                                selectedNodeId={selectedNodeId}
-                                selectNodeCallback={selectNodeCallback}
-                                zoomFactor={transform.k}
-                                ruleName={selectedRuleName}
-                                selectFormulaCallback={selectFormulaCallback}
-                                selectedListIndex={selectedListIndex}
-                            />
-                        }
+                {(transform) => (
+                    <g
+                        transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
+                    >
+                        <g>
+                            {
+                                // render nodes -> Recursively render each sub tree
+                                <SubTree
+                                    node={root}
+                                    selectedNodeId={selectedNodeId}
+                                    selectNodeCallback={selectNodeCallback}
+                                    zoomFactor={transform.k}
+                                    ruleName={selectedRuleName}
+                                    selectFormulaCallback={
+                                        selectFormulaCallback
+                                    }
+                                    selectedListIndex={selectedListIndex}
+                                />
+                            }
+                        </g>
                     </g>
-                </g>
                 )}
             </Zoomable>
         </div>
-        
     );
 };
 
 export default PSCTreeView;
-

@@ -32,7 +32,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
 
     useEffect(() => {
         if (!elementRef.current) {
-            return
+            return;
         }
 
         const box = elementRef.current.getBBox();
@@ -57,7 +57,6 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
             height={dims.height}
             rx="4"
         />
-        
     );
 };
 
