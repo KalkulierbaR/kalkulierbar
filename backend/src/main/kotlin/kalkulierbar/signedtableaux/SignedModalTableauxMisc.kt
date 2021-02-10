@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 class SignedModalTableauxState(
     val formula: LogicNode,
-    val assumption: Boolean,
+    val assumption: Boolean = false,
     val backtracking: Boolean = true
 ) : ProtectedState() {
     val nodes = mutableListOf<SignedModalTableauxNode>(SignedModalTableauxNode(null, listOf<Int>(1), assumption, formula.clone()))
@@ -93,6 +93,7 @@ class SignedModalTableauxState(
 
         return leaves
     }
+
 
     /**
      * Checks if a prefix is already in use

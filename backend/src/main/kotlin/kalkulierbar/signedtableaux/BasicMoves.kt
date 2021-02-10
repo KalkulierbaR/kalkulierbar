@@ -15,27 +15,35 @@ import kalkulierbar.logic.transform.SelectiveSuffixAppender
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
 
-fun applyNotTrue(state: SignedModalTableauxState, nodeID: Int): SignedModalTableauxState {
+fun applyNotTrue(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): SignedModalTableauxState {
     val nodes = state.nodes
     checkNodeRestrictions(nodes, nodeID)
 
+    if(leafID == null){
+        var leafs = state.childLeavesOf(nodeID)
+        leafs.forEach {
+            checkNodeRestrictions(nodes, it)
+            applyNotTrue(state, nodeID, it)
+        }
+        return state;
+    } 
+
     val node = nodes[nodeID]
-    val savedChildren = node.children.toMutableList() // Save a copy of the node's children
-    node.children.clear() // We will insert new nodes between the node and its children
+    val leaf = nodes[leafID!!]
 
     if (node.formula !is Not)
         throw IllegalMove("Outermost logic operator is not NOT")
 
+    nodes.add(SignedModalTableauxNode(leafID, node.prefix, !node.sign, node.formula));
+    leaf.children.add(state.nodes.size - 1)
 
-    // Add the node's children to the last inserted node to restore the tree structure
-    nodes[parentID].children.addAll(savedChildren)
-    state.setParent(savedChildren, nodes.size - 1)
     // Add move to history
     if (state.backtracking)
-        state.moveHistory.add(AlphaMove(nodeID))
+        state.moveHistory.add(NotTrue(nodeID, leafID))
     return state
 }
 
+/*
 /**
  * Check nodeID valid + already closed
  */
@@ -47,3 +55,5 @@ fun checkNodeRestrictions(nodes: List<NcTableauxNode>, nodeID: Int) {
     if (node.isClosed)
         throw IllegalMove("Node '$node' is already closed")
 }
+
+ */

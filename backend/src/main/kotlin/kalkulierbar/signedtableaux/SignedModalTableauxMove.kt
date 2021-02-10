@@ -19,8 +19,8 @@ val SignedModalTablueaxMoveModule = SerializersModule {
         AndFalse::class with AndFalse.serializer()
         AlwaysTrue::class with AlwaysTrue.serializer() 
         AlwaysFalse::class with AlwaysFalse.serializer()
-        SometimesTrue::class with AlwaysTrue.serializer()
-        SometimesFalse::class with AlwaysFalse.serializer()
+        SometimesTrue::class with SometimesTrue.serializer()
+        SometimesFalse::class with SometimesFalse.serializer()
         UndoMove::class with UndoMove.serializer()
         CloseMove::class with CloseMove.serializer()
     }
@@ -31,61 +31,61 @@ abstract class SignedModalTableauxMove
 
 @Serializable
 @SerialName("notTrue")
-class NotTrue(val nodeID: Int) : SignedModalTableauxMove() {
+class NotTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(notTrue|$nodeID)"
 }
 
 @Serializable
 @SerialName("notFalse")
-class NotFalse(val nodeID: Int) : SignedModalTableauxMove() {
+class NotFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(notFalse|$nodeID)"
 }
 
 @Serializable
 @SerialName("andTrue")
-class AndTrue(val nodeID: Int) : SignedModalTableauxMove() {
+class AndTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(andTrue|$nodeID)"
 }
 
 @Serializable
 @SerialName("andFalse")
-class AndFalse(val nodeID: Int) : SignedModalTableauxMove() {
+class AndFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(andFalse|$nodeID)"
 }
 
 @Serializable
 @SerialName("orTrue")
-class OrTrue(val nodeID: Int) : SignedModalTableauxMove() {
+class OrTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(orTrue|$nodeID)"
 }
 
 @Serializable
 @SerialName("orFalse")
-class OrFalse(val nodeID: Int) : SignedModalTableauxMove() {
+class OrFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(orFalse|$nodeID)"
 }
 
 @Serializable
 @SerialName("alwaysTrue")
-class AlwaysTrue(val nodeID: Int) : SignedModalTableauxMove() {
+class AlwaysTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(alwaysTrue|$nodeID)"
 }
 
 @Serializable
 @SerialName("alwaysFalse")
-class AlwaysFalse(val nodeID: Int) : SignedModalTableauxMove() {
+class AlwaysFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(alwaysFalse|$nodeID)"
 }
 
 @Serializable
 @SerialName("sometimesTrue")
-class SometimesTrue(val nodeID: Int) : SignedModalTableauxMove() {
+class SometimesTrue(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(sometimesTrue|$nodeID)"
 }
 
 @Serializable
 @SerialName("sometimesFalse")
-class SometimesFalse(val nodeID: Int) : SignedModalTableauxMove() {
+class SometimesFalse(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(sometimesFalse|$nodeID)"
 }
 

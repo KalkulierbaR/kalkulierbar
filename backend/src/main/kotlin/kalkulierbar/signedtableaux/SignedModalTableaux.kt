@@ -10,6 +10,7 @@ import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.ModalLogicParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
+import kalkulierbar.signedtableaux.applyNotTrue
 
 class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>() {
 
@@ -28,6 +29,7 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
 
         // Pass moves to relevant subfunction
         return when (move) {
+            is NotTrue -> applyNotTrue(state, move.nodeID, move.leafID)
             //is AlphaMove -> applyAlpha(state, move.nodeID)
             //is BetaMove -> applyBeta(state, move.nodeID)
             //is GammaMove -> applyGamma(state, move.nodeID)
