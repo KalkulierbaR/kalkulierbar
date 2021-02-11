@@ -57,17 +57,16 @@ const OptionList: preact.FunctionalComponent<Props> = ({
                 {node !== undefined && listIndex !== undefined &&(
                     <div class={`card ${className}`}>
                         <p class={style.originList}>
-                            {"For "}
                             <code class={style.formula}>{
                                 parseFormula(listIndex?.charAt(0) === 'l' ? node.leftFormulas[parseStringToListIndex(listIndex)] : node.rightFormulas[parseStringToListIndex(listIndex)])
                             }</code>
                             <br/>
-                            {" in Node "}
-                            <code class={style.origin}>{nodeName(node)}</code>
+
                         </p>
                     </div>
                 )}
             {Array.from(options).map((keyValuePair: [number, string]) => (
+                (disableOption(keyValuePair[0]) || listIndex === undefined) &&
                 <p
                     onClick={() => handleClick(keyValuePair)}
                     class={classMap({

@@ -8,6 +8,7 @@ import { PSCTreeLayoutNode } from "../../../types/calculus/psc";
 import { LayoutItem } from "../../../types/layout";
 import * as style from "./style.scss";
 import FormulaTreeNode from "../../calculus/psc/formulaNode";
+import { classMap } from "../../../util/class-map";
 
 interface Props
  {
@@ -54,10 +55,14 @@ const NODE_PUFFER = 16;
  * @param {number} y the y coordinate on which the comma is drawn
  * @returns {any} HTML
  */
-const drawComma = (x: number, y: number) => {
+const drawComma = (x: number, y: number, selected: boolean, isClosed: boolean) => {
     return (
         <text
-            class={style.textSelected}
+            class={classMap({
+                [style.text]: true,
+                [style.textClosed]: isClosed,
+                [style.textSelected]: selected 
+            })}
             text-anchor="left"
             x={x}
             y={y}
@@ -107,15 +112,19 @@ const drawFormula = (
  * @param {number}y the y coordinate on which the seperator is drawn
  * @returns {any} HTML
  */
-const drawSeperator = (x: number, y: number) => {
+const drawSeperator = (x: number, y: number, selected: boolean, isClosed: boolean) => {
     return (
         <text
-                class={style.textSelected}
+                class={classMap({
+                    [style.text]: true,
+                    [style.textClosed]: isClosed,
+                    [style.textSelected]: selected, 
+                })}
                 text-anchor="left"
                 x={x}
                 y={y}
             >
-                ⊢
+                ⊢ 
             </text>
     )
 }
@@ -167,13 +176,13 @@ const getSequence = (
         htmlArray.push(drawFormula(formulaLayoutNode, node, selectedListIndex, totalSize, selectFormulaCallback, selectNodeCallback,selected,true))
         totalSize += estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if(index < leftFormulas.length - 1){
-            htmlArray.push(drawComma(totalSize, node.y));
+            htmlArray.push(drawComma(totalSize, node.y,selected,node.data.isClosed));
             totalSize += NODE_SPACING;
         }
         
     })
     
-    htmlArray.push(drawSeperator(totalSize, node.y));
+    htmlArray.push(drawSeperator(totalSize, node.y,selected,node.data.isClosed));
     totalSize += SEPERATOR_SPACING;
     
     rightFormulas.forEach((elem, index) => {
@@ -181,7 +190,7 @@ const getSequence = (
         htmlArray.push(drawFormula(formulaLayoutNode, node, selectedListIndex, totalSize, selectFormulaCallback, selectNodeCallback,selected,false))
         totalSize += estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if(index < rightFormulas.length - 1){
-            htmlArray.push(drawComma(totalSize, node.y));
+            htmlArray.push(drawComma(totalSize, node.y,selected,node.data.isClosed));
             totalSize += NODE_SPACING;
         }
         

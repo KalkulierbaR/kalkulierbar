@@ -13,12 +13,16 @@ interface Props {
      */
     allowClauses?: boolean;
     /**
+     * Choose wether to allow sequences or not
+     */
+    allowSequences?: boolean;
+    /**
      * Display the format for First Order logic
      */
     foLogic?: boolean;
 }
 
-const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClauses = true }) => {
+const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClauses = true, allowSequences = false}) => {
     const { tutorialMode, smallScreen } = useAppState();
 
     const firstVisit =
@@ -31,7 +35,34 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
         collapsed,
     ]);
 
+    const sequentFormat = (
+        <li>
+            <p>
+                <b>Sequent Formula</b>
+            </p>
+            <p>
+                Use
+                <code class={style.padRight}>
+                    {" ,"}
+                </code>
+                to seperate multiple formulas from each other and the
+                <code class={style.padRight}>
+                    {" |-"}
+                </code> 
+                symbol to
+                to either define formulas on the left or on the right side of the sequence.
+                </p>
+                <p>
+                Example: {" "}
+                <code class={style.padRight}>
+                    {"!(a -> b), b |- a"}
+                </code>
+            </p>
+        </li>
+    )
+
     const foLogicFormat = (
+        <Fragment>
         <li>
             <p>
                 <b>FO Formula</b>
@@ -137,6 +168,11 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                 conventions for first-order logic.
                         </p>
         </li>
+        <br/>
+        {
+            (allowSequences && sequentFormat)
+        }
+        </Fragment>
     )
 
     const propClauseFormat = (
@@ -183,6 +219,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
     )
 
     const propFormat = (
+        <Fragment>
         <li>
             <p>
                 <b>Propositional Formula</b>
@@ -201,9 +238,16 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                                 synonymous, operator precedence follows the
                                 conventions for propositional logic. Whitespace
                                 is ignored.
-                            </p>
-        </li>          
+            </p>
+        </li>
+        <br/>
+        {
+            (allowSequences && sequentFormat)
+        }
+        </Fragment>
     )
+
+    
 
     const content = (
         <div class={style.formatContent}>
@@ -217,7 +261,7 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                     ) : (
                         propFormat
                     )}
-                    </Fragment>                   
+                    </Fragment>         
                 )                               
                 }                                
             </ul>

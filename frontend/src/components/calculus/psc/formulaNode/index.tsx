@@ -5,6 +5,7 @@ import SmallRec from "../../../svg/SmallRec";
 import { LayoutItem } from "../../../../types/layout";
 import { parseFormula } from "../../../../util/psc";
 import * as style from "./style.scss";
+import { classMap } from "../../../../util/class-map";
 
 interface Props {
     node: LayoutItem<PSCTreeLayoutNode>;
@@ -46,11 +47,19 @@ const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
                 elementRef={textRef}
                 disabled={node.data.isClosed}
                 selected={selectedListIndex === formula.id && selected}
+                class={classMap({
+                    [style.nodeClickable]: nodeIsClickable,
+                })}
             />
             <text
                 ref={textRef}
                 text-anchor="middle"
-                class={style.textSelected}
+                class={classMap({
+                    [style.node]: true,
+                    [style.nodeClickable]: nodeIsClickable,
+                    [style.textSelected]: selectedListIndex === formula.id && selected,
+                    [style.textClosed]: !nodeIsClickable,
+                })}
                 x={xCord}
                 y={node.y}
             >   

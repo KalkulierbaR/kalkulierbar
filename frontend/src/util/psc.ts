@@ -32,8 +32,8 @@ export const parseFormula = (formula: FormulaNode) => {
         case "and": result += "(" + parseFormula(formula.leftChild!) + " ∧ " + parseFormula(formula.rightChild!) + ")"; break;
         case "or":  result += "(" + parseFormula(formula.leftChild!) + " ∨ " + parseFormula(formula.rightChild!) + ")"; break;
         case "var": result += formula.spelling!; break;
-        case "impl": result += "("+ parseFormula(formula.leftChild!)+ " -> " + parseFormula(formula.rightChild!) + ")"; break;
-        case "equiv": result += "("+ parseFormula(formula.leftChild!)+ " <-> " + parseFormula(formula.rightChild!) + ")"; break;
+        case "impl": result += "("+ parseFormula(formula.leftChild!)+ " → " + parseFormula(formula.rightChild!) + ")"; break;
+        case "equiv": result += "("+ parseFormula(formula.leftChild!)+ " ↔ " + parseFormula(formula.rightChild!) + ")"; break;
         case "exquant" : result += "∃" + formula.varName + ": " + parseFormula(formula.child!); break;
         case "allquant" : result += "∀" + formula.varName + ": " + parseFormula(formula.child!); break;
         case "QuantifiedVariable": result += formula.spelling!; break;
