@@ -43,7 +43,7 @@ export const parseFormula = (formula: FormulaNode) => {
             result += formula.spelling! + "(";
             formula.arguments!.forEach((argument, index) => {
                 result += parseFormula(argument);
-                if (index != formula.arguments!.length - 1) {
+                if (index !== formula.arguments!.length - 1) {
                     result += ", ";
                 }
             });

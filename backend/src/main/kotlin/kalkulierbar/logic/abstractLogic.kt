@@ -45,8 +45,8 @@ abstract class BinaryOp : LogicNode() {
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is BinaryOp)
-            return false;
-        
+            return false
+
         return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
     }
 }
@@ -60,8 +60,8 @@ abstract class UnaryOp : LogicNode() {
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is UnaryOp)
-            return false;
-        
+            return false
+
         return this.child.synEq(other.child)
     }
 }
@@ -70,21 +70,22 @@ abstract class Quantifier : UnaryOp() {
     abstract var varName: String
     abstract val boundVariables: MutableList<QuantifiedVariable>
 
+    @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Quantifier)
-            return false;
-        
+            return false
+
         if (this.varName != other.varName)
-            return false;
-        
+            return false
+
         if (this.boundVariables.size != other.boundVariables.size)
-            return false;
+            return false
 
         for (i in this.boundVariables.indices) {
             if (!this.boundVariables[i].synEq(other.boundVariables[i]))
-                return false;
+                return false
         }
-        return true;
+        return true
     }
 }
 

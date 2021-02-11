@@ -1,12 +1,11 @@
 package main.kotlin.kalkulierbar.logic.transform
 
+import kalkulierbar.logic.And
 import kalkulierbar.logic.Equiv
 import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.And
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.transform.DoNothingVisitor
-
 
 class ChangeEquivalences : DoNothingVisitor() {
     companion object Companion {

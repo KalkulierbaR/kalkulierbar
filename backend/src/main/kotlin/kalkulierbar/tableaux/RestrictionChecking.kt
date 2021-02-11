@@ -12,7 +12,12 @@ import kalkulierbar.clause.Clause
  * @param clause Clause object to be used for expansion
  * @param applyPreprocessing Whether to simulate expansion clause preprocessing or not
  */
-fun <AtomType> verifyExpandRegularity(state: GenericTableauxState<AtomType>, leafID: Int, clause: Clause<AtomType>, applyPreprocessing: Boolean = true) {
+fun <AtomType> verifyExpandRegularity(
+    state: GenericTableauxState<AtomType>,
+    leafID: Int,
+    clause: Clause<AtomType>,
+    applyPreprocessing: Boolean = true
+) {
     // Create list of predecessor
     val leaf = state.nodes[leafID]
     val lst = mutableListOf(leaf.toAtom())

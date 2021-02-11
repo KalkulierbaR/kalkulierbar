@@ -41,8 +41,6 @@ const lineUnderNode = (node:LayoutItem<PSCTreeLayoutNode>, parent: LayoutItem<PS
 
     const parentTextRef = useRef<SVGTextElement>();
 
-    parent.data.children.length == 2 
-    
     useEffect(() => {
         if (!parentTextRef.current) {
             return
@@ -126,7 +124,7 @@ const lineUnderNode = (node:LayoutItem<PSCTreeLayoutNode>, parent: LayoutItem<PS
 
             </g>
         )
-    }else{
+    }
         
         return (
             <g>
@@ -164,7 +162,7 @@ const lineUnderNode = (node:LayoutItem<PSCTreeLayoutNode>, parent: LayoutItem<PS
 
             </g>
         )
-    }
+    
 }
     return;
 }

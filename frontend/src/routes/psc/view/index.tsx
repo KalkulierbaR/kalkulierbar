@@ -227,9 +227,9 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
         if (selectedListIndex === undefined || selectedNode === undefined){
             if(option === 0){
                 return true;
-            }else {
-                return false;
             }
+                return false;
+            
         }
             
         if (rules.rules[option].applicableOn !== undefined) {
