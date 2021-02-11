@@ -1069,7 +1069,7 @@ const ROUTES: Route[] = [
                                                         y2="7">
                                                     </line>
                                                     <text 
-                                                        class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                        class={style.changeabletext}
                                                         text-anchor="middle" 
                                                         x="84.33346939086914" 
                                                         y="9">
@@ -1155,7 +1155,7 @@ const ROUTES: Route[] = [
                                                     y2="49">
                                                 </line>
                                                 <text 
-                                                    class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                    class={style.changeabletext}
                                                     text-anchor="middle" 
                                                     x="91.23556900024414" 
                                                     y="51">
@@ -1211,7 +1211,8 @@ const ROUTES: Route[] = [
                                                 class="Rns9gYkaJwEG0jUTvFfUP" 
                                                 text-anchor="left" 
                                                 x="51.16443061828613" 
-                                                y="76">,
+                                                y="76">
+                                                ,
                                             </text>
                                             <g>
                                                 <rect 
@@ -1247,7 +1248,7 @@ const ROUTES: Route[] = [
                                                 y2="91">
                                             </line>
                                             <text 
-                                                class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                class={style.changeabletext}
                                                 text-anchor="middle" 
                                                 x="101.2880744934082" 
                                                 y="93">
@@ -1346,7 +1347,7 @@ const ROUTES: Route[] = [
                                                     y2="49">
                                                 </line>
                                                 <text 
-                                                    class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                    class={style.changeabletext}
                                                     text-anchor="middle" 
                                                     x="209.66680145263672" 
                                                     y="51">Ax
@@ -1431,10 +1432,11 @@ const ROUTES: Route[] = [
                                                     y2="91">
                                                 </line>
                                                 <text 
-                                                    class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                    class={style.changeabletext} 
                                                     text-anchor="middle" 
                                                     x="224.57194900512695" 
                                                     y="93">
+                                                    -&gt;R
                                                 </text>
                                             </g>
                                         </g>
@@ -1499,7 +1501,7 @@ const ROUTES: Route[] = [
                                                 y2="133">
                                             </line>
                                             <text 
-                                                class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                class={style.changeabletext}
                                                 text-anchor="middle" 
                                                 x="224.57194900512695" 
                                                 y="135">
