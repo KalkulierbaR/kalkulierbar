@@ -31,6 +31,7 @@ const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
         <Fragment>
             <Format foLogic={calculus === Calculus.fosc} 
                     allowClauses ={false}
+                    allowSequences = {true}
             />
             <FormulaInput
                 calculus={calculus}

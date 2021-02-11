@@ -53,5 +53,9 @@
 }
 
 .line--text {
-    fill:rgb(0, 0, 0)
+    fill: var(--kbar-primary-text-color);
+    cursor: default;
+}
+.unselected {
+    fill: var(--kbar-accent-light-color-secondary);
 }

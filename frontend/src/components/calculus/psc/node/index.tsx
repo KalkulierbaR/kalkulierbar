@@ -81,9 +81,9 @@ const lineUnderNode = (node:LayoutItem<PSCTreeLayoutNode>, parent: LayoutItem<PS
     }else if (ruleName === "orLeft") {
         lastMove = "∨L";
     }else if (ruleName === "impLeft") {
-        lastMove = "->L";
+        lastMove = "→L";
     }else if (ruleName === "impRight") {
-        lastMove = "->R";
+        lastMove = "→R";
     }else if (ruleName === "Ax") {
         lastMove = "Ax";
     }else if (ruleName === "exLeft"){
@@ -233,9 +233,11 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
                 </text>
             <Rectangle
                 elementRef={textRef}
-                disabled={true}
+                disabled={node.data.isClosed}
                 selected={selected}
                 class={classMap({
+                    [style.unselected]: !selected && !node.data.isClosed,
+                    [style.nodeClickable]: !node.data.isClosed,
                     [style.node]: !selected,
                     [style.rectSelected]: selected,})}
             />
@@ -251,10 +253,11 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
                     selectFormulaCallback={selectFormulaCallback}
                     selectedListIndex={selectedListIndex}
                 />
-            
-            {
-                lineUnderNode(node,parent,textRef,node.data.lastMove?.type)
-            }
+            <g onClick={() => {event?.stopPropagation();}}>
+                {
+                    lineUnderNode(node,parent,textRef,node.data.lastMove?.type)
+                }
+            </g>
             </g>
         </g>
         
