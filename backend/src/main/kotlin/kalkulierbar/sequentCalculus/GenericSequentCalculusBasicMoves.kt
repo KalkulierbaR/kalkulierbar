@@ -226,7 +226,7 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val formula = leaf.leftFormulas.get(listIndex)
 
     if (formula !is Impl)
-        throw IllegalMove("The rule impLeft must be applied on a '->' ")
+        throw IllegalMove("The rule impLeft must be applied on a '→' ")
     val newLeftFormulaOnLeftChild = leaf.leftFormulas.toMutableList()
     newLeftFormulaOnLeftChild.removeAt(listIndex)
     val newRightFormulaOnLeftChild = leaf.rightFormulas.toMutableList()
@@ -263,7 +263,7 @@ fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     val formula = leaf.rightFormulas.get(listIndex)
 
     if (formula !is Impl)
-        throw IllegalMove("The rule ImpRight must be applied on a '->' ")
+        throw IllegalMove("The rule ImpRight must be applied on a '→' ")
     val newLeftFormula = leaf.leftFormulas.toMutableList()
     newLeftFormula.add(formula.leftChild)
     val newRightFormula = leaf.rightFormulas.toMutableList()
