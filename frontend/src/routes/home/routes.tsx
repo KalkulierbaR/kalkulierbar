@@ -1307,7 +1307,7 @@ const ROUTES: Route[] = [
                                             text-anchor="middle" 
                                             x="104.21666717529297" 
                                             y="160">
-                                             ⊢ ((¬a ∨ a) ∧ (b -&gt; b))
+                                             ⊢ ((¬a ∨ a) ∧ (b → b))
                                         </text>
                                         <line 
                                             class={style.link}
@@ -1422,7 +1422,7 @@ const ROUTES: Route[] = [
                                                     text-anchor="middle" 
                                                     x="167.90833282470703" 
                                                     y="118">
-                                                     ⊢ (b -&gt; b)
+                                                     ⊢ (b → b)
                                                 </text>
                                                 <line 
                                                     class={style.link} 
@@ -1436,7 +1436,7 @@ const ROUTES: Route[] = [
                                                     text-anchor="middle" 
                                                     x="224.57194900512695" 
                                                     y="93">
-                                                    -&gt;R
+                                                    →R
                                                 </text>
                                             </g>
                                         </g>
@@ -1448,7 +1448,7 @@ const ROUTES: Route[] = [
                                         text-anchor="middle" 
                                         x="167.90833282470703" 
                                         y="118">
-                                         ⊢ (b -&gt; b)
+                                         ⊢ (b → b)
                                     </text>
                                     <rect 
                                         class={style.rect} 
@@ -1481,7 +1481,7 @@ const ROUTES: Route[] = [
                                                     class="_2OwwaKyvRD3KxoJMgLeJ9w" 
                                                     x="174.2697048187256" 
                                                     y="118">
-                                                    (b -&gt; b)
+                                                    (b → b)
                                                 </text>
                                             </g>
                                         </g>
@@ -1491,7 +1491,7 @@ const ROUTES: Route[] = [
                                                 text-anchor="middle" 
                                                 x="104.21666717529297" 
                                                 y="160">
-                                                 ⊢ ((¬a ∨ a) ∧ (b -&gt; b))
+                                                 ⊢ ((¬a ∨ a) ∧ (b → b))
                                             </text>
                                             <line 
                                                 class={style.link} 
@@ -1517,7 +1517,7 @@ const ROUTES: Route[] = [
                                 text-anchor="middle" 
                                 x="104.21666717529297" 
                                 y="160">
-                                 ⊢ ((¬a ∨ a) ∧ (b -&gt; b))
+                                 ⊢ ((¬a ∨ a) ∧ (b → b))
                             </text>
                             <rect 
                                 class={style.rect} 
@@ -1550,7 +1550,7 @@ const ROUTES: Route[] = [
                                             class="_2OwwaKyvRD3KxoJMgLeJ9w" 
                                             x="110.55480575561523" 
                                             y="160">
-                                            ((¬a ∨ a) ∧ (b -&gt; b))
+                                            ((¬a ∨ a) ∧ (b → b))
                                         </text>
                                     </g>
                                 </g>
