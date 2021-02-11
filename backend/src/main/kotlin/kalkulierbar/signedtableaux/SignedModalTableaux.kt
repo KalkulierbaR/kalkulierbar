@@ -32,11 +32,11 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
         return when (move) {
             is Negation -> applyNegation(state, move.nodeID, move.leafID)
             is AlphaMove -> applyAlpha(state, move.nodeID, move.leafID)
-            //is BetaMove -> applyBeta(state, move.nodeID, move.leafID)
-            //is NyMove -> applyNy(state, move.nodeID, move.leafID)
-            //is PiMove -> applyPi(state, move.nodeID, move.leafID)
-            //is CloseMove -> applyClose(state, move.nodeID, move.closeID, move.getVarAssignTerms())
-            //is UndoMove -> applyUndo(state)
+            is BetaMove -> applyBeta(state, move.nodeID, move.leafID)
+            is NuMove -> applyNu(state, move.prefix, move.nodeID, move.leafID)
+            is PiMove -> applyPi(state, move.prefix, move.nodeID, move.leafID)
+            is CloseMove -> applyClose(state, move.nodeID, move.leafID)
+            is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")
         }
 
@@ -56,7 +56,7 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
             return state
 
         // Create a fresh clone-state with the same parameters and input formula
-        var freshState = SignedModalTableauxState(state.formula, true)
+        var freshState = SignedModalTableauxState(state.formula, state.assumption, state.backtracking)
         freshState.usedBacktracking = true
 
         // We don't want to re-do the last move

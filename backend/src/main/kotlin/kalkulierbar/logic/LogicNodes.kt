@@ -238,17 +238,17 @@ class ExistentialQuantifier(
 }
 
 @Serializable
-@SerialName("always")
-class Always(override var child: LogicNode) : UnaryOp() {
+@SerialName("box")
+class Box(override var child: LogicNode) : UnaryOp() {
 
     override fun toString() = "[]$child"
 
-    override fun clone(qm: Map<String, Quantifier>) = Always(child.clone(qm))
+    override fun clone(qm: Map<String, Quantifier>) = Box(child.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
     override fun synEq(other: Any?): Boolean {
-        if (other == null || other !is Always)
+        if (other == null || other !is Box)
             return false;
         
         return this.child.synEq(other.child);
@@ -256,17 +256,17 @@ class Always(override var child: LogicNode) : UnaryOp() {
 }
 
 @Serializable
-@SerialName("sometimes")
-class Sometimes(override var child: LogicNode) : UnaryOp() {
+@SerialName("diamond")
+class Diamond(override var child: LogicNode) : UnaryOp() {
 
     override fun toString() = "<>$child"
 
-    override fun clone(qm: Map<String, Quantifier>) = Sometimes(child.clone(qm))
+    override fun clone(qm: Map<String, Quantifier>) = Diamond(child.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
     override fun synEq(other: Any?): Boolean {
-        if (other == null || other !is Sometimes)
+        if (other == null || other !is Diamond)
             return false;
         
         return this.child.synEq(other.child);

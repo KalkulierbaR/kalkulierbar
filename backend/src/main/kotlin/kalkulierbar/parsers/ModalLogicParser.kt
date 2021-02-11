@@ -9,8 +9,8 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.Not
 import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
-import kalkulierbar.logic.Always
-import kalkulierbar.logic.Sometimes
+import kalkulierbar.logic.Box
+import kalkulierbar.logic.Diamond
 
 /**
  * Recursive descent parser for propositional logic
@@ -113,7 +113,7 @@ open class ModalLogicParser {
             consume()
             return Not(parseParen())
         } else {
-            return parseAlways()
+            return parseBox()
         }
     }
 
@@ -121,12 +121,12 @@ open class ModalLogicParser {
      * Parses a unary always
      * @return LogicNode representing the negated formula
      */
-    protected open fun parseAlways(): LogicNode {
-        if (nextTokenIs(TokenType.ALWAYS)) {
+    protected open fun parseBox(): LogicNode {
+        if (nextTokenIs(TokenType.BOX)) {
             consume()
-            return Always(parseAlways())
+            return Box(parseBox())
         } else {
-            return parseSometimes()
+            return parseDiamond()
         }
     }
 
@@ -134,10 +134,10 @@ open class ModalLogicParser {
      * Parses a unary sometimes
      * @return LogicNode representing the negated formula
      */
-    protected open fun parseSometimes(): LogicNode {
-        if (nextTokenIs(TokenType.SOMETIMES)) {
+    protected open fun parseDiamond(): LogicNode {
+        if (nextTokenIs(TokenType.DIAMOND)) {
             consume()
-            return Sometimes(parseAlways())
+            return Diamond(parseBox())
         } else {
             return parseParen()
         }

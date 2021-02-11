@@ -41,24 +41,16 @@ class SignedModalTableauxState(
      * Marks a tree node and its ancestry as closed
      * NOTE: This does NOT set the closeRef of the closed node
      *       so make sure the closeRef is set before calling this
-     * @param nodeID The node to mark as closed
+     * @param leafID The node to mark as closed
      */
-    fun setClosed(nodeID: Int) {
-        var node = nodes[nodeID]
+    fun setClosed(leafID: Int) {
+        var node = nodes[leafID]
         // Set isClosed to true for all nodes dominated by node in reverse tree
-        while (node == nodes[nodeID] || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
+        while (node == nodes[leafID] || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
             node.isClosed = true
             if (node.parent == null)
                 break
             node = nodes[node.parent!!]
-        }
-
-        // Set isClosed for all descendants of the node
-        val worklist = mutableListOf<Int>(nodeID)
-        while (worklist.isNotEmpty()) {
-            val elem = nodes[worklist.removeAt(0)]
-            worklist.addAll(elem.children)
-            elem.isClosed = true
         }
     }
 
@@ -94,16 +86,20 @@ class SignedModalTableauxState(
         return leaves
     }
 
-
     /**
-     * Checks if a prefix is already in use
+     * Checks if a prefix is already in use on the branch specified by the leaf
+     * @param leafID the leafID that specifies the
      * @param prefix the prefix to be checked
      * @return whether the prefix is already in use
      */
-    fun prefixIsUsed(prefix: List<Int>): Boolean {
-        usedPrefixes.forEach {
-            if(it.equals(prefix))
-                return true;
+    fun prefixIsUsedOnBranch(leafID: Int, prefix: List<Int>): Boolean {
+        var node = nodes[leafID];
+        if(prefix.equals(node.prefix))
+            return true
+        while (node.parent != null){
+            node = nodes[node.parent!!]
+            if(prefix.equals(node.prefix))
+                return true
         }
         return false;
     }
@@ -137,7 +133,7 @@ class SignedModalTableauxNode(
     val isLeaf
         get() = children.size == 0
 
-    override fun toString() = formula.toString()
+    override fun toString() = prefix.toString() + sign.toString() + formula.toString()
 
     fun render() {
         spelling = formula.toString()

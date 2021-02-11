@@ -89,10 +89,10 @@ class Tokenizer {
                 tokens.add(Token(TokenType.UNIVERSALQUANT, "\\all", i + positionInBaseString))
                 i += 4
             } else if (i + 1 < len && formula.substring(i, i + 2) == "[]") {
-                tokens.add(Token(TokenType.ALWAYS, "[]", i + positionInBaseString))
+                tokens.add(Token(TokenType.BOX, "[]", i + positionInBaseString))
                 i += 2
             } else if (i + 1 < len && formula.substring(i, i + 2) == "<>") {
-                tokens.add(Token(TokenType.SOMETIMES, "<>", i + positionInBaseString))
+                tokens.add(Token(TokenType.DIAMOND, "<>", i + positionInBaseString))
                 i += 2
             } else if (whitespace matches formula[i].toString()) {
                 i += 1 // Skip whitespace
@@ -135,7 +135,7 @@ data class Token(val type: TokenType, val spelling: String, val srcPosition: Int
 enum class TokenType(val stringRep: String) {
     AND("&"), OR("|"), NOT("!"), IMPLICATION("->"), EQUIVALENCE("<=>"), LPAREN("("), RPAREN(")"),
     COMMA(","), COLON(":"), CAPID("uppercase identifier"), LOWERID("lowercase identifier"),
-    UNIVERSALQUANT("\\all"), EXISTENTIALQUANT("\\ex"), UNKNOWN("unknown token"), ALWAYS("[]"), SOMETIMES("<>");
+    UNIVERSALQUANT("\\all"), EXISTENTIALQUANT("\\ex"), UNKNOWN("unknown token"), BOX("[]"), DIAMOND("<>");
 
     override fun toString() = stringRep
 }

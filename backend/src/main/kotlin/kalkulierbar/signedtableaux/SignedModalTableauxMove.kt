@@ -14,7 +14,7 @@ val SignedModalTablueaxMoveModule = SerializersModule {
         Negation::class with Negation.serializer()
         AlphaMove::class with AlphaMove.serializer()
         BetaMove::class with BetaMove.serializer()
-        NyMove::class with NyMove.serializer()
+        NuMove::class with NuMove.serializer()
         PiMove::class with PiMove.serializer()
         CloseMove::class with CloseMove.serializer()
         UndoMove::class with UndoMove.serializer()
@@ -43,42 +43,21 @@ class BetaMove(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
 }
 
 @Serializable
-@SerialName("nyMove")
-class NyMove(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
-    override fun toString() = "(nyMove|$nodeID)"
+@SerialName("nuMove")
+class NuMove(val prefix: Int, val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
+    override fun toString() = "(nuMove|$nodeID)"
 }
 
 @Serializable
 @SerialName("piMove")
-class PiMove(val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
+class PiMove(val prefix: Int, val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(piMove|$nodeID)"
 }
 
 @Serializable
 @SerialName("close")
-class CloseMove(
-    val nodeID: Int,
-    val closeID: Int,
-    val varAssign: Map<String, String>?
-) : SignedModalTableauxMove() {
-    /**
-     * Parses map values to first-order terms
-     * @return null iff varAssign == null
-     *         parsed map-values iff varAssign != null
-     */
-    fun getVarAssignTerms(): Map<String, FirstOrderTerm>? {
-        if (varAssign == null)
-            return null
-        return varAssign.mapValues {
-            try {
-                FirstOrderParser.parseTerm(it.value)
-            } catch (e: InvalidFormulaFormat) {
-                throw InvalidFormulaFormat("Could not parse term '${it.value}': ${e.message}")
-            }
-        }
-    }
-
-    override fun toString() = "(close|$nodeID|$closeID|$varAssign)"
+class CloseMove(val nodeID: Int, val leafID: Int) : SignedModalTableauxMove() {
+    override fun toString() = "(close|$nodeID|$leafID)"
 }
 
 @Serializable
