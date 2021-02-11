@@ -1035,149 +1035,540 @@ const ROUTES: Route[] = [
     {
         href: Calculus.psc,
         name: "Propositional Sequent Calculus",
-        viewBox: "0 -16 450.015625 360",
+        viewBox: "0 -15 225 200",
         image: (
             <g transform="translate(0 0) scale(1)">
-                <g transform="translate(0 0)">
-                    <line
-                        class={style.link}
-                        x1="225.0078125"
-                        y1="22"
-                        x2="225.0078125"
-                        y2="72"
-                    />
+                <g>
                     <g transform="translate(0 0)">
-                        <line
-                            class={style.link}
-                            x1="225.0078125"
-                            y1="94"
-                            x2="225.0078125"
-                            y2="144"
-                        />
                         <g transform="translate(0 0)">
-                            <line
-                                class={style.link}
-                                x1="225.0078125"
-                                y1="166"
-                                x2="225.0078125"
-                                y2="216"
-                            />
                             <g transform="translate(0 0)">
-                                <line
-                                    class={style.link}
-                                    x1="225.0078125"
-                                    y1="238"
-                                    x2="225.0078125"
-                                    y2="288"
-                                />
                                 <g transform="translate(0 0)">
-                                    <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                                        <rect
-                                            class={style.rect}
-                                            x="188.15625"
-                                            y="284.734375"
-                                            width="73.703125"
-                                            height="26.609375"
-                                            rx="4"
-                                        />
-                                        <text
-                                            text-anchor="middle"
-                                            class=""
-                                            x="225.0078125"
-                                            y="304"
-                                        >
-                                            ¬R(f(X))
+                                    <g transform="translate(0 0)">
+                                        <g>
+                                            <text 
+                                                class="_1exVju-unaGRf1VM4onP8K" 
+                                                text-anchor="middle" 
+                                                x="42.57500076293945" 
+                                                y="-8"> 
+                                                
+                                            </text>
+                                            <g>
+                                                <g>
+                                                    <text 
+                                                        class="_1exVju-unaGRf1VM4onP8K" 
+                                                        text-anchor="middle" 
+                                                        x="42.57500076293945" 
+                                                        y="34">
+                                                        a ⊢ a
+                                                    </text>
+                                                    <line 
+                                                        class={style.link} 
+                                                        x1="15.816532135009766" 
+                                                        y1="7" 
+                                                        x2="69.33346939086914" 
+                                                        y2="7">
+                                                    </line>
+                                                    <text 
+                                                        class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                        text-anchor="middle" 
+                                                        x="84.33346939086914" 
+                                                        y="9">
+                                                        Ax
+                                                    </text>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <text 
+                                            class="_1exVju-unaGRf1VM4onP8K" 
+                                            text-anchor="middle" 
+                                            x="42.57500076293945" 
+                                            y="34">
+                                            a ⊢ a
+                                        </text>
+                                        <rect 
+                                            class={style.rect} 
+                                            x="15.816532135009766" 
+                                            y="15.772357940673828" 
+                                            width="53.516937255859375" 
+                                            height="25.615177154541016" 
+                                            rx="4">
+                                        </rect>
+                                        <g>
+                                            <g>
+                                                <g>
+                                                    <rect 
+                                                        class={style.rect} 
+                                                        x="23.811925888061523" 
+                                                        y="19.772357940673828" 
+                                                        width="12.90921401977539" 
+                                                        height="17.615177154541016" 
+                                                        rx="4">
+                                                    </rect>
+                                                    <text 
+                                                        text-anchor="middle" 
+                                                        class="_2OwwaKyvRD3KxoJMgLeJ9w" 
+                                                        x="30.266531944274902" 
+                                                        y="34">
+                                                        a
+                                                    </text>
+                                                </g>
+                                                <text 
+                                                    class="Rns9gYkaJwEG0jUTvFfUP" 
+                                                    text-anchor="left" 
+                                                    x="36.71653175354004" 
+                                                    y="34">
+                                                    ⊢
+                                                </text>
+                                                <g>
+                                                    <rect 
+                                                        class={style.rect} 
+                                                        x="48.71192169189453" 
+                                                        y="19.772357940673828" 
+                                                        width="12.90921401977539" 
+                                                        height="17.615177154541016" 
+                                                        rx="4">
+                                                    </rect>
+                                                    <text 
+                                                        text-anchor="middle" 
+                                                        class="_2OwwaKyvRD3KxoJMgLeJ9w" 
+                                                        x="55.166531562805176" 
+                                                        y="34">
+                                                        a
+                                                    </text>
+                                                </g>
+                                            </g>
+                                            <g>
+                                                <text 
+                                                    class="_1exVju-unaGRf1VM4onP8K" 
+                                                    text-anchor="middle" 
+                                                    x="42.57500076293945" 
+                                                    y="76"> 
+                                                    ⊢ ¬a, a
+                                                </text>
+                                                <line 
+                                                    class={style.link} 
+                                                    x1="8.914432525634766" 
+                                                    y1="49" 
+                                                    x2="76.23556900024414" 
+                                                    y2="49">
+                                                </line>
+                                                <text 
+                                                    class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                    text-anchor="middle" 
+                                                    x="91.23556900024414" 
+                                                    y="51">
+                                                    ¬R
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                                <g>
+                                    <text 
+                                        class="_1exVju-unaGRf1VM4onP8K" 
+                                        text-anchor="middle" 
+                                        x="42.57500076293945" 
+                                        y="76"> 
+                                        ⊢ ¬a, a
+                                    </text>
+                                    <rect 
+                                        class= {style.rect} 
+                                        x="8.914430618286133" 
+                                        y="57.77235794067383" 
+                                        width="67.32113647460938" 
+                                        height="25.615177154541016" 
+                                        rx="4">
+                                    </rect>
+                                    <g>
+                                        <g>
+                                            <text 
+                                                class="Rns9gYkaJwEG0jUTvFfUP" 
+                                                text-anchor="left" 
+                                                x="16.914430618286133" 
+                                                y="76">
+                                                ⊢
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="28.910024642944336" 
+                                                    y="61.77235794067383" 
+                                                    width="22.258808135986328" 
+                                                    height="17.615177154541016" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w" 
+                                                    x="40.03943061828613" 
+                                                    y="76">
+                                                    ¬a
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class="Rns9gYkaJwEG0jUTvFfUP" 
+                                                text-anchor="left" 
+                                                x="51.16443061828613" 
+                                                y="76">,
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="55.159820556640625" 
+                                                    y="61.77235794067383" 
+                                                    width="12.90921401977539" 
+                                                    height="17.615177154541016" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w" 
+                                                    x="61.61443042755127" 
+                                                    y="76">
+                                                    a
+                                                </text>
+                                            </g>
+                                        </g>
+                                        <g>
+                                            <text 
+                                                class="_1exVju-unaGRf1VM4onP8K" 
+                                                text-anchor="middle" 
+                                                x="42.57500076293945" 
+                                                y="118">
+                                                 ⊢ (¬a ∨ a)
+                                            </text>
+                                            <line 
+                                                class={style.link} 
+                                                x1="-1.1380729675292969" 
+                                                y1="91" 
+                                                x2="86.2880744934082" 
+                                                y2="91">
+                                            </line>
+                                            <text 
+                                                class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                text-anchor="middle" 
+                                                x="101.2880744934082" 
+                                                y="93">
+                                                ∨R
+                                            </text>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                            <g>
+                                <text 
+                                    class="_1exVju-unaGRf1VM4onP8K" 
+                                    text-anchor="middle" 
+                                    x="42.57500076293945" 
+                                    y="118"> 
+                                    ⊢ (¬a ∨ a)
+                                </text>
+                                <rect 
+                                    class={style.rect} 
+                                    x="-1.1380767822265625" 
+                                    y="99.77235412597656" 
+                                    width="87.4261474609375" 
+                                    height="25.615177154541016" 
+                                    rx="4">
+                                </rect>
+                                <g>
+                                    <g>
+                                        <text 
+                                            class="Rns9gYkaJwEG0jUTvFfUP" 
+                                            text-anchor="left" 
+                                            x="6.8619232177734375" 
+                                            y="118">
+                                            ⊢
+                                        </text>
+                                        <g>
+                                            <rect 
+                                                class={style.rect}
+                                                x="18.84579849243164" 
+                                                y="103.77235412597656" 
+                                                width="60.182247161865234" 
+                                                height="17.615177154541016" 
+                                                rx="4">
+                                            </rect>
+                                            <text 
+                                                text-anchor="middle" 
+                                                class="_2OwwaKyvRD3KxoJMgLeJ9w" 
+                                                x="48.93692398071289" 
+                                                y="118">
+                                                (¬a ∨ a)
+                                            </text>
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <text 
+                                            class="_1exVju-unaGRf1VM4onP8K" 
+                                            text-anchor="middle" 
+                                            x="104.21666717529297" 
+                                            y="160">
+                                             ⊢ ((¬a ∨ a) ∧ (b -&gt; b))
+                                        </text>
+                                        <line 
+                                            class={style.link}
+                                            x1="-1.1380729675292969" 
+                                            y1="133" 
+                                            x2="188.478515625" 
+                                            y2="133">
+                                        </line>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                        <g transform="translate(0 0)">
+                            <g transform="translate(0 0)">
+                                <g transform="translate(0 0)">
+                                    <g>
+                                        <text 
+                                            class="_1exVju-unaGRf1VM4onP8K" 
+                                            text-anchor="middle" 
+                                            x="167.90833282470703" 
+                                            y="34">
+                                            
+                                        </text>
+                                        <g>
+                                            <g>
+                                                <text 
+                                                    class="_1exVju-unaGRf1VM4onP8K" 
+                                                    text-anchor="middle" 
+                                                    x="167.90833282470703" 
+                                                    y="76">b ⊢ b
+                                                </text>
+                                                <line 
+                                                    class={style.link}
+                                                    x1="141.14986419677734" 
+                                                    y1="49" 
+                                                    x2="194.66680145263672" 
+                                                    y2="49">
+                                                </line>
+                                                <text 
+                                                    class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                    text-anchor="middle" 
+                                                    x="209.66680145263672" 
+                                                    y="51">Ax
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                                <g>
+                                    <text 
+                                        class="_1exVju-unaGRf1VM4onP8K" 
+                                        text-anchor="middle" 
+                                        x="167.90833282470703" 
+                                        y="76">
+                                        b ⊢ b
+                                    </text>
+                                    <rect 
+                                        class={style.rect} 
+                                        x="141.1498565673828" 
+                                        y="57.77235794067383" 
+                                        width="53.516937255859375" 
+                                        height="25.615177154541016" 
+                                        rx="4">
+                                    </rect>
+                                    <g>
+                                        <g>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="149.14524841308594" 
+                                                    y="61.77235794067383" 
+                                                    width="12.90921401977539" 
+                                                    height="17.615177154541016" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w" 
+                                                    x="155.59985637664795" 
+                                                    y="76">
+                                                    b
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class="Rns9gYkaJwEG0jUTvFfUP" 
+                                                text-anchor="left" 
+                                                x="162.0498561859131" 
+                                                y="76">
+                                                ⊢
+                                                </text>
+                                                <g>
+                                                    <rect 
+                                                        class={style.rect} 
+                                                        x="174.04525756835938" 
+                                                        y="61.77235794067383" 
+                                                        width="12.90921401977539" 
+                                                        height="17.615177154541016" 
+                                                        rx="4">
+                                                    </rect>
+                                                    <text 
+                                                        text-anchor="middle" 
+                                                        class="_2OwwaKyvRD3KxoJMgLeJ9w" 
+                                                        x="180.49985599517822" 
+                                                        y="76">
+                                                        b
+                                                    </text>
+                                                </g>
+                                            </g>
+                                            <g>
+                                                <text 
+                                                    class="_1exVju-unaGRf1VM4onP8K" 
+                                                    text-anchor="middle" 
+                                                    x="167.90833282470703" 
+                                                    y="118">
+                                                     ⊢ (b -&gt; b)
+                                                </text>
+                                                <line 
+                                                    class={style.link} 
+                                                    x1="126.24471664428711" 
+                                                    y1="91" 
+                                                    x2="209.57194900512695" 
+                                                    y2="91">
+                                                </line>
+                                                <text 
+                                                    class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                    text-anchor="middle" 
+                                                    x="224.57194900512695" 
+                                                    y="93">
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                                <g>
+                                    <text 
+                                        class="_1exVju-unaGRf1VM4onP8K" 
+                                        text-anchor="middle" 
+                                        x="167.90833282470703" 
+                                        y="118">
+                                         ⊢ (b -&gt; b)
+                                    </text>
+                                    <rect 
+                                        class={style.rect} 
+                                        x="126.24470520019531" 
+                                        y="99.77235412597656" 
+                                        width="83.32723236083984" 
+                                        height="25.615177154541016" 
+                                        rx="4">
+                                    </rect>
+                                    <g>
+                                        <g>
+                                            <text 
+                                                class="Rns9gYkaJwEG0jUTvFfUP" 
+                                                text-anchor="left" 
+                                                x="134.2447052001953" 
+                                                y="118">
+                                                ⊢
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="146.22802734375" 
+                                                    y="103.77235412597656" 
+                                                    width="56.08333206176758" 
+                                                    height="17.615177154541016" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w" 
+                                                    x="174.2697048187256" 
+                                                    y="118">
+                                                    (b -&gt; b)
+                                                </text>
+                                            </g>
+                                        </g>
+                                        <g>
+                                            <text 
+                                                class="_1exVju-unaGRf1VM4onP8K" 
+                                                text-anchor="middle" 
+                                                x="104.21666717529297" 
+                                                y="160">
+                                                 ⊢ ((¬a ∨ a) ∧ (b -&gt; b))
+                                            </text>
+                                            <line 
+                                                class={style.link} 
+                                                x1="19.954818725585938" 
+                                                y1="133" 
+                                                x2="209.57194900512695" 
+                                                y2="133">
+                                            </line>
+                                            <text 
+                                                class="_14oAyu-VnhwjB4T5n9oYBl" 
+                                                text-anchor="middle" 
+                                                x="224.57194900512695" 
+                                                y="135">
+                                                ∧R
+                                            </text>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        <g>
+                            <text 
+                                class="_1exVju-unaGRf1VM4onP8K" 
+                                text-anchor="middle" 
+                                x="104.21666717529297" 
+                                y="160">
+                                 ⊢ ((¬a ∨ a) ∧ (b -&gt; b))
+                            </text>
+                            <rect 
+                                class={style.rect} 
+                                x="19.95480728149414" 
+                                y="141.77235412597656" 
+                                width="168.52369689941406" 
+                                height="25.615177154541016" 
+                                rx="4">
+                            </rect>
+                            <g>
+                                <g>
+                                    <text 
+                                        class="Rns9gYkaJwEG0jUTvFfUP" 
+                                        text-anchor="left" 
+                                        x="27.95480728149414" 
+                                        y="160">
+                                        ⊢
+                                    </text>
+                                    <g>
+                                        <rect 
+                                            class={style.rect} 
+                                            x="39.91490173339844" 
+                                            y="145.77235412597656" 
+                                            width="141.27980041503906" 
+                                            height="17.615177154541016" 
+                                            rx="4">
+                                        </rect>
+                                        <text 
+                                            text-anchor="middle" 
+                                            class="_2OwwaKyvRD3KxoJMgLeJ9w" 
+                                            x="110.55480575561523" 
+                                            y="160">
+                                            ((¬a ∨ a) ∧ (b -&gt; b))
                                         </text>
                                     </g>
                                 </g>
-                                <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                                    <rect
-                                        class={style.rect}
-                                        x="165.140625"
-                                        y="212.734375"
-                                        width="119.734375"
-                                        height="26.609375"
-                                        rx="4"
-                                    />
-                                    <text
-                                        text-anchor="middle"
-                                        class=""
-                                        x="225.0078125"
-                                        y="232"
-                                    >
-                                        (∀X: ¬R(f(X)))
-                                    </text>
-                                </g>
-                            </g>
-                            <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                                <rect
-                                    class={style.rect}
-                                    x="148.453125"
-                                    y="140.734375"
-                                    width="153.109375"
-                                    height="26.609375"
-                                    rx="4"
-                                />
-                                <text
-                                    text-anchor="middle"
-                                    class=""
-                                    x="225.0078125"
-                                    y="160"
-                                >
-                                    (R(f(a)) ∨ ¬R(f(b)))
-                                </text>
                             </g>
                         </g>
-                        <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                            <rect
-                                class={style.rect}
-                                x="169.90625"
-                                y="68.734375"
-                                width="110.203125"
-                                height="26.609375"
-                                rx="4"
-                            />
-                            <text
-                                text-anchor="middle"
-                                class=""
-                                x="225.0078125"
-                                y="88"
-                            >
-                                (∀X: R(f(X)))
-                            </text>
-                        </g>
-                    </g>
-                    <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                        <rect
-                            class={style.rect}
-                            x="14.421875"
-                            y="-3.265625"
-                            width="421.171875"
-                            height="26.609375"
-                            rx="4"
-                        />
-                        <text
-                            text-anchor="middle"
-                            class=""
-                            x="225.0078125"
-                            y="16"
-                        >
-                            (((∀X: ¬R(f(X))) ∧ (R(f(a)) ∨ ¬R(f(b)))) ∧ (∀X:
-                            R(f(X))))
-                        </text>
                     </g>
                 </g>
             </g>
+                                            
+                                                            
         ),
     },
 
     {
         href: Calculus.fosc,
         name: "First Order Sequent Calculus",
-        viewBox:"0 -16 450.015625 360",
-        image:(
+        viewBox: "0 -16 450.015625 360",
+        image: (
             <text
-            
+
             >
 
             </text>
