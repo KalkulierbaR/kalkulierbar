@@ -19,6 +19,10 @@ export const formulaNames = (formulas: FormulaNode[]) => {
     return result;
 }
 
+export const parseStringToListIndex = (str: string) => {
+    return parseInt(str.substring(1));
+}
+
 export const parseFormula = (formula: FormulaNode) => {
     let result = "";
     if(formula === undefined) 

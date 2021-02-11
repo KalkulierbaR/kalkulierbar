@@ -1,5 +1,8 @@
 import { h } from "preact";
+import { PSCNode, PSCTreeLayoutNode } from "../../../types/calculus/psc";
+import { LayoutItem } from "../../../types/layout";
 import { classMap } from "../../../util/class-map";
+import { nodeName, parseFormula, parseStringToListIndex } from "../../../util/psc";
 import * as style from "./style.scss";
 
 interface Props {
@@ -20,6 +23,14 @@ interface Props {
      */
     className?: string;
     /**
+     * If the current selected Node should be showed above
+     */
+    node?: PSCNode | undefined;
+    /**
+     * listIndex
+     */
+    listIndex?: string
+    /**
      * Function to decide if an option should be disabled
      */
     disableOption?: (option: number) => boolean;
@@ -30,6 +41,8 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     selectedOptionIds = [],
     selectOptionCallback,
     className,
+    node,
+    listIndex,
     disableOption = (option: number) => {return true},
 }) => {
 
@@ -41,6 +54,19 @@ const OptionList: preact.FunctionalComponent<Props> = ({
 
     return (
         <div class={`card ${className}`}>
+                {node !== undefined && listIndex !== undefined &&(
+                    <div class={`card ${className}`}>
+                        <p class={style.originList}>
+                            {"For "}
+                            <code class={style.formula}>{
+                                parseFormula(listIndex?.charAt(0) === 'l' ? node.leftFormulas[parseStringToListIndex(listIndex)] : node.rightFormulas[parseStringToListIndex(listIndex)])
+                            }</code>
+                            <br/>
+                            {" in Node "}
+                            <code class={style.origin}>{nodeName(node)}</code>
+                        </p>
+                    </div>
+                )}
             {Array.from(options).map((keyValuePair: [number, string]) => (
                 <p
                     onClick={() => handleClick(keyValuePair)}

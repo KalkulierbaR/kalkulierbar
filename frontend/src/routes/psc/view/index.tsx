@@ -19,7 +19,7 @@ import TutorialDialog from "../../../components/tutorial/dialog";
 import { sendMove } from "../../../util/api";
 import Dialog from "../../../components/dialog";
 import VarAssignDialog from "../../../components/dialog/var-assign";
-import { nodeName } from "../../../util/psc";
+import { nodeName, parseStringToListIndex } from "../../../util/psc";
 
 
 interface Props {
@@ -74,14 +74,15 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
             setSelectedRuleId(undefined);
         }else{
             setSelectedRuleId(newRuleId);
-            if(newRuleId !== undefined && selectedNode !== undefined && selectedNode.children.length === 0 && selectedListIndex !== undefined){
+            if(newRuleId !== undefined && selectedNode !== undefined && selectedNode.children.length === 0){
                 if(newRuleId === 0){
                     sendMove(
                         server, calculus, state, {type: "Ax", nodeID: selectedNodeId!}, onChange,notificationHandler,
                     )
                     setSelectedNodeId(undefined);
                     setSelectedRuleId(undefined);
-                } else if (newRuleId >= 9 && newRuleId <= 12) {
+                    setSelectedListIndex(undefined);
+                } else if (newRuleId >= 9 && newRuleId <= 12 && selectedListIndex !== undefined) {
                     // Selected Rule is a Quantifier
                     setVarOrigins([nodeName(selectedNode)]);
                     // Open Popup to
@@ -99,12 +100,23 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                             setShowVarAssignDialog(true);
                         }
                     }
-                } else {
+                } else if (selectedListIndex !== undefined){
+                    if (selectedListIndex.charAt(0) === 'l' && (getFORuleSet().rules[newRuleId].site === "right")) {
+                        setSelectedRuleId(undefined);
+                        notificationHandler.error("Can't use right hand side rule on the left side!");
+                        return;
+                    }
+                    if (selectedListIndex.charAt(0) === 'r' && (getFORuleSet().rules[newRuleId].site === "left")) {
+                        setSelectedRuleId(undefined);
+                        notificationHandler.error("Can't use left hand side rule on the right side!");
+                        return;
+                    }
                     sendMove(
                         server, calculus, state, {type: ruleOptions.get(newRuleId)!, nodeID: selectedNodeId!, listIndex: parseStringToListIndex(selectedListIndex)}, onChange,notificationHandler,
                     )
                     setSelectedNodeId(undefined);
                     setSelectedRuleId(undefined);
+                    setSelectedListIndex(undefined);
                 }
                 
                 
@@ -138,10 +150,6 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
         setSelectedListIndex(undefined);
         setSelectedRuleId(undefined);
         setShowVarAssignDialog(false);
-    }
-
-    const parseStringToListIndex = (str: string) => {
-        return parseInt(str.substring(1));
     }
 
     const selectNodeCallback = (
@@ -183,6 +191,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         }
                         setSelectedNodeId(undefined);
                         setSelectedRuleId(undefined);
+                        setSelectedListIndex(undefined);
 
                 }
             }
@@ -202,7 +211,6 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
         event?.stopPropagation();
         if(newFormula.id === selectedListIndex){
             setSelectedListIndex(undefined);
-            setSelectedNodeId(undefined);
         } else {
             setSelectedListIndex(newFormula.id);
         }
@@ -212,11 +220,18 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
     const disableOptions = (
         option: number 
     ) => {
+        if(selectedNodeId === undefined) return false;
         if (state.showOnlyApplicableRules === false)
             return true;
         const rules = getFORuleSet();
-        if (selectedListIndex === undefined || selectedNodeId === undefined || selectedNode === undefined)
-            return true;
+        if (selectedListIndex === undefined || selectedNode === undefined){
+            if(option === 0){
+                return true;
+            }else {
+                return false;
+            }
+        }
+            
         if (rules.rules[option].applicableOn !== undefined) {
             if (selectedListIndex.charAt(0) === 'l') {
                 if (rules.rules[option].site === 'left' || rules.rules[option].site === 'both') {
@@ -278,6 +293,8 @@ const PSCView: preact.FunctionalComponent<Props> = ({calculus}) => {
                         setShowRuleDialog(false);
                         selectRuleCallback(keyValuePair[0]);
                     }}
+                    node={selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined}
+                    listIndex={selectedListIndex}
                     disableOption={disableOptions}
                 />
             </Dialog>

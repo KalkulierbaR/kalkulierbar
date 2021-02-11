@@ -43,7 +43,7 @@ export function instanceOfPSCState(
     object: any,
     calculus: PSCCalculusType,
 ): object is PSCState {
-    return "ruleSet" in object && calculus === Calculus.psc;
+    return "tree" in object && calculus === Calculus.psc;
 }
 export function instanceOfFOSCState(
     object: any,
