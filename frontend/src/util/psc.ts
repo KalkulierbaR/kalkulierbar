@@ -58,7 +58,7 @@ export const parseFormula = (formula: FormulaNode) => {
             result +=
                 "(" +
                 parseFormula(formula.leftChild!) +
-                " -> " +
+                " → " +
                 parseFormula(formula.rightChild!) +
                 ")";
             break;
@@ -66,7 +66,7 @@ export const parseFormula = (formula: FormulaNode) => {
             result +=
                 "(" +
                 parseFormula(formula.leftChild!) +
-                " <-> " +
+                " ↔ " +
                 parseFormula(formula.rightChild!) +
                 ")";
             break;

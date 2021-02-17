@@ -7,6 +7,7 @@ import {
 } from "../../../types/calculus/psc";
 import { PSCTreeLayoutNode } from "../../../types/calculus/psc";
 import { LayoutItem } from "../../../types/layout";
+import { classMap } from "../../../util/class-map";
 import { parseFormula } from "../../../util/psc";
 import { estimateSVGTextWidth } from "../../../util/text-width";
 import FormulaTreeNode from "../../calculus/psc/formulaNode";
@@ -57,11 +58,27 @@ const NODE_PUFFER = 16;
  * Draws a Comma at the given coordinates
  * @param {number} x the x coordinate on which the comma is drawn
  * @param {number} y the y coordinate on which the comma is drawn
+ * @param {number} selected whether or not the current node is selected
+ * @param {number} isClosed whether or not the current node is closed
  * @returns {any} HTML
  */
-const drawComma = (x: number, y: number) => {
+const drawComma = (
+    x: number,
+    y: number,
+    selected: boolean,
+    isClosed: boolean,
+) => {
     return (
-        <text class={style.textSelected} text-anchor="left" x={x} y={y}>
+        <text
+            class={classMap({
+                [style.text]: true,
+                [style.textClosed]: isClosed,
+                [style.textSelected]: selected,
+            })}
+            text-anchor="left"
+            x={x}
+            y={y}
+        >
             ,
         </text>
     );
@@ -106,13 +123,29 @@ const drawFormula = (
 
 /**
  * Draws the Seperator between the right and left Formulas
- * @param {number}x the x coordinate on which the seperator is drawn
- * @param {number}y the y coordinate on which the seperator is drawn
+ * @param {number} x the x coordinate on which the seperator is drawn
+ * @param {number} y the y coordinate on which the seperator is drawn
+ * @param {boolean} selected whether or not the current node is selected
+ * @param {boolean} isClosed whether or not the current node is closed
  * @returns {any} HTML
  */
-const drawSeperator = (x: number, y: number) => {
+const drawSeperator = (
+    x: number,
+    y: number,
+    selected: boolean,
+    isClosed: boolean,
+) => {
     return (
-        <text class={style.textSelected} text-anchor="left" x={x} y={y}>
+        <text
+            class={classMap({
+                [style.text]: true,
+                [style.textClosed]: isClosed,
+                [style.textSelected]: selected,
+            })}
+            text-anchor="left"
+            x={x}
+            y={y}
+        >
             ⊢
         </text>
     );
@@ -183,12 +216,16 @@ const getSequence = (
         totalSize +=
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if (index < leftFormulas.length - 1) {
-            htmlArray.push(drawComma(totalSize, node.y));
+            htmlArray.push(
+                drawComma(totalSize, node.y, selected, node.data.isClosed),
+            );
             totalSize += NODE_SPACING;
         }
     });
 
-    htmlArray.push(drawSeperator(totalSize, node.y));
+    htmlArray.push(
+        drawSeperator(totalSize, node.y, selected, node.data.isClosed),
+    );
     totalSize += SEPERATOR_SPACING;
 
     rightFormulas.forEach((elem, index) => {
@@ -210,7 +247,9 @@ const getSequence = (
         totalSize +=
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if (index < rightFormulas.length - 1) {
-            htmlArray.push(drawComma(totalSize, node.y));
+            htmlArray.push(
+                drawComma(totalSize, node.y, selected, node.data.isClosed),
+            );
             totalSize += NODE_SPACING;
         }
     });
