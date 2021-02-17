@@ -238,3 +238,39 @@ class ExistentialQuantifier(
         return true
     }
 }
+
+@Serializable
+@SerialName("box")
+class Box(override var child: LogicNode) : UnaryOp() {
+
+    override fun toString() = "[]$child"
+
+    override fun clone(qm: Map<String, Quantifier>) = Box(child.clone(qm))
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Box)
+            return false;
+        
+        return this.child.synEq(other.child);
+    }
+}
+
+@Serializable
+@SerialName("diamond")
+class Diamond(override var child: LogicNode) : UnaryOp() {
+
+    override fun toString() = "<>$child"
+
+    override fun clone(qm: Map<String, Quantifier>) = Diamond(child.clone(qm))
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Diamond)
+            return false;
+        
+        return this.child.synEq(other.child);
+    }
+}
