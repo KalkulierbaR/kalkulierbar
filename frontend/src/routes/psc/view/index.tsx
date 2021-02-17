@@ -400,7 +400,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     onClose={() => setShowVarAssignDialog(false)}
                     varOrigins={varOrigins}
                     vars={Array.from(varsToAssign)}
-                    manualVarAssignOnly={false}
+                    manualVarAssignOnly={true}
                     submitVarAssignCallback={quantifierCallback}
                     secondSubmitEvent={() => {}}
                 />
