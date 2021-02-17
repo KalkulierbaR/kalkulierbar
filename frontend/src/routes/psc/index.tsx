@@ -46,15 +46,12 @@ const PSC: preact.FunctionalComponent<Props> = ({calculus}) => {
                 <div class="flex-container">
                     <div class="first">
                         <Switch
-                            label="With Help"
+                            label="Show only applicable rules"
                             onChange={setShowOnlyApplicableRules}
                             initialState={false}
                         />
-                        <HintIcon hint="Only enable rules that can be applied."/>
-
                     </div>
                 </div>
-            
             </div>             
             <ExampleList calculus={calculus} />
                                  

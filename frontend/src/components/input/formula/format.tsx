@@ -55,7 +55,8 @@ const Format: preact.FunctionalComponent<Props> = ({ foLogic = false, allowClaus
                 <p>
                 Example: {" "}
                 <code class={style.padRight}>
-                    {"!(a -> b), b |- a"}
+                    {foLogic !== true && "!(a -> b), b |- a"}
+                    {foLogic === true && "\\all X: P(X), \\all X: (P(X) -> Q(X)) |- \\ex X: Q(X)"}
                 </code>
             </p>
         </li>
