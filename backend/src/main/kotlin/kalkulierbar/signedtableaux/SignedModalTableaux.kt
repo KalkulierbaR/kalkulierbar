@@ -75,7 +75,7 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
 
         if (state.nodes[0].isClosed) {
             val withWithoutBT = if (state.usedBacktracking) "with" else "without"
-            msg = "The proof is closed and valid in non-clausal tableaux $withWithoutBT backtracking"
+            msg = "The proof is closed and valid in signed modal-logic tableaux $withWithoutBT backtracking"
         }
 
         return CloseMessage(state.nodes[0].isClosed, msg)
