@@ -1,36 +1,29 @@
 import { Fragment, h } from "preact";
-import {
-    Calculus,
-    PropCalculusType,
-    PSCCalculusType,
-} from "../../../types/calculus";
-import { useCallback, useEffect, useState } from "preact/hooks";
-import OptionList from "../../../components/input/option-list";
-import { DragTransform } from "../../../types/ui";
-import { useAppState } from "../../../util/app-state";
-import { ruleSetToStringArray } from "../../../util/rule";
-import { stringArrayToStringMap } from "../../../util/array-to-map";
-import { getNormalRuleSet, getFORuleSet } from "../../../types/calculus/rules";
+import { route } from "preact-router";
+import { useState } from "preact/hooks";
+
+import PSCFAB from "../../../components/calculus/psc/fab";
 import PSCTreeView from "../../../components/calculus/psc/tree";
+import Dialog from "../../../components/dialog";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import OptionList from "../../../components/input/option-list";
+import TutorialDialog from "../../../components/tutorial/dialog";
+import { Calculus, PSCCalculusType } from "../../../types/calculus";
 import {
     FormulaTreeLayoutNode,
     instanceOfFOSCState,
     instanceOfPSCState,
-    PSCNode,
     PSCTreeLayoutNode,
     VarAssign,
 } from "../../../types/calculus/psc";
+import { getFORuleSet, getNormalRuleSet } from "../../../types/calculus/rules";
+import { sendMove } from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
+import { stringArrayToStringMap } from "../../../util/array-to-map";
+import { nodeName, parseStringToListIndex } from "../../../util/psc";
+import { ruleSetToStringArray } from "../../../util/rule";
 
 import * as style from "./style.scss";
-import { route } from "preact-router";
-import { selected } from "../../../components/svg/rectangle/style.scss";
-import PSCFAB from "../../../components/calculus/psc/fab";
-import { NotificationType } from "../../../types/app/notification";
-import TutorialDialog from "../../../components/tutorial/dialog";
-import { sendMove } from "../../../util/api";
-import Dialog from "../../../components/dialog";
-import VarAssignDialog from "../../../components/dialog/var-assign";
-import { nodeName, parseStringToListIndex } from "../../../util/psc";
 
 interface Props {
     calculus: PSCCalculusType;
@@ -291,12 +284,10 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     setSelectedListIndex(undefined);
                 }
             }
+        } else if (selectValue === true) {
+            setSelectedNodeId(newNode.id);
         } else {
-            if (selectValue === true) {
-                setSelectedNodeId(newNode.id);
-            } else {
-                setSelectedNodeId(undefined);
-            }
+            setSelectedNodeId(undefined);
         }
     };
 
@@ -409,7 +400,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     onClose={() => setShowVarAssignDialog(false)}
                     varOrigins={varOrigins}
                     vars={Array.from(varsToAssign)}
-                    manualVarAssignOnly={false}
+                    manualVarAssignOnly={true}
                     submitVarAssignCallback={quantifierCallback}
                     secondSubmitEvent={() => {}}
                 />

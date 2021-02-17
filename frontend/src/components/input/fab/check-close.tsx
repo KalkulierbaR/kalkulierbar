@@ -1,14 +1,16 @@
-import CheckCircleIcon from "../../icons/check-circle";
+import { h } from "preact";
+
+import { TutorialMode } from "../../../types/app/tutorial";
+import { CalculusType } from "../../../types/calculus";
+import { checkClose } from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
 import {
     disableTutorial,
     getHighlightCheck,
 } from "../../../util/tutorial-mode";
-import { TutorialMode } from "../../../types/app/tutorial";
-import { checkClose } from "../../../util/api";
+import CheckCircleIcon from "../../icons/check-circle";
+
 import FAB from "./index";
-import { useAppState } from "../../../util/app-state";
-import { CalculusType } from "../../../types/calculus";
-import { h } from "preact";
 
 interface Props {
     /**

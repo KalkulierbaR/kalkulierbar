@@ -1,14 +1,16 @@
 import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
+
 import { useAppState } from "../../util/app-state";
-import Btn from "../input/btn";
 import Dialog from "../dialog";
 import SettingsIcon from "../icons/settings";
-import * as style from "./style.scss";
-import Nav from "./nav";
+import Btn from "../input/btn";
+
 import Drawer from "./drawer";
-import Settings from "./settings";
 import Hamburger from "./hamburger";
+import Nav from "./nav";
+import Settings from "./settings";
+import * as style from "./style.scss";
 
 interface HeaderProps {
     /**

@@ -4,7 +4,6 @@ import {
     PSCTreeLayoutNode,
 } from "../../../../types/calculus/psc";
 import { Tree } from "../../../../types/tree";
-import * as style from "./style.scss";
 import PSCTreeNode from "../node";
 
 interface Props {
@@ -32,7 +31,6 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
     return (
         <g transform={`translate(${dt.x} ${dt.y})`}>
             {node.children.map((c, i) => {
-                const childDt = { x: 0, y: 0 };
                 return (
                     <Fragment key={i}>
                         <SubTree
@@ -54,8 +52,6 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
                 parent={parent}
                 // selectedNodeId={selectedNodeId}
                 selected={node.data.id === selectedNodeId}
-                zoomFactor={zoomFactor}
-                ruleName={ruleName}
                 selectFormulaCallback={selectFormulaCallback}
                 selectedListIndex={selectedListIndex}
             />

@@ -1,27 +1,18 @@
 import { Fragment, h } from "preact";
+import { useState } from "preact/hooks";
+
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
-import {
-    Calculus,
-    PropCalculusType,
-    PSCCalculusType,
-} from "../../types/calculus";
-import { route } from "preact-router";
-import { useAppState } from "../../util/app-state";
-import HintIcon, { Hint } from "../../components/hint";
-import Radio from "../../components/input/radio";
-import { PSCParams, PSCType } from "../../types/calculus/psc";
-import { useState } from "preact/hooks";
 import Switch from "../../components/input/switch";
+import { Calculus, PSCCalculusType } from "../../types/calculus";
+import { PSCParams } from "../../types/calculus/psc";
 
 interface Props {
     calculus: PSCCalculusType;
 }
 
 const PSC: preact.FunctionalComponent<Props> = ({ calculus }) => {
-    const { smallScreen } = useAppState();
-
     const [showOnlyApplicableRules, setShowOnlyApplicableRules] = useState(
         false,
     );
@@ -48,7 +39,6 @@ const PSC: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
             <div class="card">
                 <h3>Parameters</h3>
-                <Hint top={smallScreen} />
                 <div class="flex-container">
                     <div class="first">
                         <Switch

@@ -1,4 +1,5 @@
 import { h } from "preact";
+
 import {
     SelectNodeOptions,
     TableauxNode,
@@ -13,6 +14,7 @@ import {
 import { tableauxTreeLayout } from "../../../../util/tableaux";
 import ClosingEdge from "../../../svg/closing-edge";
 import Zoomable from "../../../svg/zoomable";
+
 import * as style from "./style.scss";
 import SubTree from "./subtree";
 

@@ -1,4 +1,6 @@
 import { Fragment, h } from "preact";
+
+import { Calculus } from "../../../../types/calculus";
 import { NCTableauxState } from "../../../../types/calculus/nc-tableaux";
 import { useAppState } from "../../../../util/app-state";
 import {
@@ -8,14 +10,14 @@ import {
     sendGamma,
     sendUndo,
 } from "../../../../util/nc-tableaux";
+import UndoIcon from "../../../icons/undo";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
-import UndoIcon from "../../../icons/undo";
-import * as style from "./style.scss";
-import DownloadFAB from "../../../input/fab/download";
-import { Calculus } from "../../../../types/calculus";
-import CheckCloseFAB from "../../../input/fab/check-close";
 import CenterFAB from "../../../input/fab/center";
+import CheckCloseFAB from "../../../input/fab/check-close";
+import DownloadFAB from "../../../input/fab/download";
+
+import * as style from "./style.scss";
 
 interface Props {
     /**

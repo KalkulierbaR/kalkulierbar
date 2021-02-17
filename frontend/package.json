@@ -8,7 +8,7 @@
         "start:production": "npm run -s serve",
         "start:development": "npm run -s dev",
         "build": "preact build --prerender=false",
-        "format": "prettier src/\\{components,routes,style,types,util\\}/**/* --write",
+        "format": "tslint --config tslintAutoFix.json --fix --project . && prettier src/\\{components,routes,style,types,util\\}/**/* --write",
         "serve": "preact build --prerender=false && serve build/ -s -l ${PORT:-8080}",
         "serve-only": "serve build/ -s -l ${PORT:-8080}",
         "dev": "preact watch",
@@ -62,7 +62,8 @@
         "preact-router": "^3.0.1",
         "react-hint": "^3.2.0",
         "serve": "^11.3.0",
-        "sha3": "^2.1.1"
+        "sha3": "^2.1.1",
+        "tslint-etc": "^1.13.9"
     },
     "peerDependencies": {
         "prettier": ">1.0.0",

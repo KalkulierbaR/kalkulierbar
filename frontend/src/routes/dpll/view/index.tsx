@@ -1,12 +1,14 @@
 import { Fragment, h } from "preact";
+import { route } from "preact-router";
 import { useCallback, useState } from "preact/hooks";
+
 import DPLLPropLitDialog from "../../../components/calculus/dpll/dialog/prop";
 import DPLLSplitDialog from "../../../components/calculus/dpll/dialog/split";
 import DPLLControlFAB from "../../../components/calculus/dpll/fab";
 import DPLLModelInput from "../../../components/calculus/dpll/model";
 import DPLLTree from "../../../components/calculus/dpll/tree";
-import TutorialDialog from "../../../components/tutorial/dialog";
 import OptionList from "../../../components/input/option-list";
+import TutorialDialog from "../../../components/tutorial/dialog";
 import { Calculus } from "../../../types/calculus";
 import { SelectedClauses } from "../../../types/calculus/clause";
 import { useAppState } from "../../../util/app-state";
@@ -18,8 +20,8 @@ import {
     sendModelCheck,
     sendProp,
 } from "../../../util/dpll";
+
 import * as style from "./style.scss";
-import { route } from "preact-router";
 
 interface Props {}
 

@@ -3,13 +3,10 @@ import {
     FormulaTreeLayoutNode,
     PSCTreeLayoutNode,
 } from "../../../../types/calculus/psc";
-import { SelectNodeOptions } from "../../../../types/calculus/tableaux";
-import { selected } from "../../../svg/rectangle/style.scss";
 import { PSCNode } from "../../../../types/calculus/psc";
-import { PSCState } from "../../../../types/calculus/psc";
-import Zoomable from "../../../svg/zoomable";
 import { findSubTree } from "../../../../util/layout/tree";
 import { pscTreeLayout } from "../../../../util/psc";
+import Zoomable from "../../../svg/zoomable";
 import { SubTree } from "../tree/subtree";
 
 import * as style from "./style.scss";
@@ -46,9 +43,7 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
 
     const treeHeight = Math.max(height, 200);
 
-    const transformGoTo = (d: any): [number, number] => {
-        const n = d.node as number;
-
+    const transformGoTo = (): [number, number] => {
         const node = findSubTree(
             root,
             (t) => t.data.id === selectedNodeId,

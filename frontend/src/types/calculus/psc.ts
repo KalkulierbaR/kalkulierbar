@@ -1,6 +1,6 @@
-import { RuleSet } from "./rules";
-import { PropCalculusType, Calculus, FOCalculusType, PSCCalculusType } from ".";
 import { KStringMap } from "../kotlin";
+
+import { Calculus, PSCCalculusType } from ".";
 
 export interface PSCNode {
     type: string;

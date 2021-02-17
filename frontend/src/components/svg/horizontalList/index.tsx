@@ -1,18 +1,18 @@
 import { h, RefObject } from "preact";
+import { useEffect, useState } from "preact/hooks";
+
 import {
     FormulaNode,
     FormulaTreeLayoutNode,
-    PSCNode,
 } from "../../../types/calculus/psc";
-import { useEffect, useState, useRef } from "preact/hooks";
-import { estimateSVGTextWidth } from "../../../util/text-width";
-import { nodeName, formulaNames, parseFormula } from "../../../util/psc";
-import SmallRec from "../SmallRec";
 import { PSCTreeLayoutNode } from "../../../types/calculus/psc";
 import { LayoutItem } from "../../../types/layout";
-import * as style from "./style.scss";
-import FormulaTreeNode from "../../calculus/psc/formulaNode";
 import { classMap } from "../../../util/class-map";
+import { parseFormula } from "../../../util/psc";
+import { estimateSVGTextWidth } from "../../../util/text-width";
+import FormulaTreeNode from "../../calculus/psc/formulaNode";
+
+import * as style from "./style.scss";
 
 interface Props {
     textRef: RefObject<SVGTextElement>;
@@ -58,8 +58,8 @@ const NODE_PUFFER = 16;
  * Draws a Comma at the given coordinates
  * @param {number} x the x coordinate on which the comma is drawn
  * @param {number} y the y coordinate on which the comma is drawn
- * @param {boolean} selected the y coordinate on which the comma is drawn
- * @param {boolean} isClosed the y coordinate on which the comma is drawn
+ * @param {number} selected whether or not the current node is selected
+ * @param {number} isClosed whether or not the current node is closed
  * @returns {any} HTML
  */
 const drawComma = (
@@ -92,7 +92,6 @@ const drawComma = (
  * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
  * @param {Function<PSCTreeLayoutNode>} selectNodeCallback KEKW
  * @param {boolean} selected the parameter which tell if the current node is selected or not
- * @param {boolean} left shows if formula is on the left
  * @returns {any} HTML
  */
 const drawFormula = (
@@ -103,7 +102,6 @@ const drawFormula = (
     selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void,
     selectNodeCallback: (node: PSCTreeLayoutNode) => void,
     selected: boolean,
-    left: boolean,
 ) => {
     return (
         <FormulaTreeNode
@@ -119,17 +117,16 @@ const drawFormula = (
             selectFormulaCallback={selectFormulaCallback}
             selectNodeCallback={selectNodeCallback}
             selected={selected}
-            left={left}
         />
     );
 };
 
 /**
  * Draws the Seperator between the right and left Formulas
- * @param {number}x the x coordinate on which the seperator is drawn
- * @param {number}y the y coordinate on which the seperator is 
- * @param {boolean} selected the y coordinate on which the comma is drawn
- * @param {boolean} isClosed the y coordinate on which the comma is drawn
+ * @param {number} x the x coordinate on which the seperator is drawn
+ * @param {number} y the y coordinate on which the seperator is drawn
+ * @param {boolean} selected whether or not the current node is selected
+ * @param {boolean} isClosed whether or not the current node is closed
  * @returns {any} HTML
  */
 const drawSeperator = (
@@ -214,7 +211,6 @@ const getSequence = (
                 selectFormulaCallback,
                 selectNodeCallback,
                 selected,
-                true,
             ),
         );
         totalSize +=
@@ -246,7 +242,6 @@ const getSequence = (
                 selectFormulaCallback,
                 selectNodeCallback,
                 selected,
-                false,
             ),
         );
         totalSize +=
@@ -260,16 +255,6 @@ const getSequence = (
     });
 
     return htmlArray;
-};
-
-const formulaWidth = (formulas: FormulaNode[]) => {
-    let totalSize = 0;
-    formulas.forEach((elem) => {
-        const elemSize =
-            estimateSVGTextWidth(parseFormula(elem)) + NODE_SPACING;
-        totalSize += elemSize;
-    });
-    return totalSize;
 };
 
 const horizontalList: preact.FunctionalComponent<Props> = ({

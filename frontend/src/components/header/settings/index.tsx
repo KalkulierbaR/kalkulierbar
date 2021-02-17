@@ -1,19 +1,21 @@
 import { h } from "preact";
-import * as style from "./style.scss";
-import { useAppState } from "../../../util/app-state";
-import { useState, useCallback } from "preact/hooks";
+import { useCallback, useState } from "preact/hooks";
+
 import { AppStateActionType } from "../../../types/app/action";
-import TextInput from "../../input/text";
-import FAB from "../../input/fab";
-import SaveIcon from "../../icons/save";
 import { Theme } from "../../../types/app/theme";
-import ThemeLight from "../../icons/theme-light";
-import ThemeDark from "../../icons/theme-dark";
-import ThemeAuto from "../../icons/theme-auto";
-import Btn from "../../input/btn";
 import { checkCredentials } from "../../../util/admin";
-import LogOutIcon from "../../icons/log-out";
+import { useAppState } from "../../../util/app-state";
 import LogInIcon from "../../icons/log-in";
+import LogOutIcon from "../../icons/log-out";
+import SaveIcon from "../../icons/save";
+import ThemeAuto from "../../icons/theme-auto";
+import ThemeDark from "../../icons/theme-dark";
+import ThemeLight from "../../icons/theme-light";
+import Btn from "../../input/btn";
+import FAB from "../../input/fab";
+import TextInput from "../../input/text";
+
+import * as style from "./style.scss";
 
 const Settings: preact.FunctionalComponent = () => {
     return (

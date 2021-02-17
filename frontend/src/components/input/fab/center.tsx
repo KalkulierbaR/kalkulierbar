@@ -1,6 +1,8 @@
-import FAB from "./index";
-import CenterIcon from "../../icons/center";
 import { h } from "preact";
+
+import CenterIcon from "../../icons/center";
+
+import FAB from "./index";
 
 interface Props {
     /**

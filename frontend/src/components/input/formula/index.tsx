@@ -1,23 +1,26 @@
 import { createRef, h } from "preact";
 import { route } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
+
+import { AppStateActionType } from "../../../types/app/action";
+import { CalculusType, FOCalculus, Params } from "../../../types/calculus";
+import { addExample } from "../../../util/admin";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
-import Btn from "../btn";
-import UploadButton from "../btn/upload";
 import Dialog from "../../dialog";
 import AddIcon from "../../icons/add";
 import SaveIcon from "../../icons/save";
 import SendIcon from "../../icons/send";
+import Btn from "../btn";
+import UploadButton from "../btn/upload";
 import OptionList from "../option-list";
 import TextInput from "../text";
+
 import * as style from "./style.scss";
-import { CalculusType, Params, FOCalculus } from "../../../types/calculus";
-import { AppStateActionType } from "../../../types/app/action";
-import { addExample } from "../../../util/admin";
 
 declare module "preact" {
     namespace JSX {
+        // tslint:disable-next-line:no-unused-declaration
         interface HTMLAttributes<RefType extends EventTarget = EventTarget> {
             autocapitalize?: "off";
         }

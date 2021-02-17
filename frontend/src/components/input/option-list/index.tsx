@@ -1,12 +1,9 @@
 import { h } from "preact";
-import { PSCNode, PSCTreeLayoutNode } from "../../../types/calculus/psc";
-import { LayoutItem } from "../../../types/layout";
+
+import { PSCNode } from "../../../types/calculus/psc";
 import { classMap } from "../../../util/class-map";
-import {
-    nodeName,
-    parseFormula,
-    parseStringToListIndex,
-} from "../../../util/psc";
+import { parseFormula, parseStringToListIndex } from "../../../util/psc";
+
 import * as style from "./style.scss";
 
 interface Props {
@@ -47,7 +44,7 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     className,
     node,
     listIndex,
-    disableOption = (option: number) => {
+    disableOption = () => {
         return true;
     },
 }) => {

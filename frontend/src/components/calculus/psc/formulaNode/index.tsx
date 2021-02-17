@@ -1,15 +1,16 @@
-import {
-    FormulaTreeLayoutNode,
-    FormulaNode,
-    PSCTreeLayoutNode,
-} from "../../../../types/calculus/psc";
 import { h } from "preact";
 import { useRef } from "preact/hooks";
-import SmallRec from "../../../svg/SmallRec";
+
+import {
+    FormulaTreeLayoutNode,
+    PSCTreeLayoutNode,
+} from "../../../../types/calculus/psc";
 import { LayoutItem } from "../../../../types/layout";
-import { parseFormula } from "../../../../util/psc";
-import * as style from "./style.scss";
 import { classMap } from "../../../../util/class-map";
+import { parseFormula } from "../../../../util/psc";
+import SmallRec from "../../../svg/SmallRec";
+
+import * as style from "./style.scss";
 
 interface Props {
     node: LayoutItem<PSCTreeLayoutNode>;
@@ -22,7 +23,6 @@ interface Props {
         selectedValue?: boolean,
     ) => void;
     selected: boolean;
-    left: boolean;
 }
 
 const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
@@ -33,7 +33,6 @@ const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
     selectFormulaCallback,
     selectNodeCallback,
     selected,
-    left,
 }) => {
     const textRef = useRef<SVGTextElement>();
 
