@@ -40,11 +40,7 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     showLabel = true,
     close,
 }) => {
-    const {
-        dispatch,
-        server,
-        notificationHandler,
-    } = useAppState();
+    const { dispatch, server, notificationHandler } = useAppState();
     const [serverInput, setServerInput] = useState(server);
 
     const dispatchServer = useCallback(() => {

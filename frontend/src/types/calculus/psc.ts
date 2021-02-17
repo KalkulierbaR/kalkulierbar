@@ -1,6 +1,6 @@
 import { RuleSet } from "./rules";
-import { PropCalculusType, Calculus } from ".";
-import { VarAssign } from "./tableaux";
+import { PropCalculusType, Calculus, FOCalculusType, PSCCalculusType } from ".";
+import { KStringMap } from "../kotlin";
 
 export interface PSCNode {
     type: string;
@@ -14,45 +14,56 @@ export interface PSCNode {
 
 export interface FormulaNode {
     type: string;
+    varName: string | null;
     child: FormulaNode | null;
     leftChild: FormulaNode | null;
     rightChild: FormulaNode | null;
     spelling: string | null;
+    arguments: FormulaNode[] | null;
 }
 
-export type PSCTreeLayoutNode = PSCNode & { id: number};
+export type PSCTreeLayoutNode = PSCNode & { id: number };
 
-export type FormulaTreeLayoutNode = FormulaNode & { id: string};
+export type FormulaTreeLayoutNode = FormulaNode & { id: string };
+
+export type VarAssign = KStringMap<string>;
 
 export interface PSCState {
     tree: PSCNode[];
     moveHistory: PSCMove[];
+    showOnlyApplicableRules: boolean;
 }
-export interface FOSCState{
+export interface FOSCState {
     tree: PSCNode[];
     moveHistory: PSCMove[];
+    showOnlyApplicableRules: boolean;
 }
 
 export function instanceOfPSCState(
     object: any,
-    calculus: PropCalculusType,
+    calculus: PSCCalculusType,
 ): object is PSCState {
-    return "ruleSet" in object && calculus === Calculus.psc;
+    return "tree" in object && calculus === Calculus.psc;
+}
+export function instanceOfFOSCState(
+    object: any,
+    calculus: PSCCalculusType,
+): object is FOSCState {
+    return "tree" in object && calculus === Calculus.fosc;
 }
 
-export type PSCMove =
-    PSCAxMove | PSCRuleMove | PSCUndoMove | PSCPruneMove;
+export type PSCMove = PSCAxMove | PSCRuleMove | PSCUndoMove | PSCPruneMove;
 
 export type FOSCMove = PSCMove | SCCloseAssignMove;
 
-export interface SCCloseAssignMove{
-    type:"psc-close-assign";
-    id1: number;
-    id2: number;
+export interface SCCloseAssignMove {
+    type: string;
+    nodeID: number;
+    listIndex: number;
     varAssign: VarAssign;
 }
 export interface PSCRuleMove {
-    type: string
+    type: string;
     nodeID: number;
     listIndex: number;
 }
@@ -67,14 +78,14 @@ export interface PSCUndoMove {
 }
 
 export interface PSCPruneMove {
-    type: "prune"
+    type: "prune";
     nodeID: number;
 }
 
 export enum PSCType {
-    help = "HELP"
+    help = "HELP",
 }
 
 export interface PSCParams {
-    help: boolean;
+    showOnlyApplicableRules: boolean;
 }

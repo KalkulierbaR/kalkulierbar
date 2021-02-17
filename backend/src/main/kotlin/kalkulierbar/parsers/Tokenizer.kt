@@ -108,7 +108,7 @@ class Tokenizer {
                 }
                 tokens.add(Token(ttype, identifier, startIndex + positionInBaseString))
             } else {
-                throw InvalidFormulaFormat("Incorrect formula syntax at char " + (i + positionInBaseString).toString());
+                throw InvalidFormulaFormat("Incorrect formula syntax at char " + (i + positionInBaseString).toString())
             }
             return i
         }

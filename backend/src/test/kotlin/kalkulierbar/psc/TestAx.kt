@@ -2,9 +2,8 @@ package kalkulierbar.psc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.sequentCalculus.psc.PSC
 import kalkulierbar.sequentCalculus.*
-import kotlin.test.assertEquals
+import kalkulierbar.sequentCalculus.psc.PSC
 import kotlin.test.*
 
 class TestAx {
@@ -16,30 +15,31 @@ class TestAx {
     fun testBasic() {
         var state = instance.parseFormulaToState("a | !a", null)
 
-        state = instance.applyMoveOnState(state, OrRight(0,0))
-        state = instance.applyMoveOnState(state, NotRight(1,1))
+        state = instance.applyMoveOnState(state, OrRight(0, 0))
+        state = instance.applyMoveOnState(state, NotRight(1, 1))
 
         state = instance.applyMoveOnState(state, Ax(2))
-
 
         state.tree.forEach { assertTrue(it.isClosed) }
     }
 
+    @Test
     fun testParent() {
         var state = instance.parseFormulaToState("a | !a", null)
 
-        state = instance.applyMoveOnState(state, OrRight(0,0))
-        state = instance.applyMoveOnState(state, NotRight(1,1))
+        state = instance.applyMoveOnState(state, OrRight(0, 0))
+        state = instance.applyMoveOnState(state, NotRight(1, 1))
 
         state = instance.applyMoveOnState(state, Ax(2))
 
-        val node = state.tree[state.tree.size -1]
+        val node = state.tree[state.tree.size - 1]
 
         assertNotNull(node.parent)
         assert(state.tree[node.parent!!].children.size == 1)
     }
 
-    fun testFail(){
+    @Test
+    fun testFail() {
         var state = instance.parseFormulaToState("a | !a", null)
 
         assertFailsWith<IllegalMove> {

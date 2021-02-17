@@ -48,12 +48,11 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     } = useAppState();
 
     const state = cState;
-    
+
     if (!state) {
         route(`/${calculus}`);
         return null;
     }
-    
 
     const [dragTransforms, setDragTransforms] = useState<
         Record<number, DragTransform>
@@ -219,16 +218,17 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
      * @param {number | undefined} overwriteSecondNodeId - The second node's id (overwrites foCloseSecondNodeId)
      * @returns {void | Error} - Error if the two nodes for the close move can't be identified
      */
-    const sendFOClose = (autoAssign: boolean, varAssign: VarAssign = {}, overwriteSecondNodeId? : number) => {
-        const secondNodeId = overwriteSecondNodeId !== undefined
-            ? overwriteSecondNodeId
-            : foCloseSecondNodeId;
-        const leaf = selectedNodeIsLeaf
-            ? selectedNodeId
-            : secondNodeId;
-        const pred = selectedNodeIsLeaf
-            ? secondNodeId
-            : selectedNodeId;
+    const sendFOClose = (
+        autoAssign: boolean,
+        varAssign: VarAssign = {},
+        overwriteSecondNodeId?: number,
+    ) => {
+        const secondNodeId =
+            overwriteSecondNodeId !== undefined
+                ? overwriteSecondNodeId
+                : foCloseSecondNodeId;
+        const leaf = selectedNodeIsLeaf ? selectedNodeId : secondNodeId;
+        const pred = selectedNodeIsLeaf ? secondNodeId : selectedNodeId;
         sendClose(
             calculus,
             server,

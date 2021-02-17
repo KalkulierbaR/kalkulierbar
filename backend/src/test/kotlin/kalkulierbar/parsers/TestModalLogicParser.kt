@@ -22,8 +22,6 @@ class TestModalLogicParser {
             "<->",
             "(a&b v2",
             "(a|b")
-        
-
 
     private val valid = mapOf(
             "a" to "a",

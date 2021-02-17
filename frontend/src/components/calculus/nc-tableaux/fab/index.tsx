@@ -96,8 +96,8 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                         name="nc-tableaux"
                         type={Calculus.ncTableaux}
                     />
-                    <CenterFAB resetDragTransforms={resetDragTransforms}/>
-                    <CheckCloseFAB calculus={Calculus.ncTableaux}/>
+                    <CenterFAB resetDragTransforms={resetDragTransforms} />
+                    <CheckCloseFAB calculus={Calculus.ncTableaux} />
                     {showUndoFAB && (
                         <FAB
                             icon={<UndoIcon />}
@@ -129,7 +129,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                 </Fragment>
             ) : (
                 <Fragment>
-                    <CenterFAB resetDragTransforms={resetDragTransforms}/>
+                    <CenterFAB resetDragTransforms={resetDragTransforms} />
                     {showAlpha && (
                         <FAB
                             icon={<span class={style.greekLetter}>α</span>}

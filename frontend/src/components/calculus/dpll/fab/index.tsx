@@ -56,7 +56,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
     } = useAppState();
 
     const couldShowCheckCloseHint = stateIsClosed(state.tree);
-    const treeIsVisible = (!smallScreen || showTree);
+    const treeIsVisible = !smallScreen || showTree;
 
     return (
         <Fragment>
@@ -85,14 +85,12 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                     />
                 )}
                 <DownloadFAB state={state} name="dpll" type={Calculus.dpll} />
-                {treeIsVisible && (
-                    <CenterFAB/>
-                )}
-                <CheckCloseFAB calculus={Calculus.dpll}/>
+                {treeIsVisible && <CenterFAB />}
+                <CheckCloseFAB calculus={Calculus.dpll} />
                 {treeIsVisible && (
                     <FAB
                         label="Prune"
-                        icon={<DeleteIcon/>}
+                        icon={<DeleteIcon />}
                         mini={true}
                         extended={true}
                         showIconAtEnd={true}

@@ -16,9 +16,9 @@ class Var(var spelling: String) : LogicNode() {
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Var)
-            return false;
-        
-        return this.spelling == other.spelling;
+            return false
+
+        return this.spelling == other.spelling
     }
 }
 
@@ -34,9 +34,9 @@ class Not(override var child: LogicNode) : UnaryOp() {
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Not)
-            return false;
-        
-        return this.child.synEq(other.child);
+            return false
+
+        return this.child.synEq(other.child)
     }
 }
 
@@ -52,9 +52,9 @@ class And(override var leftChild: LogicNode, override var rightChild: LogicNode)
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is And)
-            return false;
-        
-        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild);
+            return false
+
+        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
     }
 }
 
@@ -70,9 +70,9 @@ class Or(override var leftChild: LogicNode, override var rightChild: LogicNode) 
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Or)
-            return false;
-        
-        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild);
+            return false
+
+        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
     }
 }
 
@@ -88,9 +88,9 @@ class Impl(override var leftChild: LogicNode, override var rightChild: LogicNode
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Impl)
-            return false;
-        
-        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild);
+            return false
+
+        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
     }
 }
 
@@ -106,9 +106,9 @@ class Equiv(override var leftChild: LogicNode, override var rightChild: LogicNod
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Equiv)
-            return false;
-        
-        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild);
+            return false
+
+        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
     }
 }
 
@@ -171,24 +171,25 @@ class UniversalQuantifier(
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
+    @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is UniversalQuantifier)
-            return false;
-        
+            return false
+
             if (this.varName != other.varName)
-            return false;
-        
+            return false
+
         if (!this.child.synEq(other.child))
-            return false;
+            return false
 
         if (this.boundVariables.size != other.boundVariables.size)
-            return false;
+            return false
 
         for (i in this.boundVariables.indices) {
             if (!this.boundVariables[i].synEq(other.boundVariables[i]))
-                return false;
+                return false
         }
-        return true;
+        return true
     }
 }
 
@@ -216,24 +217,25 @@ class ExistentialQuantifier(
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
 
+    @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is ExistentialQuantifier)
-            return false;
-        
+            return false
+
             if (this.varName != other.varName)
-            return false;
-        
+            return false
+
         if (!this.child.synEq(other.child))
-            return false;
+            return false
 
         if (this.boundVariables.size != other.boundVariables.size)
-            return false;
+            return false
 
         for (i in this.boundVariables.indices) {
             if (!this.boundVariables[i].synEq(other.boundVariables[i]))
-                return false;
+                return false
         }
-        return true;
+        return true
     }
 }
 
@@ -249,9 +251,9 @@ class Box(override var child: LogicNode) : UnaryOp() {
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Box)
-            return false;
-        
-        return this.child.synEq(other.child);
+            return false
+
+        return this.child.synEq(other.child)
     }
 }
 
@@ -267,8 +269,8 @@ class Diamond(override var child: LogicNode) : UnaryOp() {
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Diamond)
-            return false;
-        
-        return this.child.synEq(other.child);
+            return false
+
+        return this.child.synEq(other.child)
     }
 }

@@ -1,7 +1,6 @@
 package kalkulierbar.signedtableaux
 
 import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
@@ -15,8 +14,8 @@ class SignedModalTableauxState(
     val moveHistory = mutableListOf<SignedModalTableauxMove>()
     var usedBacktracking = false
 
-    var usedPrefixes: List<List<Int>> = listOf<List<Int>>(listOf<Int>(1));
-   
+    var usedPrefixes: List<List<Int>> = listOf<List<Int>>(listOf<Int>(1))
+
     var statusMessage: String? = null
 
     override var seal = ""
@@ -93,15 +92,15 @@ class SignedModalTableauxState(
      * @return whether the prefix is already in use
      */
     fun prefixIsUsedOnBranch(leafID: Int, prefix: List<Int>): Boolean {
-        var node = nodes[leafID];
-        if(prefix.equals(node.prefix))
+        var node = nodes[leafID]
+        if (prefix.equals(node.prefix))
             return true
-        while (node.parent != null){
+        while (node.parent != null) {
             node = nodes[node.parent!!]
-            if(prefix.equals(node.prefix))
+            if (prefix.equals(node.prefix))
                 return true
         }
-        return false;
+        return false
     }
 
     fun render() {

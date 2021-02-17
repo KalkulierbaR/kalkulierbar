@@ -1037,152 +1037,17 @@ const ROUTES: Route[] = [
         name: "Propositional Sequent Calculus",
         viewBox: "0 -16 450.015625 360",
         image: (
-            <g transform="translate(0 0) scale(1)">
-                <g transform="translate(0 0)">
-                    <line
-                        class={style.link}
-                        x1="225.0078125"
-                        y1="22"
-                        x2="225.0078125"
-                        y2="72"
-                    />
-                    <g transform="translate(0 0)">
-                        <line
-                            class={style.link}
-                            x1="225.0078125"
-                            y1="94"
-                            x2="225.0078125"
-                            y2="144"
-                        />
-                        <g transform="translate(0 0)">
-                            <line
-                                class={style.link}
-                                x1="225.0078125"
-                                y1="166"
-                                x2="225.0078125"
-                                y2="216"
-                            />
-                            <g transform="translate(0 0)">
-                                <line
-                                    class={style.link}
-                                    x1="225.0078125"
-                                    y1="238"
-                                    x2="225.0078125"
-                                    y2="288"
-                                />
-                                <g transform="translate(0 0)">
-                                    <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                                        <rect
-                                            class={style.rect}
-                                            x="188.15625"
-                                            y="284.734375"
-                                            width="73.703125"
-                                            height="26.609375"
-                                            rx="4"
-                                        />
-                                        <text
-                                            text-anchor="middle"
-                                            class=""
-                                            x="225.0078125"
-                                            y="304"
-                                        >
-                                            ¬R(f(X))
-                                        </text>
-                                    </g>
-                                </g>
-                                <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                                    <rect
-                                        class={style.rect}
-                                        x="165.140625"
-                                        y="212.734375"
-                                        width="119.734375"
-                                        height="26.609375"
-                                        rx="4"
-                                    />
-                                    <text
-                                        text-anchor="middle"
-                                        class=""
-                                        x="225.0078125"
-                                        y="232"
-                                    >
-                                        (∀X: ¬R(f(X)))
-                                    </text>
-                                </g>
-                            </g>
-                            <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                                <rect
-                                    class={style.rect}
-                                    x="148.453125"
-                                    y="140.734375"
-                                    width="153.109375"
-                                    height="26.609375"
-                                    rx="4"
-                                />
-                                <text
-                                    text-anchor="middle"
-                                    class=""
-                                    x="225.0078125"
-                                    y="160"
-                                >
-                                    (R(f(a)) ∨ ¬R(f(b)))
-                                </text>
-                            </g>
-                        </g>
-                        <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                            <rect
-                                class={style.rect}
-                                x="169.90625"
-                                y="68.734375"
-                                width="110.203125"
-                                height="26.609375"
-                                rx="4"
-                            />
-                            <text
-                                text-anchor="middle"
-                                class=""
-                                x="225.0078125"
-                                y="88"
-                            >
-                                (∀X: R(f(X)))
-                            </text>
-                        </g>
-                    </g>
-                    <g class=" _5SInOarzdiLjFyGlFRcqs _2m8hPOXERrg4LZKpF0rI2i">
-                        <rect
-                            class={style.rect}
-                            x="14.421875"
-                            y="-3.265625"
-                            width="421.171875"
-                            height="26.609375"
-                            rx="4"
-                        />
-                        <text
-                            text-anchor="middle"
-                            class=""
-                            x="225.0078125"
-                            y="16"
-                        >
-                            (((∀X: ¬R(f(X))) ∧ (R(f(a)) ∨ ¬R(f(b)))) ∧ (∀X:
-                            R(f(X))))
-                        </text>
-                    </g>
-                </g>
-            </g>
+            <text />
+            // <g transform="translate(0 0) scale(1)"><g><g transform="translate(0 0)"><g transform="translate(0 0)"><g transform="translate(0 0)"><g><text class="_1exVju-unaGRf1VM4onP8K" text-anchor="middle" x="50.5859375" y="76"> ⊢ a, b</text><rect class=" _1YOxAJZOO0CtDQjoblNpZr  _3U4azqckUD7-LJadtNLc79" x="20.046875" y="57.546875" width="61.078125" height="25.75" rx="4"></rect><g><g><text class="Rns9gYkaJwEG0jUTvFfUP" text-anchor="left" x="28.046875" y="76">⊢</text><g><rect class=" _49e6ilIXQ2Hmr6aKFJiRj" x="40.09375" y="61.546875" width="13.140625" height="17.75" rx="4"></rect><text text-anchor="middle" class="_2OwwaKyvRD3KxoJMgLeJ9w" x="46.546875" y="76">a</text></g><text class="Rns9gYkaJwEG0jUTvFfUP" text-anchor="left" x="53.046875" y="76">,</text><g><rect class=" _49e6ilIXQ2Hmr6aKFJiRj" x="57.09375" y="61.546875" width="12.90625" height="17.75" rx="4"></rect><text text-anchor="middle" class="_2OwwaKyvRD3KxoJMgLeJ9w" x="63.546875" y="76">b</text></g></g><g><text class="_1exVju-unaGRf1VM4onP8K" text-anchor="middle" x="100.671875" y="118"> ⊢ a, (b ∧ c)</text><line class="brqqU8eXcKN6YOeLM2A7R" x1="20.046875" y1="91" x2="150.84375" y2="91"></line></g></g></g></g><g transform="translate(0 0)"><g><text class="_1exVju-unaGRf1VM4onP8K" text-anchor="middle" x="151.2578125" y="76"> ⊢ a, c</text><rect class=" _1YOxAJZOO0CtDQjoblNpZr  _3U4azqckUD7-LJadtNLc79" x="121.171875" y="57.546875" width="60.171875" height="25.75" rx="4"></rect><g><g><text class="Rns9gYkaJwEG0jUTvFfUP" text-anchor="left" x="129.171875" y="76">⊢</text><g><rect class=" _49e6ilIXQ2Hmr6aKFJiRj" x="141.21875" y="61.546875" width="13.140625" height="17.75" rx="4"></rect><text text-anchor="middle" class="_2OwwaKyvRD3KxoJMgLeJ9w" x="147.671875" y="76">a</text></g><text class="Rns9gYkaJwEG0jUTvFfUP" text-anchor="left" x="154.171875" y="76">,</text><g><rect class=" _49e6ilIXQ2Hmr6aKFJiRj" x="158.171875" y="61.546875" width="12" height="17.75" rx="4"></rect><text text-anchor="middle" class="_2OwwaKyvRD3KxoJMgLeJ9w" x="164.171875" y="76">c</text></g></g><g><text class="_1exVju-unaGRf1VM4onP8K" text-anchor="middle" x="100.671875" y="118"> ⊢ a, (b ∧ c)</text><line class="brqqU8eXcKN6YOeLM2A7R" x1="50.5" y1="91" x2="181.34375" y2="91"></line><text class="_14oAyu-VnhwjB4T5n9oYBl" text-anchor="middle" x="196.34375" y="93">∧R</text></g></g></g></g><g><text class="_1exVju-unaGRf1VM4onP8K" text-anchor="middle" x="100.671875" y="118"> ⊢ a, (b ∧ c)</text><rect class=" _1YOxAJZOO0CtDQjoblNpZr  _3U4azqckUD7-LJadtNLc79" x="50.5" y="99.546875" width="100.34375" height="25.75" rx="4"></rect><g><g><text class="Rns9gYkaJwEG0jUTvFfUP" text-anchor="left" x="58.5" y="118">⊢</text><g><rect class=" _49e6ilIXQ2Hmr6aKFJiRj" x="70.546875" y="103.546875" width="13.140625" height="17.75" rx="4"></rect><text text-anchor="middle" class="_2OwwaKyvRD3KxoJMgLeJ9w" x="77" y="118">a</text></g><text class="Rns9gYkaJwEG0jUTvFfUP" text-anchor="left" x="83.5" y="118">,</text><g><rect class=" _49e6ilIXQ2Hmr6aKFJiRj" x="87.5" y="103.546875" width="52.15625" height="17.75" rx="4"></rect><text text-anchor="middle" class="_2OwwaKyvRD3KxoJMgLeJ9w" x="113.578125" y="118">(b ∧ c)</text></g></g><g><text class="_1exVju-unaGRf1VM4onP8K" text-anchor="middle" x="100.671875" y="160"> ⊢ (a ∨ (b ∧ c))</text><line class="brqqU8eXcKN6YOeLM2A7R" x1="39.328125" y1="133" x2="162.015625" y2="133"></line><text class="_14oAyu-VnhwjB4T5n9oYBl" text-anchor="middle" x="177.015625" y="135">∨R</text></g></g></g></g><g><text class="_1exVju-unaGRf1VM4onP8K" text-anchor="middle" x="100.671875" y="160"> ⊢ (a ∨ (b ∧ c))</text><rect class=" _1YOxAJZOO0CtDQjoblNpZr  _3U4azqckUD7-LJadtNLc79" x="39.328125" y="141.546875" width="122.6875" height="25.75" rx="4"></rect><g><g><text class="Rns9gYkaJwEG0jUTvFfUP" text-anchor="left" x="47.328125" y="160">⊢</text><g><rect class=" _49e6ilIXQ2Hmr6aKFJiRj" x="59.328125" y="145.546875" width="92.3125" height="17.75" rx="4"></rect><text text-anchor="middle" class="_2OwwaKyvRD3KxoJMgLeJ9w" x="105.484375" y="160">(a ∨ (b ∧ c))</text></g></g></g></g></g></g></g>
         ),
     },
 
     {
         href: Calculus.fosc,
         name: "First Order Sequent Calculus",
-        viewBox:"0 -16 450.015625 360",
-        image:(
-            <text
-            
-            >
-
-            </text>
-        ),
-    }
+        viewBox: "0 -16 450.015625 360",
+        image: <text />,
+    },
 ];
 
 export default ROUTES;

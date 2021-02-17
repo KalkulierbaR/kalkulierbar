@@ -6,12 +6,9 @@ import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
-import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.ModalLogicParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
-import kalkulierbar.signedtableaux.Negation
-import kalkulierbar.signedtableaux.applyAlpha
 
 class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>() {
 
@@ -24,7 +21,7 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
         return SignedModalTableauxState(parsedFormula)
     }
 
-    override fun applyMoveOnState(state: SignedModalTableauxState, move:SignedModalTableauxMove): SignedModalTableauxState {
+    override fun applyMoveOnState(state: SignedModalTableauxState, move: SignedModalTableauxMove): SignedModalTableauxState {
         // Clear status message
         state.statusMessage = null
 
@@ -39,7 +36,6 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
             is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")
         }
-
     }
 
     /**

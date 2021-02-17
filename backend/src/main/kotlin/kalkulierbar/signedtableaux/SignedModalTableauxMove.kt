@@ -1,8 +1,5 @@
 package kalkulierbar.signedtableaux
 
-import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.FirstOrderTerm
-import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule

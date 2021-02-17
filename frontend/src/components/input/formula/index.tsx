@@ -40,7 +40,7 @@ interface Props {
     /**
      * Shows a Prop Placeholder
      */
-    propPlaceholder?: boolean;
+    sequentPlaceholder?: boolean;
 }
 
 /**
@@ -64,7 +64,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params,
     foLogic,
-    propPlaceholder = false,
+    sequentPlaceholder = false,
 }) => {
     const {
         server,
@@ -230,9 +230,12 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     autocorrect="off"
                     placeholder={
                         foLogic
-                            ? "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"                            
-                            : propPlaceholder ? "!(a -> b) & (c <=> d | e) & !a"
-                                              : "!a, c; a; !c"                                               
+                            ? sequentPlaceholder
+                                ? "\\all X: (\\all Y: !(P(X) -> P(Y)) |- \\all X: !P(X)"
+                                : "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"
+                            : sequentPlaceholder
+                            ? "!(a -> b) |- !b"
+                            : "!a, c; a; !c"
                     }
                 />
                 {FOCalculus.includes(calculus) && (
