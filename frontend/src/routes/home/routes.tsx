@@ -1568,13 +1568,713 @@ const ROUTES: Route[] = [
     {
         href: Calculus.fosc,
         name: "First Order Sequent Calculus",
-        viewBox: "0 -16 450.015625 360",
+        viewBox: "85 -15 700 200",
         image: (
-            <text
-
-            >
-
-            </text>
+            <g transform="translate(74.79953219189508 -1.9106229228477503) scale(0.8321187578652294)">
+                <g>
+                    <g transform="translate(0 0)">
+                        <g transform="translate(0 0)">
+                            <g transform="translate(0 0)">
+                                <g transform="translate(0 0)">
+                                    <g>
+                                        <text 
+                                            class="_1exVju-unaGRf1VM4onP8K" 
+                                            text-anchor="middle" 
+                                            x="209.97500610351562" 
+                                            y="34">
+                                            ∀X: P(X), ∀X: (P(X) → Q(X)) ⊢ ∃X: Q(X), Q(a), P(a)
+                                        </text>
+                                        <rect 
+                                            class={style.rect}
+                                            x="19.966169357299805" 
+                                            y="15.796279907226562" 
+                                            width="380.01763916015625" 
+                                            height="25.991378784179688" 
+                                            rx="4">
+                                        </rect>
+                                        <g>
+                                            <g>
+                                                <g>
+                                                    <rect 
+                                                        class={style.rect}
+                                                        x="27.952428817749023" 
+                                                        y="19.796279907226562" 
+                                                        width="65.64414978027344" 
+                                                        height="17.991378784179688" 
+                                                        rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="60.77450180053711" 
+                                                    y="34">
+                                                    ∀X: P(X)
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                                text-anchor="left" 
+                                                x="93.58283424377441" 
+                                                y="34">
+                                                ,
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect}
+                                                    x="97.5751724243164" 
+                                                    y="19.796279907226562" 
+                                                    width="134.98196411132812" 
+                                                    height="17.991378784179688" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="165.06616401672363" 
+                                                    y="34">
+                                                    ∀X: (P(X) → Q(X))
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                                text-anchor="left" 
+                                                x="232.54949378967285" 
+                                                y="34">
+                                                ⊢
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect}
+                                                    x="244.53778076171875" 
+                                                    y="19.796279907226562" 
+                                                    width="66.75676727294922" 
+                                                    height="17.991378784179688" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="277.9161605834961" 
+                                                    y="34">
+                                                    ∃X: Q(X)
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                                text-anchor="left" 
+                                                x="311.28282737731934" 
+                                                y="34">
+                                                ,
+                                            </text>
+                                            <g>
+                                                <rect
+                                                    class={style.rect}
+                                                    x="315.2882995605469" 
+                                                    y="19.796279907226562" 
+                                                    width="36.005714416503906" 
+                                                    height="17.991378784179688" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="333.2911605834961" 
+                                                    y="34">
+                                                    Q(a)
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                                text-anchor="left" 
+                                                x="351.29949378967285" 
+                                                y="34">
+                                                ,
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="355.3010559082031" 
+                                                    y="19.796279907226562" 
+                                                    width="34.230247497558594" 
+                                                    height="17.991378784179688" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="372.4161605834961" 
+                                                    y="34">
+                                                    P(a)
+                                                </text>
+                                            </g>
+                                        </g>
+                                        <g>
+                                            <g>
+                                                <text 
+                                                    class="_1exVju-unaGRf1VM4onP8K" 
+                                                    text-anchor="middle" 
+                                                    x="420.8416748046875" 
+                                                    y="76">
+                                                    ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) → Q(a)) ⊢ ∃X: Q(X), Q(a)
+                                                </text>
+                                                <line 
+                                                    class={style.link} 
+                                                    x1="19.9661865234375" 
+                                                    y1="49" 
+                                                    x2="644.6316833496094" 
+                                                    y2="49">
+                                                </line>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                            <g transform="translate(0 0)">
+                                <g>
+                                    <text 
+                                        class="_1exVju-unaGRf1VM4onP8K" 
+                                        text-anchor="middle" 
+                                        x="630.8166809082031" 
+                                        y="34">
+                                        ∀X: P(X), ∀X: (P(X) → Q(X)), Q(a) ⊢ ∃X: Q(X), Q(a)
+                                    </text>
+                                    <rect 
+                                        class={style.rect} 
+                                        x="439.9200744628906" 
+                                        y="15.796279907226562" 
+                                        width="381.7931213378906" 
+                                        height="25.991378784179688" 
+                                        rx="4">
+                                    </rect>
+                                    <g>
+                                        <g>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="447.90631103515625" 
+                                                    y="19.796279907226562" 
+                                                    width="65.64414978027344" 
+                                                    height="17.991378784179688" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="480.72840690612793" 
+                                                    y="34">
+                                                    ∀X: P(X)
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                                text-anchor="left" 
+                                                x="513.5367393493652" 
+                                                y="34">
+                                                ,
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="517.5291137695312" 
+                                                    y="19.796279907226562" 
+                                                    width="134.98196411132812" 
+                                                    height="17.991378784179688" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="585.0200691223145" 
+                                                    y="34">
+                                                    ∀X: (P(X) → Q(X))
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                                text-anchor="left" 
+                                                x="652.5033988952637" 
+                                                y="34">
+                                                ,
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="656.5088500976562" 
+                                                    y="19.796279907226562" 
+                                                    width="36.005714416503906" 
+                                                    height="17.991378784179688" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="674.5117321014404" 
+                                                    y="34">
+                                                    Q(a)
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                                text-anchor="left" 
+                                                x="692.5200653076172" 
+                                                y="34">
+                                                ⊢
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="704.5083618164062" 
+                                                    y="19.796279907226562" 
+                                                    width="66.75676727294922" 
+                                                    height="17.991378784179688" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="737.8867321014404" 
+                                                    y="34">
+                                                    ∃X: Q(X)
+                                                </text>
+                                            </g>
+                                            <text 
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                                text-anchor="left" 
+                                                x="771.2533988952637" 
+                                                y="34">
+                                                ,
+                                            </text>
+                                            <g>
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="775.2588500976562" 
+                                                    y="19.796279907226562" 
+                                                    width="36.005714416503906" 
+                                                    height="17.991378784179688" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                    x="793.2617321014404" 
+                                                    y="34">
+                                                    Q(a)
+                                                </text>
+                                            </g>
+                                        </g>
+                                        <g>
+                                            <g>
+                                                <text 
+                                                    class="_1exVju-unaGRf1VM4onP8K" 
+                                                    text-anchor="middle" 
+                                                    x="420.8416748046875" 
+                                                    y="76">
+                                                    ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) → Q(a)) ⊢ ∃X: Q(X), Q(a)
+                                                </text>
+                                                <line 
+                                                    class={style.link} 
+                                                    x1="197.05166625976562" 
+                                                    y1="49" 
+                                                    x2="821.7132415771484" 
+                                                    y2="49">
+                                                </line>
+                                                <text 
+                                                    class={style.changeabletext} 
+                                                    text-anchor="middle" 
+                                                    x="836.7132415771484" 
+                                                    y="51">
+                                                    →L
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                            <g>
+                                <text 
+                                    class="_1exVju-unaGRf1VM4onP8K" 
+                                    text-anchor="middle" 
+                                    x="420.8416748046875" 
+                                    y="76">
+                                    ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) → Q(a)) ⊢ ∃X: Q(X), Q(a)
+                                </text>
+                                <rect 
+                                    class={style.rect} 
+                                    x="197.05165100097656" 
+                                    y="57.79627990722656" 
+                                    width="447.58001708984375" 
+                                    height="25.991378784179688" 
+                                    rx="4">
+                                </rect>
+                                <g>
+                                    <g>
+                                        <g>
+                                            <rect 
+                                                class={style.rect} 
+                                                x="205.0379180908203" 
+                                                y="61.79627990722656" 
+                                                width="65.64414978027344" 
+                                                height="17.991378784179688" 
+                                                rx="4">
+                                            </rect>
+                                            <text 
+                                                text-anchor="middle" 
+                                                class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                                x="237.85998344421387" 
+                                                y="76">
+                                                ∀X: P(X)
+                                            </text>
+                                        </g>
+                                        <text 
+                                            class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                            text-anchor="left" 
+                                            x="270.6683158874512" 
+                                            y="76">
+                                            ,
+                                        </text>
+                                        <g>
+                                            <rect class={style.rect} 
+                                            x="274.66064453125" 
+                                            y="61.79627990722656" 
+                                            width="134.98196411132812" 
+                                            height="17.991378784179688" 
+                                            rx="4">
+                                        </rect>
+                                        <text 
+                                            text-anchor="middle" 
+                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                            x="342.1516456604004" 
+                                            y="76">
+                                            ∀X: (P(X) → Q(X))
+                                        </text>
+                                    </g>
+                                    <text 
+                                        class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                        text-anchor="left" 
+                                        x="409.6349754333496" 
+                                        y="76">
+                                        ,
+                                    </text>
+                                    <g>
+                                        <rect 
+                                            class={style.rect} 
+                                            x="413.6470031738281" 
+                                            y="61.79627990722656" 
+                                            width="101.7926025390625" 
+                                            height="17.991378784179688" 
+                                            rx="4">
+                                        </rect>
+                                        <text 
+                                            text-anchor="middle" 
+                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                            x="464.54330825805664" 
+                                            y="76">
+                                            (P(a) → Q(a))
+                                        </text>
+                                    </g>
+                                    <text 
+                                        class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                        text-anchor="left" 
+                                        x="515.4516410827637" 
+                                        y="76">
+                                        ⊢
+                                    </text>
+                                    <g>
+                                        <rect 
+                                            class={style.rect} 
+                                            x="527.43994140625" 
+                                            y="61.79627990722656" 
+                                            width="66.75676727294922" 
+                                            height="17.991378784179688" 
+                                            rx="4">
+                                        </rect>
+                                        <text 
+                                            text-anchor="middle" 
+                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                            x="560.8183078765869" 
+                                            y="76">
+                                            ∃X: Q(X)
+                                        </text>
+                                    </g>
+                                    <text 
+                                        class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                        text-anchor="left" 
+                                        x="594.1849746704102" 
+                                        y="76">
+                                        ,
+                                    </text>
+                                    <g>
+                                        <rect 
+                                            class={style.rect} 
+                                            x="598.1904296875" 
+                                            y="61.79627990722656" 
+                                            width="36.005714416503906" 
+                                            height="17.991378784179688" 
+                                            rx="4">
+                                        </rect>
+                                        <text 
+                                            text-anchor="middle" 
+                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                            x="616.1933078765869" 
+                                            y="76">
+                                            Q(a)
+                                        </text>
+                                    </g>
+                                </g>
+                                <g>
+                                    <g>
+                                        <text 
+                                            class="_1exVju-unaGRf1VM4onP8K" 
+                                            text-anchor="middle" 
+                                            x="420.8416748046875" 
+                                            y="118">
+                                            ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) → Q(a)) ⊢ ∃X: Q(X)
+                                        </text>
+                                        <line 
+                                            class={style.link} 
+                                            x1="197.05166625976562" 
+                                            y1="91" 
+                                            x2="644.6316833496094" 
+                                            y2="91">
+                                        </line>
+                                        <text 
+                                            class={style.changeabletext}
+                                            text-anchor="middle" 
+                                            x="659.6316833496094" 
+                                            y="93">
+                                            ∃R
+                                        </text>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                    <g>
+                        <text 
+                            class="_1exVju-unaGRf1VM4onP8K" 
+                            text-anchor="middle" 
+                            x="420.8416748046875" 
+                            y="118">
+                            ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) → Q(a)) ⊢ ∃X: Q(X)
+                        </text>
+                        <rect 
+                            class={style.rect} 
+                            x="217.50502014160156" 
+                            y="99.79627990722656" 
+                            width="406.67327880859375" 
+                            height="25.991378784179688" 
+                            rx="4">
+                        </rect>
+                        <g>
+                            <g>
+                                <g>
+                                    <rect 
+                                        class={style.rect} 
+                                        x="225.4912872314453" 
+                                        y="103.79627990722656" 
+                                        width="65.64414978027344" 
+                                        height="17.991378784179688" 
+                                        rx="4">
+                                    </rect>
+                                    <text 
+                                        text-anchor="middle" 
+                                        class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                        x="258.31335258483887" 
+                                        y="118">
+                                        ∀X: P(X)
+                                    </text>
+                                </g>
+                                <text 
+                                    class=" _2Vu5lYrTgHMQ3h2i3sb9a6 Rns9gYkaJwEG0jUTvFfUP" 
+                                    text-anchor="left" 
+                                    x="291.1216850280762" 
+                                    y="118">
+                                    ,
+                                </text>
+                                <g>
+                                    <rect 
+                                        class={style.rect} 
+                                        x="295.114013671875" 
+                                        y="103.79627990722656" 
+                                        width="134.98196411132812" 
+                                        height="17.991378784179688" 
+                                        rx="4">
+                                    </rect>
+                                    <text 
+                                        text-anchor="middle" 
+                                        class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                        x="362.6050148010254" 
+                                        y="118">
+                                        ∀X: (P(X) → Q(X))
+                                    </text>
+                                </g>
+                                <text 
+                                    class=" _2Vu5lYrTgHMQ3h2i3sb9a6 Rns9gYkaJwEG0jUTvFfUP" 
+                                    text-anchor="left" 
+                                    x="430.0883445739746" 
+                                    y="118">
+                                    ,
+                                </text>
+                                <g>
+                                    <rect 
+                                        class={style.rect} 
+                                        x="434.1003723144531" 
+                                        y="103.79627990722656" 
+                                        width="101.7926025390625" 
+                                        height="17.991378784179688" 
+                                        rx="4">
+                                    </rect>
+                                    <text 
+                                        text-anchor="middle" 
+                                        class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                        x="484.99667739868164" 
+                                        y="118">
+                                        (P(a) → Q(a))
+                                    </text>
+                                </g>
+                                <text 
+                                    class=" _2Vu5lYrTgHMQ3h2i3sb9a6 Rns9gYkaJwEG0jUTvFfUP" 
+                                    text-anchor="left" 
+                                    x="535.9050102233887" 
+                                    y="118">
+                                    ⊢
+                                </text>
+                                <g>
+                                    <rect 
+                                        class={style.rect} 
+                                        x="547.893310546875" 
+                                        y="103.79627990722656" 
+                                        width="66.75676727294922" 
+                                        height="17.991378784179688" 
+                                        rx="4">
+                                    </rect>
+                                    <text 
+                                        text-anchor="middle" 
+                                        class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                        x="581.2716770172119" 
+                                        y="118">
+                                        ∃X: Q(X)
+                                    </text>
+                                </g>
+                            </g>
+                            <g>
+                                <g>
+                                    <text 
+                                        class="_1exVju-unaGRf1VM4onP8K" 
+                                        text-anchor="middle" 
+                                        x="420.8416748046875" 
+                                        y="160">
+                                        ∀X: P(X), ∀X: (P(X) → Q(X)) ⊢ ∃X: Q(X)
+                                    </text>
+                                    <line 
+                                        class={style.link} 
+                                        x1="217.50503540039062" 
+                                        y1="133" x2="624.1783142089844" 
+                                        y2="133">
+                                    </line>
+                                    <text 
+                                        class={style.changeabletext}
+                                        text-anchor="middle" 
+                                        x="639.1783142089844" 
+                                        y="135">
+                                        ∀L
+                                    </text>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+                <g>
+                    <text 
+                        class="_1exVju-unaGRf1VM4onP8K" 
+                        text-anchor="middle" 
+                        x="420.8416748046875" 
+                        y="160">
+                        ∀X: P(X), ∀X: (P(X) → Q(X)) ⊢ ∃X: Q(X)
+                    </text>
+                        <rect 
+                            class={style.rect} 
+                            x="270.851806640625" 
+                            y="141.79627990722656" 
+                            width="299.9797058105469" 
+                            height="25.991378784179688" 
+                            rx="4">
+                    </rect>
+                    <g>
+                        <g>
+                            <g>
+                                <rect 
+                                    class={style.rect} 
+                                    x="278.8380432128906" 
+                                    y="145.79627990722656" 
+                                    width="65.64414978027344" 
+                                    height="17.991378784179688" 
+                                    rx="4">
+                                </rect>
+                                <text 
+                                    text-anchor="middle" 
+                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                    x="311.6601390838623" 
+                                    y="160">
+                                    ∀X: P(X)
+                                </text>
+                            </g>
+                            <text 
+                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                text-anchor="left" 
+                                x="344.4684715270996" 
+                                y="160">
+                                ,
+                            </text>
+                            <g>
+                                <rect 
+                                    class={style.rect} 
+                                    x="348.4608154296875" 
+                                    y="145.79627990722656" 
+                                    width="134.98196411132812" 
+                                    height="17.991378784179688" 
+                                    rx="4">
+                                </rect>
+                                <text 
+                                    text-anchor="middle" 
+                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                    x="415.9518013000488" 
+                                    y="160">
+                                    ∀X: (P(X) → Q(X))
+                                </text>
+                            </g>
+                            <text 
+                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
+                                text-anchor="left" 
+                                x="483.43513107299805" 
+                                y="160">
+                                ⊢
+                            </text>
+                            <g>
+                                <rect 
+                                    class={style.rect} 
+                                    x="495.4234313964844" 
+                                    y="145.79627990722656" 
+                                    width="66.75676727294922" 
+                                    height="17.991378784179688" 
+                                    rx="4">
+                                </rect>
+                                <text 
+                                    text-anchor="middle" 
+                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
+                                    x="528.8017978668213" 
+                                    y="160">
+                                    ∃X: Q(X)
+                                </text>
+                            </g>
+                        </g>
+                        <g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
         ),
     }
 ];
