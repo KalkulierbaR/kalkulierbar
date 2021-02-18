@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 import {
     FormulaTreeLayoutNode,
-    PSCTreeLayoutNode,
-} from "../../../../types/calculus/psc";
+    SequentTreeLayoutNode,
+} from "../../../../types/calculus/sequent";
 import { LayoutItem } from "../../../../types/layout";
 import { classMap } from "../../../../util/class-map";
-import { nodeName } from "../../../../util/psc";
+import { nodeName } from "../../../../util/sequent";
 import HorizontalList from "../../../svg/horizontalList";
 import Rectangle from "../../../svg/rectangle";
 
@@ -17,14 +17,14 @@ interface Props {
     /**
      * The single tree node to represent
      */
-    node: LayoutItem<PSCTreeLayoutNode>;
+    node: LayoutItem<SequentTreeLayoutNode>;
 
-    parent?: LayoutItem<PSCTreeLayoutNode>;
+    parent?: LayoutItem<SequentTreeLayoutNode>;
 
     selected: boolean;
 
     selectNodeCallback: (
-        node: PSCTreeLayoutNode,
+        node: SequentTreeLayoutNode,
         selectValue?: boolean,
     ) => void;
 
@@ -34,8 +34,8 @@ interface Props {
 }
 
 const lineUnderNode = (
-    node: LayoutItem<PSCTreeLayoutNode>,
-    parent: LayoutItem<PSCTreeLayoutNode> | undefined,
+    node: LayoutItem<SequentTreeLayoutNode>,
+    parent: LayoutItem<SequentTreeLayoutNode> | undefined,
     textRef: RefObject<SVGTextElement>,
     ruleName: string | undefined,
 ) => {
@@ -180,7 +180,7 @@ const lineUnderNode = (
     return;
 };
 
-const PSCTreeNode: preact.FunctionalComponent<Props> = ({
+const SequentTreeNode: preact.FunctionalComponent<Props> = ({
     node,
     parent,
     selected,
@@ -281,4 +281,4 @@ const PSCTreeNode: preact.FunctionalComponent<Props> = ({
     );
 };
 
-export default PSCTreeNode;
+export default SequentTreeNode;

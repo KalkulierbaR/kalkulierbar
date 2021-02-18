@@ -1,7 +1,7 @@
 import { Fragment, h } from "preact";
 
-import { PSCCalculusType } from "../../../../types/calculus";
-import { FOSCState, PSCState } from "../../../../types/calculus/psc";
+import { SequentCalculusType } from "../../../../types/calculus";
+import { FOSCState, PSCState } from "../../../../types/calculus/sequent";
 import { sendMove } from "../../../../util/api";
 import { useAppState } from "../../../../util/app-state";
 import DeleteIcon from "../../../icons/delete";
@@ -16,7 +16,7 @@ interface Props {
     /**
      * Which calculus to use
      */
-    calculus: PSCCalculusType;
+    calculus: SequentCalculusType;
     /**
      * The current calculus state
      */
@@ -35,7 +35,7 @@ interface Props {
     pruneCallback: () => void;
 }
 
-const PSCFAB: preact.FunctionalComponent<Props> = ({
+const SequentFAB: preact.FunctionalComponent<Props> = ({
     calculus,
     state,
     selectedNodeId,
@@ -116,4 +116,4 @@ const PSCFAB: preact.FunctionalComponent<Props> = ({
     );
 };
 
-export default PSCFAB;
+export default SequentFAB;

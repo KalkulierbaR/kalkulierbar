@@ -4,13 +4,13 @@ import { useEffect, useState } from "preact/hooks";
 import {
     FormulaNode,
     FormulaTreeLayoutNode,
-} from "../../../types/calculus/psc";
-import { PSCTreeLayoutNode } from "../../../types/calculus/psc";
+} from "../../../types/calculus/sequent";
+import { SequentTreeLayoutNode } from "../../../types/calculus/sequent";
 import { LayoutItem } from "../../../types/layout";
 import { classMap } from "../../../util/class-map";
-import { parseFormula } from "../../../util/psc";
+import { parseFormula } from "../../../util/sequent";
 import { estimateSVGTextWidth } from "../../../util/text-width";
-import FormulaTreeNode from "../../calculus/psc/formulaNode";
+import FormulaTreeNode from "../../calculus/sequent/formulaNode";
 
 import * as style from "./style.scss";
 
@@ -27,7 +27,7 @@ interface Props {
     /**
      * The Node the list will be inside
      */
-    node: LayoutItem<PSCTreeLayoutNode>;
+    node: LayoutItem<SequentTreeLayoutNode>;
     /**
      * Boolean to change the style of the node if it is selected
      */
@@ -44,7 +44,7 @@ interface Props {
      * The Callback if the Node got selected
      */
     selectNodeCallback: (
-        node: PSCTreeLayoutNode,
+        node: SequentTreeLayoutNode,
         selectValue?: boolean,
     ) => void;
 }
@@ -86,21 +86,21 @@ const drawComma = (
 /**
  * Draws the Formula for the given parameters
  * @param {FormulaTreeLayoutNode} formula the FormulaNode which will be drawn by the method
- * @param {LayoutItem<PSCTreeLayoutNode>} node the big node in which the formula is drawn
+ * @param {LayoutItem<SequentTreeLayoutNode>} node the big node in which the formula is drawn
  * @param {string | undefined} selectedListIndex string in the pattern of (r, l)[0-9]* indicating the side of the formula and its index
  * @param {number} xCoord the x coordinate in which the Formula is drawn
  * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
- * @param {Function<PSCTreeLayoutNode>} selectNodeCallback KEKW
+ * @param {Function<SequentTreeLayoutNode>} selectNodeCallback KEKW
  * @param {boolean} selected the parameter which tell if the current node is selected or not
  * @returns {any} HTML
  */
 const drawFormula = (
     formula: FormulaTreeLayoutNode,
-    node: LayoutItem<PSCTreeLayoutNode>,
+    node: LayoutItem<SequentTreeLayoutNode>,
     selectedListIndex: string | undefined,
     xCoord: number,
     selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void,
-    selectNodeCallback: (node: PSCTreeLayoutNode) => void,
+    selectNodeCallback: (node: SequentTreeLayoutNode) => void,
     selected: boolean,
 ) => {
     return (
@@ -155,22 +155,22 @@ const drawSeperator = (
  * Creates an array which contains the htmlCode for the given Sequence. (formulas, commas and the sequenceSeperator)
  * @param {FormulaNode[]}leftFormulas the formulas on the left hand side of the sequence
  * @param {FormulaNode[]}rightFormulas the formulas on the right hand side of the sequence
- * @param {LayoutItem<PSCTreeLayoutNode>}node the overlaying node in which the sequence is to be drawn
+ * @param {LayoutItem<SequentTreeLayoutNode>}node the overlaying node in which the sequence is to be drawn
  * @param {string | undefined} selectedListIndex index
  * @param {number} dimsX dimension
  * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
- * @param {Function<PSCTreeLayoutNode>} selectNodeCallback KEKW
+ * @param {Function<SequentTreeLayoutNode>} selectNodeCallback KEKW
  * @param {boolean}selected I dont know what this is for..........................................................................................................................................
  * @returns {any} HTML
  */
 const getSequence = (
     leftFormulas: FormulaNode[],
     rightFormulas: FormulaNode[],
-    node: LayoutItem<PSCTreeLayoutNode>,
+    node: LayoutItem<SequentTreeLayoutNode>,
     selectedListIndex: string | undefined,
     dimsX: number,
     selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void,
-    selectNodeCallback: (node: PSCTreeLayoutNode) => void,
+    selectNodeCallback: (node: SequentTreeLayoutNode) => void,
     selected: boolean,
 ) => {
     let totalSize = 0;

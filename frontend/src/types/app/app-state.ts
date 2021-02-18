@@ -1,8 +1,8 @@
 import { CalculusType, Formulas } from "../calculus";
 import { DPLLState } from "../calculus/dpll";
 import { NCTableauxState } from "../calculus/nc-tableaux";
-import { FOSCState, PSCState } from "../calculus/psc";
 import { FOResolutionState, PropResolutionState } from "../calculus/resolution";
+import { FOSCState, PSCState } from "../calculus/sequent";
 import { FOTableauxState, PropTableauxState } from "../calculus/tableaux";
 
 import { AppStateAction } from "./action";
@@ -64,7 +64,7 @@ export interface AppState {
      */
     psc?: PSCState;
     /**
-     * The current fo-psc state
+     * The current fosc state
      */
     fosc?: FOSCState;
     /**

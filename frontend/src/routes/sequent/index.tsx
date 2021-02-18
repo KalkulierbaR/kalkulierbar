@@ -5,23 +5,23 @@ import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Switch from "../../components/input/switch";
-import { Calculus, PSCCalculusType } from "../../types/calculus";
-import { PSCParams } from "../../types/calculus/psc";
+import { Calculus, SequentCalculusType } from "../../types/calculus";
+import { SequentParams } from "../../types/calculus/sequent";
 
 interface Props {
-    calculus: PSCCalculusType;
+    calculus: SequentCalculusType;
 }
 
-const PSC: preact.FunctionalComponent<Props> = ({ calculus }) => {
+const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showOnlyApplicableRules, setShowOnlyApplicableRules] = useState(
         false,
     );
 
     let params;
-    const pscParams: PSCParams = {
+    const sequentParams: SequentParams = {
         showOnlyApplicableRules,
     };
-    params = pscParams;
+    params = sequentParams;
 
     return (
         <Fragment>
@@ -54,4 +54,4 @@ const PSC: preact.FunctionalComponent<Props> = ({ calculus }) => {
     );
 };
 
-export default PSC;
+export default SequentCalculus;

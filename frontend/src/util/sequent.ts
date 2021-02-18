@@ -1,10 +1,14 @@
-import { FormulaNode, PSCNode, PSCTreeLayoutNode } from "../types/calculus/psc";
+import {
+    FormulaNode,
+    SequentNode,
+    SequentTreeLayoutNode,
+} from "../types/calculus/sequent";
 import { Tree, TreeLayout } from "../types/tree";
 
 import { tree, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
 
-export const nodeName = (node: PSCNode) => {
+export const nodeName = (node: SequentNode) => {
     return (
         formulaNames(node.leftFormulas) +
         " ⊢ " +
@@ -101,17 +105,17 @@ export const parseFormula = (formula: FormulaNode) => {
     return result;
 };
 
-export const pscTreeLayout = (
-    nodes: PSCNode[],
-): TreeLayout<PSCTreeLayoutNode> => {
-    return treeLayout(nodes, pscNodeToTree);
+export const sequentTreeLayout = (
+    nodes: SequentNode[],
+): TreeLayout<SequentTreeLayoutNode> => {
+    return treeLayout(nodes, sequentNodeToTree);
 };
 
-const pscNodeToTree = (
-    nodes: PSCNode[],
+const sequentNodeToTree = (
+    nodes: SequentNode[],
     i: number = 0,
     y: number = 160,
-): Tree<PSCTreeLayoutNode> => {
+): Tree<SequentTreeLayoutNode> => {
     const n = nodes[i];
 
     if (n == null)
@@ -133,7 +137,7 @@ const pscNodeToTree = (
         );
     const width = estimateSVGTextWidth(nodeName(n)) + 56;
 
-    const resultTree: Tree<PSCTreeLayoutNode> = tree(
+    const resultTree: Tree<SequentTreeLayoutNode> = tree(
         width,
         72,
         y,
@@ -142,16 +146,8 @@ const pscNodeToTree = (
     );
 
     n.children.forEach((childNode) => {
-        resultTree.children.push(pscNodeToTree(nodes, childNode, y - 42));
+        resultTree.children.push(sequentNodeToTree(nodes, childNode, y - 42));
     });
-
-    // return tree(
-    //     width,
-    //     72,
-    //     y,
-    //     {type: "", parent: null, children: [], leftFormulas: [], rightFormulas: [],isClosed: false, lastMove: null, id: i },
-    //     []
-    // );
 
     return resultTree;
 };

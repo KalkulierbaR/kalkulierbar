@@ -2,17 +2,20 @@ import { Fragment, h } from "preact";
 
 import {
     FormulaTreeLayoutNode,
-    PSCTreeLayoutNode,
-} from "../../../../types/calculus/psc";
+    SequentTreeLayoutNode,
+} from "../../../../types/calculus/sequent";
 import { Tree } from "../../../../types/tree";
-import PSCTreeNode from "../node";
+import SequentTreeNode from "../node";
 
 interface Props {
-    node: Tree<PSCTreeLayoutNode>;
-    parent?: Tree<PSCTreeLayoutNode>;
+    node: Tree<SequentTreeLayoutNode>;
+    parent?: Tree<SequentTreeLayoutNode>;
     selectedNodeId?: number;
     selectedListIndex?: string;
-    selectNodeCallback: (n: PSCTreeLayoutNode, selectValue?: boolean) => void;
+    selectNodeCallback: (
+        n: SequentTreeLayoutNode,
+        selectValue?: boolean,
+    ) => void;
     selectFormulaCallback: (f: FormulaTreeLayoutNode) => void;
     zoomFactor: number;
     ruleName: string;
@@ -47,7 +50,7 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 );
             })}
-            <PSCTreeNode
+            <SequentTreeNode
                 selectNodeCallback={selectNodeCallback}
                 node={node}
                 parent={parent}
