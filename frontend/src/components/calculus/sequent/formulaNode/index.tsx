@@ -3,23 +3,23 @@ import { useRef } from "preact/hooks";
 
 import {
     FormulaTreeLayoutNode,
-    PSCTreeLayoutNode,
-} from "../../../../types/calculus/psc";
+    SequentTreeLayoutNode,
+} from "../../../../types/calculus/sequent";
 import { LayoutItem } from "../../../../types/layout";
 import { classMap } from "../../../../util/class-map";
-import { parseFormula } from "../../../../util/psc";
+import { parseFormula } from "../../../../util/sequent";
 import SmallRec from "../../../svg/SmallRec";
 
 import * as style from "./style.scss";
 
 interface Props {
-    node: LayoutItem<PSCTreeLayoutNode>;
+    node: LayoutItem<SequentTreeLayoutNode>;
     formula: FormulaTreeLayoutNode;
     xCord: number;
     selectedListIndex?: string;
     selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
     selectNodeCallback: (
-        node: PSCTreeLayoutNode,
+        node: SequentTreeLayoutNode,
         selectedValue?: boolean,
     ) => void;
     selected: boolean;
