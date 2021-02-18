@@ -1,10 +1,9 @@
 package kalkulierbar.fosc
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.Var
 import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequentCalculus.fosc.FOSC
 import kalkulierbar.sequentCalculus.*
+import kalkulierbar.sequentCalculus.fosc.FOSC
 import kotlin.test.*
 
 class TestOrLeft {
@@ -16,15 +15,14 @@ class TestOrLeft {
     fun testBasic() {
         var state = instance.parseFormulaToState("!((P(a) & P(b)) | (P(b) |P(c)))", null)
 
-        state = instance.applyMoveOnState(state, NotRight(0,0))
-        state = instance.applyMoveOnState(state, OrLeft(1,0))
+        state = instance.applyMoveOnState(state, NotRight(0, 0))
+        state = instance.applyMoveOnState(state, OrLeft(1, 0))
 
         val formula1 = parser.parse("P(a) & P(b)")
         val formula2 = parser.parse("P(b) | P(c)")
 
         val node1 = state.tree[state.tree.size - 2]
         val node2 = state.tree[state.tree.size - 1]
-
 
         assertTrue(node1.leftFormulas[0].synEq(formula1))
         assertTrue(node2.leftFormulas[0].synEq(formula2))
@@ -34,8 +32,8 @@ class TestOrLeft {
     fun testParent() {
         var state = instance.parseFormulaToState("!((P(a) & P(b)) | (P(b) |P(c)))", null)
 
-        state = instance.applyMoveOnState(state, NotRight(0,0))
-        state = instance.applyMoveOnState(state, OrLeft(1,0))
+        state = instance.applyMoveOnState(state, NotRight(0, 0))
+        state = instance.applyMoveOnState(state, OrLeft(1, 0))
 
         val node1 = state.tree[state.tree.size - 2]
 
@@ -46,10 +44,10 @@ class TestOrLeft {
     fun testWrongNode() {
         var state = instance.parseFormulaToState("!((P(a) & P(b)) & (P(b) |P(c)))", null)
 
-        state = instance.applyMoveOnState(state, NotRight(0,0))
+        state = instance.applyMoveOnState(state, NotRight(0, 0))
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, OrLeft(1,0))
+            instance.applyMoveOnState(state, OrLeft(1, 0))
         }
     }
 }

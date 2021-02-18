@@ -1,17 +1,17 @@
+import { ResolutionCalculusType } from "../../types/calculus";
 import {
     CandidateClause,
     Clause,
-    FOLiteral,
     ClauseSet,
-    instanceOfPropClauseSet,
+    FOLiteral,
+    instanceOfFOAtom,
+    instanceOfFOClause,
     instanceOfFOClauseSet,
     instanceOfPropAtom,
-    instanceOfFOAtom,
     instanceOfPropClause,
-    instanceOfFOClause,
+    instanceOfPropClauseSet,
 } from "../../types/calculus/clause";
 import { HyperResolutionMove } from "../../types/calculus/resolution";
-import { ResolutionCalculusType } from "../../types/calculus";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible

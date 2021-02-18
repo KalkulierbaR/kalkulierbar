@@ -1,20 +1,28 @@
-import { FormulaTreeLayoutNode, FormulaNode, PSCTreeLayoutNode } from "../../../../types/calculus/psc";
-import {h} from "preact";
+import { h } from "preact";
 import { useRef } from "preact/hooks";
-import SmallRec from "../../../svg/SmallRec";
+
+import {
+    FormulaTreeLayoutNode,
+    PSCTreeLayoutNode,
+} from "../../../../types/calculus/psc";
 import { LayoutItem } from "../../../../types/layout";
+import { classMap } from "../../../../util/class-map";
 import { parseFormula } from "../../../../util/psc";
+import SmallRec from "../../../svg/SmallRec";
+
 import * as style from "./style.scss";
 
 interface Props {
     node: LayoutItem<PSCTreeLayoutNode>;
-    formula: FormulaTreeLayoutNode
-    xCord: number
+    formula: FormulaTreeLayoutNode;
+    xCord: number;
     selectedListIndex?: string;
     selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
-    selectNodeCallback: (node: PSCTreeLayoutNode, selectedValue?: boolean) => void;
+    selectNodeCallback: (
+        node: PSCTreeLayoutNode,
+        selectedValue?: boolean,
+    ) => void;
     selected: boolean;
-    left: boolean;
 }
 
 const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
@@ -25,39 +33,42 @@ const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
     selectFormulaCallback,
     selectNodeCallback,
     selected,
-    left
 }) => {
     const textRef = useRef<SVGTextElement>();
 
     const nodeIsClickable = !node.data.isClosed;
 
     const handleClick = () => {
-        if(nodeIsClickable){
-            selectNodeCallback(node.data,true);
+        if (nodeIsClickable) {
+            selectNodeCallback(node.data, true);
             selectFormulaCallback(formula);
         }
-    }
+    };
 
     return (
-        <g
-            onClick={handleClick}
-        >
+        <g onClick={handleClick}>
             <SmallRec
                 elementRef={textRef}
                 disabled={node.data.isClosed}
                 selected={selectedListIndex === formula.id && selected}
+                class={classMap({
+                    [style.nodeClickable]: nodeIsClickable,
+                })}
             />
             <text
                 ref={textRef}
                 text-anchor="middle"
-                class={style.textSelected}
+                class={classMap({
+                    [style.node]: true,
+                    [style.nodeClickable]: nodeIsClickable,
+                    [style.textSelected]:
+                        selectedListIndex === formula.id && selected,
+                    [style.textClosed]: !nodeIsClickable,
+                })}
                 x={xCord}
                 y={node.y}
-            >   
-            {
-                parseFormula(formula)
-            }
-            
+            >
+                {parseFormula(formula)}
             </text>
         </g>
     );

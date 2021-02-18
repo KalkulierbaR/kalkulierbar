@@ -1,8 +1,9 @@
-import { calcMac, getCurrentDate } from "./mac";
 import { Config } from "../types/app/config";
-import { CalculusType } from "../types/calculus";
 import { Example } from "../types/app/example";
 import { NotificationHandler } from "../types/app/notification";
+import { CalculusType } from "../types/calculus";
+
+import { calcMac, getCurrentDate } from "./mac";
 
 /**
  * Pulls the current config (kbar-state.json) of the backend sever
@@ -33,7 +34,7 @@ export const getConfig = async (
         const parsed = await res.json();
         changeConfig(parsed);
     } catch (e) {
-        if(notificationHandler){
+        if (notificationHandler) {
             notificationHandler.error((e as Error).message);
         }
     }

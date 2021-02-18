@@ -100,7 +100,7 @@ interface GenericTableauxState<AtomType> {
      * @param lemmaID Node to create lemma from
      * @return Atom representing the lemma node to be appended to the leaf
      */
-    @Suppress("ThrowsCount")
+    @Suppress("ThrowsCount", "ComplexMethod")
     fun getLemma(leafID: Int, lemmaID: Int): Atom<AtomType> {
         // Verify that subtree root for lemma creation exists
         if (lemmaID >= nodes.size || lemmaID < 0)

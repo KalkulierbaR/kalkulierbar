@@ -1,24 +1,32 @@
-import {
-    TableauxMove,
-    FOTableauxMove,
-    PropTableauxParams,
-    FOTableauxParams,
-} from "./tableaux";
-import {
-    PropResolutionMove,
-    FOResolutionMove,
-    PropResolutionParams,
-    FOResolutionParams,
-} from "./resolution";
-import { NCTableauxMove } from "./nc-tableaux";
 import { DPLLMove } from "./dpll";
+import { NCTableauxMove } from "./nc-tableaux";
 import { FOSCMove, PSCMove, PSCParams } from "./psc";
+import {
+    FOResolutionMove,
+    FOResolutionParams,
+    PropResolutionMove,
+    PropResolutionParams,
+} from "./resolution";
+import {
+    FOTableauxMove,
+    FOTableauxParams,
+    PropTableauxParams,
+    TableauxMove,
+} from "./tableaux";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
-export type PSCCalculusType ="psc"|"fosc";
-export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll" | "psc";
-export type FOCalculusType = "fo-tableaux" | "fo-resolution" | "nc-tableaux"| "fosc";
+export type PSCCalculusType = "psc" | "fosc";
+export type PropCalculusType =
+    | "prop-tableaux"
+    | "prop-resolution"
+    | "dpll"
+    | "psc";
+export type FOCalculusType =
+    | "fo-tableaux"
+    | "fo-resolution"
+    | "nc-tableaux"
+    | "fosc";
 export type CalculusType = FOCalculusType | PropCalculusType;
 
 export enum Calculus {
@@ -29,7 +37,7 @@ export enum Calculus {
     ncTableaux = "nc-tableaux",
     dpll = "dpll",
     psc = "psc",
-    fosc ="fosc",
+    fosc = "fosc",
 }
 
 export const PropCalculus: CalculusType[] = [
@@ -64,7 +72,7 @@ export interface Move {
     "nc-tableaux": NCTableauxMove;
     dpll: DPLLMove;
     psc: PSCMove;
-    fosc:FOSCMove;
+    fosc: FOSCMove;
 }
 
 /**

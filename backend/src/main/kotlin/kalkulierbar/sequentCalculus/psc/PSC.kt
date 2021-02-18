@@ -6,14 +6,15 @@ import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.PropositionalSequentParser
+import kalkulierbar.sequentCalculus.*
+import kalkulierbar.sequentCalculus.GenericSequentCalculus
+import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
+import kalkulierbar.sequentCalculus.SequentCalculusMove
+import kalkulierbar.sequentCalculus.SequentCalculusMove.*
+import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
+import kalkulierbar.sequentCalculus.moveImplementations.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
-
-import kalkulierbar.sequentCalculus.GenericSequentCalculus
-import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
-import kalkulierbar.sequentCalculus.*
-import kalkulierbar.sequentCalculus.moveImplementations.*
-import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
 
 class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>() {
 
@@ -23,18 +24,16 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
 
     override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): PSCState {
         if (params == null) {
-            return PropositionalSequentParser().parse(formula);
+            return PropositionalSequentParser().parse(formula)
         } else {
-            val state = PropositionalSequentParser().parse(formula);
-            state.showOnlyApplicableRules = params.showOnlyApplicableRules;
-            return state;
+            val state = PropositionalSequentParser().parse(formula)
+            state.showOnlyApplicableRules = params.showOnlyApplicableRules
+            return state
         }
     }
 
+    @Suppress("ComplexMethod")
     override fun applyMoveOnState(state: PSCState, move: SequentCalculusMove): PSCState {
-        // Clear status message
-        // state.statusMessage = null
-
         // Pass moves to relevant subfunction
         return when (move) {
             is Ax -> applyAx(state, move.nodeID) as PSCState
@@ -58,7 +57,7 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
                 return CloseMessage(false, "Not all branches of the proof tree are closed.")
             }
         }
-        
+
         return CloseMessage(true, "The proof is closed and valid in propositional Logic")
     }
 
@@ -72,7 +71,7 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
         try {
             val parsed = serializer.parse(PSCState.serializer(), json)
 
-            //Ensure valid, unmodified state object
+            // Ensure valid, unmodified state object
             if (!parsed.verifySeal())
                 throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
 
@@ -113,6 +112,7 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
      * @param json JSON parameter representation
      * @return parsed param object
      */
+    @Suppress("TooGenericExceptionCaught")
     override fun jsonToParam(json: String): SequentCalculusParam {
         try {
             return serializer.parse(SequentCalculusParam.serializer(), json)

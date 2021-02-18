@@ -1,3 +1,5 @@
+import { AppStateUpdater } from "../types/app/app-state";
+import { NotificationHandler } from "../types/app/notification";
 import {
     FOTerm,
     LogicNode,
@@ -8,11 +10,10 @@ import {
 } from "../types/calculus/nc-tableaux";
 import { VarAssign } from "../types/calculus/tableaux";
 import { Tree } from "../types/tree";
+
 import { sendMove } from "./api";
 import { tree, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
-import { AppStateUpdater } from "../types/app/app-state";
-import { NotificationHandler } from "../types/app/notification";
 
 /**
  * Send alpha move to backend

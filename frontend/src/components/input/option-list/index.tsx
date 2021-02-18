@@ -1,8 +1,9 @@
 import { h } from "preact";
-import { PSCNode, PSCTreeLayoutNode } from "../../../types/calculus/psc";
-import { LayoutItem } from "../../../types/layout";
+
+import { PSCNode } from "../../../types/calculus/psc";
 import { classMap } from "../../../util/class-map";
-import { nodeName, parseFormula, parseStringToListIndex } from "../../../util/psc";
+import { parseFormula, parseStringToListIndex } from "../../../util/psc";
+
 import * as style from "./style.scss";
 
 interface Props {
@@ -29,7 +30,7 @@ interface Props {
     /**
      * listIndex
      */
-    listIndex?: string
+    listIndex?: string;
     /**
      * Function to decide if an option should be disabled
      */
@@ -43,44 +44,55 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     className,
     node,
     listIndex,
-    disableOption = (option: number) => {return true},
+    disableOption = () => {
+        return true;
+    },
 }) => {
-
     const handleClick = (keyValuePair: [number, string]) => {
-        if(disableOption(keyValuePair[0])){
-            selectOptionCallback(keyValuePair)
+        if (disableOption(keyValuePair[0])) {
+            selectOptionCallback(keyValuePair);
         }
-    }
+    };
 
     return (
         <div class={`card ${className}`}>
-                {node !== undefined && listIndex !== undefined &&(
-                    <div class={`card ${className}`}>
-                        <p class={style.originList}>
-                            {"For "}
-                            <code class={style.formula}>{
-                                parseFormula(listIndex?.charAt(0) === 'l' ? node.leftFormulas[parseStringToListIndex(listIndex)] : node.rightFormulas[parseStringToListIndex(listIndex)])
-                            }</code>
-                            <br/>
-                            {" in Node "}
-                            <code class={style.origin}>{nodeName(node)}</code>
+            {node !== undefined && listIndex !== undefined && (
+                <div class={`card ${className}`}>
+                    <p class={style.originList}>
+                        <code class={style.formula}>
+                            {parseFormula(
+                                listIndex?.charAt(0) === "l"
+                                    ? node.leftFormulas[
+                                          parseStringToListIndex(listIndex)
+                                      ]
+                                    : node.rightFormulas[
+                                          parseStringToListIndex(listIndex)
+                                      ],
+                            )}
+                        </code>
+                        <br />
+                    </p>
+                </div>
+            )}
+            {Array.from(options).map(
+                (keyValuePair: [number, string]) =>
+                    (disableOption(keyValuePair[0]) ||
+                        listIndex === undefined) && (
+                        <p
+                            onClick={() => handleClick(keyValuePair)}
+                            class={classMap({
+                                [style.option]: true,
+                                [style.optionSelected]: selectedOptionIds.includes(
+                                    keyValuePair[0],
+                                ),
+                                [style.optionDisabled]:
+                                    disableOption(keyValuePair[0]) === false,
+                            })}
+                        >
+                            {keyValuePair[1]}
                         </p>
-                    </div>
-                )}
-            {Array.from(options).map((keyValuePair: [number, string]) => (
-                <p
-                    onClick={() => handleClick(keyValuePair)}
-                    class={classMap({
-                        [style.option]: true,
-                        [style.optionSelected]: selectedOptionIds.includes(
-                            keyValuePair[0],
-                        ),
-                        [style.optionDisabled]: disableOption(keyValuePair[0]) === false,
-                    })}
-                >
-                    {keyValuePair[1]}
-                </p>
-            ))}
+                    ),
+            )}
         </div>
     );
 };

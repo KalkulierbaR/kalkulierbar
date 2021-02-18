@@ -1,8 +1,5 @@
 package kalkulierbar.sequentCalculus
 
-import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.FirstOrderTerm
-import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -36,95 +33,82 @@ abstract class SequentCalculusMove
 @SerialName("Ax")
 class Ax(
     val nodeID: Int
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("notRight")
 class NotRight(
     val nodeID: Int,
     val listIndex: Int
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("notLeft")
 class NotLeft(
     val nodeID: Int,
     val listIndex: Int
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("orRight")
 class OrRight(
-        val nodeID: Int,
-        val listIndex: Int
-) : SequentCalculusMove() {
-}
+    val nodeID: Int,
+    val listIndex: Int
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("andRight")
 class AndRight(
     val nodeID: Int,
     val listIndex: Int
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("orLeft")
 class OrLeft(
-        val nodeID: Int,
-        val listIndex: Int
-) : SequentCalculusMove() {
-}
+    val nodeID: Int,
+    val listIndex: Int
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("andLeft")
 class AndLeft(
     val nodeID: Int,
     val listIndex: Int
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("impLeft")
 class ImpLeft(
-        val nodeID: Int,
-        val listIndex: Int
-) : SequentCalculusMove() {
-}
+    val nodeID: Int,
+    val listIndex: Int
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("impRight")
 class ImpRight(
-        val nodeID: Int,
-        val listIndex: Int
-) : SequentCalculusMove() {
-}
-
+    val nodeID: Int,
+    val listIndex: Int
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("undo")
-class UndoMove : SequentCalculusMove() {
-}
+class UndoMove : SequentCalculusMove()
 
 @Serializable
 @SerialName("prune")
 class PruneMove(
     val nodeID: Int
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
 
-//FOSC MOVES
+// FOSC MOVES
 @Serializable
 @SerialName("allLeft")
 class AllLeft(
     val nodeID: Int,
     val listIndex: Int,
     val varAssign: Map<String, String>
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("allRight")
@@ -132,8 +116,7 @@ class AllRight(
     val nodeID: Int,
     val listIndex: Int,
     val varAssign: Map<String, String>
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("exLeft")
@@ -141,8 +124,7 @@ class ExLeft(
     val nodeID: Int,
     val listIndex: Int,
     val varAssign: Map<String, String>
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
 
 @Serializable
 @SerialName("exRight")
@@ -150,5 +132,4 @@ class ExRight(
     val nodeID: Int,
     val listIndex: Int,
     val varAssign: Map<String, String>
-) : SequentCalculusMove() {
-}
+) : SequentCalculusMove()
