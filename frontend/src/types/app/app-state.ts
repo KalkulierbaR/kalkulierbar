@@ -8,6 +8,7 @@ import { Notification, NotificationHandler } from "./notification";
 import { Theme } from "./theme";
 import { TutorialMode } from "./tutorial";
 import { NCTableauxState } from "../calculus/nc-tableaux";
+import { ModalTableauxState } from "../calculus/modal-tableaux";
 import { Config } from "./config";
 
 /**
@@ -65,7 +66,11 @@ export interface AppState {
     /**
      * The current fo-psc state
      */
-    "fosc"?: FOSCState
+    "fosc"?: FOSCState;
+    /**
+     * The current signed-modal-tableaux state
+     */
+    "signed-modal-tableaux"?: ModalTableauxState;
     /**
      * The current tutorial mode
      */

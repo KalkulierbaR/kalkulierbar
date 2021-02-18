@@ -23,6 +23,8 @@ import { Calculus } from "../types/calculus";
 import { getConfig, checkCredentials } from "../util/admin";
 import PSC from "async!../routes/psc";
 import PSCView from "async!../routes/psc/view";
+import ModalTableaux from "async!../routes/modal-tableaux";
+import ModalTableauxView from "async!../routes/modal-tableaux/view";
 
 const SMALL_SCREEN_THRESHOLD = 750;
 
@@ -179,6 +181,14 @@ const App: preact.FunctionalComponent = () => {
                         path={`/${Calculus.fosc}/view`}
                         calculus={Calculus.fosc}
                     />
+                    <ModalTableaux
+                        path={`/${Calculus.modalTableaux}`}
+                        calculus={Calculus.modalTableaux}
+                        />
+                    <ModalTableauxView
+                        path={`/${Calculus.modalTableaux}/view`}
+                        calculus={Calculus.modalTableaux}
+                        />
                     <Page404 default={true} />
                     
                 </Router>

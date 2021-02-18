@@ -1,0 +1,97 @@
+import { h } from "preact";
+import { useRef } from "preact/hooks";
+import { ModalTableauxTreeLayoutNode } from "../../../../types/calculus/modal-tableaux";
+import { Tree } from "../../../../types/tree";
+import { DragTransform } from "../../../../types/ui";
+import { classMap } from "../../../../util/class-map";
+import { nodeName } from "../../../../util/modal-tableaux";
+import Draggable from "../../../svg/draggable";
+import Rectangle from "../../../svg/rectangle";
+import * as style from "./style.scss";
+
+interface Props {
+    /**
+     * The tree node
+     */
+    node: Tree<ModalTableauxTreeLayoutNode>;
+    /**
+     * The id of a node if one is selected
+     */
+    selected: boolean;
+    /**
+     * The function to call, when the user selects a node
+     */
+    selectNodeCallback: (node: ModalTableauxTreeLayoutNode) => void;
+    /**
+     * The drag transform of this node
+     */
+    dragTransform: DragTransform;
+    /**
+     * Callback to set this node's drag
+     */
+    onDrag: (id: number, dt: DragTransform) => void;
+    /**
+     * Current zoom factor of the SVG (needed for drag computation)
+     */
+    zoomFactor: number;
+}
+
+const SMTabNode: preact.FunctionalComponent<Props> = ({
+    node,
+    selected,
+    selectNodeCallback,
+    dragTransform,
+    onDrag,
+    zoomFactor,
+}) => {
+    const textRef = useRef<SVGTextElement>();
+
+    // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
+    const nodeIsClickable = true;
+
+    /**
+     * Handle the onClick event of the node
+     * @returns {void}
+     */
+    const handleClick = () => {
+        if (nodeIsClickable) {
+            selectNodeCallback(node.data);
+        }
+    };
+
+    return (
+        <Draggable
+            onClick={handleClick}
+            class={classMap({
+                [style.node]: true,
+                [style.nodeClosed]: node.data.isClosed,
+                [style.nodeClickable]: nodeIsClickable,
+            })}
+            elementRef={textRef}
+            dragTransform={dragTransform}
+            onDrag={onDrag}
+            zoomFactor={zoomFactor}
+            id={node.data.id}
+        >
+            <Rectangle
+                elementRef={textRef}
+                disabled={node.data.isClosed}
+                selected={selected}
+            />
+            <text
+                ref={textRef}
+                text-anchor="middle"
+                class={classMap({
+                    [style.textSelected]: selected,
+                    [style.textClosed]: node.data.isClosed,
+                })}
+                x={node.x}
+                y={node.y}
+            >
+                {nodeName(node.data)}
+            </text>
+        </Draggable>
+    );
+};
+
+export default SMTabNode;

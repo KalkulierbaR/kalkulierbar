@@ -13,13 +13,15 @@ import {
 import { NCTableauxMove } from "./nc-tableaux";
 import { DPLLMove } from "./dpll";
 import { FOSCMove, PSCMove, PSCParams } from "./psc";
+import { ModalTableauxMove } from "./modal-tableaux";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
 export type PSCCalculusType ="psc"|"fosc";
 export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll" | "psc";
 export type FOCalculusType = "fo-tableaux" | "fo-resolution" | "nc-tableaux"| "fosc";
-export type CalculusType = FOCalculusType | PropCalculusType;
+export type ModalCalculusType = "signed-modal-tableaux";
+export type CalculusType = FOCalculusType | PropCalculusType | ModalCalculusType;
 
 export enum Calculus {
     propTableaux = "prop-tableaux",
@@ -30,6 +32,7 @@ export enum Calculus {
     dpll = "dpll",
     psc = "psc",
     fosc ="fosc",
+    modalTableaux = "signed-modal-tableaux",
 }
 
 export const PropCalculus: CalculusType[] = [
@@ -65,6 +68,7 @@ export interface Move {
     dpll: DPLLMove;
     psc: PSCMove;
     fosc:FOSCMove;
+    "singed-modal-tableax": ModalTableauxMove;
 }
 
 /**
@@ -79,6 +83,7 @@ export interface Params {
     dpll: null;
     psc: PSCParams;
     fosc: PSCParams;
+    "signed-modal-tableaux": null;
 }
 
 /**
