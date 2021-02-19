@@ -1046,34 +1046,37 @@ const ROUTES: Route[] = [
                                 <g transform="translate(0 0)">
                                     <g transform="translate(0 0)">
                                         <g>
-                                            <text 
-                                                class="_1exVju-unaGRf1VM4onP8K" 
-                                                text-anchor="middle" 
-                                                x="42.57500076293945" 
-                                                y="-8"> 
-                                                
-                                            </text>
+                                            <text
+                                                class="_1exVju-unaGRf1VM4onP8K"
+                                                text-anchor="middle"
+                                                x="42.57500076293945"
+                                                y="-8"
+                                            />
                                             <g>
                                                 <g>
-                                                    <text 
-                                                        class="_1exVju-unaGRf1VM4onP8K" 
-                                                        text-anchor="middle" 
-                                                        x="42.57500076293945" 
-                                                        y="34">
+                                                    <text
+                                                        class="_1exVju-unaGRf1VM4onP8K"
+                                                        text-anchor="middle"
+                                                        x="42.57500076293945"
+                                                        y="34"
+                                                    >
                                                         a ⊢ a
                                                     </text>
-                                                    <line 
-                                                        class={style.link} 
-                                                        x1="15.816532135009766" 
-                                                        y1="7" 
-                                                        x2="69.33346939086914" 
-                                                        y2="7">
-                                                    </line>
-                                                    <text 
-                                                        class={style.changeabletext}
-                                                        text-anchor="middle" 
-                                                        x="84.33346939086914" 
-                                                        y="9">
+                                                    <line
+                                                        class={style.link}
+                                                        x1="15.816532135009766"
+                                                        y1="7"
+                                                        x2="69.33346939086914"
+                                                        y2="7"
+                                                    />
+                                                    <text
+                                                        class={
+                                                            style.changeabletext
+                                                        }
+                                                        text-anchor="middle"
+                                                        x="84.33346939086914"
+                                                        y="9"
+                                                    >
                                                         Ax
                                                     </text>
                                                 </g>
@@ -1081,85 +1084,91 @@ const ROUTES: Route[] = [
                                         </g>
                                     </g>
                                     <g>
-                                        <text 
-                                            class="_1exVju-unaGRf1VM4onP8K" 
-                                            text-anchor="middle" 
-                                            x="42.57500076293945" 
-                                            y="34">
+                                        <text
+                                            class="_1exVju-unaGRf1VM4onP8K"
+                                            text-anchor="middle"
+                                            x="42.57500076293945"
+                                            y="34"
+                                        >
                                             a ⊢ a
                                         </text>
-                                        <rect 
-                                            class={style.rect} 
-                                            x="15.816532135009766" 
-                                            y="15.772357940673828" 
-                                            width="53.516937255859375" 
-                                            height="25.615177154541016" 
-                                            rx="4">
-                                        </rect>
+                                        <rect
+                                            class={style.rect}
+                                            x="15.816532135009766"
+                                            y="15.772357940673828"
+                                            width="53.516937255859375"
+                                            height="25.615177154541016"
+                                            rx="4"
+                                        />
                                         <g>
                                             <g>
                                                 <g>
-                                                    <rect 
-                                                        class={style.rect} 
-                                                        x="23.811925888061523" 
-                                                        y="19.772357940673828" 
-                                                        width="12.90921401977539" 
-                                                        height="17.615177154541016" 
-                                                        rx="4">
-                                                    </rect>
-                                                    <text 
-                                                        text-anchor="middle" 
-                                                        class="_2OwwaKyvRD3KxoJMgLeJ9w" 
-                                                        x="30.266531944274902" 
-                                                        y="34">
+                                                    <rect
+                                                        class={style.rect}
+                                                        x="23.811925888061523"
+                                                        y="19.772357940673828"
+                                                        width="12.90921401977539"
+                                                        height="17.615177154541016"
+                                                        rx="4"
+                                                    />
+                                                    <text
+                                                        text-anchor="middle"
+                                                        class="_2OwwaKyvRD3KxoJMgLeJ9w"
+                                                        x="30.266531944274902"
+                                                        y="34"
+                                                    >
                                                         a
                                                     </text>
                                                 </g>
-                                                <text 
-                                                    class="Rns9gYkaJwEG0jUTvFfUP" 
-                                                    text-anchor="left" 
-                                                    x="36.71653175354004" 
-                                                    y="34">
+                                                <text
+                                                    class="Rns9gYkaJwEG0jUTvFfUP"
+                                                    text-anchor="left"
+                                                    x="36.71653175354004"
+                                                    y="34"
+                                                >
                                                     ⊢
                                                 </text>
                                                 <g>
-                                                    <rect 
-                                                        class={style.rect} 
-                                                        x="48.71192169189453" 
-                                                        y="19.772357940673828" 
-                                                        width="12.90921401977539" 
-                                                        height="17.615177154541016" 
-                                                        rx="4">
-                                                    </rect>
-                                                    <text 
-                                                        text-anchor="middle" 
-                                                        class="_2OwwaKyvRD3KxoJMgLeJ9w" 
-                                                        x="55.166531562805176" 
-                                                        y="34">
+                                                    <rect
+                                                        class={style.rect}
+                                                        x="48.71192169189453"
+                                                        y="19.772357940673828"
+                                                        width="12.90921401977539"
+                                                        height="17.615177154541016"
+                                                        rx="4"
+                                                    />
+                                                    <text
+                                                        text-anchor="middle"
+                                                        class="_2OwwaKyvRD3KxoJMgLeJ9w"
+                                                        x="55.166531562805176"
+                                                        y="34"
+                                                    >
                                                         a
                                                     </text>
                                                 </g>
                                             </g>
                                             <g>
-                                                <text 
-                                                    class="_1exVju-unaGRf1VM4onP8K" 
-                                                    text-anchor="middle" 
-                                                    x="42.57500076293945" 
-                                                    y="76"> 
+                                                <text
+                                                    class="_1exVju-unaGRf1VM4onP8K"
+                                                    text-anchor="middle"
+                                                    x="42.57500076293945"
+                                                    y="76"
+                                                >
                                                     ⊢ ¬a, a
                                                 </text>
-                                                <line 
-                                                    class={style.link} 
-                                                    x1="8.914432525634766" 
-                                                    y1="49" 
-                                                    x2="76.23556900024414" 
-                                                    y2="49">
-                                                </line>
-                                                <text 
+                                                <line
+                                                    class={style.link}
+                                                    x1="8.914432525634766"
+                                                    y1="49"
+                                                    x2="76.23556900024414"
+                                                    y2="49"
+                                                />
+                                                <text
                                                     class={style.changeabletext}
-                                                    text-anchor="middle" 
-                                                    x="91.23556900024414" 
-                                                    y="51">
+                                                    text-anchor="middle"
+                                                    x="91.23556900024414"
+                                                    y="51"
+                                                >
                                                     ¬R
                                                 </text>
                                             </g>
@@ -1167,92 +1176,99 @@ const ROUTES: Route[] = [
                                     </g>
                                 </g>
                                 <g>
-                                    <text 
-                                        class="_1exVju-unaGRf1VM4onP8K" 
-                                        text-anchor="middle" 
-                                        x="42.57500076293945" 
-                                        y="76"> 
+                                    <text
+                                        class="_1exVju-unaGRf1VM4onP8K"
+                                        text-anchor="middle"
+                                        x="42.57500076293945"
+                                        y="76"
+                                    >
                                         ⊢ ¬a, a
                                     </text>
-                                    <rect 
-                                        class= {style.rect} 
-                                        x="8.914430618286133" 
-                                        y="57.77235794067383" 
-                                        width="67.32113647460938" 
-                                        height="25.615177154541016" 
-                                        rx="4">
-                                    </rect>
+                                    <rect
+                                        class={style.rect}
+                                        x="8.914430618286133"
+                                        y="57.77235794067383"
+                                        width="67.32113647460938"
+                                        height="25.615177154541016"
+                                        rx="4"
+                                    />
                                     <g>
                                         <g>
-                                            <text 
-                                                class="Rns9gYkaJwEG0jUTvFfUP" 
-                                                text-anchor="left" 
-                                                x="16.914430618286133" 
-                                                y="76">
+                                            <text
+                                                class="Rns9gYkaJwEG0jUTvFfUP"
+                                                text-anchor="left"
+                                                x="16.914430618286133"
+                                                y="76"
+                                            >
                                                 ⊢
                                             </text>
                                             <g>
-                                                <rect 
-                                                    class={style.rect} 
-                                                    x="28.910024642944336" 
-                                                    y="61.77235794067383" 
-                                                    width="22.258808135986328" 
-                                                    height="17.615177154541016" 
-                                                    rx="4">
-                                                </rect>
-                                                <text 
-                                                    text-anchor="middle" 
-                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w" 
-                                                    x="40.03943061828613" 
-                                                    y="76">
+                                                <rect
+                                                    class={style.rect}
+                                                    x="28.910024642944336"
+                                                    y="61.77235794067383"
+                                                    width="22.258808135986328"
+                                                    height="17.615177154541016"
+                                                    rx="4"
+                                                />
+                                                <text
+                                                    text-anchor="middle"
+                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w"
+                                                    x="40.03943061828613"
+                                                    y="76"
+                                                >
                                                     ¬a
                                                 </text>
                                             </g>
-                                            <text 
-                                                class="Rns9gYkaJwEG0jUTvFfUP" 
-                                                text-anchor="left" 
-                                                x="51.16443061828613" 
-                                                y="76">
+                                            <text
+                                                class="Rns9gYkaJwEG0jUTvFfUP"
+                                                text-anchor="left"
+                                                x="51.16443061828613"
+                                                y="76"
+                                            >
                                                 ,
                                             </text>
                                             <g>
-                                                <rect 
-                                                    class={style.rect} 
-                                                    x="55.159820556640625" 
-                                                    y="61.77235794067383" 
-                                                    width="12.90921401977539" 
-                                                    height="17.615177154541016" 
-                                                    rx="4">
-                                                </rect>
-                                                <text 
-                                                    text-anchor="middle" 
-                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w" 
-                                                    x="61.61443042755127" 
-                                                    y="76">
+                                                <rect
+                                                    class={style.rect}
+                                                    x="55.159820556640625"
+                                                    y="61.77235794067383"
+                                                    width="12.90921401977539"
+                                                    height="17.615177154541016"
+                                                    rx="4"
+                                                />
+                                                <text
+                                                    text-anchor="middle"
+                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w"
+                                                    x="61.61443042755127"
+                                                    y="76"
+                                                >
                                                     a
                                                 </text>
                                             </g>
                                         </g>
                                         <g>
-                                            <text 
-                                                class="_1exVju-unaGRf1VM4onP8K" 
-                                                text-anchor="middle" 
-                                                x="42.57500076293945" 
-                                                y="118">
-                                                 ⊢ (¬a ∨ a)
+                                            <text
+                                                class="_1exVju-unaGRf1VM4onP8K"
+                                                text-anchor="middle"
+                                                x="42.57500076293945"
+                                                y="118"
+                                            >
+                                                ⊢ (¬a ∨ a)
                                             </text>
-                                            <line 
-                                                class={style.link} 
-                                                x1="-1.1380729675292969" 
-                                                y1="91" 
-                                                x2="86.2880744934082" 
-                                                y2="91">
-                                            </line>
-                                            <text 
+                                            <line
+                                                class={style.link}
+                                                x1="-1.1380729675292969"
+                                                y1="91"
+                                                x2="86.2880744934082"
+                                                y2="91"
+                                            />
+                                            <text
                                                 class={style.changeabletext}
-                                                text-anchor="middle" 
-                                                x="101.2880744934082" 
-                                                y="93">
+                                                text-anchor="middle"
+                                                x="101.2880744934082"
+                                                y="93"
+                                            >
                                                 ∨R
                                             </text>
                                         </g>
@@ -1260,63 +1276,67 @@ const ROUTES: Route[] = [
                                 </g>
                             </g>
                             <g>
-                                <text 
-                                    class="_1exVju-unaGRf1VM4onP8K" 
-                                    text-anchor="middle" 
-                                    x="42.57500076293945" 
-                                    y="118"> 
+                                <text
+                                    class="_1exVju-unaGRf1VM4onP8K"
+                                    text-anchor="middle"
+                                    x="42.57500076293945"
+                                    y="118"
+                                >
                                     ⊢ (¬a ∨ a)
                                 </text>
-                                <rect 
-                                    class={style.rect} 
-                                    x="-1.1380767822265625" 
-                                    y="99.77235412597656" 
-                                    width="87.4261474609375" 
-                                    height="25.615177154541016" 
-                                    rx="4">
-                                </rect>
+                                <rect
+                                    class={style.rect}
+                                    x="-1.1380767822265625"
+                                    y="99.77235412597656"
+                                    width="87.4261474609375"
+                                    height="25.615177154541016"
+                                    rx="4"
+                                />
                                 <g>
                                     <g>
-                                        <text 
-                                            class="Rns9gYkaJwEG0jUTvFfUP" 
-                                            text-anchor="left" 
-                                            x="6.8619232177734375" 
-                                            y="118">
+                                        <text
+                                            class="Rns9gYkaJwEG0jUTvFfUP"
+                                            text-anchor="left"
+                                            x="6.8619232177734375"
+                                            y="118"
+                                        >
                                             ⊢
                                         </text>
                                         <g>
-                                            <rect 
+                                            <rect
                                                 class={style.rect}
-                                                x="18.84579849243164" 
-                                                y="103.77235412597656" 
-                                                width="60.182247161865234" 
-                                                height="17.615177154541016" 
-                                                rx="4">
-                                            </rect>
-                                            <text 
-                                                text-anchor="middle" 
-                                                class="_2OwwaKyvRD3KxoJMgLeJ9w" 
-                                                x="48.93692398071289" 
-                                                y="118">
+                                                x="18.84579849243164"
+                                                y="103.77235412597656"
+                                                width="60.182247161865234"
+                                                height="17.615177154541016"
+                                                rx="4"
+                                            />
+                                            <text
+                                                text-anchor="middle"
+                                                class="_2OwwaKyvRD3KxoJMgLeJ9w"
+                                                x="48.93692398071289"
+                                                y="118"
+                                            >
                                                 (¬a ∨ a)
                                             </text>
                                         </g>
                                     </g>
                                     <g>
-                                        <text 
-                                            class="_1exVju-unaGRf1VM4onP8K" 
-                                            text-anchor="middle" 
-                                            x="104.21666717529297" 
-                                            y="160">
-                                             ⊢ ((¬a ∨ a) ∧ (b → b))
+                                        <text
+                                            class="_1exVju-unaGRf1VM4onP8K"
+                                            text-anchor="middle"
+                                            x="104.21666717529297"
+                                            y="160"
+                                        >
+                                            ⊢ ((¬a ∨ a) ∧ (b → b))
                                         </text>
-                                        <line 
+                                        <line
                                             class={style.link}
-                                            x1="-1.1380729675292969" 
-                                            y1="133" 
-                                            x2="188.478515625" 
-                                            y2="133">
-                                        </line>
+                                            x1="-1.1380729675292969"
+                                            y1="133"
+                                            x2="188.478515625"
+                                            y2="133"
+                                        />
                                     </g>
                                 </g>
                             </g>
@@ -1325,232 +1345,249 @@ const ROUTES: Route[] = [
                             <g transform="translate(0 0)">
                                 <g transform="translate(0 0)">
                                     <g>
-                                        <text 
-                                            class="_1exVju-unaGRf1VM4onP8K" 
-                                            text-anchor="middle" 
-                                            x="167.90833282470703" 
-                                            y="34">
-                                            
-                                        </text>
+                                        <text
+                                            class="_1exVju-unaGRf1VM4onP8K"
+                                            text-anchor="middle"
+                                            x="167.90833282470703"
+                                            y="34"
+                                        />
                                         <g>
                                             <g>
-                                                <text 
-                                                    class="_1exVju-unaGRf1VM4onP8K" 
-                                                    text-anchor="middle" 
-                                                    x="167.90833282470703" 
-                                                    y="76">b ⊢ b
+                                                <text
+                                                    class="_1exVju-unaGRf1VM4onP8K"
+                                                    text-anchor="middle"
+                                                    x="167.90833282470703"
+                                                    y="76"
+                                                >
+                                                    b ⊢ b
                                                 </text>
-                                                <line 
+                                                <line
                                                     class={style.link}
-                                                    x1="141.14986419677734" 
-                                                    y1="49" 
-                                                    x2="194.66680145263672" 
-                                                    y2="49">
-                                                </line>
-                                                <text 
+                                                    x1="141.14986419677734"
+                                                    y1="49"
+                                                    x2="194.66680145263672"
+                                                    y2="49"
+                                                />
+                                                <text
                                                     class={style.changeabletext}
-                                                    text-anchor="middle" 
-                                                    x="209.66680145263672" 
-                                                    y="51">Ax
+                                                    text-anchor="middle"
+                                                    x="209.66680145263672"
+                                                    y="51"
+                                                >
+                                                    Ax
                                                 </text>
                                             </g>
                                         </g>
                                     </g>
                                 </g>
                                 <g>
-                                    <text 
-                                        class="_1exVju-unaGRf1VM4onP8K" 
-                                        text-anchor="middle" 
-                                        x="167.90833282470703" 
-                                        y="76">
+                                    <text
+                                        class="_1exVju-unaGRf1VM4onP8K"
+                                        text-anchor="middle"
+                                        x="167.90833282470703"
+                                        y="76"
+                                    >
                                         b ⊢ b
                                     </text>
-                                    <rect 
-                                        class={style.rect} 
-                                        x="141.1498565673828" 
-                                        y="57.77235794067383" 
-                                        width="53.516937255859375" 
-                                        height="25.615177154541016" 
-                                        rx="4">
-                                    </rect>
+                                    <rect
+                                        class={style.rect}
+                                        x="141.1498565673828"
+                                        y="57.77235794067383"
+                                        width="53.516937255859375"
+                                        height="25.615177154541016"
+                                        rx="4"
+                                    />
                                     <g>
                                         <g>
                                             <g>
-                                                <rect 
-                                                    class={style.rect} 
-                                                    x="149.14524841308594" 
-                                                    y="61.77235794067383" 
-                                                    width="12.90921401977539" 
-                                                    height="17.615177154541016" 
-                                                    rx="4">
-                                                </rect>
-                                                <text 
-                                                    text-anchor="middle" 
-                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w" 
-                                                    x="155.59985637664795" 
-                                                    y="76">
+                                                <rect
+                                                    class={style.rect}
+                                                    x="149.14524841308594"
+                                                    y="61.77235794067383"
+                                                    width="12.90921401977539"
+                                                    height="17.615177154541016"
+                                                    rx="4"
+                                                />
+                                                <text
+                                                    text-anchor="middle"
+                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w"
+                                                    x="155.59985637664795"
+                                                    y="76"
+                                                >
                                                     b
                                                 </text>
                                             </g>
-                                            <text 
-                                                class="Rns9gYkaJwEG0jUTvFfUP" 
-                                                text-anchor="left" 
-                                                x="162.0498561859131" 
-                                                y="76">
-                                                ⊢
-                                                </text>
-                                                <g>
-                                                    <rect 
-                                                        class={style.rect} 
-                                                        x="174.04525756835938" 
-                                                        y="61.77235794067383" 
-                                                        width="12.90921401977539" 
-                                                        height="17.615177154541016" 
-                                                        rx="4">
-                                                    </rect>
-                                                    <text 
-                                                        text-anchor="middle" 
-                                                        class="_2OwwaKyvRD3KxoJMgLeJ9w" 
-                                                        x="180.49985599517822" 
-                                                        y="76">
-                                                        b
-                                                    </text>
-                                                </g>
-                                            </g>
-                                            <g>
-                                                <text 
-                                                    class="_1exVju-unaGRf1VM4onP8K" 
-                                                    text-anchor="middle" 
-                                                    x="167.90833282470703" 
-                                                    y="118">
-                                                     ⊢ (b → b)
-                                                </text>
-                                                <line 
-                                                    class={style.link} 
-                                                    x1="126.24471664428711" 
-                                                    y1="91" 
-                                                    x2="209.57194900512695" 
-                                                    y2="91">
-                                                </line>
-                                                <text 
-                                                    class={style.changeabletext} 
-                                                    text-anchor="middle" 
-                                                    x="224.57194900512695" 
-                                                    y="93">
-                                                    →R
-                                                </text>
-                                            </g>
-                                        </g>
-                                    </g>
-                                </g>
-                                <g>
-                                    <text 
-                                        class="_1exVju-unaGRf1VM4onP8K" 
-                                        text-anchor="middle" 
-                                        x="167.90833282470703" 
-                                        y="118">
-                                         ⊢ (b → b)
-                                    </text>
-                                    <rect 
-                                        class={style.rect} 
-                                        x="126.24470520019531" 
-                                        y="99.77235412597656" 
-                                        width="83.32723236083984" 
-                                        height="25.615177154541016" 
-                                        rx="4">
-                                    </rect>
-                                    <g>
-                                        <g>
-                                            <text 
-                                                class="Rns9gYkaJwEG0jUTvFfUP" 
-                                                text-anchor="left" 
-                                                x="134.2447052001953" 
-                                                y="118">
+                                            <text
+                                                class="Rns9gYkaJwEG0jUTvFfUP"
+                                                text-anchor="left"
+                                                x="162.0498561859131"
+                                                y="76"
+                                            >
                                                 ⊢
                                             </text>
                                             <g>
-                                                <rect 
-                                                    class={style.rect} 
-                                                    x="146.22802734375" 
-                                                    y="103.77235412597656" 
-                                                    width="56.08333206176758" 
-                                                    height="17.615177154541016" 
-                                                    rx="4">
-                                                </rect>
-                                                <text 
-                                                    text-anchor="middle" 
-                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w" 
-                                                    x="174.2697048187256" 
-                                                    y="118">
-                                                    (b → b)
+                                                <rect
+                                                    class={style.rect}
+                                                    x="174.04525756835938"
+                                                    y="61.77235794067383"
+                                                    width="12.90921401977539"
+                                                    height="17.615177154541016"
+                                                    rx="4"
+                                                />
+                                                <text
+                                                    text-anchor="middle"
+                                                    class="_2OwwaKyvRD3KxoJMgLeJ9w"
+                                                    x="180.49985599517822"
+                                                    y="76"
+                                                >
+                                                    b
                                                 </text>
                                             </g>
                                         </g>
                                         <g>
-                                            <text 
-                                                class="_1exVju-unaGRf1VM4onP8K" 
-                                                text-anchor="middle" 
-                                                x="104.21666717529297" 
-                                                y="160">
-                                                 ⊢ ((¬a ∨ a) ∧ (b → b))
+                                            <text
+                                                class="_1exVju-unaGRf1VM4onP8K"
+                                                text-anchor="middle"
+                                                x="167.90833282470703"
+                                                y="118"
+                                            >
+                                                ⊢ (b → b)
                                             </text>
-                                            <line 
-                                                class={style.link} 
-                                                x1="19.954818725585938" 
-                                                y1="133" 
-                                                x2="209.57194900512695" 
-                                                y2="133">
-                                            </line>
-                                            <text 
+                                            <line
+                                                class={style.link}
+                                                x1="126.24471664428711"
+                                                y1="91"
+                                                x2="209.57194900512695"
+                                                y2="91"
+                                            />
+                                            <text
                                                 class={style.changeabletext}
-                                                text-anchor="middle" 
-                                                x="224.57194900512695" 
-                                                y="135">
-                                                ∧R
+                                                text-anchor="middle"
+                                                x="224.57194900512695"
+                                                y="93"
+                                            >
+                                                →R
                                             </text>
                                         </g>
                                     </g>
                                 </g>
                             </g>
+                            <g>
+                                <text
+                                    class="_1exVju-unaGRf1VM4onP8K"
+                                    text-anchor="middle"
+                                    x="167.90833282470703"
+                                    y="118"
+                                >
+                                    ⊢ (b → b)
+                                </text>
+                                <rect
+                                    class={style.rect}
+                                    x="126.24470520019531"
+                                    y="99.77235412597656"
+                                    width="83.32723236083984"
+                                    height="25.615177154541016"
+                                    rx="4"
+                                />
+                                <g>
+                                    <g>
+                                        <text
+                                            class="Rns9gYkaJwEG0jUTvFfUP"
+                                            text-anchor="left"
+                                            x="134.2447052001953"
+                                            y="118"
+                                        >
+                                            ⊢
+                                        </text>
+                                        <g>
+                                            <rect
+                                                class={style.rect}
+                                                x="146.22802734375"
+                                                y="103.77235412597656"
+                                                width="56.08333206176758"
+                                                height="17.615177154541016"
+                                                rx="4"
+                                            />
+                                            <text
+                                                text-anchor="middle"
+                                                class="_2OwwaKyvRD3KxoJMgLeJ9w"
+                                                x="174.2697048187256"
+                                                y="118"
+                                            >
+                                                (b → b)
+                                            </text>
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <text
+                                            class="_1exVju-unaGRf1VM4onP8K"
+                                            text-anchor="middle"
+                                            x="104.21666717529297"
+                                            y="160"
+                                        >
+                                            ⊢ ((¬a ∨ a) ∧ (b → b))
+                                        </text>
+                                        <line
+                                            class={style.link}
+                                            x1="19.954818725585938"
+                                            y1="133"
+                                            x2="209.57194900512695"
+                                            y2="133"
+                                        />
+                                        <text
+                                            class={style.changeabletext}
+                                            text-anchor="middle"
+                                            x="224.57194900512695"
+                                            y="135"
+                                        >
+                                            ∧R
+                                        </text>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
                         <g>
-                            <text 
-                                class="_1exVju-unaGRf1VM4onP8K" 
-                                text-anchor="middle" 
-                                x="104.21666717529297" 
-                                y="160">
-                                 ⊢ ((¬a ∨ a) ∧ (b → b))
+                            <text
+                                class="_1exVju-unaGRf1VM4onP8K"
+                                text-anchor="middle"
+                                x="104.21666717529297"
+                                y="160"
+                            >
+                                ⊢ ((¬a ∨ a) ∧ (b → b))
                             </text>
-                            <rect 
-                                class={style.rect} 
-                                x="19.95480728149414" 
-                                y="141.77235412597656" 
-                                width="168.52369689941406" 
-                                height="25.615177154541016" 
-                                rx="4">
-                            </rect>
+                            <rect
+                                class={style.rect}
+                                x="19.95480728149414"
+                                y="141.77235412597656"
+                                width="168.52369689941406"
+                                height="25.615177154541016"
+                                rx="4"
+                            />
                             <g>
                                 <g>
-                                    <text 
-                                        class="Rns9gYkaJwEG0jUTvFfUP" 
-                                        text-anchor="left" 
-                                        x="27.95480728149414" 
-                                        y="160">
+                                    <text
+                                        class="Rns9gYkaJwEG0jUTvFfUP"
+                                        text-anchor="left"
+                                        x="27.95480728149414"
+                                        y="160"
+                                    >
                                         ⊢
                                     </text>
                                     <g>
-                                        <rect 
-                                            class={style.rect} 
-                                            x="39.91490173339844" 
-                                            y="145.77235412597656" 
-                                            width="141.27980041503906" 
-                                            height="17.615177154541016" 
-                                            rx="4">
-                                        </rect>
-                                        <text 
-                                            text-anchor="middle" 
-                                            class="_2OwwaKyvRD3KxoJMgLeJ9w" 
-                                            x="110.55480575561523" 
-                                            y="160">
+                                        <rect
+                                            class={style.rect}
+                                            x="39.91490173339844"
+                                            y="145.77235412597656"
+                                            width="141.27980041503906"
+                                            height="17.615177154541016"
+                                            rx="4"
+                                        />
+                                        <text
+                                            text-anchor="middle"
+                                            class="_2OwwaKyvRD3KxoJMgLeJ9w"
+                                            x="110.55480575561523"
+                                            y="160"
+                                        >
                                             ((¬a ∨ a) ∧ (b → b))
                                         </text>
                                     </g>
@@ -1560,8 +1597,6 @@ const ROUTES: Route[] = [
                     </g>
                 </g>
             </g>
-                                            
-                                                            
         ),
     },
 
@@ -1579,416 +1614,447 @@ const ROUTES: Route[] = [
                                     <g>
                                         <g>
                                             <g>
-                                                <text 
-                                                    class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
-                                                    text-anchor="left" 
-                                                    x="311.28282737731934" 
-                                                    y="34">
+                                                <text
+                                                    class=" _2Vu5lYrTgHMQ3h2i3sb9a6"
+                                                    text-anchor="left"
+                                                    x="311.28282737731934"
+                                                    y="34"
+                                                >
                                                     ,
                                                 </text>
-                                            </g>                                     
+                                            </g>
                                         </g>
                                     </g>
                                 </g>
-                            <g transform="translate(0 0)">
+                                <g transform="translate(0 0)">
+                                    <g>
+                                        <text
+                                            class="_1exVju-unaGRf1VM4onP8K"
+                                            text-anchor="middle"
+                                            x="630.8166809082031"
+                                            y="34"
+                                        />
+                                    </g>
+                                </g>
                                 <g>
-                                    <text 
-                                        class="_1exVju-unaGRf1VM4onP8K" 
-                                        text-anchor="middle" 
-                                        x="630.8166809082031" 
-                                        y="34">
-                                        
+                                    <text
+                                        class="_1exVju-unaGRf1VM4onP8K"
+                                        text-anchor="middle"
+                                        x="420.8416748046875"
+                                        y="76"
+                                    >
+                                        ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) →
+                                        Q(a)) ⊢ ∃X: Q(X), Q(a)
                                     </text>
-                                    
+                                    <rect
+                                        class={style.rect}
+                                        x="197.05165100097656"
+                                        y="57.79627990722656"
+                                        width="447.58001708984375"
+                                        height="25.991378784179688"
+                                        rx="4"
+                                    />
+                                    <g>
+                                        <g>
+                                            <g>
+                                                <rect
+                                                    class={style.rect}
+                                                    x="205.0379180908203"
+                                                    y="61.79627990722656"
+                                                    width="65.64414978027344"
+                                                    height="17.991378784179688"
+                                                    rx="4"
+                                                />
+                                                <text
+                                                    text-anchor="middle"
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                                    x="237.85998344421387"
+                                                    y="76"
+                                                >
+                                                    ∀X: P(X)
+                                                </text>
+                                            </g>
+                                            <text
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6"
+                                                text-anchor="left"
+                                                x="270.6683158874512"
+                                                y="76"
+                                            >
+                                                ,
+                                            </text>
+                                            <g>
+                                                <rect
+                                                    class={style.rect}
+                                                    x="274.66064453125"
+                                                    y="61.79627990722656"
+                                                    width="134.98196411132812"
+                                                    height="17.991378784179688"
+                                                    rx="4"
+                                                />
+                                                <text
+                                                    text-anchor="middle"
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                                    x="342.1516456604004"
+                                                    y="76"
+                                                >
+                                                    ∀X: (P(X) → Q(X))
+                                                </text>
+                                            </g>
+                                            <text
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6"
+                                                text-anchor="left"
+                                                x="409.6349754333496"
+                                                y="76"
+                                            >
+                                                ,
+                                            </text>
+                                            <g>
+                                                <rect
+                                                    class={style.rect}
+                                                    x="413.6470031738281"
+                                                    y="61.79627990722656"
+                                                    width="101.7926025390625"
+                                                    height="17.991378784179688"
+                                                    rx="4"
+                                                />
+                                                <text
+                                                    text-anchor="middle"
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                                    x="464.54330825805664"
+                                                    y="76"
+                                                >
+                                                    (P(a) → Q(a))
+                                                </text>
+                                            </g>
+                                            <text
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6"
+                                                text-anchor="left"
+                                                x="515.4516410827637"
+                                                y="76"
+                                            >
+                                                ⊢
+                                            </text>
+                                            <g>
+                                                <rect
+                                                    class={style.rect}
+                                                    x="527.43994140625"
+                                                    y="61.79627990722656"
+                                                    width="66.75676727294922"
+                                                    height="17.991378784179688"
+                                                    rx="4"
+                                                />
+                                                <text
+                                                    text-anchor="middle"
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                                    x="560.8183078765869"
+                                                    y="76"
+                                                >
+                                                    ∃X: Q(X)
+                                                </text>
+                                            </g>
+                                            <text
+                                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6"
+                                                text-anchor="left"
+                                                x="594.1849746704102"
+                                                y="76"
+                                            >
+                                                ,
+                                            </text>
+                                            <g>
+                                                <rect
+                                                    class={style.rect}
+                                                    x="598.1904296875"
+                                                    y="61.79627990722656"
+                                                    width="36.005714416503906"
+                                                    height="17.991378784179688"
+                                                    rx="4"
+                                                />
+                                                <text
+                                                    text-anchor="middle"
+                                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                                    x="616.1933078765869"
+                                                    y="76"
+                                                >
+                                                    Q(a)
+                                                </text>
+                                            </g>
+                                        </g>
+                                        <g>
+                                            <g>
+                                                <text
+                                                    class="_1exVju-unaGRf1VM4onP8K"
+                                                    text-anchor="middle"
+                                                    x="420.8416748046875"
+                                                    y="118"
+                                                >
+                                                    ∀X: P(X), ∀X: (P(X) → Q(X)),
+                                                    (P(a) → Q(a)) ⊢ ∃X: Q(X)
+                                                </text>
+                                                <line
+                                                    class={style.link}
+                                                    x1="197.05166625976562"
+                                                    y1="91"
+                                                    x2="644.6316833496094"
+                                                    y2="91"
+                                                />
+                                                <text
+                                                    class={style.changeabletext}
+                                                    text-anchor="middle"
+                                                    x="659.6316833496094"
+                                                    y="93"
+                                                >
+                                                    ∃R
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
                                 </g>
                             </g>
                             <g>
-                                <text 
-                                    class="_1exVju-unaGRf1VM4onP8K" 
-                                    text-anchor="middle" 
-                                    x="420.8416748046875" 
-                                    y="76">
-                                    ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) → Q(a)) ⊢ ∃X: Q(X), Q(a)
+                                <text
+                                    class="_1exVju-unaGRf1VM4onP8K"
+                                    text-anchor="middle"
+                                    x="420.8416748046875"
+                                    y="118"
+                                >
+                                    ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) → Q(a)) ⊢
+                                    ∃X: Q(X)
                                 </text>
-                                <rect 
-                                    class={style.rect} 
-                                    x="197.05165100097656" 
-                                    y="57.79627990722656" 
-                                    width="447.58001708984375" 
-                                    height="25.991378784179688" 
-                                    rx="4">
-                                </rect>
+                                <rect
+                                    class={style.rect}
+                                    x="217.50502014160156"
+                                    y="99.79627990722656"
+                                    width="406.67327880859375"
+                                    height="25.991378784179688"
+                                    rx="4"
+                                />
                                 <g>
                                     <g>
                                         <g>
-                                            <rect 
-                                                class={style.rect} 
-                                                x="205.0379180908203" 
-                                                y="61.79627990722656" 
-                                                width="65.64414978027344" 
-                                                height="17.991378784179688" 
-                                                rx="4">
-                                            </rect>
-                                            <text 
-                                                text-anchor="middle" 
-                                                class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                                x="237.85998344421387" 
-                                                y="76">
+                                            <rect
+                                                class={style.rect}
+                                                x="225.4912872314453"
+                                                y="103.79627990722656"
+                                                width="65.64414978027344"
+                                                height="17.991378784179688"
+                                                rx="4"
+                                            />
+                                            <text
+                                                text-anchor="middle"
+                                                class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                                x="258.31335258483887"
+                                                y="118"
+                                            >
                                                 ∀X: P(X)
                                             </text>
                                         </g>
-                                        <text 
-                                            class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
-                                            text-anchor="left" 
-                                            x="270.6683158874512" 
-                                            y="76">
+                                        <text
+                                            class=" _2Vu5lYrTgHMQ3h2i3sb9a6 Rns9gYkaJwEG0jUTvFfUP"
+                                            text-anchor="left"
+                                            x="291.1216850280762"
+                                            y="118"
+                                        >
                                             ,
                                         </text>
                                         <g>
-                                            <rect class={style.rect} 
-                                            x="274.66064453125" 
-                                            y="61.79627990722656" 
-                                            width="134.98196411132812" 
-                                            height="17.991378784179688" 
-                                            rx="4">
-                                        </rect>
-                                        <text 
-                                            text-anchor="middle" 
-                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                            x="342.1516456604004" 
-                                            y="76">
+                                            <rect
+                                                class={style.rect}
+                                                x="295.114013671875"
+                                                y="103.79627990722656"
+                                                width="134.98196411132812"
+                                                height="17.991378784179688"
+                                                rx="4"
+                                            />
+                                            <text
+                                                text-anchor="middle"
+                                                class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                                x="362.6050148010254"
+                                                y="118"
+                                            >
+                                                ∀X: (P(X) → Q(X))
+                                            </text>
+                                        </g>
+                                        <text
+                                            class=" _2Vu5lYrTgHMQ3h2i3sb9a6 Rns9gYkaJwEG0jUTvFfUP"
+                                            text-anchor="left"
+                                            x="430.0883445739746"
+                                            y="118"
+                                        >
+                                            ,
+                                        </text>
+                                        <g>
+                                            <rect
+                                                class={style.rect}
+                                                x="434.1003723144531"
+                                                y="103.79627990722656"
+                                                width="101.7926025390625"
+                                                height="17.991378784179688"
+                                                rx="4"
+                                            />
+                                            <text
+                                                text-anchor="middle"
+                                                class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                                x="484.99667739868164"
+                                                y="118"
+                                            >
+                                                (P(a) → Q(a))
+                                            </text>
+                                        </g>
+                                        <text
+                                            class=" _2Vu5lYrTgHMQ3h2i3sb9a6 Rns9gYkaJwEG0jUTvFfUP"
+                                            text-anchor="left"
+                                            x="535.9050102233887"
+                                            y="118"
+                                        >
+                                            ⊢
+                                        </text>
+                                        <g>
+                                            <rect
+                                                class={style.rect}
+                                                x="547.893310546875"
+                                                y="103.79627990722656"
+                                                width="66.75676727294922"
+                                                height="17.991378784179688"
+                                                rx="4"
+                                            />
+                                            <text
+                                                text-anchor="middle"
+                                                class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                                x="581.2716770172119"
+                                                y="118"
+                                            >
+                                                ∃X: Q(X)
+                                            </text>
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <text
+                                                class="_1exVju-unaGRf1VM4onP8K"
+                                                text-anchor="middle"
+                                                x="420.8416748046875"
+                                                y="160"
+                                            >
+                                                ∀X: P(X), ∀X: (P(X) → Q(X)) ⊢
+                                                ∃X: Q(X)
+                                            </text>
+                                            <line
+                                                class={style.link}
+                                                x1="217.50503540039062"
+                                                y1="133"
+                                                x2="624.1783142089844"
+                                                y2="133"
+                                            />
+                                            <text
+                                                class={style.changeabletext}
+                                                text-anchor="middle"
+                                                x="639.1783142089844"
+                                                y="135"
+                                            >
+                                                ∀L
+                                            </text>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                        <g>
+                            <text
+                                class="_1exVju-unaGRf1VM4onP8K"
+                                text-anchor="middle"
+                                x="420.8416748046875"
+                                y="160"
+                            >
+                                ∀X: P(X), ∀X: (P(X) → Q(X)) ⊢ ∃X: Q(X)
+                            </text>
+                            <rect
+                                class={style.rect}
+                                x="270.851806640625"
+                                y="141.79627990722656"
+                                width="299.9797058105469"
+                                height="25.991378784179688"
+                                rx="4"
+                            />
+                            <g>
+                                <g>
+                                    <g>
+                                        <rect
+                                            class={style.rect}
+                                            x="278.8380432128906"
+                                            y="145.79627990722656"
+                                            width="65.64414978027344"
+                                            height="17.991378784179688"
+                                            rx="4"
+                                        />
+                                        <text
+                                            text-anchor="middle"
+                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                            x="311.6601390838623"
+                                            y="160"
+                                        >
+                                            ∀X: P(X)
+                                        </text>
+                                    </g>
+                                    <text
+                                        class=" _2Vu5lYrTgHMQ3h2i3sb9a6"
+                                        text-anchor="left"
+                                        x="344.4684715270996"
+                                        y="160"
+                                    >
+                                        ,
+                                    </text>
+                                    <g>
+                                        <rect
+                                            class={style.rect}
+                                            x="348.4608154296875"
+                                            y="145.79627990722656"
+                                            width="134.98196411132812"
+                                            height="17.991378784179688"
+                                            rx="4"
+                                        />
+                                        <text
+                                            text-anchor="middle"
+                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                            x="415.9518013000488"
+                                            y="160"
+                                        >
                                             ∀X: (P(X) → Q(X))
                                         </text>
                                     </g>
-                                    <text 
-                                        class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
-                                        text-anchor="left" 
-                                        x="409.6349754333496" 
-                                        y="76">
-                                        ,
-                                    </text>
-                                    <g>
-                                        <rect 
-                                            class={style.rect} 
-                                            x="413.6470031738281" 
-                                            y="61.79627990722656" 
-                                            width="101.7926025390625" 
-                                            height="17.991378784179688" 
-                                            rx="4">
-                                        </rect>
-                                        <text 
-                                            text-anchor="middle" 
-                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                            x="464.54330825805664" 
-                                            y="76">
-                                            (P(a) → Q(a))
-                                        </text>
-                                    </g>
-                                    <text 
-                                        class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
-                                        text-anchor="left" 
-                                        x="515.4516410827637" 
-                                        y="76">
+                                    <text
+                                        class=" _2Vu5lYrTgHMQ3h2i3sb9a6"
+                                        text-anchor="left"
+                                        x="483.43513107299805"
+                                        y="160"
+                                    >
                                         ⊢
                                     </text>
                                     <g>
-                                        <rect 
-                                            class={style.rect} 
-                                            x="527.43994140625" 
-                                            y="61.79627990722656" 
-                                            width="66.75676727294922" 
-                                            height="17.991378784179688" 
-                                            rx="4">
-                                        </rect>
-                                        <text 
-                                            text-anchor="middle" 
-                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                            x="560.8183078765869" 
-                                            y="76">
+                                        <rect
+                                            class={style.rect}
+                                            x="495.4234313964844"
+                                            y="145.79627990722656"
+                                            width="66.75676727294922"
+                                            height="17.991378784179688"
+                                            rx="4"
+                                        />
+                                        <text
+                                            text-anchor="middle"
+                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb"
+                                            x="528.8017978668213"
+                                            y="160"
+                                        >
                                             ∃X: Q(X)
                                         </text>
                                     </g>
-                                    <text 
-                                        class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
-                                        text-anchor="left" 
-                                        x="594.1849746704102" 
-                                        y="76">
-                                        ,
-                                    </text>
-                                    <g>
-                                        <rect 
-                                            class={style.rect} 
-                                            x="598.1904296875" 
-                                            y="61.79627990722656" 
-                                            width="36.005714416503906" 
-                                            height="17.991378784179688" 
-                                            rx="4">
-                                        </rect>
-                                        <text 
-                                            text-anchor="middle" 
-                                            class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                            x="616.1933078765869" 
-                                            y="76">
-                                            Q(a)
-                                        </text>
-                                    </g>
-                                </g>
-                                <g>
-                                    <g>
-                                        <text 
-                                            class="_1exVju-unaGRf1VM4onP8K" 
-                                            text-anchor="middle" 
-                                            x="420.8416748046875" 
-                                            y="118">
-                                            ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) → Q(a)) ⊢ ∃X: Q(X)
-                                        </text>
-                                        <line 
-                                            class={style.link} 
-                                            x1="197.05166625976562" 
-                                            y1="91" 
-                                            x2="644.6316833496094" 
-                                            y2="91">
-                                        </line>
-                                        <text 
-                                            class={style.changeabletext}
-                                            text-anchor="middle" 
-                                            x="659.6316833496094" 
-                                            y="93">
-                                            ∃R
-                                        </text>
-                                    </g>
                                 </g>
                             </g>
-                        </g>
-                    </g>
-                    <g>
-                        <text 
-                            class="_1exVju-unaGRf1VM4onP8K" 
-                            text-anchor="middle" 
-                            x="420.8416748046875" 
-                            y="118">
-                            ∀X: P(X), ∀X: (P(X) → Q(X)), (P(a) → Q(a)) ⊢ ∃X: Q(X)
-                        </text>
-                        <rect 
-                            class={style.rect} 
-                            x="217.50502014160156" 
-                            y="99.79627990722656" 
-                            width="406.67327880859375" 
-                            height="25.991378784179688" 
-                            rx="4">
-                        </rect>
-                        <g>
-                            <g>
-                                <g>
-                                    <rect 
-                                        class={style.rect} 
-                                        x="225.4912872314453" 
-                                        y="103.79627990722656" 
-                                        width="65.64414978027344" 
-                                        height="17.991378784179688" 
-                                        rx="4">
-                                    </rect>
-                                    <text 
-                                        text-anchor="middle" 
-                                        class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                        x="258.31335258483887" 
-                                        y="118">
-                                        ∀X: P(X)
-                                    </text>
-                                </g>
-                                <text 
-                                    class=" _2Vu5lYrTgHMQ3h2i3sb9a6 Rns9gYkaJwEG0jUTvFfUP" 
-                                    text-anchor="left" 
-                                    x="291.1216850280762" 
-                                    y="118">
-                                    ,
-                                </text>
-                                <g>
-                                    <rect 
-                                        class={style.rect} 
-                                        x="295.114013671875" 
-                                        y="103.79627990722656" 
-                                        width="134.98196411132812" 
-                                        height="17.991378784179688" 
-                                        rx="4">
-                                    </rect>
-                                    <text 
-                                        text-anchor="middle" 
-                                        class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                        x="362.6050148010254" 
-                                        y="118">
-                                        ∀X: (P(X) → Q(X))
-                                    </text>
-                                </g>
-                                <text 
-                                    class=" _2Vu5lYrTgHMQ3h2i3sb9a6 Rns9gYkaJwEG0jUTvFfUP" 
-                                    text-anchor="left" 
-                                    x="430.0883445739746" 
-                                    y="118">
-                                    ,
-                                </text>
-                                <g>
-                                    <rect 
-                                        class={style.rect} 
-                                        x="434.1003723144531" 
-                                        y="103.79627990722656" 
-                                        width="101.7926025390625" 
-                                        height="17.991378784179688" 
-                                        rx="4">
-                                    </rect>
-                                    <text 
-                                        text-anchor="middle" 
-                                        class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                        x="484.99667739868164" 
-                                        y="118">
-                                        (P(a) → Q(a))
-                                    </text>
-                                </g>
-                                <text 
-                                    class=" _2Vu5lYrTgHMQ3h2i3sb9a6 Rns9gYkaJwEG0jUTvFfUP" 
-                                    text-anchor="left" 
-                                    x="535.9050102233887" 
-                                    y="118">
-                                    ⊢
-                                </text>
-                                <g>
-                                    <rect 
-                                        class={style.rect} 
-                                        x="547.893310546875" 
-                                        y="103.79627990722656" 
-                                        width="66.75676727294922" 
-                                        height="17.991378784179688" 
-                                        rx="4">
-                                    </rect>
-                                    <text 
-                                        text-anchor="middle" 
-                                        class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                        x="581.2716770172119" 
-                                        y="118">
-                                        ∃X: Q(X)
-                                    </text>
-                                </g>
-                            </g>
-                            <g>
-                                <g>
-                                    <text 
-                                        class="_1exVju-unaGRf1VM4onP8K" 
-                                        text-anchor="middle" 
-                                        x="420.8416748046875" 
-                                        y="160">
-                                        ∀X: P(X), ∀X: (P(X) → Q(X)) ⊢ ∃X: Q(X)
-                                    </text>
-                                    <line 
-                                        class={style.link} 
-                                        x1="217.50503540039062" 
-                                        y1="133" x2="624.1783142089844" 
-                                        y2="133">
-                                    </line>
-                                    <text 
-                                        class={style.changeabletext }
-                                        text-anchor="middle" 
-                                        x="639.1783142089844" 
-                                        y="135">
-                                        ∀L
-                                    </text>
-                                </g>
-                            </g>
-                        </g>
-                    </g>
-                </g>
-                <g>
-                    <text 
-                        class="_1exVju-unaGRf1VM4onP8K" 
-                        text-anchor="middle" 
-                        x="420.8416748046875" 
-                        y="160">
-                        ∀X: P(X), ∀X: (P(X) → Q(X)) ⊢ ∃X: Q(X)
-                    </text>
-                        <rect 
-                            class={style.rect} 
-                            x="270.851806640625" 
-                            y="141.79627990722656" 
-                            width="299.9797058105469" 
-                            height="25.991378784179688" 
-                            rx="4">
-                    </rect>
-                    <g>
-                        <g>
-                            <g>
-                                <rect 
-                                    class={style.rect} 
-                                    x="278.8380432128906" 
-                                    y="145.79627990722656" 
-                                    width="65.64414978027344" 
-                                    height="17.991378784179688" 
-                                    rx="4">
-                                </rect>
-                                <text 
-                                    text-anchor="middle" 
-                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                    x="311.6601390838623" 
-                                    y="160">
-                                    ∀X: P(X)
-                                </text>
-                            </g>
-                            <text 
-                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
-                                text-anchor="left" 
-                                x="344.4684715270996" 
-                                y="160">
-                                ,
-                            </text>
-                            <g>
-                                <rect 
-                                    class={style.rect} 
-                                    x="348.4608154296875" 
-                                    y="145.79627990722656" 
-                                    width="134.98196411132812" 
-                                    height="17.991378784179688" 
-                                    rx="4">
-                                </rect>
-                                <text 
-                                    text-anchor="middle" 
-                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                    x="415.9518013000488" 
-                                    y="160">
-                                    ∀X: (P(X) → Q(X))
-                                </text>
-                            </g>
-                            <text 
-                                class=" _2Vu5lYrTgHMQ3h2i3sb9a6" 
-                                text-anchor="left" 
-                                x="483.43513107299805" 
-                                y="160">
-                                ⊢
-                            </text>
-                            <g>
-                                <rect 
-                                    class={style.rect} 
-                                    x="495.4234313964844" 
-                                    y="145.79627990722656" 
-                                    width="66.75676727294922" 
-                                    height="17.991378784179688" 
-                                    rx="4">
-                                </rect>
-                                <text 
-                                    text-anchor="middle" 
-                                    class=" _3lDoj08wB6FPSIbPIuWGqW Ill0sMM9BHeRdFeYzc8Vb" 
-                                    x="528.8017978668213" 
-                                    y="160">
-                                    ∃X: Q(X)
-                                </text>
-                            </g>
-                        </g>
-                        <g>
                         </g>
                     </g>
                 </g>
             </g>
-        </g>
-    </g>
         ),
-    }
+    },
 ];
 
 export default ROUTES;
