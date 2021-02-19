@@ -32,6 +32,7 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
             is BetaMove -> applyBeta(state, move.nodeID, move.leafID)
             is NuMove -> applyNu(state, move.prefix, move.nodeID, move.leafID)
             is PiMove -> applyPi(state, move.prefix, move.nodeID, move.leafID)
+            is Prune -> applyPrune(state, move.nodeID)
             is CloseMove -> applyClose(state, move.nodeID, move.leafID)
             is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")

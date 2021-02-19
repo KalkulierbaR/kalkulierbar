@@ -13,6 +13,7 @@ val SignedModalTablueaxMoveModule = SerializersModule {
         BetaMove::class with BetaMove.serializer()
         NuMove::class with NuMove.serializer()
         PiMove::class with PiMove.serializer()
+        Prune::class with Prune.serializer()
         CloseMove::class with CloseMove.serializer()
         UndoMove::class with UndoMove.serializer()
     }
@@ -49,6 +50,12 @@ class NuMove(val prefix: Int, val nodeID: Int, val leafID: Int?) : SignedModalTa
 @SerialName("piMove")
 class PiMove(val prefix: Int, val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(piMove|$nodeID)"
+}
+
+@Serializable
+@SerialName("prune")
+class Prune(val prefix: Int, val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
+    override fun toString() = "(prune|$nodeID)"
 }
 
 @Serializable

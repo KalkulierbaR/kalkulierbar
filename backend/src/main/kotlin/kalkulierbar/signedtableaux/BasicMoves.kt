@@ -266,6 +266,55 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     return state
 }
 
+@Suppress("ComplexMethod")
+fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableauxState {
+    val nodes = state.nodes
+
+    val node = nodes[nodeID]
+
+    if (nodes.size <= 1)
+        throw IllegalMove("Nothing to Prune")
+
+    if (node.isLeaf)
+        throw IllegalMove("Nothing to Prune")
+
+    for (child: Int in node.children) {
+        try {
+            applyPrune(state, child)
+        } catch (e: IllegalMove) {
+        }
+        nodes.removeAt(child)
+        // Update left side of removalNode 
+        for (i in 0..(child - 1)) {
+            var currentNode = nodes.elementAt(i)
+
+            for (j in 0..(currentNode.children.size - 1)) {
+                if (currentNode.children[j] > child)
+                    currentNode.children[j] -= 1
+            }
+
+            if (currentNode.closeRef != null && currentNode.closeRef!! > child)
+                currentNode.closeRef = currentNode.closeRef!! - 1
+        }
+        // Update right side of removalNode
+        for (i in child..(nodes.size - 1)) {
+            var currentNode = nodes.elementAt(i)
+
+            for (j in 0..(currentNode.children.size - 1)) {
+                currentNode.children[j] -= 1
+                if (currentNode.parent != null && currentNode.parent!! > child)
+                    currentNode.parent = currentNode.parent!! - 1
+            }
+
+            if (currentNode.closeRef != null && currentNode.closeRef!! > child)
+                currentNode.closeRef = currentNode.closeRef!! - 1
+        }
+    }
+    node.children.clear()
+    node.isClosed = false
+    return state
+}
+
 @Suppress("ThrowsCount")
 fun applyClose(state: SignedModalTableauxState, nodeID: Int, leafID: Int): SignedModalTableauxState {
     val nodes = state.nodes
