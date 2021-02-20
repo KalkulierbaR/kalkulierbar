@@ -19,8 +19,6 @@ For information on how to use the admin interface to add examples or disable cal
 Ever wanted to play with your own calculus? We provide a set of different parsers, interfaces, and utilites to make [building your own calculus](./backend/docs/ImplementingACalculus.md) as straightforward as possible - take a look at the code and dive in!
 We always appreciate your bug reports, feature ideas or pull requests - so feel free to join us in building something cool!
 
-Please note that this is a mirror of our private development repository. While stable features should eventually end up here, we unfortunately can't provide you with the most bleeding-edge code as of now.
-
 ## Development
 
 ### Dependencies

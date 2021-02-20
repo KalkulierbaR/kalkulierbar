@@ -70,3 +70,13 @@
 .changeabletext {
     fill: var(--kbar-primary-text-color);
 }
+
+.sparkle {
+    vertical-align: middle;
+    margin: 0rem 0.5rem;
+    height: 1rem;
+}
+
+.sparkle path {
+    fill: var(--kbar-primary-text-color);
+}

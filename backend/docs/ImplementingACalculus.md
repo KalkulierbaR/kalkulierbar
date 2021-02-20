@@ -142,3 +142,7 @@ for details on the parsed representations it's probably best to jump right to th
 in the `logic` and `clause` packages.
 There is also a variety of ready-to-use formula transformations (CNF, NNF, SNF, Unification, etc)
 for both propositional and first-order formulae in the `logic/transform` `logic/util` packages.
+
+## Calculus Frontends
+
+This file has only covered the implementation of a custom calculus backend - to create a new frontend, have a look at the [frontend documentation](../../frontend/docs/ImplementingACalculus.md).

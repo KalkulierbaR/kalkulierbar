@@ -180,7 +180,14 @@ export const getAllLits = (cs: ClauseSet): string[] => {
         }
     }
 
-    return [...lits];
+    const res: string[] = [];
+
+    // Manual because of a transpiler bug (I think)
+    for (const e of lits) {
+        res.push(e);
+    }
+
+    return res;
 };
 
 /**

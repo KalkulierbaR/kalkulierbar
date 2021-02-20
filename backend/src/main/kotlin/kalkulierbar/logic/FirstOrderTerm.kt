@@ -23,7 +23,10 @@ abstract class FirstOrderTerm : SyntacticEquality {
      * Create a deep copy of a term
      * @return copy of the current term
      */
-    abstract fun clone(qm: Map<String, Quantifier> = mapOf()): FirstOrderTerm
+    abstract fun clone(qm: Map<String, Quantifier>): FirstOrderTerm
+
+    // Implement simple clone function required by SynEq
+    override fun clone() = clone(mapOf())
 }
 
 @Serializable

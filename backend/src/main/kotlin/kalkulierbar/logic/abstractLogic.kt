@@ -23,6 +23,8 @@ val LogicModule = SerializersModule {
 @Serializable
 abstract class LogicNode : SyntacticEquality {
 
+    override fun clone() = clone(mapOf())
+
     /**
      * Create a deep copy of a logic node
      * @return copy of the current logic node
@@ -100,4 +102,10 @@ interface SyntacticEquality {
      * @return true iff the terms are equal
      */
     fun synEq(other: Any?): Boolean
+
+    /**
+     * Create a deep copy of the object
+     * @return copy of the current object
+     */
+    fun clone(): SyntacticEquality
 }
