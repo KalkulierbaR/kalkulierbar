@@ -1,4 +1,4 @@
-import {ModalTableauxNode, ModalTableauxState, ModalTableauxTreeLayoutNode} from "../types/calculus/modal-tableaux";
+import {ExpandMove, ModalTableauxMove, ModalTableauxNode, ModalTableauxState, ModalTableauxTreeLayoutNode} from "../types/calculus/modal-tableaux";
 import { tree, treeFind, treeLayout } from "./layout/tree";
 import { Tree, TreeLayout } from "../types/tree";
 import { DragTransform } from "../types/ui";
@@ -8,6 +8,7 @@ import { ModalCalculusType } from "../types/calculus";
 import { AppStateUpdater } from "../types/app/app-state";
 import { NotificationHandler } from "../types/app/notification";
 import { sendMove } from "./api";
+import { child } from "../components/tutorial/dialog/style.scss";
 
 /**
  * Wrapper to send move request
@@ -48,6 +49,62 @@ export const nextOpenLeaf = (nodes: ModalTableauxNode[]) => {
     }
     return;
 };
+
+export const sendNodeExtend = (
+    calculus: ModalCalculusType,
+    server: string,
+    state: ModalTableauxState,
+    move: string,
+    stateChanger: AppStateUpdater,
+    notificationHandler: NotificationHandler,
+    nodes: ModalTableauxNode[],
+    nodeID: number,
+    setLeafSelected: (b: boolean) => void,
+    setSelectedMove: (move: ExpandMove) => void,
+    setSelectedNodeId: (id: number | undefined) => void,
+) => {
+    let node = nodes[nodeID]
+    let leaves = getLeaves(nodes, node);
+    if (leaves.length > 1) {
+        //Ask for Leaf to apply the rule on
+        setLeafSelected(true);
+        setSelectedMove({type: move, nodeID: nodeID, leafID: leaves[0]})
+        // sendMove(server, calculus, state, {type: move, nodeID: nodeID, leafID: leaves[leaves.length - 1]}, stateChanger, notificationHandler);
+    } else {
+        //No need to ask -> apply the rule on the only possible Leaf
+        sendMove(server, calculus, state, {type: move, nodeID: nodeID, leafID: leaves[0]}, stateChanger, notificationHandler);
+        setSelectedNodeId(undefined);
+    }
+}
+
+export const getLeaves = (nodes: ModalTableauxNode[], node: ModalTableauxNode) => {
+    if (node.children.length === 0 && !node.isClosed) {
+        return [nodes.findIndex(elem => elem === node)];
+    }
+        
+    let sum: number[] = [];
+    node.children.forEach(childID => {
+        let child = nodes[childID];
+        sum = sum.concat(getLeaves(nodes, child));
+    })
+    return sum;
+}
+
+export const isChildOf = (node: ModalTableauxNode, parent: ModalTableauxNode, nodes: ModalTableauxNode[]) => {
+    if (node === parent){
+        return true;
+    }else if (node.parent !== null) {
+        let a = isChildOf(nodes[node.parent!], parent, nodes); 
+        if (a === true)
+            return true;
+        else 
+            return false;
+        
+    }
+    
+    return false;
+    
+}
 
 /**
  * @param {ModalTableauxNode} node - The node

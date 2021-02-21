@@ -46,6 +46,10 @@ interface Props {
      * Callback to change a specific drag
      */
     onDrag: (id: number, dt: DragTransform) => void;
+    /**
+     * Whether or not the tree waits for the user to choose a leaf
+     */
+    leafSelection: boolean
 }
 
 const ModalTableauxTreeView: preact.FunctionalComponent<Props> = ({
@@ -55,6 +59,7 @@ const ModalTableauxTreeView: preact.FunctionalComponent<Props> = ({
     lemmaNodesSelectable = false,
     dragTransforms,
     onDrag,
+    leafSelection,
 }) => {
     const { root, height, width: treeWidth } = modalTableauxTreeLayout(nodes);
 
@@ -163,9 +168,11 @@ const ModalTableauxTreeView: preact.FunctionalComponent<Props> = ({
                                     dragTransforms={dragTransforms}
                                     onDrag={onDrag}
                                     node={root}
+                                    nodes={nodes}
                                     selectedNodeId={selectedNodeId}
                                     selectNodeCallback={selectNodeCallback}
                                     zoomFactor={transform.k}
+                                    leafSelectiion={leafSelection}
                                 />
                             }
                         </g>

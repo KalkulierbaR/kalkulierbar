@@ -43,6 +43,9 @@ const getTitle = (url: string) => {
         case "/nc-tableaux":
         case "/nc-tableaux/view":
             return "NC Tableaux";
+        case "/signed-modal-tableaux":
+        case "/signed-modal-tableaux/view":
+            return "Modal Tableaux";
         default:
             return "Not Found";
     }

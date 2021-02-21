@@ -1,10 +1,10 @@
 import { h } from "preact";
 import { useRef } from "preact/hooks";
-import { ModalTableauxTreeLayoutNode } from "../../../../types/calculus/modal-tableaux";
+import { ModalTableauxMove, ModalTableauxNode, ModalTableauxTreeLayoutNode } from "../../../../types/calculus/modal-tableaux";
 import { Tree } from "../../../../types/tree";
 import { DragTransform } from "../../../../types/ui";
 import { classMap } from "../../../../util/class-map";
-import { nodeName } from "../../../../util/modal-tableaux";
+import { isChildOf, nodeName } from "../../../../util/modal-tableaux";
 import Draggable from "../../../svg/draggable";
 import Rectangle from "../../../svg/rectangle";
 import * as style from "./style.scss";
@@ -15,9 +15,17 @@ interface Props {
      */
     node: Tree<ModalTableauxTreeLayoutNode>;
     /**
+     * All Nodes of the current state
+     */
+    nodes: ModalTableauxNode[];
+    /**
      * The id of a node if one is selected
      */
     selected: boolean;
+    /**
+     * The Id of the currently selected Node
+     */
+    selectedNodeId: number | undefined
     /**
      * The function to call, when the user selects a node
      */
@@ -34,20 +42,27 @@ interface Props {
      * Current zoom factor of the SVG (needed for drag computation)
      */
     zoomFactor: number;
+    /**
+     * Whether or not the tree waits for the user to choose a leaf
+     */
+    leafSelection: boolean;
 }
 
 const SMTabNode: preact.FunctionalComponent<Props> = ({
     node,
+    nodes,
     selected,
+    selectedNodeId,
     selectNodeCallback,
     dragTransform,
     onDrag,
     zoomFactor,
+    leafSelection,
 }) => {
     const textRef = useRef<SVGTextElement>();
 
     // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
-    const nodeIsClickable = true;
+    const nodeIsClickable = !node.data.isClosed;
 
     /**
      * Handle the onClick event of the node
@@ -77,6 +92,9 @@ const SMTabNode: preact.FunctionalComponent<Props> = ({
                 elementRef={textRef}
                 disabled={node.data.isClosed}
                 selected={selected}
+                class={classMap({
+                    [style.nodeSelectLemma]: leafSelection && selectedNodeId !== undefined && isChildOf(node.data, nodes[selectedNodeId], nodes) && node.data.children.length <= 0,
+                })}
             />
             <text
                 ref={textRef}

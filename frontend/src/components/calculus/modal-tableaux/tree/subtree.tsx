@@ -1,11 +1,15 @@
 import { Fragment, h } from "preact";
-import {  ModalTableauxTreeLayoutNode } from "../../../../types/calculus/modal-tableaux";
+import { ModalTableauxNode, ModalTableauxTreeLayoutNode } from "../../../../types/calculus/modal-tableaux";
 import { Tree } from "../../../../types/tree";
 import { DragTransform } from "../../../../types/ui";
 import SMTabNode from "../node";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * All nodes of the current state
+     */
+    nodes: ModalTableauxNode[];
     /**
      * The current tree to render
      */
@@ -30,15 +34,21 @@ interface Props {
      * Zoom factor of the SVG
      */
     zoomFactor: number;
+    /**
+     * Whether or not tree waits for the user to select a leaf
+     */
+    leafSelectiion: boolean;
 }
 
 const SubTree: preact.FunctionalComponent<Props> = ({
+    nodes,
     node,
     dragTransforms,
     selectedNodeId,
     selectNodeCallback,
     onDrag,
     zoomFactor,
+    leafSelectiion,
 }) => {
     const dt = dragTransforms[node.data.id] ?? { x: 0, y: 0 };
 
@@ -56,23 +66,28 @@ const SubTree: preact.FunctionalComponent<Props> = ({
                             y2={c.y + childDt.y - 16}
                         />
                         <SubTree
+                            nodes={nodes}
                             node={c}
                             onDrag={onDrag}
                             selectedNodeId={selectedNodeId}
                             selectNodeCallback={selectNodeCallback}
                             dragTransforms={dragTransforms}
                             zoomFactor={zoomFactor}
+                            leafSelectiion={leafSelectiion}
                         />
                     </Fragment>
                 );
             })}
             <SMTabNode
+                nodes={nodes}
                 node={node}
                 selected={selectedNodeId === node.data.id}
+                selectedNodeId={selectedNodeId}
                 selectNodeCallback={selectNodeCallback}
                 dragTransform={dt}
                 onDrag={onDrag}
                 zoomFactor={zoomFactor}
+                leafSelection={leafSelectiion}
             />
         </g>
     );

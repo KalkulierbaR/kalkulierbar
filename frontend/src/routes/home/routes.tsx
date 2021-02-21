@@ -1055,7 +1055,7 @@ const ROUTES: Route[] = [
 
     {
         href: Calculus.modalTableaux,
-        name:"Modal-Tabluex",
+        name:"Modal-Tableaux",
         viewBox: "0 -16 450.015625 360",
         image:(
             <text

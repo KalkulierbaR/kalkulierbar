@@ -1,12 +1,12 @@
 import { ModalCalculusType } from "../../../../types/calculus";
-import { ModalTableauxState } from "../../../../types/calculus/modal-tableaux";
+import { ExpandMove, ModalTableauxState } from "../../../../types/calculus/modal-tableaux";
 import { useAppState } from "../../../../util/app-state";
 import { Fragment, h } from "preact";
 import DownloadFAB from "../../../input/fab/download";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
 import ExploreIcon from "../../../icons/explore";
-import { nextOpenLeaf } from "../../../../util/modal-tableaux";
+import { nextOpenLeaf, sendNodeExtend } from "../../../../util/modal-tableaux";
 import CenterFAB from "../../../input/fab/center";
 import CheckCloseFAB from "../../../input/fab/check-close";
 import { sendBacktrack } from "../../../../util/modal-tableaux";
@@ -30,17 +30,17 @@ interface Props {
      */
     selectedNodeId?: number;
     /**
-     * Callback if expand FAB is clicked
+     * Which node is currently selected
      */
-    expandCallback: () => void;
+    setSelectedNodeId: (id: number | undefined) => void;
     /**
-     * Whether lemma mode is enabled
+     * Which node is currently selected
      */
-    lemmaMode: boolean;
+    setLeafSelected: (b: boolean) => void;
     /**
-     * Callback if lemma FAB is clicked
+     * Which Move has been selected in case the user needs to specify the branch
      */
-    lemmaCallback: () => void;
+    setSelectedMove: (move: ExpandMove) => void;
     /**
      * Callback to reset a specific drag
      */
@@ -55,9 +55,9 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
     calculus,
     state,
     selectedNodeId,
-    expandCallback,
-    lemmaMode,
-    lemmaCallback,
+    setSelectedNodeId,
+    setLeafSelected,
+    setSelectedMove,
     resetDragTransform,
     resetDragTransforms,
 }) => {
@@ -141,13 +141,47 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                 ) : (
                     <Fragment>
                         <FAB
+                            icon={<span class={style.greekLetter}>!</span>}
+                            label="Negation"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                sendNodeExtend(
+                                    calculus, 
+                                    server, 
+                                    state, 
+                                    "negation", 
+                                    onChange, 
+                                    notificationHandler, 
+                                    state.nodes, 
+                                    selectedNodeId, 
+                                    setLeafSelected, 
+                                    setSelectedMove,
+                                    setSelectedNodeId
+                                );
+                            }}
+                        />
+                        <FAB
                             icon={<span class={style.greekLetter}>α</span>}
                             label="Alpha"
                             mini={true}
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                sendMove(server,calculus,state,{type: "alphaMove", nodeID: selectedNodeId, leafID: null},onChange,notificationHandler);
+                                sendNodeExtend(
+                                    calculus, 
+                                    server, 
+                                    state, 
+                                    "alphaMove", 
+                                    onChange, 
+                                    notificationHandler, 
+                                    state.nodes, 
+                                    selectedNodeId, 
+                                    setLeafSelected, 
+                                    setSelectedMove,
+                                    setSelectedNodeId
+                                );
                             }}
                         />
                         <FAB
@@ -157,7 +191,19 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                sendMove(server,calculus,state,{type: "betaMove", nodeID: selectedNodeId, leafID: null},onChange,notificationHandler);
+                                sendNodeExtend(
+                                    calculus, 
+                                    server, 
+                                    state, 
+                                    "betaMove", 
+                                    onChange, 
+                                    notificationHandler, 
+                                    state.nodes, 
+                                    selectedNodeId, 
+                                    setLeafSelected, 
+                                    setSelectedMove,
+                                    setSelectedNodeId
+                                );
                             }}
                         />
                         <FAB
@@ -167,7 +213,19 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                sendMove(server,calculus,state,{type: "nuMove", nodeID: selectedNodeId, leafID: null},onChange,notificationHandler);
+                                sendNodeExtend(
+                                    calculus, 
+                                    server, 
+                                    state, 
+                                    "nuMove", 
+                                    onChange, 
+                                    notificationHandler, 
+                                    state.nodes, 
+                                    selectedNodeId, 
+                                    setLeafSelected, 
+                                    setSelectedMove,
+                                    setSelectedNodeId
+                                );
                             }}
                         />
                         <FAB
@@ -177,7 +235,19 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                sendMove(server,calculus,state,{type: "piMove", nodeID: selectedNodeId, leafID: null},onChange,notificationHandler);
+                                sendNodeExtend(
+                                    calculus, 
+                                    server, 
+                                    state, 
+                                    "piMove", 
+                                    onChange, 
+                                    notificationHandler, 
+                                    state.nodes, 
+                                    selectedNodeId, 
+                                    setLeafSelected, 
+                                    setSelectedMove,
+                                    setSelectedNodeId
+                                );
                             }}
                         />
                     </Fragment>

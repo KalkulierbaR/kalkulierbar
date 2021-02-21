@@ -5,10 +5,12 @@ import ModalTableauxFAB from "../../../components/calculus/modal-tableaux/fab";
 import ModalTableauxTreeView from "../../../components/calculus/modal-tableaux/tree";
 import TableauxTreeView from "../../../components/calculus/tableaux/tree";
 import { Calculus, ModalCalculusType } from "../../../types/calculus";
-import { ModalTableauxNode, ModalTableauxTreeLayoutNode } from "../../../types/calculus/modal-tableaux";
+import { ExpandMove, ModalTableauxMove, ModalTableauxNode, ModalTableauxTreeLayoutNode } from "../../../types/calculus/modal-tableaux";
 import { DragTransform } from "../../../types/ui";
+import { sendMove } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
-import { updateDragTransform } from "../../../util/tableaux";
+import { getLeaves, sendNodeExtend } from "../../../util/modal-tableaux";
+import { sendExtend, updateDragTransform } from "../../../util/tableaux";
 
 
 interface Props{
@@ -33,19 +35,19 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({calculus}) => {
     const [selectedNodeId, setSelectedNodeId] = useState<number |undefined>(
         undefined
     );
-    const [selectedRuleId, setSelectedRuleId] = useState<number | undefined>(   
-        undefined
+    const [leafSelection, setLeafSelection] = useState<boolean>(
+        false
     );
+    const [selectedMove, setSelectedMove] = useState<ExpandMove | undefined>(
+        undefined
+    )
+
     const [dragTransforms, setDragTransforms] = useState<
         Record<number, DragTransform>
     >({});
     const onDrag = useCallback(updateDragTransform(setDragTransforms), [
         setDragTransforms,
     ]);
-    const selectedNode =
-        selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
-    const selectedNodeIsLeaf =
-        selectedNode !== undefined && selectedNode.children.length === 0;
 
     const resetDragTransform = useCallback(
         (id: number) => onDrag(id, { x: 0, y: 0 }),
@@ -60,8 +62,19 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({calculus}) => {
     ) => {
         if(newNode.id === selectedNodeId){
             setSelectedNodeId(undefined);
+            setSelectedMove(undefined);
+            setLeafSelection(false);
         }else if(selectedNodeId === undefined){
             setSelectedNodeId(newNode.id);
+        }else if(leafSelection === true && selectedMove !== undefined && getLeaves(state.nodes, state.nodes[selectedNodeId]).includes(newNode.id)){
+            selectedMove.leafID = newNode.id;
+            sendMove(server,calculus,state, selectedMove, onChange, notificationHandler);
+            setSelectedNodeId(undefined);
+            setSelectedMove(undefined);
+            setLeafSelection(false);
+        }else {
+            sendMove(server, calculus, state, {type: "close", nodeID: selectedNodeId, leafID: newNode.id},onChange,notificationHandler);
+            setSelectedNodeId(undefined);
         }
     }
 
@@ -77,15 +90,16 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({calculus}) => {
             lemmaNodesSelectable={false}
             dragTransforms={dragTransforms}
             onDrag={onDrag}
+            leafSelection={leafSelection}
         />
 
         <ModalTableauxFAB
             calculus={calculus}
             state={state}
             selectedNodeId={selectedNodeId}
-            expandCallback={() => {}}
-            lemmaMode={false}
-            lemmaCallback={() => {}}
+            setSelectedNodeId={setSelectedNodeId}
+            setLeafSelected={setLeafSelection}
+            setSelectedMove={setSelectedMove}
             resetDragTransform={resetDragTransform}
             resetDragTransforms={resetDragTransforms}
         />
