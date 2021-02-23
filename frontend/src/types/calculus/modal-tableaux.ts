@@ -119,9 +119,10 @@ export type ModalTableauxMove =
     AlphaMove | BetaMove | NuMove | PiMove | UndoMove | CloseMove | NegMove;
 
 export interface ExpandMove {
-    type: string;
-    nodeID: number;
-    leafID: number;
+    type?: string;
+    nodeID?: number;
+    leafID?: number;
+    prefix?: number;
 }
 
 export interface AlphaMove extends ExpandMove {

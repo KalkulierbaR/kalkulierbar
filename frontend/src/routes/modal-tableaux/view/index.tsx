@@ -4,12 +4,13 @@ import { useCallback, useState } from "preact/hooks";
 import ModalTableauxFAB from "../../../components/calculus/modal-tableaux/fab";
 import ModalTableauxTreeView from "../../../components/calculus/modal-tableaux/tree";
 import TableauxTreeView from "../../../components/calculus/tableaux/tree";
+import PrefixDialog from "../../../components/dialog/prefix-dialog";
 import { Calculus, ModalCalculusType } from "../../../types/calculus";
 import { ExpandMove, ModalTableauxMove, ModalTableauxNode, ModalTableauxTreeLayoutNode } from "../../../types/calculus/modal-tableaux";
 import { DragTransform } from "../../../types/ui";
 import { sendMove } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
-import { getLeaves, sendNodeExtend } from "../../../util/modal-tableaux";
+import { getLeaves, nodeName, sendNodeExtend } from "../../../util/modal-tableaux";
 import { sendExtend, updateDragTransform } from "../../../util/tableaux";
 
 
@@ -56,6 +57,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({calculus}) => {
     const resetDragTransforms = useCallback(() => setDragTransforms({}), [
         setDragTransforms,
     ]);
+    const [showPrefixDialog, setShowPrefixDialog] = useState<boolean>(false);
     
     const selectNodeCallback = (
         newNode: ModalTableauxTreeLayoutNode,
@@ -75,6 +77,23 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({calculus}) => {
         }else {
             sendMove(server, calculus, state, {type: "close", nodeID: selectedNodeId, leafID: newNode.id},onChange,notificationHandler);
             setSelectedNodeId(undefined);
+        }
+    }
+
+    const sendPrefix = (
+        prefix: number,
+    ) => {
+        if(selectedNodeId !== undefined){
+            let leaves = getLeaves(state.nodes,state.nodes[selectedNodeId]);
+            if(leaves.length > 1){
+                setLeafSelection(true);
+                setSelectedMove({type: selectedMove?.type,nodeID: selectedNodeId,leafID: selectedMove?.leafID, prefix: prefix})
+            }else{
+                sendMove(server, calculus, state, {type: selectedMove?.type, nodeID: selectedNodeId, leafID: leaves[0], prefix: prefix}, onChange, notificationHandler);
+                setSelectedNodeId(undefined);
+                setSelectedMove(undefined);
+            }
+            setShowPrefixDialog(false);
         }
     }
 
@@ -102,6 +121,15 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({calculus}) => {
             setSelectedMove={setSelectedMove}
             resetDragTransform={resetDragTransform}
             resetDragTransforms={resetDragTransforms}
+            setShowPrefixDialog={setShowPrefixDialog}
+        />
+
+        <PrefixDialog
+            open={showPrefixDialog}
+            onClose={() => setShowPrefixDialog(false)}
+            prefixOrigin={nodeName(state.nodes[selectedNodeId!])}
+            submitPrefixCallback={sendPrefix}
+            notificationHandler={notificationHandler}
         />
 
         </Fragment>

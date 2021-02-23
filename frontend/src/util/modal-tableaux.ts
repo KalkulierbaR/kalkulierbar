@@ -111,6 +111,7 @@ export const isChildOf = (node: ModalTableauxNode, parent: ModalTableauxNode, no
  * @returns {string} - The name
  */
 export const nodeName = (node: ModalTableauxNode) => {
+    if(node === undefined) return "";
     return `
         ${node.sign ? "T " : "F " }
         ${node.prefix.map(

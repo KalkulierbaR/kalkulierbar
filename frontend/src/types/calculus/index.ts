@@ -15,6 +15,7 @@ export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
 export type PSCCalculusType ="psc"|"fosc";
 export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll" | "psc";
 export type FOCalculusType = "fo-tableaux" | "fo-resolution" | "nc-tableaux"| "fosc";
+export type SequentCalculusType = "psc" | "fosc"
 export type ModalCalculusType = "signed-modal-tableaux";
 export type CalculusType = FOCalculusType | PropCalculusType | ModalCalculusType;
 

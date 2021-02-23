@@ -49,6 +49,10 @@ interface Props {
      * Callback to reset all drags
      */
     resetDragTransforms: () => void;
+    /**
+     * Whether to show or not to show the prefix dialog
+     */
+    setShowPrefixDialog: (b: boolean) => void; 
 }
 
 const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
@@ -60,6 +64,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
     setSelectedMove,
     resetDragTransform,
     resetDragTransforms,
+    setShowPrefixDialog,
 }) => {
     
     const {
@@ -213,19 +218,8 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                sendNodeExtend(
-                                    calculus, 
-                                    server, 
-                                    state, 
-                                    "nuMove", 
-                                    onChange, 
-                                    notificationHandler, 
-                                    state.nodes, 
-                                    selectedNodeId, 
-                                    setLeafSelected, 
-                                    setSelectedMove,
-                                    setSelectedNodeId
-                                );
+                                setSelectedMove({type: "nuMove",nodeID: selectedNodeId})
+                                setShowPrefixDialog(true);
                             }}
                         />
                         <FAB
@@ -235,19 +229,8 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                sendNodeExtend(
-                                    calculus, 
-                                    server, 
-                                    state, 
-                                    "piMove", 
-                                    onChange, 
-                                    notificationHandler, 
-                                    state.nodes, 
-                                    selectedNodeId, 
-                                    setLeafSelected, 
-                                    setSelectedMove,
-                                    setSelectedNodeId
-                                );
+                                setSelectedMove({type: "piMove",nodeID: selectedNodeId})
+                                setShowPrefixDialog(true);
                             }}
                         />
                     </Fragment>
