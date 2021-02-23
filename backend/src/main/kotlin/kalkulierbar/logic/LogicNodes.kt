@@ -243,7 +243,7 @@ class ExistentialQuantifier(
 @SerialName("box")
 class Box(override var child: LogicNode) : UnaryOp() {
 
-    override fun toString() = "[]$child"
+    override fun toString() = "□$child"
 
     override fun clone(qm: Map<String, Quantifier>) = Box(child.clone(qm))
 
@@ -261,7 +261,7 @@ class Box(override var child: LogicNode) : UnaryOp() {
 @SerialName("diamond")
 class Diamond(override var child: LogicNode) : UnaryOp() {
 
-    override fun toString() = "<>$child"
+    override fun toString() = "◇$child"
 
     override fun clone(qm: Map<String, Quantifier>) = Diamond(child.clone(qm))
 
