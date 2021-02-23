@@ -1,12 +1,14 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
+
 import { TutorialMode } from "../../../types/app/tutorial";
 import { useAppState } from "../../../util/app-state";
 import { disableTutorial, getHighlightFAB } from "../../../util/tutorial-mode";
-import FAB from "../fab";
 import CloseIcon from "../../icons/close";
 import MoreIcon from "../../icons/more";
 import TutorialHint from "../../tutorial/hint";
+import FAB from "../fab";
+
 import * as style from "./style.scss";
 
 interface MenuProps {

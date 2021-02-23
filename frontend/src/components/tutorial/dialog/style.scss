@@ -42,6 +42,12 @@
     }
 }
 
+.rules {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 @media (min-width: 700px) {
     .help-menu {
         right: 32px;

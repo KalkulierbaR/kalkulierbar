@@ -1,7 +1,9 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
+
 import Dialog from "../../../../components/dialog";
 import OptionList from "../../../../components/input/option-list";
+import { ResolutionCalculusType } from "../../../../types/calculus";
 import {
     Atom,
     FOAtom,
@@ -18,7 +20,6 @@ import { stringArrayToStringMap } from "../../../../util/array-to-map";
 import { atomToString } from "../../../../util/clause";
 import { sendFactorize } from "../../../../util/resolution";
 import Btn from "../../../input/btn";
-import { ResolutionCalculusType } from "../../../../types/calculus";
 
 interface Props {
     /**

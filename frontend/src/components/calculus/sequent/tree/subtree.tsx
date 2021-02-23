@@ -1,15 +1,21 @@
 import { Fragment, h } from "preact";
-import { FormulaTreeLayoutNode, PSCTreeLayoutNode } from "../../../../types/calculus/psc";
+
+import {
+    FormulaTreeLayoutNode,
+    SequentTreeLayoutNode,
+} from "../../../../types/calculus/sequent";
 import { Tree } from "../../../../types/tree";
-import * as style from "./style.scss";
-import PSCTreeNode from "../node";
+import SequentTreeNode from "../node";
 
 interface Props {
-    node: Tree<PSCTreeLayoutNode>;
-    parent?: Tree<PSCTreeLayoutNode>; 
+    node: Tree<SequentTreeLayoutNode>;
+    parent?: Tree<SequentTreeLayoutNode>;
     selectedNodeId?: number;
     selectedListIndex?: string;
-    selectNodeCallback: (n: PSCTreeLayoutNode, selectValue?: boolean) => void;
+    selectNodeCallback: (
+        n: SequentTreeLayoutNode,
+        selectValue?: boolean,
+    ) => void;
     selectFormulaCallback: (f: FormulaTreeLayoutNode) => void;
     zoomFactor: number;
     ruleName: string;
@@ -25,11 +31,10 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
     zoomFactor,
     ruleName,
 }) => {
-    const dt = {x: 0,y: 0};
+    const dt = { x: 0, y: 0 };
     return (
         <g transform={`translate(${dt.x} ${dt.y})`}>
             {node.children.map((c, i) => {
-                const childDt = {x: 0,y: 0};
                 return (
                     <Fragment key={i}>
                         <SubTree
@@ -45,17 +50,15 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 );
             })}
-            <PSCTreeNode
+            <SequentTreeNode
                 selectNodeCallback={selectNodeCallback}
                 node={node}
                 parent={parent}
                 // selectedNodeId={selectedNodeId}
                 selected={node.data.id === selectedNodeId}
-                zoomFactor={zoomFactor}
-                ruleName={ruleName}
                 selectFormulaCallback={selectFormulaCallback}
                 selectedListIndex={selectedListIndex}
             />
         </g>
-    )
-}
+    );
+};

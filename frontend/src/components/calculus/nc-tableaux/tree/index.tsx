@@ -1,4 +1,5 @@
 import { h } from "preact";
+
 import {
     NCTableauxNode,
     NCTabTreeNode,
@@ -8,6 +9,7 @@ import { findSubTree, getClosedLeaves } from "../../../../util/layout/tree";
 import { ncTabTreeLayout } from "../../../../util/nc-tableaux";
 import ClosingEdge from "../../../svg/closing-edge";
 import Zoomable from "../../../svg/zoomable";
+
 import NCSubTree from "./subtree";
 
 interface Props {

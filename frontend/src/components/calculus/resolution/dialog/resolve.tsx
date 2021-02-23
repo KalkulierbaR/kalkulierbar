@@ -1,5 +1,6 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
+
 import Dialog from "../../../../components/dialog";
 import OptionList from "../../../../components/input/option-list";
 import { ResolutionCalculusType } from "../../../../types/calculus";

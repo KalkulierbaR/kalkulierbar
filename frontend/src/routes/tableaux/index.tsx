@@ -1,5 +1,6 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
+
 import HintIcon, { Hint } from "../../components/hint";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";

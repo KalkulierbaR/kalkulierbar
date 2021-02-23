@@ -1,10 +1,12 @@
-import { h, Component } from "preact";
-import * as style from "./style.scss";
-import { ROUTES, LinkGroup, SingleLink } from "./routes";
-import { classMap } from "../../../util/class-map";
+import { Component, h } from "preact";
 import { Link } from "preact-router";
-import { useAppState } from "../../../util/app-state";
+
 import { TableauxCalculusType } from "../../../types/calculus";
+import { useAppState } from "../../../util/app-state";
+import { classMap } from "../../../util/class-map";
+
+import { LinkGroup, ROUTES, SingleLink } from "./routes";
+import * as style from "./style.scss";
 
 interface NavProps {
     /**
