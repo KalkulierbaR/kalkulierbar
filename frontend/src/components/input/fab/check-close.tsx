@@ -1,11 +1,16 @@
-import CheckCircleIcon from "../../icons/check-circle";
-import { disableTutorial, getHighlightCheck } from "../../../util/tutorial-mode";
-import { TutorialMode } from "../../../types/app/tutorial";
-import { checkClose} from "../../../util/api";
-import FAB from "./index";
-import { useAppState } from "../../../util/app-state";
-import { CalculusType } from "../../../types/calculus";
 import { h } from "preact";
+
+import { TutorialMode } from "../../../types/app/tutorial";
+import { CalculusType } from "../../../types/calculus";
+import { checkClose } from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
+import {
+    disableTutorial,
+    getHighlightCheck,
+} from "../../../util/tutorial-mode";
+import CheckCircleIcon from "../../icons/check-circle";
+
+import FAB from "./index";
 
 interface Props {
     /**
@@ -14,9 +19,7 @@ interface Props {
     calculus: CalculusType;
 }
 
-const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
-    calculus,
-}) => {
+const CheckCloseFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const {
         tutorialMode,
         dispatch,
@@ -40,12 +43,7 @@ const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
                         TutorialMode.HighlightCheck,
                     );
                 }
-                checkClose(
-                    server,
-                    notificationHandler,
-                    calculus,
-                    state,
-                );
+                checkClose(server, notificationHandler, calculus, state);
             }}
         />
     );

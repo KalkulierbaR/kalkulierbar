@@ -1,15 +1,16 @@
-import { PropTableauxState, FOTableauxState } from "../calculus/tableaux";
-import { PropResolutionState, FOResolutionState } from "../calculus/resolution";
+import { CalculusType, Formulas } from "../calculus";
 import { DPLLState } from "../calculus/dpll";
-import {  FOSCState, PSCState } from "../calculus/psc";
+import { NCTableauxState } from "../calculus/nc-tableaux";
+import { FOResolutionState, PropResolutionState } from "../calculus/resolution";
+import { FOSCState, PSCState } from "../calculus/sequent";
+import { FOTableauxState, PropTableauxState } from "../calculus/tableaux";
+
 import { AppStateAction } from "./action";
-import { Formulas, CalculusType } from "../calculus";
+import { Config } from "./config";
 import { Notification, NotificationHandler } from "./notification";
 import { Theme } from "./theme";
 import { TutorialMode } from "./tutorial";
-import { NCTableauxState } from "../calculus/nc-tableaux";
 import { ModalTableauxState } from "../calculus/modal-tableaux";
-import { Config } from "./config";
 
 /**
  * The state of the application
@@ -62,9 +63,9 @@ export interface AppState {
     /**
      * The current psc state
      */
-    "psc"?: PSCState;
+    psc?: PSCState;
     /**
-     * The current fo-psc state
+     * The current fosc state
      */
     "fosc"?: FOSCState;
     /**

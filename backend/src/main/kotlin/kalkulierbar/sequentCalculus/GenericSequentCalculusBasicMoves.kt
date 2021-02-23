@@ -33,7 +33,7 @@ fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalc
             return state
         }
     }
-    throw IllegalMove("Rule 'Ax' needs two nodes of the same kind on both sides to be applied.")
+    throw IllegalMove("Rule 'Ax' needs two formulas of the same kind on both sides to be applied.")
 }
 
 fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {

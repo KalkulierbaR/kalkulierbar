@@ -9,6 +9,7 @@ import {
     FOLiteral,
 } from "../types/calculus/clause";
 import { FORelation } from "../types/calculus/tableaux";
+
 import { stringArrayToStringMap } from "./array-to-map";
 import { maxBy } from "./max-by";
 

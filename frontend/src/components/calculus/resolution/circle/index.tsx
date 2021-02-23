@@ -1,11 +1,13 @@
 import { h } from "preact";
 import { useMemo } from "preact/hooks";
+
 import { CandidateClause } from "../../../../types/calculus/clause";
 import { VisualHelp } from "../../../../types/calculus/resolution";
 import { DragTransform } from "../../../../types/ui";
 import { circleLayout } from "../../../../util/layout/circle";
 import Zoomable from "../../../svg/zoomable";
 import ResolutionNode from "../node";
+
 import * as style from "./style.scss";
 
 interface Props {

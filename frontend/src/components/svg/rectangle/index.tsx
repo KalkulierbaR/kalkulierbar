@@ -1,6 +1,8 @@
 import { h, RefObject } from "preact";
 import { useEffect, useState } from "preact/hooks";
+
 import { classMap } from "../../../util/class-map";
+
 import * as style from "./style.scss";
 
 interface Props {
@@ -32,7 +34,7 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
 
     useEffect(() => {
         if (!elementRef.current) {
-            return
+            return;
         }
 
         const box = elementRef.current.getBBox();
@@ -57,7 +59,6 @@ const Rectangle: preact.FunctionalComponent<Props> = ({
             height={dims.height}
             rx="4"
         />
-        
     );
 };
 

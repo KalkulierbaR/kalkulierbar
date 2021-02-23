@@ -1,4 +1,4 @@
-import { Clause, FOClause, Atom } from "../../types/calculus/clause";
+import { Atom, Clause, FOClause } from "../../types/calculus/clause";
 import { HyperResolutionMove } from "../../types/calculus/resolution";
 
 /**

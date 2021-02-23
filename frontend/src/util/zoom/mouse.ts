@@ -1,4 +1,5 @@
 import { Point } from "../../types/ui";
+
 import { getPoint } from "./point";
 
 /**

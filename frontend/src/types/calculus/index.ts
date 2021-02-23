@@ -1,19 +1,14 @@
-import {
-    TableauxMove,
-    FOTableauxMove,
-    PropTableauxParams,
-    FOTableauxParams,
-} from "./tableaux";
-import {
-    PropResolutionMove,
-    FOResolutionMove,
-    PropResolutionParams,
-    FOResolutionParams,
-} from "./resolution";
-import { NCTableauxMove } from "./nc-tableaux";
 import { DPLLMove } from "./dpll";
-import { FOSCMove, PSCMove, PSCParams } from "./psc";
+import { NCTableauxMove } from "./nc-tableaux";
+import {
+    FOResolutionMove,
+    FOResolutionParams,
+    PropResolutionMove,
+    PropResolutionParams,
+} from "./resolution";
+import { FOSCMove, PSCMove, SequentParams } from "./sequent";
 import { ModalTableauxMove } from "./modal-tableaux";
+import { FOTableauxMove, FOTableauxParams, PropTableauxParams, TableauxMove } from "./tableaux";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
@@ -81,9 +76,8 @@ export interface Params {
     "fo-resolution": FOResolutionParams;
     "nc-tableaux": null;
     dpll: null;
-    psc: PSCParams;
-    fosc: PSCParams;
-    "signed-modal-tableaux": null;
+    psc: SequentParams;
+    fosc: SequentParams;
 }
 
 /**

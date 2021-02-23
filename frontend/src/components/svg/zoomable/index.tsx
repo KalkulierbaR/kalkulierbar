@@ -1,4 +1,5 @@
 import { Component, ComponentChildren, createRef, h } from "preact";
+
 import { Extent, GoToEvent, Point, Transform } from "../../../types/ui";
 import { disableDrag, enableDrag } from "../../../util/zoom/drag";
 import { extent } from "../../../util/zoom/extent";
