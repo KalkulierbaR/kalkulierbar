@@ -235,6 +235,8 @@ const Format: preact.FunctionalComponent<Props> = ({
         </Fragment>
     );
 
+    
+
     const content = (
         <div class={style.formatContent}>
             <ul>
