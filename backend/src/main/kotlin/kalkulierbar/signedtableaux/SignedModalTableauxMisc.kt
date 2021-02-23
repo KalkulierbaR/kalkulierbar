@@ -42,14 +42,17 @@ class SignedModalTableauxState(
      *       so make sure the closeRef is set before calling this
      * @param leafID The node to mark as closed
      */
-    fun setClosed(leafID: Int) {
-        var node = nodes[leafID]
+    fun setClosed(nodeID: Int) {
+        var node = nodes[nodeID]
         // Set isClosed to true for all nodes dominated by node in reverse tree
-        while (node == nodes[leafID] || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
+        while (node == nodes[nodeID] || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
             node.isClosed = true
             if (node.parent == null)
                 break
             node = nodes[node.parent!!]
+        }
+        childLeavesOf(nodeID).forEach {
+            setClosed(it)
         }
     }
 

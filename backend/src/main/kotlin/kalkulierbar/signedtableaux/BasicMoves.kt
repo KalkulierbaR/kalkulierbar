@@ -332,7 +332,7 @@ fun applyClose(state: SignedModalTableauxState, nodeID: Int, leafID: Int): Signe
     if (!node.formula.synEq(leaf.formula))
         throw IllegalMove("The selected formula is not syntactically equivalent.")
 
-    node.closeRef = leafID
+    // node.closeRef = leafID
     leaf.closeRef = nodeID
     state.setClosed(leafID)
 

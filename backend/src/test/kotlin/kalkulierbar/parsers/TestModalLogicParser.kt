@@ -32,11 +32,11 @@ class TestModalLogicParser {
             "a->b" to "(a --> b)",
             "a<->(b -> (!(c)))" to "(a <=> (b --> ¬c))",
             "(b & a <-> (a) | !b)" to "((b ∧ a) <=> (a ∨ ¬b))",
-            "[]a" to "[]a",
-            "[](a&b)" to "[](a ∧ b)",
-            "<>(a&b)" to "<>(a ∧ b)",
-            "[]<>(a)" to "[]<>a",
-            "[][](a)" to "[][]a"
+            "[]a" to "□a",
+            "[](a&b)" to "□(a ∧ b)",
+            "<>(a&b)" to "◇(a ∧ b)",
+            "[]<>(a)" to "□◇a",
+            "[][](a)" to "□□a"
     )
 
     @Test
