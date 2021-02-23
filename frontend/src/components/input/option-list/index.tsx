@@ -1,8 +1,8 @@
 import { h } from "preact";
 
-import { PSCNode } from "../../../types/calculus/psc";
+import { SequentNode } from "../../../types/calculus/sequent";
 import { classMap } from "../../../util/class-map";
-import { parseFormula, parseStringToListIndex } from "../../../util/psc";
+import { parseFormula, parseStringToListIndex } from "../../../util/sequent";
 
 import * as style from "./style.scss";
 
@@ -26,7 +26,7 @@ interface Props {
     /**
      * If the current selected Node should be showed above
      */
-    node?: PSCNode | undefined;
+    node?: SequentNode | undefined;
     /**
      * listIndex
      */

@@ -1,12 +1,12 @@
 import { DPLLMove } from "./dpll";
 import { NCTableauxMove } from "./nc-tableaux";
-import { FOSCMove, PSCMove, PSCParams } from "./psc";
 import {
     FOResolutionMove,
     FOResolutionParams,
     PropResolutionMove,
     PropResolutionParams,
 } from "./resolution";
+import { FOSCMove, PSCMove, SequentParams } from "./sequent";
 import {
     FOTableauxMove,
     FOTableauxParams,
@@ -16,7 +16,7 @@ import {
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
-export type PSCCalculusType = "psc" | "fosc";
+export type SequentCalculusType = "psc" | "fosc";
 export type PropCalculusType =
     | "prop-tableaux"
     | "prop-resolution"
@@ -85,8 +85,8 @@ export interface Params {
     "fo-resolution": FOResolutionParams;
     "nc-tableaux": null;
     dpll: null;
-    psc: PSCParams;
-    fosc: PSCParams;
+    psc: SequentParams;
+    fosc: SequentParams;
 }
 
 /**

@@ -201,29 +201,68 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                 {calculus === Calculus.psc && (
                     <div class={style.container}>
                         <VideoTutorial
-                            title="Test"
-                            videoSrc="../../../assets/videos/nc_tableaux_alpha.mp4"
-                            text="This is a Test"
+                            title="Applying rules"
+                            videoSrc="../../../assets/videos/PSC_apply_Rules.mp4"
+                            text="Select a formula and choose a rule to apply"
                         />
                         <VideoTutorial
-                            title="Test2"
-                            videoSrc="../../../assets/videos/nc_tableaux_beta.mp4"
-                            text="This is a Test"
+                            title="Ax rule"
+                            videoSrc="../../../assets/videos/PSC_Ax.mp4"
+                            text="Close a branch by applying the Ax rule on a node which has the same formula on both sides"
                         />
                         <VideoTutorial
-                            title="Test3"
-                            videoSrc="../../../assets/videos/nc_tableaux_gamma.mp4"
-                            text="This is a Test"
+                            title="Closing a proof"
+                            videoSrc="../../../assets/videos/PSC_Close.mp4"
+                            text="When all branches are closed you can check if the proof is valid"
                         />
                         <VideoTutorial
-                            title="Test4"
-                            videoSrc="../../../assets/videos/nc_tableaux_delta.mp4"
-                            text="This is a Test"
+                            title="Prune a branch"
+                            videoSrc="../../../assets/videos/PSC_Prune.mp4"
+                            text="Use prune to delete a whole branch"
+                        />
+                        <h3>Rules:</h3>
+                        <h3 />
+                        <img
+                            class={style.rules}
+                            src="../../../assets/images/PSCLeftRules.jpg"
+                        />
+                        <img
+                            class={style.rules}
+                            src="../../../assets/images/PSCRightRules.jpg"
+                        />
+                    </div>
+                )}
+                {calculus === Calculus.fosc && (
+                    <div class={style.container}>
+                        <VideoTutorial
+                            title="Applying rules"
+                            videoSrc="../../../assets/videos/PSC_apply_Rules.mp4"
+                            text="Select a formula and choose a rule to apply"
                         />
                         <VideoTutorial
-                            title="Test5"
-                            videoSrc="../../../assets/videos/nc_tableaux_close.mp4"
-                            text="This is a Test"
+                            title="Ax rule"
+                            videoSrc="../../../assets/videos/PSC_Ax.mp4"
+                            text="Close a branch by applying the Ax rule on a node which has the same formula on both sides"
+                        />
+                        <VideoTutorial
+                            title="Closing a proof"
+                            videoSrc="../../../assets/videos/PSC_Close.mp4"
+                            text="When all branches are closed you can check if the proof is valid"
+                        />
+                        <VideoTutorial
+                            title="Prune a branch"
+                            videoSrc="../../../assets/videos/PSC_Prune.mp4"
+                            text="Use prune to delete a whole branch"
+                        />
+                        <h3>Rules:</h3>
+                        <h3 />
+                        <img
+                            class={style.rules}
+                            src="../../../assets/images/FOSCLeftRules.jpg"
+                        />
+                        <img
+                            class={style.rules}
+                            src="../../../assets/images/FOSCRightRules.jpg"
                         />
                     </div>
                 )}

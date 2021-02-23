@@ -1,24 +1,24 @@
 import { h } from "preact";
 import {
     FormulaTreeLayoutNode,
-    PSCTreeLayoutNode,
-} from "../../../../types/calculus/psc";
-import { PSCNode } from "../../../../types/calculus/psc";
+    SequentTreeLayoutNode,
+} from "../../../../types/calculus/sequent";
+import { SequentNode } from "../../../../types/calculus/sequent";
 import { findSubTree } from "../../../../util/layout/tree";
-import { pscTreeLayout } from "../../../../util/psc";
+import { sequentTreeLayout } from "../../../../util/sequent";
 import Zoomable from "../../../svg/zoomable";
-import { SubTree } from "../tree/subtree";
 
 import * as style from "./style.scss";
+import { SubTree } from "./subtree";
 
 interface Props {
     // Nodes of the tree
-    nodes: PSCNode[];
+    nodes: SequentNode[];
     // The id of the selected Node
     selectedNodeId: number | undefined;
     // The function to call, when user selects a node
     selectNodeCallback: (
-        node: PSCTreeLayoutNode,
+        node: SequentTreeLayoutNode,
         selectValue?: boolean,
     ) => void;
     // informs the element if the screen is small
@@ -31,7 +31,7 @@ interface Props {
     selectedListIndex?: string;
 }
 
-const PSCTreeView: preact.FunctionalComponent<Props> = ({
+const SequentTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
     selectNodeCallback,
     selectedNodeId,
@@ -39,7 +39,7 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
     selectFormulaCallback,
     selectedListIndex,
 }) => {
-    const { root, height, width: treeWidth } = pscTreeLayout(nodes);
+    const { root, height, width: treeWidth } = sequentTreeLayout(nodes);
 
     const treeHeight = Math.max(height, 200);
 
@@ -93,4 +93,4 @@ const PSCTreeView: preact.FunctionalComponent<Props> = ({
     );
 };
 
-export default PSCTreeView;
+export default SequentTreeView;

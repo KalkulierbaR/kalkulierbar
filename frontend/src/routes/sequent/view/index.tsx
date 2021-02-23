@@ -2,34 +2,34 @@ import { Fragment, h } from "preact";
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
 
-import PSCFAB from "../../../components/calculus/psc/fab";
-import PSCTreeView from "../../../components/calculus/psc/tree";
+import SequentFAB from "../../../components/calculus/sequent/fab";
+import SequentTreeView from "../../../components/calculus/sequent/tree";
 import Dialog from "../../../components/dialog";
 import VarAssignDialog from "../../../components/dialog/var-assign";
 import OptionList from "../../../components/input/option-list";
 import TutorialDialog from "../../../components/tutorial/dialog";
-import { Calculus, PSCCalculusType } from "../../../types/calculus";
+import { SequentCalculusType } from "../../../types/calculus";
+import { getFORuleSet, getNormalRuleSet } from "../../../types/calculus/rules";
 import {
     FormulaTreeLayoutNode,
     instanceOfFOSCState,
     instanceOfPSCState,
-    PSCTreeLayoutNode,
+    SequentTreeLayoutNode,
     VarAssign,
-} from "../../../types/calculus/psc";
-import { getFORuleSet, getNormalRuleSet } from "../../../types/calculus/rules";
+} from "../../../types/calculus/sequent";
 import { sendMove } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
-import { nodeName, parseStringToListIndex } from "../../../util/psc";
 import { ruleSetToStringArray } from "../../../util/rule";
+import { nodeName, parseStringToListIndex } from "../../../util/sequent";
 
 import * as style from "./style.scss";
 
 interface Props {
-    calculus: PSCCalculusType;
+    calculus: SequentCalculusType;
 }
 
-const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
+const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const {
         server,
         [calculus]: cState,
@@ -190,6 +190,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     notificationHandler,
                 );
             } else {
+                if (Object.keys(varAssign).length === 0) return;
                 sendMove(
                     server,
                     calculus,
@@ -212,7 +213,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     };
 
     const selectNodeCallback = (
-        newNode: PSCTreeLayoutNode,
+        newNode: SequentTreeLayoutNode,
         selectValue?: boolean,
     ) => {
         if (selectValue === undefined) {
@@ -362,7 +363,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     </div>
                 )}
 
-                <PSCTreeView
+                <SequentTreeView
                     nodes={state.tree}
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
@@ -406,7 +407,7 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             )}
 
-            <PSCFAB
+            <SequentFAB
                 calculus={calculus}
                 state={state}
                 selectedNodeId={selectedNodeId}
@@ -422,9 +423,9 @@ const PSCView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     )
                 }
             />
-            <TutorialDialog calculus={Calculus.psc} />
+            <TutorialDialog calculus={calculus} />
         </Fragment>
     );
 };
 
-export default PSCView;
+export default SequentView;

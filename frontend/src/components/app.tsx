@@ -3,10 +3,10 @@ import DPLLView from "async!../routes/dpll/view";
 import Home from "async!../routes/home";
 import NCTableaux from "async!../routes/nc-tableaux";
 import NCTableauxView from "async!../routes/nc-tableaux/view";
-import PSC from "async!../routes/psc";
-import PSCView from "async!../routes/psc/view";
 import Resolution from "async!../routes/resolution";
 import ResolutionView from "async!../routes/resolution/view";
+import SequentCalculus from "async!../routes/sequent";
+import SequentView from "async!../routes/sequent/view";
 import Tableaux from "async!../routes/tableaux";
 import TableauxView from "async!../routes/tableaux/view";
 import { h } from "preact";
@@ -165,13 +165,19 @@ const App: preact.FunctionalComponent = () => {
                     <NCTableauxView path={`/${Calculus.ncTableaux}/view`} />
                     <DPLL path={`/${Calculus.dpll}`} />
                     <DPLLView path={`/${Calculus.dpll}/view`} />
-                    <PSC path={`/${Calculus.psc}`} calculus={Calculus.psc} />
-                    <PSCView
+                    <SequentCalculus
+                        path={`/${Calculus.psc}`}
+                        calculus={Calculus.psc}
+                    />
+                    <SequentView
                         path={`/${Calculus.psc}/view`}
                         calculus={Calculus.psc}
                     />
-                    <PSC path={`/${Calculus.fosc}`} calculus={Calculus.fosc} />
-                    <PSCView
+                    <SequentCalculus
+                        path={`/${Calculus.fosc}`}
+                        calculus={Calculus.fosc}
+                    />
+                    <SequentView
                         path={`/${Calculus.fosc}/view`}
                         calculus={Calculus.fosc}
                     />
