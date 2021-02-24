@@ -45,12 +45,7 @@ abstract class BinaryOp : LogicNode() {
         return "( $leftChild bop $rightChild)"
     }
 
-    override fun synEq(other: Any?): Boolean {
-        if (other == null || other !is BinaryOp)
-            return false
-
-        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
-    }
+    
 }
 
 abstract class UnaryOp : LogicNode() {

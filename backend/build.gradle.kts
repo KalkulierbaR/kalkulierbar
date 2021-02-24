@@ -2,7 +2,6 @@ plugins {
     kotlin("jvm") version "1.3.50"
     application
     eclipse
-    jacoco
     id("org.jmailen.kotlinter") version "2.1.2"
     id("io.gitlab.arturbosch.detekt") version "1.1.1"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.3.50"

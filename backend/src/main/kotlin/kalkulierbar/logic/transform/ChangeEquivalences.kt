@@ -1,4 +1,4 @@
-package main.kotlin.kalkulierbar.logic.transform
+package kalkulierbar.logic.transform
 
 import kalkulierbar.logic.And
 import kalkulierbar.logic.Equiv

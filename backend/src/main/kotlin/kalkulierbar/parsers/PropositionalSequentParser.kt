@@ -4,7 +4,7 @@ import kalkulierbar.EmptyFormulaException
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.sequentCalculus.psc.PSCState
-import main.kotlin.kalkulierbar.logic.transform.ChangeEquivalences
+import kalkulierbar.logic.transform.ChangeEquivalences
 
 @Suppress("TooManyFunctions")
 open class PropositionalSequentParser {
