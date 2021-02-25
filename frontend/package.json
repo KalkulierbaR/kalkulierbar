@@ -53,6 +53,7 @@
         "@material/radio": "^4.0.0",
         "@material/switch": "^4.0.0",
         "@yarnpkg/pnpify": "^2.0.0-rc.18",
+        "firebase": "^8.2.9",
         "firebase-tools": "^8.0.0",
         "preact": "^10.3.4",
         "preact-markup": "^2.0.0",

@@ -1,0 +1,21 @@
+name: Build and Deploy to kbar.app preview URL
+
+on:
+  pull_request:
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build_and_preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd frontend && yarn && yarn build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KALKULIERBAR_8EDA1 }}'
+          projectId: kalkulierbar-8eda1
+          entryPoint: ./frontend
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels
