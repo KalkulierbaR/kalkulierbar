@@ -75,33 +75,35 @@ const lineUnderNode = (
         });
 
         let lastMove: string = "";
-
-        if (ruleName === "notRight") {
-            lastMove = "¬R";
-        } else if (ruleName === "notLeft") {
-            lastMove = "¬L";
-        } else if (ruleName === "andRight") {
-            lastMove = "∧R";
-        } else if (ruleName === "andLeft") {
-            lastMove = "∧L";
-        } else if (ruleName === "orRight") {
-            lastMove = "∨R";
-        } else if (ruleName === "orLeft") {
-            lastMove = "∨L";
-        } else if (ruleName === "impLeft") {
-            lastMove = "→L";
-        } else if (ruleName === "impRight") {
-            lastMove = "→R";
-        } else if (ruleName === "Ax") {
-            lastMove = "Ax";
-        } else if (ruleName === "exLeft") {
-            lastMove = "∃L";
-        } else if (ruleName === "exRight") {
-            lastMove = "∃R";
-        } else if (ruleName === "allLeft") {
-            lastMove = "∀L";
-        } else if (ruleName === "allRight") {
-            lastMove = "∀R";
+ 
+        switch (ruleName) {
+            case "notRight": 
+                lastMove = "¬R"; break;
+            case "notLeft": 
+                lastMove = "¬L"; break;
+            case "andRight": 
+                lastMove = "∧R"; break;
+            case "andLeft": 
+                lastMove = "∧L"; break;
+            case "orRight": 
+                lastMove = "∨R"; break;
+            case "orLeft": 
+                lastMove = "∨L"; break;
+            case "impLeft": 
+                lastMove = "→L"; break;
+            case "impRight": 
+                lastMove = "→R"; break;
+            case "Ax": 
+                lastMove = "Ax"; break;
+            case "exLeft": 
+                lastMove = "∃L"; break;
+            case "exRight": 
+                lastMove = "∃R"; break;
+            case "allLeft": 
+                lastMove = "∀L"; break;
+            case "allRight": 
+                lastMove = "∀R"; break;
+            default: lastMove = "";
         }
 
         const parentWidth = parentDims.width;
