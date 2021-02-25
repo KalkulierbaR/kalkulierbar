@@ -7,11 +7,13 @@ on:
 
 jobs:
   build-and-preview:
+    name: Build and deploy Preview
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: build
-        uses: actions/checkout@v2
         run: cd frontend && yarn && yarn build
 
       - name: preview
