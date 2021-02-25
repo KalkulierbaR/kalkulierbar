@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - 'frontend/**'
-      - '.github/**'
 
 jobs:
   build-and-preview:
