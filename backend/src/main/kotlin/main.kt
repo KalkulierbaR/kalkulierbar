@@ -17,7 +17,6 @@ import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.StateKeeper
-import kalkulierbar.signedtableaux.SignedModalTableaux
 
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(

@@ -122,6 +122,15 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({calculus}) => {
             resetDragTransform={resetDragTransform}
             resetDragTransforms={resetDragTransforms}
             setShowPrefixDialog={setShowPrefixDialog}
+            pruneCallback={() => {
+                sendMove(
+                server,
+                calculus,
+                state,
+                { type: "prune", nodeID: selectedNodeId! },
+                onChange,
+                notificationHandler,
+                )}}
         />
 
         <PrefixDialog

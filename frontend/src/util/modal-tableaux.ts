@@ -113,10 +113,10 @@ export const isChildOf = (node: ModalTableauxNode, parent: ModalTableauxNode, no
 export const nodeName = (node: ModalTableauxNode) => {
     if(node === undefined) return "";
     return `
-        ${node.sign ? "T " : "F " }
         ${node.prefix.map(
             (prefix, index) => prefix.toString() + (index === node.prefix.length - 1 ? "" : ".")
         )}
+        ${node.sign ? "𝕋 " : "𝔽 " }
         ${node.spelling}
     `;
 };

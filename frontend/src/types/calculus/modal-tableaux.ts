@@ -166,3 +166,7 @@ export interface NegMove {
 export interface UndoMove {
     type: "undo";
 }
+
+export interface ModalTableauxParams {
+    backtracking: boolean;
+} 

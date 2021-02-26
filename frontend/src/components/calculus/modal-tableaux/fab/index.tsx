@@ -14,6 +14,7 @@ import UndoIcon from "../../../icons/undo";
 import { sendMove } from "../../../../util/api";
 
 import * as style from "./style.scss";
+import DeleteIcon from "../../../icons/delete";
 
 
 interface Props {
@@ -53,6 +54,11 @@ interface Props {
      * Whether to show or not to show the prefix dialog
      */
     setShowPrefixDialog: (b: boolean) => void; 
+    /**
+     * Deletes selected Branch
+     */
+    pruneCallback: () => void;
+
 }
 
 const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
@@ -65,6 +71,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
     resetDragTransform,
     resetDragTransforms,
     setShowPrefixDialog,
+    pruneCallback,
 }) => {
     
     const {
@@ -74,7 +81,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
         notificationHandler,
     } = useAppState();
 
-    const showUndoFAB = state.usedBacktracking && state.moveHistory.length > 0;
+    const showUndoFAB = state.backtracking && state.moveHistory.length > 0;
 
     return (
         <Fragment>
@@ -212,7 +219,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             }}
                         />
                         <FAB
-                            icon={<span class={style.greekLetter}>β</span>}
+                            icon={<span class={style.greekLetter}>𝜈</span>}
                             label="Nu"
                             mini={true}
                             extended={true}
@@ -231,6 +238,16 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             onClick={() => {
                                 setSelectedMove({type: "piMove",nodeID: selectedNodeId})
                                 setShowPrefixDialog(true);
+                            }}
+                        />
+                        <FAB
+                            icon={<DeleteIcon />}
+                            label="Prune"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                pruneCallback();
                             }}
                         />
                     </Fragment>
