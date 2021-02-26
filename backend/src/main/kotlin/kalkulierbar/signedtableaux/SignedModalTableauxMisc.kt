@@ -1,7 +1,6 @@
 package kalkulierbar.signedtableaux
 
 import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
@@ -15,8 +14,8 @@ class SignedModalTableauxState(
     val moveHistory = mutableListOf<SignedModalTableauxMove>()
     var usedBacktracking = false
 
-    var usedPrefixes: List<List<Int>> = listOf<List<Int>>(listOf<Int>(1));
-   
+    var usedPrefixes: List<List<Int>> = listOf<List<Int>>(listOf<Int>(1))
+
     var statusMessage: String? = null
 
     override var seal = ""
@@ -43,14 +42,17 @@ class SignedModalTableauxState(
      *       so make sure the closeRef is set before calling this
      * @param leafID The node to mark as closed
      */
-    fun setClosed(leafID: Int) {
-        var node = nodes[leafID]
+    fun setClosed(nodeID: Int) {
+        var node = nodes[nodeID]
         // Set isClosed to true for all nodes dominated by node in reverse tree
-        while (node == nodes[leafID] || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
+        while (node == nodes[nodeID] || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
             node.isClosed = true
             if (node.parent == null)
                 break
             node = nodes[node.parent!!]
+        }
+        childLeavesOf(nodeID).forEach {
+            setClosed(it)
         }
     }
 
@@ -93,15 +95,15 @@ class SignedModalTableauxState(
      * @return whether the prefix is already in use
      */
     fun prefixIsUsedOnBranch(leafID: Int, prefix: List<Int>): Boolean {
-        var node = nodes[leafID];
-        if(prefix.equals(node.prefix))
+        var node = nodes[leafID]
+        if (prefix.equals(node.prefix))
             return true
-        while (node.parent != null){
+        while (node.parent != null) {
             node = nodes[node.parent!!]
-            if(prefix.equals(node.prefix))
+            if (prefix.equals(node.prefix))
                 return true
         }
-        return false;
+        return false
     }
 
     fun render() {

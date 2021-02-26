@@ -1,5 +1,4 @@
 import { Fragment, h } from "preact";
-
 import {
     FormulaTreeLayoutNode,
     SequentTreeLayoutNode,

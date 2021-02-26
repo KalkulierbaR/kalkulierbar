@@ -251,9 +251,9 @@ class Box(override var child: LogicNode) : UnaryOp() {
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Box)
-            return false;
-        
-        return this.child.synEq(other.child);
+            return false
+
+        return this.child.synEq(other.child)
     }
 }
 
@@ -269,8 +269,8 @@ class Diamond(override var child: LogicNode) : UnaryOp() {
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is Diamond)
-            return false;
-        
-        return this.child.synEq(other.child);
+            return false
+
+        return this.child.synEq(other.child)
     }
 }

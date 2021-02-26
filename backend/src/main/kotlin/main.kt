@@ -11,6 +11,7 @@ import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.sequentCalculus.fosc.FOSC
 import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.signedtableaux.SignedModalTableaux
 import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server

@@ -1,8 +1,5 @@
 package kalkulierbar.signedtableaux
 
-import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.FirstOrderTerm
-import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -16,6 +13,7 @@ val SignedModalTablueaxMoveModule = SerializersModule {
         BetaMove::class with BetaMove.serializer()
         NuMove::class with NuMove.serializer()
         PiMove::class with PiMove.serializer()
+        Prune::class with Prune.serializer()
         CloseMove::class with CloseMove.serializer()
         UndoMove::class with UndoMove.serializer()
     }
@@ -52,6 +50,12 @@ class NuMove(val prefix: Int, val nodeID: Int, val leafID: Int?) : SignedModalTa
 @SerialName("piMove")
 class PiMove(val prefix: Int, val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
     override fun toString() = "(piMove|$nodeID)"
+}
+
+@Serializable
+@SerialName("prune")
+class Prune(val nodeID: Int) : SignedModalTableauxMove() {
+    override fun toString() = "(prune|$nodeID)"
 }
 
 @Serializable

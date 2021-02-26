@@ -6,12 +6,9 @@ import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
-import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.parsers.ModalLogicParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
-import kalkulierbar.signedtableaux.Negation
-import kalkulierbar.signedtableaux.applyAlpha
 
 class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>() {
 
@@ -24,7 +21,7 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
         return SignedModalTableauxState(parsedFormula)
     }
 
-    override fun applyMoveOnState(state: SignedModalTableauxState, move:SignedModalTableauxMove): SignedModalTableauxState {
+    override fun applyMoveOnState(state: SignedModalTableauxState, move: SignedModalTableauxMove): SignedModalTableauxState {
         // Clear status message
         state.statusMessage = null
 
@@ -35,11 +32,11 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
             is BetaMove -> applyBeta(state, move.nodeID, move.leafID)
             is NuMove -> applyNu(state, move.prefix, move.nodeID, move.leafID)
             is PiMove -> applyPi(state, move.prefix, move.nodeID, move.leafID)
+            is Prune -> applyPrune(state, move.nodeID)
             is CloseMove -> applyClose(state, move.nodeID, move.leafID)
             is UndoMove -> applyUndo(state)
             else -> throw IllegalMove("Unknown move")
         }
-
     }
 
     /**
@@ -75,7 +72,7 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
 
         if (state.nodes[0].isClosed) {
             val withWithoutBT = if (state.usedBacktracking) "with" else "without"
-            msg = "The proof is closed and valid in non-clausal tableaux $withWithoutBT backtracking"
+            msg = "The proof is closed and valid in signed modal-logic tableaux $withWithoutBT backtracking"
         }
 
         return CloseMessage(state.nodes[0].isClosed, msg)
