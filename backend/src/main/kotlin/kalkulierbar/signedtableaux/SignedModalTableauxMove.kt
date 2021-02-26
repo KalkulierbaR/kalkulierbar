@@ -54,7 +54,7 @@ class PiMove(val prefix: Int, val nodeID: Int, val leafID: Int?) : SignedModalTa
 
 @Serializable
 @SerialName("prune")
-class Prune(val prefix: Int, val nodeID: Int, val leafID: Int?) : SignedModalTableauxMove() {
+class Prune(val nodeID: Int) : SignedModalTableauxMove() {
     override fun toString() = "(prune|$nodeID)"
 }
 

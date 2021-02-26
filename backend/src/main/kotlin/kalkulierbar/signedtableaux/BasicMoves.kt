@@ -312,6 +312,10 @@ fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableau
     }
     node.children.clear()
     node.isClosed = false
+
+    if (state.backtracking)
+        state.moveHistory.add(Prune(nodeID))
+
     return state
 }
 
