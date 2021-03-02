@@ -17,6 +17,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.xerial:sqlite-jdbc:3.32.3.2")
     implementation(kotlin("stdlib"))
     implementation("com.github.komputing:khash:0.9")
     testImplementation(kotlin("test-junit5"))

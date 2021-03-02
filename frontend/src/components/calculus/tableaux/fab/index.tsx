@@ -1,20 +1,21 @@
 import { Fragment, h } from "preact";
-import ControlFAB from "../../../input/control-fab";
-import FAB from "../../../input/fab";
-import AddIcon from "../../../icons/add";
+
+import { TableauxCalculusType } from "../../../../types/calculus";
 import {
     FOTableauxState,
     PropTableauxState,
 } from "../../../../types/calculus/tableaux";
 import { useAppState } from "../../../../util/app-state";
 import { nextOpenLeaf, sendBacktrack } from "../../../../util/tableaux";
-import DownloadFAB from "../../../input/fab/download";
+import AddIcon from "../../../icons/add";
 import ExploreIcon from "../../../icons/explore";
 import LemmaIcon from "../../../icons/lemma";
 import UndoIcon from "../../../icons/undo";
-import {TableauxCalculusType} from "../../../../types/calculus";
-import CheckCloseFAB from "../../../input/fab/check-close";
+import ControlFAB from "../../../input/control-fab";
+import FAB from "../../../input/fab";
 import CenterFAB from "../../../input/fab/center";
+import CheckCloseFAB from "../../../input/fab/check-close";
+import DownloadFAB from "../../../input/fab/download";
 
 interface Props {
     /**
@@ -105,8 +106,8 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 }}
                             />
                         )}
-                        <CenterFAB resetDragTransforms={resetDragTransforms}/>
-                        <CheckCloseFAB calculus={calculus}/>
+                        <CenterFAB resetDragTransforms={resetDragTransforms} />
+                        <CheckCloseFAB calculus={calculus} />
                         {showUndoFAB && (
                             <FAB
                                 icon={<UndoIcon />}
@@ -140,7 +141,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 ) : (
                     <Fragment>
-                        <CenterFAB resetDragTransforms={resetDragTransforms}/>
+                        <CenterFAB resetDragTransforms={resetDragTransforms} />
                         <FAB
                             icon={<AddIcon />}
                             label="Expand"

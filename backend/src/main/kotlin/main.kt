@@ -17,6 +17,9 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.StateKeeper
 
+import java.sql.*
+import kalkulierbar.sqlite.DatabaseHandler
+
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
         PropositionalTableaux(),
@@ -47,6 +50,12 @@ fun main(args: Array<String>) {
     val listenGlobally = args.isNotEmpty() && (args[0] == "--global" || args[0] == "-g")
 
     httpApi(port, endpoints, listenGlobally)
+
+
+
+    val db = DatabaseHandler("psc")
+    // db.insert("a -> a", "user1")
+    db.query()
 }
 
 fun getEnvPort() = System.getenv("PORT")?.toInt() ?: KBAR_DEFAULT_PORT

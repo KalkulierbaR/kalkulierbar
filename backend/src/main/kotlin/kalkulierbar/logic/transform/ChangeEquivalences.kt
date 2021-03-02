@@ -2,9 +2,8 @@ package main.kotlin.kalkulierbar.logic.transform
 
 import kalkulierbar.logic.And
 import kalkulierbar.logic.Equiv
+import kalkulierbar.logic.Impl
 import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
 import kalkulierbar.logic.transform.DoNothingVisitor
 
 class ChangeEquivalences : DoNothingVisitor() {
@@ -23,9 +22,10 @@ class ChangeEquivalences : DoNothingVisitor() {
         // Cloning the sub-terms here is important!
         // Not cloning leads to object-reuse which causes all sorts of weirdness
         // especially when used with Quantifiers
-        val bothTrue = And(left, right)
-        val bothFalse = And(Not(left.clone()), Not(right.clone()))
 
-        return Or(bothTrue, bothFalse).accept(this)
+        val implToRight = Impl(left.clone(), right.clone())
+        val implToLeft = Impl(right.clone(), left.clone())
+
+        return And(implToRight, implToLeft)
     }
 }

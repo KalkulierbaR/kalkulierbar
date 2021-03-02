@@ -1,8 +1,8 @@
-import { RuleSet } from "./rules";
-import { PropCalculusType, Calculus, FOCalculusType, PSCCalculusType } from ".";
 import { KStringMap } from "../kotlin";
 
-export interface PSCNode {
+import { Calculus, SequentCalculusType } from ".";
+
+export interface SequentNode {
     type: string;
     parent: number | null;
     children: number[];
@@ -22,71 +22,70 @@ export interface FormulaNode {
     arguments: FormulaNode[] | null;
 }
 
-export type PSCTreeLayoutNode = PSCNode & { id: number};
+export type SequentTreeLayoutNode = SequentNode & { id: number };
 
-export type FormulaTreeLayoutNode = FormulaNode & { id: string};
+export type FormulaTreeLayoutNode = FormulaNode & { id: string };
 
 export type VarAssign = KStringMap<string>;
 
 export interface PSCState {
-    tree: PSCNode[];
+    tree: SequentNode[];
     moveHistory: PSCMove[];
     showOnlyApplicableRules: boolean;
 }
-export interface FOSCState{
-    tree: PSCNode[];
+export interface FOSCState {
+    tree: SequentNode[];
     moveHistory: PSCMove[];
     showOnlyApplicableRules: boolean;
 }
 
 export function instanceOfPSCState(
     object: any,
-    calculus: PSCCalculusType,
+    calculus: SequentCalculusType,
 ): object is PSCState {
     return "tree" in object && calculus === Calculus.psc;
 }
 export function instanceOfFOSCState(
     object: any,
-    calculus: PSCCalculusType,
-): object is FOSCState{
+    calculus: SequentCalculusType,
+): object is FOSCState {
     return "tree" in object && calculus === Calculus.fosc;
 }
 
 export type PSCMove =
-    PSCAxMove | PSCRuleMove | PSCUndoMove | PSCPruneMove;
+    | SequentAxMove
+    | SequentRuleMove
+    | SequentUndoMove
+    | SequentPruneMove;
 
 export type FOSCMove = PSCMove | SCCloseAssignMove;
 
-export interface SCCloseAssignMove{
+export interface SCCloseAssignMove {
     type: string;
     nodeID: number;
     listIndex: number;
     varAssign: VarAssign;
 }
-export interface PSCRuleMove {
-    type: string
+export interface SequentRuleMove {
+    type: string;
     nodeID: number;
     listIndex: number;
 }
 
-export interface PSCAxMove {
+export interface SequentAxMove {
     type: "Ax";
     nodeID: number;
 }
 
-export interface PSCUndoMove {
+export interface SequentUndoMove {
     type: "undo";
 }
 
-export interface PSCPruneMove {
-    type: "prune"
+export interface SequentPruneMove {
+    type: "prune";
     nodeID: number;
 }
 
-export enum PSCType {
-    help = "HELP"
-}
-
-export interface PSCParams {
+export interface SequentParams {
     showOnlyApplicableRules: boolean;
 }

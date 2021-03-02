@@ -1,5 +1,6 @@
 import { h } from "preact";
 import { useMemo } from "preact/hooks";
+
 import { ClauseSet } from "../../../../types/calculus/clause";
 import { DPLLState } from "../../../../types/calculus/dpll";
 import { useAppState } from "../../../../util/app-state";
