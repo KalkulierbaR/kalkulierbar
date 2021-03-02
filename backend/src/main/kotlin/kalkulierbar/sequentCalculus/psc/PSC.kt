@@ -4,6 +4,8 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
+import kalkulierbar.Statistic
+import kalkulierbar.StatisticCalculus
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.PropositionalSequentParser
 import kalkulierbar.sequentCalculus.*
@@ -16,7 +18,7 @@ import kalkulierbar.sequentCalculus.moveImplementations.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>() {
+class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>(), StatisticCalculus<PSCState> {
 
     private val serializer = Json(context = LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
 
@@ -120,5 +122,41 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
             val msg = "Could not parse JSON params"
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
+    }
+
+    /**
+    * Calculates the statistics for a given proof
+    * @param state A closed state
+    * @return The statistics for the given state
+    */
+    override fun getStatistic(state: String): String {
+        return statisticToJson(getStatisticOnState(jsonToState(state)))
+    }
+
+    /**
+     * Takes in a State of the given calculus
+     * @param state Current state object
+     * @return The statisitcs of the given object
+     */
+    override fun getStatisticOnState(state: PSCState): Statistic {
+        return SequentCalculusStatistic(state.tree.size)
+    }
+
+    /**
+     * Serializes a statistics object to JSON
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    override fun statisticToJson(statistic: Statistic): String {
+        return serializer.stringify(SequentCalculusStatistic.serializer(), (statistic as SequentCalculusStatistic))
+    }
+
+    /**
+     * Returns the intitial formula of the state.
+     * @param state state representation
+     * @return string representing the initial formula of the state
+     */
+    override fun getStartingFormula(state: String): String {
+        return jsonToState(state).tree[0].toString()
     }
 }

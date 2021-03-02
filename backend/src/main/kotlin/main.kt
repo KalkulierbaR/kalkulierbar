@@ -1,24 +1,24 @@
 package main.kotlin
 
 import io.javalin.Javalin
+import java.sql.*
 import kalkulierbar.ApiMisuseException
 import kalkulierbar.Calculus
 import kalkulierbar.KBAR_DEFAULT_PORT
 import kalkulierbar.KalkulierbarException
+import kalkulierbar.StatisticCalculus
 import kalkulierbar.dpll.DPLL
 import kalkulierbar.nonclausaltableaux.NonClausalTableaux
 import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.sequentCalculus.fosc.FOSC
 import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.sqlite.DatabaseHandler
 import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.StateKeeper
-
-import java.sql.*
-import kalkulierbar.sqlite.DatabaseHandler
 
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
@@ -49,16 +49,21 @@ fun main(args: Array<String>) {
     // Only listen globally if cli argument is present
     val listenGlobally = args.isNotEmpty() && (args[0] == "--global" || args[0] == "-g")
 
+    initDatabase(endpoints)
+
     httpApi(port, endpoints, listenGlobally)
-
-
-
-    val db = DatabaseHandler("psc")
-    // db.insert("a -> a", "user1")
-    db.query()
 }
 
 fun getEnvPort() = System.getenv("PORT")?.toInt() ?: KBAR_DEFAULT_PORT
+
+fun initDatabase(endpoints: Set<Calculus>) {
+    DatabaseHandler.init()
+
+    for (endpoint in endpoints) {
+        if (endpoint is StatisticCalculus<*>)
+            DatabaseHandler.createTable(endpoint.identifier)
+    }
+}
 
 /**
  * Starts a Javalin Server and creates API methods for active calculus objects
@@ -142,11 +147,27 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
             ctx.result(endpoint.checkClose(state))
         }
 
-        // Close endpoint takes state parameter value and passes it to calculus implementation
-        app.post("/$name/statistics") { ctx ->
-            val state = ctx.formParam("state")
-                    ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
-            ctx.result(endpoint.getStatistics(state))
+        if (endpoint is StatisticCalculus<*>) {
+            // Get statistics for a calculus and a formula
+            app.post("/$name/statistics") { ctx ->
+                val state = ctx.formParam("state")
+                        ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
+                ctx.result(endpoint.getStatistic(state))
+            }
+
+            // Save the statistic under the given name
+            app.post("/$name/save-statistics") { ctx ->
+                val state = ctx.formParam("state")
+                        ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
+                val name = ctx.formParam("name")
+                        ?: throw ApiMisuseException("POST parameter 'name' with name must be present")
+
+                val identifier = endpoint.identifier
+                val rootFormula = endpoint.getStartingFormula(state)
+                val statistic = endpoint.getStatistic(state)
+                DatabaseHandler.insert(identifier, rootFormula, statistic, 1)
+                ctx.result("name: " + name)
+            }
         }
     }
 

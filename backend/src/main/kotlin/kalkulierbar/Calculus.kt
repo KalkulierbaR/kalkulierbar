@@ -42,11 +42,4 @@ interface Calculus {
      * @return string representing proof state (closed/open) with an optional message
      */
     fun checkClose(state: String): String
-
-    /**
-     * Calculates the statistics for the given closed state.
-     * @param state state representation
-     * @return string representing the statistics of the given proof
-     */
-    fun getStatistics(state: String): String
 }

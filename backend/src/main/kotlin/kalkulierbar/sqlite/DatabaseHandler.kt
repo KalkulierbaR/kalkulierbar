@@ -2,66 +2,55 @@ package kalkulierbar.sqlite
 
 import java.sql.*
 
+class DatabaseHandler {
 
-class DatabaseHandler(
-) {
+    companion object {
+        private var connection: Connection? = null
 
-    private var connection: Connection? = null;
-    private var identifier: String = "";
-
-    constructor(identifier: String): this() {
-        this.identifier = identifier
-        try {
-            Class.forName("org.sqlite.JDBC")
-            connection = DriverManager.getConnection("jdbc:sqlite:test.db")
-            this.createTable()
-        } catch(e: Exception) {
-            println("Connection could not be established")
-            println(e.message)
-        }
-    }
-
-    public fun createTable() {
-        if (connection != null) {
-            val stmt = (connection as Connection).createStatement()
-            val create: String = 
-                "create table if not exists $identifier (formula varchar(255), name varchar(30));"
-            stmt.execute(create)
-            stmt.close()
-        }
-    }
-
-    public fun insert(keyFormula: String, name: String) {
-        if (connection != null) {
-            val stmt = (connection as Connection).createStatement()
-            val insert: String =
-                "INSERT INTO $identifier VALUES (\"$keyFormula\", \"$name\");"
-            stmt.execute(insert)
-            stmt.close()
-        }
-    }
-
-    // public fun insert(keyFormula: String, statistics: Any) {
-    //     if (connection != null) {
-    //         val stmt = (connection as Connection).createStatement()
-    //         val query: String = "SELECT * FROM a;" 
-    //         val a: ResultSet = stmt.executeQuery(query)
-    //         println("Result:")
-    //         println(a.getString(1).toString())
-    //         stmt.close()
-    //     }
-    // }
-
-    public fun query() {
-        if (connection != null) {
-            val stmt = (connection as Connection).createStatement()
-            val query: String = "SELECT * FROM $identifier;" 
-            val a: ResultSet = stmt.executeQuery(query)
-            println("Result:")
-            while (a.next()) {
-                println(a.getString(1).toString() + ", " + a.getString(2).toString())
+        public fun init() {
+            try {
+                Class.forName("org.sqlite.JDBC")
+                connection = DriverManager.getConnection("jdbc:sqlite:test.db")
+            } catch (e: Exception) {
+                println("Connection to database could not be established")
+                println(e.message)
             }
-            stmt.close()
+        }
+
+        public fun createTable(identifier: String) {
+            if (connection != null) {
+                val stmt = (connection as Connection).createStatement()
+                val create: String =
+                    "CREATE TABLE IF NOT EXISTS $identifier (formula VARCHAR(8000) NOT NULL PRIMARY KEY, statistics VARCHAR(8000) NOT NULL, score INTEGER NOT NULL);"
+                println(create)
+                stmt.execute(create)
+                stmt.close()
+            }
+        }
+
+        public fun insert(identifier: String, keyFormula: String, statisticsJSON: String, score: Int) {
+            if (connection != null) {
+                val stmt = (connection as Connection).createStatement()
+                val insert: String =
+                    "INSERT INTO $identifier VALUES (\"$keyFormula\", \"$statisticsJSON\", $score);"
+                println(insert);
+                stmt.execute(insert)
+                stmt.close()
+            }
+        }
+
+        public fun query(identifier: String, formula: String): MutableList<String> {
+            val returnList = mutableListOf<String>()
+            if (connection != null) {
+                val stmt = (connection as Connection).createStatement()
+                val query: String = "SELECT * FROM $identifier WHERE formula = $formula ORDER BY score DESC;"
+                val result: ResultSet = stmt.executeQuery(query)
+                while (result.next()) {
+                    returnList.add(result.getString(2).toString())
+                }
+                stmt.close()
+            }
+            return returnList
         }
     }
 }
