@@ -115,6 +115,27 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      */
     @kotlinx.serialization.UnstableDefault
     fun closeToJson(close: CloseMessage) = Json.stringify(CloseMessage.serializer(), close)
+
+    /**
+    * Calculates the statistics for a given proof
+    * @param state A closed state
+    * @return The statistics for the given state 
+    */
+    fun getStatistics(state: String) = Json.stringify(Statistics.serializer(), jsonToState(state))
+
+    /**
+     * Takes in a State of the given calculus
+     * @param state Current state object
+     * @return The statisitcs of the given object
+     */
+    abstract fun getStatisticsOnState(state: State): Statisitcs
+
+    /**
+     * Serializes a statistics object to JSON
+     * @param statistics Statistics object
+     * @return JSON statistics representation
+     */
+    abstract fun statisticsToJson(statistics : Statistics): String
 }
 
 @Serializable

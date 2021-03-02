@@ -132,6 +132,13 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
                     ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
             ctx.result(endpoint.checkClose(state))
         }
+
+        // Close endpoint takes state parameter value and passes it to calculus implementation
+        app.post("/$name/statistics") { ctx ->
+            val state = ctx.formParam("state")
+                    ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
+            ctx.result(endpoint.getStatistics(state))
+        }
     }
 
     // Create admin interface and config endpoints
