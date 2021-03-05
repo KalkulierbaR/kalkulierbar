@@ -22,18 +22,17 @@ class DatabaseHandler {
                 val stmt = (connection as Connection).createStatement()
                 val create: String =
                     "CREATE TABLE IF NOT EXISTS $identifier (formula VARCHAR(8000) NOT NULL PRIMARY KEY, statistics VARCHAR(8000) NOT NULL, score INTEGER NOT NULL);"
-                println(create)
                 stmt.execute(create)
                 stmt.close()
             }
         }
 
         public fun insert(identifier: String, keyFormula: String, statisticsJSON: String, score: Int) {
+            statisticsJSON.replace("\"", "\\\"")
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
                 val insert: String =
-                    "INSERT INTO $identifier VALUES (\"$keyFormula\", \"$statisticsJSON\", $score);"
-                println(insert);
+                    "INSERT INTO $identifier VALUES (\"$keyFormula\", '$statisticsJSON', $score);"
                 stmt.execute(insert)
                 stmt.close()
             }
@@ -43,10 +42,11 @@ class DatabaseHandler {
             val returnList = mutableListOf<String>()
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
-                val query: String = "SELECT * FROM $identifier WHERE formula = $formula ORDER BY score DESC;"
+                val query: String = "SELECT * FROM $identifier WHERE formula = \"$formula\" ORDER BY score DESC;"
                 val result: ResultSet = stmt.executeQuery(query)
                 while (result.next()) {
-                    returnList.add(result.getString(2).toString())
+                    val tmp = result.getString(2).toString()
+                    returnList.add(tmp)
                 }
                 stmt.close()
             }

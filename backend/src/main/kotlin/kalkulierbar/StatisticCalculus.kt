@@ -6,7 +6,7 @@ interface StatisticCalculus<State> {
     * @param state A closed state
     * @return The statistics for the given state
     */
-    fun getStatistic(state: String): String
+    fun getStatistic(state: String, name: String?): String
 
     /**
      * Takes in a State of the given calculus
@@ -21,6 +21,20 @@ interface StatisticCalculus<State> {
      * @return JSON statistics representation
      */
     fun statisticToJson(statistic: Statistic): String
+
+    /**
+     * Serializes a List<Statistic> object to JSON
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    fun statisticsToJson(statistics: List<Statistic>): String
+
+    /**
+     * Parses a json object to Statistic
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    fun jsonToStatistic(json: String): Statistic
 
     /**
      * Returns the intitial formula of the state.

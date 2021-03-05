@@ -20,6 +20,13 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.StateKeeper
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.json.json
+import kotlinx.serialization.serializer
+import kotlinx.serialization.list
+
+
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
         PropositionalTableaux(),
@@ -148,25 +155,37 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         }
 
         if (endpoint is StatisticCalculus<*>) {
+
             // Get statistics for a calculus and a formula
             app.post("/$name/statistics") { ctx ->
                 val state = ctx.formParam("state")
                         ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
-                ctx.result(endpoint.getStatistic(state))
+
+                //Read the statistics which are currently saved in the database (saved as Json-Strings)
+                val statisticsAsStrings = DatabaseHandler.query(endpoint.identifier, endpoint.getStartingFormula(state))
+                //add the current statistic without name to the resultset
+                statisticsAsStrings.add(endpoint.getStatistic(state, null))
+
+                //Parse the Json-Strings to the Statistic class
+                val statistics = statisticsAsStrings.map { endpoint.jsonToStatistic(it) }
+                
+                //Serialize the List of Statistics back to a Json-String
+                ctx.result(endpoint.statisticsToJson(statistics))
             }
 
             // Save the statistic under the given name
             app.post("/$name/save-statistics") { ctx ->
                 val state = ctx.formParam("state")
                         ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
-                val name = ctx.formParam("name")
+                val userName = ctx.formParam("name")
                         ?: throw ApiMisuseException("POST parameter 'name' with name must be present")
 
                 val identifier = endpoint.identifier
                 val rootFormula = endpoint.getStartingFormula(state)
-                val statistic = endpoint.getStatistic(state)
-                DatabaseHandler.insert(identifier, rootFormula, statistic, 1)
-                ctx.result("name: " + name)
+                val statistic = endpoint.getStatistic(state, userName)
+                val statisticAsStatistic = endpoint.jsonToStatistic(statistic)
+                DatabaseHandler.insert(identifier, rootFormula, statistic, statisticAsStatistic.score)
+                ctx.result("name: " + userName)
             }
         }
     }
