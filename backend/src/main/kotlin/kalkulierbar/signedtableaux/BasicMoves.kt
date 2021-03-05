@@ -362,9 +362,6 @@ private fun checkCloseIDRestrictions(state: SignedModalTableauxState, nodeID: In
     // Verify that closeNode is transitive parent of node
     if (!state.nodeIsParentOf(nodeID, closeID))
         throw IllegalMove("Node '$closeNode' is not an ancestor of node '$node'")
-
-    if (!closeNode.isLeaf)
-        throw IllegalMove("Node '$closeNode' is not a Leaf.")
 }
 
 /**

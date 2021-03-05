@@ -51,8 +51,11 @@ class SignedModalTableauxState(
                 break
             node = nodes[node.parent!!]
         }
-        childLeavesOf(nodeID).forEach {
-            setClosed(it)
+        node = nodes[nodeID]
+        if(!node.isLeaf){
+            childLeavesOf(nodeID).forEach {
+                setClosed(it)
+            }
         }
     }
 
