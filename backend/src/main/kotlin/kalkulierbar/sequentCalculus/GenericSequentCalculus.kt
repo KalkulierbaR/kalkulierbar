@@ -1,5 +1,6 @@
 package kalkulierbar.sequentCalculus
 
+import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -82,3 +83,16 @@ class TreeNode(
 data class SequentCalculusParam(
     val showOnlyApplicableRules: Boolean
 )
+
+@Serializable
+class SequentCalculusStatistic(
+    val nodeAmount: Int,
+    override var userName: String?
+) : Statistic {
+
+    override val score: Int = calculateScore()
+
+    override fun calculateScore(): Int {
+        return nodeAmount
+    }
+}
