@@ -3,7 +3,3 @@ export interface Entry {
     score: number,
     nodeAmount: number | null,
 }
-
-export interface Statistics{
-    table: Entry[],
-}

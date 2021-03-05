@@ -1,7 +1,7 @@
 import { CheckCloseResponse } from "../types/app/api";
 import { AppState, AppStateUpdater } from "../types/app/app-state";
 import { NotificationHandler, NotificationType } from "../types/app/notification";
-import { Statistics } from "../types/app/statistics";
+import { Entry } from "../types/app/statistics";
 import { Calculus, CalculusType, Move } from "../types/calculus";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
@@ -17,7 +17,7 @@ export type checkCloseFn<C extends CalculusType = CalculusType> = (
  * @param {NotificationHandler} notificationHandler - Notification handler
  * @param {C} calculus - Calculus endpoint
  * @param {any} state - Current state for the calculus
- * @param {void} onProofen - the function to call if proof is valid
+ * @param {void} onProoven - the function to call if proof is valid
  * @returns {Promise<void>} - Resolves when the request is done
  */
 export const checkClose = async <C extends CalculusType = CalculusType>(
@@ -25,7 +25,7 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     notificationHandler: NotificationHandler,
     calculus: C,
     state: AppState[C],
-    onProofen?: (stats: Statistics) => void,
+    onProoven?: (stats: Entry[]) => void,
 ) => {
     const url = `${server}/${calculus}/close`;
     try {
@@ -46,8 +46,8 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
             if (closed) {
                 notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));
-                if(onProofen !== undefined){
-                    getStatistics(server,calculus,state,notificationHandler,onProofen);
+                if(onProoven !== undefined){
+                    getStatistics(server,calculus,state,notificationHandler,onProoven);
                 }
             } else {
                 notificationHandler.error(msg);
@@ -63,7 +63,7 @@ export const getStatistics = async <C extends CalculusType = CalculusType>(
     calculus: C,
     state: AppState[C],
     notificationHandler: NotificationHandler,
-    onProofen: (stats: Statistics) => void
+    onProoven: (stats: Entry[]) => void
 ) => {
     const url = `${server}/${calculus}/statistics`;
     try {
@@ -77,7 +77,7 @@ export const getStatistics = async <C extends CalculusType = CalculusType>(
         if(response.status !== 200){
             notificationHandler.error(await response.text());
         }else{
-            onProofen(await response.json() as Statistics);
+            onProoven((await response.json() as Entry[]));
         }
     }catch (e) {
         notificationHandler.error((e as Error).message);

@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { Statistics } from "../../../../types/app/statistics";
+import { Entry } from "../../../../types/app/statistics";
 
 import { SequentCalculusType } from "../../../../types/calculus";
 import { FOSCState, PSCState } from "../../../../types/calculus/sequent";
@@ -37,7 +37,7 @@ interface Props {
     /**
      * Opens Save Dialog
      */
-    closeCallback: (stats: Statistics) => void;
+    closeCallback: (stats: Entry[]) => void;
 }
 
 const SequentFAB: preact.FunctionalComponent<Props> = ({
@@ -71,7 +71,7 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
                         />
                         <CheckCloseFAB
                             calculus={calculus}
-                            onProofen={closeCallback}
+                            onProoven={closeCallback}
                         />
                         <FAB
                             icon={<UndoIcon />}

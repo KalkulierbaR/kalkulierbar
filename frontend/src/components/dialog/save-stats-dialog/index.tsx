@@ -1,7 +1,7 @@
 import { h } from "preact";
 
 import Dialog from "..";
-import { Statistics } from "../../../types/app/statistics";
+import { Entry } from "../../../types/app/statistics";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
@@ -31,7 +31,7 @@ interface Props {
     /**
      * Statistics of current Calculus
      */
-    stats?: Statistics;
+    stats?: Entry[];
     /**
      * Additional className for the element
      */
@@ -96,8 +96,13 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
             onClose={onClose}
             class={className}
         >
-            {`${stats?.table[0].userName}`}
-            {""}
+            {stats !== undefined && (
+                <p>
+                    {`${stats[0].score}`}
+                    {""}
+                </p>
+           
+            )}
             {"Please enter your name to save the close proof."}
             {""}
             <TextInput

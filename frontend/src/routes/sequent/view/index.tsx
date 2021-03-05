@@ -9,7 +9,7 @@ import SaveStatsDialog from "../../../components/dialog/save-stats-dialog";
 import VarAssignDialog from "../../../components/dialog/var-assign";
 import OptionList from "../../../components/input/option-list";
 import TutorialDialog from "../../../components/tutorial/dialog";
-import { Statistics } from "../../../types/app/statistics";
+import { Entry } from "../../../types/app/statistics";
 import { SequentCalculusType } from "../../../types/calculus";
 import { getFORuleSet, getNormalRuleSet } from "../../../types/calculus/rules";
 import {
@@ -76,7 +76,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
     const [varOrigins, setVarOrigins] = useState<string[]>([]);
 
-    const [stats, setStats] = useState<Statistics | undefined>(undefined);
+    const [stats, setStats] = useState<Entry[] | undefined>(undefined);
 
     const selectRuleCallback = (newRuleId: number) => {
         if (newRuleId === selectedRuleId) {
@@ -405,6 +405,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 open={showSaveDialog}
                 onClose={() => setShowSaveDialog(false)}
                 submitCallback={() => setShowSaveDialog(false)}
+                stats={stats}
             />
 
             {instanceOfFOSCState(state, calculus) && (
@@ -434,7 +435,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         notificationHandler,
                     )
                 }
-                closeCallback={(statistics: Statistics) => {
+                closeCallback={(statistics: Entry[]) => {
                     setStats(statistics)
                     setShowSaveDialog(true)
                 }}

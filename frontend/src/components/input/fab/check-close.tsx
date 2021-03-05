@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { Statistics } from "../../../types/app/statistics";
+import { Entry } from "../../../types/app/statistics";
 
 import { TutorialMode } from "../../../types/app/tutorial";
 import { CalculusType } from "../../../types/calculus";
@@ -21,12 +21,12 @@ interface Props {
     /**
      * Function to call when the proof is valid
      */
-    onProofen?: (stats: Statistics) => void;
+    onProoven?: (stats: Entry[]) => void;
 }
 
 const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
     calculus,
-    onProofen,
+    onProoven,
 }) => {
     const {
         tutorialMode,
@@ -56,7 +56,7 @@ const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
                     notificationHandler,
                     calculus,
                     state,
-                    onProofen,
+                    onProoven,
                 );
             }}
         />
