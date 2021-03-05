@@ -1,7 +1,8 @@
 import { CheckCloseResponse } from "../types/app/api";
 import { AppState, AppStateUpdater } from "../types/app/app-state";
-import { NotificationHandler } from "../types/app/notification";
-import { CalculusType, Move } from "../types/calculus";
+import { NotificationHandler, NotificationType } from "../types/app/notification";
+import { Statistics } from "../types/app/statistics";
+import { Calculus, CalculusType, Move } from "../types/calculus";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
@@ -24,7 +25,7 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     notificationHandler: NotificationHandler,
     calculus: C,
     state: AppState[C],
-    onProofen?: () => void,
+    onProofen?: (stats: Statistics) => void,
 ) => {
     const url = `${server}/${calculus}/close`;
     try {
@@ -45,8 +46,8 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
             if (closed) {
                 notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));
-                if (onProofen !== undefined) {
-                    onProofen();
+                if(onProofen !== undefined){
+                    getStatistics(server,calculus,state,notificationHandler,onProofen);
                 }
             } else {
                 notificationHandler.error(msg);
@@ -56,6 +57,58 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
         notificationHandler.error((e as Error).message);
     }
 };
+
+export const getStatistics = async <C extends CalculusType = CalculusType>(
+    server: string,
+    calculus: C,
+    state: AppState[C],
+    notificationHandler: NotificationHandler,
+    onProofen: (stats: Statistics) => void
+) => {
+    const url = `${server}/${calculus}/statistics`;
+    try {
+        const response = await fetch(url , {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `state=${encodeURIComponent(JSON.stringify(state))}`,
+        });
+        if(response.status !== 200){
+            notificationHandler.error(await response.text());
+        }else{
+            onProofen(await response.json() as Statistics);
+        }
+    }catch (e) {
+        notificationHandler.error((e as Error).message);
+    }
+};
+
+export const saveStatistics = async <C extends CalculusType = CalculusType>(
+    server: string,
+    calculus: C,
+    state: AppState[C],
+    notificationHandler: NotificationHandler,
+    name: string,
+) => {
+    const url = `${server}/${calculus}/save-statistics`;
+    try {
+        const response = await fetch(url , {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `name=${name}&state=${encodeURIComponent(JSON.stringify(state))}`,  
+        });
+        if(response.status !== 200){
+            notificationHandler.error(await response.text());
+        } else {
+           notificationHandler.message(NotificationType.Success,"Proof saved as " + (await response.text()))
+        }
+    }catch (e) {
+        notificationHandler.error((e as Error).message);
+    }
+}
 
 /**
  * Checks that a state is valid for the given calculus

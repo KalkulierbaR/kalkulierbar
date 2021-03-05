@@ -25,7 +25,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
     const toggle = useCallback(() => setOpen(!open), [open]);
     const setClosed = useCallback(() => setOpen(false), [setOpen]);
 
-    const right = smallScreen ? (
+    const right = window.innerWidth < 950 ? (
         <Hamburger open={open} onClick={toggle} />
     ) : (
         <Fragment>
@@ -61,7 +61,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
             />
             <Dialog
                 class={style.dialog}
-                open={!smallScreen && open}
+                open={!(window.innerWidth < 900) && open}
                 label="Settings"
                 onClose={setClosed}
             >
