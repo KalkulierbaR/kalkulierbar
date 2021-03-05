@@ -1,4 +1,5 @@
 import { DPLLMove } from "./dpll";
+import { ModalTableauxMove, ModalTableauxParams } from "./modal-tableaux";
 import { NCTableauxMove } from "./nc-tableaux";
 import {
     FOResolutionMove,
@@ -7,17 +8,32 @@ import {
     PropResolutionParams,
 } from "./resolution";
 import { FOSCMove, PSCMove, SequentParams } from "./sequent";
-import { ModalTableauxMove } from "./modal-tableaux";
-import { FOTableauxMove, FOTableauxParams, PropTableauxParams, TableauxMove } from "./tableaux";
+import {
+    FOTableauxMove,
+    FOTableauxParams,
+    PropTableauxParams,
+    TableauxMove,
+} from "./tableaux";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
-export type PSCCalculusType ="psc"|"fosc";
-export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll" | "psc";
-export type FOCalculusType = "fo-tableaux" | "fo-resolution" | "nc-tableaux"| "fosc";
-export type SequentCalculusType = "psc" | "fosc"
+export type PSCCalculusType = "psc" | "fosc";
+export type PropCalculusType =
+    | "prop-tableaux"
+    | "prop-resolution"
+    | "dpll"
+    | "psc";
+export type FOCalculusType =
+    | "fo-tableaux"
+    | "fo-resolution"
+    | "nc-tableaux"
+    | "fosc";
+export type SequentCalculusType = "psc" | "fosc";
 export type ModalCalculusType = "signed-modal-tableaux";
-export type CalculusType = FOCalculusType | PropCalculusType | ModalCalculusType;
+export type CalculusType =
+    | FOCalculusType
+    | PropCalculusType
+    | ModalCalculusType;
 
 export enum Calculus {
     propTableaux = "prop-tableaux",
@@ -27,7 +43,7 @@ export enum Calculus {
     ncTableaux = "nc-tableaux",
     dpll = "dpll",
     psc = "psc",
-    fosc ="fosc",
+    fosc = "fosc",
     modalTableaux = "signed-modal-tableaux",
 }
 
@@ -63,8 +79,8 @@ export interface Move {
     "nc-tableaux": NCTableauxMove;
     dpll: DPLLMove;
     psc: PSCMove;
-    fosc:FOSCMove;
-    "singed-modal-tableax": ModalTableauxMove;
+    fosc: FOSCMove;
+    "signed-modal-tableaux": ModalTableauxMove;
 }
 
 /**
@@ -79,6 +95,7 @@ export interface Params {
     dpll: null;
     psc: SequentParams;
     fosc: SequentParams;
+    "signed-modal-tableaux": ModalTableauxParams;
 }
 
 /**

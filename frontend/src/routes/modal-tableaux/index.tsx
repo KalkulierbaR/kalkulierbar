@@ -1,44 +1,37 @@
 import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
+
 import HintIcon, { Hint } from "../../components/hint";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Switch from "../../components/input/switch";
-import { Calculus, ModalCalculusType } from "../../types/calculus";
+import { ModalCalculusType } from "../../types/calculus";
 import { ModalTableauxParams } from "../../types/calculus/modal-tableaux";
 import { useAppState } from "../../util/app-state";
 
-interface Props{
+interface Props {
     calculus: ModalCalculusType;
 }
 
-const ModalTableaux: preact.FunctionalComponent<Props> = ({
-    calculus,
-}
-) => {
+const ModalTableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const { smallScreen } = useAppState();
 
     const [backtracking, setBacktracking] = useState(true);
 
     const Params: ModalTableauxParams = {
         backtracking,
-    }
-    let params = Params;
-    
+    };
+    const params = Params;
 
     return (
         <Fragment>
-            <Format 
+            <Format
                 foLogic={false}
                 allowClauses={true}
-                allowSequences={false}    
+                allowSequences={false}
             />
-            <FormulaInput
-                calculus={calculus}
-                foLogic={false}
-                params={params}
-            />
+            <FormulaInput calculus={calculus} foLogic={false} params={params} />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />

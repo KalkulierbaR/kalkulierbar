@@ -5,6 +5,7 @@ import { useState } from "preact/hooks";
 import SequentFAB from "../../../components/calculus/sequent/fab";
 import SequentTreeView from "../../../components/calculus/sequent/tree";
 import Dialog from "../../../components/dialog";
+import SaveStatsDialog from "../../../components/dialog/save-stats-dialog";
 import VarAssignDialog from "../../../components/dialog/var-assign";
 import OptionList from "../../../components/input/option-list";
 import TutorialDialog from "../../../components/tutorial/dialog";
@@ -68,6 +69,8 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showRuleDialog, setShowRuleDialog] = useState(false);
 
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
+
+    const [showSaveDialog, setShowSaveDialog] = useState(false);
 
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
     const [varOrigins, setVarOrigins] = useState<string[]>([]);
@@ -395,6 +398,12 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             </Dialog>
 
+            <SaveStatsDialog
+                open={showSaveDialog}
+                onClose={() => setShowSaveDialog(false)}
+                submitCallback={() => setShowSaveDialog(false)}
+            />
+
             {instanceOfFOSCState(state, calculus) && (
                 <VarAssignDialog
                     open={showVarAssignDialog}
@@ -422,6 +431,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         notificationHandler,
                     )
                 }
+                closeCallback={() => setShowSaveDialog(true)}
             />
             <TutorialDialog calculus={calculus} />
         </Fragment>

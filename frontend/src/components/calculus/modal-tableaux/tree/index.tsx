@@ -1,4 +1,5 @@
 import { h } from "preact";
+
 import {
     ModalTableauxNode,
     ModalTableauxTreeLayoutNode,
@@ -12,6 +13,7 @@ import {
 import { modalTableauxTreeLayout } from "../../../../util/modal-tableaux";
 import ClosingEdge from "../../../svg/closing-edge";
 import Zoomable from "../../../svg/zoomable";
+
 import * as style from "./style.scss";
 import SubTree from "./subtree";
 
@@ -27,17 +29,11 @@ interface Props {
     /**
      * The function to call, when the user selects a node
      */
-    selectNodeCallback: (
-        node: ModalTableauxTreeLayoutNode,
-    ) => void;
+    selectNodeCallback: (node: ModalTableauxTreeLayoutNode) => void;
     /**
      * Informs the element that the screen is small.
      */
     smallScreen: boolean;
-    /**
-     * Hands the Information over, that potential Lemma nodes are selectable
-     */
-    lemmaNodesSelectable?: boolean;
     /**
      * Drag transforms of all nodes
      */
@@ -49,14 +45,13 @@ interface Props {
     /**
      * Whether or not the tree waits for the user to choose a leaf
      */
-    leafSelection: boolean
+    leafSelection: boolean;
 }
 
 const ModalTableauxTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
     selectNodeCallback,
     selectedNodeId,
-    lemmaNodesSelectable = false,
     dragTransforms,
     onDrag,
     leafSelection,

@@ -1,12 +1,17 @@
 import { h } from "preact";
 import { useRef } from "preact/hooks";
-import { ModalTableauxMove, ModalTableauxNode, ModalTableauxTreeLayoutNode } from "../../../../types/calculus/modal-tableaux";
+
+import {
+    ModalTableauxNode,
+    ModalTableauxTreeLayoutNode,
+} from "../../../../types/calculus/modal-tableaux";
 import { Tree } from "../../../../types/tree";
 import { DragTransform } from "../../../../types/ui";
 import { classMap } from "../../../../util/class-map";
 import { isChildOf, nodeName } from "../../../../util/modal-tableaux";
 import Draggable from "../../../svg/draggable";
 import Rectangle from "../../../svg/rectangle";
+
 import * as style from "./style.scss";
 
 interface Props {
@@ -25,7 +30,7 @@ interface Props {
     /**
      * The Id of the currently selected Node
      */
-    selectedNodeId: number | undefined
+    selectedNodeId: number | undefined;
     /**
      * The function to call, when the user selects a node
      */
@@ -93,7 +98,11 @@ const SMTabNode: preact.FunctionalComponent<Props> = ({
                 disabled={node.data.isClosed}
                 selected={selected}
                 class={classMap({
-                    [style.nodeSelectLemma]: leafSelection && selectedNodeId !== undefined && isChildOf(node.data, nodes[selectedNodeId], nodes) && node.data.children.length <= 0,
+                    [style.nodeSelectLemma]:
+                        leafSelection &&
+                        selectedNodeId !== undefined &&
+                        isChildOf(node.data, nodes[selectedNodeId], nodes) &&
+                        node.data.children.length <= 0,
                 })}
             />
             <text

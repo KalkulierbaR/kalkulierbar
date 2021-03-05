@@ -1,13 +1,13 @@
 export interface ModalTableauxNode {
     parent: number | null;
-    prefix: number[];    
+    prefix: number[];
     sign: boolean;
     formula: LogicNode;
     isClosed: boolean;
     spelling: string;
     closeRef: number | null;
     children: number[];
-    lemmaSource? : number;
+    lemmaSource?: number;
 }
 
 export interface ModalTableauxState {
@@ -115,8 +115,11 @@ export type LogicNode =
 
 export type ModalTableauxTreeLayoutNode = ModalTableauxNode & { id: number };
 
-export type ModalTableauxMove = 
-    AlphaMove | BetaMove | NuMove | PiMove | UndoMove | CloseMove | NegMove;
+export type ModalTableauxMove =
+    | ExpandMove
+    | UndoMove
+    | CloseMove
+    | NegMove;
 
 export interface ExpandMove {
     type?: string;
@@ -144,7 +147,7 @@ export interface NuMove extends ExpandMove {
     leafID: number;
 }
 
-export interface PiMove extends ExpandMove{
+export interface PiMove extends ExpandMove {
     type: "piMove";
     prefix: number;
     nodeID: number;
@@ -158,7 +161,7 @@ export interface CloseMove {
 }
 
 export interface NegMove {
-    type: "negation"
+    type: "negation";
     nodeID: number;
     leafID: number;
 }
@@ -169,4 +172,4 @@ export interface UndoMove {
 
 export interface ModalTableauxParams {
     backtracking: boolean;
-} 
+}

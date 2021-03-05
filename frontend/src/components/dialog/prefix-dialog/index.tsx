@@ -1,10 +1,11 @@
 import { h } from "preact";
-import { useState } from "preact/hooks";
+
 import Dialog from "..";
 import { NotificationHandler } from "../../../types/app/notification";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
+
 import * as style from "./style.scss";
 
 interface Props {
@@ -22,18 +23,13 @@ interface Props {
      */
     onClose: () => void;
     /**
-     * The prefix to choose
-     */
-    /**
      * Which atoms are being combined
      */
     prefixOrigin?: string;
     /**
      * The function to call, when the user submits the list
      */
-    submitPrefixCallback: (
-        prefix: number
-    ) => void;
+    submitPrefixCallback: (prefix: number) => void;
     /**
      * Label for the submit button
      */
@@ -49,7 +45,7 @@ interface Props {
     /**
      * To Display Notifications
      */
-    notificationHandler: NotificationHandler
+    notificationHandler: NotificationHandler;
     /**
      * Additional className for the element
      */
@@ -63,16 +59,10 @@ const PrefixDialog: preact.FunctionalComponent<Props> = ({
     prefixOrigin,
     submitPrefixCallback,
     submitLabel = "Assign like this",
-    secondSubmitLabel = "Automatic",
-    secondSubmitEvent,
     notificationHandler,
     className,
 }) => {
-
     const { smallScreen } = useAppState();
-    const [focusedInputElement, setFocusedInputElement] = useState<string>(
-        "prefix",
-    );
 
     /**
      * Submit the manual prefix by the user
@@ -80,7 +70,7 @@ const PrefixDialog: preact.FunctionalComponent<Props> = ({
      */
     const submitPrefix = () => {
         const textInput = document.getElementById("prefix");
-        if(
+        if (
             !(
                 textInput &&
                 textInput instanceof HTMLInputElement &&
@@ -89,14 +79,13 @@ const PrefixDialog: preact.FunctionalComponent<Props> = ({
         ) {
             return;
         }
-        if(isNaN(+textInput.value)){
+        if (isNaN(+textInput.value)) {
             notificationHandler.error("Only numbers are allowed as prefixes.");
             return;
-        }else{
-            submitPrefixCallback(Number(textInput.value));
         }
-    }
-    
+        submitPrefixCallback(Number(textInput.value));
+    };
+
     /**
      * Handle the KeyDown event of the input fields
      * @param {KeyboardEvent} e - The keyboard event
@@ -117,7 +106,6 @@ const PrefixDialog: preact.FunctionalComponent<Props> = ({
      */
     const onFocus = (e: FocusEvent) => {
         const target = e.target as HTMLInputElement;
-        setFocusedInputElement(target.id);
         target.focus();
     };
 
@@ -140,14 +128,11 @@ const PrefixDialog: preact.FunctionalComponent<Props> = ({
                 inline={true}
                 onKeyDown={onKeyDown}
                 onFocus={onFocus}
-                autoFocus={
-                    !smallScreen
-                }
+                autoFocus={!smallScreen}
             />
             <Btn onClick={submitPrefix} label={submitLabel} />
-
         </Dialog>
-    )
-}
+    );
+};
 
 export default PrefixDialog;

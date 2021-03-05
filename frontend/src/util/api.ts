@@ -16,6 +16,7 @@ export type checkCloseFn<C extends CalculusType = CalculusType> = (
  * @param {NotificationHandler} notificationHandler - Notification handler
  * @param {C} calculus - Calculus endpoint
  * @param {any} state - Current state for the calculus
+ * @param {void} onProofen - the function to call if proof is valid
  * @returns {Promise<void>} - Resolves when the request is done
  */
 export const checkClose = async <C extends CalculusType = CalculusType>(
@@ -23,6 +24,7 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     notificationHandler: NotificationHandler,
     calculus: C,
     state: AppState[C],
+    onProofen?: () => void,
 ) => {
     const url = `${server}/${calculus}/close`;
     try {
@@ -43,6 +45,9 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
             if (closed) {
                 notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));
+                if (onProofen !== undefined) {
+                    onProofen();
+                }
             } else {
                 notificationHandler.error(msg);
             }

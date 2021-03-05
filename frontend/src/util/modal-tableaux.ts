@@ -1,14 +1,20 @@
-import {ExpandMove, ModalTableauxMove, ModalTableauxNode, ModalTableauxState, ModalTableauxTreeLayoutNode} from "../types/calculus/modal-tableaux";
-import { tree, treeFind, treeLayout } from "./layout/tree";
-import { Tree, TreeLayout } from "../types/tree";
-import { DragTransform } from "../types/ui";
-import { estimateSVGTextWidth } from "./text-width";
 import { StateUpdater } from "preact/hooks";
-import { ModalCalculusType } from "../types/calculus";
+
 import { AppStateUpdater } from "../types/app/app-state";
 import { NotificationHandler } from "../types/app/notification";
+import { ModalCalculusType } from "../types/calculus";
+import {
+    ExpandMove,
+    ModalTableauxNode,
+    ModalTableauxState,
+    ModalTableauxTreeLayoutNode,
+} from "../types/calculus/modal-tableaux";
+import { Tree, TreeLayout } from "../types/tree";
+import { DragTransform } from "../types/ui";
+
 import { sendMove } from "./api";
-import { child } from "../components/tutorial/dialog/style.scss";
+import { tree, treeFind, treeLayout } from "./layout/tree";
+import { estimateSVGTextWidth } from "./text-width";
 
 /**
  * Wrapper to send move request
@@ -63,60 +69,74 @@ export const sendNodeExtend = (
     setSelectedMove: (move: ExpandMove) => void,
     setSelectedNodeId: (id: number | undefined) => void,
 ) => {
-    let node = nodes[nodeID]
-    let leaves = getLeaves(nodes, node);
+    const node = nodes[nodeID];
+    const leaves = getLeaves(nodes, node);
     if (leaves.length > 1) {
-        //Ask for Leaf to apply the rule on
+        // Ask for Leaf to apply the rule on
         setLeafSelected(true);
-        setSelectedMove({type: move, nodeID: nodeID, leafID: leaves[0]})
+        setSelectedMove({ type: move, nodeID, leafID: leaves[0] });
         // sendMove(server, calculus, state, {type: move, nodeID: nodeID, leafID: leaves[leaves.length - 1]}, stateChanger, notificationHandler);
     } else {
-        //No need to ask -> apply the rule on the only possible Leaf
-        sendMove(server, calculus, state, {type: move, nodeID: nodeID, leafID: leaves[0]}, stateChanger, notificationHandler);
+        // No need to ask -> apply the rule on the only possible Leaf
+        sendMove(
+            server,
+            calculus,
+            state,
+            { type: move, nodeID, leafID: leaves[0] },
+            stateChanger,
+            notificationHandler,
+        );
         setSelectedNodeId(undefined);
     }
-}
+};
 
-export const getLeaves = (nodes: ModalTableauxNode[], node: ModalTableauxNode) => {
+export const getLeaves = (
+    nodes: ModalTableauxNode[],
+    node: ModalTableauxNode,
+) => {
     if (node.children.length === 0 && !node.isClosed) {
-        return [nodes.findIndex(elem => elem === node)];
+        return [nodes.findIndex((elem) => elem === node)];
     }
-        
-    let sum: number[] = [];
-    node.children.forEach(childID => {
-        let child = nodes[childID];
-        sum = sum.concat(getLeaves(nodes, child));
-    })
-    return sum;
-}
 
-export const isChildOf = (node: ModalTableauxNode, parent: ModalTableauxNode, nodes: ModalTableauxNode[]) => {
-    if (node === parent){
+    let sum: number[] = [];
+    node.children.forEach((childID) => {
+        const child = nodes[childID];
+        sum = sum.concat(getLeaves(nodes, child));
+    });
+    return sum;
+};
+
+export const isChildOf = (
+    node: ModalTableauxNode,
+    parent: ModalTableauxNode,
+    nodes: ModalTableauxNode[],
+) => {
+    if (node === parent) {
         return true;
-    }else if (node.parent !== null) {
-        let a = isChildOf(nodes[node.parent!], parent, nodes); 
-        if (a === true)
-            return true;
-        else 
-            return false;
-        
     }
-    
+    if (node.parent !== null) {
+        const a = isChildOf(nodes[node.parent!], parent, nodes);
+        if (a === true) return true;
+
+        return false;
+    }
+
     return false;
-    
-}
+};
 
 /**
  * @param {ModalTableauxNode} node - The node
  * @returns {string} - The name
  */
 export const nodeName = (node: ModalTableauxNode) => {
-    if(node === undefined) return "";
+    if (node === undefined) return "";
     return `
         ${node.prefix.map(
-            (prefix, index) => prefix.toString() + (index === node.prefix.length - 1 ? "" : ".")
+            (prefix, index) =>
+                prefix.toString() +
+                (index === node.prefix.length - 1 ? "" : "."),
         )}
-        ${node.sign ? "𝕋 " : "𝔽 " }
+        ${node.sign ? "𝕋 " : "𝔽 "}
         ${node.spelling}
     `;
 };

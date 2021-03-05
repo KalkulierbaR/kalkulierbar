@@ -33,6 +33,10 @@ interface Props {
      * Deletes selected Branch
      */
     pruneCallback: () => void;
+    /**
+     * Opens Save Dialog
+     */
+    closeCallback: () => void;
 }
 
 const SequentFAB: preact.FunctionalComponent<Props> = ({
@@ -41,6 +45,7 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
     selectedNodeId,
     ruleCallback,
     pruneCallback,
+    closeCallback,
 }) => {
     const {
         server,
@@ -63,7 +68,10 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
                             name={calculus}
                             type={calculus}
                         />
-                        <CheckCloseFAB calculus={calculus} />
+                        <CheckCloseFAB
+                            calculus={calculus}
+                            onProofen={closeCallback}
+                        />
                         <FAB
                             icon={<UndoIcon />}
                             label="Undo"

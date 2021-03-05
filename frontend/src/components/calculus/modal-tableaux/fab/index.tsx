@@ -1,21 +1,24 @@
-import { ModalCalculusType } from "../../../../types/calculus";
-import { ExpandMove, ModalTableauxState } from "../../../../types/calculus/modal-tableaux";
-import { useAppState } from "../../../../util/app-state";
 import { Fragment, h } from "preact";
-import DownloadFAB from "../../../input/fab/download";
+
+import { ModalCalculusType } from "../../../../types/calculus";
+import {
+    ExpandMove,
+    ModalTableauxState,
+} from "../../../../types/calculus/modal-tableaux";
+import { useAppState } from "../../../../util/app-state";
+import { nextOpenLeaf, sendNodeExtend } from "../../../../util/modal-tableaux";
+import { sendBacktrack } from "../../../../util/modal-tableaux";
+import DeleteIcon from "../../../icons/delete";
+import ExploreIcon from "../../../icons/explore";
+import UndoIcon from "../../../icons/undo";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
-import ExploreIcon from "../../../icons/explore";
-import { nextOpenLeaf, sendNodeExtend } from "../../../../util/modal-tableaux";
 import CenterFAB from "../../../input/fab/center";
 import CheckCloseFAB from "../../../input/fab/check-close";
-import { sendBacktrack } from "../../../../util/modal-tableaux";
-import UndoIcon from "../../../icons/undo";
-import { sendMove } from "../../../../util/api";
+import DownloadFAB from "../../../input/fab/download";
 
 import * as style from "./style.scss";
-import DeleteIcon from "../../../icons/delete";
-
+// import { sendMove } from "../../../../util/api";
 
 interface Props {
     /**
@@ -53,12 +56,11 @@ interface Props {
     /**
      * Whether to show or not to show the prefix dialog
      */
-    setShowPrefixDialog: (b: boolean) => void; 
+    setShowPrefixDialog: (b: boolean) => void;
     /**
      * Deletes selected Branch
      */
     pruneCallback: () => void;
-
 }
 
 const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
@@ -73,7 +75,6 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
     setShowPrefixDialog,
     pruneCallback,
 }) => {
-    
     const {
         server,
         smallScreen,
@@ -85,7 +86,6 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
 
     return (
         <Fragment>
-        
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={state.nodes[0].isClosed}
@@ -97,29 +97,30 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             name={calculus}
                             type={calculus}
                         />
-                        {state.nodes.filter((node) => !node.isClosed).length > 0 && (
+                        {state.nodes.filter((node) => !node.isClosed).length >
+                            0 && (
                             <FAB
-                            icon={<ExploreIcon />}
-                            label="Next Leaf"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                const node = nextOpenLeaf(state!.nodes);
-                                if (node === undefined) {
-                                    return;
-                                }
-                                dispatchEvent(
-                                    new CustomEvent("go-to", {
-                                        detail: { node },
-                                    }),
-                                );
-                            }}
-                        />
-                    )}
-                    <CenterFAB resetDragTransforms={resetDragTransforms}/>
-                    <CheckCloseFAB calculus={calculus}/>
-                    {showUndoFAB && (
+                                icon={<ExploreIcon />}
+                                label="Next Leaf"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    const node = nextOpenLeaf(state!.nodes);
+                                    if (node === undefined) {
+                                        return;
+                                    }
+                                    dispatchEvent(
+                                        new CustomEvent("go-to", {
+                                            detail: { node },
+                                        }),
+                                    );
+                                }}
+                            />
+                        )}
+                        <CenterFAB resetDragTransforms={resetDragTransforms} />
+                        <CheckCloseFAB calculus={calculus} />
+                        {showUndoFAB && (
                             <FAB
                                 icon={<UndoIcon />}
                                 label="Undo"
@@ -133,7 +134,10 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                                             state.moveHistory[
                                                 state.moveHistory.length - 1
                                             ];
-                                        if (move.type === "alphaMove" || "betaMove") {
+                                        if (
+                                            move.type === "alphaMove" ||
+                                            "betaMove"
+                                        ) {
                                             resetDragTransform(
                                                 state.nodes.length - 1,
                                             );
@@ -160,17 +164,17 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             showIconAtEnd={true}
                             onClick={() => {
                                 sendNodeExtend(
-                                    calculus, 
-                                    server, 
-                                    state, 
-                                    "negation", 
-                                    onChange, 
-                                    notificationHandler, 
-                                    state.nodes, 
-                                    selectedNodeId, 
-                                    setLeafSelected, 
+                                    calculus,
+                                    server,
+                                    state,
+                                    "negation",
+                                    onChange,
+                                    notificationHandler,
+                                    state.nodes,
+                                    selectedNodeId,
+                                    setLeafSelected,
                                     setSelectedMove,
-                                    setSelectedNodeId
+                                    setSelectedNodeId,
                                 );
                             }}
                         />
@@ -182,17 +186,17 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             showIconAtEnd={true}
                             onClick={() => {
                                 sendNodeExtend(
-                                    calculus, 
-                                    server, 
-                                    state, 
-                                    "alphaMove", 
-                                    onChange, 
-                                    notificationHandler, 
-                                    state.nodes, 
-                                    selectedNodeId, 
-                                    setLeafSelected, 
+                                    calculus,
+                                    server,
+                                    state,
+                                    "alphaMove",
+                                    onChange,
+                                    notificationHandler,
+                                    state.nodes,
+                                    selectedNodeId,
+                                    setLeafSelected,
                                     setSelectedMove,
-                                    setSelectedNodeId
+                                    setSelectedNodeId,
                                 );
                             }}
                         />
@@ -204,17 +208,17 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             showIconAtEnd={true}
                             onClick={() => {
                                 sendNodeExtend(
-                                    calculus, 
-                                    server, 
-                                    state, 
-                                    "betaMove", 
-                                    onChange, 
-                                    notificationHandler, 
-                                    state.nodes, 
-                                    selectedNodeId, 
-                                    setLeafSelected, 
+                                    calculus,
+                                    server,
+                                    state,
+                                    "betaMove",
+                                    onChange,
+                                    notificationHandler,
+                                    state.nodes,
+                                    selectedNodeId,
+                                    setLeafSelected,
                                     setSelectedMove,
-                                    setSelectedNodeId
+                                    setSelectedNodeId,
                                 );
                             }}
                         />
@@ -225,7 +229,10 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                setSelectedMove({type: "nuMove",nodeID: selectedNodeId})
+                                setSelectedMove({
+                                    type: "nuMove",
+                                    nodeID: selectedNodeId,
+                                });
                                 setShowPrefixDialog(true);
                             }}
                         />
@@ -236,7 +243,10 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             extended={true}
                             showIconAtEnd={true}
                             onClick={() => {
-                                setSelectedMove({type: "piMove",nodeID: selectedNodeId})
+                                setSelectedMove({
+                                    type: "piMove",
+                                    nodeID: selectedNodeId,
+                                });
                                 setShowPrefixDialog(true);
                             }}
                         />
@@ -253,10 +263,8 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                     </Fragment>
                 )}
             </ControlFAB>
-           
         </Fragment>
     );
-
-}
+};
 
 export default ModalTableauxFAB;

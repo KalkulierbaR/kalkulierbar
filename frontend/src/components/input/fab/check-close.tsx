@@ -17,9 +17,16 @@ interface Props {
      * Which calculus to use
      */
     calculus: CalculusType;
+    /**
+     * Function to call when the proof is valid
+     */
+    onProofen?: () => void;
 }
 
-const CheckCloseFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
+const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
+    calculus,
+    onProofen,
+}) => {
     const {
         tutorialMode,
         dispatch,
@@ -43,7 +50,13 @@ const CheckCloseFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         TutorialMode.HighlightCheck,
                     );
                 }
-                checkClose(server, notificationHandler, calculus, state);
+                checkClose(
+                    server,
+                    notificationHandler,
+                    calculus,
+                    state,
+                    onProofen,
+                );
             }}
         />
     );

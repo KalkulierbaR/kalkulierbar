@@ -1,6 +1,8 @@
 import DPLL from "async!../routes/dpll";
 import DPLLView from "async!../routes/dpll/view";
 import Home from "async!../routes/home";
+import ModalTableaux from "async!../routes/modal-tableaux";
+import ModalTableauxView from "async!../routes/modal-tableaux/view";
 import NCTableaux from "async!../routes/nc-tableaux";
 import NCTableauxView from "async!../routes/nc-tableaux/view";
 import Resolution from "async!../routes/resolution";
@@ -24,9 +26,6 @@ import { useTitle } from "../util/title";
 import Page404 from "./404";
 import Header from "./header";
 import Snackbar from "./snackbar";
-import ModalTableaux from "async!../routes/modal-tableaux";
-import ModalTableauxView from "async!../routes/modal-tableaux/view";
-
 import * as style from "./style.scss";
 
 const SMALL_SCREEN_THRESHOLD = 750;
@@ -187,11 +186,11 @@ const App: preact.FunctionalComponent = () => {
                     <ModalTableaux
                         path={`/${Calculus.modalTableaux}`}
                         calculus={Calculus.modalTableaux}
-                        />
+                    />
                     <ModalTableauxView
                         path={`/${Calculus.modalTableaux}/view`}
                         calculus={Calculus.modalTableaux}
-                        />
+                    />
                     <Page404 default={true} />
                 </Router>
             </main>
