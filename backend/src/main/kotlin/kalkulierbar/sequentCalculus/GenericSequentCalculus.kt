@@ -5,7 +5,6 @@ import kalkulierbar.logic.LogicNode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
-import kotlin.collections.mapOf
 
 interface GenericSequentCalculus
 
@@ -90,7 +89,7 @@ class SequentCalculusStatistic(
     val nodeAmount: Int,
     override var userName: String?
 ) : Statistic {
-        
+
     override val score: Int = calculateScore()
 
     override fun calculateScore(): Int {

@@ -20,13 +20,6 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.StateKeeper
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.json.json
-import kotlinx.serialization.serializer
-import kotlinx.serialization.list
-
-
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
         PropositionalTableaux(),
@@ -161,15 +154,15 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
                 val state = ctx.formParam("state")
                         ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
 
-                //Read the statistics which are currently saved in the database (saved as Json-Strings)
+                // Read the statistics which are currently saved in the database (saved as Json-Strings)
                 val statisticsAsStrings = DatabaseHandler.query(endpoint.identifier, endpoint.getStartingFormula(state))
-                //add the current statistic without name to the resultset
+                // add the current statistic without name to the resultset
                 statisticsAsStrings.add(endpoint.getStatistic(state, null))
 
-                //Parse the Json-Strings to the Statistic class
+                // Parse the Json-Strings to the Statistic class
                 val statistics = statisticsAsStrings.map { endpoint.jsonToStatistic(it) }
-                
-                //Serialize the List of Statistics back to a Json-String
+
+                // Serialize the List of Statistics back to a Json-String
                 ctx.result(endpoint.statisticsToJson(statistics))
             }
 
