@@ -97,13 +97,40 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
             class={className}
         >
             {stats !== undefined && (
-                <p>
-                    {`${stats[0].score}`}
-                    {""}
-                </p>
+                <table>
+                    <tr>
+                        {Object.keys(stats[0]).map((elem) => (
+                            <td>
+                                {`${elem.toString()}`}
+                            </td>
+
+                        ))}
+                    </tr>
+                    {stats.map((stat) => (
+                        <tr>
+                            {Object.values(stat).map((val) => (
+                                val === null &&
+                                    <td>
+                                        <TextInput
+                                            id={"name"}
+                                            label={"Your name : "}
+                                            inline={true}
+                                            onKeyDown={onKeyDown}
+                                            onFocus={onFocus}
+                                            autoFocus={!smallScreen}
+                                        />
+                                    </td> ||
+                                val !== null &&
+                                    <td>
+                                        {`${val.toString()}`}
+                                    </td>
+                            ))}
+                        </tr>
+                    ))}
+                </table>
            
             )}
-            {"Please enter your name to save the close proof."}
+            {/* {"Please enter your name to save the close proof."}
             {""}
             <TextInput
                 id={"name"}
@@ -112,7 +139,7 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
                 onKeyDown={onKeyDown}
                 onFocus={onFocus}
                 autoFocus={!smallScreen}
-            />
+            /> */}
             <Btn onClick={submit} label={submitLabel} />
         </Dialog>
     );

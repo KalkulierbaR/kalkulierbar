@@ -19,7 +19,7 @@ import {
     SequentTreeLayoutNode,
     VarAssign,
 } from "../../../types/calculus/sequent";
-import { sendMove } from "../../../util/api";
+import { saveStatistics, sendMove } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { ruleSetToStringArray } from "../../../util/rule";
@@ -347,6 +347,19 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         return true;
     };
 
+    const saveStatisticsCallback = (userName: string) => {
+        if (userName !== '') {
+            saveStatistics(
+                server,
+                calculus,
+                state,
+                notificationHandler,
+                userName
+            )
+            setShowSaveDialog(false);
+        }
+    }
+
     return (
         <Fragment>
             <h2>Sequent Calculus View</h2>
@@ -404,7 +417,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             <SaveStatsDialog
                 open={showSaveDialog}
                 onClose={() => setShowSaveDialog(false)}
-                submitCallback={() => setShowSaveDialog(false)}
+                submitCallback={saveStatisticsCallback}
                 stats={stats}
             />
 

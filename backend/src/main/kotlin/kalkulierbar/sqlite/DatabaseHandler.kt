@@ -21,7 +21,7 @@ class DatabaseHandler {
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
                 val create: String =
-                    "CREATE TABLE IF NOT EXISTS $identifier (formula VARCHAR(8000) NOT NULL PRIMARY KEY, statistics VARCHAR(8000) NOT NULL, score INTEGER NOT NULL);"
+                    "CREATE TABLE IF NOT EXISTS $identifier (formula VARCHAR(8000) NOT NULL, statistics VARCHAR(8000) NOT NULL, score INTEGER NOT NULL);"
                 stmt.execute(create)
                 stmt.close()
             }

@@ -4,7 +4,7 @@ interface Statistic {
 
     public var userName: String?
 
-    public val score: Int
+    public var score: Int
 
     /**
      * The function returns the score of the statistic object

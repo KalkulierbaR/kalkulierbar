@@ -162,7 +162,10 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
                 statisticsAsStrings.add(endpoint.getStatistic(state, null))
 
                 // Parse the Json-Strings to the Statistic class
-                val statistics = statisticsAsStrings.map { endpoint.jsonToStatistic(it) }
+                var statistics = statisticsAsStrings.map { endpoint.jsonToStatistic(it) }
+
+                statistics = statistics.sortedBy { it.score }
+                statistics = statistics.asReversed()
 
                 // Serialize the List of Statistics back to a Json-String
                 ctx.result(endpoint.statisticsToJson(statistics))
@@ -170,10 +173,9 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
 
             // Save the statistic under the given name
             app.post("/$name/save-statistics") { ctx ->
-                val state = ctx.formParam("state")
-                        ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
-                val userName = ctx.formParam("name")
-                        ?: throw ApiMisuseException("POST parameter 'name' with name must be present")
+                val map = ctx.formParamMap()
+                val state = getParam(map, "state")!!
+                val userName = getParam(map, "name")!!
 
                 val identifier = endpoint.identifier
                 val rootFormula = endpoint.getStartingFormula(state)

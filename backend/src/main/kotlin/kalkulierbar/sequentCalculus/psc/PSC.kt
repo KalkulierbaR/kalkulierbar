@@ -143,7 +143,7 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
      * @return The statisitcs of the given object
      */
     override fun getStatisticOnState(state: PSCState): Statistic {
-        return SequentCalculusStatistic(state.tree.size, null)
+        return SequentCalculusStatistic(state)
     }
 
     /**
