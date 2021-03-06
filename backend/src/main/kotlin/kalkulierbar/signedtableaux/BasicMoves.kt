@@ -266,7 +266,7 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     return state
 }
 
-@Suppress("ComplexMethod")
+@Suppress("ComplexMethod, NestedBlockDepth, EmptyCatchBlock")
 fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableauxState {
     val nodes = state.nodes
 

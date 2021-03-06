@@ -7,6 +7,7 @@ class DatabaseHandler {
     companion object {
         private var connection: Connection? = null
 
+        @Suppress("TooGenericExceptionCaught")
         public fun init() {
             try {
                 Class.forName("org.sqlite.JDBC")
@@ -17,6 +18,7 @@ class DatabaseHandler {
             }
         }
 
+        @Suppress("MaxLineLength")
         public fun createTable(identifier: String) {
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()

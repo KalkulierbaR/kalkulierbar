@@ -52,7 +52,7 @@ class SignedModalTableauxState(
             node = nodes[node.parent!!]
         }
         node = nodes[nodeID]
-        if(!node.isLeaf){
+        if (!node.isLeaf) {
             childLeavesOf(nodeID).forEach {
                 setClosed(it)
             }
@@ -97,6 +97,7 @@ class SignedModalTableauxState(
      * @param prefix the prefix to be checked
      * @return whether the prefix is already in use
      */
+    @Suppress("ReturnCount")
     fun prefixIsUsedOnBranch(leafID: Int, prefix: List<Int>): Boolean {
         var node = nodes[leafID]
         if (prefix.equals(node.prefix))

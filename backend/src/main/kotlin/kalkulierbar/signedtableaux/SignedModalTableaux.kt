@@ -21,6 +21,7 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
         return SignedModalTableauxState(parsedFormula)
     }
 
+    @Suppress("ComplexMethod")
     override fun applyMoveOnState(state: SignedModalTableauxState, move: SignedModalTableauxMove): SignedModalTableauxState {
         // Clear status message
         state.statusMessage = null

@@ -2,12 +2,11 @@ package kalkulierbar.sequentCalculus
 
 import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
+import kotlin.math.max
+import kotlin.math.sqrt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
-import kotlin.math.sqrt
-import kotlin.math.max
-
 
 interface GenericSequentCalculus
 
@@ -28,18 +27,18 @@ interface GenericSequentCalculusState {
 
     fun getWidth(nodeID: Int): Int {
         val node = tree[nodeID]
-        if(node.children.isEmpty()){
+        if (node.children.isEmpty()) {
             return 1
         }
-        return node.children.fold(0) {acc: Int, elem: Int -> acc + getWidth(elem)}
+        return node.children.fold(0) { acc: Int, elem: Int -> acc + getWidth(elem) }
     }
 
     fun getDepth(nodeID: Int): Int {
         val node = tree[nodeID]
-        if (node.children.isEmpty()){
+        if (node.children.isEmpty()) {
             return 1
         }
-        return node.children.fold(0) {acc: Int, elem: Int -> max(acc, getDepth(elem) + 1)}
+        return node.children.fold(0) { acc: Int, elem: Int -> max(acc, getDepth(elem) + 1) }
         // return node.children.fold(0) { (elem1, elem2) -> max(elem1, getDepth(elem2) + 1) }   
     }
 }
@@ -113,14 +112,23 @@ class SequentCalculusStatistic(
     val usedStupidMode: Boolean
 ) : Statistic {
 
-    constructor(state: GenericSequentCalculusState): this(null, state.tree.size, state.getDepth(0), state.getWidth(0), state.showOnlyApplicableRules) {
+    @Suppress("MagicNumber")
+    constructor(state: GenericSequentCalculusState) : this(
+        null,
+        state.tree.size,
+        state.getDepth(0),
+        state.getWidth(0),
+        state.showOnlyApplicableRules
+    ) {
         score = calculateScore()
-        if (state.showOnlyApplicableRules)
+        if (state.showOnlyApplicableRules) {
             score = (score * 0.9).toInt()
+        }
     }
 
     override var score: Int = calculateScore()
 
+    @Suppress("MagicNumber")
     override fun calculateScore(): Int {
         return ((1 / sqrt(nodeAmount.toDouble())) * 1000).toInt()
     }
