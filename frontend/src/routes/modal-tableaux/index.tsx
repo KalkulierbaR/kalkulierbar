@@ -28,8 +28,9 @@ const ModalTableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
         <Fragment>
             <Format
                 foLogic={false}
-                allowClauses={true}
+                allowClauses={false}
                 allowSequences={false}
+                modalLogic={true}
             />
             <FormulaInput calculus={calculus} foLogic={false} params={params} />
             <div class="card">
