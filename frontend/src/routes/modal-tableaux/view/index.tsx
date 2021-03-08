@@ -5,6 +5,7 @@ import { useCallback, useState } from "preact/hooks";
 import ModalTableauxFAB from "../../../components/calculus/modal-tableaux/fab";
 import ModalTableauxTreeView from "../../../components/calculus/modal-tableaux/tree";
 import PrefixDialog from "../../../components/dialog/prefix-dialog";
+import TutorialDialog from "../../../components/tutorial/dialog";
 import { Calculus, ModalCalculusType } from "../../../types/calculus";
 import {
     ExpandMove,
@@ -172,6 +173,8 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
                 submitPrefixCallback={sendPrefix}
                 notificationHandler={notificationHandler}
             />
+
+            <TutorialDialog calculus={calculus} />
         </Fragment>
     );
 };

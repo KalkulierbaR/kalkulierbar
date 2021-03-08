@@ -82,12 +82,12 @@ class NavGroup extends Component<NavGroupProps, NavGroupState> {
     public close = () => {
         this.setState({ open: false });
         return false;
-    };
+    }
 
     public toggle = () => {
         this.setState({ open: !this.state.open });
         return false;
-    };
+    }
 
     public handleClickOutside = ({ target }: MouseEvent) => {
         if (!this.state.open || !target) {
@@ -101,7 +101,7 @@ class NavGroup extends Component<NavGroupProps, NavGroupState> {
             target = (target as any).parentNode;
         } while (target);
         this.close();
-    };
+    }
 
     public componentDidMount() {
         addEventListener("click", this.handleClickOutside);

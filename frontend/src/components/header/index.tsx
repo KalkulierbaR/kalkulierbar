@@ -1,7 +1,5 @@
 import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
-
-import { useAppState } from "../../util/app-state";
 import Dialog from "../dialog";
 import SettingsIcon from "../icons/settings";
 import Btn from "../input/btn";
@@ -20,7 +18,6 @@ interface HeaderProps {
 }
 
 const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
-    const { smallScreen } = useAppState();
     const [open, setOpen] = useState(false);
     const toggle = useCallback(() => setOpen(!open), [open]);
     const setClosed = useCallback(() => setOpen(false), [setOpen]);
