@@ -1,5 +1,5 @@
 export interface Entry {
-    userName: string,
-    score: number,
-    nodeAmount: number | null,
+    userName: string;
+    score: number;
+    nodeAmount: number | null;
 }

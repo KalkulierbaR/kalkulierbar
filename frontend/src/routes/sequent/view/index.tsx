@@ -355,10 +355,10 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 state,
                 notificationHandler,
                 userName
-            )
+            );
             setShowSaveDialog(false);
         }
-    }
+    };
 
     return (
         <Fragment>
@@ -449,8 +449,8 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     )
                 }
                 closeCallback={(statistics: Entry[]) => {
-                    setStats(statistics)
-                    setShowSaveDialog(true)
+                    setStats(statistics);
+                    setShowSaveDialog(true);
                 }}
             />
             <TutorialDialog calculus={calculus} />

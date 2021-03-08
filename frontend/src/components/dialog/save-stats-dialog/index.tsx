@@ -128,7 +128,7 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
                         </tr>
                     ))}
                 </table>
-           
+
             )}
             {/* {"Please enter your name to save the close proof."}
             {""}

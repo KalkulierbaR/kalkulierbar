@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
-import { Entry } from "../../../../types/app/statistics";
 
+import { Entry } from "../../../../types/app/statistics";
 import { SequentCalculusType } from "../../../../types/calculus";
 import { FOSCState, PSCState } from "../../../../types/calculus/sequent";
 import { sendMove } from "../../../../util/api";

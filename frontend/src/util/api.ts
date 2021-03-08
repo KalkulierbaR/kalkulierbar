@@ -2,7 +2,7 @@ import { CheckCloseResponse } from "../types/app/api";
 import { AppState, AppStateUpdater } from "../types/app/app-state";
 import { NotificationHandler, NotificationType } from "../types/app/notification";
 import { Entry } from "../types/app/statistics";
-import { Calculus, CalculusType, Move } from "../types/calculus";
+import { CalculusType, Move } from "../types/calculus";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
@@ -46,8 +46,8 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
             if (closed) {
                 notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));
-                if(onProoven !== undefined){
-                    getStatistics(server,calculus,state,notificationHandler,onProoven);
+                if (onProoven !== undefined) {
+                    getStatistics(server, calculus, state, notificationHandler, onProoven);
                 }
             } else {
                 notificationHandler.error(msg);
@@ -74,9 +74,9 @@ export const getStatistics = async <C extends CalculusType = CalculusType>(
             method: "POST",
             body: `state=${encodeURIComponent(JSON.stringify(state))}`,
         });
-        if(response.status !== 200){
+        if (response.status !== 200) {
             notificationHandler.error(await response.text());
-        }else{
+        }else {
             onProoven((await response.json() as Entry[]));
         }
     }catch (e) {
@@ -98,17 +98,17 @@ export const saveStatistics = async <C extends CalculusType = CalculusType>(
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `name=${name}&state=${encodeURIComponent(JSON.stringify(state))}`,  
+            body: `name=${name}&state=${encodeURIComponent(JSON.stringify(state))}`,
         });
-        if(response.status !== 200){
+        if (response.status !== 200) {
             notificationHandler.error(await response.text());
         } else {
-           notificationHandler.message(NotificationType.Success,"Proof saved as " + (await response.text()))
+           notificationHandler.message(NotificationType.Success, "Proof saved as " + (await response.text()));
         }
     }catch (e) {
         notificationHandler.error((e as Error).message);
     }
-}
+};
 
 /**
  * Checks that a state is valid for the given calculus

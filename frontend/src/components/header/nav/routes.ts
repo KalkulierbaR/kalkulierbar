@@ -46,7 +46,7 @@ export const ROUTES: LinkGroup[] = [
             { name: "NC Tableaux", path: Calculus.ncTableaux },
             { name: "Sequent", path: Calculus.fosc },
         ],
-    }, 
+    },
     {
         name: "Modal",
         routes: [
