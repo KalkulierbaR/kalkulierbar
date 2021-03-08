@@ -14,6 +14,10 @@ interface GenericSequentCalculusState {
     val tree: MutableList<GenericSequentCalculusNode>
     var showOnlyApplicableRules: Boolean
 
+    /**
+     * Closes the branch specified by the leaf is its closeable
+     * @param leaf the leaf to closeS
+     */
     fun setNodeClosed(leaf: GenericSequentCalculusNode) {
         var node = leaf
         while (node.isLeaf || node.children.fold(true) { acc, elem -> acc && tree[elem].isClosed }) {
@@ -25,6 +29,11 @@ interface GenericSequentCalculusState {
         }
     }
 
+    /**
+     * Returns the width of the tree specified by nodeID
+     * @param nodeID the node id of the root
+     * @return the width of the tree
+     */
     fun getWidth(nodeID: Int): Int {
         val node = tree[nodeID]
         if (node.children.isEmpty()) {
@@ -33,6 +42,11 @@ interface GenericSequentCalculusState {
         return node.children.fold(0) { acc: Int, elem: Int -> acc + getWidth(elem) }
     }
 
+    /**
+    * Returns the maxmimum depth of the tree specified by nodeID
+    * @param nodeID the node id of the root
+    * @return the width of the tree
+    */
     fun getDepth(nodeID: Int): Int {
         val node = tree[nodeID]
         if (node.children.isEmpty()) {

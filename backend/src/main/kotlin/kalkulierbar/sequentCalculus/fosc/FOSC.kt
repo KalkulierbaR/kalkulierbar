@@ -16,8 +16,11 @@ import kalkulierbar.sequentCalculus.fosc.moveImplementations.*
 import kalkulierbar.sequentCalculus.moveImplementations.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
+import kotlinx.serialization.list
+import kalkulierbar.StatisticCalculus
+import kalkulierbar.Statistic
 
-class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>() {
+class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>(), StatisticCalculus<FOSCState> {
 
     private val serializer = Json(context = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
 
@@ -125,5 +128,62 @@ class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove
             val msg = "Could not parse JSON params"
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
+    }
+
+    /**
+    * Calculates the statistics for a given proof
+    * @param state A closed state
+    * @return The statistics for the given state
+    */
+    override fun getStatistic(state: String, name: String?): String {
+        val statistic = getStatisticOnState(jsonToState(state))
+        if (name != null)
+            statistic.userName = name
+        return statisticToJson(statistic)
+    }
+
+    /**
+     * Takes in a State of the given calculus
+     * @param state Current state object
+     * @return The statisitcs of the given object
+     */
+    override fun getStatisticOnState(state: FOSCState): Statistic {
+        return SequentCalculusStatistic(state)
+    }
+
+    /**
+     * Serializes a statistics object to JSON
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    override fun statisticToJson(statistic: Statistic): String {
+        return serializer.stringify(SequentCalculusStatistic.serializer(), (statistic as SequentCalculusStatistic))
+    }
+
+    /**
+     * Serializes a List<Statistic> object to JSON
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    override fun statisticsToJson(statistics: List<Statistic>): String {
+        return serializer.stringify(SequentCalculusStatistic.serializer().list, (statistics as List<SequentCalculusStatistic>))
+    }
+
+    /**
+     * Parses a json object to Statistic
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    override fun jsonToStatistic(json: String): Statistic {
+        return serializer.parse(SequentCalculusStatistic.serializer(), json)
+    }
+
+    /**
+     * Returns the intitial formula of the state.
+     * @param state state representation
+     * @return string representing the initial formula of the state
+     */
+    override fun getStartingFormula(state: String): String {
+        return jsonToState(state).tree[0].toString()
     }
 }

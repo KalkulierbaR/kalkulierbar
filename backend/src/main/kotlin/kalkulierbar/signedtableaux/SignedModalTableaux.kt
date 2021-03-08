@@ -7,10 +7,13 @@ import kalkulierbar.JsonParseException
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.ModalLogicParser
+import kalkulierbar.StatisticCalculus
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
+import kotlinx.serialization.list
+import kalkulierbar.Statistic
 
-class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>() {
+class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>(), StatisticCalculus<SignedModalTableauxState> {
 
     private val serializer = Json(context = FoTermModule + LogicModule + SignedModalTablueaxMoveModule)
 
@@ -132,4 +135,63 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
      * @return parsed param object
      */
     override fun jsonToParam(json: String) = Unit
+
+
+    /**
+    * Calculates the statistics for a given proof
+    * @param state A closed state
+    * @return The statistics for the given state
+    */
+    override fun getStatistic(state: String, name: String?): String {
+        val statistic = getStatisticOnState(jsonToState(state))
+        if (name != null)
+            statistic.userName = name
+        return statisticToJson(statistic)
+    }
+
+    /**
+     * Takes in a State of the given calculus
+     * @param state Current state object
+     * @return The statisitcs of the given object
+     */
+    override fun getStatisticOnState(state: SignedModalTableauxState): Statistic {
+        return SignedModalTableauxStatistic(state)
+    }
+
+    /**
+     * Serializes a statistics object to JSON
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    override fun statisticToJson(statistic: Statistic): String {
+        return serializer.stringify(SignedModalTableauxStatistic.serializer(), (statistic as SignedModalTableauxStatistic))
+    }
+
+    /**
+     * Serializes a List<Statistic> object to JSON
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    override fun statisticsToJson(statistics: List<Statistic>): String {
+        return serializer.stringify(SignedModalTableauxStatistic.serializer().list, (statistics as List<SignedModalTableauxStatistic>))
+    }
+
+    /**
+     * Parses a json object to Statistic
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    override fun jsonToStatistic(json: String): Statistic {
+        return serializer.parse(SignedModalTableauxStatistic.serializer(), json)
+    }
+
+    /**
+     * Returns the intitial formula of the state.
+     * @param state state representation
+     * @return string representing the initial formula of the state
+     */
+    override fun getStartingFormula(state: String): String {
+        return jsonToState(state).nodes[0].toString()
+    }
+
 }

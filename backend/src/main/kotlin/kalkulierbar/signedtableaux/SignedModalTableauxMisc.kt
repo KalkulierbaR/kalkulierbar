@@ -3,6 +3,9 @@ package kalkulierbar.signedtableaux
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
+import kotlin.math.max
+import kotlin.math.sqrt
+import kalkulierbar.Statistic
 
 @Serializable
 class SignedModalTableauxState(
@@ -110,6 +113,33 @@ class SignedModalTableauxState(
         return false
     }
 
+    /**
+     * Returns the width of the tree specified by nodeID
+     * @param nodeID the node id of the root
+     * @return the width of the tree
+     */
+    fun getWidth(nodeID: Int): Int {
+        val node = nodes[nodeID]
+        if (node.children.isEmpty()) {
+            return 1
+        }
+        return node.children.fold(0) { acc: Int, elem: Int -> acc + getWidth(elem) }
+    }
+
+    /**
+    * Returns the maxmimum depth of the tree specified by nodeID
+    * @param nodeID the node id of the root
+    * @return the width of the tree
+    */
+    fun getDepth(nodeID: Int): Int {
+        val node = nodes[nodeID]
+        if (node.children.isEmpty()) {
+            return 1
+        }
+        return node.children.fold(0) { acc: Int, elem: Int -> max(acc, getDepth(elem) + 1) }
+        // return node.children.fold(0) { (elem1, elem2) -> max(elem1, getDepth(elem2) + 1) }   
+    }
+
     fun render() {
         nodes.forEach {
             it.render()
@@ -146,4 +176,35 @@ class SignedModalTableauxNode(
     }
 
     fun getHash() = "($parent|$children|$isClosed|$closeRef|$formula)"
+}
+
+@Serializable 
+class SignedModalTableauxStatistic(
+    override var userName: String?,
+    val numberOfMoves: Int,
+    val depth: Int,
+    val width: Int,
+    val usedBacktracking: Boolean
+) : Statistic {
+
+    @Suppress("MagicNumber")
+    constructor(state: SignedModalTableauxState) : this(
+        null,
+        state.moveHistory.size,
+        state.getDepth(0),
+        state.getWidth(0),
+        state.usedBacktracking
+    ) {
+        score = calculateScore()
+        if (state.usedBacktracking) {
+            score = (score * 0.9).toInt()
+        }
+    }
+
+    override var score: Int = calculateScore()
+
+    @Suppress("MagicNumber")
+    override fun calculateScore(): Int {
+        return ((1 / sqrt(numberOfMoves.toDouble())) * 1000).toInt()
+    }
 }

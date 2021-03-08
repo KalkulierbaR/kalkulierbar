@@ -69,3 +69,4 @@ class CloseMove(val nodeID: Int, val leafID: Int) : SignedModalTableauxMove() {
 class UndoMove : SignedModalTableauxMove() {
     override fun toString() = "(undo)"
 }
+    
