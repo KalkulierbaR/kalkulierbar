@@ -395,16 +395,21 @@ fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableau
  * 3. The selected formula is syntactically equivalent.
  * @param state State to apply close move on
  * @param nodeID Node to close
- * @param leafID:Node to close with
+ * @param closeID:Node to close with
  * @return state after applying move
  */
 @Suppress("ThrowsCount")
-fun applyClose(state: SignedModalTableauxState, nodeID: Int, leafID: Int): SignedModalTableauxState {
+fun applyClose(state: SignedModalTableauxState, nodeID: Int, closeID: Int): SignedModalTableauxState {
     val nodes = state.nodes
-    checkCloseIDRestrictions(state, nodeID, leafID)
+
+    if(closeID < nodeID){
+        return applyClose(state, closeID, nodeID);
+    }
+
+    checkCloseIDRestrictions(state, nodeID, closeID)
 
     val node = nodes[nodeID]
-    val leaf = nodes[leafID]
+    val leaf = nodes[closeID]
 
     if (node.sign == leaf.sign)
         throw IllegalMove("The selected formulas are not of opposite sign.")
@@ -415,12 +420,12 @@ fun applyClose(state: SignedModalTableauxState, nodeID: Int, leafID: Int): Signe
     if (!node.formula.synEq(leaf.formula))
         throw IllegalMove("The selected formula is not syntactically equivalent.")
 
-    // node.closeRef = leafID
+    // node.closeRef = closeID
     leaf.closeRef = nodeID
-    state.setClosed(leafID)
+    state.setClosed(closeID)
 
     if (state.backtracking)
-        state.moveHistory.add(CloseMove(nodeID, leafID))
+        state.moveHistory.add(CloseMove(nodeID, closeID))
 
     return state
 }

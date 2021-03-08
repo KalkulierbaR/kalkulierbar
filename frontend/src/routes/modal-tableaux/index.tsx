@@ -32,7 +32,11 @@ const ModalTableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 allowSequences={false}
                 modalLogic={true}
             />
-            <FormulaInput calculus={calculus} foLogic={false} params={params} />
+            <FormulaInput 
+                calculus={calculus} 
+                placeholder={"!(<>(!a)) -> []a"} 
+                params={params} 
+            />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />

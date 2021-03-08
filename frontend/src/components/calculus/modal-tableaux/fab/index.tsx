@@ -1,4 +1,5 @@
 import { Fragment, h } from "preact";
+import { Entry } from "../../../../types/app/statistics";
 
 import { ModalCalculusType } from "../../../../types/calculus";
 import {
@@ -61,6 +62,10 @@ interface Props {
      * Deletes selected Branch
      */
     pruneCallback: () => void;
+    /**
+     * Function called on closeProof
+     */
+    closeCallback: (stat: Entry[]) => void;
 }
 
 const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
@@ -74,6 +79,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
     resetDragTransforms,
     setShowPrefixDialog,
     pruneCallback,
+    closeCallback
 }) => {
     const {
         server,
@@ -119,7 +125,10 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             />
                         )}
                         <CenterFAB resetDragTransforms={resetDragTransforms} />
-                        <CheckCloseFAB calculus={calculus} />
+                        <CheckCloseFAB 
+                            calculus={calculus}
+                            onProoven={closeCallback}
+                        />
                         {showUndoFAB && (
                             <FAB
                                 icon={<UndoIcon />}

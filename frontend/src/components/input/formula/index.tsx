@@ -37,13 +37,9 @@ interface Props {
      */
     params?: Params[CalculusType];
     /**
-     * Whether this is currently FO logic
+     * The placeholder for the input field
      */
-    foLogic: boolean;
-    /**
-     * Shows a Prop Placeholder
-     */
-    sequentPlaceholder?: boolean;
+    placeholder: string
 }
 
 /**
@@ -66,8 +62,9 @@ const normalizeInput = (input: string) => {
 const FormulaInput: preact.FunctionalComponent<Props> = ({
     calculus,
     params,
-    foLogic,
-    sequentPlaceholder = false,
+    placeholder,
+    // foLogic,
+    // sequentPlaceholder = false,
 }) => {
     const {
         server,
@@ -231,15 +228,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     autocomplete="nope"
                     autocapitalize="off"
                     autocorrect="off"
-                    placeholder={
-                        foLogic
-                            ? sequentPlaceholder
-                                ? "\\all X: (\\all Y: !(P(X) -> P(Y)) |- \\all X: !P(X)"
-                                : "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"
-                            : sequentPlaceholder
-                            ? "!(a -> b) |- !b"
-                            : "!a, c; a; !c"
-                    }
+                    placeholder={placeholder}
                 />
                 {FOCalculus.includes(calculus) && (
                     <OptionList

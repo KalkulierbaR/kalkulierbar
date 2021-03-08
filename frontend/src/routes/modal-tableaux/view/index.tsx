@@ -5,14 +5,16 @@ import { useCallback, useState } from "preact/hooks";
 import ModalTableauxFAB from "../../../components/calculus/modal-tableaux/fab";
 import ModalTableauxTreeView from "../../../components/calculus/modal-tableaux/tree";
 import PrefixDialog from "../../../components/dialog/prefix-dialog";
+import SaveStatsDialog from "../../../components/dialog/save-stats-dialog";
 import TutorialDialog from "../../../components/tutorial/dialog";
+import { Entry } from "../../../types/app/statistics";
 import { Calculus, ModalCalculusType } from "../../../types/calculus";
 import {
     ExpandMove,
     ModalTableauxTreeLayoutNode,
 } from "../../../types/calculus/modal-tableaux";
 import { DragTransform } from "../../../types/ui";
-import { sendMove } from "../../../util/api";
+import { saveStatistics, sendMove } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { getLeaves, nodeName } from "../../../util/modal-tableaux";
 import { updateDragTransform } from "../../../util/tableaux";
@@ -58,6 +60,11 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
         setDragTransforms,
     ]);
     const [showPrefixDialog, setShowPrefixDialog] = useState<boolean>(false);
+
+    const [showSaveDialog, setShowSaveDialog] = useState<boolean>(false);
+    
+    const [stats, setStats] = useState<Entry[] | undefined>(undefined);
+
 
     const selectNodeCallback = (newNode: ModalTableauxTreeLayoutNode) => {
         if (newNode.id === selectedNodeId) {
@@ -130,6 +137,19 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
         }
     };
 
+    const saveStatisticsCallback = (userName: string) => {
+        if (userName !== '') {
+            saveStatistics(
+                server,
+                calculus,
+                state,
+                notificationHandler,
+                userName
+            );
+            setShowSaveDialog(false);
+        }
+    };
+
     return (
         <Fragment>
             <h2>Modal Tableux View</h2>
@@ -164,6 +184,10 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
                         notificationHandler,
                     );
                 }}
+                closeCallback={(statistics: Entry[]) => {
+                    setStats(statistics);
+                    setShowSaveDialog(true);
+                }}
             />
 
             <PrefixDialog
@@ -173,6 +197,14 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
                 submitPrefixCallback={sendPrefix}
                 notificationHandler={notificationHandler}
             />
+
+            <SaveStatsDialog
+                open={showSaveDialog}
+                onClose={() => setShowSaveDialog(false)}
+                submitCallback={saveStatisticsCallback}
+                stats={stats}
+            />
+
 
             <TutorialDialog calculus={calculus} />
         </Fragment>

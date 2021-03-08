@@ -86,7 +86,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                     <br />
                     Always and Sometimes can be used like this: {" "}
                     <code class={style.padRight}>
-                        {"(<>a & <>b) -> [](a & b)"}
+                        {"!(<>(!a)) -> []a"}
                     </code>
 
                 </p>
