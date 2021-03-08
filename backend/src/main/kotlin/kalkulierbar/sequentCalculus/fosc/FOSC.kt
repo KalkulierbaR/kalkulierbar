@@ -4,6 +4,8 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
+import kalkulierbar.Statistic
+import kalkulierbar.StatisticCalculus
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.FirstOrderSequentParser
@@ -15,12 +17,13 @@ import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
 import kalkulierbar.sequentCalculus.fosc.moveImplementations.*
 import kalkulierbar.sequentCalculus.moveImplementations.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.plus
 import kotlinx.serialization.list
-import kalkulierbar.StatisticCalculus
-import kalkulierbar.Statistic
+import kotlinx.serialization.modules.plus
 
-class FOSC : GenericSequentCalculus, JSONCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>(), StatisticCalculus<FOSCState> {
+class FOSC :
+    GenericSequentCalculus,
+    JSONCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>(),
+    StatisticCalculus<FOSCState> {
 
     private val serializer = Json(context = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
 

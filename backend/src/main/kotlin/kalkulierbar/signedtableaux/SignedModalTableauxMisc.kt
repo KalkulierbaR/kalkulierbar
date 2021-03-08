@@ -1,11 +1,11 @@
 package kalkulierbar.signedtableaux
 
+import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.tamperprotect.ProtectedState
-import kotlinx.serialization.Serializable
 import kotlin.math.max
 import kotlin.math.sqrt
-import kalkulierbar.Statistic
+import kotlinx.serialization.Serializable
 
 @Serializable
 class SignedModalTableauxState(
@@ -178,7 +178,7 @@ class SignedModalTableauxNode(
     fun getHash() = "($parent|$children|$isClosed|$closeRef|$formula)"
 }
 
-@Serializable 
+@Serializable
 class SignedModalTableauxStatistic(
     override var userName: String?,
     val numberOfMoves: Int,

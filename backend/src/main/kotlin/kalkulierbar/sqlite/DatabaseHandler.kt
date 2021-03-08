@@ -57,9 +57,9 @@ class DatabaseHandler {
             }
             return returnList
         }
-        
+
         private fun parseIdentifier(identifier: String): String {
-            return identifier.replace("-", "");
+            return identifier.replace("-", "")
         }
     }
 }

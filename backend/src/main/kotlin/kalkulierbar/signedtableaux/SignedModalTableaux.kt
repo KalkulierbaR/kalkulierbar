@@ -4,14 +4,14 @@ import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
+import kalkulierbar.Statistic
+import kalkulierbar.StatisticCalculus
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.StatisticCalculus
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.plus
 import kotlinx.serialization.list
-import kalkulierbar.Statistic
+import kotlinx.serialization.modules.plus
 
 class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>(), StatisticCalculus<SignedModalTableauxState> {
 
@@ -136,7 +136,6 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
      */
     override fun jsonToParam(json: String) = Unit
 
-
     /**
     * Calculates the statistics for a given proof
     * @param state A closed state
@@ -193,5 +192,4 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
     override fun getStartingFormula(state: String): String {
         return jsonToState(state).nodes[0].toString()
     }
-
 }
