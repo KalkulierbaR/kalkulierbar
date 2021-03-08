@@ -76,12 +76,12 @@ const Format: preact.FunctionalComponent<Props> = ({
                     <b>Modal Formula</b>
                 </p>
                 <p>
-                    Use and uppercase T and F to set the appropriate assumption to TRUE or FALSE.
+                    Use uppercase T and F to set the appropriate assumption to TRUE or FALSE.
 
                     <br />
-                    Assumptions and Prefixes can be used like this:{" "}
+                    Assumptions can be set like this:{" "}
                     <code class={style.padRight}>
-                        {"\\all X: R(f(X, a)) & \\ex Y: !R(f(Y, a))"}
+                        {"\\sign T:"} or {"\\sign F:"}
                     </code>
                     <br />
                     Always and Sometimes can be used like this: {" "}
@@ -131,6 +131,15 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                             <td>
                                 <code>{`<>`}a -&gt; {`<>`}a</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Assumption</td>
+                            <td>
+                                <code>\sign</code>
+                            </td>
+                            <td>
+                                <code>\sign T: a | b</code>
                             </td>
                         </tr>
                         <tr>

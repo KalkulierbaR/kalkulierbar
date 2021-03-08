@@ -8,6 +8,7 @@ import kalkulierbar.Statistic
 import kalkulierbar.StatisticCalculus
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
+import kalkulierbar.logic.LogicNode
 import kalkulierbar.parsers.ModalLogicParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.list
@@ -20,7 +21,21 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
     override val identifier = "signed-modal-tableaux"
 
     override fun parseFormulaToState(formula: String, params: Unit?): SignedModalTableauxState {
-        val parsedFormula = ModalLogicParser().parse(formula)
+        var sign = ""
+        if (formula.length > 8)
+            sign = formula.substring(0, 8)
+        var parsedFormula: LogicNode
+        if (sign == "\\sign T:") {
+            parsedFormula = ModalLogicParser().parse(formula.substring(8), 8)
+            return SignedModalTableauxState(parsedFormula, true)
+            
+        }
+        if (sign == "\\sign F:") {
+            parsedFormula = ModalLogicParser().parse(formula.substring(8), 8)   
+            return SignedModalTableauxState(parsedFormula, false)
+        }
+        parsedFormula = ModalLogicParser().parse(formula)   
+
         return SignedModalTableauxState(parsedFormula)
     }
 
