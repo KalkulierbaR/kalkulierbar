@@ -2059,11 +2059,263 @@ const ROUTES: Route[] = [
     {
         href: Calculus.modalTableaux,
         name:"Modal-Tableaux",
-        viewBox: "0 -16 450.015625 360",
+        viewBox: "0 -16 250 400",
         image:(
-            <text
-
-            />
+            <g transform="translate(0 0) scale(1)">
+                <g>
+                    <path d="M 46.77499961853027 304 Q 10.774999618530273 268 46.77499961853027 232" 
+                            class={style.link}>
+                    </path>
+                    <path d="M 139.7916660308838 376 Q 103.79166603088379 340 139.7916660308838 304" 
+                            class={style.link}>
+                    </path>
+                    <g transform="translate(0 0)">
+                        <line 
+                            class={style.link} 
+                            x1="121.0791654586792" 
+                            y1="22" 
+                            x2="121.0791654586792" 
+                            y2="72">
+                        </line>
+                        <g transform="translate(0 0)">
+                            <line 
+                                class={style.link} 
+                                x1="121.0791654586792" 
+                                y1="94" 
+                                x2="121.0791654586792" 
+                                y2="144">
+                            </line>
+                            <g transform="translate(0 0)">
+                                <line 
+                                    class={style.link} 
+                                    x1="121.0791654586792" 
+                                    y1="166" 
+                                    x2="46.77499961853027" 
+                                    y2="216">
+                                </line>
+                                <g transform="translate(0 0)">
+                                    <line 
+                                        class={style.link} 
+                                        x1="46.77499961853027" 
+                                        y1="238" 
+                                        x2="46.77499961853027" 
+                                        y2="288">
+                                    </line>
+                                    <g transform="translate(0 0)">
+                                        <g class=" _1_Mzif8JSl1VZes0ljSNY3 _3gM9omY37lP1ehrOpXxpMc">
+                                            <rect 
+                                                class={style.rect} 
+                                                x="18.691667556762695" 
+                                                y="285.3333435058594" 
+                                                width="57.5" 
+                                                height="26.66666603088379" 
+                                                rx="4">
+                                            </rect>
+                                            <text 
+                                                text-anchor="middle" 
+                                                class=" _32unYKTU0JVxI4CxcpWdyn" 
+                                                x="46.77499961853027" 
+                                                y="304">
+                                                1
+                                                𝕋 
+                                                a
+                                            </text>
+                                        </g>
+                                    </g>
+                                    <g class=" _1_Mzif8JSl1VZes0ljSNY3 _3gM9omY37lP1ehrOpXxpMc">
+                                        <rect 
+                                            class={style.rect} 
+                                            x="19.20833396911621" 
+                                            y="213.3333282470703" 
+                                            width="56.46666717529297" 
+                                            height="26.66666603088379" 
+                                            rx="4">
+                                        </rect>
+                                        <text 
+                                            text-anchor="middle" 
+                                            class=" _32unYKTU0JVxI4CxcpWdyn" 
+                                            x="46.77499961853027" 
+                                            y="232">
+                                            1
+                                            𝔽 
+                                            a
+                                        </text>
+                                    </g>
+                                </g>
+                                <line 
+                                    class={style.link} 
+                                    x1="121.0791654586792" 
+                                    y1="166" 
+                                    x2="190.70833206176758" 
+                                    y2="216">
+                                </line>
+                                <g transform="translate(0 0)">
+                                    <line 
+                                        class={style.link} 
+                                        x1="190.70833206176758" 
+                                        y1="238" 
+                                        x2="139.7916660308838" 
+                                        y2="288">
+                                    </line>
+                                    <g transform="translate(0 0)">
+                                        <line 
+                                            class={style.link}
+                                            x1="139.7916660308838" 
+                                            y1="310" 
+                                            x2="139.7916660308838" 
+                                            y2="360">
+                                        </line>
+                                        <g transform="translate(0 0)">
+                                            <g class=" _1_Mzif8JSl1VZes0ljSNY3 _3gM9omY37lP1ehrOpXxpMc">
+                                                <rect 
+                                                    class={style.rect} 
+                                                    x="111.70833587646484" 
+                                                    y="357.3333435058594" 
+                                                    width="57.5" 
+                                                    height="26.66666603088379" 
+                                                    rx="4">
+                                                </rect>
+                                                <text 
+                                                    text-anchor="middle" 
+                                                    class=" _32unYKTU0JVxI4CxcpWdyn" 
+                                                    x="139.7916660308838" 
+                                                    y="376">
+                                                    1
+                                                    𝕋 
+                                                    a
+                                                </text>
+                                            </g>
+                                        </g>
+                                        <g class=" _1_Mzif8JSl1VZes0ljSNY3 _3gM9omY37lP1ehrOpXxpMc">
+                                            <rect 
+                                                class={style.rect} 
+                                                x="112.22500610351562" 
+                                                y="285.3333435058594" 
+                                                width="56.46666717529297" 
+                                                height="26.66666603088379" 
+                                                rx="4">
+                                            </rect>
+                                            <text 
+                                                text-anchor="middle" 
+                                                class=" _32unYKTU0JVxI4CxcpWdyn" 
+                                                x="139.7916660308838" 
+                                                y="304">
+                                                1
+                                                𝔽 
+                                                a
+                                            </text>
+                                        </g>
+                                    </g>
+                                    <line 
+                                        class={style.link} 
+                                        x1="190.70833206176758" 
+                                        y1="238" 
+                                        x2="236.94999885559082" 
+                                        y2="288">
+                                    </line>
+                                    <g transform="translate(0 0)">
+                                        <g class=" _1_Mzif8JSl1VZes0ljSNY3 _3ntOrbbtMbfQe_DQvjxRJE">
+                                            <rect 
+                                                class={style.rect} 
+                                                x="204.71665954589844" 
+                                                y="285.3333435058594" 
+                                                width="65.80000305175781" 
+                                                height="26.66666603088379" 
+                                                rx="4">
+                                            </rect>
+                                            <text 
+                                                text-anchor="middle" 
+                                                class="" 
+                                                x="236.94999885559082" 
+                                                y="304">
+                                                1
+                                                𝔽 
+                                                ¬b
+                                            </text>
+                                        </g>
+                                    </g>
+                                    <g class=" _1_Mzif8JSl1VZes0ljSNY3 _3ntOrbbtMbfQe_DQvjxRJE">
+                                        <rect 
+                                            class={style.rect} 
+                                            x="158.47499084472656" 
+                                            y="213.3333282470703" 
+                                            width="65.80000305175781" 
+                                            height="26.66666603088379" 
+                                            rx="4">
+                                        </rect>
+                                        <text 
+                                            text-anchor="middle" 
+                                            class="" 
+                                            x="190.70833206176758" 
+                                            y="232">
+                                            1
+                                            𝔽 
+                                            ¬b
+                                        </text>
+                                    </g>
+                                </g>
+                                <g class=" _1_Mzif8JSl1VZes0ljSNY3 _3ntOrbbtMbfQe_DQvjxRJE">
+                                    <rect 
+                                        class={style.rect} 
+                                        x="70.12915802001953" 
+                                        y="141.3333282470703" 
+                                        width="103.23332977294922" 
+                                        height="26.66666603088379" 
+                                        rx="4">
+                                    </rect>
+                                    <text 
+                                        text-anchor="middle" 
+                                        class="" 
+                                        x="121.0791654586792" 
+                                        y="160">
+                                        1
+                                        𝔽 
+                                        (a ∧ ¬b)
+                                    </text>
+                                </g>
+                            </g>
+                            <g class=" _1_Mzif8JSl1VZes0ljSNY3 _3ntOrbbtMbfQe_DQvjxRJE">
+                                <rect 
+                                    class={style.rect} 
+                                    x="88.8458251953125" 
+                                    y="69.33333587646484" 
+                                    width="65.80000305175781" 
+                                    height="26.66666603088379" 
+                                    rx="4">
+                                </rect>
+                                <text 
+                                    text-anchor="middle" 
+                                    class="" 
+                                    x="121.0791654586792" 
+                                    y="88">
+                                    1
+                                    𝔽   
+                                    ¬a
+                                </text>
+                            </g>
+                        </g>
+                        <g class=" _1_Mzif8JSl1VZes0ljSNY3 _3ntOrbbtMbfQe_DQvjxRJE">
+                            <rect 
+                                class={style.rect} 
+                                x="46.745826721191406" 
+                                y="-2.6666669845581055" 
+                                width="150" 
+                                height="26.66666603088379" 
+                                rx="4">
+                            </rect>
+                            <text 
+                                text-anchor="middle" 
+                                class="" 
+                                x="121.0791654586792" 
+                                y="16">
+                                1
+                                𝔽   
+                                (¬a ∨ (a ∧ ¬b))
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
         )
     }
 ];
