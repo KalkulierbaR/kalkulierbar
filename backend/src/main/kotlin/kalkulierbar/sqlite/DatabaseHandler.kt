@@ -47,11 +47,11 @@ class DatabaseHandler {
                 val result: ResultSet = queryStmt.executeQuery(queryCount)
                 result.next()
                 val count = result.getInt(1)
-                
-                if (count > this.maxEntriesPerFormula){
+
+                if (count > this.maxEntriesPerFormula) {
                     val difference = count - maxEntriesPerFormula
                     val deleteStmt = (connection as Connection).createStatement()
-                    val delete: String = 
+                    val delete: String =
                         "DELETE FROM $identifier WHERE rowid IN (SELECT rowid FROM $identifier WHERE formula = \"$keyFormula\" ORDER BY time ASC LIMIT $difference);"
                     println(delete)
                     deleteStmt.executeUpdate(delete)

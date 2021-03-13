@@ -7,14 +7,13 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.UniversalQuantifier
 import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
+import kalkulierbar.parsers.Tokenizer
 import kalkulierbar.sequentCalculus.*
 import kalkulierbar.sequentCalculus.GenericSequentCalculusNode
 import kalkulierbar.sequentCalculus.TreeNode
 import kalkulierbar.sequentCalculus.fosc.FOSCState
 import kalkulierbar.sequentCalculus.moveImplementations.checkLeft
 import kalkulierbar.sequentCalculus.moveImplementations.checkRight
-import kalkulierbar.parsers.Tokenizer
-import com.sun.org.apache.xpath.internal.operations.Bool
 
 fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkLeft(state, nodeID, listIndex)
@@ -28,12 +27,12 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
     // No need to check if swapVariable is already in use for rule allLeft
 
     var replaceWithString = varAssign.get(formula.varName)
-    
+
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
         replaceWithString = findFittingVariableName(node)
-    
-    //Check if varAssign is a valid string for a constant
+
+    // Check if varAssign is a valid string for a constant
     isAllowedVarAssign(replaceWithString)
 
     // The newFormula which will be added to the left side of the sequence. This is the child of the quantifier
@@ -71,12 +70,12 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<
         throw IllegalMove("The rule allRight must be applied on a 'UniversalQuantifier'")
 
     var replaceWithString = varAssign.get(formula.varName)
-    
+
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
         replaceWithString = findFittingVariableName(node)
-    
-    //Check if varAssign is a valid string for a constant
+
+    // Check if varAssign is a valid string for a constant
     isAllowedVarAssign(replaceWithString)
 
     // Check if swapVariable is not already in use in the current seqeuence
@@ -119,12 +118,12 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<St
         throw IllegalMove("The rule exLeft must be applied on a 'ExistentialQuantifier'")
 
     var replaceWithString = varAssign.get(formula.varName)
-    
+
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
         replaceWithString = findFittingVariableName(node)
-    
-    //Check if varAssign is a valid string for a constant
+
+    // Check if varAssign is a valid string for a constant
     isAllowedVarAssign(replaceWithString)
 
     // Check if swapVariable is not already in use in the current seqeuence
@@ -167,14 +166,14 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
         throw IllegalMove("The rule exRight must be applied on a 'ExistentialQuantifier'")
 
     var replaceWithString = varAssign.get(formula.varName)
-    
+
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
         replaceWithString = findFittingVariableName(node)
-    
-    //Check if varAssign is a valid string for a constant
+
+    // Check if varAssign is a valid string for a constant
     isAllowedVarAssign(replaceWithString)
-    
+
     // No need to check if swapVariable is already in use for rule allLeft
 
     // The newFormula which will be added to the right side of the sequence. This is the child of the quantifier
@@ -226,7 +225,7 @@ private fun isAllowedVarAssign(str: String): Boolean {
     if (str.length <= 0) {
         throw IllegalMove("Can't Instantiate with empty identifier.")
     }
-        
+
     if (str.get(0).isUpperCase()) {
         throw IllegalMove("Constants need to start with a lowercase Letter.")
     }
@@ -235,5 +234,5 @@ private fun isAllowedVarAssign(str: String): Boolean {
         if (!Tokenizer.isAllowedChar(str.get(i)))
             throw IllegalMove("Character at position " + i.toString() + " is not allowed within Constant")
     }
-    return true;
+    return true
 }

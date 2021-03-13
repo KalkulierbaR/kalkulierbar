@@ -28,13 +28,12 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
         if (sign == "\\sign T:") {
             parsedFormula = ModalLogicParser().parse(formula.substring(8), 8)
             return SignedModalTableauxState(parsedFormula, true)
-            
         }
         if (sign == "\\sign F:") {
-            parsedFormula = ModalLogicParser().parse(formula.substring(8), 8)   
+            parsedFormula = ModalLogicParser().parse(formula.substring(8), 8)
             return SignedModalTableauxState(parsedFormula, false)
         }
-        parsedFormula = ModalLogicParser().parse(formula)   
+        parsedFormula = ModalLogicParser().parse(formula)
 
         return SignedModalTableauxState(parsedFormula)
     }

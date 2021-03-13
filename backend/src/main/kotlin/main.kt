@@ -21,9 +21,6 @@ import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.StateKeeper
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import kalkulierbar.StatisticModule
 
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
@@ -166,7 +163,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
                 statisticsAsStrings.add(endpoint.getStatistic(state, null))
 
                 val statistics = Statistics(statisticsAsStrings.toList(), endpoint.getStartingFormula(state), endpoint)
-                
+
                 ctx.result(statistics.toJson())
             }
 

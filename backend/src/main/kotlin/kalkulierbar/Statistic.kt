@@ -1,12 +1,10 @@
 package kalkulierbar
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.modules.SerializersModule
 import kalkulierbar.sequentCalculus.SequentCalculusStatistic
 import kalkulierbar.signedtableaux.SignedModalTableauxStatistic
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 
 interface Statistic {
 
@@ -41,12 +39,12 @@ class Statistics(
     var entries: List<Statistic> = listOf<Statistic>()
     var columnNames: List<String> = listOf<String>()
 
-    constructor(entries: List<Statistic>, formula: String):this(formula) {
+    constructor(entries: List<Statistic>, formula: String) : this(formula) {
         this.entries = entries
         this.columnNames = entries[0].columnNames()
     }
 
-    constructor(entries: List<String>, formula: String, endpoint: StatisticCalculus<*>): this(formula) {
+    constructor(entries: List<String>, formula: String, endpoint: StatisticCalculus<*>) : this(formula) {
 
         var statistics = entries.map { endpoint.jsonToStatistic(it) }
 

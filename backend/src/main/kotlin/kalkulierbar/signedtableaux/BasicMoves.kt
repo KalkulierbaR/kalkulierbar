@@ -402,8 +402,8 @@ fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableau
 fun applyClose(state: SignedModalTableauxState, nodeID: Int, closeID: Int): SignedModalTableauxState {
     val nodes = state.nodes
 
-    if(closeID < nodeID){
-        return applyClose(state, closeID, nodeID);
+    if (closeID < nodeID) {
+        return applyClose(state, closeID, nodeID)
     }
 
     checkCloseIDRestrictions(state, nodeID, closeID)
