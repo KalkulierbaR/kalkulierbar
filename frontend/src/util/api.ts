@@ -1,7 +1,7 @@
 import { CheckCloseResponse } from "../types/app/api";
 import { AppState, AppStateUpdater } from "../types/app/app-state";
 import { NotificationHandler, NotificationType } from "../types/app/notification";
-import { Entry } from "../types/app/statistics";
+import { Statistics } from "../types/app/statistics";
 import { CalculusType, Move } from "../types/calculus";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
@@ -25,7 +25,7 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     notificationHandler: NotificationHandler,
     calculus: C,
     state: AppState[C],
-    onProoven?: (stats: Entry[]) => void,
+    onProoven?: (stats: Statistics) => void,
 ) => {
     const url = `${server}/${calculus}/close`;
     try {
@@ -63,7 +63,7 @@ export const getStatistics = async <C extends CalculusType = CalculusType>(
     calculus: C,
     state: AppState[C],
     notificationHandler: NotificationHandler,
-    onProoven: (stats: Entry[]) => void
+    onProoven: (stats: Statistics) => void
 ) => {
     const url = `${server}/${calculus}/statistics`;
     try {
@@ -77,7 +77,7 @@ export const getStatistics = async <C extends CalculusType = CalculusType>(
         if (response.status !== 200) {
             notificationHandler.error(await response.text());
         }else {
-            onProoven((await response.json() as Entry[]));
+            onProoven((await response.json() as Statistics));
         }
     }catch (e) {
         notificationHandler.error((e as Error).message);

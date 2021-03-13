@@ -6,6 +6,7 @@ class DatabaseHandler {
 
     companion object {
         private var connection: Connection? = null
+        private val maxEntriesPerFormula: Int = 5
 
         @Suppress("TooGenericExceptionCaught")
         public fun init() {
@@ -24,7 +25,7 @@ class DatabaseHandler {
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
                 val create: String =
-                    "CREATE TABLE IF NOT EXISTS $sqlIdentifier (formula VARCHAR(8000) NOT NULL, statistics VARCHAR(8000) NOT NULL, score INTEGER NOT NULL);"
+                    "CREATE TABLE IF NOT EXISTS $sqlIdentifier (formula VARCHAR(8000) NOT NULL, statistics VARCHAR(8000) NOT NULL, score INTEGER NOT NULL, time TIMESTAMP NOT NULL);"
                 stmt.execute(create)
                 stmt.close()
             }
@@ -36,9 +37,25 @@ class DatabaseHandler {
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
                 val insert: String =
-                    "INSERT INTO $sqlIdentifier VALUES (\"$keyFormula\", '$statisticsJSON', $score);"
+                    "INSERT INTO $sqlIdentifier VALUES (\"$keyFormula\", '$statisticsJSON', $score, CURRENT_TIMESTAMP);"
                 stmt.execute(insert)
                 stmt.close()
+
+                val queryStmt = (connection as Connection).createStatement()
+                val queryCount: String =
+                    "SELECT COUNT() FROM $identifier WHERE formula = \"$keyFormula\";"
+                val result: ResultSet = queryStmt.executeQuery(queryCount)
+                result.next()
+                val count = result.getInt(1)
+                
+                if (count > this.maxEntriesPerFormula){
+                    val difference = count - maxEntriesPerFormula
+                    val deleteStmt = (connection as Connection).createStatement()
+                    val delete: String = 
+                        "DELETE FROM $identifier WHERE rowid IN (SELECT rowid FROM $identifier WHERE formula = \"$keyFormula\" ORDER BY time ASC LIMIT $difference);"
+                    println(delete)
+                    deleteStmt.executeUpdate(delete)
+                }
             }
         }
 

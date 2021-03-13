@@ -7,6 +7,7 @@ import kalkulierbar.Calculus
 import kalkulierbar.KBAR_DEFAULT_PORT
 import kalkulierbar.KalkulierbarException
 import kalkulierbar.StatisticCalculus
+import kalkulierbar.Statistics
 import kalkulierbar.dpll.DPLL
 import kalkulierbar.nonclausaltableaux.NonClausalTableaux
 import kalkulierbar.resolution.FirstOrderResolution
@@ -20,6 +21,9 @@ import kalkulierbar.tableaux.PropositionalTableaux
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.StateKeeper
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import kalkulierbar.StatisticModule
 
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
@@ -161,14 +165,9 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
                 // add the current statistic without name to the resultset
                 statisticsAsStrings.add(endpoint.getStatistic(state, null))
 
-                // Parse the Json-Strings to the Statistic class
-                var statistics = statisticsAsStrings.map { endpoint.jsonToStatistic(it) }
-
-                statistics = statistics.sortedBy { it.score }
-                statistics = statistics.asReversed()
-
-                // Serialize the List of Statistics back to a Json-String
-                ctx.result(endpoint.statisticsToJson(statistics))
+                val statistics = Statistics(statisticsAsStrings.toList(), endpoint.getStartingFormula(state), endpoint)
+                
+                ctx.result(statistics.toJson())
             }
 
             // Save the statistic under the given name

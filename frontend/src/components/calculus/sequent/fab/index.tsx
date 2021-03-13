@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
 
-import { Entry } from "../../../../types/app/statistics";
+import { Statistics } from "../../../../types/app/statistics";
 import { SequentCalculusType } from "../../../../types/calculus";
 import { FOSCState, PSCState } from "../../../../types/calculus/sequent";
 import { sendMove } from "../../../../util/api";
@@ -37,7 +37,7 @@ interface Props {
     /**
      * Opens Save Dialog
      */
-    closeCallback: (stats: Entry[]) => void;
+    closeCallback: (stats: Statistics) => void;
 }
 
 const SequentFAB: preact.FunctionalComponent<Props> = ({

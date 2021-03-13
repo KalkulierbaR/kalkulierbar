@@ -118,6 +118,7 @@ data class SequentCalculusParam(
 )
 
 @Serializable
+@SerialName("SequentCalculusStatistic")
 class SequentCalculusStatistic(
     override var userName: String?,
     val nodeAmount: Int,
@@ -126,7 +127,6 @@ class SequentCalculusStatistic(
     val usedStupidMode: Boolean
 ) : Statistic {
 
-    @Suppress("MagicNumber")
     constructor(state: GenericSequentCalculusState) : this(
         null,
         state.tree.size,
@@ -145,5 +145,9 @@ class SequentCalculusStatistic(
         if (usedStupidMode == true) 
             ret = (ret * 0.9).toInt()
         return ret
+    }
+
+    override fun columnNames(): List<String> {
+        return listOf("Name", "Number of Sequences", "Depth", "Width", "Used Help", "Score")
     }
 }

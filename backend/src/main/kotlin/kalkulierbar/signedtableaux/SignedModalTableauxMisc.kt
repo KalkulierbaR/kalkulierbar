@@ -187,7 +187,6 @@ class SignedModalTableauxStatistic(
     val usedBacktracking: Boolean
 ) : Statistic {
 
-    @Suppress("MagicNumber")
     constructor(state: SignedModalTableauxState) : this(
         null,
         state.moveHistory.size,
@@ -207,5 +206,9 @@ class SignedModalTableauxStatistic(
             ret = (ret * 0.9).toInt()
         }
         return ret
+    }
+
+    override fun columnNames(): List<String> {
+        return listOf("Name", "Number of Rules", "Depth", "Width", "Used backtracking", "Score")
     }
 }

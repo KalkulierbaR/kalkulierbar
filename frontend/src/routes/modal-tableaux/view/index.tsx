@@ -7,7 +7,7 @@ import ModalTableauxTreeView from "../../../components/calculus/modal-tableaux/t
 import PrefixDialog from "../../../components/dialog/prefix-dialog";
 import SaveStatsDialog from "../../../components/dialog/save-stats-dialog";
 import TutorialDialog from "../../../components/tutorial/dialog";
-import { Entry } from "../../../types/app/statistics";
+import { Statistics } from "../../../types/app/statistics";
 import { Calculus, ModalCalculusType } from "../../../types/calculus";
 import {
     ExpandMove,
@@ -63,7 +63,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
 
     const [showSaveDialog, setShowSaveDialog] = useState<boolean>(false);
     
-    const [stats, setStats] = useState<Entry[] | undefined>(undefined);
+    const [stats, setStats] = useState<Statistics | undefined>(undefined);
 
 
     const selectNodeCallback = (newNode: ModalTableauxTreeLayoutNode) => {
@@ -184,7 +184,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
                         notificationHandler,
                     );
                 }}
-                closeCallback={(statistics: Entry[]) => {
+                closeCallback={(statistics: Statistics) => {
                     setStats(statistics);
                     setShowSaveDialog(true);
                 }}

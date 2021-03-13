@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { Entry } from "../../../../types/app/statistics";
+import { Statistics } from "../../../../types/app/statistics";
 
 import { ModalCalculusType } from "../../../../types/calculus";
 import {
@@ -65,7 +65,7 @@ interface Props {
     /**
      * Function called on closeProof
      */
-    closeCallback: (stat: Entry[]) => void;
+    closeCallback: (stat: Statistics) => void;
 }
 
 const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({

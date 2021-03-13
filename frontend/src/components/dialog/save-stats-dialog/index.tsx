@@ -1,7 +1,7 @@
 import { h } from "preact";
 
 import Dialog from "..";
-import { Entry } from "../../../types/app/statistics";
+import { Statistics } from "../../../types/app/statistics";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
@@ -29,9 +29,13 @@ interface Props {
      */
     submitLabel?: string;
     /**
+     * Label for the Cancel button
+     */
+     cancelLabel?: string;
+    /**
      * Statistics of current Calculus
      */
-    stats?: Entry[];
+    stats?: Statistics;
     /**
      * Additional className for the element
      */
@@ -44,6 +48,7 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
     onClose,
     submitCallback,
     submitLabel = "Save",
+    cancelLabel = "Cancel",
     stats,
     className,
 }) => {
@@ -66,6 +71,14 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
         }
         submitCallback(textInput.value);
     };
+
+    /**
+     * Close the dialog
+     * @returns {void}
+     */
+    const cancel = () => {
+        onClose()
+    }
 
     /**
      * Handle the KeyDown event of the input fields
@@ -99,14 +112,14 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
             {stats !== undefined && (
                 <table>
                     <tr>
-                        {Object.keys(stats[0]).map((elem) => (
+                        {stats.columnNames.map((elem) => (
                             <td>
                                 {`${elem.toString()}`}
                             </td>
 
                         ))}
                     </tr>
-                    {stats.map((stat) => (
+                    {stats.entries.map((stat) => (
                         <tr>
                             {Object.values(stat).map((val) => (
                                 val === null &&
@@ -130,17 +143,8 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
                 </table>
 
             )}
-            {/* {"Please enter your name to save the close proof."}
-            {""}
-            <TextInput
-                id={"name"}
-                label={"Your name : "}
-                inline={true}
-                onKeyDown={onKeyDown}
-                onFocus={onFocus}
-                autoFocus={!smallScreen}
-            /> */}
             <Btn onClick={submit} label={submitLabel} />
+            <Btn onClick={cancel} label={cancelLabel} />
         </Dialog>
     );
 };
