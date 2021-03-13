@@ -196,15 +196,16 @@ class SignedModalTableauxStatistic(
         state.usedBacktracking
     ) {
         score = calculateScore()
-        if (state.usedBacktracking) {
-            score = (score * 0.9).toInt()
-        }
     }
-
+    
     override var score: Int = calculateScore()
-
+    
     @Suppress("MagicNumber")
     override fun calculateScore(): Int {
-        return ((1 / sqrt(numberOfMoves.toDouble())) * 1000).toInt()
+        var ret = ((1 / sqrt(numberOfMoves.toDouble())) * 1000).toInt()
+        if (usedBacktracking) {
+            ret = (ret * 0.9).toInt()
+        }
+        return ret
     }
 }

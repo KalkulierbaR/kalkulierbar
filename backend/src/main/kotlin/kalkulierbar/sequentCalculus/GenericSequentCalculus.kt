@@ -135,15 +135,15 @@ class SequentCalculusStatistic(
         state.showOnlyApplicableRules
     ) {
         score = calculateScore()
-        if (state.showOnlyApplicableRules) {
-            score = (score * 0.9).toInt()
-        }
     }
 
     override var score: Int = calculateScore()
 
     @Suppress("MagicNumber")
     override fun calculateScore(): Int {
-        return ((1 / sqrt(nodeAmount.toDouble())) * 1000).toInt()
+        var ret = ((1 / sqrt(nodeAmount.toDouble())) * 1000).toInt()
+        if (usedStupidMode == true) 
+            ret = (ret * 0.9).toInt()
+        return ret
     }
 }

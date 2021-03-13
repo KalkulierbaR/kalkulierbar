@@ -78,33 +78,66 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const [stats, setStats] = useState<Entry[] | undefined>(undefined);
 
+    const checkIfRuleIsAppliedOnCorrectSite = (selected: string, ruleId: number): boolean => {
+        if (
+            selected.charAt(0) === "l" &&
+            getFORuleSet().rules[ruleId].site === "right"
+        ) {
+            setSelectedRuleId(undefined);
+            notificationHandler.error(
+                "Can't use right hand side rule on the left side!",
+            );
+            return false;
+        }
+
+        if (
+            selected.charAt(0) === "r" &&
+            getFORuleSet().rules[ruleId].site === "left"
+        ) {
+            setSelectedRuleId(undefined);
+            notificationHandler.error(
+                "Can't use left hand side rule on the right side!",
+            );
+            return false;
+        }
+
+        return true;
+    }
+
     const selectRuleCallback = (newRuleId: number) => {
         if (newRuleId === selectedRuleId) {
             // The same Rule was selected again => deselect it
             setSelectedRuleId(undefined);
-        } else {
-            setSelectedRuleId(newRuleId);
-            if (
-                newRuleId !== undefined &&
-                selectedNode !== undefined &&
-                selectedNode.children.length === 0
-            ) {
-                if (newRuleId === 0) {
-                    sendMove(
-                        server,
-                        calculus,
-                        state,
-                        { type: "Ax", nodeID: selectedNodeId! },
-                        onChange,
-                        notificationHandler,
-                    );
-                    setSelectedNodeId(undefined);
-                    setSelectedRuleId(undefined);
-                    setSelectedListIndex(undefined);
-                } else if (
+            return
+        } 
+        setSelectedRuleId(newRuleId);
+        if (
+            newRuleId !== undefined &&
+            selectedNode !== undefined &&
+            selectedNode.children.length === 0
+        ) {
+            if (newRuleId === 0) {
+                sendMove(
+                    server,
+                    calculus,
+                    state,
+                    { type: "Ax", nodeID: selectedNodeId! },
+                    onChange,
+                    notificationHandler,
+                );
+                setSelectedNodeId(undefined);
+                setSelectedRuleId(undefined);
+                setSelectedListIndex(undefined);
+            } else {
+                if (selectedListIndex === undefined)
+                    return;
+                    
+                if (!checkIfRuleIsAppliedOnCorrectSite(selectedListIndex, newRuleId))
+                    return
+
+                if (
                     newRuleId >= 9 &&
-                    newRuleId <= 12 &&
-                    selectedListIndex !== undefined
+                    newRuleId <= 12
                 ) {
                     // Selected Rule is a Quantifier
                     setVarOrigins([nodeName(selectedNode)]);
@@ -134,27 +167,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             setShowVarAssignDialog(true);
                         }
                     }
-                } else if (selectedListIndex !== undefined) {
-                    if (
-                        selectedListIndex.charAt(0) === "l" &&
-                        getFORuleSet().rules[newRuleId].site === "right"
-                    ) {
-                        setSelectedRuleId(undefined);
-                        notificationHandler.error(
-                            "Can't use right hand side rule on the left side!",
-                        );
-                        return;
-                    }
-                    if (
-                        selectedListIndex.charAt(0) === "r" &&
-                        getFORuleSet().rules[newRuleId].site === "left"
-                    ) {
-                        setSelectedRuleId(undefined);
-                        notificationHandler.error(
-                            "Can't use left hand side rule on the right side!",
-                        );
-                        return;
-                    }
+                } else {
                     sendMove(
                         server,
                         calculus,
