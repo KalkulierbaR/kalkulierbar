@@ -1,10 +1,13 @@
 import { h } from "preact";
+import { useCallback, useState } from "preact/hooks";
 
 import Dialog from "..";
 import { Statistics } from "../../../types/app/statistics";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
+import { StatisticEntry } from "../../../types/calculus";
+
 
 interface Props {
     /**
@@ -54,6 +57,26 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
 }) => {
     const { smallScreen } = useAppState();
 
+    const memoizedCallback = useCallback(
+        () => {
+          setEntries(stats === undefined ? [] : stats.entries)
+        },
+        [stats],
+    );
+
+    const [entries, setEntries] = useState<StatisticEntry[]>(
+        stats === undefined ? [] : stats.entries,
+    );
+
+    const [asc, setAsc] = useState<boolean>(
+        false,
+    )
+
+    const [sortedBy, setSortedBy] = useState<number>(
+        -1,
+    )
+
+
     /**
      * Submit the close proof with the users name
      * @returns {void}
@@ -102,6 +125,30 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
         target.focus();
     };
 
+    const sortByColumn = (columnIndex: number) => {
+        if (stats === undefined)
+            return
+
+        if (sortedBy === columnIndex)
+            setAsc(!asc)
+        setSortedBy(columnIndex)
+
+        const tmp: StatisticEntry[] = [];
+        stats.entries.forEach(elem => {
+            tmp.push(elem)
+        })
+        tmp.sort((a, b) => {
+            if (Object.values(a)[columnIndex] <= Object.values(b)[columnIndex])
+                return asc ? -1 : 1;
+             if (Object.values(a)[columnIndex] === Object.values(b)[columnIndex])
+                return 0;
+             
+                return asc ? 1 : -1
+        })
+        
+        setEntries(tmp)
+    }
+
     return (
         <Dialog
             open={open}
@@ -109,17 +156,20 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
             onClose={onClose}
             class={className}
         >
+            {open && entries.length === 0 && memoizedCallback()}
             {stats !== undefined && (
                 <table>
                     <tr>
-                        {stats.columnNames.map((elem) => (
-                            <td>
+                        {stats.columnNames.map((elem, index) => (
+                            <td
+                                onClick={() => sortByColumn(index + 1)}
+                            >
                                 {`${elem.toString()}`}
                             </td>
 
                         ))}
                     </tr>
-                    {stats.entries.map((stat) => (
+                    {entries.map((stat) => (
                         <tr>
                             {Object.values(stat).map((val, index) => (
                                 index !== 0 && val === null &&
