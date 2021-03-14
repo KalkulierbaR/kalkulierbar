@@ -12,11 +12,10 @@ interface Props {
     parent?: Tree<SequentTreeLayoutNode>;
     selectedNodeId?: number;
     selectedListIndex?: string;
-    selectNodeCallback: (
-        n: SequentTreeLayoutNode,
-        selectValue?: boolean,
+    selectFormulaCallback: (
+        f: FormulaTreeLayoutNode,
+        nodeId: number
     ) => void;
-    selectFormulaCallback: (f: FormulaTreeLayoutNode) => void;
     zoomFactor: number;
     ruleName: string;
 }
@@ -24,7 +23,6 @@ interface Props {
 export const SubTree: preact.FunctionalComponent<Props> = ({
     node,
     parent,
-    selectNodeCallback,
     selectFormulaCallback,
     selectedNodeId,
     selectedListIndex,
@@ -40,7 +38,6 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
                         <SubTree
                             node={c}
                             parent={node}
-                            selectNodeCallback={selectNodeCallback}
                             selectedNodeId={selectedNodeId}
                             zoomFactor={zoomFactor}
                             ruleName={ruleName}
@@ -51,7 +48,6 @@ export const SubTree: preact.FunctionalComponent<Props> = ({
                 );
             })}
             <SequentTreeNode
-                selectNodeCallback={selectNodeCallback}
                 node={node}
                 parent={parent}
                 // selectedNodeId={selectedNodeId}

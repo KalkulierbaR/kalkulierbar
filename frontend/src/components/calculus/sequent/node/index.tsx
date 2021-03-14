@@ -23,14 +23,12 @@ interface Props {
 
     selected: boolean;
 
-    selectNodeCallback: (
-        node: SequentTreeLayoutNode,
-        selectValue?: boolean,
-    ) => void;
-
     selectedListIndex?: string;
 
-    selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
+    selectFormulaCallback: (
+        formula: FormulaTreeLayoutNode,
+        nodeId: number
+    ) => void;
 }
 
 const lineUnderNode = (
@@ -185,23 +183,12 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
     parent,
     selected,
     selectedListIndex,
-    selectNodeCallback,
     selectFormulaCallback,
 }) => {
     const textRef = useRef<SVGTextElement>();
 
-    // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
-    const nodeIsClickable = !node.data.isClosed;
-
-    /**
-     * Handle the onClick event of the node
-     * @returns {void}
-     */
-    const handleClick = () => {
-        if (nodeIsClickable) {
-            selectNodeCallback(node.data);
-        }
-    };
+    //Outer Nodes are always unclickable
+    const nodeIsClickable = false;
 
     if (
         node.data.leftFormulas.length === 0 &&
@@ -232,7 +219,7 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
     }
 
     return (
-        <g onClick={handleClick}>
+        <g>
             <text
                 ref={textRef}
                 class={style.trans}
@@ -248,7 +235,6 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
                 selected={selected}
                 class={classMap({
                     [style.unselected]: !selected && !node.data.isClosed,
-                    [style.nodeClickable]: !node.data.isClosed,
                     [style.node]: !selected,
                     [style.rectSelected]: selected,
                 })}
@@ -260,7 +246,6 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
                     leftFormulas={node.data.leftFormulas}
                     rightFormulas={node.data.rightFormulas}
                     selected={selected}
-                    selectNodeCallback={selectNodeCallback}
                     selectFormulaCallback={selectFormulaCallback}
                     selectedListIndex={selectedListIndex}
                 />

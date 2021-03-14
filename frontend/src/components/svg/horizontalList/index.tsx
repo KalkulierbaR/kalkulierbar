@@ -35,18 +35,14 @@ interface Props {
     /**
      * The Callback if the Formula got selected
      */
-    selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
+    selectFormulaCallback: (
+        formula: FormulaTreeLayoutNode,
+        nodeId: number
+    ) => void;
     /**
      * Index of the selected Formula
      */
     selectedListIndex?: string;
-    /**
-     * The Callback if the Node got selected
-     */
-    selectNodeCallback: (
-        node: SequentTreeLayoutNode,
-        selectValue?: boolean,
-    ) => void;
 }
 
 const NODE_SPACING = 4;
@@ -58,14 +54,12 @@ const NODE_PUFFER = 16;
  * Draws a Comma at the given coordinates
  * @param {number} x the x coordinate on which the comma is drawn
  * @param {number} y the y coordinate on which the comma is drawn
- * @param {number} selected whether or not the current node is selected
  * @param {number} isClosed whether or not the current node is closed
  * @returns {any} HTML
  */
 const drawComma = (
     x: number,
     y: number,
-    selected: boolean,
     isClosed: boolean,
 ) => {
     return (
@@ -73,7 +67,6 @@ const drawComma = (
             class={classMap({
                 [style.text]: true,
                 [style.textClosed]: isClosed,
-                [style.textSelected]: selected,
             })}
             text-anchor="left"
             x={x}
@@ -90,7 +83,6 @@ const drawComma = (
  * @param {string | undefined} selectedListIndex string in the pattern of (r, l)[0-9]* indicating the side of the formula and its index
  * @param {number} xCoord the x coordinate in which the Formula is drawn
  * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
- * @param {Function<SequentTreeLayoutNode>} selectNodeCallback KEKW
  * @param {boolean} selected the parameter which tell if the current node is selected or not
  * @returns {any} HTML
  */
@@ -99,8 +91,10 @@ const drawFormula = (
     node: LayoutItem<SequentTreeLayoutNode>,
     selectedListIndex: string | undefined,
     xCoord: number,
-    selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void,
-    selectNodeCallback: (node: SequentTreeLayoutNode) => void,
+    selectFormulaCallback: (
+        formula: FormulaTreeLayoutNode,
+        nodeId: number
+    ) => void,
     selected: boolean,
 ) => {
     return (
@@ -115,7 +109,6 @@ const drawFormula = (
             }
             selectedListIndex={selectedListIndex}
             selectFormulaCallback={selectFormulaCallback}
-            selectNodeCallback={selectNodeCallback}
             selected={selected}
         />
     );
@@ -125,14 +118,12 @@ const drawFormula = (
  * Draws the Seperator between the right and left Formulas
  * @param {number} x the x coordinate on which the seperator is drawn
  * @param {number} y the y coordinate on which the seperator is drawn
- * @param {boolean} selected whether or not the current node is selected
  * @param {boolean} isClosed whether or not the current node is closed
  * @returns {any} HTML
  */
 const drawSeperator = (
     x: number,
     y: number,
-    selected: boolean,
     isClosed: boolean,
 ) => {
     return (
@@ -140,7 +131,6 @@ const drawSeperator = (
             class={classMap({
                 [style.text]: true,
                 [style.textClosed]: isClosed,
-                [style.textSelected]: selected,
             })}
             text-anchor="left"
             x={x}
@@ -169,8 +159,10 @@ const getSequence = (
     node: LayoutItem<SequentTreeLayoutNode>,
     selectedListIndex: string | undefined,
     dimsX: number,
-    selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void,
-    selectNodeCallback: (node: SequentTreeLayoutNode) => void,
+    selectFormulaCallback: (
+        formula: FormulaTreeLayoutNode,
+        nodeId: number
+    ) => void,
     selected: boolean,
 ) => {
     let totalSize = 0;
@@ -209,7 +201,6 @@ const getSequence = (
                 selectedListIndex,
                 totalSize,
                 selectFormulaCallback,
-                selectNodeCallback,
                 selected,
             ),
         );
@@ -217,14 +208,14 @@ const getSequence = (
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if (index < leftFormulas.length - 1) {
             htmlArray.push(
-                drawComma(totalSize, node.y, selected, node.data.isClosed),
+                drawComma(totalSize, node.y, node.data.isClosed),
             );
             totalSize += NODE_SPACING;
         }
     });
 
     htmlArray.push(
-        drawSeperator(totalSize, node.y, selected, node.data.isClosed),
+        drawSeperator(totalSize, node.y, node.data.isClosed),
     );
     totalSize += SEPERATOR_SPACING;
 
@@ -240,7 +231,6 @@ const getSequence = (
                 selectedListIndex,
                 totalSize,
                 selectFormulaCallback,
-                selectNodeCallback,
                 selected,
             ),
         );
@@ -248,7 +238,7 @@ const getSequence = (
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if (index < rightFormulas.length - 1) {
             htmlArray.push(
-                drawComma(totalSize, node.y, selected, node.data.isClosed),
+                drawComma(totalSize, node.y, node.data.isClosed),
             );
             totalSize += NODE_SPACING;
         }
@@ -265,7 +255,6 @@ const horizontalList: preact.FunctionalComponent<Props> = ({
     selected,
     selectFormulaCallback,
     selectedListIndex,
-    selectNodeCallback,
 }) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
@@ -291,7 +280,6 @@ const horizontalList: preact.FunctionalComponent<Props> = ({
                 selectedListIndex,
                 dims.x,
                 selectFormulaCallback,
-                selectNodeCallback,
                 selected,
             ).map((el) => el)}
         </g>

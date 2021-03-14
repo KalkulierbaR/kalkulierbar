@@ -17,24 +17,21 @@ interface Props {
     nodes: SequentNode[];
     // The id of the selected Node
     selectedNodeId: number | undefined;
-    // The function to call, when user selects a node
-    selectNodeCallback: (
-        node: SequentTreeLayoutNode,
-        selectValue?: boolean,
-    ) => void;
     // informs the element if the screen is small
     smallScreen: boolean;
     // The id of the selected Rule
     selectedRuleName: string;
     // The funktion to call, when user selects a Formula
-    selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
+    selectFormulaCallback: (
+        formula: FormulaTreeLayoutNode,
+        nodeId: number
+    ) => void;
     // The selected index of a formula
     selectedListIndex?: string;
 }
 
 const SequentTreeView: preact.FunctionalComponent<Props> = ({
     nodes,
-    selectNodeCallback,
     selectedNodeId,
     selectedRuleName,
     selectFormulaCallback,
@@ -50,7 +47,6 @@ const SequentTreeView: preact.FunctionalComponent<Props> = ({
             (t) => t.data.id === selectedNodeId,
             (t) => t,
         )!;
-        selectNodeCallback(node.data, undefined);
 
         const { x, y } = node;
         return [treeWidth / 2 - x, treeHeight / 2 - y];
@@ -77,7 +73,6 @@ const SequentTreeView: preact.FunctionalComponent<Props> = ({
                                 <SubTree
                                     node={root}
                                     selectedNodeId={selectedNodeId}
-                                    selectNodeCallback={selectNodeCallback}
                                     zoomFactor={transform.k}
                                     ruleName={selectedRuleName}
                                     selectFormulaCallback={

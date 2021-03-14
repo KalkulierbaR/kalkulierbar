@@ -72,102 +72,117 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
     const [varOrigins, setVarOrigins] = useState<string[]>([]);
 
+    const trySendMove = (ruleId: number | undefined, nodeId: number | undefined, listIndex: string | undefined) => {
+        if (
+            ruleId === undefined || 
+            nodeId === undefined ||
+            listIndex === undefined
+        )
+            return;
+
+        const node = state.tree[nodeId]
+
+        if (ruleId === 0) {
+            sendMove(
+                server,
+                calculus,
+                state,
+                { type: "Ax", nodeID: nodeId },
+                onChange,
+                notificationHandler,
+            );
+            setSelectedNodeId(undefined);
+            setSelectedRuleId(undefined);
+            setSelectedListIndex(undefined);
+        } else if (
+            ruleId >= 9 &&
+            ruleId <= 12 && 
+            node !== undefined
+        ) {
+            // Selected Rule is a Quantifier
+            setVarOrigins([nodeName(node)]);
+            // Open Popup to
+            if (listIndex.charAt(0) === "l") {
+                const formula =
+                    node.leftFormulas[
+                        parseStringToListIndex(listIndex)
+                    ];
+                if (
+                    formula.type === "allquant" ||
+                    formula.type === "exquant"
+                ) {
+                    setVarsToAssign([formula.varName!]);
+                    setShowVarAssignDialog(true);
+                    return
+                }
+            } else {
+                const formula =
+                    node.rightFormulas[
+                        parseStringToListIndex(listIndex)
+                    ];
+                if (
+                    formula.type === "allquant" ||
+                    formula.type === "exquant"
+                ) {
+                    setVarsToAssign([formula.varName!]);
+                    setShowVarAssignDialog(true);
+                    return
+                }
+            }
+            notificationHandler.error(
+                "Cannot use quantifier rules on a non quantifier formula!"
+            )
+            setSelectedNodeId(undefined);
+            setSelectedRuleId(undefined);
+            setSelectedListIndex(undefined);
+        } else {
+            if (
+                listIndex.charAt(0) === "l" &&
+                getFORuleSet().rules[ruleId].site === "right"
+            ) {
+                setSelectedRuleId(undefined);
+                notificationHandler.error(
+                    "Can't use right hand side rule on the left side!",
+                );
+                return;
+            }
+            if (
+                listIndex.charAt(0) === "r" &&
+                getFORuleSet().rules[ruleId].site === "left"
+            ) {
+                setSelectedRuleId(undefined);
+                notificationHandler.error(
+                    "Can't use left hand side rule on the right side!",
+                );
+                return;
+            }
+            sendMove(
+                server,
+                calculus,
+                state,
+                {
+                    type: ruleOptions.get(ruleId)!,
+                    nodeID: nodeId,
+                    listIndex: parseStringToListIndex(
+                        listIndex,
+                    ),
+                },
+                onChange,
+                notificationHandler,
+            );
+            setSelectedNodeId(undefined);
+            setSelectedRuleId(undefined);
+            setSelectedListIndex(undefined);
+        }
+    }
+
     const selectRuleCallback = (newRuleId: number) => {
         if (newRuleId === selectedRuleId) {
             // The same Rule was selected again => deselect it
             setSelectedRuleId(undefined);
         } else {
             setSelectedRuleId(newRuleId);
-            if (
-                newRuleId !== undefined &&
-                selectedNode !== undefined &&
-                selectedNode.children.length === 0
-            ) {
-                if (newRuleId === 0) {
-                    sendMove(
-                        server,
-                        calculus,
-                        state,
-                        { type: "Ax", nodeID: selectedNodeId! },
-                        onChange,
-                        notificationHandler,
-                    );
-                    setSelectedNodeId(undefined);
-                    setSelectedRuleId(undefined);
-                    setSelectedListIndex(undefined);
-                } else if (
-                    newRuleId >= 9 &&
-                    newRuleId <= 12 &&
-                    selectedListIndex !== undefined
-                ) {
-                    // Selected Rule is a Quantifier
-                    setVarOrigins([nodeName(selectedNode)]);
-                    // Open Popup to
-                    if (selectedListIndex.charAt(0) === "l") {
-                        const formula =
-                            selectedNode.leftFormulas[
-                                parseStringToListIndex(selectedListIndex)
-                            ];
-                        if (
-                            formula.type === "allquant" ||
-                            formula.type === "exquant"
-                        ) {
-                            setVarsToAssign([formula.varName!]);
-                            setShowVarAssignDialog(true);
-                        }
-                    } else {
-                        const formula =
-                            selectedNode.rightFormulas[
-                                parseStringToListIndex(selectedListIndex)
-                            ];
-                        if (
-                            formula.type === "allquant" ||
-                            formula.type === "exquant"
-                        ) {
-                            setVarsToAssign([formula.varName!]);
-                            setShowVarAssignDialog(true);
-                        }
-                    }
-                } else if (selectedListIndex !== undefined) {
-                    if (
-                        selectedListIndex.charAt(0) === "l" &&
-                        getFORuleSet().rules[newRuleId].site === "right"
-                    ) {
-                        setSelectedRuleId(undefined);
-                        notificationHandler.error(
-                            "Can't use right hand side rule on the left side!",
-                        );
-                        return;
-                    }
-                    if (
-                        selectedListIndex.charAt(0) === "r" &&
-                        getFORuleSet().rules[newRuleId].site === "left"
-                    ) {
-                        setSelectedRuleId(undefined);
-                        notificationHandler.error(
-                            "Can't use left hand side rule on the right side!",
-                        );
-                        return;
-                    }
-                    sendMove(
-                        server,
-                        calculus,
-                        state,
-                        {
-                            type: ruleOptions.get(newRuleId)!,
-                            nodeID: selectedNodeId!,
-                            listIndex: parseStringToListIndex(
-                                selectedListIndex,
-                            ),
-                        },
-                        onChange,
-                        notificationHandler,
-                    );
-                    setSelectedNodeId(undefined);
-                    setSelectedRuleId(undefined);
-                    setSelectedListIndex(undefined);
-                }
-            }
+            trySendMove(newRuleId, selectedNodeId, selectedListIndex);
         }
     };
 
@@ -212,97 +227,21 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         setShowVarAssignDialog(false);
     };
 
-    const selectNodeCallback = (
-        newNode: SequentTreeLayoutNode,
-        selectValue?: boolean,
-    ) => {
-        if (selectValue === undefined) {
-            if (newNode.id === selectedNodeId) {
-                setSelectedNodeId(undefined);
-            } else {
-                setSelectedNodeId(newNode.id);
-                if (
-                    selectedRuleId !== undefined &&
-                    newNode.children.length === 0 &&
-                    selectedListIndex !== undefined
-                ) {
-                    if (selectedRuleId === 0) {
-                        sendMove(
-                            server,
-                            calculus,
-                            state,
-                            { type: "Ax", nodeID: newNode.id },
-                            onChange,
-                            notificationHandler,
-                        );
-                    } else if (selectedRuleId >= 9 && selectedRuleId <= 12) {
-                        // Selected Rule is a Quantifier
-                        setVarOrigins([nodeName(newNode)]);
-                        // Open Popup to
-                        if (selectedListIndex.charAt(0) === "l") {
-                            const formula =
-                                newNode.leftFormulas[
-                                    parseStringToListIndex(selectedListIndex)
-                                ];
-                            if (
-                                formula.type === "allquant" ||
-                                formula.type === "exquant"
-                            ) {
-                                setVarsToAssign([formula.varName!]);
-                                setShowVarAssignDialog(true);
-                            }
-                        } else {
-                            const formula =
-                                newNode.rightFormulas[
-                                    parseStringToListIndex(selectedListIndex)
-                                ];
-                            if (
-                                formula.type === "allquant" ||
-                                formula.type === "exquant"
-                            ) {
-                                setVarsToAssign([formula.varName!]);
-                                setShowVarAssignDialog(true);
-                            }
-                        }
-                    } else {
-                        sendMove(
-                            server,
-                            calculus,
-                            state,
-                            {
-                                type: ruleOptions.get(selectedRuleId)!,
-                                nodeID: newNode.id,
-                                listIndex: parseStringToListIndex(
-                                    selectedListIndex,
-                                ),
-                            },
-                            onChange,
-                            notificationHandler,
-                        );
-                    }
-                    setSelectedNodeId(undefined);
-                    setSelectedRuleId(undefined);
-                    setSelectedListIndex(undefined);
-                }
-            }
-        } else if (selectValue === true) {
-            setSelectedNodeId(newNode.id);
-        } else {
-            setSelectedNodeId(undefined);
-        }
-    };
-
-    const selectFormulaCallback = (newFormula: FormulaTreeLayoutNode) => {
+    const selectFormulaCallback = (newFormula: FormulaTreeLayoutNode, nodeId: number) => {
         event?.stopPropagation();
         if (newFormula.id === selectedListIndex) {
             setSelectedListIndex(undefined);
+            setSelectedNodeId(undefined);
+            setSelectedRuleId(undefined)
         } else {
             setSelectedListIndex(newFormula.id);
+            setSelectedNodeId(nodeId)
+            trySendMove(selectedRuleId, nodeId, newFormula.id);
         }
     };
 
     const disableOptions = (option: number) => {
-        if (selectedNodeId === undefined) return false;
+        if (selectedNodeId === undefined) return true;
         if (state.showOnlyApplicableRules === false) return true;
         const rules = getFORuleSet();
         if (selectedListIndex === undefined || selectedNode === undefined) {
@@ -368,7 +307,6 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
                     selectedRuleName={selectedRule}
-                    selectNodeCallback={selectNodeCallback}
                     selectFormulaCallback={selectFormulaCallback}
                     selectedListIndex={selectedListIndex}
                 />

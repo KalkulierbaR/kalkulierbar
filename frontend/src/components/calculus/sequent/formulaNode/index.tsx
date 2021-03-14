@@ -17,10 +17,9 @@ interface Props {
     formula: FormulaTreeLayoutNode;
     xCord: number;
     selectedListIndex?: string;
-    selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
-    selectNodeCallback: (
-        node: SequentTreeLayoutNode,
-        selectedValue?: boolean,
+    selectFormulaCallback?: (
+        formula: FormulaTreeLayoutNode,
+        nodeId: number
     ) => void;
     selected: boolean;
 }
@@ -31,7 +30,6 @@ const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
     xCord,
     selectedListIndex,
     selectFormulaCallback,
-    selectNodeCallback,
     selected,
 }) => {
     const textRef = useRef<SVGTextElement>();
@@ -40,8 +38,7 @@ const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
 
     const handleClick = () => {
         if (nodeIsClickable) {
-            selectNodeCallback(node.data, true);
-            selectFormulaCallback(formula);
+            selectFormulaCallback!(formula, node.data.id);
         }
     };
 
