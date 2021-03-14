@@ -10,6 +10,7 @@ import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.parsers.ModalLogicParser
+import kalkulierbar.InvalidFormulaFormat
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.list
 import kotlinx.serialization.modules.plus
@@ -21,21 +22,28 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
     override val identifier = "signed-modal-tableaux"
 
     override fun parseFormulaToState(formula: String, params: Unit?): SignedModalTableauxState {
-        var sign = ""
-        if (formula.length > 8)
-            sign = formula.substring(0, 8)
-        var parsedFormula: LogicNode
-        if (sign == "\\sign T:") {
-            parsedFormula = ModalLogicParser().parse(formula.substring(8), 8)
-            return SignedModalTableauxState(parsedFormula, true)
-        }
-        if (sign == "\\sign F:") {
-            parsedFormula = ModalLogicParser().parse(formula.substring(8), 8)
-            return SignedModalTableauxState(parsedFormula, false)
-        }
-        parsedFormula = ModalLogicParser().parse(formula)
 
-        return SignedModalTableauxState(parsedFormula)
+        var regex = Regex("[\\s]*\\\\sign[\\s]+[TF]:")
+
+        val match = regex.find(formula);
+        var formulaString = formula
+        var startIndex = 0
+        var assumption = false
+
+        if (match != null) {
+            if(match.range.start == 0) {
+                startIndex = match.range.last + 1
+                formulaString = formula.substring(startIndex)
+                if (formula.get(startIndex - 2) == 'T')
+                    assumption = true
+
+            } else {
+                throw InvalidFormulaFormat("\\sign T: or \\sign F: needs to be at the start of the formula")
+            }
+        }
+
+        var parsedFormula = ModalLogicParser().parse(formulaString, startIndex)
+        return SignedModalTableauxState(parsedFormula, assumption)
     }
 
     @Suppress("ComplexMethod")
