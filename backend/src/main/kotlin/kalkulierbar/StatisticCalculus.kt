@@ -4,6 +4,7 @@ interface StatisticCalculus<State> {
     /**
     * Calculates the statistics for a given proof
     * @param state A closed state
+    * @param name the name of the user
     * @return The statistics for the given state
     */
     fun getStatistic(state: String, name: String?): String
@@ -23,15 +24,8 @@ interface StatisticCalculus<State> {
     fun statisticToJson(statistic: Statistic): String
 
     /**
-     * Serializes a List<Statistic> object to JSON
-     * @param statistic Statistics object
-     * @return JSON statistics representation
-     */
-    fun statisticsToJson(statistics: List<Statistic>): String
-
-    /**
      * Parses a json object to Statistic
-     * @param statistic Statistics object
+     * @param json Statistics object
      * @return JSON statistics representation
      */
     fun jsonToStatistic(json: String): Statistic

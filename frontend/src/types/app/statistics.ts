@@ -1,15 +1,16 @@
+import { CalculusType, StatisticEntry } from "../calculus";
 export interface Statistics {
     formula: string;
-    entries: Entry[];
+    entries: StatisticEntry[];
     columnNames: string[];
 }
-export interface SequentCalculusStatistic {
-    userName: string;
-    nodeAmount: number;
-    depth: number;
-    width: number;
-    usedStupidMode: boolean;
-    score: number;
-}
+// export interface SequentCalculusStatistic {
+//     userName: string;
+//     nodeAmount: number;
+//     depth: number;
+//     width: number;
+//     usedStupidMode: boolean;
+//     score: number;
+// }
 
-export type Entry = SequentCalculusStatistic
+// export type Entry = SequentCalculusStatistic

@@ -173,3 +173,12 @@ export interface UndoMove {
 export interface ModalTableauxParams {
     backtracking: boolean;
 }
+
+export interface SignedModalTableauxStatistic {
+    userName: string;
+    numberOfMoves: number;
+    depth: number;
+    width: number;
+    usedBacktracking: boolean;
+    score: number;
+}

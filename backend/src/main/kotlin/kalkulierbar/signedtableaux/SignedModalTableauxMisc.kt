@@ -6,6 +6,7 @@ import kalkulierbar.tamperprotect.ProtectedState
 import kotlin.math.max
 import kotlin.math.sqrt
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
 @Serializable
 class SignedModalTableauxState(
@@ -179,6 +180,7 @@ class SignedModalTableauxNode(
 }
 
 @Serializable
+@SerialName("signedModalTableauxStatistic")
 class SignedModalTableauxStatistic(
     override var userName: String?,
     val numberOfMoves: Int,

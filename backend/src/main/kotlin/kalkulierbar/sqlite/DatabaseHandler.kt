@@ -6,7 +6,7 @@ class DatabaseHandler {
 
     companion object {
         private var connection: Connection? = null
-        private val maxEntriesPerFormula: Int = 5
+        private val maxEntriesPerFormula: Int = 1000
 
         @Suppress("TooGenericExceptionCaught")
         public fun init() {
@@ -43,7 +43,7 @@ class DatabaseHandler {
 
                 val queryStmt = (connection as Connection).createStatement()
                 val queryCount: String =
-                    "SELECT COUNT() FROM $identifier WHERE formula = \"$keyFormula\";"
+                    "SELECT COUNT() FROM $sqlIdentifier WHERE formula = \"$keyFormula\";"
                 val result: ResultSet = queryStmt.executeQuery(queryCount)
                 result.next()
                 val count = result.getInt(1)
@@ -52,8 +52,7 @@ class DatabaseHandler {
                     val difference = count - maxEntriesPerFormula
                     val deleteStmt = (connection as Connection).createStatement()
                     val delete: String =
-                        "DELETE FROM $identifier WHERE rowid IN (SELECT rowid FROM $identifier WHERE formula = \"$keyFormula\" ORDER BY time ASC LIMIT $difference);"
-                    println(delete)
+                        "DELETE FROM $sqlIdentifier WHERE rowid IN (SELECT rowid FROM $sqlIdentifier WHERE formula = \"$keyFormula\" ORDER BY time ASC LIMIT $difference);"
                     deleteStmt.executeUpdate(delete)
                 }
             }

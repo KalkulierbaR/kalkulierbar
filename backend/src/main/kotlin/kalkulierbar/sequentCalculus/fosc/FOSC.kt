@@ -162,16 +162,7 @@ class FOSC :
     override fun statisticToJson(statistic: Statistic): String {
         return serializer.stringify(SequentCalculusStatistic.serializer(), (statistic as SequentCalculusStatistic))
     }
-
-    /**
-     * Serializes a List<Statistic> object to JSON
-     * @param statistic Statistics object
-     * @return JSON statistics representation
-     */
-    override fun statisticsToJson(statistics: List<Statistic>): String {
-        return serializer.stringify(SequentCalculusStatistic.serializer().list, (statistics as List<SequentCalculusStatistic>))
-    }
-
+    
     /**
      * Parses a json object to Statistic
      * @param statistic Statistics object

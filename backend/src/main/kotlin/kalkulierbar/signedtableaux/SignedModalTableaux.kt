@@ -181,15 +181,6 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
     }
 
     /**
-     * Serializes a List<Statistic> object to JSON
-     * @param statistic Statistics object
-     * @return JSON statistics representation
-     */
-    override fun statisticsToJson(statistics: List<Statistic>): String {
-        return serializer.stringify(SignedModalTableauxStatistic.serializer().list, (statistics as List<SignedModalTableauxStatistic>))
-    }
-
-    /**
      * Parses a json object to Statistic
      * @param statistic Statistics object
      * @return JSON statistics representation

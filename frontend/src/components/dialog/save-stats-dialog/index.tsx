@@ -121,8 +121,8 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
                     </tr>
                     {stats.entries.map((stat) => (
                         <tr>
-                            {Object.values(stat).map((val) => (
-                                val === null &&
+                            {Object.values(stat).map((val, index) => (
+                                index !== 0 && val === null &&
                                     <td>
                                         <TextInput
                                             id={"name"}
@@ -133,7 +133,7 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
                                             autoFocus={!smallScreen}
                                         />
                                     </td> ||
-                                val !== null &&
+                                index !== 0 && val !== null &&
                                     <td>
                                         {`${val.toString()}`}
                                     </td>

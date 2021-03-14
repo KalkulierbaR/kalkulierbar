@@ -161,7 +161,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
                 val statisticsAsStrings = DatabaseHandler.query(endpoint.identifier, endpoint.getStartingFormula(state))
                 // add the current statistic without name to the resultset
                 statisticsAsStrings.add(endpoint.getStatistic(state, null))
-
+                
                 val statistics = Statistics(statisticsAsStrings.toList(), endpoint.getStartingFormula(state), endpoint)
 
                 ctx.result(statistics.toJson())
