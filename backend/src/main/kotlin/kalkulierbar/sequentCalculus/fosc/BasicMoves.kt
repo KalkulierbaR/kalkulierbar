@@ -15,6 +15,15 @@ import kalkulierbar.sequentCalculus.fosc.FOSCState
 import kalkulierbar.sequentCalculus.moveImplementations.checkLeft
 import kalkulierbar.sequentCalculus.moveImplementations.checkRight
 
+/**
+ * Rule AllLeft is applied, if the LogicNode is the leftChild of node and is of type All(UniversalQuantifier).
+ * It replaces the UniversalQuantifier with the swapvariable
+ * @param state: FOSCState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ * @param varAssign: Map of swapvariable used.
+ * @return new state after applying move
+ */
 fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkLeft(state, nodeID, listIndex)
 
@@ -60,6 +69,15 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
     return state
 }
 
+/**
+ * Rule AllRight is applied, if the LogicNode is the rightChild of node and is of type All(UniversalQuantifier).
+ * It replaces the UniversalQuantifier with the swapvariable.Here, Swap Variable should not be Identifier that already exist.
+ * @param state: FOSCState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ * @param varAssign: Map of swapvariable used.
+ * @return new state after applying move
+ */
 fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkRight(state, nodeID, listIndex)
 
@@ -108,6 +126,15 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<
     return state
 }
 
+/**
+ * Rule ExLeft is applied, if the LogicNode is the leftChild of node and is of type Ex(ExistentialQuantifier).
+ * It replaces the ExistentialQuantifier with the swapvariable.Here, Swap Variable should not be Identifier that already exist.
+ * @param state: FOSCState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ * @param varAssign: Map of swapvariable used.
+ * @return new state after applying move
+ */
 fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkLeft(state, nodeID, listIndex)
 
@@ -156,6 +183,15 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<St
     return state
 }
 
+/**
+ * Rule ExRight is applied, if the LogicNode is the rightChild of node and is of type Ex(ExistentialQuantifier).
+ * It replaces the ExistentialQuantifier with the swapvariable
+ * @param state: FOSCState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ * @param varAssign: Map of swapvariable used.
+ * @return new state after applying move
+ */
 fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkRight(state, nodeID, listIndex)
 
