@@ -13,10 +13,9 @@ import kalkulierbar.logic.Or
 import kalkulierbar.logic.Var
 
 /**
- * Recursive descent parser for propositional logic
- * Supports basic operations (and, or, not) as well
- * as implications and equivalences.
- * For format specification, see docs/PropositionalFormula.md
+ * Recursive descent parser for Modal logic
+ * Supports basic operations (and, or, not) ,implications and equivalences, as well as
+ * Box and Diamond.
  */
 @Suppress("TooManyFunctions")
 open class ModalLogicParser {
