@@ -44,7 +44,7 @@ interface Props {
  * @param parent the parent of the node which the line is drawn above
  * @param textRef the reference of the text inside the node 
  * @param ruleName the name of the rule which is written besides the line 
- * @returns nothing we use it as termination method
+ * @returns {void}
  */
 const lineUnderNode = (
     node: LayoutItem<SequentTreeLayoutNode>,

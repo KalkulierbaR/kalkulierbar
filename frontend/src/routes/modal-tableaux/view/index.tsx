@@ -65,6 +65,10 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
 
     const [stats, setStats] = useState<Statistics | undefined>(undefined);
 
+    /**
+     * Gets called each time a node gets selected or deselected
+     * @param newNode the selected Node
+     */
     const selectNodeCallback = (newNode: ModalTableauxTreeLayoutNode) => {
         if (newNode.id === selectedNodeId) {
             setSelectedNodeId(undefined);
@@ -104,6 +108,10 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
         }
     };
 
+    /**
+     * Sends the changed prefix to the backend
+     * @param prefix the index of the prefix
+     */
     const sendPrefix = (prefix: number) => {
         if (selectedNodeId !== undefined) {
             const leaves = getLeaves(state.nodes, state.nodes[selectedNodeId]);
@@ -136,6 +144,10 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
         }
     };
 
+    /**
+     * Saves the closed Proof in the DB
+     * @param userName the name of the user who closed the proof
+     */
     const saveStatisticsCallback = (userName: string) => {
         if (userName !== "") {
             saveStatistics(

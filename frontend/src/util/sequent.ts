@@ -8,6 +8,11 @@ import { Tree, TreeLayout } from "../types/tree";
 import { tree, treeLayout } from "./layout/tree";
 import { estimateSVGTextWidth } from "./text-width";
 
+/**
+ * parse a whole node with all its formulas
+ * @param node - the node
+ * @returns all formulas in the node with all seperators as a string
+ */
 export const nodeName = (node: SequentNode) => {
     return (
         formulaNames(node.leftFormulas) +
@@ -16,6 +21,11 @@ export const nodeName = (node: SequentNode) => {
     );
 };
 
+/**
+ * 
+ * @param formulas - multiple formulas
+ * @returns all formulas as a concat string
+ */
 export const formulaNames = (formulas: FormulaNode[]) => {
     if (formulas == null) return "";
     if (formulas.length === 0) return "";
@@ -32,6 +42,11 @@ export const parseStringToListIndex = (str: string) => {
     return parseInt(str.substring(1));
 };
 
+/**
+ * Parses a formula
+ * @param formula - the formula 
+ * @returns the formula as a string
+ */
 export const parseFormula = (formula: FormulaNode) => {
     let result = "";
     if (formula === undefined) return result;
@@ -111,6 +126,13 @@ export const sequentTreeLayout = (
     return treeLayout(nodes, sequentNodeToTree);
 };
 
+/**
+ * translates a node to a TreeLayoutNode
+ * @param nodes - the node
+ * @param i - index in the tree
+ * @param y - Y Position
+ * @returns the tree
+ */
 const sequentNodeToTree = (
     nodes: SequentNode[],
     i: number = 0,

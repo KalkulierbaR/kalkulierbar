@@ -9,6 +9,9 @@ import { Calculus, SequentCalculusType } from "../../types/calculus";
 import { SequentParams } from "../../types/calculus/sequent";
 
 interface Props {
+    /**
+     * the calculus to use
+     */
     calculus: SequentCalculusType;
 }
 

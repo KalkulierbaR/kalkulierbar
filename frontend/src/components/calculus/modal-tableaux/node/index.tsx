@@ -66,7 +66,7 @@ const SMTabNode: preact.FunctionalComponent<Props> = ({
 }) => {
     const textRef = useRef<SVGTextElement>();
 
-    // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
+    // Uses parameter isClosed to determine if the Node should be selectable
     const nodeIsClickable = !node.data.isClosed;
 
     /**

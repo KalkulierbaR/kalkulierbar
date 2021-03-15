@@ -38,6 +38,11 @@ const SequentTreeView: preact.FunctionalComponent<Props> = ({
 
     const treeHeight = Math.max(height, 200);
 
+    /**
+     * Go to a node in the tree
+     * @param {any} d - The node to go to
+     * @returns {[number, number]} - The target coordinates
+     */
     const transformGoTo = (): [number, number] => {
         const node = findSubTree(
             root,

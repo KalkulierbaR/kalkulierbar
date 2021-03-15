@@ -11,6 +11,9 @@ import { ModalTableauxParams } from "../../types/calculus/modal-tableaux";
 import { useAppState } from "../../util/app-state";
 
 interface Props {
+    /**
+     * The calculus type
+     */
     calculus: ModalCalculusType;
 }
 

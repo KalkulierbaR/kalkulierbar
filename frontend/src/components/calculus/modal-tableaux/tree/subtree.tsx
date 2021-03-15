@@ -57,6 +57,8 @@ const SubTree: preact.FunctionalComponent<Props> = ({
 }) => {
     const dt = dragTransforms[node.data.id] ?? { x: 0, y: 0 };
 
+    //Recursively draw each Node
+
     return (
         <g transform={`translate(${dt.x} ${dt.y})`}>
             {node.children.map((c, i) => {

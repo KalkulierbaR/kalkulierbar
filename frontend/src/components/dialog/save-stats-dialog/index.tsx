@@ -116,6 +116,11 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
         target.focus();
     };
 
+    /**
+     * Sorts the table by column
+     * @param columnIndex - The index of the column
+     * @returns {void}
+     */
     const sortByColumn = (columnIndex: number) => {
         if (stats === undefined) return;
 

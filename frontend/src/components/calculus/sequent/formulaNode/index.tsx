@@ -34,8 +34,12 @@ const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
 }) => {
     const textRef = useRef<SVGTextElement>();
 
+    //Determends if the node should be clickable
     const nodeIsClickable = !node.data.isClosed;
 
+    /**
+     * Handles the onClick Event of the Formula Node
+     */
     const handleClick = () => {
         if (nodeIsClickable) {
             selectFormulaCallback!(formula, node.data.id);

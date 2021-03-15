@@ -56,6 +56,20 @@ export const nextOpenLeaf = (nodes: ModalTableauxNode[]) => {
     return;
 };
 
+/**
+ * Sends a NodeExtend Move to the backend
+ * @param calculus the calculus tape
+ * @param server the backend server
+ * @param state current state
+ * @param move the move to send
+ * @param stateChanger StateChanger
+ * @param notificationHandler NotificationHandler
+ * @param nodes nodes in the current state
+ * @param nodeID the selected Node
+ * @param setLeafSelected function
+ * @param setSelectedMove function
+ * @param setSelectedNodeId function
+ */
 export const sendNodeExtend = (
     calculus: ModalCalculusType,
     server: string,
@@ -90,6 +104,12 @@ export const sendNodeExtend = (
     }
 };
 
+/**
+ * recursevly gets the number of leaves
+ * @param nodes all nodes
+ * @param node current parent node
+ * @returns the sum of all leaves
+ */
 export const getLeaves = (
     nodes: ModalTableauxNode[],
     node: ModalTableauxNode,
@@ -105,7 +125,13 @@ export const getLeaves = (
     });
     return sum;
 };
-
+/**
+ * checks wether a node is a child
+ * @param node current node
+ * @param parent the parent node of the current node
+ * @param nodes all nodes
+ * @returns boolean
+ */
 export const isChildOf = (
     node: ModalTableauxNode,
     parent: ModalTableauxNode,

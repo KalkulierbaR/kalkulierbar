@@ -82,7 +82,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [stats, setStats] = useState<Statistics | undefined>(undefined);
 
     /**
-     * 
+     * Sends the Move to the backend
      * @param ruleId the id of the selected rule 
      * @param nodeId the id of the selected node
      * @param listIndex the index of the selected node
@@ -156,7 +156,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         }
     };
     /**
-     * 
+     * Checks if the rule gets applied on the correct side
      * @param selected the selected node 
      * @param ruleId the ruleId of the rule the user wants to use 
      * @returns throwns an error if the user wants to use a right side rule on a left side node and the other way around.
@@ -196,6 +196,10 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         setSelectedListIndex(undefined);
     };
 
+    /**
+     * Gets called when a rule gets selected (or deselected)
+     * @param newRuleId the selected rule
+     */
     const selectRuleCallback = (newRuleId: number) => {
         if (newRuleId === selectedRuleId) {
             // The same Rule was selected again => deselect it
@@ -206,6 +210,12 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         }
     };
 
+    /**
+     * Sends the backend the choosen quantifier
+     * @param autoAssign Wether the backend should auto-assign the quantifier
+     * @param varAssign the quantifiers
+     * @returns 
+     */
     const quantifierCallback = (
         autoAssign: boolean,
         varAssign: VarAssign = {},
@@ -245,6 +255,11 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         setShowVarAssignDialog(false);
     };
 
+    /**
+     * Gets called when a new formula gets selected (or deselected)
+     * @param newFormula selected formula
+     * @param nodeId the id of the node
+     */
     const selectFormulaCallback = (
         newFormula: FormulaTreeLayoutNode,
         nodeId: number,
@@ -259,7 +274,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         }
     };
     /**
-     * 
+     * Disables options inside the option list wether it should be or not
      * @param option index of the rule 
      * @returns return true or false depending if some rules should be grayed out
      */
@@ -303,10 +318,9 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         return true;
     };
     /**
-     * 
+     * Saves the closed Proof in the DB
      * @param userName the name the user types in after he succesfully solved a calculus
      */
-
     const saveStatisticsCallback = (userName: string) => {
         if (userName !== "") {
             saveStatistics(

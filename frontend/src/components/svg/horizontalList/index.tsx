@@ -138,17 +138,10 @@ const drawSeperator = (x: number, y: number, isClosed: boolean) => {
  * @param {FormulaNode[]}leftFormulas the formulas on the left hand side of the sequence
  * @param {FormulaNode[]}rightFormulas the formulas on the right hand side of the sequence
  * @param {LayoutItem<SequentTreeLayoutNode>}node the overlaying node in which the sequence is to be drawn
-<<<<<<< HEAD
- * @param {string | undefined} selectedListIndex index
- * @param {number} dimsX dimension
- * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
- * @param {boolean}selected I dont know what this is for..........................................................................................................................................
-=======
  * @param {string | undefined} selectedListIndex index of formula
  * @param {number} dimsX dimension x
  * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback Callback for selecting a formula
  * @param {boolean}selected Whether or not the current node is selected
->>>>>>> cca4d394937cd4aace33c2eff81064790eb8ed07
  * @returns {any} HTML
  */
 const getSequence = (
@@ -250,6 +243,7 @@ const horizontalList: preact.FunctionalComponent<Props> = ({
 }) => {
     const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
+    //Gets the bounding box of the text inside the horizontal list
     useEffect(() => {
         if (!textRef.current) {
             return;
