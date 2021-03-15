@@ -27,6 +27,9 @@ import { nodeName, parseStringToListIndex } from "../../../util/sequent";
 import * as style from "./style.scss";
 
 interface Props {
+    /**
+     * Which calculus to use
+     */
     calculus: SequentCalculusType;
 }
 
@@ -78,6 +81,13 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const [stats, setStats] = useState<Statistics | undefined>(undefined);
 
+    /**
+     * 
+     * @param ruleId the id of the selected rule 
+     * @param nodeId the id of the selected node
+     * @param listIndex the index of the selected node
+     * @returns nothing, just sends a move towards the backend, we use returns as termination methods
+     */
     const trySendMove = (
         ruleId: number | undefined,
         nodeId: number | undefined,
@@ -145,7 +155,12 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             resetSelection();
         }
     };
-
+    /**
+     * 
+     * @param selected the selected node 
+     * @param ruleId the ruleId of the rule the user wants to use 
+     * @returns throwns an error if the user wants to use a right side rule on a left side node and the other way around.
+     */
     const checkIfRuleIsAppliedOnCorrectSite = (
         selected: string,
         ruleId: number,
@@ -243,7 +258,11 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             trySendMove(selectedRuleId, nodeId, newFormula.id);
         }
     };
-
+    /**
+     * 
+     * @param option index of the rule 
+     * @returns return true or false depending if some rules should be grayed out
+     */
     const disableOptions = (option: number) => {
         if (selectedNodeId === undefined) return true;
         if (state.showOnlyApplicableRules === false) return true;
@@ -283,6 +302,10 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         }
         return true;
     };
+    /**
+     * 
+     * @param userName the name the user types in after he succesfully solved a calculus
+     */
 
     const saveStatisticsCallback = (userName: string) => {
         if (userName !== "") {
