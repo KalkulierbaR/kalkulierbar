@@ -18,19 +18,34 @@ interface Props {
      * The single tree node to represent
      */
     node: LayoutItem<SequentTreeLayoutNode>;
-
+    /**
+     * The parent of the tree node to represent 
+     */
     parent?: LayoutItem<SequentTreeLayoutNode>;
-
+    /**
+     * Boolean to change the style of the node if it is selected
+     */
     selected: boolean;
-
+    /**
+     * The ListIndex of the node to represent
+     */
     selectedListIndex?: string;
-
+    /**
+     * The function to select and deselect a specific formula
+     */
     selectFormulaCallback: (
         formula: FormulaTreeLayoutNode,
         nodeId: number,
     ) => void;
 }
-
+/**
+ * 
+ * @param node the node which the line is drawn under
+ * @param parent the parent of the node which the line is drawn above
+ * @param textRef the reference of the text inside the node 
+ * @param ruleName the name of the rule which is written besides the line 
+ * @returns nothing we use it as termination method
+ */
 const lineUnderNode = (
     node: LayoutItem<SequentTreeLayoutNode>,
     parent: LayoutItem<SequentTreeLayoutNode> | undefined,
