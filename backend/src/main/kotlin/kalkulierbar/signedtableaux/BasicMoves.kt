@@ -209,7 +209,8 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
 }
 
 /**
- *  if a NU formula occurs, the prefix that is alread used will be used in the new node, and the node with out the modal variable is added to the branch end.
+ *  if a NU formula occurs, the prefix that is alread used will be used in the new node,
+ *  and the node with out the modal variable is added to the branch end.
  *  In case of multiple branch end, will be added to the branch whose leafID is given.
  * @param state: SignedModalTableauxState state to apply move on
  * @param nodeID: ID of node to apply move on
@@ -270,7 +271,8 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
 }
 
 /**
- *  if a PI formula occurs, the new Prifix will be used in the new node, and the node with out the modal variable is added to the branch end.
+ *  if a PI formula occurs, the new Prifix will be used in the new node,
+ *  and the node with out the modal variable is added to the branch end.
  *  In case of multiple branch end, will be added to the branch whose leafID is given.
  * @param state: SignedModalTableauxState state to apply move on
  * @param nodeID: ID of node to apply move on
@@ -348,7 +350,7 @@ fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableau
  * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-@Suppress("ComplexMethod")
+@Suppress("ComplexMethod", "EmptyCatchBlock", "NestedBlockDepth")
 fun applyPruneRecursive(state: SignedModalTableauxState, nodeID: Int): SignedModalTableauxState {
     val nodes = state.nodes
 

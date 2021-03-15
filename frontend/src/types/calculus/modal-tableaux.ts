@@ -115,11 +115,7 @@ export type LogicNode =
 
 export type ModalTableauxTreeLayoutNode = ModalTableauxNode & { id: number };
 
-export type ModalTableauxMove =
-    | ExpandMove
-    | UndoMove
-    | CloseMove
-    | NegMove;
+export type ModalTableauxMove = ExpandMove | UndoMove | CloseMove | NegMove;
 
 export interface ExpandMove {
     type?: string;

@@ -2,20 +2,20 @@ package kalkulierbar.signedtableaux
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
+import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.Statistic
 import kalkulierbar.StatisticCalculus
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
-import kalkulierbar.logic.LogicNode
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.InvalidFormulaFormat
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.list
 import kotlinx.serialization.modules.plus
 
-class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>(), StatisticCalculus<SignedModalTableauxState> {
+class SignedModalTableaux :
+    JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>(),
+    StatisticCalculus<SignedModalTableauxState> {
 
     private val serializer = Json(context = FoTermModule + LogicModule + SignedModalTablueaxMoveModule)
 
@@ -25,18 +25,17 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
 
         var regex = Regex("[\\s]*\\\\sign[\\s]+[TF]:")
 
-        val match = regex.find(formula);
+        val match = regex.find(formula)
         var formulaString = formula
         var startIndex = 0
         var assumption = false
 
         if (match != null) {
-            if(match.range.start == 0) {
+            if (match.range.start == 0) {
                 startIndex = match.range.last + 1
                 formulaString = formula.substring(startIndex)
                 if (formula.get(startIndex - 2) == 'T')
                     assumption = true
-
             } else {
                 throw InvalidFormulaFormat("\\sign T: or \\sign F: needs to be at the start of the formula")
             }

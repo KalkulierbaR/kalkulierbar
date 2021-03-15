@@ -27,7 +27,7 @@ interface Props {
 
     selectFormulaCallback: (
         formula: FormulaTreeLayoutNode,
-        nodeId: number
+        nodeId: number,
     ) => void;
 }
 
@@ -186,9 +186,6 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
     selectFormulaCallback,
 }) => {
     const textRef = useRef<SVGTextElement>();
-
-    //Outer Nodes are always unclickable
-    const nodeIsClickable = false;
 
     if (
         node.data.leftFormulas.length === 0 &&

@@ -132,7 +132,7 @@ export const nodeName = (node: ModalTableauxNode) => {
     if (node === undefined) return "";
     return `
         ${node.prefix.toString().replace(",", ".")}
-        ${node.sign ? "𝕋 " : "𝔽 " }
+        ${node.sign ? "𝕋 " : "𝔽 "}
         ${node.spelling}
     `;
 };

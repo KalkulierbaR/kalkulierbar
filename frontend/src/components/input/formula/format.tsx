@@ -76,19 +76,16 @@ const Format: preact.FunctionalComponent<Props> = ({
                     <b>Modal Formula</b>
                 </p>
                 <p>
-                    Use uppercase T and F to set the appropriate assumption to TRUE or FALSE.
-
+                    Use uppercase T and F to set the appropriate assumption to
+                    TRUE or FALSE.
                     <br />
                     Assumptions can be set like this:{" "}
                     <code class={style.padRight}>
                         {"\\sign T:"} or {"\\sign F:"}
                     </code>
                     <br />
-                    Always and Sometimes can be used like this: {" "}
-                    <code class={style.padRight}>
-                        {"!(<>(!a)) -> []a"}
-                    </code>
-
+                    Always and Sometimes can be used like this:{" "}
+                    <code class={style.padRight}>{"!(<>(!a)) -> []a"}</code>
                 </p>
                 <p>
                     <table>
@@ -130,7 +127,9 @@ const Format: preact.FunctionalComponent<Props> = ({
                                 <code>{`<>`}a</code>
                             </td>
                             <td>
-                                <code>{`<>`}a -&gt; {`<>`}a</code>
+                                <code>
+                                    {`<>`}a -&gt; {`<>`}a
+                                </code>
                             </td>
                         </tr>
                         <tr>
@@ -184,7 +183,7 @@ const Format: preact.FunctionalComponent<Props> = ({
             <br />
             {allowSequences && sequentFormat}
         </Fragment>
-    )
+    );
 
     const foLogicFormat = (
         <Fragment>
@@ -367,9 +366,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                         {allowClauses ? propClauseFormat : propFormat}
                     </Fragment>
                 )}
-                {modalLogic && (
-                    modalFormat
-                )}
+                {modalLogic && modalFormat}
             </ul>
         </div>
     );

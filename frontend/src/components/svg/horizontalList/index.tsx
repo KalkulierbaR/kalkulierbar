@@ -37,7 +37,7 @@ interface Props {
      */
     selectFormulaCallback: (
         formula: FormulaTreeLayoutNode,
-        nodeId: number
+        nodeId: number,
     ) => void;
     /**
      * Index of the selected Formula
@@ -57,11 +57,7 @@ const NODE_PUFFER = 16;
  * @param {number} isClosed whether or not the current node is closed
  * @returns {any} HTML
  */
-const drawComma = (
-    x: number,
-    y: number,
-    isClosed: boolean,
-) => {
+const drawComma = (x: number, y: number, isClosed: boolean) => {
     return (
         <text
             class={classMap({
@@ -82,7 +78,7 @@ const drawComma = (
  * @param {LayoutItem<SequentTreeLayoutNode>} node the big node in which the formula is drawn
  * @param {string | undefined} selectedListIndex string in the pattern of (r, l)[0-9]* indicating the side of the formula and its index
  * @param {number} xCoord the x coordinate in which the Formula is drawn
- * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
+ * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback Callback for selecting a formula
  * @param {boolean} selected the parameter which tell if the current node is selected or not
  * @returns {any} HTML
  */
@@ -93,7 +89,7 @@ const drawFormula = (
     xCoord: number,
     selectFormulaCallback: (
         formula: FormulaTreeLayoutNode,
-        nodeId: number
+        nodeId: number,
     ) => void,
     selected: boolean,
 ) => {
@@ -121,11 +117,7 @@ const drawFormula = (
  * @param {boolean} isClosed whether or not the current node is closed
  * @returns {any} HTML
  */
-const drawSeperator = (
-    x: number,
-    y: number,
-    isClosed: boolean,
-) => {
+const drawSeperator = (x: number, y: number, isClosed: boolean) => {
     return (
         <text
             class={classMap({
@@ -146,11 +138,10 @@ const drawSeperator = (
  * @param {FormulaNode[]}leftFormulas the formulas on the left hand side of the sequence
  * @param {FormulaNode[]}rightFormulas the formulas on the right hand side of the sequence
  * @param {LayoutItem<SequentTreeLayoutNode>}node the overlaying node in which the sequence is to be drawn
- * @param {string | undefined} selectedListIndex index
- * @param {number} dimsX dimension
- * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback YIKES
- * @param {Function<SequentTreeLayoutNode>} selectNodeCallback KEKW
- * @param {boolean}selected I dont know what this is for..........................................................................................................................................
+ * @param {string | undefined} selectedListIndex index of formula
+ * @param {number} dimsX dimension x
+ * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback Callback for selecting a formula
+ * @param {boolean}selected Whether or not the current node is selected
  * @returns {any} HTML
  */
 const getSequence = (
@@ -161,7 +152,7 @@ const getSequence = (
     dimsX: number,
     selectFormulaCallback: (
         formula: FormulaTreeLayoutNode,
-        nodeId: number
+        nodeId: number,
     ) => void,
     selected: boolean,
 ) => {
@@ -207,16 +198,12 @@ const getSequence = (
         totalSize +=
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if (index < leftFormulas.length - 1) {
-            htmlArray.push(
-                drawComma(totalSize, node.y, node.data.isClosed),
-            );
+            htmlArray.push(drawComma(totalSize, node.y, node.data.isClosed));
             totalSize += NODE_SPACING;
         }
     });
 
-    htmlArray.push(
-        drawSeperator(totalSize, node.y, node.data.isClosed),
-    );
+    htmlArray.push(drawSeperator(totalSize, node.y, node.data.isClosed));
     totalSize += SEPERATOR_SPACING;
 
     rightFormulas.forEach((elem, index) => {
@@ -237,9 +224,7 @@ const getSequence = (
         totalSize +=
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if (index < rightFormulas.length - 1) {
-            htmlArray.push(
-                drawComma(totalSize, node.y, node.data.isClosed),
-            );
+            htmlArray.push(drawComma(totalSize, node.y, node.data.isClosed));
             totalSize += NODE_SPACING;
         }
     });

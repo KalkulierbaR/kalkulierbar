@@ -5,8 +5,8 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlin.math.max
 import kotlin.math.sqrt
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 class SignedModalTableauxState(

@@ -111,9 +111,9 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 calculus={calculus}
                 params={params}
                 placeholder={
-                    calculus === Calculus.foTableaux ? 
-                    "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))" :
-                    "!a, c; a; !c"
+                    calculus === Calculus.foTableaux
+                        ? "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"
+                        : "!a, c; a; !c"
                 }
             />
             <div class="card">

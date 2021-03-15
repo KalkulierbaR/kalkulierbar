@@ -12,7 +12,9 @@ const NCTableaux: preact.FunctionalComponent = () => {
             <FormulaInput
                 calculus={Calculus.ncTableaux}
                 params={null}
-                placeholder={"\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"}
+                placeholder={
+                    "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"
+                }
             />
             <ExampleList calculus={Calculus.ncTableaux} />
         </Fragment>

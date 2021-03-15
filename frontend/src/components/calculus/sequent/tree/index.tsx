@@ -1,9 +1,6 @@
 import { h } from "preact";
 
-import {
-    FormulaTreeLayoutNode,
-    SequentTreeLayoutNode,
-} from "../../../../types/calculus/sequent";
+import { FormulaTreeLayoutNode } from "../../../../types/calculus/sequent";
 import { SequentNode } from "../../../../types/calculus/sequent";
 import { findSubTree } from "../../../../util/layout/tree";
 import { sequentTreeLayout } from "../../../../util/sequent";
@@ -24,7 +21,7 @@ interface Props {
     // The funktion to call, when user selects a Formula
     selectFormulaCallback: (
         formula: FormulaTreeLayoutNode,
-        nodeId: number
+        nodeId: number,
     ) => void;
     // The selected index of a formula
     selectedListIndex?: string;

@@ -17,7 +17,6 @@ import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
 import kalkulierbar.sequentCalculus.fosc.moveImplementations.*
 import kalkulierbar.sequentCalculus.moveImplementations.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.list
 import kotlinx.serialization.modules.plus
 
 class FOSC :
@@ -162,7 +161,7 @@ class FOSC :
     override fun statisticToJson(statistic: Statistic): String {
         return serializer.stringify(SequentCalculusStatistic.serializer(), (statistic as SequentCalculusStatistic))
     }
-    
+
     /**
      * Parses a json object to Statistic
      * @param statistic Statistics object

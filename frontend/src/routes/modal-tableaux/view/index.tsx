@@ -62,9 +62,8 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
     const [showPrefixDialog, setShowPrefixDialog] = useState<boolean>(false);
 
     const [showSaveDialog, setShowSaveDialog] = useState<boolean>(false);
-    
-    const [stats, setStats] = useState<Statistics | undefined>(undefined);
 
+    const [stats, setStats] = useState<Statistics | undefined>(undefined);
 
     const selectNodeCallback = (newNode: ModalTableauxTreeLayoutNode) => {
         if (newNode.id === selectedNodeId) {
@@ -138,13 +137,13 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
     };
 
     const saveStatisticsCallback = (userName: string) => {
-        if (userName !== '') {
+        if (userName !== "") {
             saveStatistics(
                 server,
                 calculus,
                 state,
                 notificationHandler,
-                userName
+                userName,
             );
             setShowSaveDialog(false);
         }
@@ -204,7 +203,6 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
                 submitCallback={saveStatisticsCallback}
                 stats={stats}
             />
-
 
             <TutorialDialog calculus={calculus} />
         </Fragment>

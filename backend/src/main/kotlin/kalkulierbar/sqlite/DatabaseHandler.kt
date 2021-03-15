@@ -31,6 +31,7 @@ class DatabaseHandler {
             }
         }
 
+        @Suppress("MaxLineLength")
         public fun insert(identifier: String, keyFormula: String, statisticsJSON: String, score: Int) {
             val sqlIdentifier = parseIdentifier(identifier)
             statisticsJSON.replace("\"", "\\\"")

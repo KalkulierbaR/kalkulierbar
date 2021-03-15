@@ -16,7 +16,6 @@ import kalkulierbar.sequentCalculus.SequentCalculusMove.*
 import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
 import kalkulierbar.sequentCalculus.moveImplementations.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.list
 import kotlinx.serialization.modules.plus
 
 class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>(), StatisticCalculus<PSCState> {

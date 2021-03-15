@@ -3,11 +3,10 @@ import { useCallback, useState } from "preact/hooks";
 
 import Dialog from "..";
 import { Statistics } from "../../../types/app/statistics";
+import { StatisticEntry } from "../../../types/calculus";
 import { useAppState } from "../../../util/app-state";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
-import { StatisticEntry } from "../../../types/calculus";
-
 
 interface Props {
     /**
@@ -34,7 +33,7 @@ interface Props {
     /**
      * Label for the Cancel button
      */
-     cancelLabel?: string;
+    cancelLabel?: string;
     /**
      * Statistics of current Calculus
      */
@@ -57,25 +56,17 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
 }) => {
     const { smallScreen } = useAppState();
 
-    const memoizedCallback = useCallback(
-        () => {
-          setEntries(stats === undefined ? [] : stats.entries)
-        },
-        [stats],
-    );
+    const memoizedCallback = useCallback(() => {
+        setEntries(stats === undefined ? [] : stats.entries);
+    }, [stats]);
 
     const [entries, setEntries] = useState<StatisticEntry[]>(
         stats === undefined ? [] : stats.entries,
     );
 
-    const [asc, setAsc] = useState<boolean>(
-        false,
-    )
+    const [asc, setAsc] = useState<boolean>(false);
 
-    const [sortedBy, setSortedBy] = useState<number>(
-        -1,
-    )
-
+    const [sortedBy, setSortedBy] = useState<number>(-1);
 
     /**
      * Submit the close proof with the users name
@@ -100,8 +91,8 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const cancel = () => {
-        onClose()
-    }
+        onClose();
+    };
 
     /**
      * Handle the KeyDown event of the input fields
@@ -126,35 +117,33 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
     };
 
     const sortByColumn = (columnIndex: number) => {
-        if (stats === undefined)
-            return
+        if (stats === undefined) return;
 
-        let currentAsc: boolean
+        let currentAsc: boolean;
         if (sortedBy === columnIndex) {
-            currentAsc = !asc
-            setAsc(!asc)
+            currentAsc = !asc;
+            setAsc(!asc);
+        } else {
+            currentAsc = false;
+            setAsc(false);
         }
-        else {
-            currentAsc = false
-            setAsc(false)
-        }
-        setSortedBy(columnIndex)
+        setSortedBy(columnIndex);
 
         const tmp: StatisticEntry[] = [];
-        stats.entries.forEach(elem => {
-            tmp.push(elem)
-        })
+        stats.entries.forEach((elem) => {
+            tmp.push(elem);
+        });
         tmp.sort((a, b) => {
             if (Object.values(a)[columnIndex] < Object.values(b)[columnIndex])
                 return currentAsc ? -1 : 1;
             if (Object.values(a)[columnIndex] === Object.values(b)[columnIndex])
                 return 0;
-            
-            return currentAsc ? 1 : -1
-        })
-        
-        setEntries(tmp)
-    }
+
+            return currentAsc ? 1 : -1;
+        });
+
+        setEntries(tmp);
+    };
 
     return (
         <Dialog
@@ -168,37 +157,34 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
                 <table>
                     <tr>
                         {stats.columnNames.map((elem, index) => (
-                            <td
-                                onClick={() => sortByColumn(index + 1)}
-                            >
+                            <td onClick={() => sortByColumn(index + 1)}>
                                 {`${elem.toString()}`}
                             </td>
-
                         ))}
                     </tr>
                     {entries.map((stat) => (
                         <tr>
-                            {Object.values(stat).map((val, index) => (
-                                index !== 0 && val === null &&
-                                    <td>
-                                        <TextInput
-                                            id={"name"}
-                                            label={"Your name : "}
-                                            inline={true}
-                                            onKeyDown={onKeyDown}
-                                            onFocus={onFocus}
-                                            autoFocus={!smallScreen}
-                                        />
-                                    </td> ||
-                                index !== 0 && val !== null &&
-                                    <td>
-                                        {`${val.toString()}`}
-                                    </td>
-                            ))}
+                            {Object.values(stat).map(
+                                (val, index) =>
+                                    (index !== 0 && val === null && (
+                                        <td>
+                                            <TextInput
+                                                id={"name"}
+                                                label={"Your name : "}
+                                                inline={true}
+                                                onKeyDown={onKeyDown}
+                                                onFocus={onFocus}
+                                                autoFocus={!smallScreen}
+                                            />
+                                        </td>
+                                    )) ||
+                                    (index !== 0 && val !== null && (
+                                        <td>{`${val.toString()}`}</td>
+                                    )),
+                            )}
                         </tr>
                     ))}
                 </table>
-
             )}
             <Btn onClick={submit} label={submitLabel} />
             <Btn onClick={cancel} label={cancelLabel} />

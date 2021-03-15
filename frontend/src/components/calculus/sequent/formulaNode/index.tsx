@@ -19,7 +19,7 @@ interface Props {
     selectedListIndex?: string;
     selectFormulaCallback?: (
         formula: FormulaTreeLayoutNode,
-        nodeId: number
+        nodeId: number,
     ) => void;
     selected: boolean;
 }

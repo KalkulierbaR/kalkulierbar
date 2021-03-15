@@ -1,6 +1,9 @@
 import { CheckCloseResponse } from "../types/app/api";
 import { AppState, AppStateUpdater } from "../types/app/app-state";
-import { NotificationHandler, NotificationType } from "../types/app/notification";
+import {
+    NotificationHandler,
+    NotificationType,
+} from "../types/app/notification";
 import { Statistics } from "../types/app/statistics";
 import { CalculusType, Move } from "../types/calculus";
 
@@ -47,7 +50,13 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
                 notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));
                 if (onProoven !== undefined) {
-                    getStatistics(server, calculus, state, notificationHandler, onProoven);
+                    getStatistics(
+                        server,
+                        calculus,
+                        state,
+                        notificationHandler,
+                        onProoven,
+                    );
                 }
             } else {
                 notificationHandler.error(msg);
@@ -63,11 +72,11 @@ export const getStatistics = async <C extends CalculusType = CalculusType>(
     calculus: C,
     state: AppState[C],
     notificationHandler: NotificationHandler,
-    onProoven: (stats: Statistics) => void
+    onProoven: (stats: Statistics) => void,
 ) => {
     const url = `${server}/${calculus}/statistics`;
     try {
-        const response = await fetch(url , {
+        const response = await fetch(url, {
             headers: {
                 "Content-Type": "text/plain",
             },
@@ -76,10 +85,10 @@ export const getStatistics = async <C extends CalculusType = CalculusType>(
         });
         if (response.status !== 200) {
             notificationHandler.error(await response.text());
-        }else {
-            onProoven((await response.json() as Statistics));
+        } else {
+            onProoven((await response.json()) as Statistics);
         }
-    }catch (e) {
+    } catch (e) {
         notificationHandler.error((e as Error).message);
     }
 };
@@ -93,19 +102,24 @@ export const saveStatistics = async <C extends CalculusType = CalculusType>(
 ) => {
     const url = `${server}/${calculus}/save-statistics`;
     try {
-        const response = await fetch(url , {
+        const response = await fetch(url, {
             headers: {
                 "Content-Type": "text/plain",
             },
             method: "POST",
-            body: `name=${name}&state=${encodeURIComponent(JSON.stringify(state))}`,
+            body: `name=${name}&state=${encodeURIComponent(
+                JSON.stringify(state),
+            )}`,
         });
         if (response.status !== 200) {
             notificationHandler.error(await response.text());
         } else {
-           notificationHandler.message(NotificationType.Success, "Proof saved as " + (await response.text()));
+            notificationHandler.message(
+                NotificationType.Success,
+                "Proof saved as " + (await response.text()),
+            );
         }
-    }catch (e) {
+    } catch (e) {
         notificationHandler.error((e as Error).message);
     }
 };

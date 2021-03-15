@@ -39,7 +39,7 @@ interface Props {
     /**
      * The placeholder for the input field
      */
-    placeholder: string
+    placeholder: string;
 }
 
 /**

@@ -23,22 +23,23 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
     const toggle = useCallback(() => setOpen(!open), [open]);
     const setClosed = useCallback(() => setOpen(false), [setOpen]);
 
-    const right = window.innerWidth < 950 ? (
-        <Hamburger open={open} onClick={toggle} />
-    ) : (
-        <Fragment>
-            <Nav
-                hamburger={false}
-                onLinkClick={setClosed}
-                currentUrl={currentUrl}
-            />
-            <Btn
-                className={style.settingsBtn}
-                onClick={toggle}
-                icon={<SettingsIcon />}
-            />
-        </Fragment>
-    );
+    const right =
+        window.innerWidth < 950 ? (
+            <Hamburger open={open} onClick={toggle} />
+        ) : (
+            <Fragment>
+                <Nav
+                    hamburger={false}
+                    onLinkClick={setClosed}
+                    currentUrl={currentUrl}
+                />
+                <Btn
+                    className={style.settingsBtn}
+                    onClick={toggle}
+                    icon={<SettingsIcon />}
+                />
+            </Fragment>
+        );
 
     return (
         <header class={style.header}>

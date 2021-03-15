@@ -81,18 +81,17 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
                             showIconAtEnd={true}
                             onClick={() => {
                                 // If the last move added a node, and we undo this, remove the corresponding drag
-                                if (state.tree.length > 0) {
-                                    sendMove(
-                                        server,
-                                        calculus,
-                                        state,
-                                        { type: "undo" },
-                                        onChange,
-                                        notificationHandler,
-                                    );
-                                } else {
+                                if (state.tree.length <= 0) {
                                     return;
                                 }
+                                sendMove(
+                                    server,
+                                    calculus,
+                                    state,
+                                    { type: "undo" },
+                                    onChange,
+                                    notificationHandler,
+                                );
                             }}
                         />
                     </Fragment>

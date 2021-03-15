@@ -34,9 +34,9 @@ const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 calculus={calculus}
                 params={params}
                 placeholder={
-                    calculus === Calculus.fosc ? 
-                    "\\all X: (\\all Y: !(P(X) -> P(Y)) |- \\all X: !P(X)" : 
-                    "!(a -> b) |- !b"
+                    calculus === Calculus.fosc
+                        ? "\\all X: (\\all Y: !(P(X) -> P(Y)) |- \\all X: !P(X)"
+                        : "!(a -> b) |- !b"
                 }
             />
 

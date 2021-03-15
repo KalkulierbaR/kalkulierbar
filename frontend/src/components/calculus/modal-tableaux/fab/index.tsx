@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
-import { Statistics } from "../../../../types/app/statistics";
 
+import { Statistics } from "../../../../types/app/statistics";
 import { ModalCalculusType } from "../../../../types/calculus";
 import {
     ExpandMove,
@@ -79,7 +79,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
     resetDragTransforms,
     setShowPrefixDialog,
     pruneCallback,
-    closeCallback
+    closeCallback,
 }) => {
     const {
         server,
@@ -125,7 +125,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             />
                         )}
                         <CenterFAB resetDragTransforms={resetDragTransforms} />
-                        <CheckCloseFAB 
+                        <CheckCloseFAB
                             calculus={calculus}
                             onProoven={closeCallback}
                         />

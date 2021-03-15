@@ -257,6 +257,10 @@ private fun findFittingVariableName(node: GenericSequentCalculusNode): String {
     throw IllegalMove("Not yet implemented")
 }
 
+/**
+ * Checks if a string is syntactically allowed to be assigned as a constant for quantifier instantiation
+ */
+@Suppress("ThrowsCount")
 private fun isAllowedVarAssign(str: String): Boolean {
     if (str.length <= 0) {
         throw IllegalMove("Can't Instantiate with empty identifier.")

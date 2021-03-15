@@ -16,7 +16,6 @@ import {
     FormulaTreeLayoutNode,
     instanceOfFOSCState,
     instanceOfPSCState,
-    SequentTreeLayoutNode,
     VarAssign,
 } from "../../../types/calculus/sequent";
 import { saveStatistics, sendMove } from "../../../util/api";
@@ -48,17 +47,24 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         return null;
     }
 
-    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(undefined);
+    const [selectedNodeId, setSelectedNodeId] = useState<number | undefined>(
+        undefined,
+    );
 
-    const [selectedListIndex, setSelectedListIndex] = useState<string | undefined>(undefined);
+    const [selectedListIndex, setSelectedListIndex] = useState<
+        string | undefined
+    >(undefined);
 
-    const selectedNode = selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined;
+    const selectedNode =
+        selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined;
 
     const ruleOptions = instanceOfPSCState(state, calculus)
         ? stringArrayToStringMap(ruleSetToStringArray(getNormalRuleSet()))
         : stringArrayToStringMap(ruleSetToStringArray(getFORuleSet()));
 
-    const [selectedRuleId, setSelectedRuleId] = useState<number | undefined>(undefined);
+    const [selectedRuleId, setSelectedRuleId] = useState<number | undefined>(
+        undefined,
+    );
 
     const [showRuleDialog, setShowRuleDialog] = useState(false);
 
@@ -67,23 +73,26 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [showSaveDialog, setShowSaveDialog] = useState(false);
 
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
-    
+
     const [varOrigins, setVarOrigins] = useState<string[]>([]);
-    
+
     const [stats, setStats] = useState<Statistics | undefined>(undefined);
 
-    const trySendMove = (ruleId: number | undefined, nodeId: number | undefined, listIndex: string | undefined) => {
+    const trySendMove = (
+        ruleId: number | undefined,
+        nodeId: number | undefined,
+        listIndex: string | undefined,
+    ) => {
         if (
-            ruleId === undefined || 
+            ruleId === undefined ||
             nodeId === undefined ||
             listIndex === undefined
         )
             return;
 
-        const node = state.tree[nodeId]
+        const node = state.tree[nodeId];
 
-        if (!checkIfRuleIsAppliedOnCorrectSite(listIndex, ruleId))
-            return;
+        if (!checkIfRuleIsAppliedOnCorrectSite(listIndex, ruleId)) return;
 
         if (ruleId === 0) {
             sendMove(
@@ -94,46 +103,32 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 onChange,
                 notificationHandler,
             );
-            resetSelection()
-        } else if (
-            ruleId >= 9 &&
-            ruleId <= 12 && 
-            node !== undefined
-        ) {
+            resetSelection();
+        } else if (ruleId >= 9 && ruleId <= 12 && node !== undefined) {
             // Selected Rule is a Quantifier
             setVarOrigins([nodeName(node)]);
             // Open Popup to
             if (listIndex.charAt(0) === "l") {
                 const formula =
-                    node.leftFormulas[
-                        parseStringToListIndex(listIndex)
-                    ];
-                if (
-                    formula.type === "allquant" ||
-                    formula.type === "exquant"
-                ) {
+                    node.leftFormulas[parseStringToListIndex(listIndex)];
+                if (formula.type === "allquant" || formula.type === "exquant") {
                     setVarsToAssign([formula.varName!]);
                     setShowVarAssignDialog(true);
-                    return
+                    return;
                 }
             } else {
                 const formula =
-                    node.rightFormulas[
-                        parseStringToListIndex(listIndex)
-                    ];
-                if (
-                    formula.type === "allquant" ||
-                    formula.type === "exquant"
-                ) {
+                    node.rightFormulas[parseStringToListIndex(listIndex)];
+                if (formula.type === "allquant" || formula.type === "exquant") {
                     setVarsToAssign([formula.varName!]);
                     setShowVarAssignDialog(true);
-                    return
+                    return;
                 }
             }
             notificationHandler.error(
-                "Cannot use quantifier rules on a non quantifier formula!"
-            )
-            resetSelection()
+                "Cannot use quantifier rules on a non quantifier formula!",
+            );
+            resetSelection();
         } else {
             sendMove(
                 server,
@@ -142,23 +137,24 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 {
                     type: ruleOptions.get(ruleId)!,
                     nodeID: nodeId,
-                    listIndex: parseStringToListIndex(
-                        listIndex,
-                    ),
+                    listIndex: parseStringToListIndex(listIndex),
                 },
                 onChange,
                 notificationHandler,
             );
-            resetSelection()
+            resetSelection();
         }
-    }
+    };
 
-    const checkIfRuleIsAppliedOnCorrectSite = (selected: string, ruleId: number): boolean => {
+    const checkIfRuleIsAppliedOnCorrectSite = (
+        selected: string,
+        ruleId: number,
+    ): boolean => {
         if (
             selected.charAt(0) === "l" &&
             getFORuleSet().rules[ruleId].site === "right"
         ) {
-            resetSelection()
+            resetSelection();
             notificationHandler.error(
                 "Can't use right hand side rule on the left side!",
             );
@@ -169,21 +165,21 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             selected.charAt(0) === "r" &&
             getFORuleSet().rules[ruleId].site === "left"
         ) {
-            resetSelection()
+            resetSelection();
             notificationHandler.error(
                 "Can't use left hand side rule on the right side!",
-                );
-                return false;
+            );
+            return false;
         }
-        
+
         return true;
-    }
-        
+    };
+
     const resetSelection = () => {
-        setSelectedRuleId(undefined)
-        setSelectedNodeId(undefined)
-        setSelectedListIndex(undefined)
-    }
+        setSelectedRuleId(undefined);
+        setSelectedNodeId(undefined);
+        setSelectedListIndex(undefined);
+    };
 
     const selectRuleCallback = (newRuleId: number) => {
         if (newRuleId === selectedRuleId) {
@@ -230,17 +226,20 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 );
             }
         }
-        resetSelection()
+        resetSelection();
         setShowVarAssignDialog(false);
     };
 
-    const selectFormulaCallback = (newFormula: FormulaTreeLayoutNode, nodeId: number) => {
+    const selectFormulaCallback = (
+        newFormula: FormulaTreeLayoutNode,
+        nodeId: number,
+    ) => {
         event?.stopPropagation();
         if (newFormula.id === selectedListIndex) {
-            resetSelection()
+            resetSelection();
         } else {
             setSelectedListIndex(newFormula.id);
-            setSelectedNodeId(nodeId)
+            setSelectedNodeId(nodeId);
             trySendMove(selectedRuleId, nodeId, newFormula.id);
         }
     };
@@ -286,13 +285,13 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     };
 
     const saveStatisticsCallback = (userName: string) => {
-        if (userName !== '') {
+        if (userName !== "") {
             saveStatistics(
                 server,
                 calculus,
                 state,
                 notificationHandler,
-                userName
+                userName,
             );
             setShowSaveDialog(false);
         }
