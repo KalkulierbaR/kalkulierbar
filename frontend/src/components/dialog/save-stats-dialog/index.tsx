@@ -147,10 +147,10 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
         tmp.sort((a, b) => {
             if (Object.values(a)[columnIndex] < Object.values(b)[columnIndex])
                 return currentAsc ? -1 : 1;
-             if (Object.values(a)[columnIndex] === Object.values(b)[columnIndex])
+            if (Object.values(a)[columnIndex] === Object.values(b)[columnIndex])
                 return 0;
             
-                return currentAsc ? 1 : -1
+            return currentAsc ? 1 : -1
         })
         
         setEntries(tmp)
