@@ -157,7 +157,7 @@ export default class Zoomable extends Component<Props, State> {
 
         // Propagate changes, re-render
         this.setState({ transform: t, gesture: g });
-    };
+    }
 
     public onMouseDown = (ev: MouseEvent) => {
         // Ignore right click, etc.
@@ -217,7 +217,7 @@ export default class Zoomable extends Component<Props, State> {
 
         window.addEventListener("mousemove", mouseMoved);
         window.addEventListener("mouseup", mouseUpped);
-    };
+    }
 
     public onTouchStart = (e: TouchEvent) => {
         e.stopImmediatePropagation();
@@ -277,7 +277,7 @@ export default class Zoomable extends Component<Props, State> {
         }
 
         this.setState({ transform: t, gesture: g });
-    };
+    }
 
     public onTouchMove = (e: TouchEvent) => {
         let t = this.state.transform;
@@ -348,7 +348,7 @@ export default class Zoomable extends Component<Props, State> {
             gesture: g,
             transform: constrain(translate(t, p, l), g.extent, translateExtent),
         });
-    };
+    }
 
     public onTouchEnd = (e: TouchEvent) => {
         const t = this.state.transform;
@@ -393,10 +393,10 @@ export default class Zoomable extends Component<Props, State> {
         if (g.touch0) {
             g.touch0[1] = invert(t, g.touch0[0]);
         }
-    };
+    }
 
     public setTransform = (t: Transform) =>
-        this.setState((s) => ({ ...s, transform: t }));
+        this.setState((s) => ({ ...s, transform: t }))
 
     /**
      * Handle the GoToEvent
@@ -410,7 +410,7 @@ export default class Zoomable extends Component<Props, State> {
         }
         const [x, y] = this.props.transformGoTo(detail);
         this.setTransform({ x, y, k: 1 });
-    };
+    }
 
     /**
      * Handle the CenterEvent
@@ -418,7 +418,7 @@ export default class Zoomable extends Component<Props, State> {
      */
     public handleCenter = () => {
         this.setTransform(IDENTITY);
-    };
+    }
 
     public componentDidMount() {
         window.addEventListener("go-to", this.handleGoTo);

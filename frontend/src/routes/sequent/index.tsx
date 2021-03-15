@@ -33,8 +33,11 @@ const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
             <FormulaInput
                 calculus={calculus}
                 params={params}
-                foLogic={calculus === Calculus.fosc}
-                sequentPlaceholder={true}
+                placeholder={
+                    calculus === Calculus.fosc ? 
+                    "\\all X: (\\all Y: !(P(X) -> P(Y)) |- \\all X: !P(X)" : 
+                    "!(a -> b) |- !b"
+                }
             />
 
             <div class="card">

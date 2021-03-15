@@ -1,5 +1,6 @@
 import { Fragment, h } from "preact";
 
+import { Statistics } from "../../../../types/app/statistics";
 import { SequentCalculusType } from "../../../../types/calculus";
 import { FOSCState, PSCState } from "../../../../types/calculus/sequent";
 import { sendMove } from "../../../../util/api";
@@ -33,6 +34,10 @@ interface Props {
      * Deletes selected Branch
      */
     pruneCallback: () => void;
+    /**
+     * Opens Save Dialog
+     */
+    closeCallback: (stats: Statistics) => void;
 }
 
 const SequentFAB: preact.FunctionalComponent<Props> = ({
@@ -41,6 +46,7 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
     selectedNodeId,
     ruleCallback,
     pruneCallback,
+    closeCallback,
 }) => {
     const {
         server,
@@ -63,7 +69,10 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
                             name={calculus}
                             type={calculus}
                         />
-                        <CheckCloseFAB calculus={calculus} />
+                        <CheckCloseFAB
+                            calculus={calculus}
+                            onProoven={closeCallback}
+                        />
                         <FAB
                             icon={<UndoIcon />}
                             label="Undo"

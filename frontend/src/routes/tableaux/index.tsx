@@ -110,7 +110,11 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
             <FormulaInput
                 calculus={calculus}
                 params={params}
-                foLogic={calculus === Calculus.foTableaux}
+                placeholder={
+                    calculus === Calculus.foTableaux ? 
+                    "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))" :
+                    "!a, c; a; !c"
+                }
             />
             <div class="card">
                 <h3>Parameters</h3>
