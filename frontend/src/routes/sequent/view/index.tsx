@@ -14,7 +14,6 @@ import {
     FormulaTreeLayoutNode,
     instanceOfFOSCState,
     instanceOfPSCState,
-    SequentTreeLayoutNode,
     VarAssign,
 } from "../../../types/calculus/sequent";
 import { sendMove } from "../../../util/api";
@@ -72,15 +71,19 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
     const [varOrigins, setVarOrigins] = useState<string[]>([]);
 
-    const trySendMove = (ruleId: number | undefined, nodeId: number | undefined, listIndex: string | undefined) => {
+    const trySendMove = (
+        ruleId: number | undefined,
+        nodeId: number | undefined,
+        listIndex: string | undefined,
+    ) => {
         if (
-            ruleId === undefined || 
+            ruleId === undefined ||
             nodeId === undefined ||
             listIndex === undefined
         )
             return;
 
-        const node = state.tree[nodeId]
+        const node = state.tree[nodeId];
 
         if (ruleId === 0) {
             sendMove(
@@ -94,44 +97,30 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             setSelectedNodeId(undefined);
             setSelectedRuleId(undefined);
             setSelectedListIndex(undefined);
-        } else if (
-            ruleId >= 9 &&
-            ruleId <= 12 && 
-            node !== undefined
-        ) {
+        } else if (ruleId >= 9 && ruleId <= 12 && node !== undefined) {
             // Selected Rule is a Quantifier
             setVarOrigins([nodeName(node)]);
             // Open Popup to
             if (listIndex.charAt(0) === "l") {
                 const formula =
-                    node.leftFormulas[
-                        parseStringToListIndex(listIndex)
-                    ];
-                if (
-                    formula.type === "allquant" ||
-                    formula.type === "exquant"
-                ) {
+                    node.leftFormulas[parseStringToListIndex(listIndex)];
+                if (formula.type === "allquant" || formula.type === "exquant") {
                     setVarsToAssign([formula.varName!]);
                     setShowVarAssignDialog(true);
-                    return
+                    return;
                 }
             } else {
                 const formula =
-                    node.rightFormulas[
-                        parseStringToListIndex(listIndex)
-                    ];
-                if (
-                    formula.type === "allquant" ||
-                    formula.type === "exquant"
-                ) {
+                    node.rightFormulas[parseStringToListIndex(listIndex)];
+                if (formula.type === "allquant" || formula.type === "exquant") {
                     setVarsToAssign([formula.varName!]);
                     setShowVarAssignDialog(true);
-                    return
+                    return;
                 }
             }
             notificationHandler.error(
-                "Cannot use quantifier rules on a non quantifier formula!"
-            )
+                "Cannot use quantifier rules on a non quantifier formula!",
+            );
             setSelectedNodeId(undefined);
             setSelectedRuleId(undefined);
             setSelectedListIndex(undefined);
@@ -163,9 +152,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 {
                     type: ruleOptions.get(ruleId)!,
                     nodeID: nodeId,
-                    listIndex: parseStringToListIndex(
-                        listIndex,
-                    ),
+                    listIndex: parseStringToListIndex(listIndex),
                 },
                 onChange,
                 notificationHandler,
@@ -174,7 +161,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             setSelectedRuleId(undefined);
             setSelectedListIndex(undefined);
         }
-    }
+    };
 
     const selectRuleCallback = (newRuleId: number) => {
         if (newRuleId === selectedRuleId) {
@@ -227,15 +214,18 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         setShowVarAssignDialog(false);
     };
 
-    const selectFormulaCallback = (newFormula: FormulaTreeLayoutNode, nodeId: number) => {
+    const selectFormulaCallback = (
+        newFormula: FormulaTreeLayoutNode,
+        nodeId: number,
+    ) => {
         event?.stopPropagation();
         if (newFormula.id === selectedListIndex) {
             setSelectedListIndex(undefined);
             setSelectedNodeId(undefined);
-            setSelectedRuleId(undefined)
+            setSelectedRuleId(undefined);
         } else {
             setSelectedListIndex(newFormula.id);
-            setSelectedNodeId(nodeId)
+            setSelectedNodeId(nodeId);
             trySendMove(selectedRuleId, nodeId, newFormula.id);
         }
     };

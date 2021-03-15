@@ -12,10 +12,7 @@ interface Props {
     parent?: Tree<SequentTreeLayoutNode>;
     selectedNodeId?: number;
     selectedListIndex?: string;
-    selectFormulaCallback: (
-        f: FormulaTreeLayoutNode,
-        nodeId: number
-    ) => void;
+    selectFormulaCallback: (f: FormulaTreeLayoutNode, nodeId: number) => void;
     zoomFactor: number;
     ruleName: string;
 }

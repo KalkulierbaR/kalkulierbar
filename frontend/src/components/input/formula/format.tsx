@@ -185,6 +185,69 @@ const Format: preact.FunctionalComponent<Props> = ({
                     </code>
                 </p>
                 <p>
+                    <table>
+                        <tr>
+                            <th>Operator</th>
+                            <th>Symbol</th>
+                            <th>Example</th>
+                        </tr>
+                        <tr>
+                            <td>Parentheses</td>
+                            <td>
+                                <code>()</code>
+                            </td>
+                            <td>
+                                <code>(a | b) & c</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Unary Not</td>
+                            <td>
+                                <code>!</code>
+                            </td>
+                            <td>
+                                <code>!valid</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Binary And</td>
+                            <td>
+                                <code>&</code>
+                            </td>
+                            <td>
+                                <code>a & b</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Binary Or</td>
+                            <td>
+                                <code>|</code>
+                            </td>
+                            <td>
+                                <code>a | b</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Implication</td>
+                            <td>
+                                <code>{"->"}</code>
+                            </td>
+                            <td>
+                                <code>{"rain -> wet"}</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Equivalence</td>
+                            <td>
+                                <code>{"<=>"}</code> or <code>{"<->"}</code>
+                            </td>
+                            <td>
+                                <code>{"right <=> !left"}</code>
+                            </td>
+                        </tr>
+                    </table>
+                </p>
+                <p>
                     <code class={style.padRight}>{"<=>"}</code>
                     and
                     <code class={style.padLeft}>{"<->"}</code> are synonymous,
@@ -222,6 +285,70 @@ const Format: preact.FunctionalComponent<Props> = ({
                         {"!(a -> b) & (c <=> d | e) & !a"}
                     </code>
                 </p>
+
+                <p>
+                    <table>
+                        <tr>
+                            <th>Operator</th>
+                            <th>Symbol</th>
+                            <th>Example</th>
+                        </tr>
+                        <tr>
+                            <td>Parentheses</td>
+                            <td>
+                                <code>()</code>
+                            </td>
+                            <td>
+                                <code>(a | b) & c</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Unary Not</td>
+                            <td>
+                                <code>!</code>
+                            </td>
+                            <td>
+                                <code>!valid</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Binary And</td>
+                            <td>
+                                <code>&</code>
+                            </td>
+                            <td>
+                                <code>a & b</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Binary Or</td>
+                            <td>
+                                <code>|</code>
+                            </td>
+                            <td>
+                                <code>a | b</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Implication</td>
+                            <td>
+                                <code>{"->"}</code>
+                            </td>
+                            <td>
+                                <code>{"rain -> wet"}</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Equivalence</td>
+                            <td>
+                                <code>{"<=>"}</code> or <code>{"<->"}</code>
+                            </td>
+                            <td>
+                                <code>{"right <=> !left"}</code>
+                            </td>
+                        </tr>
+                    </table>
+                </p>
                 <p>
                     <code class={style.padRight}>{"<=>"}</code>
                     and
@@ -234,8 +361,6 @@ const Format: preact.FunctionalComponent<Props> = ({
             {allowSequences && sequentFormat}
         </Fragment>
     );
-
-    
 
     const content = (
         <div class={style.formatContent}>
@@ -257,7 +382,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                 <button
                     class={classMap({
                         [style.btnIcon]: true,
-                        [style.expand]: !collapsed,
+                        [style.expand]: collapsed,
                     })}
                 >
                     <ChevronRightIcon
