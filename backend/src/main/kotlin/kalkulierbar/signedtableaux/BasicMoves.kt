@@ -335,8 +335,21 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
  * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-@Suppress("ComplexMethod", "NestedBlockDepth", "EmptyCatchBlock")
 fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableauxState {
+    if (state.backtracking)
+        state.moveHistory.add(Prune(nodeID))
+
+    return applyPruneRecursive(state, nodeID)
+}
+
+/**
+ * Prune all the children of the given node.
+ * @param state: SignedModalTableaux state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @return new state after applying move
+ */
+@Suppress("ComplexMethod")
+fun applyPruneRecursive(state: SignedModalTableauxState, nodeID: Int): SignedModalTableauxState {
     val nodes = state.nodes
 
     val node = nodes[nodeID]
@@ -349,7 +362,7 @@ fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableau
 
     for (child: Int in node.children) {
         try {
-            applyPrune(state, child)
+            applyPruneRecursive(state, child)
         } catch (e: IllegalMove) {
         }
         nodes.removeAt(child)
@@ -381,9 +394,6 @@ fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableau
     }
     node.children.clear()
     node.isClosed = false
-
-    if (state.backtracking)
-        state.moveHistory.add(Prune(nodeID))
 
     return state
 }
