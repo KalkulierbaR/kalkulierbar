@@ -80,7 +80,7 @@ class Or(override var leftChild: LogicNode, override var rightChild: LogicNode) 
 @SerialName("impl")
 class Impl(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
 
-    override fun toString() = "($leftChild --> $rightChild)"
+    override fun toString() = "($leftChild → $rightChild)"
 
     override fun clone(qm: Map<String, Quantifier>) = Impl(leftChild.clone(qm), rightChild.clone(qm))
 
@@ -236,5 +236,41 @@ class ExistentialQuantifier(
                 return false
         }
         return true
+    }
+}
+
+@Serializable
+@SerialName("box")
+class Box(override var child: LogicNode) : UnaryOp() {
+
+    override fun toString() = "□$child"
+
+    override fun clone(qm: Map<String, Quantifier>) = Box(child.clone(qm))
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Box)
+            return false
+
+        return this.child.synEq(other.child)
+    }
+}
+
+@Serializable
+@SerialName("diamond")
+class Diamond(override var child: LogicNode) : UnaryOp() {
+
+    override fun toString() = "◇$child"
+
+    override fun clone(qm: Map<String, Quantifier>) = Diamond(child.clone(qm))
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Diamond)
+            return false
+
+        return this.child.synEq(other.child)
     }
 }

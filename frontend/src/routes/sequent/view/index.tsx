@@ -5,9 +5,11 @@ import { useState } from "preact/hooks";
 import SequentFAB from "../../../components/calculus/sequent/fab";
 import SequentTreeView from "../../../components/calculus/sequent/tree";
 import Dialog from "../../../components/dialog";
+import SaveStatsDialog from "../../../components/dialog/save-stats-dialog";
 import VarAssignDialog from "../../../components/dialog/var-assign";
 import OptionList from "../../../components/input/option-list";
 import TutorialDialog from "../../../components/tutorial/dialog";
+import { Statistics } from "../../../types/app/statistics";
 import { SequentCalculusType } from "../../../types/calculus";
 import { getFORuleSet, getNormalRuleSet } from "../../../types/calculus/rules";
 import {
@@ -16,7 +18,7 @@ import {
     instanceOfPSCState,
     VarAssign,
 } from "../../../types/calculus/sequent";
-import { sendMove } from "../../../util/api";
+import { saveStatistics, sendMove } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
 import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { ruleSetToStringArray } from "../../../util/rule";
@@ -68,8 +70,13 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
 
+    const [showSaveDialog, setShowSaveDialog] = useState(false);
+
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
+
     const [varOrigins, setVarOrigins] = useState<string[]>([]);
+
+    const [stats, setStats] = useState<Statistics | undefined>(undefined);
 
     const trySendMove = (
         ruleId: number | undefined,
@@ -85,6 +92,8 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
         const node = state.tree[nodeId];
 
+        if (!checkIfRuleIsAppliedOnCorrectSite(listIndex, ruleId)) return;
+
         if (ruleId === 0) {
             sendMove(
                 server,
@@ -94,9 +103,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 onChange,
                 notificationHandler,
             );
-            setSelectedNodeId(undefined);
-            setSelectedRuleId(undefined);
-            setSelectedListIndex(undefined);
+            resetSelection();
         } else if (ruleId >= 9 && ruleId <= 12 && node !== undefined) {
             // Selected Rule is a Quantifier
             setVarOrigins([nodeName(node)]);
@@ -121,30 +128,8 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             notificationHandler.error(
                 "Cannot use quantifier rules on a non quantifier formula!",
             );
-            setSelectedNodeId(undefined);
-            setSelectedRuleId(undefined);
-            setSelectedListIndex(undefined);
+            resetSelection();
         } else {
-            if (
-                listIndex.charAt(0) === "l" &&
-                getFORuleSet().rules[ruleId].site === "right"
-            ) {
-                setSelectedRuleId(undefined);
-                notificationHandler.error(
-                    "Can't use right hand side rule on the left side!",
-                );
-                return;
-            }
-            if (
-                listIndex.charAt(0) === "r" &&
-                getFORuleSet().rules[ruleId].site === "left"
-            ) {
-                setSelectedRuleId(undefined);
-                notificationHandler.error(
-                    "Can't use left hand side rule on the right side!",
-                );
-                return;
-            }
             sendMove(
                 server,
                 calculus,
@@ -157,10 +142,43 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 onChange,
                 notificationHandler,
             );
-            setSelectedNodeId(undefined);
-            setSelectedRuleId(undefined);
-            setSelectedListIndex(undefined);
+            resetSelection();
         }
+    };
+
+    const checkIfRuleIsAppliedOnCorrectSite = (
+        selected: string,
+        ruleId: number,
+    ): boolean => {
+        if (
+            selected.charAt(0) === "l" &&
+            getFORuleSet().rules[ruleId].site === "right"
+        ) {
+            resetSelection();
+            notificationHandler.error(
+                "Can't use right hand side rule on the left side!",
+            );
+            return false;
+        }
+
+        if (
+            selected.charAt(0) === "r" &&
+            getFORuleSet().rules[ruleId].site === "left"
+        ) {
+            resetSelection();
+            notificationHandler.error(
+                "Can't use left hand side rule on the right side!",
+            );
+            return false;
+        }
+
+        return true;
+    };
+
+    const resetSelection = () => {
+        setSelectedRuleId(undefined);
+        setSelectedNodeId(undefined);
+        setSelectedListIndex(undefined);
     };
 
     const selectRuleCallback = (newRuleId: number) => {
@@ -208,9 +226,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 );
             }
         }
-        setSelectedNodeId(undefined);
-        setSelectedListIndex(undefined);
-        setSelectedRuleId(undefined);
+        resetSelection();
         setShowVarAssignDialog(false);
     };
 
@@ -220,9 +236,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     ) => {
         event?.stopPropagation();
         if (newFormula.id === selectedListIndex) {
-            setSelectedListIndex(undefined);
-            setSelectedNodeId(undefined);
-            setSelectedRuleId(undefined);
+            resetSelection();
         } else {
             setSelectedListIndex(newFormula.id);
             setSelectedNodeId(nodeId);
@@ -268,6 +282,19 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             return false;
         }
         return true;
+    };
+
+    const saveStatisticsCallback = (userName: string) => {
+        if (userName !== "") {
+            saveStatistics(
+                server,
+                calculus,
+                state,
+                notificationHandler,
+                userName,
+            );
+            setShowSaveDialog(false);
+        }
     };
 
     return (
@@ -323,6 +350,13 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 />
             </Dialog>
 
+            <SaveStatsDialog
+                open={showSaveDialog}
+                onClose={() => setShowSaveDialog(false)}
+                submitCallback={saveStatisticsCallback}
+                stats={stats}
+            />
+
             {instanceOfFOSCState(state, calculus) && (
                 <VarAssignDialog
                     open={showVarAssignDialog}
@@ -350,6 +384,10 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         notificationHandler,
                     )
                 }
+                closeCallback={(statistics: Statistics) => {
+                    setStats(statistics);
+                    setShowSaveDialog(true);
+                }}
             />
             <TutorialDialog calculus={calculus} />
         </Fragment>

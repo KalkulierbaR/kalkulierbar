@@ -5,7 +5,12 @@ import kalkulierbar.logic.*
 import kalkulierbar.sequentCalculus.*
 import kalkulierbar.sequentCalculus.GenericSequentCalculusState
 import kalkulierbar.sequentCalculus.TreeNode
-
+/**
+ * Rule Ax is applied, if formulas of the same kind are on both sides of the Node.
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @return new state after applying move
+ */
 @Suppress("ThrowsCount")
 fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalculusState {
 
@@ -36,6 +41,14 @@ fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalc
     throw IllegalMove("Rule 'Ax' needs two formulas of the same kind on both sides to be applied.")
 }
 
+/**
+ * Rule NotRight is applied, if the LogicNode is in RightFormula of the Node and is of type NOT  .
+ * The LogicNode on which the NotRight is applied, will be moved to the leftFormula of Node
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(LogicNode) to which move should be applied.
+ * @return new state after applying move
+ */
 fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
 
     checkRight(state, nodeID, listIndex)
@@ -62,6 +75,14 @@ fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     return state
 }
 
+/**
+ * Rule NotLeft is applied, if the LogicNode is LeftFormula of Node and is of type NOT  .
+ * The LogicNode on which the NotLeft is applied, will be moved to the rightFormula of the Node
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ * @return new state after applying move
+ */
 fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
 
     checkLeft(state, nodeID, listIndex)
@@ -89,6 +110,14 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     return state
 }
 
+/**
+ * Rule OrRight is applied, if the LogicNode is in rightFormula of Node and is of type OR  .
+ * The left and right formula of the logicNode will be seperated and added to the right formula of the Node
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ * @return new state after applying move
+ */
 fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
 
     checkRight(state, nodeID, listIndex)
@@ -115,6 +144,18 @@ fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     return state
 }
 
+/**
+ * Rule OrLeft is applied, if the LogicNode is in LeftFormula of Node and is of type Or.
+ * Node will be splited into 2 Nodes.
+ *    LeftNode: RightChild of LeftNode will be same as RightChild of the Node.
+ *            : LeftChild of LeftNode will have LeftChild of the LogicNode and LeftChild of the Node.
+ *    RightNode: RightChild of RightNode will be same as RightChild of the Node.
+ *            : LeftChild of RightNode will have RightChild of the LogicNode and LeftChild of the Node.
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ * @return new state after applying move
+ */
 fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
 
     checkLeft(state, nodeID, listIndex)
@@ -154,6 +195,18 @@ fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int)
     return state
 }
 
+/**
+ * Rule AndRight is applied, if the LogicNode is in RightFormula of Node and  is of type AND.
+ * Node will be splited into 2 Nodes.
+ *    LeftNode: LeftChild of LeftNode will be same as LeftChild of the Node.
+ *            : RightChild of LeftNode will have LeftChild of the LogicNode and RightChild of the Node.
+ *    RightNode: LeftChild of RightNode will be same as LeftChild of the Node.
+ *            : RightChild of RightNode will have RightChild of the LogicNode and RightChild of the Node.
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(LogicNode) to which move should be applied.
+ * @return new state after applying move
+ */
 fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
 
     checkRight(state, nodeID, listIndex)
@@ -192,6 +245,14 @@ fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     return state
 }
 
+/**
+ * Rule AndLeft is applied, if LogicNode is in LeftFormula of Node and is of type AND.
+ * The left and right formula of the logicNode will be seperated and added to the left Child of the node,
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(LogicNode) to which move should be applied.
+ * @return new state after applying move
+ */
 fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
 
     checkLeft(state, nodeID, listIndex)
@@ -218,6 +279,18 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     return state
 }
 
+/**
+ * Rule ImpLeft is applied, if the LogicNode is the leftChild of node and is of type IMPL (Implication).
+ * Node will be splitted into 2 nodes:
+ *  LeftNode: LeftChild of LeftNode will be same as leftChild of Node. (except the logicNode)
+ *            RightChild of LeftNode will be same as rightChild of Node + LeftChild of logicNode
+ *  RightNode: LeftChild of RightNode will be same as leftChild of Node + RightChild of logicNode
+ *             RightChild of RightNode will same as rightChild of Node.
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ * @return new state after applying move
+ */
 fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
 
     checkLeft(state, nodeID, listIndex)
@@ -255,6 +328,15 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     return state
 }
 
+/**
+ * Rule ImpRight is applied, if the LogicNode is RightFormula of node and is of type IMPL (Implication).
+ * The leftChild of the logicNode will moved to the leftChild of the Node,
+ * The rightChild of the logicNode will be moved to the rightChild of the Node.
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ * @return new state after applying move
+ */
 fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
 
     checkRight(state, nodeID, listIndex)
@@ -280,6 +362,15 @@ fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     return state
 }
 
+/**
+ * Check the following ristrictions:
+ *      1) If the nodeID is within the tree
+ *      2) If the given node is a leaf
+ *      3) If the logicNode is within the the right formula of the NOde
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ */
 @Suppress("ThrowsCount")
 fun checkRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) {
     if (nodeID < 0 || state.tree.size <= nodeID)
@@ -296,6 +387,15 @@ fun checkRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) 
     return
 }
 
+/**
+ * Check the following ristrictions:
+ *      1) If the nodeID is within the tree
+ *      2) If the given node is a leaf
+ *      3) If the logicNode is within the the leftformula of the Node
+ * @param state: GenericSequentCalculusState state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @param listIndex: Index of the formula(logicNode) to which move should be applied.
+ */
 @Suppress("ThrowsCount")
 fun checkLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) {
     if (nodeID < 0 || state.tree.size <= nodeID)
@@ -341,6 +441,12 @@ fun applyUndo(state: GenericSequentCalculusState): GenericSequentCalculusState {
     return state
 }
 
+/**
+ * Prune all the children of the given node.
+ * @param state: GenericSequentCalculus state to apply move on
+ * @param nodeID: ID of node to apply move on
+ * @return new state after applying move
+ */
 @Suppress("EmptyCatchBlock", "ComplexMethod", "NestedBlockDepth", "ThrowsCount")
 fun applyPrune(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalculusState {
     if (nodeID < 0 || state.tree.size <= nodeID)

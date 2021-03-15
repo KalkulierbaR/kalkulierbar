@@ -1,5 +1,6 @@
 import { CalculusType, Formulas } from "../calculus";
 import { DPLLState } from "../calculus/dpll";
+import { ModalTableauxState } from "../calculus/modal-tableaux";
 import { NCTableauxState } from "../calculus/nc-tableaux";
 import { FOResolutionState, PropResolutionState } from "../calculus/resolution";
 import { FOSCState, PSCState } from "../calculus/sequent";
@@ -67,6 +68,10 @@ export interface AppState {
      * The current fosc state
      */
     fosc?: FOSCState;
+    /**
+     * The current signed-modal-tableaux state
+     */
+    "signed-modal-tableaux"?: ModalTableauxState;
     /**
      * The current tutorial mode
      */

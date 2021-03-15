@@ -187,8 +187,6 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
 }) => {
     const textRef = useRef<SVGTextElement>();
 
-    // Outer Nodes are always unclickable
-
     if (
         node.data.leftFormulas.length === 0 &&
         node.data.rightFormulas.length === 0 &&
