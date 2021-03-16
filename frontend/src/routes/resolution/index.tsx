@@ -55,7 +55,15 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format foLogic={fo} />
-            <FormulaInput calculus={calculus} params={params} foLogic={fo} />
+            <FormulaInput
+                calculus={calculus}
+                params={params}
+                placeholder={
+                    fo
+                        ? "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"
+                        : "!a, c; a; !c"
+                }
+            />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />

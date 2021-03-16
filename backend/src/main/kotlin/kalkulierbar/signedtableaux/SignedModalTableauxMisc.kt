@@ -1,7 +1,11 @@
 package kalkulierbar.signedtableaux
 
+import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.tamperprotect.ProtectedState
+import kotlin.math.max
+import kotlin.math.sqrt
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -51,8 +55,11 @@ class SignedModalTableauxState(
                 break
             node = nodes[node.parent!!]
         }
-        childLeavesOf(nodeID).forEach {
-            setClosed(it)
+        node = nodes[nodeID]
+        if (!node.isLeaf) {
+            childLeavesOf(nodeID).forEach {
+                setClosed(it)
+            }
         }
     }
 
@@ -94,6 +101,7 @@ class SignedModalTableauxState(
      * @param prefix the prefix to be checked
      * @return whether the prefix is already in use
      */
+    @Suppress("ReturnCount")
     fun prefixIsUsedOnBranch(leafID: Int, prefix: List<Int>): Boolean {
         var node = nodes[leafID]
         if (prefix.equals(node.prefix))
@@ -104,6 +112,33 @@ class SignedModalTableauxState(
                 return true
         }
         return false
+    }
+
+    /**
+     * Returns the width of the tree specified by nodeID
+     * @param nodeID the node id of the root
+     * @return the width of the tree
+     */
+    fun getWidth(nodeID: Int): Int {
+        val node = nodes[nodeID]
+        if (node.children.isEmpty()) {
+            return 1
+        }
+        return node.children.fold(0) { acc: Int, elem: Int -> acc + getWidth(elem) }
+    }
+
+    /**
+    * Returns the maxmimum depth of the tree specified by nodeID
+    * @param nodeID the node id of the root
+    * @return the width of the tree
+    */
+    fun getDepth(nodeID: Int): Int {
+        val node = nodes[nodeID]
+        if (node.children.isEmpty()) {
+            return 1
+        }
+        return node.children.fold(0) { acc: Int, elem: Int -> max(acc, getDepth(elem) + 1) }
+        // return node.children.fold(0) { (elem1, elem2) -> max(elem1, getDepth(elem2) + 1) }   
     }
 
     fun render() {
@@ -142,4 +177,40 @@ class SignedModalTableauxNode(
     }
 
     fun getHash() = "($parent|$children|$isClosed|$closeRef|$formula)"
+}
+
+@Serializable
+@SerialName("signedModalTableauxStatistic")
+class SignedModalTableauxStatistic(
+    override var userName: String?,
+    val numberOfMoves: Int,
+    val depth: Int,
+    val width: Int,
+    val usedBacktracking: Boolean
+) : Statistic {
+
+    constructor(state: SignedModalTableauxState) : this(
+        null,
+        state.moveHistory.size,
+        state.getDepth(0),
+        state.getWidth(0),
+        state.usedBacktracking
+    ) {
+        score = calculateScore()
+    }
+
+    override var score: Int = calculateScore()
+
+    @Suppress("MagicNumber")
+    override fun calculateScore(): Int {
+        var ret = ((1 / sqrt(numberOfMoves.toDouble())) * 1000).toInt()
+        if (usedBacktracking) {
+            ret = (ret * 0.9).toInt()
+        }
+        return ret
+    }
+
+    override fun columnNames(): List<String> {
+        return listOf("Name", "Number of Rules", "Depth", "Width", "Used backtracking", "Score")
+    }
 }

@@ -10,6 +10,7 @@
     --kbar-8dp-color: #2d2d2d;
     --kbar-16dp-color: #333333;
     --kbar-selected-color: var(--kbar-accent-color);
+    --kbar-text-color-black: white;
     scrollbar-color: dark;
 
     :global {
@@ -50,6 +51,7 @@
     --kbar-link-color: var(--kbar-accent-color);
     --kbar-text-selected-color: #fff;
     --kbar-text-closed-color: #555555;
+    --kbar-text-color-black: black;
     --mdc-theme-secondary: var(--kbar-accent-color);
 }
 

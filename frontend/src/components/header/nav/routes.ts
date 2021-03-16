@@ -47,4 +47,13 @@ export const ROUTES: LinkGroup[] = [
             { name: "Sequent", path: Calculus.fosc },
         ],
     },
+    {
+        name: "Modal",
+        routes: [
+            {
+                name: "Tableaux",
+                path: Calculus.modalTableaux,
+            },
+        ],
+    },
 ];

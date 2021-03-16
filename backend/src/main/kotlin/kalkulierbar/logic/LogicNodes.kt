@@ -80,7 +80,7 @@ class Or(override var leftChild: LogicNode, override var rightChild: LogicNode) 
 @SerialName("impl")
 class Impl(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
 
-    override fun toString() = "($leftChild --> $rightChild)"
+    override fun toString() = "($leftChild → $rightChild)"
 
     override fun clone(qm: Map<String, Quantifier>) = Impl(leftChild.clone(qm), rightChild.clone(qm))
 

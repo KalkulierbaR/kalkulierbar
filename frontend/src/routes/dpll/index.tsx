@@ -11,7 +11,10 @@ const DPLL: preact.FunctionalComponent<Props> = () => {
     return (
         <Fragment>
             <Format foLogic={false} />
-            <FormulaInput calculus={Calculus.dpll} foLogic={false} />
+            <FormulaInput
+                calculus={Calculus.dpll}
+                placeholder={"!a, c; a; !c"}
+            />
             <ExampleList calculus={Calculus.dpll} />
         </Fragment>
     );

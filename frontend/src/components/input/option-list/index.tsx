@@ -87,6 +87,8 @@ const OptionList: preact.FunctionalComponent<Props> = ({
                                 ),
                                 [style.optionDisabled]:
                                     disableOption(keyValuePair[0]) === false,
+                                [style.optionEnabled]:
+                                    disableOption(keyValuePair[0]) === true,
                             })}
                         >
                             {keyValuePair[1]}

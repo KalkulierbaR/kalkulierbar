@@ -1,4 +1,9 @@
 import { DPLLMove } from "./dpll";
+import {
+    ModalTableauxMove,
+    ModalTableauxParams,
+    SignedModalTableauxStatistic,
+} from "./modal-tableaux";
 import { NCTableauxMove } from "./nc-tableaux";
 import {
     FOResolutionMove,
@@ -6,7 +11,12 @@ import {
     PropResolutionMove,
     PropResolutionParams,
 } from "./resolution";
-import { FOSCMove, PSCMove, SequentParams } from "./sequent";
+import {
+    FOSCMove,
+    PSCMove,
+    SequentCalculusStatistic,
+    SequentParams,
+} from "./sequent";
 import {
     FOTableauxMove,
     FOTableauxParams,
@@ -16,7 +26,7 @@ import {
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
-export type SequentCalculusType = "psc" | "fosc";
+export type PSCCalculusType = "psc" | "fosc";
 export type PropCalculusType =
     | "prop-tableaux"
     | "prop-resolution"
@@ -27,7 +37,12 @@ export type FOCalculusType =
     | "fo-resolution"
     | "nc-tableaux"
     | "fosc";
-export type CalculusType = FOCalculusType | PropCalculusType;
+export type SequentCalculusType = "psc" | "fosc";
+export type ModalCalculusType = "signed-modal-tableaux";
+export type CalculusType =
+    | FOCalculusType
+    | PropCalculusType
+    | ModalCalculusType;
 
 export enum Calculus {
     propTableaux = "prop-tableaux",
@@ -38,6 +53,7 @@ export enum Calculus {
     dpll = "dpll",
     psc = "psc",
     fosc = "fosc",
+    modalTableaux = "signed-modal-tableaux",
 }
 
 export const PropCalculus: CalculusType[] = [
@@ -73,6 +89,7 @@ export interface Move {
     dpll: DPLLMove;
     psc: PSCMove;
     fosc: FOSCMove;
+    "signed-modal-tableaux": ModalTableauxMove;
 }
 
 /**
@@ -87,6 +104,13 @@ export interface Params {
     dpll: null;
     psc: SequentParams;
     fosc: SequentParams;
+    "signed-modal-tableaux": ModalTableauxParams;
+}
+
+export interface StatisticEntry {
+    psc: SequentCalculusStatistic;
+    fosc: SequentCalculusStatistic;
+    "signed-modal-tableaux": SignedModalTableauxStatistic;
 }
 
 /**

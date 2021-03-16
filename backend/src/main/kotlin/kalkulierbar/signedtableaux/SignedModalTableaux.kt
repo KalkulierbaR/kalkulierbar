@@ -2,25 +2,50 @@ package kalkulierbar.signedtableaux
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
+import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
+import kalkulierbar.Statistic
+import kalkulierbar.StatisticCalculus
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.ModalLogicParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>() {
+class SignedModalTableaux :
+    JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>(),
+    StatisticCalculus<SignedModalTableauxState> {
 
     private val serializer = Json(context = FoTermModule + LogicModule + SignedModalTablueaxMoveModule)
 
     override val identifier = "signed-modal-tableaux"
 
     override fun parseFormulaToState(formula: String, params: Unit?): SignedModalTableauxState {
-        val parsedFormula = ModalLogicParser().parse(formula)
-        return SignedModalTableauxState(parsedFormula)
+
+        var regex = Regex("[\\s]*\\\\sign[\\s]+[TF]:")
+
+        val match = regex.find(formula)
+        var formulaString = formula
+        var startIndex = 0
+        var assumption = false
+
+        if (match != null) {
+            if (match.range.start == 0) {
+                startIndex = match.range.last + 1
+                formulaString = formula.substring(startIndex)
+                if (formula.get(startIndex - 2) == 'T')
+                    assumption = true
+            } else {
+                throw InvalidFormulaFormat("\\sign T: or \\sign F: needs to be at the start of the formula")
+            }
+        }
+
+        var parsedFormula = ModalLogicParser().parse(formulaString, startIndex)
+        return SignedModalTableauxState(parsedFormula, assumption)
     }
 
+    @Suppress("ComplexMethod")
     override fun applyMoveOnState(state: SignedModalTableauxState, move: SignedModalTableauxMove): SignedModalTableauxState {
         // Clear status message
         state.statusMessage = null
@@ -131,4 +156,52 @@ class SignedModalTableaux : JSONCalculus<SignedModalTableauxState, SignedModalTa
      * @return parsed param object
      */
     override fun jsonToParam(json: String) = Unit
+
+    /**
+    * Calculates the statistics for a given proof
+    * @param state A closed state
+    * @return The statistics for the given state
+    */
+    override fun getStatistic(state: String, name: String?): String {
+        val statistic = getStatisticOnState(jsonToState(state))
+        if (name != null)
+            statistic.userName = name
+        return statisticToJson(statistic)
+    }
+
+    /**
+     * Takes in a State of the given calculus
+     * @param state Current state object
+     * @return The statisitcs of the given object
+     */
+    override fun getStatisticOnState(state: SignedModalTableauxState): Statistic {
+        return SignedModalTableauxStatistic(state)
+    }
+
+    /**
+     * Serializes a statistics object to JSON
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    override fun statisticToJson(statistic: Statistic): String {
+        return serializer.stringify(SignedModalTableauxStatistic.serializer(), (statistic as SignedModalTableauxStatistic))
+    }
+
+    /**
+     * Parses a json object to Statistic
+     * @param statistic Statistics object
+     * @return JSON statistics representation
+     */
+    override fun jsonToStatistic(json: String): Statistic {
+        return serializer.parse(SignedModalTableauxStatistic.serializer(), json)
+    }
+
+    /**
+     * Returns the intitial formula of the state.
+     * @param state state representation
+     * @return string representing the initial formula of the state
+     */
+    override fun getStartingFormula(state: String): String {
+        return jsonToState(state).nodes[0].toString()
+    }
 }
