@@ -148,6 +148,6 @@ class SequentCalculusStatistic(
     }
 
     override fun columnNames(): List<String> {
-        return listOf("Name", "Number of Sequences", "Depth", "Width", "Used Help", "Score")
+        return listOf("Name", "Number of Sequences", "Depth", "Branches", "Used Help", "Score")
     }
 }

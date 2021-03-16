@@ -211,6 +211,6 @@ class SignedModalTableauxStatistic(
     }
 
     override fun columnNames(): List<String> {
-        return listOf("Name", "Number of Rules", "Depth", "Width", "Used backtracking", "Score")
+        return listOf("Name", "Number of Rules", "Depth", "Branches", "Used backtracking", "Score")
     }
 }

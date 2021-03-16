@@ -95,24 +95,6 @@ const Format: preact.FunctionalComponent<Props> = ({
                             <th>Example</th>
                         </tr>
                         <tr>
-                            <td>Parentheses</td>
-                            <td>
-                                <code>()</code>
-                            </td>
-                            <td>
-                                <code>(a | b) & c</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Unary Not</td>
-                            <td>
-                                <code>!</code>
-                            </td>
-                            <td>
-                                <code>!valid</code>
-                            </td>
-                        </tr>
-                        <tr>
                             <td>Always Operator</td>
                             <td>
                                 <code>[]a</code>
@@ -139,42 +121,6 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                             <td>
                                 <code>\sign T: a | b</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Binary And</td>
-                            <td>
-                                <code>&</code>
-                            </td>
-                            <td>
-                                <code>a & b</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Binary Or</td>
-                            <td>
-                                <code>|</code>
-                            </td>
-                            <td>
-                                <code>a | b</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Implication</td>
-                            <td>
-                                <code>{"->"}</code>
-                            </td>
-                            <td>
-                                <code>{"rain -> wet"}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Equivalence</td>
-                            <td>
-                                <code>{"<=>"}</code> or <code>{"<->"}</code>
-                            </td>
-                            <td>
-                                <code>{"right <=> !left"}</code>
                             </td>
                         </tr>
                     </table>
@@ -218,7 +164,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Unary Not</td>
+                            <td>Not</td>
                             <td>
                                 <code>!</code>
                             </td>
@@ -245,7 +191,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Binary And</td>
+                            <td>And</td>
                             <td>
                                 <code>&</code>
                             </td>
@@ -254,7 +200,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Binary Or</td>
+                            <td>Or</td>
                             <td>
                                 <code>|</code>
                             </td>
@@ -322,7 +268,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Unary Not</td>
+                            <td>Not</td>
                             <td>
                                 <code>!</code>
                             </td>
@@ -331,7 +277,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Binary And</td>
+                            <td>And</td>
                             <td>
                                 <code>&</code>
                             </td>
@@ -340,7 +286,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Binary Or</td>
+                            <td>Or</td>
                             <td>
                                 <code>|</code>
                             </td>
@@ -424,7 +370,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Unary Not</td>
+                            <td>Not</td>
                             <td>
                                 <code>!</code>
                             </td>
@@ -433,7 +379,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Binary And</td>
+                            <td>And</td>
                             <td>
                                 <code>&</code>
                             </td>
@@ -442,7 +388,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Binary Or</td>
+                            <td>Or</td>
                             <td>
                                 <code>|</code>
                             </td>
