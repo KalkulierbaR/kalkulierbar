@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
 import { route } from "preact-router";
-import { useCallback, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 
 import ModalTableauxFAB from "../../../components/calculus/modal-tableaux/fab";
 import ModalTableauxTreeView from "../../../components/calculus/modal-tableaux/tree";
@@ -16,7 +16,7 @@ import {
 import { DragTransform } from "../../../types/ui";
 import { saveStatistics, sendMove } from "../../../util/api";
 import { useAppState } from "../../../util/app-state";
-import { getLeaves, nodeName } from "../../../util/modal-tableaux";
+import { getLeaves, nodeName, sendBacktrack } from "../../../util/modal-tableaux";
 import { updateDragTransform } from "../../../util/tableaux";
 
 interface Props {
@@ -145,6 +145,30 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
             setShowPrefixDialog(false);
         }
     };
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Only handle (Crtl + Z)
+            if (!e.ctrlKey || e.shiftKey || e.metaKey || e.keyCode !== 90) {
+                return;
+            }
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            sendBacktrack(
+                calculus,
+                server,
+                state,
+                onChange,
+                notificationHandler,
+            );
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [state, server, onChange, notificationHandler]);
 
     /**
      * Saves the closed Proof in the DB
