@@ -14,14 +14,14 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 class SignedModalTableaux :
-    JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, Unit>(),
+    JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, SignedModalTableauxParam>(),
     StatisticCalculus<SignedModalTableauxState> {
 
     private val serializer = Json(context = FoTermModule + LogicModule + SignedModalTablueaxMoveModule)
 
     override val identifier = "signed-modal-tableaux"
 
-    override fun parseFormulaToState(formula: String, params: Unit?): SignedModalTableauxState {
+    override fun parseFormulaToState(formula: String, params: SignedModalTableauxParam?): SignedModalTableauxState {
 
         var regex = Regex("[\\s]*\\\\sign[\\s]+[TF]:")
 
@@ -42,7 +42,11 @@ class SignedModalTableaux :
         }
 
         var parsedFormula = ModalLogicParser().parse(formulaString, startIndex)
-        return SignedModalTableauxState(parsedFormula, assumption)
+
+        if (params == null)
+            return SignedModalTableauxState(parsedFormula, assumption)
+        else            
+            return SignedModalTableauxState(parsedFormula, assumption, params.backtracking)
     }
 
     @Suppress("ComplexMethod")
@@ -155,7 +159,14 @@ class SignedModalTableaux :
      * @param json JSON parameter representation
      * @return parsed param object
      */
-    override fun jsonToParam(json: String) = Unit
+    override fun jsonToParam(json: String): SignedModalTableauxParam {
+        try {
+            return serializer.parse(SignedModalTableauxParam.serializer(), json)
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON Param: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
+        }
+    }
 
     /**
     * Calculates the statistics for a given proof

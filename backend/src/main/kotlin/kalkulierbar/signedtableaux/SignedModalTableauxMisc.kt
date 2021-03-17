@@ -151,7 +151,7 @@ class SignedModalTableauxState(
         val nodeH = nodes.joinToString(",") { it.getHash() }
         val historyH = moveHistory.joinToString(",")
         val variousH = "$backtracking|$usedBacktracking|$formula"
-        return "nctableaux|$variousH|$nodeH|$historyH"
+        return "signed-modal-tableaux|$variousH|$nodeH|$historyH"
     }
 }
 
@@ -178,6 +178,11 @@ class SignedModalTableauxNode(
 
     fun getHash() = "($parent|$children|$isClosed|$closeRef|$formula)"
 }
+
+@Serializable
+data class SignedModalTableauxParam(
+    val backtracking: Boolean
+)
 
 @Serializable
 @SerialName("signedModalTableauxStatistic")
