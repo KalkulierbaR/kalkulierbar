@@ -3,8 +3,8 @@ package kalkulierbar.test.signedtableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.*
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.Negation
 import kalkulierbar.signedtableaux.BetaMove
+import kalkulierbar.signedtableaux.Negation
 import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.*
 

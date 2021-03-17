@@ -3,12 +3,10 @@ package kalkulierbar.test.signedtableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.*
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.NuMove
-import kalkulierbar.signedtableaux.PiMove
-import kalkulierbar.signedtableaux.SignedModalTableaux
 import kalkulierbar.signedtableaux.AlphaMove
 import kalkulierbar.signedtableaux.BetaMove
 import kalkulierbar.signedtableaux.Prune
+import kalkulierbar.signedtableaux.SignedModalTableaux
 import kalkulierbar.signedtableaux.SignedModalTableauxParam
 import kotlin.test.*
 

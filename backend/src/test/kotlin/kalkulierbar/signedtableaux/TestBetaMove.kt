@@ -3,9 +3,9 @@ package kalkulierbar.test.signedtableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.*
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.SignedModalTableaux
 import kalkulierbar.signedtableaux.BetaMove
 import kalkulierbar.signedtableaux.Negation
+import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.*
 
 class TestBetaMove {
@@ -67,7 +67,7 @@ class TestBetaMove {
         val nodes = state.nodes
 
         val formula1 = parser.parse("a")
-        
+
         var state2 = instance.parseFormulaToState("!b", null)
         state2 = instance.applyMoveOnState(state2, Negation(0, null))
         val formula2 = state2.nodes[1].formula

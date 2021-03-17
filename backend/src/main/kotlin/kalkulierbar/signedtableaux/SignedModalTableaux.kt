@@ -45,7 +45,7 @@ class SignedModalTableaux :
 
         if (params == null)
             return SignedModalTableauxState(parsedFormula, assumption)
-        else            
+        else
             return SignedModalTableauxState(parsedFormula, assumption, params.backtracking)
     }
 

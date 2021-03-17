@@ -6,7 +6,6 @@ import kalkulierbar.parsers.ModalLogicParser
 import kalkulierbar.signedtableaux.NuMove
 import kalkulierbar.signedtableaux.PiMove
 import kalkulierbar.signedtableaux.SignedModalTableaux
-import kalkulierbar.signedtableaux.AlphaMove
 import kotlin.test.*
 
 class TestPiMove {
@@ -42,10 +41,8 @@ class TestPiMove {
         assertTrue(nodes[1].prefix.equals(listOf(1, 1)))
     }
 
-    
-
     @Test
-    fun testWrongSignBox(){
+    fun testWrongSignBox() {
         var state = instance.parseFormulaToState("\\sign T: []a", null)
 
         assertFailsWith<IllegalMove> {
@@ -54,7 +51,7 @@ class TestPiMove {
     }
 
     @Test
-    fun testWrongSignDiamond(){
+    fun testWrongSignDiamond() {
         var state = instance.parseFormulaToState("\\sign F: <>a", null)
 
         assertFailsWith<IllegalMove> {

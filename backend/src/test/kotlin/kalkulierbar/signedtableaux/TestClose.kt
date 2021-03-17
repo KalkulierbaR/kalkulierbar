@@ -1,15 +1,13 @@
 package kalkulierbar.test.signedtableaux
 
-import kalkulierbar.IllegalMove
 import kalkulierbar.logic.*
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.SignedModalTableaux
 import kalkulierbar.signedtableaux.AlphaMove
+import kalkulierbar.signedtableaux.CloseMove
 import kalkulierbar.signedtableaux.Negation
 import kalkulierbar.signedtableaux.NuMove
 import kalkulierbar.signedtableaux.PiMove
-import kalkulierbar.signedtableaux.BetaMove
-import kalkulierbar.signedtableaux.CloseMove
+import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.*
 
 class TestClose {
@@ -30,11 +28,10 @@ class TestClose {
 
         state = instance.applyMoveOnState(state, Negation(5, null))
 
-
         val stateTopDown = instance.applyMoveOnState(state, CloseMove(4, 6))
-        //val stateDownTop = instance.applyMoveOnState(state, CloseMove(6, 4))
+        // val stateDownTop = instance.applyMoveOnState(state, CloseMove(6, 4))
 
         stateTopDown.nodes.forEach { node -> assertEquals(true, node.isClosed) }
-        //stateDownTop.nodes.forEach { node -> assertEquals(true, node.isClosed) }
+        // stateDownTop.nodes.forEach { node -> assertEquals(true, node.isClosed) }
     }
 }
