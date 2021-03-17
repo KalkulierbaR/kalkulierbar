@@ -8,7 +8,7 @@ For modal logics, we have to both extend the notion of signed formula and add ru
 1.2 T □A → A
 is a prefixed signed formula (or just a prefixed formula for short).
 ## Input Format Specification
-The input to a Signed Modal Tableaux proof is the extensions of Prepositional Formula by the operators □ (“box”) and ◇ (“diamond”), which is attached to formulas.
+The input to a Signed Modal Tableaux proof is the extensions of Propositional Formula by the operators □ (“box”) and ◇ (“diamond”), which is attached to formulas.
 
 
 ## State Format Specification
