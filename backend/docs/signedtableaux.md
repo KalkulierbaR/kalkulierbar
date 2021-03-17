@@ -16,9 +16,9 @@ The input to a Signed Modal Tableaux proof is the extensions of Prepositional Fo
 The state representation returned by most endpoints is a JSON object.
 Some of the object's properties are for internal use only and are subject to change at any time.
 The state object is intended to be read-only and any modification may lead to the state being rejected by the API.
-The only property that a visualization frontend should rely on is the `tree` list.
+The only property that a visualization frontend should rely on is the `nodes` list.
 
-The `tree` lists contains all TreeNodes of the current proof tree.
+The `nodes` lists contains all TreeNodes of the current proof tree.
 A TreeNode is identified by its position in the list starting at zero.
 Each TreeNode has the properties `parent` and `children`, containing the IDs of the respective parent and child TreeNodes.
 The parent of the root TreeNode is `null`. Additionally, TreeNodes have an `isClosed` flag, `prefix` list and `sign` flag.
@@ -45,16 +45,13 @@ These Moves add one or two TreeNodes to the proof tree and set the children and 
 }
 ```
 
-Other Basic Moves are: `Ax`
-This move is used to close a Leaf of the proof tree. It checks if there is a formula in `leftFormulas` which is syntactic equal to a formula in `rightFormulas`. If that is the case it will add an empty node as a child of the current Node and sets the `isClosed` flag for all parent nodes which now have no more open children.
-
 `Nu`, `Pi` are encoded as 
 ```json
 {
   "type": <identifier for the move>, 
   "nodeID": <ID of the TreeNode to to apply the move on>, 
   "leafID": <ID of leaf , where the child should be attatched to`>,
-  "prefex": <Prefix that should be used>, 
+  "prefix": <Prefix that should be used>, 
 }
 ```
 
