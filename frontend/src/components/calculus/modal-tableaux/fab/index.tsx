@@ -259,16 +259,18 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                                 setShowPrefixDialog(true);
                             }}
                         />
-                        <FAB
-                            icon={<DeleteIcon />}
-                            label="Prune"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                pruneCallback();
-                            }}
-                        />
+                        {showUndoFAB && (
+                            <FAB
+                                icon={<DeleteIcon />}
+                                label="Prune"
+                                mini={true}
+                                extended={true}
+                                showIconAtEnd={true}
+                                onClick={() => {
+                                    pruneCallback();
+                                }}
+                            />
+                        )}
                     </Fragment>
                 )}
             </ControlFAB>

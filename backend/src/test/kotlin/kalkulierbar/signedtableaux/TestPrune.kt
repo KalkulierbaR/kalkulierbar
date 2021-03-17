@@ -9,6 +9,7 @@ import kalkulierbar.signedtableaux.SignedModalTableaux
 import kalkulierbar.signedtableaux.AlphaMove
 import kalkulierbar.signedtableaux.BetaMove
 import kalkulierbar.signedtableaux.Prune
+import kalkulierbar.signedtableaux.SignedModalTableauxParam
 import kotlin.test.*
 
 class TestPruneMove {
@@ -39,5 +40,17 @@ class TestPruneMove {
         state = instance.applyMoveOnState(state, Prune(3))
 
         assertEquals(5, state.nodes.size)
+    }
+
+    @Test
+    fun testWrongPrune() {
+        var state = instance.parseFormulaToState("!(a -> b)", SignedModalTableauxParam(false))
+        assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, Prune(0)) }
+    }
+
+    @Test
+    fun testWrongPrune2() {
+        var state = instance.parseFormulaToState("!(a -> b)", null)
+        assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, Prune(0)) }
     }
 }

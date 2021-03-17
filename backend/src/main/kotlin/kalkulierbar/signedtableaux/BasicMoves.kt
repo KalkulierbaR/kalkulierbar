@@ -338,8 +338,10 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
  * @return new state after applying move
  */
 fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableauxState {
-    if (state.backtracking)
-        state.moveHistory.add(Prune(nodeID))
+    if (!state.backtracking)
+        throw IllegalMove("Backtracking is not enabled for this proof")
+
+    state.moveHistory.add(Prune(nodeID))
 
     return applyPruneRecursive(state, nodeID)
 }
