@@ -163,19 +163,10 @@ class SignedModalTableaux :
     * @return The statistics for the given state
     */
     override fun getStatistic(state: String, name: String?): String {
-        val statistic = getStatisticOnState(jsonToState(state))
+        val statistic = SignedModalTableauxStatistic(jsonToState(state))
         if (name != null)
             statistic.userName = name
         return statisticToJson(statistic)
-    }
-
-    /**
-     * Takes in a State of the given calculus
-     * @param state Current state object
-     * @return The statisitcs of the given object
-     */
-    override fun getStatisticOnState(state: SignedModalTableauxState): Statistic {
-        return SignedModalTableauxStatistic(state)
     }
 
     /**

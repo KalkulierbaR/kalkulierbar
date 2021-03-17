@@ -137,10 +137,10 @@ class SequentCalculusStatistic(
         score = calculateScore()
     }
 
-    override var score: Int = calculateScore()
+    var score: Int = calculateScore()
 
     @Suppress("MagicNumber")
-    override fun calculateScore(): Int {
+    fun calculateScore(): Int {
         var ret = ((1 / sqrt(nodeAmount.toDouble())) * 1000).toInt()
         if (usedStupidMode == true)
             ret = (ret * 0.9).toInt()

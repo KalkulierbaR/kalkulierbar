@@ -57,7 +57,11 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
     const { smallScreen } = useAppState();
 
     const memoizedCallback = useCallback(() => {
-        setEntries(stats === undefined ? [] : stats.entries);
+        if (stats === undefined)
+            setEntries([])
+        else {
+            sortByColumn(stats.columnNames.length);
+        }
     }, [stats]);
 
     const [entries, setEntries] = useState<StatisticEntry[]>(
@@ -83,15 +87,10 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
         ) {
             return;
         }
+        setEntries([]);
+        setAsc(false);
+        setSortedBy(-1);
         submitCallback(textInput.value);
-    };
-
-    /**
-     * Close the dialog
-     * @returns {void}
-     */
-    const cancel = () => {
-        onClose();
     };
 
     /**
@@ -118,7 +117,7 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
 
     /**
      * Sorts the table by column
-     * @param columnIndex - The index of the column
+     * @param {number} columnIndex - The index of the column
      * @returns {void}
      */
     const sortByColumn = (columnIndex: number) => {
@@ -192,7 +191,7 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
                 </table>
             )}
             <Btn onClick={submit} label={submitLabel} />
-            <Btn onClick={cancel} label={cancelLabel} />
+            <Btn onClick={onClose} label={cancelLabel} />
         </Dialog>
     );
 };

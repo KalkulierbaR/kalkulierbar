@@ -84,7 +84,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                         {"\\sign T:"} or {"\\sign F:"}
                     </code>
                     <br />
-                    Always and Sometimes can be used like this:{" "}
+                    Box and Diamond can be used like this:{" "}
                     <code class={style.padRight}>{"!(<>(!a)) -> []a"}</code>
                 </p>
                 <p>
@@ -95,7 +95,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             <th>Example</th>
                         </tr>
                         <tr>
-                            <td>Always Operator</td>
+                            <td>Box Operator</td>
                             <td>
                                 <code>[]a</code>
                             </td>
@@ -104,7 +104,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Sometimes Operator</td>
+                            <td>Diamond Operator</td>
                             <td>
                                 <code>{`<>`}a</code>
                             </td>

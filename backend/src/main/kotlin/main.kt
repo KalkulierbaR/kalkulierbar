@@ -176,8 +176,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
                 val identifier = endpoint.identifier
                 val rootFormula = endpoint.getStartingFormula(state)
                 val statistic = endpoint.getStatistic(state, userName)
-                val statisticAsStatistic = endpoint.jsonToStatistic(statistic)
-                DatabaseHandler.insert(identifier, rootFormula, statistic, statisticAsStatistic.score)
+                DatabaseHandler.insert(identifier, rootFormula, statistic)
                 ctx.result("name: " + userName)
             }
         }

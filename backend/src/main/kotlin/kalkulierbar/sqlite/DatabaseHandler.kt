@@ -12,7 +12,7 @@ class DatabaseHandler {
         public fun init() {
             try {
                 Class.forName("org.sqlite.JDBC")
-                connection = DriverManager.getConnection("jdbc:sqlite:test.db")
+                connection = DriverManager.getConnection("jdbc:sqlite:Statistics.db")
             } catch (e: Exception) {
                 println("Connection to database could not be established")
                 println(e.message)
@@ -25,20 +25,20 @@ class DatabaseHandler {
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
                 val create: String =
-                    "CREATE TABLE IF NOT EXISTS $sqlIdentifier (formula VARCHAR(8000) NOT NULL, statistics VARCHAR(8000) NOT NULL, score INTEGER NOT NULL, time TIMESTAMP NOT NULL);"
+                    "CREATE TABLE IF NOT EXISTS $sqlIdentifier (formula VARCHAR(8000) NOT NULL, statistics VARCHAR(8000) NOT NULL, time TIMESTAMP NOT NULL);"
                 stmt.execute(create)
                 stmt.close()
             }
         }
 
         @Suppress("MaxLineLength")
-        public fun insert(identifier: String, keyFormula: String, statisticsJSON: String, score: Int) {
+        public fun insert(identifier: String, keyFormula: String, statisticsJSON: String) {
             val sqlIdentifier = parseIdentifier(identifier)
             statisticsJSON.replace("\"", "\\\"")
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
                 val insert: String =
-                    "INSERT INTO $sqlIdentifier VALUES (\"$keyFormula\", '$statisticsJSON', $score, CURRENT_TIMESTAMP);"
+                    "INSERT INTO $sqlIdentifier VALUES (\"$keyFormula\", '$statisticsJSON', CURRENT_TIMESTAMP);"
                 stmt.execute(insert)
                 stmt.close()
 
@@ -64,7 +64,7 @@ class DatabaseHandler {
             val returnList = mutableListOf<String>()
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
-                val query: String = "SELECT * FROM $sqlIdentifier WHERE formula = \"$formula\" ORDER BY score DESC;"
+                val query: String = "SELECT * FROM $sqlIdentifier WHERE formula = \"$formula\";"
                 val result: ResultSet = stmt.executeQuery(query)
                 while (result.next()) {
                     val tmp = result.getString(2).toString()

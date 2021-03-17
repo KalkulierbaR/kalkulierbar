@@ -10,13 +10,6 @@ interface StatisticCalculus<State> {
     fun getStatistic(state: String, name: String?): String
 
     /**
-     * Takes in a State of the given calculus
-     * @param state Current state object
-     * @return The statistic of the given object
-     */
-    fun getStatisticOnState(state: State): Statistic
-
-    /**
      * Serializes a statistics object to JSON
      * @param statistic Statistics object
      * @return JSON statistics representation

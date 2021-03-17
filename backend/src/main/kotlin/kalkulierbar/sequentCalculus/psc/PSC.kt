@@ -130,19 +130,10 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
     * @return The statistics for the given state
     */
     override fun getStatistic(state: String, name: String?): String {
-        val statistic = getStatisticOnState(jsonToState(state))
+        val statistic = SequentCalculusStatistic(jsonToState(state))
         if (name != null)
             statistic.userName = name
         return statisticToJson(statistic)
-    }
-
-    /**
-     * Takes in a State of the given calculus
-     * @param state Current state object
-     * @return The statisitcs of the given object
-     */
-    override fun getStatisticOnState(state: PSCState): Statistic {
-        return SequentCalculusStatistic(state)
     }
 
     /**

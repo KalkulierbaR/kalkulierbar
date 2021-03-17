@@ -10,14 +10,6 @@ interface Statistic {
 
     public var userName: String?
 
-    public var score: Int
-
-    /**
-     * The function returns the score of the statistic object
-     * @return The score of the statistic
-     */
-    public fun calculateScore(): Int
-
     /**
      * Returns the column names of the data that is stored within this interface.
      * The column names are needed by the Frontend and need to be ordered in the same order serialization happens
@@ -47,9 +39,6 @@ class Statistics(
     constructor(entries: List<String>, formula: String, endpoint: StatisticCalculus<*>) : this(formula) {
 
         var statistics = entries.map { endpoint.jsonToStatistic(it) }
-
-        statistics = statistics.sortedBy { it.score }
-        statistics = statistics.asReversed()
 
         this.entries = statistics
         this.columnNames = statistics[0].columnNames()
