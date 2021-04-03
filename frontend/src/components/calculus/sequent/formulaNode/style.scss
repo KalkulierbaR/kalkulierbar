@@ -12,13 +12,11 @@
 }
 
 .rect--selected {
-    /* stroke: hsla(0, 0%, 26%, 1);
-    stroke-width: 2; */
     fill: var(--kbar-accent-color);
 }
 
 .text--selected {
-    fill: var(--kbar-text-selected-color);
+    fill: --kbar-primary-text-color;
 }
 
 .text--closed {

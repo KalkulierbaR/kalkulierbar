@@ -1,6 +1,8 @@
 import DPLL from "async!../routes/dpll";
 import DPLLView from "async!../routes/dpll/view";
 import Home from "async!../routes/home";
+import ModalTableaux from "async!../routes/modal-tableaux";
+import ModalTableauxView from "async!../routes/modal-tableaux/view";
 import NCTableaux from "async!../routes/nc-tableaux";
 import NCTableauxView from "async!../routes/nc-tableaux/view";
 import Resolution from "async!../routes/resolution";
@@ -180,6 +182,14 @@ const App: preact.FunctionalComponent = () => {
                     <SequentView
                         path={`/${Calculus.fosc}/view`}
                         calculus={Calculus.fosc}
+                    />
+                    <ModalTableaux
+                        path={`/${Calculus.modalTableaux}`}
+                        calculus={Calculus.modalTableaux}
+                    />
+                    <ModalTableauxView
+                        path={`/${Calculus.modalTableaux}/view`}
+                        calculus={Calculus.modalTableaux}
                     />
                     <Page404 default={true} />
                 </Router>

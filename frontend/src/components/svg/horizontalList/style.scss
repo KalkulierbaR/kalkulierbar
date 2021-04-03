@@ -1,9 +1,9 @@
 .text--selected {
-    fill: var(--kbar-text-selected-color);
+    fill: --kbar-primary-text-color;
     cursor: pointer;
 }
 .text {
-    cursor: pointer;
+    cursor: default;
 }
 .text--closed {
     fill: var(--kbar-text-closed-color);

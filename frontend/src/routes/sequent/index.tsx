@@ -9,6 +9,9 @@ import { Calculus, SequentCalculusType } from "../../types/calculus";
 import { SequentParams } from "../../types/calculus/sequent";
 
 interface Props {
+    /**
+     * the calculus to use
+     */
     calculus: SequentCalculusType;
 }
 
@@ -33,8 +36,11 @@ const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
             <FormulaInput
                 calculus={calculus}
                 params={params}
-                foLogic={calculus === Calculus.fosc}
-                sequentPlaceholder={true}
+                placeholder={
+                    calculus === Calculus.fosc
+                        ? "\\all X: (\\all Y: !(P(X) -> P(Y)) |- \\all X: !P(X)"
+                        : "!(a -> b) |- !b"
+                }
             />
 
             <div class="card">

@@ -12,13 +12,11 @@
 }
 
 .rect--selected {
-    /* stroke: hsla(0, 0%, 26%, 1);
-    stroke-width: 2; */
-    fill: var(--kbar-accent-trans-color);
+    fill: var(--kbar-accent-light-color-secondary);
 }
 
 .text--selected {
-    fill: var(--kbar-text-selected-color);
+    fill: var(--kbar-text-closed-color);
 }
 
 .text--closed {
@@ -55,6 +53,9 @@
 .line--text {
     fill: var(--kbar-primary-text-color);
     cursor: default;
+}
+.unselected {
+    fill: var(--kbar-accent-light-color-secondary);
 }
 .unselected {
     fill: var(--kbar-accent-light-color-secondary);

@@ -17,6 +17,8 @@ val LogicModule = SerializersModule {
         Relation::class with Relation.serializer()
         ExistentialQuantifier::class with ExistentialQuantifier.serializer()
         UniversalQuantifier::class with UniversalQuantifier.serializer()
+        Box::class with Box.serializer()
+        Diamond::class with Diamond.serializer()
     }
 }
 

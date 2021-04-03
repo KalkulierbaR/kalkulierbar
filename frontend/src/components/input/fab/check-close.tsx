@@ -1,5 +1,6 @@
 import { h } from "preact";
 
+import { Statistics } from "../../../types/app/statistics";
 import { TutorialMode } from "../../../types/app/tutorial";
 import { CalculusType } from "../../../types/calculus";
 import { checkClose } from "../../../util/api";
@@ -17,9 +18,16 @@ interface Props {
      * Which calculus to use
      */
     calculus: CalculusType;
+    /**
+     * Function to call when the proof is valid
+     */
+    onProoven?: (stats: Statistics) => void;
 }
 
-const CheckCloseFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
+const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
+    calculus,
+    onProoven,
+}) => {
     const {
         tutorialMode,
         dispatch,
@@ -43,7 +51,13 @@ const CheckCloseFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         TutorialMode.HighlightCheck,
                     );
                 }
-                checkClose(server, notificationHandler, calculus, state);
+                checkClose(
+                    server,
+                    notificationHandler,
+                    calculus,
+                    state,
+                    onProoven,
+                );
             }}
         />
     );

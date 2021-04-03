@@ -18,21 +18,34 @@ interface Props {
      * The single tree node to represent
      */
     node: LayoutItem<SequentTreeLayoutNode>;
-
+    /**
+     * The parent of the tree node to represent
+     */
     parent?: LayoutItem<SequentTreeLayoutNode>;
-
+    /**
+     * Boolean to change the style of the node if it is selected
+     */
     selected: boolean;
-
-    selectNodeCallback: (
-        node: SequentTreeLayoutNode,
-        selectValue?: boolean,
-    ) => void;
-
+    /**
+     * The ListIndex of the node to represent
+     */
     selectedListIndex?: string;
-
-    selectFormulaCallback: (formula: FormulaTreeLayoutNode) => void;
+    /**
+     * The function to select and deselect a specific formula
+     */
+    selectFormulaCallback: (
+        formula: FormulaTreeLayoutNode,
+        nodeId: number,
+    ) => void;
 }
-
+/**
+ *
+ * @param {LayoutItem<SequentTreeLayoutNode>} node the node which the line is drawn under
+ * @param {LayoutItem<SequentTreeLayoutNode> | undefined} parent the parent of the node which the line is drawn above
+ * @param {RefObject<SVGTextElement>} textRef the reference of the text inside the node
+ * @param {string | undefined} ruleName the name of the rule which is written besides the line
+ * @returns {void}
+ */
 const lineUnderNode = (
     node: LayoutItem<SequentTreeLayoutNode>,
     parent: LayoutItem<SequentTreeLayoutNode> | undefined,
@@ -75,35 +88,49 @@ const lineUnderNode = (
         });
 
         let lastMove: string = "";
- 
+
         switch (ruleName) {
-            case "notRight": 
-                lastMove = "¬R"; break;
-            case "notLeft": 
-                lastMove = "¬L"; break;
-            case "andRight": 
-                lastMove = "∧R"; break;
-            case "andLeft": 
-                lastMove = "∧L"; break;
-            case "orRight": 
-                lastMove = "∨R"; break;
-            case "orLeft": 
-                lastMove = "∨L"; break;
-            case "impLeft": 
-                lastMove = "→L"; break;
-            case "impRight": 
-                lastMove = "→R"; break;
-            case "Ax": 
-                lastMove = "Ax"; break;
-            case "exLeft": 
-                lastMove = "∃L"; break;
-            case "exRight": 
-                lastMove = "∃R"; break;
-            case "allLeft": 
-                lastMove = "∀L"; break;
-            case "allRight": 
-                lastMove = "∀R"; break;
-            default: lastMove = "";
+            case "notRight":
+                lastMove = "¬R";
+                break;
+            case "notLeft":
+                lastMove = "¬L";
+                break;
+            case "andRight":
+                lastMove = "∧R";
+                break;
+            case "andLeft":
+                lastMove = "∧L";
+                break;
+            case "orRight":
+                lastMove = "∨R";
+                break;
+            case "orLeft":
+                lastMove = "∨L";
+                break;
+            case "impLeft":
+                lastMove = "→L";
+                break;
+            case "impRight":
+                lastMove = "→R";
+                break;
+            case "Ax":
+                lastMove = "Ax";
+                break;
+            case "exLeft":
+                lastMove = "∃L";
+                break;
+            case "exRight":
+                lastMove = "∃R";
+                break;
+            case "allLeft":
+                lastMove = "∀L";
+                break;
+            case "allRight":
+                lastMove = "∀R";
+                break;
+            default:
+                lastMove = "";
         }
 
         const parentWidth = parentDims.width;
@@ -187,23 +214,9 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
     parent,
     selected,
     selectedListIndex,
-    selectNodeCallback,
     selectFormulaCallback,
 }) => {
     const textRef = useRef<SVGTextElement>();
-
-    // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
-    const nodeIsClickable = !node.data.isClosed;
-
-    /**
-     * Handle the onClick event of the node
-     * @returns {void}
-     */
-    const handleClick = () => {
-        if (nodeIsClickable) {
-            selectNodeCallback(node.data);
-        }
-    };
 
     if (
         node.data.leftFormulas.length === 0 &&
@@ -234,7 +247,7 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
     }
 
     return (
-        <g onClick={handleClick}>
+        <g>
             <text
                 ref={textRef}
                 class={style.trans}
@@ -250,7 +263,6 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
                 selected={selected}
                 class={classMap({
                     [style.unselected]: !selected && !node.data.isClosed,
-                    [style.nodeClickable]: !node.data.isClosed,
                     [style.node]: !selected,
                     [style.rectSelected]: selected,
                 })}
@@ -262,7 +274,6 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
                     leftFormulas={node.data.leftFormulas}
                     rightFormulas={node.data.rightFormulas}
                     selected={selected}
-                    selectNodeCallback={selectNodeCallback}
                     selectFormulaCallback={selectFormulaCallback}
                     selectedListIndex={selectedListIndex}
                 />

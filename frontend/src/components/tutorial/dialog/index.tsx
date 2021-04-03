@@ -266,6 +266,35 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                         />
                     </div>
                 )}
+                {calculus === Calculus.modalTableaux && (
+                    <div class={style.container}>
+                        <VideoTutorial
+                            title="Applying rules"
+                            videoSrc="../../../assets/videos/Apply_Rule_MT.mp4"
+                            text="Select a node and choose a rule to apply"
+                        />
+                        <VideoTutorial
+                            title="Prefix rule"
+                            videoSrc="../../../assets/videos/Prefix_MT.mp4"
+                            text="Apply the nu or pi rule and choose a new prefix"
+                        />
+                        <VideoTutorial
+                            title="Prune a branch"
+                            videoSrc="../../../assets/videos/Prune_MT.mp4"
+                            text="Use prune to delete a whole branch"
+                        />
+                        <VideoTutorial
+                            title="Closing a branch"
+                            videoSrc="../../../assets/videos/Close_MT.mp4"
+                            text="Select two nodes with a diffrent assumption but same content to close a branch"
+                        />
+                        <VideoTutorial
+                            title="Checking a proof"
+                            videoSrc="../../../assets/videos/Check_MT.mp4"
+                            text="When all branches are closed you can check if the proof is valid"
+                        />
+                    </div>
+                )}
             </Dialog>
         </Fragment>
     );
