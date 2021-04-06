@@ -383,8 +383,6 @@ fun checkRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) 
 
     if (listIndex < 0 || leaf.rightFormulas.size <= listIndex)
         throw IllegalMove("listIndex out of Bounds.")
-
-    return
 }
 
 /**
@@ -408,8 +406,6 @@ fun checkLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) {
 
     if (listIndex < 0 || leaf.leftFormulas.size <= listIndex)
         throw IllegalMove("listIndex out of Bounds.")
-
-    return
 }
 
 /**

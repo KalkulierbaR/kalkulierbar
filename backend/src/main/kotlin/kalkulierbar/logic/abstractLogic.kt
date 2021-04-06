@@ -34,8 +34,6 @@ abstract class LogicNode : SyntacticEquality {
     abstract fun clone(qm: Map<String, Quantifier> = mapOf()): LogicNode
 
     abstract fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>): ReturnType
-
-    abstract override fun synEq(other: Any?): Boolean
 }
 
 abstract class BinaryOp : LogicNode() {
@@ -46,8 +44,6 @@ abstract class BinaryOp : LogicNode() {
     override fun toString(): String {
         return "( $leftChild bop $rightChild)"
     }
-
-    
 }
 
 abstract class UnaryOp : LogicNode() {

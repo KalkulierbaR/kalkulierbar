@@ -20,11 +20,10 @@ import kalkulierbar.logic.Or
 fun applyNegation(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): SignedModalTableauxState {
     val nodes = state.nodes
     checkNodeRestrictions(nodes, nodeID)
-    // If the leafID is not given, the new node will be added to all the available Leaf.
+    // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leafs = state.childLeavesOf(nodeID)
-        leafs.forEach {
-            checkNodeRestrictions(nodes, it)
+        var leaves = state.childLeavesOf(nodeID)
+        leaves.forEach {
             applyNegation(state, nodeID, it)
         }
         return state
@@ -35,9 +34,9 @@ fun applyNegation(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): S
     val formula = node.formula
 
     if (formula !is Not)
-        throw IllegalMove("Outermost logic operator is not NOT")
+        throw IllegalMove("Negation rule can only be applied on a negation")
 
-    // new node with Negated node sigh is added as a child of the given node.
+    // new node with negated node sigh is added as a child of the given node
     nodes.add(SignedModalTableauxNode(leafID, node.prefix, !node.sign, formula.child))
     leaf.children.add(state.nodes.size - 1)
 
@@ -59,11 +58,11 @@ fun applyNegation(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): S
 fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): SignedModalTableauxState {
     val nodes = state.nodes
     checkNodeRestrictions(nodes, nodeID)
-    // If the leafID is not given, the new node will be added to all the available Leaf.
+
+    // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leafs = state.childLeavesOf(nodeID)
-        leafs.forEach {
-            checkNodeRestrictions(nodes, it)
+        var leaves = state.childLeavesOf(nodeID)
+        leaves.forEach {
             applyAlpha(state, nodeID, it)
         }
         return state
@@ -77,7 +76,7 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
     if (formula is And) {
         // Alpha move can only be applied if the node sign is TRUE if the Formula is And
         if (node.sign == false)
-            throw IllegalMove("Operation can only be applied in AND if the sign is True")
+            throw IllegalMove("Alpha rule can only be applied on a conjunction if the sign is True")
         var leftFormula = formula.leftChild
         var rightFormula = formula.rightChild
 
@@ -91,7 +90,7 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
     } else if (formula is Or) {
         // Alpha move can only be applied if the node sign is FALSE if the Formula is OR
         if (node.sign == true)
-            throw IllegalMove("Operation can only be applied in OR if the sign is False")
+            throw IllegalMove("Alpha rule can only be applied on a disjunction if the sign is False")
         var leftFormula = formula.leftChild
         var rightFormula = formula.rightChild
 
@@ -105,7 +104,7 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
     } else if (formula is Impl) {
         // Alpha move can only be applied if the node sign is FALSE if the Formula is IMPL
         if (node.sign == true)
-            throw IllegalMove("Operation can only be applied in IMPL if the sign is False")
+            throw IllegalMove("Alpha rule can only be applied on an implication if the sign is False")
         var leftFormula = formula.leftChild
         var rightFormula = formula.rightChild
 
@@ -117,7 +116,7 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
         nodes.add(alpha2)
         alpha1.children.add(nodes.size - 1)
     } else {
-        throw IllegalMove("Alpha Rule can not be applied on the node $node")
+        throw IllegalMove("Alpha rule can not be applied on the node '$node'")
     }
 
     // Add move to history
@@ -138,11 +137,10 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
 fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): SignedModalTableauxState {
     val nodes = state.nodes
     checkNodeRestrictions(nodes, nodeID)
-    // If the leafID is not given, the new node will be added to all the available Leaf.
+    // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leafs = state.childLeavesOf(nodeID)
-        leafs.forEach {
-            checkNodeRestrictions(nodes, it)
+        var leaves = state.childLeavesOf(nodeID)
+        leaves.forEach {
             applyBeta(state, nodeID, it)
         }
         return state
@@ -152,11 +150,11 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
     val leaf = nodes[leafID]
     val formula = node.formula
 
-    // Check if the node is F And , T Or or T Impl: only then can be Beta move applied
+    // Check if the node is F And, T Or or T Impl: only then can be Beta move applied
     if (formula is And) {
         // Beta move can only be applied if the node sign is FALSE if the Formula is AND
         if (node.sign == true)
-            throw IllegalMove("Operation can only be applied in AND if the sign is True")
+            throw IllegalMove("Beta rule can only be applied on a conjunction if the sign is True")
         var leftFormula = formula.leftChild
         var rightFormula = formula.rightChild
 
@@ -171,11 +169,11 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
     } else if (formula is Or) {
         // Beta move can only be applied if the node sign is TRUE if the Formula is OR
         if (node.sign == false)
-            throw IllegalMove("Operation can only be applied in OR if the sign is False")
+            throw IllegalMove("Beta rule can only be applied on a disjunction if the sign is False")
         var leftFormula = formula.leftChild
         var rightFormula = formula.rightChild
 
-        // The formula will be splited, and the leftFormula will be added to the leftBranch of the Leaf and the
+        // The formula will be split, and the leftFormula will be added to the leftBranch of the Leaf and the
         // the right formula will be added to the right branch fo the leaf.
         var beta1 = SignedModalTableauxNode(leafID, node.prefix, true, leftFormula)
         nodes.add(beta1)
@@ -186,7 +184,7 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
     } else if (formula is Impl) {
         // Beta move can only be applied if the node sign is TRUE if the Formula is IMPL
         if (node.sign == false)
-            throw IllegalMove("Operation can only be applied in IMPL if the sign is False")
+            throw IllegalMove("Beta rule can only be applied on an implication if the sign is False")
         var leftFormula = formula.leftChild
         var rightFormula = formula.rightChild
 
@@ -199,7 +197,7 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
         nodes.add(beta2)
         leaf.children.add(nodes.size - 1)
     } else {
-        throw IllegalMove("Beta Rule can not be applied on the node $node")
+        throw IllegalMove("Beta rule can not be applied on the node '$node'")
     }
 
     // Add move to history
@@ -222,11 +220,10 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
 fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: Int?): SignedModalTableauxState {
     val nodes = state.nodes
     checkNodeRestrictions(nodes, nodeID)
-    // If the leafID is not given, the new node will be added to all the available Leaf.
+    // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leafs = state.childLeavesOf(nodeID)
-        leafs.forEach {
-            checkNodeRestrictions(nodes, it)
+        var leaves = state.childLeavesOf(nodeID)
+        leaves.forEach {
             applyNu(state, prefix, nodeID, it)
         }
         return state
@@ -246,7 +243,7 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     // Check if the node is T Box ( [] ) or F DIAMOD ( <> ) : only then can be NU move applied
     if (formula is Box) {
         if (node.sign == false)
-            throw IllegalMove("Operation can only be applied in BOX if the sign is True")
+            throw IllegalMove("Nu rule can only be applied on BOX if the sign is True")
         var childFormula = formula.child
 
         var nu0 = SignedModalTableauxNode(leafID, newPrefix, true, childFormula)
@@ -254,14 +251,14 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
         leaf.children.add(nodes.size - 1)
     } else if (formula is Diamond) {
         if (node.sign == true)
-            throw IllegalMove("Operation can only be applied in DIAMOND if the sign is False")
+            throw IllegalMove("Nu rule can only be applied on DIAMOND if the sign is False")
         var childFormula = formula.child
 
         var nu0 = SignedModalTableauxNode(leafID, newPrefix, false, childFormula)
         nodes.add(nu0)
         leaf.children.add(nodes.size - 1)
     } else {
-        throw IllegalMove("Nu Rule can not be applied on the node $node")
+        throw IllegalMove("Nu rule can not be applied on the node '$node'")
     }
 
     // Add move to history
@@ -284,11 +281,11 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
 fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: Int?): SignedModalTableauxState {
     val nodes = state.nodes
     checkNodeRestrictions(nodes, nodeID)
-    // If the leafID is not given, the new node will be added to all the available Leaf.
+
+    // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leafs = state.childLeavesOf(nodeID)
-        leafs.forEach {
-            checkNodeRestrictions(nodes, it)
+        var leaves = state.childLeavesOf(nodeID)
+        leaves.forEach {
             applyPi(state, prefix, nodeID, it)
         }
         return state
@@ -322,7 +319,7 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
         nodes.add(nu0)
         leaf.children.add(nodes.size - 1)
     } else {
-        throw IllegalMove("Pi Rule can not be applied on the node $node")
+        throw IllegalMove("Pi Rule can not be applied on the node '$node'")
     }
 
     // Add move to history
@@ -352,23 +349,16 @@ fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableau
  * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-@Suppress("ComplexMethod", "EmptyCatchBlock", "NestedBlockDepth")
+@Suppress("ComplexMethod")
 fun applyPruneRecursive(state: SignedModalTableauxState, nodeID: Int): SignedModalTableauxState {
     val nodes = state.nodes
-
     val node = nodes[nodeID]
 
-    if (nodes.size <= 1)
-        throw IllegalMove("Nothing to Prune")
-
-    if (node.isLeaf)
-        throw IllegalMove("Nothing to Prune")
+    if (nodes.size <= 1 || node.isLeaf)
+        return
 
     for (child: Int in node.children) {
-        try {
-            applyPruneRecursive(state, child)
-        } catch (e: IllegalMove) {
-        }
+        applyPruneRecursive(state, child)
         nodes.removeAt(child)
         // Update left side of removalNode 
         for (i in 0..(child - 1)) {
@@ -426,13 +416,13 @@ fun applyClose(state: SignedModalTableauxState, nodeID: Int, closeID: Int): Sign
     val leaf = nodes[closeID]
 
     if (node.sign == leaf.sign)
-        throw IllegalMove("The selected formulas are not of opposite sign.")
+        throw IllegalMove("The selected formulas are not of opposite sign")
 
     if (!node.prefix.equals(leaf.prefix))
-        throw IllegalMove("The selected formulas do not have the same prefix.")
+        throw IllegalMove("The selected formulas do not have the same prefix")
 
     if (!node.formula.synEq(leaf.formula))
-        throw IllegalMove("The selected formula is not syntactically equivalent.")
+        throw IllegalMove("The selected formula is not syntactically equivalent")
 
     // node.closeRef = closeID
     leaf.closeRef = nodeID
