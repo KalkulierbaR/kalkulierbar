@@ -2,7 +2,6 @@ package kalkulierbar.signedtableaux
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
-import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.Statistic
@@ -22,31 +21,15 @@ class SignedModalTableaux :
     override val identifier = "signed-modal-tableaux"
 
     override fun parseFormulaToState(formula: String, params: SignedModalTableauxParam?): SignedModalTableauxState {
+        val signTrue = Regex("^\\s*\\\\sign\\s+T:")
+        val signAny = Regex("^\\s*\\\\sign\\s+[FT]:")
 
-        var regex = Regex("[\\s]*\\\\sign[\\s]+[TF]:")
+        val assumption = signTrue.containsMatchIn(formula) // Assumption is true unless '\sign F:' is found
+        val baseFormula = formula.replace(signAny, "")
+        val startIndex = formula.length - baseFormula.length
 
-        val match = regex.find(formula)
-        var formulaString = formula
-        var startIndex = 0
-        var assumption = false
-
-        if (match != null) {
-            if (match.range.start == 0) {
-                startIndex = match.range.last + 1
-                formulaString = formula.substring(startIndex)
-                if (formula.get(startIndex - 2) == 'T')
-                    assumption = true
-            } else {
-                throw InvalidFormulaFormat("\\sign T: or \\sign F: needs to be at the start of the formula")
-            }
-        }
-
-        var parsedFormula = ModalLogicParser().parse(formulaString, startIndex)
-
-        if (params == null)
-            return SignedModalTableauxState(parsedFormula, assumption)
-        else
-            return SignedModalTableauxState(parsedFormula, assumption, params.backtracking)
+        val parsedFormula = ModalLogicParser().parse(baseFormula, startIndex)
+        return SignedModalTableauxState(parsedFormula, assumption, params?.backtracking ?: true)
     }
 
     @Suppress("ComplexMethod")
@@ -159,6 +142,7 @@ class SignedModalTableaux :
      * @param json JSON parameter representation
      * @return parsed param object
      */
+    @Suppress("TooGenericExceptionCaught")
     override fun jsonToParam(json: String): SignedModalTableauxParam {
         try {
             return serializer.parse(SignedModalTableauxParam.serializer(), json)

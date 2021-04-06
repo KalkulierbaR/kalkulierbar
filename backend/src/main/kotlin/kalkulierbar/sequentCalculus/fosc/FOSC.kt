@@ -23,16 +23,15 @@ class FOSC :
     GenericSequentCalculus,
     JSONCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>(),
     StatisticCalculus<FOSCState> {
-
     private val serializer = Json(context = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
-
     override val identifier = "fosc"
 
     override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): FOSCState {
-        val state = FirstOrderSequentParser().parse(formula)
-        if (params != null)
-            state.showOnlyApplicableRules = params.showOnlyApplicableRules
-        return state
+        val sequents = FirstOrderSequentParser.parse(formula)
+        return FOSCState(
+                mutableListOf(TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())),
+                params?.showOnlyApplicableRules ?: false
+        )
     }
 
     @Suppress("ComplexMethod")
@@ -59,10 +58,10 @@ class FOSC :
     }
 
     override fun checkCloseOnState(state: FOSCState): CloseMessage {
-        return if (state.tree.all{ it.isClosed })
+        return if (state.tree.all { it.isClosed })
                 CloseMessage(true, "The proof is closed and valid in First Order Logic")
             else
-                return CloseMessage(false, "Not all branches of the proof tree are closed")
+                CloseMessage(false, "Not all branches of the proof tree are closed")
     }
 
     /**

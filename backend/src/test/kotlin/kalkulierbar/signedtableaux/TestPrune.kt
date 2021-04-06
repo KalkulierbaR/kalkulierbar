@@ -47,8 +47,8 @@ class TestPruneMove {
     }
 
     @Test
-    fun testWrongPrune2() {
+    fun testNoActionPrune() {
         var state = instance.parseFormulaToState("!(a -> b)", null)
-        assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, Prune(0)) }
+        assertEquals(state, instance.applyMoveOnState(state, Prune(0)))
     }
 }

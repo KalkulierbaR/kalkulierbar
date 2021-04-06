@@ -15,7 +15,7 @@ object FlexibleClauseSetParser {
      * @param formula formula or clause set to parse
      * @return ClauseSet representing the input formula
      */
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "EmptyCatchBlock")
     fun parse(formula: String, strategy: CnfStrategy = CnfStrategy.OPTIMAL): ClauseSet<String> {
         var errorMsg: String
 

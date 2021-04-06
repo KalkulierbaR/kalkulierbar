@@ -3,7 +3,6 @@ package kalkulierbar.signedtableaux
 import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.tamperprotect.ProtectedState
-import kotlin.math.max
 import kotlin.math.sqrt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -11,17 +10,16 @@ import kotlinx.serialization.Serializable
 @Serializable
 class SignedModalTableauxState(
     val formula: LogicNode,
-    val assumption: Boolean = false,
-    val backtracking: Boolean = true
+    val assumption: Boolean,
+    val backtracking: Boolean
 ) : ProtectedState() {
     val nodes = mutableListOf<SignedModalTableauxNode>(SignedModalTableauxNode(null, listOf<Int>(1), assumption, formula.clone()))
     val moveHistory = mutableListOf<SignedModalTableauxMove>()
     var usedBacktracking = false
 
-    var usedPrefixes: List<List<Int>> = listOf<List<Int>>(listOf<Int>(1))
+    var usedPrefixes: List<List<Int>> = listOf(listOf(1))
 
     var statusMessage: String? = null
-
     override var seal = ""
 
     /**
@@ -104,11 +102,11 @@ class SignedModalTableauxState(
     @Suppress("ReturnCount")
     fun prefixIsUsedOnBranch(leafID: Int, prefix: List<Int>): Boolean {
         var node = nodes[leafID]
-        if (prefix.equals(node.prefix))
+        if (prefix == node.prefix)
             return true
         while (node.parent != null) {
             node = nodes[node.parent!!]
-            if (prefix.equals(node.prefix))
+            if (prefix == node.prefix)
                 return true
         }
         return false
@@ -121,24 +119,23 @@ class SignedModalTableauxState(
      */
     fun getWidth(nodeID: Int): Int {
         val node = nodes[nodeID]
-        if (node.children.isEmpty()) {
-            return 1
-        }
-        return node.children.fold(0) { acc: Int, elem: Int -> acc + getWidth(elem) }
+        return if (node.children.isEmpty())
+            1
+        else
+            node.children.sumBy { getWidth(it) }
     }
 
     /**
-    * Returns the maxmimum depth of the tree specified by nodeID
-    * @param nodeID the node id of the root
-    * @return the width of the tree
-    */
+     * Returns the maxmimum depth of the tree specified by nodeID
+     * @param nodeID the node id of the root
+     * @return the width of the tree
+     */
     fun getDepth(nodeID: Int): Int {
         val node = nodes[nodeID]
-        if (node.children.isEmpty()) {
-            return 1
-        }
-        return node.children.fold(0) { acc: Int, elem: Int -> max(acc, getDepth(elem) + 1) }
-        // return node.children.fold(0) { (elem1, elem2) -> max(elem1, getDepth(elem2) + 1) }   
+        return if (node.children.isEmpty())
+            1
+        else
+            node.children.maxBy { getDepth(it) }!! + 1
     }
 
     fun render() {
@@ -162,7 +159,6 @@ class SignedModalTableauxNode(
     var sign: Boolean,
     var formula: LogicNode
 ) {
-
     var isClosed = false
     var closeRef: Int? = null
     val children = mutableListOf<Int>()
@@ -200,11 +196,9 @@ class SignedModalTableauxStatistic(
         state.getDepth(0),
         state.getWidth(0),
         state.usedBacktracking
-    ) {
-        score = calculateScore()
-    }
+    )
 
-    var score: Int = calculateScore()
+    val score: Int = calculateScore()
 
     @Suppress("MagicNumber")
     fun calculateScore(): Int {

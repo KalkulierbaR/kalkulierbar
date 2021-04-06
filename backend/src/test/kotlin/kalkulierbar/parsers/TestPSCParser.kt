@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestPSCParser {
-    private val parser = PropositionalSequentParser()
+    private val parser = PropositionalSequentParser
 
     private val invalid = listOf(
         "-->a",
@@ -69,7 +69,9 @@ class TestPSCParser {
     @Test
     fun testValidStrings() {
         for ((formula, expected) in valid) {
-            assertEquals(expected, parser.parse(formula).tree.get(0).toString())
+            val sequents = parser.parse(formula)
+            val node = kalkulierbar.sequentCalculus.TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())
+            assertEquals(expected, node.toString())
         }
     }
 }

@@ -4,7 +4,6 @@ import kalkulierbar.logic.And
 import kalkulierbar.logic.Equiv
 import kalkulierbar.logic.Impl
 import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.transform.DoNothingVisitor
 
 class ChangeEquivalences : DoNothingVisitor() {
     companion object Companion {

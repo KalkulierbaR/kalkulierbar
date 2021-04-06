@@ -19,16 +19,15 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>(), StatisticCalculus<PSCState> {
-
     private val serializer = Json(context = LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
-
     override val identifier = "psc"
 
     override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): PSCState {
-        val state = PropositionalSequentParser().parse(formula)
-        if (params != null) {
-            state.showOnlyApplicableRules = params.showOnlyApplicableRules
-        return state
+        val sequents = PropositionalSequentParser.parse(formula)
+        return PSCState(
+                mutableListOf(TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())),
+                params?.showOnlyApplicableRules ?: false
+        )
     }
 
     @Suppress("ComplexMethod")
@@ -51,7 +50,7 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
     }
 
     override fun checkCloseOnState(state: PSCState): CloseMessage {
-        return if (state.tree.all{ it.isClosed })
+        return if (state.tree.all { it.isClosed })
                 CloseMessage(true, "The proof is closed and valid in Propositional Logic")
             else
                 CloseMessage(false, "Not all branches of the proof tree are closed")

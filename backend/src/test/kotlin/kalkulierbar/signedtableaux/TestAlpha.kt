@@ -16,7 +16,12 @@ class TestAlpha {
     fun testBasicAnd() {
         var state = instance.parseFormulaToState("!(a & b)", null)
 
+        println(state.assumption)
+
         state = instance.applyMoveOnState(state, Negation(0, null))
+
+        println(state.assumption)
+
         state = instance.applyMoveOnState(state, AlphaMove(1, null))
         val nodes = state.nodes
 

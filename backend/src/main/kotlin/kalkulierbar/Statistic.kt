@@ -26,20 +26,15 @@ val StatisticModule = SerializersModule {
 
 @Serializable
 class Statistics(
-    val formula: String
-) {
-    var entries: List<Statistic> = listOf<Statistic>()
+    val formula: String,
+    var entries: List<Statistic> = listOf<Statistic>(),
     var columnNames: List<String> = listOf<String>()
+) {
 
-    constructor(entries: List<Statistic>, formula: String) : this(formula) {
-        this.entries = entries
-        this.columnNames = entries[0].columnNames()
-    }
+    constructor(entries: List<Statistic>, formula: String) : this(formula, entries, entries[0].columnNames())
 
     constructor(entries: List<String>, formula: String, endpoint: StatisticCalculus<*>) : this(formula) {
-
-        var statistics = entries.map { endpoint.jsonToStatistic(it) }
-
+        val statistics = entries.map { endpoint.jsonToStatistic(it) }
         this.entries = statistics
         this.columnNames = statistics[0].columnNames()
     }

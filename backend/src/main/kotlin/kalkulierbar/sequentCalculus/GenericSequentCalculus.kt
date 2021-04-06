@@ -2,7 +2,6 @@ package kalkulierbar.sequentCalculus
 
 import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
-import kotlin.math.max
 import kotlin.math.sqrt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -20,7 +19,7 @@ interface GenericSequentCalculusState {
      */
     fun setNodeClosed(leaf: GenericSequentCalculusNode) {
         var node = leaf
-        while (node.isLeaf || node.children.fold(true) { acc, elem -> acc && tree[elem].isClosed }) {
+        while (node.isLeaf || node.children.all { tree[it].isClosed }) {
             node.isClosed = true
             if (node.parent == null) {
                 break
@@ -36,10 +35,10 @@ interface GenericSequentCalculusState {
      */
     fun getWidth(nodeID: Int): Int {
         val node = tree[nodeID]
-        if (node.children.isEmpty()) {
-            return 1
-        }
-        return node.children.fold(0) { acc: Int, elem: Int -> acc + getWidth(elem) }
+        return if (node.children.isEmpty())
+                1
+            else
+                node.children.sumBy { getWidth(it) }
     }
 
     /**
@@ -49,11 +48,10 @@ interface GenericSequentCalculusState {
     */
     fun getDepth(nodeID: Int): Int {
         val node = tree[nodeID]
-        if (node.children.isEmpty()) {
-            return 1
-        }
-        return node.children.fold(0) { acc: Int, elem: Int -> max(acc, getDepth(elem) + 1) }
-        // return node.children.fold(0) { (elem1, elem2) -> max(elem1, getDepth(elem2) + 1) }   
+        return if (node.children.isEmpty())
+                1
+            else
+                node.children.maxBy { getDepth(it) }!! + 1
     }
 }
 
@@ -101,12 +99,6 @@ class TreeNode(
         rightFormulas: MutableList<LogicNode>
     ) : this(null, emptyArray<Int>(), leftFormulas, rightFormulas, false, null)
 
-    constructor(
-        leftFormulas: MutableList<LogicNode>,
-        rightFormulas: MutableList<LogicNode>,
-        lastMove: SequentCalculusMove
-    ) : this(null, emptyArray<Int>(), leftFormulas, rightFormulas, false, lastMove)
-
     override fun toString(): String {
         return leftFormulas.joinToString() + " ⊢ " + rightFormulas.joinToString()
     }
@@ -124,7 +116,7 @@ class SequentCalculusStatistic(
     val nodeAmount: Int,
     val depth: Int,
     val width: Int,
-    val usedStupidMode: Boolean
+    val usedGuidedMode: Boolean
 ) : Statistic {
 
     constructor(state: GenericSequentCalculusState) : this(
@@ -133,18 +125,16 @@ class SequentCalculusStatistic(
         state.getDepth(0),
         state.getWidth(0),
         state.showOnlyApplicableRules
-    ) {
-        score = calculateScore()
-    }
+    )
 
-    var score: Int = calculateScore()
+    val score: Int = calculateScore()
 
     @Suppress("MagicNumber")
     fun calculateScore(): Int {
-        var ret = ((1 / sqrt(nodeAmount.toDouble())) * 1000).toInt()
-        if (usedStupidMode == true)
-            ret = (ret * 0.9).toInt()
-        return ret
+        var score = ((1 / sqrt(nodeAmount.toDouble())) * 1000).toInt()
+        if (usedGuidedMode)
+            score = (score * 0.9).toInt()
+        return score
     }
 
     override fun columnNames(): List<String> {

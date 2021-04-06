@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestFOSCParser {
-    private val parser = FirstOrderSequentParser()
+    private val parser = FirstOrderSequentParser
 
     private val invalid = listOf(
         "-->a",
@@ -81,7 +81,9 @@ class TestFOSCParser {
     @Test
     fun testValidStrings() {
         for ((formula, expected) in valid) {
-            assertEquals(expected, parser.parse(formula).tree.get(0).toString())
+            val sequents = parser.parse(formula)
+            val node = kalkulierbar.sequentCalculus.TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())
+            assertEquals(expected, node.toString())
         }
     }
 }

@@ -31,7 +31,7 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
     val formula: LogicNode = node.leftFormulas[listIndex]
 
     if (formula !is UniversalQuantifier)
-        throw IllegalMove("The rule allRight must be applied on a 'UniversalQuantifier'")
+        throw IllegalMove("Rule allRight can only be applied on a universal quantifier")
 
     // No need to check if swapVariable is already in use for rule allLeft
 
@@ -85,7 +85,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<
     val formula: LogicNode = node.rightFormulas[listIndex]
 
     if (formula !is UniversalQuantifier)
-        throw IllegalMove("The rule allRight must be applied on a 'UniversalQuantifier'")
+        throw IllegalMove("Rule allRight can only be applied on a universal quantifier")
 
     var replaceWithString = varAssign.get(formula.varName)
 
@@ -98,7 +98,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<
 
     // Check if swapVariable is not already in use in the current seqeuence
     if (checkIfVariableNameIsAlreadyInUse(node, replaceWithString))
-        throw IllegalMove("Can't instatiate with an already existing identifier")
+        throw IllegalMove("Identifier '$replaceWithString' is already in use")
 
     // The newFormula which will be added to the right side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
@@ -142,7 +142,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<St
     val formula: LogicNode = node.leftFormulas[listIndex]
 
     if (formula !is ExistentialQuantifier)
-        throw IllegalMove("The rule exLeft must be applied on a 'ExistentialQuantifier'")
+        throw IllegalMove("Rule exLeft can only be applied on an existential quantifier")
 
     var replaceWithString = varAssign.get(formula.varName)
 
@@ -155,7 +155,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<St
 
     // Check if swapVariable is not already in use in the current seqeuence
     if (checkIfVariableNameIsAlreadyInUse(node, replaceWithString))
-        throw IllegalMove("Can't instatiate with an already existing identifier")
+        throw IllegalMove("Identifier '$replaceWithString' is already in use")
 
     // The newFormula which will be added to the left side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
@@ -199,7 +199,7 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
     val formula: LogicNode = node.rightFormulas[listIndex]
 
     if (formula !is ExistentialQuantifier)
-        throw IllegalMove("The rule exRight must be applied on a 'ExistentialQuantifier'")
+        throw IllegalMove("Rule exRight can only be applied on an existential quantifier")
 
     var replaceWithString = varAssign.get(formula.varName)
 
@@ -244,10 +244,8 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
  * @param varName The variable name to be compared with
  */
 private fun checkIfVariableNameIsAlreadyInUse(node: GenericSequentCalculusNode, varName: String): Boolean {
-    var set = mutableSetOf<String>()
-    set = node.leftFormulas.fold(set) { a, b -> a.addAll(IdentifierCollector.collect(b)); return@fold a.distinct().toMutableSet() }
-    set = node.rightFormulas.fold(set) { a, b -> a.addAll(IdentifierCollector.collect(b)); return@fold a.distinct().toMutableSet() }
-    return set.contains(varName)
+    val usedNames = (node.leftFormulas + node.rightFormulas).flatMap { IdentifierCollector.collect(it) }.toSet()
+    return usedNames.contains(varName)
 }
 
 /**
@@ -261,18 +259,14 @@ private fun findFittingVariableName(node: GenericSequentCalculusNode): String {
  * Checks if a string is syntactically allowed to be assigned as a constant for quantifier instantiation
  */
 @Suppress("ThrowsCount")
-private fun isAllowedVarAssign(str: String): Boolean {
-    if (str.length <= 0) {
-        throw IllegalMove("Can't Instantiate with empty identifier.")
-    }
-
-    if (str.get(0).isUpperCase()) {
-        throw IllegalMove("Constants need to start with a lowercase Letter.")
-    }
+private fun isAllowedVarAssign(str: String) {
+    if (str.length <= 0)
+        throw IllegalMove("Can't instantiate with empty identifier")
+    else if (str.get(0).isUpperCase())
+        throw IllegalMove("Constant '$str' does not start with a lowercase letter")
 
     for (i in str.indices) {
         if (!Tokenizer.isAllowedChar(str.get(i)))
-            throw IllegalMove("Character at position " + i.toString() + " is not allowed within Constant")
+            throw IllegalMove("Character at position " + i.toString() + " in '$str' is not allowed in constants")
     }
-    return true
 }

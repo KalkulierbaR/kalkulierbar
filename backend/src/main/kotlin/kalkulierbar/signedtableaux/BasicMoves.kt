@@ -73,51 +73,39 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
     val formula = node.formula
 
     // Check if the node is T And , F Or or F Impl: only then can be Alpha move applied
-    if (formula is And) {
-        // Alpha move can only be applied if the node sign is TRUE if the Formula is And
-        if (node.sign == false)
-            throw IllegalMove("Alpha rule can only be applied on a conjunction if the sign is True")
-        var leftFormula = formula.leftChild
-        var rightFormula = formula.rightChild
+    val alpha1: SignedModalTableauxNode
+    val alpha2: SignedModalTableauxNode
 
-        // The left Formula is will be add to the node first, right formula will be added at the child of left formula
-        var alpha1 = SignedModalTableauxNode(leafID, node.prefix, true, leftFormula)
-        nodes.add(alpha1)
-        leaf.children.add(nodes.size - 1)
-        var alpha2 = SignedModalTableauxNode(nodes.size - 1, node.prefix, true, rightFormula)
-        nodes.add(alpha2)
-        alpha1.children.add(nodes.size - 1)
-    } else if (formula is Or) {
-        // Alpha move can only be applied if the node sign is FALSE if the Formula is OR
-        if (node.sign == true)
-            throw IllegalMove("Alpha rule can only be applied on a disjunction if the sign is False")
-        var leftFormula = formula.leftChild
-        var rightFormula = formula.rightChild
-
-        // The left Formula is will be add to the node first, right formula will be added at the child of left formula
-        var alpha1 = SignedModalTableauxNode(leafID, node.prefix, false, leftFormula)
-        nodes.add(alpha1)
-        leaf.children.add(nodes.size - 1)
-        var alpha2 = SignedModalTableauxNode(nodes.size - 1, node.prefix, false, rightFormula)
-        nodes.add(alpha2)
-        alpha1.children.add(nodes.size - 1)
-    } else if (formula is Impl) {
-        // Alpha move can only be applied if the node sign is FALSE if the Formula is IMPL
-        if (node.sign == true)
-            throw IllegalMove("Alpha rule can only be applied on an implication if the sign is False")
-        var leftFormula = formula.leftChild
-        var rightFormula = formula.rightChild
-
-        // The left Formula is will be add to the node first, right formula will be added at the child of left formula
-        var alpha1 = SignedModalTableauxNode(leafID, node.prefix, true, leftFormula)
-        nodes.add(alpha1)
-        leaf.children.add(nodes.size - 1)
-        var alpha2 = SignedModalTableauxNode(nodes.size - 1, node.prefix, false, rightFormula)
-        nodes.add(alpha2)
-        alpha1.children.add(nodes.size - 1)
-    } else {
-        throw IllegalMove("Alpha rule can not be applied on the node '$node'")
+    when (formula) {
+        is And -> {
+            // Alpha move can only be applied if the node sign is TRUE if the Formula is And
+            if (!node.sign)
+                throw IllegalMove("Alpha rule can only be applied on a conjunction if the sign is True")
+            alpha1 = SignedModalTableauxNode(leafID, node.prefix, true, formula.leftChild)
+            alpha2 = SignedModalTableauxNode(nodes.size, node.prefix, true, formula.rightChild)
+        }
+        is Or -> {
+            // Alpha move can only be applied if the node sign is FALSE if the Formula is OR
+            if (node.sign)
+                throw IllegalMove("Alpha rule can only be applied on a disjunction if the sign is False")
+            alpha1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
+            alpha2 = SignedModalTableauxNode(nodes.size, node.prefix, false, formula.rightChild)
+        }
+        is Impl -> {
+            // Alpha move can only be applied if the node sign is FALSE if the Formula is IMPL
+            if (node.sign)
+                throw IllegalMove("Alpha rule can only be applied on an implication if the sign is False")
+            alpha1 = SignedModalTableauxNode(leafID, node.prefix, true, formula.leftChild)
+            alpha2 = SignedModalTableauxNode(nodes.size, node.prefix, false, formula.rightChild)
+        }
+        else -> throw IllegalMove("Alpha rule can not be applied on the node '$node'")
     }
+
+    // The left formula is will be add to the node first, right formula will be added as the child of left formula
+    nodes.add(alpha1)
+    leaf.children.add(nodes.size - 1)
+    nodes.add(alpha2)
+    alpha1.children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
@@ -130,7 +118,7 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
  *  In case of multiple branch end, will be added to the branch whose leafID is given.
  * @param state: SignedModalTableauxState state to apply move on
  * @param nodeID: ID of node to apply move on
- * @param leafID: ID of leaf , where the child should be attatched to
+ * @param leafID: ID of leaf, where the child should be attatched to
  * @return new state after applying move
  */
 @Suppress("ThrowsCount", "ComplexMethod")
@@ -150,55 +138,38 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
     val leaf = nodes[leafID]
     val formula = node.formula
 
+    val beta1: SignedModalTableauxNode
+    val beta2: SignedModalTableauxNode
+
     // Check if the node is F And, T Or or T Impl: only then can be Beta move applied
-    if (formula is And) {
-        // Beta move can only be applied if the node sign is FALSE if the Formula is AND
-        if (node.sign == true)
-            throw IllegalMove("Beta rule can only be applied on a conjunction if the sign is True")
-        var leftFormula = formula.leftChild
-        var rightFormula = formula.rightChild
-
-        // The formula will be splited, and the leftFormula will be added to the leftBranch of the Leaf and the
-        // the right formula will be added to the right branch fo the leaf.
-        var beta1 = SignedModalTableauxNode(leafID, node.prefix, false, leftFormula)
-        nodes.add(beta1)
-        leaf.children.add(nodes.size - 1)
-        var beta2 = SignedModalTableauxNode(leafID, node.prefix, false, rightFormula)
-        nodes.add(beta2)
-        leaf.children.add(nodes.size - 1)
-    } else if (formula is Or) {
-        // Beta move can only be applied if the node sign is TRUE if the Formula is OR
-        if (node.sign == false)
-            throw IllegalMove("Beta rule can only be applied on a disjunction if the sign is False")
-        var leftFormula = formula.leftChild
-        var rightFormula = formula.rightChild
-
-        // The formula will be split, and the leftFormula will be added to the leftBranch of the Leaf and the
-        // the right formula will be added to the right branch fo the leaf.
-        var beta1 = SignedModalTableauxNode(leafID, node.prefix, true, leftFormula)
-        nodes.add(beta1)
-        leaf.children.add(nodes.size - 1)
-        var beta2 = SignedModalTableauxNode(leafID, node.prefix, true, rightFormula)
-        nodes.add(beta2)
-        leaf.children.add(nodes.size - 1)
-    } else if (formula is Impl) {
-        // Beta move can only be applied if the node sign is TRUE if the Formula is IMPL
-        if (node.sign == false)
-            throw IllegalMove("Beta rule can only be applied on an implication if the sign is False")
-        var leftFormula = formula.leftChild
-        var rightFormula = formula.rightChild
-
-        // The formula will be splited, and the leftFormula will be added to the leftBranch of the Leaf and the
-        // the right formula will be added to the right branch fo the leaf.
-        var beta1 = SignedModalTableauxNode(leafID, node.prefix, false, leftFormula)
-        nodes.add(beta1)
-        leaf.children.add(nodes.size - 1)
-        var beta2 = SignedModalTableauxNode(leafID, node.prefix, true, rightFormula)
-        nodes.add(beta2)
-        leaf.children.add(nodes.size - 1)
-    } else {
-        throw IllegalMove("Beta rule can not be applied on the node '$node'")
+    when (formula) {
+        is And -> {
+            if (node.sign == true)
+                throw IllegalMove("Beta rule can only be applied on a conjunction if the sign is True")
+            beta1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
+            beta2 = SignedModalTableauxNode(leafID, node.prefix, false, formula.rightChild)
+        }
+        is Or -> {
+            if (node.sign == false)
+                throw IllegalMove("Beta rule can only be applied on a disjunction if the sign is False")
+            beta1 = SignedModalTableauxNode(leafID, node.prefix, true, formula.leftChild)
+            beta2 = SignedModalTableauxNode(leafID, node.prefix, true, formula.rightChild)
+        }
+        is Impl -> {
+            if (node.sign == false)
+                throw IllegalMove("Beta rule can only be applied on an implication if the sign is False")
+            beta1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
+            beta2 = SignedModalTableauxNode(leafID, node.prefix, true, formula.rightChild)
+        }
+        else -> throw IllegalMove("Beta rule can not be applied on the node '$node'")
     }
+
+    // The formula will be split, the leftFormula will be added to the leftBranch of the feaf and the
+    // the right formula will be added to the right branch fo the leaf.
+    nodes.add(beta1)
+    leaf.children.add(nodes.size - 1)
+    nodes.add(beta2)
+    leaf.children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
@@ -233,7 +204,7 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     val leaf = nodes[leafID]
     val formula = node.formula
 
-    // The new prifix will be 𝜎.n, where n is already used
+    // The new prefix will be 𝜎.n, where n is already used
     var newPrefix = node.prefix.toMutableList()
     newPrefix.add(prefix)
 
@@ -241,25 +212,22 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
         throw IllegalMove("Prefix has to be already in use on the selected branch")
 
     // Check if the node is T Box ( [] ) or F DIAMOD ( <> ) : only then can be NU move applied
-    if (formula is Box) {
-        if (node.sign == false)
-            throw IllegalMove("Nu rule can only be applied on BOX if the sign is True")
-        var childFormula = formula.child
-
-        var nu0 = SignedModalTableauxNode(leafID, newPrefix, true, childFormula)
-        nodes.add(nu0)
-        leaf.children.add(nodes.size - 1)
-    } else if (formula is Diamond) {
-        if (node.sign == true)
-            throw IllegalMove("Nu rule can only be applied on DIAMOND if the sign is False")
-        var childFormula = formula.child
-
-        var nu0 = SignedModalTableauxNode(leafID, newPrefix, false, childFormula)
-        nodes.add(nu0)
-        leaf.children.add(nodes.size - 1)
-    } else {
-        throw IllegalMove("Nu rule can not be applied on the node '$node'")
+    val nu0 = when (formula) {
+        is Box -> {
+            if (!node.sign)
+                throw IllegalMove("Nu rule can only be applied on BOX if the sign is True")
+            SignedModalTableauxNode(leafID, newPrefix, true, formula.child)
+        }
+        is Diamond -> {
+            if (node.sign)
+                throw IllegalMove("Nu rule can only be applied on DIAMOND if the sign is False")
+            SignedModalTableauxNode(leafID, newPrefix, false, formula.child)
+        }
+        else -> throw IllegalMove("Nu rule can not be applied on the node '$node'")
     }
+
+    nodes.add(nu0)
+    leaf.children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
@@ -296,31 +264,28 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     val formula = node.formula
 
     // The new prifix will be 𝜎.n, where n is a new prefex
-    var newPrefix = node.prefix.toMutableList()
+    val newPrefix = node.prefix.toMutableList()
     newPrefix.add(prefix)
 
     if (state.prefixIsUsedOnBranch(leafID, newPrefix))
-        throw IllegalMove("Prefix has to not be already in use on the selected branch")
+        throw IllegalMove("Prefix is already in use on the selected branch")
     // Check if the node is F Box ( [] ) or T DIAMOD ( <> ) : only then can be NU move applied
-    if (formula is Box) {
-        if (node.sign == true)
-            throw IllegalMove("Operation can only be applied in BOX if the sign is False")
-        var childFormula = formula.child
-
-        var nu0 = SignedModalTableauxNode(leafID, newPrefix, false, childFormula)
-        nodes.add(nu0)
-        leaf.children.add(nodes.size - 1)
-    } else if (formula is Diamond) {
-        if (node.sign == false)
-            throw IllegalMove("Operation can only be applied in DIAMOND if the sign is True")
-        var childFormula = formula.child
-
-        var nu0 = SignedModalTableauxNode(leafID, newPrefix, true, childFormula)
-        nodes.add(nu0)
-        leaf.children.add(nodes.size - 1)
-    } else {
-        throw IllegalMove("Pi Rule can not be applied on the node '$node'")
+    val nu0 = when (formula) {
+        is Box -> {
+            if (node.sign == true)
+                throw IllegalMove("Operation can only be applied in box if the sign is False")
+            SignedModalTableauxNode(leafID, newPrefix, false, formula.child)
+        }
+        is Diamond -> {
+            if (node.sign == false)
+                throw IllegalMove("Operation can only be applied in diamond if the sign is True")
+            SignedModalTableauxNode(leafID, newPrefix, true, formula.child)
+        }
+        else -> throw IllegalMove("Pi Rule can not be applied on the node '$node'")
     }
+
+    nodes.add(nu0)
+    leaf.children.add(nodes.size - 1)
 
     // Add move to history
     if (state.backtracking)
@@ -339,7 +304,6 @@ fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableau
         throw IllegalMove("Backtracking is not enabled for this proof")
 
     state.moveHistory.add(Prune(nodeID))
-
     return applyPruneRecursive(state, nodeID)
 }
 
@@ -355,9 +319,9 @@ fun applyPruneRecursive(state: SignedModalTableauxState, nodeID: Int): SignedMod
     val node = nodes[nodeID]
 
     if (nodes.size <= 1 || node.isLeaf)
-        return
+        return state
 
-    for (child: Int in node.children) {
+    for (child in node.children) {
         applyPruneRecursive(state, child)
         nodes.removeAt(child)
         // Update left side of removalNode 
@@ -406,9 +370,8 @@ fun applyPruneRecursive(state: SignedModalTableauxState, nodeID: Int): SignedMod
 fun applyClose(state: SignedModalTableauxState, nodeID: Int, closeID: Int): SignedModalTableauxState {
     val nodes = state.nodes
 
-    if (closeID < nodeID) {
+    if (closeID < nodeID)
         return applyClose(state, closeID, nodeID)
-    }
 
     checkCloseIDRestrictions(state, nodeID, closeID)
 
@@ -418,13 +381,12 @@ fun applyClose(state: SignedModalTableauxState, nodeID: Int, closeID: Int): Sign
     if (node.sign == leaf.sign)
         throw IllegalMove("The selected formulas are not of opposite sign")
 
-    if (!node.prefix.equals(leaf.prefix))
+    if (node.prefix != leaf.prefix)
         throw IllegalMove("The selected formulas do not have the same prefix")
 
     if (!node.formula.synEq(leaf.formula))
-        throw IllegalMove("The selected formula is not syntactically equivalent")
+        throw IllegalMove("The selected formulas are not syntactically equivalent")
 
-    // node.closeRef = closeID
     leaf.closeRef = nodeID
     state.setClosed(closeID)
 

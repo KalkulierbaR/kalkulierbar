@@ -36,7 +36,7 @@ interface GenericTableauxState<AtomType> {
      */
     @Suppress("ReturnCount")
     fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
-        val child = nodes.get(childID)
+        val child = nodes[childID]
         if (child.parent == parentID)
             return true
         if (child.parent == 0 || child.parent == null)

@@ -9,16 +9,16 @@ class Tokenizer {
     companion object Companion {
 
         // Single-character tokens can be handled in one step
-        protected val oneCharToken = Regex("[\\(\\)!&\\|,\\:]")
-        protected val whitespace = Regex("\\s")
+        private val oneCharToken = Regex("[\\(\\)!&\\|,\\:]")
+        private val whitespace = Regex("\\s")
 
         // Might be reasonable to treat the first character of a varname
         // differently from the rest of the variable in the future
         // Note that the current implementation implies/requires that
         // VarStartChars is a subset of VarChars
-        protected val permittedVarStartChars = Regex("[a-zA-Z0-9]")
-        protected val permittedVarChars = permittedVarStartChars
-        protected val extendedVarChars = Regex("[_-]")
+        private val permittedVarStartChars = Regex("[a-zA-Z0-9]")
+        private val permittedVarChars = permittedVarStartChars
+        private val extendedVarChars = Regex("[_-]")
         private var allowExtended = false
 
         /**
@@ -48,7 +48,7 @@ class Tokenizer {
 	     * @return start offset of the next token
 	     */
         @Suppress("ComplexMethod", "MagicNumber")
-        protected fun extractToken(formula: String, index: Int, tokens: MutableList<Token>, positionInBaseString: Int): Int {
+        private fun extractToken(formula: String, index: Int, tokens: MutableList<Token>, positionInBaseString: Int): Int {
             var i = index
             val len = formula.length
 
@@ -58,17 +58,15 @@ class Tokenizer {
 
             // If the next token is one char only, we can add it to the list directly
             if (oneCharToken matches formula[i].toString()) {
-                val ttype: TokenType
-
-                when (formula[i]) {
-                    '&' -> ttype = TokenType.AND
-                    '|' -> ttype = TokenType.OR
-                    '!' -> ttype = TokenType.NOT
-                    '(' -> ttype = TokenType.LPAREN
-                    ')' -> ttype = TokenType.RPAREN
-                    ',' -> ttype = TokenType.COMMA
-                    ':' -> ttype = TokenType.COLON
-                    else -> ttype = TokenType.UNKNOWN
+                val ttype = when (formula[i]) {
+                    '&' -> TokenType.AND
+                    '|' -> TokenType.OR
+                    '!' -> TokenType.NOT
+                    '(' -> TokenType.LPAREN
+                    ')' -> TokenType.RPAREN
+                    ',' -> TokenType.COMMA
+                    ':' -> TokenType.COLON
+                    else -> TokenType.UNKNOWN
                 }
 
                 tokens.add(Token(ttype, formula[i].toString(), i))
@@ -132,7 +130,7 @@ data class Token(val type: TokenType, val spelling: String, val srcPosition: Int
     override fun toString() = spelling
 }
 
-enum class TokenType(val stringRep: String) {
+enum class TokenType(private val stringRep: String) {
     AND("&"), OR("|"), NOT("!"), IMPLICATION("->"), EQUIVALENCE("<=>"), LPAREN("("), RPAREN(")"),
     COMMA(","), COLON(":"), CAPID("uppercase identifier"), LOWERID("lowercase identifier"),
     UNIVERSALQUANT("\\all"), EXISTENTIALQUANT("\\ex"), UNKNOWN("unknown token"), BOX("[]"), DIAMOND("<>");

@@ -6,10 +6,10 @@ class DatabaseHandler {
 
     companion object {
         private var connection: Connection? = null
-        private val maxEntriesPerFormula: Int = 1000
+        private const val maxEntriesPerFormula: Int = 1000
 
         @Suppress("TooGenericExceptionCaught")
-        public fun init() {
+        fun init() {
             try {
                 Class.forName("org.sqlite.JDBC")
                 connection = DriverManager.getConnection("jdbc:sqlite:Statistics.db")
@@ -20,11 +20,11 @@ class DatabaseHandler {
         }
 
         @Suppress("MaxLineLength")
-        public fun createTable(identifier: String) {
+        fun createTable(identifier: String) {
             val sqlIdentifier = parseIdentifier(identifier)
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
-                val create: String =
+                val create =
                     "CREATE TABLE IF NOT EXISTS $sqlIdentifier (formula VARCHAR(8000) NOT NULL, statistics VARCHAR(8000) NOT NULL, time TIMESTAMP NOT NULL);"
                 stmt.execute(create)
                 stmt.close()
@@ -32,7 +32,7 @@ class DatabaseHandler {
         }
 
         @Suppress("MaxLineLength")
-        public fun insert(identifier: String, keyFormula: String, statisticsJSON: String) {
+        fun insert(identifier: String, keyFormula: String, statisticsJSON: String) {
             val sqlIdentifier = parseIdentifier(identifier)
             statisticsJSON.replace("\"", "\\\"")
             if (connection != null) {
@@ -59,7 +59,7 @@ class DatabaseHandler {
             }
         }
 
-        public fun query(identifier: String, formula: String): MutableList<String> {
+        fun query(identifier: String, formula: String): MutableList<String> {
             val sqlIdentifier = parseIdentifier(identifier)
             val returnList = mutableListOf<String>()
             if (connection != null) {
