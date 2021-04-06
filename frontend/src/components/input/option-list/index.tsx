@@ -27,6 +27,7 @@ interface Props {
      * If the current selected Node should be showed above
      */
     node?: SequentNode | undefined;
+    // FIXME: What is a `listIndex`?
     /**
      * listIndex
      */
@@ -60,7 +61,8 @@ const OptionList: preact.FunctionalComponent<Props> = ({
                 <div class={`card ${className}`}>
                     <p class={style.originList}>
                         <code class={style.formula}>
-                            {parseFormula(
+                            {// FIXME: What does this do?
+                            parseFormula(
                                 listIndex?.charAt(0) === "l"
                                     ? node.leftFormulas[
                                           parseStringToListIndex(listIndex)

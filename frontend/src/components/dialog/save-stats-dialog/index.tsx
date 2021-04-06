@@ -76,6 +76,7 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const submit = () => {
+        // FIXME: Use state instead of DOM-read (and never read DOM, ever)
         const textInput = document.getElementById("name");
         if (
             !(
@@ -99,7 +100,7 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
      */
     const onKeyDown = (e: KeyboardEvent) => {
         e.stopPropagation();
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
             submit();
         }
     };

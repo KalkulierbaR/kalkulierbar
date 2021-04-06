@@ -50,6 +50,7 @@ export const parseStringToListIndex = (str: string) => {
 export const parseFormula = (formula: FormulaNode) => {
     let result = "";
     if (formula === undefined) return result;
+    // FIXME: Make cases consistent, e.g., "Relation"
     switch (formula.type) {
         case "not":
             result += "¬" + parseFormula(formula.child!);
@@ -140,6 +141,7 @@ const sequentNodeToTree = (
 ): Tree<SequentTreeLayoutNode> => {
     const n = nodes[i];
 
+    // FIXME: When does this happen? Prefer === over ==.
     if (n == null)
         return tree(
             72,

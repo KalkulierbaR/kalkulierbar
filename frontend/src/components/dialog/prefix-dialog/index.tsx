@@ -69,6 +69,7 @@ const PrefixDialog: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const submitPrefix = () => {
+        // FIXME: Use state instead of DOM-read (and never read DOM, ever)
         const textInput = document.getElementById("prefix");
         if (
             !(
@@ -93,7 +94,7 @@ const PrefixDialog: preact.FunctionalComponent<Props> = ({
      */
     const onKeyDown = (e: KeyboardEvent) => {
         e.stopPropagation();
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
             // Submit prefix when hitting (enter + ctrlKey)
             submitPrefix();
         }

@@ -127,7 +127,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                         <CenterFAB resetDragTransforms={resetDragTransforms} />
                         <CheckCloseFAB
                             calculus={calculus}
-                            onProoven={closeCallback}
+                            onProven={closeCallback}
                         />
                         {showUndoFAB && (
                             <FAB

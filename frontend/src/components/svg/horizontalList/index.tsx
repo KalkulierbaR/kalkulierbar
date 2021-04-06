@@ -82,6 +82,7 @@ const drawComma = (x: number, y: number, isClosed: boolean) => {
  * @param {boolean} selected the parameter which tell if the current node is selected or not
  * @returns {any} HTML
  */
+// FIXME: Turn into preact component
 const drawFormula = (
     formula: FormulaTreeLayoutNode,
     node: LayoutItem<SequentTreeLayoutNode>,
@@ -97,7 +98,7 @@ const drawFormula = (
         <FormulaTreeNode
             formula={formula}
             node={node}
-            xCord={
+            xCoord={
                 xCoord +
                 (estimateSVGTextWidth(parseFormula(formula)) +
                     RECTANGLE_PUFFER) /
@@ -144,6 +145,7 @@ const drawSeperator = (x: number, y: number, isClosed: boolean) => {
  * @param {boolean}selected Whether or not the current node is selected
  * @returns {any} HTML
  */
+// FIXME: Turn into preact component?
 const getSequence = (
     leftFormulas: FormulaNode[],
     rightFormulas: FormulaNode[],
@@ -179,13 +181,13 @@ const getSequence = (
 
     totalSize = dimsX + NODE_PUFFER / 2;
 
-    const htmlArray: any[] = [];
+    const nodeArray: h.JSX.Element[] = [];
     leftFormulas.forEach((elem, index) => {
         const formulaLayoutNode: FormulaTreeLayoutNode = {
             ...elem,
-            id: "l" + index.toString(),
+            id: `l${index}`,
         };
-        htmlArray.push(
+        nodeArray.push(
             drawFormula(
                 formulaLayoutNode,
                 node,
@@ -198,20 +200,20 @@ const getSequence = (
         totalSize +=
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if (index < leftFormulas.length - 1) {
-            htmlArray.push(drawComma(totalSize, node.y, node.data.isClosed));
+            nodeArray.push(drawComma(totalSize, node.y, node.data.isClosed));
             totalSize += NODE_SPACING;
         }
     });
 
-    htmlArray.push(drawSeperator(totalSize, node.y, node.data.isClosed));
+    nodeArray.push(drawSeperator(totalSize, node.y, node.data.isClosed));
     totalSize += SEPERATOR_SPACING;
 
     rightFormulas.forEach((elem, index) => {
         const formulaLayoutNode: FormulaTreeLayoutNode = {
             ...elem,
-            id: "r" + index.toString(),
+            id: `r${index}`,
         };
-        htmlArray.push(
+        nodeArray.push(
             drawFormula(
                 formulaLayoutNode,
                 node,
@@ -224,12 +226,12 @@ const getSequence = (
         totalSize +=
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
         if (index < rightFormulas.length - 1) {
-            htmlArray.push(drawComma(totalSize, node.y, node.data.isClosed));
+            nodeArray.push(drawComma(totalSize, node.y, node.data.isClosed));
             totalSize += NODE_SPACING;
         }
     });
 
-    return htmlArray;
+    return nodeArray;
 };
 
 const horizontalList: preact.FunctionalComponent<Props> = ({
@@ -257,6 +259,7 @@ const horizontalList: preact.FunctionalComponent<Props> = ({
         setDims(box);
     });
 
+    // FIXME: Why this identity mapping?
     return (
         <g>
             {getSequence(

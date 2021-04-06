@@ -71,7 +71,7 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
                         />
                         <CheckCloseFAB
                             calculus={calculus}
-                            onProoven={closeCallback}
+                            onProven={closeCallback}
                         />
                         <FAB
                             icon={<UndoIcon />}
@@ -98,16 +98,6 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
                 ) : (
                     <Fragment>
                         <FAB
-                            icon={<RuleIcon />}
-                            label="Rules"
-                            mini={true}
-                            extended={true}
-                            showIconAtEnd={true}
-                            onClick={() => {
-                                ruleCallback();
-                            }}
-                        />
-                        <FAB
                             icon={<DeleteIcon />}
                             label="Prune"
                             mini={true}
@@ -115,6 +105,16 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
                             showIconAtEnd={true}
                             onClick={() => {
                                 pruneCallback();
+                            }}
+                        />
+                        <FAB
+                            icon={<RuleIcon />}
+                            label="Rules"
+                            mini={true}
+                            extended={true}
+                            showIconAtEnd={true}
+                            onClick={() => {
+                                ruleCallback();
                             }}
                         />
                     </Fragment>
