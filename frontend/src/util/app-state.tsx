@@ -1,16 +1,18 @@
 import { createContext, h } from "preact";
 import { Reducer, useContext, useEffect, useReducer } from "preact/hooks";
-import { localStorageGet, localStorageSet } from "./local-storage";
-import { AppState, DerivedAppState } from "../types/app/app-state";
-import { Calculus, CalculusType } from "../types/calculus";
-import { Theme } from "../types/app/theme";
-import { TutorialMode } from "../types/app/tutorial";
+
 import { AppStateAction, AppStateActionType } from "../types/app/action";
+import { AppState, DerivedAppState } from "../types/app/app-state";
+import { Config } from "../types/app/config";
 import {
     NotificationHandler,
     NotificationType,
 } from "../types/app/notification";
-import { Config } from "../types/app/config";
+import { Theme } from "../types/app/theme";
+import { TutorialMode } from "../types/app/tutorial";
+import { Calculus, CalculusType } from "../types/calculus";
+
+import { localStorageGet, localStorageSet } from "./local-storage";
 
 const isDeployed = location.port !== "8080";
 
@@ -23,6 +25,9 @@ const INIT_APP_STATE: AppState = {
         [Calculus.foTableaux]: "",
         [Calculus.ncTableaux]: "",
         [Calculus.dpll]: "",
+        [Calculus.psc]: "",
+        [Calculus.fosc]: "",
+        [Calculus.modalTableaux]: "",
     },
     server: isDeployed
         ? "https://api.kbar.app"

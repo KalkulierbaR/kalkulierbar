@@ -1,9 +1,10 @@
 import { CalculusType } from "../calculus";
+
 import { AppState } from "./app-state";
+import { Config } from "./config";
+import { Notification } from "./notification";
 import { Theme } from "./theme";
 import { TutorialMode } from "./tutorial";
-import { Notification } from "./notification";
-import { Config } from "./config";
 
 interface AppStateActionBase {
     type: AppStateActionType;

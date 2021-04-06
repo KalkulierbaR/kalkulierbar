@@ -1,23 +1,48 @@
-import {
-    TableauxMove,
-    FOTableauxMove,
-    PropTableauxParams,
-    FOTableauxParams,
-} from "./tableaux";
-import {
-    PropResolutionMove,
-    FOResolutionMove,
-    PropResolutionParams,
-    FOResolutionParams,
-} from "./resolution";
-import { NCTableauxMove } from "./nc-tableaux";
 import { DPLLMove } from "./dpll";
+import {
+    ModalTableauxMove,
+    ModalTableauxParams,
+    SignedModalTableauxStatistic,
+} from "./modal-tableaux";
+import { NCTableauxMove } from "./nc-tableaux";
+import {
+    FOResolutionMove,
+    FOResolutionParams,
+    PropResolutionMove,
+    PropResolutionParams,
+} from "./resolution";
+import {
+    FOSCMove,
+    PSCMove,
+    SequentCalculusStatistic,
+    SequentParams,
+} from "./sequent";
+import {
+    FOTableauxMove,
+    FOTableauxParams,
+    PropTableauxParams,
+    TableauxMove,
+} from "./tableaux";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";
-export type PropCalculusType = "prop-tableaux" | "prop-resolution" | "dpll";
-export type FOCalculusType = "fo-tableaux" | "fo-resolution" | "nc-tableaux";
-export type CalculusType = FOCalculusType | PropCalculusType;
+export type PSCCalculusType = "psc" | "fosc";
+export type PropCalculusType =
+    | "prop-tableaux"
+    | "prop-resolution"
+    | "dpll"
+    | "psc";
+export type FOCalculusType =
+    | "fo-tableaux"
+    | "fo-resolution"
+    | "nc-tableaux"
+    | "fosc";
+export type SequentCalculusType = "psc" | "fosc";
+export type ModalCalculusType = "signed-modal-tableaux";
+export type CalculusType =
+    | FOCalculusType
+    | PropCalculusType
+    | ModalCalculusType;
 
 export enum Calculus {
     propTableaux = "prop-tableaux",
@@ -26,17 +51,22 @@ export enum Calculus {
     foResolution = "fo-resolution",
     ncTableaux = "nc-tableaux",
     dpll = "dpll",
+    psc = "psc",
+    fosc = "fosc",
+    modalTableaux = "signed-modal-tableaux",
 }
 
 export const PropCalculus: CalculusType[] = [
     Calculus.propTableaux,
     Calculus.propResolution,
     Calculus.dpll,
+    Calculus.psc,
 ];
 export const FOCalculus: CalculusType[] = [
     Calculus.foTableaux,
     Calculus.foResolution,
     Calculus.ncTableaux,
+    Calculus.fosc,
 ];
 export const TableauxCalculus: CalculusType[] = [
     Calculus.propTableaux,
@@ -57,6 +87,9 @@ export interface Move {
     "fo-resolution": FOResolutionMove;
     "nc-tableaux": NCTableauxMove;
     dpll: DPLLMove;
+    psc: PSCMove;
+    fosc: FOSCMove;
+    "signed-modal-tableaux": ModalTableauxMove;
 }
 
 /**
@@ -69,6 +102,15 @@ export interface Params {
     "fo-resolution": FOResolutionParams;
     "nc-tableaux": null;
     dpll: null;
+    psc: SequentParams;
+    fosc: SequentParams;
+    "signed-modal-tableaux": ModalTableauxParams;
+}
+
+export interface StatisticEntry {
+    psc: SequentCalculusStatistic;
+    fosc: SequentCalculusStatistic;
+    "signed-modal-tableaux": SignedModalTableauxStatistic;
 }
 
 /**

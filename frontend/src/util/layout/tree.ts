@@ -268,9 +268,8 @@ const separate = <T>(t: Tree<T>, i: number, ih: LeftSiblingList) => {
     let mscl = cl.mod;
 
     let ihIt: LeftSiblingList | undefined = ih;
-
     while (sr && cl) {
-        if (bottom(sr) > ihIt!.lowY) {
+        if (bottom(sr) > ihIt!.lowY && ih.next !== undefined) {
             ihIt = ih.next;
         }
         const dist = mssr + sr.prelim + sr.width - (mscl + cl.prelim);

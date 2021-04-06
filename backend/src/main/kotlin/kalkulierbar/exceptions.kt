@@ -2,7 +2,9 @@ package kalkulierbar
 
 open class KalkulierbarException(msg: String) : Exception(msg)
 
-class InvalidFormulaFormat(msg: String) : KalkulierbarException(msg)
+open class InvalidFormulaFormat(msg: String) : KalkulierbarException(msg)
+
+class EmptyFormulaException(msg: String) : InvalidFormulaFormat(msg)
 
 class IllegalMove(msg: String) : KalkulierbarException(msg)
 

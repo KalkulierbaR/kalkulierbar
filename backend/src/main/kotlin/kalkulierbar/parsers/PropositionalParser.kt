@@ -1,5 +1,6 @@
 package kalkulierbar.parsers
 
+import kalkulierbar.EmptyFormulaException
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.And
 import kalkulierbar.logic.Equiv
@@ -25,8 +26,11 @@ open class PropositionalParser {
      * @param formula input formula
      * @return LogicNode representing the formula
      */
-    open fun parse(formula: String): LogicNode {
-        tokens = Tokenizer.tokenize(formula)
+    open fun parse(formula: String, positionInBaseString: Int = 0): LogicNode {
+        tokens = Tokenizer.tokenize(formula, false, positionInBaseString)
+        if (tokens.isEmpty()) {
+            throw EmptyFormulaException("Expected a formula but got an empty String")
+        }
         val res = parseEquiv()
         if (tokens.isNotEmpty())
             throw InvalidFormulaFormat("Expected end of formula but got ${gotMsg()}")

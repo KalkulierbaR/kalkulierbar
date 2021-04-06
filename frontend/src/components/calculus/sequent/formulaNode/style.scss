@@ -1,0 +1,47 @@
+.node {
+    transform: none;
+    cursor: default;
+}
+
+.f-closed {
+    fill: rgb(218, 218, 218);
+}
+
+.f-default {
+    fill: var(--kbar-accent-light-color);
+}
+
+.rect--selected {
+    fill: var(--kbar-accent-color);
+}
+
+.text--selected {
+    fill: --kbar-primary-text-color;
+}
+
+.text--closed {
+    fill: var(--kbar-text-closed-color);
+}
+
+.node--lemma {
+    stroke: var(--kbar-accent-2-color);
+    stroke-width: 2px;
+}
+
+.node--selectLemma {
+    fill: var(--kbar-accent-2-color);
+}
+
+.node--closed {
+    transform: none;
+}
+
+.node--clickable {
+    cursor: pointer;
+}
+
+.link {
+    fill: none;
+    stroke: var(--kbar-link-color);
+    stroke-width: 2px;
+}

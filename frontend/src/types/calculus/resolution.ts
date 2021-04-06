@@ -1,7 +1,8 @@
-import { ClauseSet, FOClauseSet } from "./clause";
 import { KNumMap, KPair } from "../kotlin";
+
+import { Calculus, ResolutionCalculusType } from ".";
+import { ClauseSet, FOClauseSet } from "./clause";
 import { CnfStrategy, VarAssign } from "./tableaux";
-import { ResolutionCalculusType, Calculus } from ".";
 
 export interface PropResolutionState {
     seal: string;

@@ -116,7 +116,6 @@ class VariableRenamer(
     val replacementMap: Map<QuantifiedVariable, String>,
     val strict: Boolean = true
 ) : FirstOrderTermVisitor<Unit>() {
-
     /**
      * Change the variable name to the new spelling
      * Throw an exception if no new variable name is specified for the encountered variable

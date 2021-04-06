@@ -1,26 +1,32 @@
+import DPLL from "async!../routes/dpll";
+import DPLLView from "async!../routes/dpll/view";
+import Home from "async!../routes/home";
+import ModalTableaux from "async!../routes/modal-tableaux";
+import ModalTableauxView from "async!../routes/modal-tableaux/view";
+import NCTableaux from "async!../routes/nc-tableaux";
+import NCTableauxView from "async!../routes/nc-tableaux/view";
+import Resolution from "async!../routes/resolution";
+import ResolutionView from "async!../routes/resolution/view";
+import SequentCalculus from "async!../routes/sequent";
+import SequentView from "async!../routes/sequent/view";
+import Tableaux from "async!../routes/tableaux";
+import TableauxView from "async!../routes/tableaux/view";
 import { h } from "preact";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
+
+import { AppStateActionType } from "../types/app/action";
+import { NotificationHandler } from "../types/app/notification";
+import { Calculus } from "../types/calculus";
+import { checkCredentials, getConfig } from "../util/admin";
 import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
+import { useTitle } from "../util/title";
+
 import Page404 from "./404";
 import Header from "./header";
 import Snackbar from "./snackbar";
 import * as style from "./style.scss";
-import { useTitle } from "../util/title";
-import Home from "async!../routes/home";
-import Tableaux from "async!../routes/tableaux";
-import TableauxView from "async!../routes/tableaux/view";
-import Resolution from "async!../routes/resolution";
-import ResolutionView from "async!../routes/resolution/view";
-import NCTableaux from "async!../routes/nc-tableaux";
-import NCTableauxView from "async!../routes/nc-tableaux/view";
-import DPLL from "async!../routes/dpll";
-import DPLLView from "async!../routes/dpll/view";
-import { NotificationHandler } from "../types/app/notification";
-import { AppStateActionType } from "../types/app/action";
-import { Calculus } from "../types/calculus";
-import { getConfig, checkCredentials } from "../util/admin";
 
 const SMALL_SCREEN_THRESHOLD = 750;
 
@@ -161,6 +167,30 @@ const App: preact.FunctionalComponent = () => {
                     <NCTableauxView path={`/${Calculus.ncTableaux}/view`} />
                     <DPLL path={`/${Calculus.dpll}`} />
                     <DPLLView path={`/${Calculus.dpll}/view`} />
+                    <SequentCalculus
+                        path={`/${Calculus.psc}`}
+                        calculus={Calculus.psc}
+                    />
+                    <SequentView
+                        path={`/${Calculus.psc}/view`}
+                        calculus={Calculus.psc}
+                    />
+                    <SequentCalculus
+                        path={`/${Calculus.fosc}`}
+                        calculus={Calculus.fosc}
+                    />
+                    <SequentView
+                        path={`/${Calculus.fosc}/view`}
+                        calculus={Calculus.fosc}
+                    />
+                    <ModalTableaux
+                        path={`/${Calculus.modalTableaux}`}
+                        calculus={Calculus.modalTableaux}
+                    />
+                    <ModalTableauxView
+                        path={`/${Calculus.modalTableaux}/view`}
+                        calculus={Calculus.modalTableaux}
+                    />
                     <Page404 default={true} />
                 </Router>
             </main>

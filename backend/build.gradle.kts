@@ -2,12 +2,12 @@ plugins {
     kotlin("jvm") version "1.3.50"
     application
     eclipse
-    jacoco
     id("org.jmailen.kotlinter") version "2.1.2"
     id("io.gitlab.arturbosch.detekt") version "1.1.1"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.3.50"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("java")
+    id("jacoco")
 }
 
 repositories {
@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.xerial:sqlite-jdbc:3.32.3.2")
     implementation(kotlin("stdlib"))
     implementation("com.github.komputing:khash:0.9")
     testImplementation(kotlin("test-junit5"))
@@ -45,4 +46,13 @@ detekt {
     toolVersion = "1.1.1"
     input = files("src/main/kotlin")
     filters = ".*/resources/.*,.*/build/.*"
+    config = files("$projectDir/config/detekt/detekt.yml")
+}
+
+kotlinter {
+    ignoreFailures = false
+    indentSize = 4
+    reporters = arrayOf("checkstyle", "plain")
+    experimentalRules = false
+    disabledRules = arrayOf("no-wildcard-imports", "filename")
 }
