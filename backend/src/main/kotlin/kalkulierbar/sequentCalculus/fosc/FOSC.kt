@@ -29,13 +29,10 @@ class FOSC :
     override val identifier = "fosc"
 
     override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): FOSCState {
-        if (params == null) {
-            return FirstOrderSequentParser().parse(formula)
-        } else {
-            val state = FirstOrderSequentParser().parse(formula)
+        val state = FirstOrderSequentParser().parse(formula)
+        if (params != null)
             state.showOnlyApplicableRules = params.showOnlyApplicableRules
-            return state
-        }
+        return state
     }
 
     @Suppress("ComplexMethod")
@@ -62,13 +59,10 @@ class FOSC :
     }
 
     override fun checkCloseOnState(state: FOSCState): CloseMessage {
-        for (node in state.tree) {
-            if (!node.isClosed) {
-                return CloseMessage(false, "Not all branches of the proof tree are closed.")
-            }
-        }
-
-        return CloseMessage(true, "The proof is closed and valid in First Order Logic")
+        return if (state.tree.all{ it.isClosed })
+                CloseMessage(true, "The proof is closed and valid in First Order Logic")
+            else
+                return CloseMessage(false, "Not all branches of the proof tree are closed")
     }
 
     /**

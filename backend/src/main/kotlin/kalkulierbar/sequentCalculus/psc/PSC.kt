@@ -25,13 +25,10 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
     override val identifier = "psc"
 
     override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): PSCState {
-        if (params == null) {
-            return PropositionalSequentParser().parse(formula)
-        } else {
-            val state = PropositionalSequentParser().parse(formula)
+        val state = PropositionalSequentParser().parse(formula)
+        if (params != null) {
             state.showOnlyApplicableRules = params.showOnlyApplicableRules
-            return state
-        }
+        return state
     }
 
     @Suppress("ComplexMethod")
@@ -54,13 +51,10 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
     }
 
     override fun checkCloseOnState(state: PSCState): CloseMessage {
-        for (node in state.tree) {
-            if (!node.isClosed) {
-                return CloseMessage(false, "Not all branches of the proof tree are closed.")
-            }
-        }
-
-        return CloseMessage(true, "The proof is closed and valid in propositional Logic")
+        return if (state.tree.all{ it.isClosed })
+                CloseMessage(true, "The proof is closed and valid in Propositional Logic")
+            else
+                CloseMessage(false, "Not all branches of the proof tree are closed")
     }
 
     /**
