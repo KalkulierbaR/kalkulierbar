@@ -1,4 +1,4 @@
-import { h, RefObject } from "preact";
+import preact, { h, RefObject } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 import {
@@ -38,20 +38,32 @@ interface Props {
         nodeId: number,
     ) => void;
 }
-/**
- *
- * @param {LayoutItem<SequentTreeLayoutNode>} node the node which the line is drawn under
- * @param {LayoutItem<SequentTreeLayoutNode> | undefined} parent the parent of the node which the line is drawn above
- * @param {RefObject<SVGTextElement>} textRef the reference of the text inside the node
- * @param {string | undefined} ruleName the name of the rule which is written besides the line
- * @returns {void}
- */
-const lineUnderNode = (
-    node: LayoutItem<SequentTreeLayoutNode>,
-    parent: LayoutItem<SequentTreeLayoutNode> | undefined,
-    textRef: RefObject<SVGTextElement>,
-    ruleName: string | undefined,
-) => {
+
+interface LineUnderNodeProps {
+    /**
+     * the node which the line is drawn under
+     */
+    node: LayoutItem<SequentTreeLayoutNode>;
+    /**
+     * the parent of the node which the line is drawn above
+     */
+    parent: LayoutItem<SequentTreeLayoutNode> | undefined;
+    /**
+     * the reference of the text inside the node
+     */
+    textRef: RefObject<SVGTextElement>;
+    /**
+     * the name of the rule which is written besides the line
+     */
+    ruleName: string | undefined;
+}
+
+const LineUnderNode: preact.FunctionalComponent<LineUnderNodeProps> = ({
+    node,
+    parent,
+    textRef,
+    ruleName,
+}) => {
     if (parent !== undefined) {
         const [parentDims, setParentDims] = useState({
             x: 0,
@@ -206,7 +218,7 @@ const lineUnderNode = (
             </g>
         );
     }
-    return;
+    return null;
 };
 
 const SequentTreeNode: preact.FunctionalComponent<Props> = ({
@@ -235,12 +247,12 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
                     {nodeName(node.data)}
                 </text>
                 <g>
-                    {lineUnderNode(
-                        node,
-                        parent,
-                        textRef,
-                        node.data.lastMove?.type,
-                    )}
+                    <LineUnderNode
+                        node={node}
+                        parent={parent}
+                        textRef={textRef}
+                        ruleName={node.data.lastMove?.type}
+                    />
                 </g>
             </g>
         );
@@ -282,12 +294,12 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
                         event?.stopPropagation();
                     }}
                 >
-                    {lineUnderNode(
-                        node,
-                        parent,
-                        textRef,
-                        node.data.lastMove?.type,
-                    )}
+                    <LineUnderNode
+                        node={node}
+                        parent={parent}
+                        textRef={textRef}
+                        ruleName={node.data.lastMove?.type}
+                    />
                 </g>
             </g>
         </g>

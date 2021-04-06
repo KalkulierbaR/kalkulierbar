@@ -23,6 +23,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
     const toggle = useCallback(() => setOpen(!open), [open]);
     const setClosed = useCallback(() => setOpen(false), [setOpen]);
 
+    // FIXME: Adjust `smallScreen` or find another solution?
     const right =
         window.innerWidth < 950 ? (
             <Hamburger open={open} onClick={toggle} />
@@ -60,6 +61,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
             />
             <Dialog
                 class={style.dialog}
+                // FIXME: Why 900?
                 open={!(window.innerWidth < 900) && open}
                 label="Settings"
                 onClose={setClosed}

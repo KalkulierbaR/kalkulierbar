@@ -36,12 +36,13 @@
     font-size: 2em;
 }
 
-.option-Disabled {
+.option--disabled {
+    // FIXME: Use color variables or define new ones.
     background-color: #ff009d00;
     color: rgb(109, 109, 109);
     pointer-events: none;
 }
 
-.option-Enabled {
+.option--enabled {
     color: var(--kbar-text-color-black);
 }

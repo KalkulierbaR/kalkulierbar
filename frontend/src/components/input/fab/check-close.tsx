@@ -21,12 +21,12 @@ interface Props {
     /**
      * Function to call when the proof is valid
      */
-    onProoven?: (stats: Statistics) => void;
+    onProven?: (stats: Statistics) => void;
 }
 
 const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
     calculus,
-    onProoven,
+    onProven,
 }) => {
     const {
         tutorialMode,
@@ -56,7 +56,7 @@ const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
                     notificationHandler,
                     calculus,
                     state,
-                    onProoven,
+                    onProven,
                 );
             }}
         />

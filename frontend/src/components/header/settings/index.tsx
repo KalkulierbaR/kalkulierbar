@@ -68,7 +68,7 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
 
     const handleEnter = useCallback(
         (e: KeyboardEvent) => {
-            if (e.keyCode === 13) {
+            if (e.key === "Enter") {
                 onSubmit();
             }
         },

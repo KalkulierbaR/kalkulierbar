@@ -15,7 +15,7 @@ import * as style from "./style.scss";
 interface Props {
     node: LayoutItem<SequentTreeLayoutNode>;
     formula: FormulaTreeLayoutNode;
-    xCord: number;
+    xCoord: number;
     selectedListIndex?: string;
     selectFormulaCallback?: (
         formula: FormulaTreeLayoutNode,
@@ -27,7 +27,7 @@ interface Props {
 const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
     node,
     formula,
-    xCord,
+    xCoord: xCord,
     selectedListIndex,
     selectFormulaCallback,
     selected,

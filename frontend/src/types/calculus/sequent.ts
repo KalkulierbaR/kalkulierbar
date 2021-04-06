@@ -3,6 +3,7 @@ import { KStringMap } from "../kotlin";
 import { Calculus, SequentCalculusType } from ".";
 
 export interface SequentNode {
+    // FIXME: Enum
     type: string;
     parent: number | null;
     children: number[];
