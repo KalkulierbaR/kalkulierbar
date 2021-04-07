@@ -148,7 +148,7 @@ const sequentNodeToTree = (
             y,
             y,
             {
-                type: "",
+                type: "TreeNode",
                 parent: null,
                 children: [],
                 leftFormulas: [],

@@ -2,9 +2,10 @@ import { KStringMap } from "../kotlin";
 
 import { Calculus, SequentCalculusType } from ".";
 
+export type SequentNodeType = "";
+
 export interface SequentNode {
-    // FIXME: Enum
-    type: string;
+    type: "TreeNode";
     parent: number | null;
     children: number[];
     leftFormulas: FormulaNode[];
