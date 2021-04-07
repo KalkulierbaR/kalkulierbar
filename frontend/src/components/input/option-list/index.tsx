@@ -27,9 +27,8 @@ interface Props {
      * If the current selected Node should be showed above
      */
     node?: SequentNode | undefined;
-    // FIXME: What is a `listIndex`?
     /**
-     * listIndex
+     * Set for sequent calculus. Of the form [lr][0-9]+
      */
     listIndex?: string;
     /**
