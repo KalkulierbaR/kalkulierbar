@@ -8,7 +8,7 @@ import {
 import { LayoutItem } from "../../../../types/layout";
 import { classMap } from "../../../../util/class-map";
 import { nodeName } from "../../../../util/sequent";
-import HorizontalList from "../../../svg/horizontalList";
+import HorizontalList from "../../../svg/horizontal-list";
 import Rectangle from "../../../svg/rectangle";
 
 import * as style from "./style.scss";
@@ -290,8 +290,8 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
                     selectedListIndex={selectedListIndex}
                 />
                 <g
-                    onClick={() => {
-                        event?.stopPropagation();
+                    onClick={(e) => {
+                        e.stopPropagation();
                     }}
                 >
                     <LineUnderNode

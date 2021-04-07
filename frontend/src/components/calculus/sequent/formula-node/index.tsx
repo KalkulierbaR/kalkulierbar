@@ -8,7 +8,7 @@ import {
 import { LayoutItem } from "../../../../types/layout";
 import { classMap } from "../../../../util/class-map";
 import { parseFormula } from "../../../../util/sequent";
-import SmallRec from "../../../svg/SmallRec";
+import SmallRec from "../../../svg/small-rectangle";
 
 import * as style from "./style.scss";
 

@@ -1,4 +1,4 @@
-import { h, RefObject } from "preact";
+import preact, { h, RefObject } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
 import {
@@ -10,7 +10,7 @@ import { LayoutItem } from "../../../types/layout";
 import { classMap } from "../../../util/class-map";
 import { parseFormula } from "../../../util/sequent";
 import { estimateSVGTextWidth } from "../../../util/text-width";
-import FormulaTreeNode from "../../calculus/sequent/formulaNode";
+import FormulaTreeNode from "../../calculus/sequent/formula-node";
 
 import * as style from "./style.scss";
 
@@ -50,14 +50,22 @@ const SEPERATOR_SPACING = 12;
 const RECTANGLE_PUFFER = 4;
 const NODE_PUFFER = 16;
 
-/**
- * Draws a Comma at the given coordinates
- * @param {number} x the x coordinate on which the comma is drawn
- * @param {number} y the y coordinate on which the comma is drawn
- * @param {number} isClosed whether or not the current node is closed
- * @returns {any} HTML
- */
-const drawComma = (x: number, y: number, isClosed: boolean) => {
+interface CommaProps {
+    /**
+     * the x coordinate on which the comma is drawn
+     */
+    x: number;
+    /**
+     * the y coordinate on which the comma is drawn
+     */
+    y: number;
+    /**
+     * whether or not the current node is closed
+     */
+    isClosed: boolean;
+}
+
+const Comma: preact.FunctionalComponent<CommaProps> = ({ x, y, isClosed }) => {
     return (
         <text
             class={classMap({
@@ -72,28 +80,45 @@ const drawComma = (x: number, y: number, isClosed: boolean) => {
         </text>
     );
 };
-/**
- * Draws the Formula for the given parameters
- * @param {FormulaTreeLayoutNode} formula the FormulaNode which will be drawn by the method
- * @param {LayoutItem<SequentTreeLayoutNode>} node the big node in which the formula is drawn
- * @param {string | undefined} selectedListIndex string in the pattern of (r, l)[0-9]* indicating the side of the formula and its index
- * @param {number} xCoord the x coordinate in which the Formula is drawn
- * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback Callback for selecting a formula
- * @param {boolean} selected the parameter which tell if the current node is selected or not
- * @returns {any} HTML
- */
-// FIXME: Turn into preact component
-const drawFormula = (
-    formula: FormulaTreeLayoutNode,
-    node: LayoutItem<SequentTreeLayoutNode>,
-    selectedListIndex: string | undefined,
-    xCoord: number,
+
+interface FormulaProps {
+    /**
+     * the FormulaNode which will be drawn by the method
+     */
+    formula: FormulaTreeLayoutNode;
+    /**
+     * the big node in which the formula is drawn
+     */
+    node: LayoutItem<SequentTreeLayoutNode>;
+    /**
+     * string in the pattern of (r, l)[0-9]* indicating the side of the formula and its index
+     */
+    selectedListIndex: string | undefined;
+    /**
+     * the x coordinate in which the Formula is drawn
+     */
+    xCoord: number;
+    /**
+     * Callback for selecting a formula
+     */
     selectFormulaCallback: (
         formula: FormulaTreeLayoutNode,
         nodeId: number,
-    ) => void,
-    selected: boolean,
-) => {
+    ) => void;
+    /**
+     * the parameter which tells if the current node is selected or not
+     */
+    selected: boolean;
+}
+
+const Formula: preact.FunctionalComponent<FormulaProps> = ({
+    formula,
+    node,
+    selectedListIndex,
+    xCoord,
+    selectFormulaCallback,
+    selected,
+}) => {
     return (
         <FormulaTreeNode
             formula={formula}
@@ -111,14 +136,26 @@ const drawFormula = (
     );
 };
 
-/**
- * Draws the Seperator between the right and left Formulas
- * @param {number} x the x coordinate on which the seperator is drawn
- * @param {number} y the y coordinate on which the seperator is drawn
- * @param {boolean} isClosed whether or not the current node is closed
- * @returns {any} HTML
- */
-const drawSeperator = (x: number, y: number, isClosed: boolean) => {
+interface SeperatorProps {
+    /**
+     * the x coordinate on which the seperator is drawn
+     */
+    x: number;
+    /**
+     * the y coordinate on which the seperator is drawn
+     */
+    y: number;
+    /**
+     * whether or not the current node is closed
+     */
+    isClosed: boolean;
+}
+
+const Seperator: preact.FunctionalComponent<SeperatorProps> = ({
+    x,
+    y,
+    isClosed,
+}) => {
     return (
         <text
             class={classMap({
@@ -188,24 +225,28 @@ const getSequence = (
             id: `l${index}`,
         };
         nodeArray.push(
-            drawFormula(
-                formulaLayoutNode,
-                node,
-                selectedListIndex,
-                totalSize,
-                selectFormulaCallback,
-                selected,
-            ),
+            <Formula
+                formula={formulaLayoutNode}
+                node={node}
+                selectedListIndex={selectedListIndex}
+                xCoord={totalSize}
+                selectFormulaCallback={selectFormulaCallback}
+                selected={selected}
+            />,
         );
         totalSize +=
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
-        if (index < leftFormulas.length - 1) {
-            nodeArray.push(drawComma(totalSize, node.y, node.data.isClosed));
-            totalSize += NODE_SPACING;
-        }
+        if (index === leftFormulas.length - 1) return;
+
+        nodeArray.push(
+            <Comma x={totalSize} y={node.y} isClosed={node.data.isClosed} />,
+        );
+        totalSize += NODE_SPACING;
     });
 
-    nodeArray.push(drawSeperator(totalSize, node.y, node.data.isClosed));
+    nodeArray.push(
+        <Seperator x={totalSize} y={node.y} isClosed={node.data.isClosed} />,
+    );
     totalSize += SEPERATOR_SPACING;
 
     rightFormulas.forEach((elem, index) => {
@@ -214,21 +255,23 @@ const getSequence = (
             id: `r${index}`,
         };
         nodeArray.push(
-            drawFormula(
-                formulaLayoutNode,
-                node,
-                selectedListIndex,
-                totalSize,
-                selectFormulaCallback,
-                selected,
-            ),
+            <Formula
+                formula={formulaLayoutNode}
+                node={node}
+                selectedListIndex={selectedListIndex}
+                xCoord={totalSize}
+                selectFormulaCallback={selectFormulaCallback}
+                selected={selected}
+            />,
         );
         totalSize +=
             estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
-        if (index < rightFormulas.length - 1) {
-            nodeArray.push(drawComma(totalSize, node.y, node.data.isClosed));
-            totalSize += NODE_SPACING;
-        }
+        if (index === rightFormulas.length - 1) return;
+
+        nodeArray.push(
+            <Comma x={totalSize} y={node.y} isClosed={node.data.isClosed} />,
+        );
+        totalSize += NODE_SPACING;
     });
 
     return nodeArray;

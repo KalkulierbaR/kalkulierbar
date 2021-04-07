@@ -75,8 +75,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
         } else if (selectedNodeId === undefined) {
             setSelectedNodeId(newNode.id);
         } else if (
-            leafSelection === true &&
-            selectedMove !== undefined &&
+            leafSelection && selectedMove !== undefined &&
             getLeaves(state.nodes, state.nodes[selectedNodeId]).includes(
                 newNode.id,
             )
@@ -112,9 +111,8 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
      * @returns {void}
      */
     const sendPrefix = (prefix: number) => {
-        if (selectedNodeId === undefined) {
-            return;
-        }
+        if (selectedNodeId === undefined) return;
+
         const leaves = getLeaves(state.nodes, state.nodes[selectedNodeId]);
         if (leaves.length > 1) {
             setLeafSelection(true);
@@ -174,9 +172,8 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
      * @returns {void}
      */
     const saveStatisticsCallback = (userName: string) => {
-        if (userName === "") {
-            return;
-        }
+        if (userName === "") return;
+
         saveStatistics(server, calculus, state, notificationHandler, userName);
         setShowSaveDialog(false);
     };
