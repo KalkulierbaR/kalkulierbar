@@ -10,7 +10,7 @@ import { LayoutItem } from "../../../types/layout";
 import { classMap } from "../../../util/class-map";
 import { parseFormula } from "../../../util/sequent";
 import { estimateSVGTextWidth } from "../../../util/text-width";
-import FormulaTreeNode from "../../calculus/sequent/formulaNode";
+import FormulaTreeNode from "../../calculus/sequent/formula-node";
 
 import * as style from "./style.scss";
 
