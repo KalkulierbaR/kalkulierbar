@@ -60,7 +60,7 @@ const OptionList: preact.FunctionalComponent<Props> = ({
                 <div class={`card ${className}`}>
                     <p class={style.originList}>
                         <code class={style.formula}>
-                            {// FIXME: What does this do?
+                            {// Sequent calculus
                             parseFormula(
                                 listIndex?.charAt(0) === "l"
                                     ? node.leftFormulas[
