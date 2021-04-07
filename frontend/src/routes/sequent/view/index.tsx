@@ -267,6 +267,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         newFormula: FormulaTreeLayoutNode,
         nodeId: number,
     ) => {
+        // FIXME: The event should be a param
         event?.stopPropagation();
         if (newFormula.id === selectedListIndex) {
             resetSelection();

@@ -119,35 +119,35 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
      * @returns {void}
      */
     const sendPrefix = (prefix: number) => {
-        if (selectedNodeId !== undefined) {
-            const leaves = getLeaves(state.nodes, state.nodes[selectedNodeId]);
-            if (leaves.length > 1) {
-                setLeafSelection(true);
-                setSelectedMove({
+        if (selectedNodeId === undefined) return;
+
+        const leaves = getLeaves(state.nodes, state.nodes[selectedNodeId]);
+        if (leaves.length > 1) {
+            setLeafSelection(true);
+            setSelectedMove({
+                type: selectedMove?.type,
+                nodeID: selectedNodeId,
+                leafID: selectedMove?.leafID,
+                prefix,
+            });
+        } else {
+            sendMove(
+                server,
+                calculus,
+                state,
+                {
                     type: selectedMove?.type,
                     nodeID: selectedNodeId,
-                    leafID: selectedMove?.leafID,
+                    leafID: leaves[0],
                     prefix,
-                });
-            } else {
-                sendMove(
-                    server,
-                    calculus,
-                    state,
-                    {
-                        type: selectedMove?.type,
-                        nodeID: selectedNodeId,
-                        leafID: leaves[0],
-                        prefix,
-                    },
-                    onChange,
-                    notificationHandler,
-                );
-                setSelectedNodeId(undefined);
-                setSelectedMove(undefined);
-            }
-            setShowPrefixDialog(false);
+                },
+                onChange,
+                notificationHandler,
+            );
+            setSelectedNodeId(undefined);
+            setSelectedMove(undefined);
         }
+        setShowPrefixDialog(false);
     };
 
     useEffect(() => {
@@ -180,16 +180,10 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
      * @returns {void}
      */
     const saveStatisticsCallback = (userName: string) => {
-        if (userName !== "") {
-            saveStatistics(
-                server,
-                calculus,
-                state,
-                notificationHandler,
-                userName,
-            );
-            setShowSaveDialog(false);
-        }
+        if (userName === "") return;
+
+        saveStatistics(server, calculus, state, notificationHandler, userName);
+        setShowSaveDialog(false);
     };
 
     return (
