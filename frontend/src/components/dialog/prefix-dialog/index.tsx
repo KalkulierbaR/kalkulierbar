@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { useState } from "preact/hooks";
 
 import Dialog from "..";
 import { NotificationHandler } from "../../../types/app/notification";
@@ -64,27 +65,21 @@ const PrefixDialog: preact.FunctionalComponent<Props> = ({
 }) => {
     const { smallScreen } = useAppState();
 
+    const [prefixInput, setPrefixInput] = useState("");
+
     /**
      * Submit the manual prefix by the user
      * @returns {void}
      */
     const submitPrefix = () => {
-        // FIXME: Use state instead of DOM-read (and never read DOM, ever)
-        const textInput = document.getElementById("prefix");
-        if (
-            !(
-                textInput &&
-                textInput instanceof HTMLInputElement &&
-                textInput.value
-            )
-        ) {
+        if (prefixInput.length === 0) {
             return;
         }
-        if (isNaN(+textInput.value)) {
+        if (isNaN(+prefixInput)) {
             notificationHandler.error("Only numbers are allowed as prefixes.");
             return;
         }
-        submitPrefixCallback(Number(textInput.value));
+        submitPrefixCallback(Number(prefixInput));
     };
 
     /**
@@ -124,12 +119,13 @@ const PrefixDialog: preact.FunctionalComponent<Props> = ({
                 </p>
             )}
             <TextInput
-                id={"prefix"}
                 label={"prefix := "}
                 inline={true}
                 onKeyDown={onKeyDown}
                 onFocus={onFocus}
                 autoFocus={!smallScreen}
+                syncValue={prefixInput}
+                onChange={setPrefixInput}
             />
             <Btn onClick={submitPrefix} label={submitLabel} />
         </Dialog>
