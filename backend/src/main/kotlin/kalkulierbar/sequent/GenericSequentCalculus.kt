@@ -1,11 +1,13 @@
-package kalkulierbar.sequentCalculus
+package kalkulierbar.sequent
 
 import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
-import kotlin.math.sqrt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
+import kotlin.math.sqrt
 
 interface GenericSequentCalculus
 
@@ -24,7 +26,7 @@ interface GenericSequentCalculusState {
             if (node.parent == null) {
                 break
             }
-            node = tree.get(node.parent!!)
+            node = tree[node.parent!!]
         }
     }
 
@@ -36,28 +38,28 @@ interface GenericSequentCalculusState {
     fun getWidth(nodeID: Int): Int {
         val node = tree[nodeID]
         return if (node.children.isEmpty())
-                1
-            else
-                node.children.sumBy { getWidth(it) }
+            1
+        else
+            node.children.sumBy { getWidth(it) }
     }
 
     /**
-    * Returns the maxmimum depth of the tree specified by nodeID
-    * @param nodeID the node id of the root
-    * @return the width of the tree
-    */
+     * Returns the maxmimum depth of the tree specified by nodeID
+     * @param nodeID the node id of the root
+     * @return the width of the tree
+     */
     fun getDepth(nodeID: Int): Int {
         val node = tree[nodeID]
         return if (node.children.isEmpty())
-                1
-            else
-                node.children.maxBy { getDepth(it) }!! + 1
+            1
+        else
+            node.children.maxByOrNull { getDepth(it) }!! + 1
     }
 }
 
 val GenericSequentCalculusNodeModule = SerializersModule {
     polymorphic(GenericSequentCalculusNode::class) {
-        TreeNode::class with TreeNode.serializer()
+        subclass(TreeNode::class)
     }
 }
 
@@ -70,13 +72,14 @@ interface GenericSequentCalculusNode {
     val lastMove: SequentCalculusMove?
 
     val isLeaf
-        get() = children.size == 0
+        get() = children.isEmpty()
 
     override fun toString(): String
 }
 
 @Serializable
 @SerialName("TreeNode")
+@Suppress("LongParameterList")
 class TreeNode(
     override var parent: Int?,
     override var children: Array<Int>,

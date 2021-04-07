@@ -36,60 +36,113 @@ class TestFOLogic {
     @BeforeTest
     fun before() {
         r1 = Relation("R1", listOf(QuantifiedVariable("Abc")))
-        r2 = Relation("NewRel",
-                listOf(
-                        Constant("c"),
-                        Function("f",
-                                listOf(Constant("d"),
-                                        QuantifiedVariable("X")))))
-        r3 = Relation("Aefjwadg",
-                listOf(
-                        Function("g",
-                                listOf(
-                                        Function("f",
-                                                listOf(Constant("c"), Constant("k")))))))
+        r2 = Relation(
+            "NewRel",
+            listOf(
+                Constant("c"),
+                Function(
+                    "f",
+                    listOf(
+                        Constant("d"),
+                        QuantifiedVariable("X")
+                    )
+                )
+            )
+        )
+        r3 = Relation(
+            "Aefjwadg",
+            listOf(
+                Function(
+                    "g",
+                    listOf(
+                        Function(
+                            "f",
+                            listOf(Constant("c"), Constant("k"))
+                        )
+                    )
+                )
+            )
+        )
 
         u1 = UniversalQuantifier("X", Or(Var("X"), Not(Var("X"))), mutableListOf())
-        u2 = UniversalQuantifier("X",
-                ExistentialQuantifier("Y",
-                        UniversalQuantifier("Z",
-                                And(
-                                        Relation("R",
-                                                listOf(QuantifiedVariable("X"),
-                                                        QuantifiedVariable("Y"))),
-                                        Relation("R",
-                                                listOf(QuantifiedVariable("Y"),
-                                                        QuantifiedVariable("Z")))),
-                                mutableListOf()),
-                        mutableListOf()),
-                mutableListOf())
-        u3 = UniversalQuantifier("Number1",
-                ExistentialQuantifier("Number2",
-                        Relation("Greater",
-                                listOf(QuantifiedVariable("Number1"),
-                                        QuantifiedVariable("Number2"))),
-                        mutableListOf()),
-                mutableListOf())
+        u2 = UniversalQuantifier(
+            "X",
+            ExistentialQuantifier(
+                "Y",
+                UniversalQuantifier(
+                    "Z",
+                    And(
+                        Relation(
+                            "R",
+                            listOf(
+                                QuantifiedVariable("X"),
+                                QuantifiedVariable("Y")
+                            )
+                        ),
+                        Relation(
+                            "R",
+                            listOf(
+                                QuantifiedVariable("Y"),
+                                QuantifiedVariable("Z")
+                            )
+                        )
+                    ),
+                    mutableListOf()
+                ),
+                mutableListOf()
+            ),
+            mutableListOf()
+        )
+        u3 = UniversalQuantifier(
+            "Number1",
+            ExistentialQuantifier(
+                "Number2",
+                Relation(
+                    "Greater",
+                    listOf(
+                        QuantifiedVariable("Number1"),
+                        QuantifiedVariable("Number2")
+                    )
+                ),
+                mutableListOf()
+            ),
+            mutableListOf()
+        )
 
         e1 = ExistentialQuantifier("C", Not(Relation("Q", listOf(QuantifiedVariable("C")))), mutableListOf())
-        e2 = ExistentialQuantifier("X",
-                UniversalQuantifier("Y",
-                        Relation("=",
-                                listOf(
-                                        QuantifiedVariable("Y"),
-                                        Function("m",
-                                                listOf(QuantifiedVariable("X"),
-                                                        QuantifiedVariable("Y"))))),
-                        mutableListOf()),
-                mutableListOf())
-        e3 = ExistentialQuantifier("El",
-                Impl(
-                        Relation("P", listOf(QuantifiedVariable("El"))),
-                        UniversalQuantifier("Y",
-                                Relation("P", listOf(QuantifiedVariable("Y"))),
-                                mutableListOf())
+        e2 = ExistentialQuantifier(
+            "X",
+            UniversalQuantifier(
+                "Y",
+                Relation(
+                    "=",
+                    listOf(
+                        QuantifiedVariable("Y"),
+                        Function(
+                            "m",
+                            listOf(
+                                QuantifiedVariable("X"),
+                                QuantifiedVariable("Y")
+                            )
+                        )
+                    )
                 ),
-                mutableListOf())
+                mutableListOf()
+            ),
+            mutableListOf()
+        )
+        e3 = ExistentialQuantifier(
+            "El",
+            Impl(
+                Relation("P", listOf(QuantifiedVariable("El"))),
+                UniversalQuantifier(
+                    "Y",
+                    Relation("P", listOf(QuantifiedVariable("Y"))),
+                    mutableListOf()
+                )
+            ),
+            mutableListOf()
+        )
     }
 
     @Test

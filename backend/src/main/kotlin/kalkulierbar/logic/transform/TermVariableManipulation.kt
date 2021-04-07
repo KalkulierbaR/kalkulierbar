@@ -7,7 +7,7 @@ import kalkulierbar.logic.Function
 import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Quantifier
 
-class VariableInstantiator(val replacementMap: Map<String, FirstOrderTerm>) : FirstOrderTermVisitor<FirstOrderTerm>() {
+class VariableInstantiator(private val replacementMap: Map<String, FirstOrderTerm>) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     companion object {
         /**
@@ -45,7 +45,7 @@ class VariableInstantiator(val replacementMap: Map<String, FirstOrderTerm>) : Fi
     override fun visit(node: Constant) = node
 
     /**
-     * Apply transformation recusively on function arguments
+     * Apply transformation recursively on function arguments
      * @param node Function encountered
      * @return Function with transformed arguments
      */
@@ -56,7 +56,7 @@ class VariableInstantiator(val replacementMap: Map<String, FirstOrderTerm>) : Fi
     }
 }
 
-class VariableSuffixAppend(val suffix: String) : FirstOrderTermVisitor<FirstOrderTerm>() {
+class VariableSuffixAppend(private val suffix: String) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     /**
      * Append the suffix to a Variable
@@ -93,7 +93,7 @@ class VariableSuffixAppend(val suffix: String) : FirstOrderTermVisitor<FirstOrde
  *        Everything after the first occurrence of this string will be removed
  *        (including the marker itself)
  */
-class VariableSuffixStripper(val marker: String) : FirstOrderTermVisitor<FirstOrderTerm>() {
+class VariableSuffixStripper(private val marker: String) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     /**
      * Remove a suffix from a Variable
@@ -164,11 +164,11 @@ class TermContainsVariable(val variable: String) : FirstOrderTermVisitor<Boolean
 /**
  * Registers newly created variables in terms with their respective quantifiers
  * Variables will be bound to the innermost matching quantifier
- * @param quantifers List of quantifiers in whose scope the term in question resides
+ * @param quantifiers List of quantifiers in whose scope the term in question resides
  * @param enforceUnique Set to true to ensure no variable hiding is taking place
  *        (i.e. binding quantifiers are unambiguous)
  */
-class QuantifierLinker(val quantifiers: List<Quantifier>, val enforceUnique: Boolean) : FirstOrderTermVisitor<Unit>() {
+class QuantifierLinker(private val quantifiers: List<Quantifier>, private val enforceUnique: Boolean) : FirstOrderTermVisitor<Unit>() {
 
     /**
      * Match a QuantifiedVariable to its binding quantifier
@@ -177,12 +177,16 @@ class QuantifierLinker(val quantifiers: List<Quantifier>, val enforceUnique: Boo
     override fun visit(node: QuantifiedVariable) {
         val matchingQuantifiers = quantifiers.filter { it.varName == node.spelling }
 
-        if (matchingQuantifiers.size == 0)
-            throw FormulaConversionException("Error linking variables to quantifiers: " +
-                "Variable '${node.spelling}' is not bound by any quantifier")
+        if (matchingQuantifiers.isEmpty())
+            throw FormulaConversionException(
+                "Error linking variables to quantifiers: " +
+                    "Variable '${node.spelling}' is not bound by any quantifier"
+            )
         else if (matchingQuantifiers.size > 1 && enforceUnique)
-            throw FormulaConversionException("Error linking variables to quantifiers: " +
-                "Variable '${node.spelling}' is bound by more than one quantifier")
+            throw FormulaConversionException(
+                "Error linking variables to quantifiers: " +
+                    "Variable '${node.spelling}' is bound by more than one quantifier"
+            )
 
         // The last-defined quantifier is the binding one for the variable occurrence
         matchingQuantifiers[matchingQuantifiers.size - 1].boundVariables.add(node)

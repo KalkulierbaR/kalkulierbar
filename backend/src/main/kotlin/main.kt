@@ -1,19 +1,13 @@
 package main.kotlin
 
 import io.javalin.Javalin
-import java.sql.*
-import kalkulierbar.ApiMisuseException
-import kalkulierbar.Calculus
-import kalkulierbar.KBAR_DEFAULT_PORT
-import kalkulierbar.KalkulierbarException
-import kalkulierbar.StatisticCalculus
-import kalkulierbar.Statistics
+import kalkulierbar.*
 import kalkulierbar.dpll.DPLL
 import kalkulierbar.nonclausaltableaux.NonClausalTableaux
 import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.PropositionalResolution
-import kalkulierbar.sequentCalculus.fosc.FOSC
-import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.sequent.fosc.FOSC
+import kalkulierbar.sequent.psc.PSC
 import kalkulierbar.signedtableaux.SignedModalTableaux
 import kalkulierbar.sqlite.DatabaseHandler
 import kalkulierbar.tableaux.FirstOrderTableaux
@@ -24,15 +18,15 @@ import statekeeper.StateKeeper
 
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
-        PropositionalTableaux(),
-        PropositionalResolution(),
-        FirstOrderTableaux(),
-        FirstOrderResolution(),
-        DPLL(),
-        NonClausalTableaux(),
-        PSC(),
-        FOSC(),
-        SignedModalTableaux()
+    PropositionalTableaux(),
+    PropositionalResolution(),
+    FirstOrderTableaux(),
+    FirstOrderResolution(),
+    DPLL(),
+    NonClausalTableaux(),
+    PSC(),
+    FOSC(),
+    SignedModalTableaux()
 )
 
 fun main(args: Array<String>) {
@@ -73,7 +67,7 @@ fun initDatabase(endpoints: Set<Calculus>) {
  * @param port Port number to run the local server at
  * @param endpoints Set of active Calculi to serve
  */
-@Suppress("ThrowsCount", "MagicNumber", "LongMethod")
+@Suppress("ThrowsCount", "MagicNumber", "LongMethod", "ComplexMethod")
 fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false) {
 
     val host = if (listenGlobally) "0.0.0.0" else "localhost"
@@ -86,10 +80,12 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         config.server {
             // Create and configure Jetty server
             Server().apply {
-                connectors = arrayOf(ServerConnector(this).apply {
-                    this.host = host
-                    this.port = port
-                })
+                connectors = arrayOf(
+                    ServerConnector(this).apply {
+                        this.host = host
+                        this.port = port
+                    }
+                )
             }
         }
     }
@@ -105,10 +101,12 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
     // Serve a small overview at the root endpoint listing all active calculus identifiers
     app.get("/") { ctx ->
         val ids = endpoints.map { it.identifier }
-        ctx.result("""KalkulierbaR API Server
+        ctx.result(
+            """KalkulierbaR API Server
             |
             |Available calculus endpoints:
-            |${ids.joinToString("\n")}""".trimMargin())
+            |${ids.joinToString("\n")}""".trimMargin()
+        )
     }
 
     // Create API methods for each calculus
@@ -117,8 +115,10 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
 
         // Small documentation at the main calculus endpoint
         app.get("/$name") { ctx ->
-            ctx.result("""Calculus "$name" loaded.
-                |Interact via the /parse /move /close and /validate endpoints""".trimMargin())
+            ctx.result(
+                """Calculus "$name" loaded.
+                |Interact via the /parse /move /close and /validate endpoints""".trimMargin()
+            )
         }
 
         // Parse endpoint takes formula parameter and passes it to calculus implementation
@@ -146,7 +146,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         // Close endpoint takes state parameter value and passes it to calculus implementation
         app.post("/$name/close") { ctx ->
             val state = ctx.formParam("state")
-                    ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
+                ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
             ctx.result(endpoint.checkClose(state))
         }
 
@@ -155,7 +155,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
             // Get statistics for a calculus and a formula
             app.post("/$name/statistics") { ctx ->
                 val state = ctx.formParam("state")
-                        ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
+                    ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
 
                 // Read the statistics which are currently saved in the database (saved as Json-Strings)
                 val statisticsAsStrings = DatabaseHandler.query(endpoint.identifier, endpoint.getStartingFormula(state))
@@ -177,7 +177,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
                 val rootFormula = endpoint.getStartingFormula(state)
                 val statistic = endpoint.getStatistic(state, userName)
                 DatabaseHandler.insert(identifier, rootFormula, statistic)
-                ctx.result("name: " + userName)
+                ctx.result("name: $userName")
             }
         }
     }
@@ -189,33 +189,33 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
 
     app.post("/admin/checkCredentials") { ctx ->
         val mac = ctx.formParam("mac")
-                    ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
+            ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
         ctx.result(StateKeeper.checkCredentials(mac))
     }
 
     app.post("/admin/setCalculusState") { ctx ->
         val calculus = ctx.formParam("calculus")
-                    ?: throw ApiMisuseException("POST parameter 'calculus' with calculus name must be present")
+            ?: throw ApiMisuseException("POST parameter 'calculus' with calculus name must be present")
         val enable = ctx.formParam("enable")
-                    ?: throw ApiMisuseException("POST parameter 'enable' with calculus state must be present")
+            ?: throw ApiMisuseException("POST parameter 'enable' with calculus state must be present")
         val mac = ctx.formParam("mac")
-                    ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
+            ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
         ctx.result(StateKeeper.setCalculusState(calculus, enable, mac))
     }
 
     app.post("/admin/addExample") { ctx ->
         val example = ctx.formParam("example")
-                    ?: throw ApiMisuseException("POST parameter 'example' with example data must be present")
+            ?: throw ApiMisuseException("POST parameter 'example' with example data must be present")
         val mac = ctx.formParam("mac")
-                    ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
+            ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
         ctx.result(StateKeeper.addExample(example, mac))
     }
 
     app.post("/admin/delExample") { ctx ->
         val exampleID = ctx.formParam("exampleID")
-                    ?: throw ApiMisuseException("POST parameter 'exampleID' must be present")
+            ?: throw ApiMisuseException("POST parameter 'exampleID' must be present")
         val mac = ctx.formParam("mac")
-                    ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
+            ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
         ctx.result(StateKeeper.delExample(exampleID, mac))
     }
 }
@@ -229,12 +229,12 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
  * @return Value associated with the parameter key, null if not found and optional
  */
 fun getParam(map: Map<String, List<String>>, key: String, optional: Boolean = false): String? {
-    val lst = map.get(key)
+    val lst = map[key]
 
     if (lst == null && !optional)
         throw ApiMisuseException("POST parameter '$key' needs to be present")
     else if (lst == null)
         return null
 
-    return lst.get(0)
+    return lst[0]
 }

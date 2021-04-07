@@ -1,10 +1,10 @@
-package kalkulierbar.sequentCalculus.moveImplementations
+package kalkulierbar.sequent.moveImplementations
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.*
-import kalkulierbar.sequentCalculus.*
-import kalkulierbar.sequentCalculus.GenericSequentCalculusState
-import kalkulierbar.sequentCalculus.TreeNode
+import kalkulierbar.sequent.*
+import kalkulierbar.sequent.GenericSequentCalculusState
+import kalkulierbar.sequent.TreeNode
 /**
  * Rule Ax is applied, if formulas of the same kind are on both sides of the Node.
  * @param state: GenericSequentCalculusState state to apply move on
@@ -27,8 +27,8 @@ fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalc
             val newLeaf = TreeNode(
                 nodeID,
                 emptyArray(),
-                mutableListOf<LogicNode>(),
-                mutableListOf<LogicNode>(),
+                mutableListOf(),
+                mutableListOf(),
                 true,
                 Ax(nodeID)
             )
@@ -53,8 +53,8 @@ fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
 
     checkRight(state, nodeID, listIndex)
 
-    var leaf = state.tree[nodeID]
-    val formula = leaf.rightFormulas.get(listIndex)
+    val leaf = state.tree[nodeID]
+    val formula = leaf.rightFormulas[listIndex]
 
     if (formula !is Not)
         throw IllegalMove("Rule notRight can only be applied on a negation")
@@ -64,7 +64,7 @@ fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     val newRightFormula = leaf.rightFormulas.toMutableList()
     newRightFormula.removeAt(listIndex)
 
-    var newLeaf = TreeNode(
+    val newLeaf = TreeNode(
         nodeID,
         newLeftFormula.distinct().toMutableList(),
         newRightFormula.distinct().toMutableList(),
@@ -87,8 +87,8 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
 
     checkLeft(state, nodeID, listIndex)
 
-    var leaf = state.tree[nodeID]
-    val formula = leaf.leftFormulas.get(listIndex)
+    val leaf = state.tree[nodeID]
+    val formula = leaf.leftFormulas[listIndex]
 
     if (formula !is Not)
         throw IllegalMove("Rule notLeft can only be applied on a negation")
@@ -98,7 +98,7 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val newRightFormula = leaf.rightFormulas.toMutableList()
     newRightFormula.add(formula.child)
 
-    var newLeaf = TreeNode(
+    val newLeaf = TreeNode(
         nodeID,
         newLeftFormula.distinct().toMutableList(),
         newRightFormula.distinct().toMutableList(),
@@ -111,7 +111,7 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
 
 /**
  * Rule OrRight is applied, if the LogicNode is in rightFormula of Node and is of type OR  .
- * The left and right formula of the logicNode will be seperated and added to the right formula of the Node
+ * The left and right formula of the logicNode will be separated and added to the right formula of the Node
  * @param state: GenericSequentCalculusState state to apply move on
  * @param nodeID: ID of node to apply move on
  * @param listIndex: Index of the formula(logicNode) to which move should be applied.
@@ -121,8 +121,8 @@ fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
 
     checkRight(state, nodeID, listIndex)
 
-    var leaf = state.tree[nodeID]
-    val formula = leaf.rightFormulas.get(listIndex)
+    val leaf = state.tree[nodeID]
+    val formula = leaf.rightFormulas[listIndex]
 
     if (formula !is Or)
         throw IllegalMove("Rule orRight can only be applied on a disjunction")
@@ -145,7 +145,7 @@ fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
 
 /**
  * Rule OrLeft is applied, if the LogicNode is in LeftFormula of Node and is of type Or.
- * Node will be splited into 2 Nodes.
+ * Node will be split into 2 Nodes.
  *    LeftNode: RightChild of LeftNode will be same as RightChild of the Node.
  *            : LeftChild of LeftNode will have LeftChild of the LogicNode and LeftChild of the Node.
  *    RightNode: RightChild of RightNode will be same as RightChild of the Node.
@@ -159,8 +159,8 @@ fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int)
 
     checkLeft(state, nodeID, listIndex)
 
-    var leaf = state.tree[nodeID]
-    val formula = leaf.leftFormulas.get(listIndex)
+    val leaf = state.tree[nodeID]
+    val formula = leaf.leftFormulas[listIndex]
 
     if (formula !is Or)
         throw IllegalMove("Rule orLeft can only be applied on a disjunction")
@@ -196,7 +196,7 @@ fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int)
 
 /**
  * Rule AndRight is applied, if the LogicNode is in RightFormula of Node and  is of type AND.
- * Node will be splited into 2 Nodes.
+ * Node will be split into 2 Nodes.
  *    LeftNode: LeftChild of LeftNode will be same as LeftChild of the Node.
  *            : RightChild of LeftNode will have LeftChild of the LogicNode and RightChild of the Node.
  *    RightNode: LeftChild of RightNode will be same as LeftChild of the Node.
@@ -211,7 +211,7 @@ fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     checkRight(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
-    val formula = leaf.rightFormulas.get(listIndex)
+    val formula = leaf.rightFormulas[listIndex]
 
     if (formula !is And)
         throw IllegalMove("Rule andRight can only be applied on a conjunction")
@@ -246,7 +246,7 @@ fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
 
 /**
  * Rule AndLeft is applied, if LogicNode is in LeftFormula of Node and is of type AND.
- * The left and right formula of the logicNode will be seperated and added to the left Child of the node,
+ * The left and right formula of the logicNode will be separated and added to the left Child of the node,
  * @param state: GenericSequentCalculusState state to apply move on
  * @param nodeID: ID of node to apply move on
  * @param listIndex: Index of the formula(LogicNode) to which move should be applied.
@@ -257,7 +257,7 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     checkLeft(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
-    val formula = leaf.leftFormulas.get(listIndex)
+    val formula = leaf.leftFormulas[listIndex]
 
     if (formula !is And)
         throw IllegalMove("Rule andLeft can only be applied on a conjunction")
@@ -280,7 +280,7 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
 
 /**
  * Rule ImpLeft is applied, if the LogicNode is the leftChild of node and is of type IMPL (Implication).
- * Node will be splitted into 2 nodes:
+ * Node will be split into 2 nodes:
  *  LeftNode: LeftChild of LeftNode will be same as leftChild of Node. (except the logicNode)
  *            RightChild of LeftNode will be same as rightChild of Node + LeftChild of logicNode
  *  RightNode: LeftChild of RightNode will be same as leftChild of Node + RightChild of logicNode
@@ -295,7 +295,7 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     checkLeft(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
-    val formula = leaf.leftFormulas.get(listIndex)
+    val formula = leaf.leftFormulas[listIndex]
 
     if (formula !is Impl)
         throw IllegalMove("Rule impLeft can only be applied on an implication")
@@ -341,7 +341,7 @@ fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     checkRight(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
-    val formula = leaf.rightFormulas.get(listIndex)
+    val formula = leaf.rightFormulas[listIndex]
 
     if (formula !is Impl)
         throw IllegalMove("Rule impRight can only be applied on an implication")
@@ -362,7 +362,7 @@ fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
 }
 
 /**
- * Check the following ristrictions:
+ * Check the following restrictions:
  *      1) If the nodeID is within the tree
  *      2) If the given node is a leaf
  *      3) If the logicNode is within the the right formula of the NOde
@@ -384,10 +384,10 @@ fun checkRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) 
 }
 
 /**
- * Check the following ristrictions:
+ * Check the following restrictions:
  *      1) If the nodeID is within the tree
  *      2) If the given node is a leaf
- *      3) If the logicNode is within the the leftformula of the Node
+ *      3) If the logicNode is within the the left formula of the Node
  * @param state: GenericSequentCalculusState state to apply move on
  * @param nodeID: ID of node to apply move on
  * @param listIndex: Index of the formula(logicNode) to which move should be applied.
@@ -459,26 +459,26 @@ fun applyPrune(state: GenericSequentCalculusState, nodeID: Int): GenericSequentC
         }
         state.tree.removeAt(child)
         // Update left side of removalNode 
-        for (i in 0..(child - 1)) {
-            var currentNode = state.tree.elementAt(i)
+        for (i in 0 until child) {
+            val currentNode = state.tree.elementAt(i)
 
-            for (j in 0..(currentNode.children.size - 1)) {
+            for (j in currentNode.children.indices) {
                 if (currentNode.children[j] > child)
                     currentNode.children[j] -= 1
             }
         }
         // Update right side of removalNode
-        for (i in child..(state.tree.size - 1)) {
-            var currentNode = state.tree.elementAt(i)
+        for (i in child until state.tree.size) {
+            val currentNode = state.tree.elementAt(i)
 
-            for (j in 0..(currentNode.children.size - 1)) {
+            for (j in currentNode.children.indices) {
                 currentNode.children[j] -= 1
                 if (currentNode.parent != null && currentNode.parent!! > child)
                     currentNode.parent = currentNode.parent!! - 1
             }
         }
     }
-    node.children = emptyArray<Int>()
+    node.children = emptyArray()
     node.isClosed = false
     return state
 }

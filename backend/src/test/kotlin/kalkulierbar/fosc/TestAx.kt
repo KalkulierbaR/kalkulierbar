@@ -2,8 +2,8 @@ package kalkulierbar.fosc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequentCalculus.*
-import kalkulierbar.sequentCalculus.fosc.FOSC
+import kalkulierbar.sequent.*
+import kalkulierbar.sequent.fosc.FOSC
 import kotlin.test.*
 
 class TestAx {

@@ -72,7 +72,7 @@ abstract class DoNothingCollector : LogicNodeVisitor<Unit>() {
 
     /**
      * Visit a Relation
-     * Functionallity for FirstOrderTerms has to be implemented
+     * Functionality for FirstOrderTerms has to be implemented
      * @param node Relation to visit
      */
     override fun visit(node: Relation) {

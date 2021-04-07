@@ -9,6 +9,8 @@ import kalkulierbar.StatisticCalculus
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.ModalLogicParser
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
@@ -16,7 +18,12 @@ class SignedModalTableaux :
     JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, SignedModalTableauxParam>(),
     StatisticCalculus<SignedModalTableauxState> {
 
-    private val serializer = Json(context = FoTermModule + LogicModule + SignedModalTablueaxMoveModule)
+    override val serializer = Json {
+        serializersModule = FoTermModule + LogicModule + SignedModalTableauxMoveModule
+        encodeDefaults = true
+    }
+    override val stateSerializer = SignedModalTableauxState.serializer()
+    override val moveSerializer = SignedModalTableauxMove.serializer()
 
     override val identifier = "signed-modal-tableaux"
 
@@ -90,51 +97,9 @@ class SignedModalTableaux :
         return CloseMessage(state.nodes[0].isClosed, msg)
     }
 
-    /**
-     * Parses a JSON state representation into a TableauxState object
-     * @param json JSON state representation
-     * @return parsed state object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToState(json: String): SignedModalTableauxState {
-        try {
-            val parsed = serializer.parse(SignedModalTableauxState.serializer(), json)
-
-            // Ensure valid, unmodified state object
-            if (!parsed.verifySeal())
-                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
-
-            return parsed
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON state: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
-    /**
-     * Serializes internal state object to JSON
-     * @param state State object
-     * @return JSON state representation
-     */
     override fun stateToJson(state: SignedModalTableauxState): String {
         state.render()
-        state.computeSeal()
-        return serializer.stringify(SignedModalTableauxState.serializer(), state)
-    }
-
-    /*
-     * Parses a JSON move representation into a TableauxMove object
-     * @param json JSON move representation
-     * @return parsed move object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToMove(json: String): SignedModalTableauxMove {
-        try {
-            return serializer.parse(SignedModalTableauxMove.serializer(), json)
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON move: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
+        return super.stateToJson(state)
     }
 
     /*
@@ -145,7 +110,7 @@ class SignedModalTableaux :
     @Suppress("TooGenericExceptionCaught")
     override fun jsonToParam(json: String): SignedModalTableauxParam {
         try {
-            return serializer.parse(SignedModalTableauxParam.serializer(), json)
+            return serializer.decodeFromString(json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON Param: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -153,10 +118,10 @@ class SignedModalTableaux :
     }
 
     /**
-    * Calculates the statistics for a given proof
-    * @param state A closed state
-    * @return The statistics for the given state
-    */
+     * Calculates the statistics for a given proof
+     * @param state A closed state
+     * @return The statistics for the given state
+     */
     override fun getStatistic(state: String, name: String?): String {
         val statistic = SignedModalTableauxStatistic(jsonToState(state))
         if (name != null)
@@ -170,20 +135,20 @@ class SignedModalTableaux :
      * @return JSON statistics representation
      */
     override fun statisticToJson(statistic: Statistic): String {
-        return serializer.stringify(SignedModalTableauxStatistic.serializer(), (statistic as SignedModalTableauxStatistic))
+        return serializer.encodeToString(statistic as SignedModalTableauxStatistic)
     }
 
     /**
      * Parses a json object to Statistic
-     * @param statistic Statistics object
-     * @return JSON statistics representation
+     * @param json JSON statistics representation
+     * @return Statistics object
      */
     override fun jsonToStatistic(json: String): Statistic {
-        return serializer.parse(SignedModalTableauxStatistic.serializer(), json)
+        return serializer.decodeFromString(json)
     }
 
     /**
-     * Returns the intitial formula of the state.
+     * Returns the initial formula of the state.
      * @param state state representation
      * @return string representing the initial formula of the state
      */

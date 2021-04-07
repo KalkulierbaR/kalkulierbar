@@ -22,10 +22,10 @@ class Tokenizer {
         private var allowExtended = false
 
         /**
-	     * Splits a raw formula into its tokens, removes whitespace etc
-	     * @param formula Input formula to tokenize
-	     * @return list of extracted tokens
-	     */
+         * Splits a raw formula into its tokens, removes whitespace etc
+         * @param formula Input formula to tokenize
+         * @return list of extracted tokens
+         */
         fun tokenize(formula: String, extended: Boolean = false, positionInBaseString: Int = 0): MutableList<Token> {
             val tokens = mutableListOf<Token>()
             var i = 0
@@ -41,12 +41,12 @@ class Tokenizer {
         }
 
         /**
-	     * Extract a single token from a given formula at a given offset
-	     * @param formula formula to extract token from
-	     * @param index start offset of the token to extract
-	     * @param tokens list of tokens to append the new token to
-	     * @return start offset of the next token
-	     */
+         * Extract a single token from a given formula at a given offset
+         * @param formula formula to extract token from
+         * @param index start offset of the token to extract
+         * @param tokens list of tokens to append the new token to
+         * @return start offset of the next token
+         */
         @Suppress("ComplexMethod", "MagicNumber")
         private fun extractToken(formula: String, index: Int, tokens: MutableList<Token>, positionInBaseString: Int): Int {
             var i = index

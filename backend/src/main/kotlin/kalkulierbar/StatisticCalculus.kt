@@ -2,11 +2,11 @@ package kalkulierbar
 
 interface StatisticCalculus<State> {
     /**
-    * Calculates the statistics for a given proof
-    * @param state A closed state
-    * @param name the name of the user
-    * @return The statistics for the given state
-    */
+     * Calculates the statistics for a given proof
+     * @param state A closed state
+     * @param name the name of the user
+     * @return The statistics for the given state
+     */
     fun getStatistic(state: String, name: String?): String
 
     /**
@@ -24,7 +24,7 @@ interface StatisticCalculus<State> {
     fun jsonToStatistic(json: String): Statistic
 
     /**
-     * Returns the intitial formula of the state.
+     * Returns the initial formula of the state.
      * @param state state representation
      * @return string representing the initial formula of the state
      */

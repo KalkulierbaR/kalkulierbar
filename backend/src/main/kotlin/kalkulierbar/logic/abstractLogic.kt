@@ -3,22 +3,23 @@ package kalkulierbar.logic
 import kalkulierbar.logic.transform.LogicNodeVisitor
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 // Context object for logic formula serialization
 // Tells kotlinx.serialize about child types of LogicNode
 val LogicModule = SerializersModule {
     polymorphic(LogicNode::class) {
-        Var::class with Var.serializer()
-        Not::class with Not.serializer()
-        And::class with And.serializer()
-        Or::class with Or.serializer()
-        Impl::class with Impl.serializer()
-        Equiv::class with Equiv.serializer()
-        Relation::class with Relation.serializer()
-        ExistentialQuantifier::class with ExistentialQuantifier.serializer()
-        UniversalQuantifier::class with UniversalQuantifier.serializer()
-        Box::class with Box.serializer()
-        Diamond::class with Diamond.serializer()
+        subclass(Var::class)
+        subclass(Not::class)
+        subclass(And::class)
+        subclass(Or::class)
+        subclass(Equiv::class)
+        subclass(Relation::class)
+        subclass(ExistentialQuantifier::class)
+        subclass(UniversalQuantifier::class)
+        subclass(Box::class)
+        subclass(Diamond::class)
     }
 }
 

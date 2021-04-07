@@ -4,6 +4,7 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
 import kalkulierbar.parsers.FlexibleClauseSetParser
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 /**
@@ -15,7 +16,9 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
     override val identifier = "prop-tableaux"
 
-    private val serializer = Json(context = tableauxMoveModule)
+    override val serializer = Json { serializersModule = tableauxMoveModule; encodeDefaults = true }
+    override val stateSerializer = TableauxState.serializer()
+    override val moveSerializer = TableauxMove.serializer()
 
     /**
      * Parses a provided clause set as text into an initial internal state
@@ -24,12 +27,12 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      * @return parsed state object
      */
     override fun parseFormulaToState(formula: String, params: TableauxParam?): TableauxState {
-        if (params == null) {
+        return if (params == null) {
             val clauses = FlexibleClauseSetParser.parse(formula)
-            return TableauxState(clauses)
+            TableauxState(clauses)
         } else {
             val clauses = FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
-            return TableauxState(clauses, params.type, params.regular, params.backtracking)
+            TableauxState(clauses, params.type, params.regular, params.backtracking)
         }
     }
 
@@ -59,65 +62,15 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      */
     override fun checkCloseOnState(state: TableauxState) = state.getCloseMessage()
 
-    /**
-     * Parses a JSON state representation into a TableauxState object
-     * @param json JSON state representation
-     * @return parsed state object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    @kotlinx.serialization.UnstableDefault
-    override fun jsonToState(json: String): TableauxState {
-        try {
-            val parsed = serializer.parse(TableauxState.serializer(), json)
-
-            // Ensure valid, unmodified state object
-            if (!parsed.verifySeal())
-                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
-
-            return parsed
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON state: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
-    /**
-     * Serializes internal state object to JSON
-     * @param state State object
-     * @return JSON state representation
-     */
-    @kotlinx.serialization.UnstableDefault
-    override fun stateToJson(state: TableauxState): String {
-        state.computeSeal()
-        return serializer.stringify(TableauxState.serializer(), state)
-    }
-
-    /*
-     * Parses a JSON move representation into a TableauxMove object
-     * @param json JSON move representation
-     * @return parsed move object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    @kotlinx.serialization.UnstableDefault
-    override fun jsonToMove(json: String): TableauxMove {
-        try {
-            return serializer.parse(TableauxMove.serializer(), json)
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON move: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
     /*
      * Parses a JSON parameter representation into a TableauxParam object
      * @param json JSON parameter representation
      * @return parsed param object
      */
     @Suppress("TooGenericExceptionCaught")
-    @kotlinx.serialization.UnstableDefault
     override fun jsonToParam(json: String): TableauxParam {
         try {
-            return serializer.parse(TableauxParam.serializer(), json)
+            return serializer.decodeFromString(json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON params: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))

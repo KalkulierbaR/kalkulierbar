@@ -135,7 +135,7 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Synt
      */
     @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
-        if (other == null || !(other is Relation))
+        if (other == null || other !is Relation)
             return false
 
         if (spelling != other.spelling || arguments.size != other.arguments.size)
@@ -179,7 +179,7 @@ class UniversalQuantifier(
         if (other == null || other !is UniversalQuantifier)
             return false
 
-            if (this.varName != other.varName)
+        if (this.varName != other.varName)
             return false
 
         if (!this.child.synEq(other.child))
@@ -225,7 +225,7 @@ class ExistentialQuantifier(
         if (other == null || other !is ExistentialQuantifier)
             return false
 
-            if (this.varName != other.varName)
+        if (this.varName != other.varName)
             return false
 
         if (!this.child.synEq(other.child))

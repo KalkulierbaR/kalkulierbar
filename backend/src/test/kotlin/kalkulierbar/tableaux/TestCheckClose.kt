@@ -20,8 +20,8 @@ class TestCheckClose {
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(1, "a", true)
+            TableauxNode(0, "a", false),
+            TableauxNode(1, "a", true)
         )
 
         state.nodes.addAll(nodes)
@@ -42,10 +42,10 @@ class TestCheckClose {
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(0, "b", false),
-                TableauxNode(1, "a", true),
-                TableauxNode(2, "b", true)
+            TableauxNode(0, "a", false),
+            TableauxNode(0, "b", false),
+            TableauxNode(1, "a", true),
+            TableauxNode(2, "b", true)
         )
 
         state.nodes.addAll(nodes)
@@ -93,12 +93,12 @@ class TestCheckClose {
         var state = propTableaux.parseFormulaToState("a,b,c;!a;!b;!c", tableauxOpts)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(0, "b", false),
-                TableauxNode(0, "c", false),
-                TableauxNode(1, "a", true),
-                TableauxNode(2, "b", true),
-                TableauxNode(3, "c", true)
+            TableauxNode(0, "a", false),
+            TableauxNode(0, "b", false),
+            TableauxNode(0, "c", false),
+            TableauxNode(1, "a", true),
+            TableauxNode(2, "b", true),
+            TableauxNode(3, "c", true)
         )
 
         state.nodes.addAll(nodes)

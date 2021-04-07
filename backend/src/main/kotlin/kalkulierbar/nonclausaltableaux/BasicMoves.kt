@@ -226,11 +226,11 @@ fun applyClose(
     // Use user-supplied variable assignment if given, calculate MGU otherwise
     val unifier: Map<String, FirstOrderTerm>
     unifier = varAssign
-            ?: try {
-                Unification.unify(nodeRelation, closeRelation)
-            } catch (e: UnificationImpossible) {
-                throw IllegalMove("Cannot unify '$nodeRelation' and '$closeRelation': ${e.message}")
-            }
+        ?: try {
+            Unification.unify(nodeRelation, closeRelation)
+        } catch (e: UnificationImpossible) {
+            throw IllegalMove("Cannot unify '$nodeRelation' and '$closeRelation': ${e.message}")
+        }
 
     if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, nodeRelation, closeRelation))
         state.statusMessage = "The unifier you specified is not an MGU"
@@ -243,8 +243,10 @@ fun applyClose(
 
     // Check relations after instantiation
     if (!nodeRelation.synEq(closeRelation))
-        throw IllegalMove("Relations '$nodeRelation' and '$closeRelation' are" +
-                " not equal after variable instantiation")
+        throw IllegalMove(
+            "Relations '$nodeRelation' and '$closeRelation' are" +
+                " not equal after variable instantiation"
+        )
 
     // Close branch
     node.closeRef = closeID

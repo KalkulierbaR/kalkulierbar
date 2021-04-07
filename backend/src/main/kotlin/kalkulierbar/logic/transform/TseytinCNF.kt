@@ -33,7 +33,7 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
             val instance = TseytinCNF()
             val res = ClauseSet<String>()
 
-            val rootClause = Clause<String>(mutableListOf(Atom(instance.getName(formula), false)))
+            val rootClause = Clause(mutableListOf(Atom(instance.getName(formula), false)))
             res.add(rootClause)
 
             formula.accept(instance)

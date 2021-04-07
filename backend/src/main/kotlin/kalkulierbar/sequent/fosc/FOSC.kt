@@ -1,4 +1,4 @@
-package kalkulierbar.sequentCalculus.fosc
+package kalkulierbar.sequent.fosc
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
@@ -9,13 +9,15 @@ import kalkulierbar.StatisticCalculus
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.FirstOrderSequentParser
-import kalkulierbar.sequentCalculus.*
-import kalkulierbar.sequentCalculus.GenericSequentCalculus
-import kalkulierbar.sequentCalculus.GenericSequentCalculusNodeModule
-import kalkulierbar.sequentCalculus.SequentCalculusMove
-import kalkulierbar.sequentCalculus.SequentCalculusMoveModule
-import kalkulierbar.sequentCalculus.fosc.moveImplementations.*
-import kalkulierbar.sequentCalculus.moveImplementations.*
+import kalkulierbar.sequent.*
+import kalkulierbar.sequent.GenericSequentCalculus
+import kalkulierbar.sequent.GenericSequentCalculusNodeModule
+import kalkulierbar.sequent.SequentCalculusMove
+import kalkulierbar.sequent.SequentCalculusMoveModule
+import kalkulierbar.sequent.fosc.moveImplementations.*
+import kalkulierbar.sequent.moveImplementations.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
@@ -23,14 +25,20 @@ class FOSC :
     GenericSequentCalculus,
     JSONCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>(),
     StatisticCalculus<FOSCState> {
-    private val serializer = Json(context = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule)
     override val identifier = "fosc"
+
+    override val serializer = Json {
+        serializersModule = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule
+        encodeDefaults = true
+    }
+    override val stateSerializer = FOSCState.serializer()
+    override val moveSerializer = SequentCalculusMove.serializer()
 
     override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): FOSCState {
         val sequents = FirstOrderSequentParser.parse(formula)
         return FOSCState(
-                mutableListOf(TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())),
-                params?.showOnlyApplicableRules ?: false
+            mutableListOf(TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())),
+            params?.showOnlyApplicableRules ?: false
         )
     }
 
@@ -59,55 +67,9 @@ class FOSC :
 
     override fun checkCloseOnState(state: FOSCState): CloseMessage {
         return if (state.tree.all { it.isClosed })
-                CloseMessage(true, "The proof is closed and valid in First Order Logic")
-            else
-                CloseMessage(false, "Not all branches of the proof tree are closed")
-    }
-
-    /**
-     * Parses a JSON state representation into a TableauxState object
-     * @param json JSON state representation
-     * @return parsed state object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToState(json: String): FOSCState {
-        try {
-            val parsed = serializer.parse(FOSCState.serializer(), json)
-
-            // Ensure valid, unmodified state object
-            if (!parsed.verifySeal())
-                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
-
-            return parsed
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON state: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
-    /**
-     * Serializes internal state object to JSON
-     * @param state State object
-     * @return JSON state representation
-     */
-    override fun stateToJson(state: FOSCState): String {
-        state.computeSeal()
-        return serializer.stringify(FOSCState.serializer(), state)
-    }
-
-    /*
-     * Parses a JSON move representation into a TableauxMove object
-     * @param json JSON move representation
-     * @return parsed move object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToMove(json: String): SequentCalculusMove {
-        try {
-            return serializer.parse(SequentCalculusMove.serializer(), json)
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON move: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
+            CloseMessage(true, "The proof is closed and valid in First Order Logic")
+        else
+            CloseMessage(false, "Not all branches of the proof tree are closed")
     }
 
     /*
@@ -118,7 +80,7 @@ class FOSC :
     @Suppress("TooGenericExceptionCaught")
     override fun jsonToParam(json: String): SequentCalculusParam {
         try {
-            return serializer.parse(SequentCalculusParam.serializer(), json)
+            return serializer.decodeFromString(json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON params"
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -126,10 +88,10 @@ class FOSC :
     }
 
     /**
-    * Calculates the statistics for a given proof
-    * @param state A closed state
-    * @return The statistics for the given state
-    */
+     * Calculates the statistics for a given proof
+     * @param state A closed state
+     * @return The statistics for the given state
+     */
     override fun getStatistic(state: String, name: String?): String {
         val statistic = SequentCalculusStatistic(jsonToState(state))
         if (name != null)
@@ -143,20 +105,20 @@ class FOSC :
      * @return JSON statistics representation
      */
     override fun statisticToJson(statistic: Statistic): String {
-        return serializer.stringify(SequentCalculusStatistic.serializer(), (statistic as SequentCalculusStatistic))
+        return serializer.encodeToString(statistic as SequentCalculusStatistic)
     }
 
     /**
      * Parses a json object to Statistic
-     * @param statistic Statistics object
-     * @return JSON statistics representation
+     * @param json JSON statistics representation
+     * @return Statistics object
      */
     override fun jsonToStatistic(json: String): Statistic {
-        return serializer.parse(SequentCalculusStatistic.serializer(), json)
+        return serializer.decodeFromString(json)
     }
 
     /**
-     * Returns the intitial formula of the state.
+     * Returns the initial formula of the state.
      * @param state state representation
      * @return string representing the initial formula of the state
      */

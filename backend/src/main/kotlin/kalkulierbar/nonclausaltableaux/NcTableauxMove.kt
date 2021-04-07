@@ -6,17 +6,19 @@ import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 // Context object for move serialization
 // Tells kotlinx.serialize about child types of NcTableauxMove
 val NcMoveModule = SerializersModule {
     polymorphic(NcTableauxMove::class) {
-        AlphaMove::class with AlphaMove.serializer()
-        BetaMove::class with BetaMove.serializer()
-        GammaMove::class with GammaMove.serializer()
-        DeltaMove::class with DeltaMove.serializer()
-        CloseMove::class with CloseMove.serializer()
-        UndoMove::class with UndoMove.serializer()
+        subclass(AlphaMove::class)
+        subclass(BetaMove::class)
+        subclass(GammaMove::class)
+        subclass(DeltaMove::class)
+        subclass(CloseMove::class)
+        subclass(UndoMove::class)
     }
 }
 

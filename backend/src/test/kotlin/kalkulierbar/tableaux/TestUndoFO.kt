@@ -13,9 +13,9 @@ class TestUndoFO {
     var statesManual = mutableListOf<FoTableauxState>()
 
     val formula = mutableListOf<String>(
-            "\\all X: R(X) & R(c) & !R(c)",
-            "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-            "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))"
+        "\\all X: R(X) & R(c) & !R(c)",
+        "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
+        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))"
     )
 
     @BeforeTest

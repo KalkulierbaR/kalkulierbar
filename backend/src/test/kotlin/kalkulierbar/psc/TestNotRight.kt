@@ -3,8 +3,8 @@ package kalkulierbar.psc
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.Var
 import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.sequentCalculus.*
-import kalkulierbar.sequentCalculus.psc.PSC
+import kalkulierbar.sequent.*
+import kalkulierbar.sequent.psc.PSC
 import kotlin.test.*
 
 class TestNotRight {

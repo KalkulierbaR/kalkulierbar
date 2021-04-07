@@ -55,15 +55,15 @@ fun propagate(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID:
     // A node is considered a model if it contains only single-atom clauses
     // that do not contradict each other and contain no duplicates
     else if (
-            newClauses.all { it.size == 1 } &&
-            newClauses.map { it.atoms[0].lit }.distinct().size == newClauses.size
+        newClauses.all { it.size == 1 } &&
+        newClauses.map { it.atoms[0].lit }.distinct().size == newClauses.size
     ) {
         state.tree.add(TreeNode(propNodeID, NodeType.MODEL, "model", Identity()))
         propNode.children.add(state.tree.size - 1)
     }
 }
 
-@Suppress("ThrowsCount")
+@Suppress("ThrowsCount", "ComplexMethod")
 private fun checkPropagateRestrictions(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID: Int) {
     // Check branch validity
     if (branchID < 0 || branchID >= state.tree.size)

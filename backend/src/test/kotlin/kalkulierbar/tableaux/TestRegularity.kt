@@ -32,10 +32,10 @@ class TestRegularity {
         var state = instance.parseFormulaToState("a,b;!a;!b", opts)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(0, "b", false),
-                TableauxNode(2, "b", true),
-                TableauxNode(1, "a", true)
+            TableauxNode(0, "a", false),
+            TableauxNode(0, "b", false),
+            TableauxNode(2, "b", true),
+            TableauxNode(1, "a", true)
         )
 
         state = createState(nodes, state)
@@ -48,11 +48,11 @@ class TestRegularity {
         var state = instance.parseFormulaToState("a,b;!a;!b;a", opts)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(0, "b", false),
-                TableauxNode(1, "a", true),
-                TableauxNode(2, "b", true),
-                TableauxNode(4, "a", false)
+            TableauxNode(0, "a", false),
+            TableauxNode(0, "b", false),
+            TableauxNode(1, "a", true),
+            TableauxNode(2, "b", true),
+            TableauxNode(4, "a", false)
         )
 
         state = createState(nodes, state)
@@ -65,9 +65,9 @@ class TestRegularity {
         var state = instance.parseFormulaToState("true,false;!true", opts)
 
         val nodes = listOf(
-                TableauxNode(0, "true", false),
-                TableauxNode(0, "false", false),
-                TableauxNode(1, "true", true)
+            TableauxNode(0, "true", false),
+            TableauxNode(0, "false", false),
+            TableauxNode(1, "true", true)
         )
 
         state = createState(nodes, state)
@@ -93,8 +93,8 @@ class TestRegularity {
         var state = instance.parseFormulaToState("a,b;a;b;!a;!b", opts)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(1, "a", false)
+            TableauxNode(0, "a", false),
+            TableauxNode(1, "a", false)
         )
 
         state = createState(nodes, state)
@@ -107,10 +107,10 @@ class TestRegularity {
         var state = instance.parseFormulaToState("a,b;a;b;!a;!b", opts)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(1, "a", true),
-                TableauxNode(2, "b", false),
-                TableauxNode(3, "a", false)
+            TableauxNode(0, "a", false),
+            TableauxNode(1, "a", true),
+            TableauxNode(2, "b", false),
+            TableauxNode(3, "a", false)
         )
 
         state = createState(nodes, state)
@@ -123,11 +123,11 @@ class TestRegularity {
         var state = instance.parseFormulaToState("a,b;a;b;!a;!b", opts)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(0, "b", false),
-                TableauxNode(1, "b", false),
-                TableauxNode(2, "a", false),
-                TableauxNode(2, "b", false)
+            TableauxNode(0, "a", false),
+            TableauxNode(0, "b", false),
+            TableauxNode(1, "b", false),
+            TableauxNode(2, "a", false),
+            TableauxNode(2, "b", false)
         )
 
         state = createState(nodes, state)
@@ -140,9 +140,9 @@ class TestRegularity {
         var state = instance.parseFormulaToState("true;!true", opts)
 
         val nodes = listOf(
-                TableauxNode(0, "true", false),
-                TableauxNode(1, "true", true),
-                TableauxNode(2, "true", false)
+            TableauxNode(0, "true", false),
+            TableauxNode(1, "true", true),
+            TableauxNode(2, "true", false)
         )
 
         state = createState(nodes, state)
@@ -156,7 +156,7 @@ class TestRegularity {
         state = instance.applyMoveOnState(state, MoveExpand(0, 0))
 
         val expectedHash = "tableauxstate|UNCONNECTED|true|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
-                "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]|[]"
+            "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]|[]"
         assertEquals(expectedHash, state.getHash())
     }
 
@@ -167,7 +167,7 @@ class TestRegularity {
         state = instance.applyMoveOnState(state, MoveExpand(1, 0))
 
         val expectedHash = "tableauxstate|UNCONNECTED|true|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
-                "[true;p;null;-;i;o;(1)|a;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;-;l;o;()|c;p;1;-;l;o;()]|[]"
+            "[true;p;null;-;i;o;(1)|a;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;-;l;o;()|c;p;1;-;l;o;()]|[]"
         assertEquals(expectedHash, state.getHash())
     }
 

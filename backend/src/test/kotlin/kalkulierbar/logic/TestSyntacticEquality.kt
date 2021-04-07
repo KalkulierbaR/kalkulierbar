@@ -6,29 +6,24 @@ import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Relation
 import kalkulierbar.parsers.FirstOrderParser
 import kotlin.test.Test
-import kotlin.test.assert
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
 class TestSyntacticEquality {
 
-    private val equalPairs = listOf<Pair<String, String>>(
-            Pair("f(g(f(q)), c)", "f(g(f(q)), c)"),
-            Pair("a", "a"),
-            Pair("f(X)", "f(X)")
+    private val equalPairs = listOf(
+        Pair("f(g(f(q)), c)", "f(g(f(q)), c)"),
+        Pair("a", "a"),
+        Pair("f(X)", "f(X)")
     )
 
-    private val unequalPairs = listOf<Pair<String, String>>(
-            Pair("f(g(f(q)), c)", "f(g(f(q)), d)"),
-            Pair("a", "d"),
-            Pair("f(X)", "f(X, X)"),
-            Pair("f(g(f(c)))", "f(g(f(g(c))))"),
-            Pair("X", "Y"),
-            Pair("X", "x")
-    )
-
-    private val invalid = listOf(
-            "\\ex X: R(X) & R(sk-1)"
+    private val unequalPairs = listOf(
+        Pair("f(g(f(q)), c)", "f(g(f(q)), d)"),
+        Pair("a", "d"),
+        Pair("f(X)", "f(X, X)"),
+        Pair("f(g(f(c)))", "f(g(f(g(c))))"),
+        Pair("X", "Y"),
+        Pair("X", "x")
     )
 
     @Test

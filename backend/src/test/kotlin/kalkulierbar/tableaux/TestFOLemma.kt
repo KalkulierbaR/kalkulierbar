@@ -16,8 +16,8 @@ class TestFOLemma {
     var manualStates = mutableListOf<FoTableauxState>()
 
     val formula = listOf<String>(
-            "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-            "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) & R(A)))"
+        "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
+        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) & R(A)))"
     )
 
     @BeforeTest

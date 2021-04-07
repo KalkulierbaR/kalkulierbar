@@ -70,7 +70,7 @@ class TestPSCParser {
     fun testValidStrings() {
         for ((formula, expected) in valid) {
             val sequents = parser.parse(formula)
-            val node = kalkulierbar.sequentCalculus.TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())
+            val node = kalkulierbar.sequent.TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())
             assertEquals(expected, node.toString())
         }
     }

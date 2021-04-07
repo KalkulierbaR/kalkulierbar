@@ -1,18 +1,18 @@
-package kalkulierbar.sequentCalculus.psc
+package kalkulierbar.sequent.fosc
 
-import kalkulierbar.sequentCalculus.GenericSequentCalculusNode
-import kalkulierbar.sequentCalculus.GenericSequentCalculusState
+import kalkulierbar.sequent.GenericSequentCalculusNode
+import kalkulierbar.sequent.GenericSequentCalculusState
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
 @Serializable
-class PSCState(
+class FOSCState(
     override val tree: MutableList<GenericSequentCalculusNode> = mutableListOf<GenericSequentCalculusNode>(),
     override var showOnlyApplicableRules: Boolean = false
 ) : GenericSequentCalculusState, ProtectedState() {
     override var seal = ""
 
     override fun getHash(): String {
-        return "psc|${tree.joinToString()}|$showOnlyApplicableRules"
+        return "fosc|${tree.joinToString()}|$showOnlyApplicableRules"
     }
 }

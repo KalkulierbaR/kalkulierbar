@@ -38,8 +38,10 @@ fun <AtomType> verifyExpandRegularity(
 
     for (atom in processedClause) {
         if (lst.contains(atom))
-            throw IllegalMove("Expanding this clause would introduce a duplicate " +
-                "node '$atom' on the branch, making the tree irregular")
+            throw IllegalMove(
+                "Expanding this clause would introduce a duplicate " +
+                    "node '$atom' on the branch, making the tree irregular"
+            )
     }
 }
 
@@ -62,8 +64,10 @@ fun <AtomType> verifyExpandConnectedness(state: GenericTableauxState<AtomType>, 
             throw IllegalMove("No literal in this clause would be closeable, making the tree unconnected")
     } else if (state.type == TableauxType.STRONGLYCONNECTED) {
         if (!children.fold(false) { acc, id -> acc || state.nodeIsDirectlyCloseable(id) })
-            throw IllegalMove("""No literal in this clause would be closeable with '$leaf',
-                making the tree not strongly connected""")
+            throw IllegalMove(
+                """No literal in this clause would be closeable with '$leaf',
+                making the tree not strongly connected"""
+            )
     }
 }
 
@@ -191,8 +195,10 @@ private fun <AtomType> checkRegularitySubtree(
 fun <AtomType> ensureExpandability(state: GenericTableauxState<AtomType>, leafID: Int, clauseID: Int) {
     // Don't allow further expand moves if connectedness requires close moves to be applied first
     if (!checkConnectedness(state, state.type))
-        throw IllegalMove("The proof tree is currently not sufficiently connected, " +
-                "please close branches first to restore connectedness before expanding more leaves")
+        throw IllegalMove(
+            "The proof tree is currently not sufficiently connected, " +
+                "please close branches first to restore connectedness before expanding more leaves"
+        )
 
     // Verify that both leaf and clause are valid
     if (leafID >= state.nodes.size || leafID < 0)

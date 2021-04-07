@@ -13,10 +13,10 @@ class TestLemma {
     var states = mutableListOf<TableauxState>()
 
     val formula = mutableListOf<String>(
-            "a,a;!a,b;!b",
-            "a;b,b;!a,!b",
-            "!a,b;!b;a,b",
-            "a,b;!b;!a,b"
+        "a,a;!a,b;!b",
+        "a;b,b;!a,!b",
+        "!a,b;!b;a,b",
+        "a,b;!b;!a,b"
     )
 
     @BeforeTest

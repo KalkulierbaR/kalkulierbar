@@ -22,20 +22,20 @@ import kalkulierbar.logic.UniversalQuantifier
  * Note: I'm unsure if this implementation produces correct results
  *       if it is not applied as part of the Skolem Normal Form transformation,
  *       especially if only a subformula is being skolemized
- * @param nameBlacklist Set of names already used in the tree to avoid for skolem constants
+ * @param usedNames Set of names already used in the tree to avoid for skolem constants
  */
-class Skolemization(val nameBlacklist: Set<String>) : DoNothingVisitor() {
+class Skolemization(private val usedNames: Set<String>) : DoNothingVisitor() {
 
     companion object Companion {
         /**
          * Skolemize a formula
-         * @param forumula Formula to transform
+         * @param formula Formula to transform
          * @return Skolemized formula
          */
         fun transform(formula: LogicNode): LogicNode {
             // Collect all identifiers already in use and add to blacklist
-            val blacklist = IdentifierCollector.collect(formula)
-            val instance = Skolemization(blacklist)
+            val usedNames = IdentifierCollector.collect(formula)
+            val instance = Skolemization(usedNames)
             return formula.accept(instance)
         }
     }
@@ -65,8 +65,10 @@ class Skolemization(val nameBlacklist: Set<String>) : DoNothingVisitor() {
     override fun visit(node: ExistentialQuantifier): LogicNode {
 
         if (quantifierScope.size > quantifierScope.distinctBy { it.varName }.size)
-            throw FormulaConversionException("Double-bound universally quantified variable encountered " +
-                "during Skolemization")
+            throw FormulaConversionException(
+                "Double-bound universally quantified variable encountered " +
+                    "during Skolemization"
+            )
 
         val term = getSkolemTerm()
 
@@ -99,7 +101,7 @@ class Skolemization(val nameBlacklist: Set<String>) : DoNothingVisitor() {
         var skolemName = "sk$skolemCounter"
 
         // Ensure freshness
-        while (nameBlacklist.contains(skolemName)) {
+        while (usedNames.contains(skolemName)) {
             skolemCounter += 1
             skolemName = "sk$skolemCounter"
         }
@@ -123,8 +125,8 @@ class Skolemization(val nameBlacklist: Set<String>) : DoNothingVisitor() {
  * @param bindingQuantifiers List of quantifiers in effect for the term in question
  */
 class SkolemTermReplacer(
-    val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>,
-    val bindingQuantifiers: List<UniversalQuantifier>
+    private val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>,
+    private val bindingQuantifiers: List<UniversalQuantifier>
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     /**

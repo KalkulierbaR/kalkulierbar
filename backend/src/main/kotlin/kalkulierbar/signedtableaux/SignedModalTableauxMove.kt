@@ -3,19 +3,21 @@ package kalkulierbar.signedtableaux
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 // Context object for move serialization
 // Tells kotlinx.serialize about child types of SignedModalTableaux
-val SignedModalTablueaxMoveModule = SerializersModule {
+val SignedModalTableauxMoveModule = SerializersModule {
     polymorphic(SignedModalTableauxMove::class) {
-        Negation::class with Negation.serializer()
-        AlphaMove::class with AlphaMove.serializer()
-        BetaMove::class with BetaMove.serializer()
-        NuMove::class with NuMove.serializer()
-        PiMove::class with PiMove.serializer()
-        Prune::class with Prune.serializer()
-        CloseMove::class with CloseMove.serializer()
-        UndoMove::class with UndoMove.serializer()
+        subclass(Negation::class)
+        subclass(AlphaMove::class)
+        subclass(BetaMove::class)
+        subclass(NuMove::class)
+        subclass(PiMove::class)
+        subclass(Prune::class)
+        subclass(CloseMove::class)
+        subclass(UndoMove::class)
     }
 }
 

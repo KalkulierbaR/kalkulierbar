@@ -5,16 +5,18 @@ import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 // Context object for move serialization
 // Tells kotlinx.serialize about child types of DPLLMove
 val tableauxMoveModule = SerializersModule {
     polymorphic(TableauxMove::class) {
-        MoveExpand::class with MoveExpand.serializer()
-        MoveAutoClose::class with MoveAutoClose.serializer()
-        MoveLemma::class with MoveLemma.serializer()
-        MoveUndo::class with MoveUndo.serializer()
-        MoveCloseAssign::class with MoveCloseAssign.serializer()
+        subclass(MoveExpand::class)
+        subclass(MoveAutoClose::class)
+        subclass(MoveLemma::class)
+        subclass(MoveUndo::class)
+        subclass(MoveCloseAssign::class)
     }
 }
 

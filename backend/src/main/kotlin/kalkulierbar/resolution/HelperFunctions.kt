@@ -28,7 +28,7 @@ fun <AtomType> filterClause(
 
     val msg = "Clauses '$c1' and '$c2' do not contain atom '$literal' in both positive and negated form"
     val resCandidates = findResCandidates(atomsInC1, atomsInC2)
-            ?: throw IllegalMove(msg)
+        ?: throw IllegalMove(msg)
     return resCandidates
 }
 
@@ -58,8 +58,10 @@ fun <AtomType> getAutoResolutionCandidates(
     }
 
     if (sharedAtoms.isEmpty())
-        throw IllegalMove("Clauses '$c1' and '$c2' contain no common literals that appear" +
-                "in positive and negated form")
+        throw IllegalMove(
+            "Clauses '$c1' and '$c2' contain no common literals that appear" +
+                "in positive and negated form"
+        )
 
     // Choose the first shared literal
     val a1 = sharedAtoms[0]
@@ -83,7 +85,7 @@ fun <AtomType> buildClause(
     a2: Atom<AtomType>
 ): Clause<AtomType> {
     val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
-            c2.atoms.filter { it != a2 }.toMutableList()
+        c2.atoms.filter { it != a2 }.toMutableList()
     return Clause(atoms.toMutableList())
 }
 

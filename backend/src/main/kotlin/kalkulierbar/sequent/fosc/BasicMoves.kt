@@ -1,4 +1,4 @@
-package kalkulierbar.sequentCalculus.fosc.moveImplementations
+package kalkulierbar.sequent.fosc.moveImplementations
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.Constant
@@ -8,12 +8,12 @@ import kalkulierbar.logic.UniversalQuantifier
 import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.parsers.Tokenizer
-import kalkulierbar.sequentCalculus.*
-import kalkulierbar.sequentCalculus.GenericSequentCalculusNode
-import kalkulierbar.sequentCalculus.TreeNode
-import kalkulierbar.sequentCalculus.fosc.FOSCState
-import kalkulierbar.sequentCalculus.moveImplementations.checkLeft
-import kalkulierbar.sequentCalculus.moveImplementations.checkRight
+import kalkulierbar.sequent.*
+import kalkulierbar.sequent.GenericSequentCalculusNode
+import kalkulierbar.sequent.TreeNode
+import kalkulierbar.sequent.fosc.FOSCState
+import kalkulierbar.sequent.moveImplementations.checkLeft
+import kalkulierbar.sequent.moveImplementations.checkRight
 
 /**
  * Rule AllLeft is applied, if the LogicNode is the leftChild of node and is of type All(UniversalQuantifier).

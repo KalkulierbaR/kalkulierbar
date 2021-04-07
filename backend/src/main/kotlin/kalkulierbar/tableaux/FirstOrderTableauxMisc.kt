@@ -13,6 +13,7 @@ import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Suppress("LongParameterList")
 class FoTableauxState(
     override val clauseSet: ClauseSet<Relation>,
     val formula: String,

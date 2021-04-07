@@ -14,7 +14,7 @@ import kalkulierbar.logic.Or
  * Node sign is changed, and the children node is added at the given leaf id.
  * @param state: SignedModalTableauxState state to apply move on
  * @param nodeID: ID of node to apply move on
- * @param leafID: ID of leaf , where the child should be attatched to
+ * @param leafID: ID of leaf , where the child should be attached to
  * @return new state after applying move
  */
 fun applyNegation(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): SignedModalTableauxState {
@@ -22,7 +22,7 @@ fun applyNegation(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): S
     checkNodeRestrictions(nodes, nodeID)
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leaves = state.childLeavesOf(nodeID)
+        val leaves = state.childLeavesOf(nodeID)
         leaves.forEach {
             applyNegation(state, nodeID, it)
         }
@@ -51,7 +51,7 @@ fun applyNegation(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): S
  *  In case of multiple branch end, will be added to the branch whose leafID is given.
  * @param state: SignedModalTableauxState state to apply move on
  * @param nodeID: ID of node to apply move on
- * @param leafID: ID of leaf , where the child should be attatched to
+ * @param leafID: ID of leaf , where the child should be attached to
  * @return new state after applying move
  */
 @Suppress("ThrowsCount", "ComplexMethod")
@@ -61,7 +61,7 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
 
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leaves = state.childLeavesOf(nodeID)
+        val leaves = state.childLeavesOf(nodeID)
         leaves.forEach {
             applyAlpha(state, nodeID, it)
         }
@@ -118,7 +118,7 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
  *  In case of multiple branch end, will be added to the branch whose leafID is given.
  * @param state: SignedModalTableauxState state to apply move on
  * @param nodeID: ID of node to apply move on
- * @param leafID: ID of leaf, where the child should be attatched to
+ * @param leafID: ID of leaf, where the child should be attached to
  * @return new state after applying move
  */
 @Suppress("ThrowsCount", "ComplexMethod")
@@ -127,7 +127,7 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
     checkNodeRestrictions(nodes, nodeID)
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leaves = state.childLeavesOf(nodeID)
+        val leaves = state.childLeavesOf(nodeID)
         leaves.forEach {
             applyBeta(state, nodeID, it)
         }
@@ -144,19 +144,19 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
     // Check if the node is F And, T Or or T Impl: only then can be Beta move applied
     when (formula) {
         is And -> {
-            if (node.sign == true)
+            if (node.sign)
                 throw IllegalMove("Beta rule can only be applied on a conjunction if the sign is True")
             beta1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
             beta2 = SignedModalTableauxNode(leafID, node.prefix, false, formula.rightChild)
         }
         is Or -> {
-            if (node.sign == false)
+            if (!node.sign)
                 throw IllegalMove("Beta rule can only be applied on a disjunction if the sign is False")
             beta1 = SignedModalTableauxNode(leafID, node.prefix, true, formula.leftChild)
             beta2 = SignedModalTableauxNode(leafID, node.prefix, true, formula.rightChild)
         }
         is Impl -> {
-            if (node.sign == false)
+            if (!node.sign)
                 throw IllegalMove("Beta rule can only be applied on an implication if the sign is False")
             beta1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
             beta2 = SignedModalTableauxNode(leafID, node.prefix, true, formula.rightChild)
@@ -164,7 +164,7 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
         else -> throw IllegalMove("Beta rule can not be applied on the node '$node'")
     }
 
-    // The formula will be split, the leftFormula will be added to the leftBranch of the feaf and the
+    // The formula will be split, the leftFormula will be added to the leftBranch of the leaf and the
     // the right formula will be added to the right branch fo the leaf.
     nodes.add(beta1)
     leaf.children.add(nodes.size - 1)
@@ -178,13 +178,13 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
 }
 
 /**
- *  if a NU formula occurs, the prefix that is alread used will be used in the new node,
+ *  if a NU formula occurs, the prefix that is already used will be used in the new node,
  *  and the node with out the modal variable is added to the branch end.
  *  In case of multiple branch end, will be added to the branch whose leafID is given.
  * @param state: SignedModalTableauxState state to apply move on
  * @param nodeID: ID of node to apply move on
  * @param prefix : Prefix that should be used
- * @param leafID: ID of leaf , where the child should be attatched to
+ * @param leafID: ID of leaf , where the child should be attached to
  * @return new state after applying move
  */
 @Suppress("ThrowsCount", "ComplexMethod")
@@ -193,7 +193,7 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     checkNodeRestrictions(nodes, nodeID)
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leaves = state.childLeavesOf(nodeID)
+        val leaves = state.childLeavesOf(nodeID)
         leaves.forEach {
             applyNu(state, prefix, nodeID, it)
         }
@@ -205,13 +205,13 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     val formula = node.formula
 
     // The new prefix will be 𝜎.n, where n is already used
-    var newPrefix = node.prefix.toMutableList()
+    val newPrefix = node.prefix.toMutableList()
     newPrefix.add(prefix)
 
     if (!state.prefixIsUsedOnBranch(leafID, newPrefix))
         throw IllegalMove("Prefix has to be already in use on the selected branch")
 
-    // Check if the node is T Box ( [] ) or F DIAMOD ( <> ) : only then can be NU move applied
+    // Check if the node is T Box ( [] ) or F DIAMOND ( <> ) : only then can be NU move applied
     val nu0 = when (formula) {
         is Box -> {
             if (!node.sign)
@@ -236,13 +236,13 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
 }
 
 /**
- *  if a PI formula occurs, the new Prifix will be used in the new node,
+ *  if a PI formula occurs, the new Prefix will be used in the new node,
  *  and the node with out the modal variable is added to the branch end.
  *  In case of multiple branch end, will be added to the branch whose leafID is given.
  * @param state: SignedModalTableauxState state to apply move on
  * @param nodeID: ID of node to apply move on
  * @param prefix : Prefix that should be used
- * @param leafID: ID of leaf , where the child should be attatched to
+ * @param leafID: ID of leaf , where the child should be attached to
  * @return new state after applying move
  */
 @Suppress("ThrowsCount", "ComplexMethod")
@@ -252,7 +252,7 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
 
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
-        var leaves = state.childLeavesOf(nodeID)
+        val leaves = state.childLeavesOf(nodeID)
         leaves.forEach {
             applyPi(state, prefix, nodeID, it)
         }
@@ -263,21 +263,21 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     val leaf = nodes[leafID]
     val formula = node.formula
 
-    // The new prifix will be 𝜎.n, where n is a new prefex
+    // The new prefix will be 𝜎.n, where n is a new prefix
     val newPrefix = node.prefix.toMutableList()
     newPrefix.add(prefix)
 
     if (state.prefixIsUsedOnBranch(leafID, newPrefix))
         throw IllegalMove("Prefix is already in use on the selected branch")
-    // Check if the node is F Box ( [] ) or T DIAMOD ( <> ) : only then can be NU move applied
+    // Check if the node is F Box ( [] ) or T DIAMOND ( <> ) : only then can be NU move applied
     val nu0 = when (formula) {
         is Box -> {
-            if (node.sign == true)
+            if (node.sign)
                 throw IllegalMove("Operation can only be applied in box if the sign is False")
             SignedModalTableauxNode(leafID, newPrefix, false, formula.child)
         }
         is Diamond -> {
-            if (node.sign == false)
+            if (!node.sign)
                 throw IllegalMove("Operation can only be applied in diamond if the sign is True")
             SignedModalTableauxNode(leafID, newPrefix, true, formula.child)
         }
@@ -325,10 +325,10 @@ fun applyPruneRecursive(state: SignedModalTableauxState, nodeID: Int): SignedMod
         applyPruneRecursive(state, child)
         nodes.removeAt(child)
         // Update left side of removalNode 
-        for (i in 0..(child - 1)) {
-            var currentNode = nodes.elementAt(i)
+        for (i in 0 until child) {
+            val currentNode = nodes.elementAt(i)
 
-            for (j in 0..(currentNode.children.size - 1)) {
+            for (j in 0 until currentNode.children.size) {
                 if (currentNode.children[j] > child)
                     currentNode.children[j] -= 1
             }
@@ -337,10 +337,10 @@ fun applyPruneRecursive(state: SignedModalTableauxState, nodeID: Int): SignedMod
                 currentNode.closeRef = currentNode.closeRef!! - 1
         }
         // Update right side of removalNode
-        for (i in child..(nodes.size - 1)) {
-            var currentNode = nodes.elementAt(i)
+        for (i in child until nodes.size) {
+            val currentNode = nodes.elementAt(i)
 
-            for (j in 0..(currentNode.children.size - 1)) {
+            for (j in 0 until currentNode.children.size) {
                 currentNode.children[j] -= 1
                 if (currentNode.parent != null && currentNode.parent!! > child)
                     currentNode.parent = currentNode.parent!! - 1

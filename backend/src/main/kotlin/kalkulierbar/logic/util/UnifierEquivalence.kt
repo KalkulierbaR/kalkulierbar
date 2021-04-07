@@ -83,8 +83,8 @@ class UnifierEquivalence {
  */
 class VariableCanonicizer : FirstOrderTermVisitor<FirstOrderTerm>() {
 
-    var counter = 0
-    val replacements = mutableMapOf<String, String>()
+    private var counter = 0
+    private val replacements = mutableMapOf<String, String>()
 
     // Re-name encountered Variables
     override fun visit(node: QuantifiedVariable): FirstOrderTerm {

@@ -47,8 +47,10 @@ object ClauseSetParser {
         val formulaFormat = "$atom($aSep$atom)*($cSep$atom($aSep$atom)*)*"
 
         if (!(Regex(formulaFormat) matches pf))
-            throw InvalidFormulaFormat("Please use alphanumeric variables only, " +
-                    "separate atoms with '$atomSeparator' and clauses with '$clauseSeparator'.")
+            throw InvalidFormulaFormat(
+                "Please use alphanumeric variables only, " +
+                    "separate atoms with '$atomSeparator' and clauses with '$clauseSeparator'."
+            )
 
         val parsed = ClauseSet<String>()
         val clauses = pf.split(clauseSeparator)

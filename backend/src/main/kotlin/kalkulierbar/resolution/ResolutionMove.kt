@@ -5,18 +5,20 @@ import kalkulierbar.parsers.FirstOrderParser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 // Context object for move serialization
 // Tells kotlinx.serialize about child types of ResolutionMove
 val resolutionMoveModule = SerializersModule {
     polymorphic(ResolutionMove::class) {
-        MoveResolve::class with MoveResolve.serializer()
-        MoveResolveUnify::class with MoveResolveUnify.serializer()
-        MoveResolveCustom::class with MoveResolveCustom.serializer()
-        MoveHide::class with MoveHide.serializer()
-        MoveShow::class with MoveShow.serializer()
-        MoveHyper::class with MoveHyper.serializer()
-        MoveFactorize::class with MoveFactorize.serializer()
+        subclass(MoveResolve::class)
+        subclass(MoveResolveUnify::class)
+        subclass(MoveResolveCustom::class)
+        subclass(MoveHide::class)
+        subclass(MoveShow::class)
+        subclass(MoveHyper::class)
+        subclass(MoveFactorize::class)
     }
 }
 

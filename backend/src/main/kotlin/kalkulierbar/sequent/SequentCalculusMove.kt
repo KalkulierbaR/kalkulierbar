@@ -1,28 +1,30 @@
-package kalkulierbar.sequentCalculus
+package kalkulierbar.sequent
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 // Context object for move serialization
 // Tells kotlinx.serialize about child types of PSCMove
 val SequentCalculusMoveModule = SerializersModule {
     polymorphic(SequentCalculusMove::class) {
-        Ax::class with Ax.serializer()
-        NotRight::class with NotRight.serializer()
-        NotLeft::class with NotLeft.serializer()
-        OrRight::class with OrRight.serializer()
-        OrLeft::class with OrLeft.serializer()
-        AndRight::class with AndRight.serializer()
-        AndLeft::class with AndLeft.serializer()
-        ImpLeft::class with ImpLeft.serializer()
-        ImpRight::class with ImpRight.serializer()
-        AllRight::class with AllRight.serializer()
-        AllLeft::class with AllLeft.serializer()
-        ExRight::class with ExRight.serializer()
-        ExLeft::class with ExLeft.serializer()
-        UndoMove::class with UndoMove.serializer()
-        PruneMove::class with PruneMove.serializer()
+        subclass(Ax::class)
+        subclass(NotRight::class)
+        subclass(NotLeft::class)
+        subclass(OrRight::class)
+        subclass(OrLeft::class)
+        subclass(AndRight::class)
+        subclass(AndLeft::class)
+        subclass(ImpLeft::class)
+        subclass(ImpRight::class)
+        subclass(AllRight::class)
+        subclass(AllLeft::class)
+        subclass(ExRight::class)
+        subclass(ExLeft::class)
+        subclass(UndoMove::class)
+        subclass(PruneMove::class)
     }
 }
 

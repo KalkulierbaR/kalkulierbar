@@ -3,9 +3,9 @@ package kalkulierbar.signedtableaux
 import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.tamperprotect.ProtectedState
-import kotlin.math.sqrt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.math.sqrt
 
 @Serializable
 class SignedModalTableauxState(
@@ -13,11 +13,9 @@ class SignedModalTableauxState(
     val assumption: Boolean,
     val backtracking: Boolean
 ) : ProtectedState() {
-    val nodes = mutableListOf<SignedModalTableauxNode>(SignedModalTableauxNode(null, listOf<Int>(1), assumption, formula.clone()))
+    val nodes = mutableListOf(SignedModalTableauxNode(null, listOf(1), assumption, formula.clone()))
     val moveHistory = mutableListOf<SignedModalTableauxMove>()
     var usedBacktracking = false
-
-    var usedPrefixes: List<List<Int>> = listOf(listOf(1))
 
     var statusMessage: String? = null
     override var seal = ""
@@ -42,7 +40,7 @@ class SignedModalTableauxState(
      * Marks a tree node and its ancestry as closed
      * NOTE: This does NOT set the closeRef of the closed node
      *       so make sure the closeRef is set before calling this
-     * @param leafID The node to mark as closed
+     * @param nodeID The node to mark as closed
      */
     fun setClosed(nodeID: Int) {
         var node = nodes[nodeID]
@@ -58,17 +56,6 @@ class SignedModalTableauxState(
             childLeavesOf(nodeID).forEach {
                 setClosed(it)
             }
-        }
-    }
-
-    /**
-     * Overwrite parent reference for some nodes
-     * @param children List of nodes to update
-     * @param parent New parent reference
-     */
-    fun setParent(children: List<Int>, parent: Int) {
-        children.forEach {
-            nodes[it].parent = parent
         }
     }
 
@@ -126,7 +113,7 @@ class SignedModalTableauxState(
     }
 
     /**
-     * Returns the maxmimum depth of the tree specified by nodeID
+     * Returns the maximum depth of the tree specified by nodeID
      * @param nodeID the node id of the root
      * @return the width of the tree
      */
@@ -135,7 +122,7 @@ class SignedModalTableauxState(
         return if (node.children.isEmpty())
             1
         else
-            node.children.maxBy { getDepth(it) }!! + 1
+            node.children.maxByOrNull { getDepth(it) }!! + 1
     }
 
     fun render() {

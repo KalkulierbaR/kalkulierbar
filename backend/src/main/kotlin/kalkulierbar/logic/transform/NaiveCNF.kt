@@ -42,7 +42,7 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
     override fun visit(node: Var): ClauseSet<String> {
         val atom = Atom(node.spelling, false)
         val clause = Clause(mutableListOf(atom))
-        return ClauseSet<String>(mutableListOf(clause))
+        return ClauseSet(mutableListOf(clause))
     }
 
     /**
