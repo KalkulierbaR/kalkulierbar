@@ -1,6 +1,6 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
-import { useState } from "preact/hooks";
+import {Fragment, h} from "preact";
+import {route} from "preact-router";
+import {useState} from "preact/hooks";
 
 import SequentFAB from "../../../components/calculus/sequent/fab";
 import SequentTreeView from "../../../components/calculus/sequent/tree";
@@ -9,20 +9,20 @@ import SaveStatsDialog from "../../../components/dialog/save-stats-dialog";
 import VarAssignDialog from "../../../components/dialog/var-assign";
 import OptionList from "../../../components/input/option-list";
 import TutorialDialog from "../../../components/tutorial/dialog";
-import { Statistics } from "../../../types/app/statistics";
-import { SequentCalculusType } from "../../../types/calculus";
-import { getFORuleSet, getNormalRuleSet } from "../../../types/calculus/rules";
+import {Statistics} from "../../../types/app/statistics";
+import {SequentCalculusType} from "../../../types/calculus";
+import {getFORuleSet, getNormalRuleSet} from "../../../types/calculus/rules";
 import {
     FormulaTreeLayoutNode,
     instanceOfFOSCState,
     instanceOfPSCState,
     VarAssign,
 } from "../../../types/calculus/sequent";
-import { saveStatistics, sendMove } from "../../../util/api";
-import { useAppState } from "../../../util/app-state";
-import { stringArrayToStringMap } from "../../../util/array-to-map";
-import { ruleSetToStringArray } from "../../../util/rule";
-import { nodeName, parseStringToListIndex } from "../../../util/sequent";
+import {saveStatistics, sendMove} from "../../../util/api";
+import {useAppState} from "../../../util/app-state";
+import {stringArrayToStringMap} from "../../../util/array-to-map";
+import {ruleSetToStringArray} from "../../../util/rule";
+import {nodeName, parseStringToListIndex} from "../../../util/sequent";
 
 import * as style from "./style.scss";
 
@@ -270,11 +270,11 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         event?.stopPropagation();
         if (newFormula.id === selectedListIndex) {
             resetSelection();
-        } else {
-            setSelectedListIndex(newFormula.id);
-            setSelectedNodeId(nodeId);
-            trySendMove(selectedRuleId, nodeId, newFormula.id);
+            return;
         }
+        setSelectedListIndex(newFormula.id);
+        setSelectedNodeId(nodeId);
+        trySendMove(selectedRuleId, nodeId, newFormula.id);
     };
     /**
      * Disables options inside the option list wether it should be or not
@@ -286,10 +286,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         if (state.showOnlyApplicableRules === false) return true;
         const rules = getFORuleSet();
         if (selectedListIndex === undefined || selectedNode === undefined) {
-            if (option === 0) {
-                return true;
-            }
-            return false;
+            return option === 0;
         }
 
         if (rules.rules[option].applicableOn !== undefined) {
@@ -326,16 +323,11 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
      * @returns {void} nothing
      */
     const saveStatisticsCallback = (userName: string) => {
-        if (userName !== "") {
-            saveStatistics(
-                server,
-                calculus,
-                state,
-                notificationHandler,
-                userName,
-            );
-            setShowSaveDialog(false);
+        if (userName === "") {
+            return;
         }
+        saveStatistics(server, calculus, state, notificationHandler, userName);
+        setShowSaveDialog(false);
     };
 
     return (

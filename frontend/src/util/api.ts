@@ -1,11 +1,8 @@
-import { CheckCloseResponse } from "../types/app/api";
-import { AppState, AppStateUpdater } from "../types/app/app-state";
-import {
-    NotificationHandler,
-    NotificationType,
-} from "../types/app/notification";
-import { Statistics } from "../types/app/statistics";
-import { CalculusType, Move } from "../types/calculus";
+import {CheckCloseResponse} from "../types/app/api";
+import {AppState, AppStateUpdater} from "../types/app/app-state";
+import {NotificationHandler, NotificationType,} from "../types/app/notification";
+import {Statistics} from "../types/app/statistics";
+import {CalculusType, Move} from "../types/calculus";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
@@ -20,7 +17,7 @@ export type checkCloseFn<C extends CalculusType = CalculusType> = (
  * @param {NotificationHandler} notificationHandler - Notification handler
  * @param {C} calculus - Calculus endpoint
  * @param {any} state - Current state for the calculus
- * @param {void} onProoven - the function to call if proof is valid
+ * @param {void} onProven - the function to call if proof is valid
  * @returns {Promise<void>} - Resolves when the request is done
  */
 export const checkClose = async <C extends CalculusType = CalculusType>(
@@ -28,7 +25,7 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     notificationHandler: NotificationHandler,
     calculus: C,
     state: AppState[C],
-    onProoven?: (stats: Statistics) => void,
+    onProven?: (stats: Statistics) => void,
 ) => {
     const url = `${server}/${calculus}/close`;
     try {
@@ -49,13 +46,13 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
             if (closed) {
                 notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));
-                if (onProoven !== undefined) {
+                if (onProven !== undefined) {
                     getStatistics(
                         server,
                         calculus,
                         state,
                         notificationHandler,
-                        onProoven,
+                        onProven,
                     );
                 }
             } else {

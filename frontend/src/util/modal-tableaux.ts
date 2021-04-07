@@ -1,20 +1,20 @@
-import { StateUpdater } from "preact/hooks";
+import {StateUpdater} from "preact/hooks";
 
-import { AppStateUpdater } from "../types/app/app-state";
-import { NotificationHandler } from "../types/app/notification";
-import { ModalCalculusType } from "../types/calculus";
+import {AppStateUpdater} from "../types/app/app-state";
+import {NotificationHandler} from "../types/app/notification";
+import {ModalCalculusType} from "../types/calculus";
 import {
     ExpandMove,
     ModalTableauxNode,
     ModalTableauxState,
     ModalTableauxTreeLayoutNode,
 } from "../types/calculus/modal-tableaux";
-import { Tree, TreeLayout } from "../types/tree";
-import { DragTransform } from "../types/ui";
+import {Tree, TreeLayout} from "../types/tree";
+import {DragTransform} from "../types/ui";
 
-import { sendMove } from "./api";
-import { tree, treeFind, treeLayout } from "./layout/tree";
-import { estimateSVGTextWidth } from "./text-width";
+import {sendMove} from "./api";
+import {tree, treeFind, treeLayout} from "./layout/tree";
+import {estimateSVGTextWidth} from "./text-width";
 
 /**
  * Wrapper to send move request
@@ -40,21 +40,6 @@ export const sendBacktrack = (
         stateChanger,
         notificationHandler,
     );
-
-/**
- * Finds the first open leaf and returns its id.
- * @param {Array<TableauxNode>} nodes - the nodes to search through.
- * @returns {number|undefined} id of the next open leaf if any.
- */
-export const nextOpenLeaf = (nodes: ModalTableauxNode[]) => {
-    for (let i = 0; i < nodes.length; i++) {
-        const n = nodes[i];
-        if (!n.isClosed && n.children.length === 0) {
-            return i;
-        }
-    }
-    return;
-};
 
 /**
  * Sends a NodeExtend Move to the backend
@@ -137,15 +122,12 @@ export const isChildOf = (
     node: ModalTableauxNode,
     parent: ModalTableauxNode,
     nodes: ModalTableauxNode[],
-) => {
+): boolean => {
     if (node === parent) {
         return true;
     }
     if (node.parent !== null) {
-        const a = isChildOf(nodes[node.parent!], parent, nodes);
-        if (a === true) return true;
-
-        return false;
+        return isChildOf(nodes[node.parent!], parent, nodes);
     }
 
     return false;

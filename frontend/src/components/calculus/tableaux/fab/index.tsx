@@ -1,21 +1,17 @@
-import { Fragment, h } from "preact";
+import {Fragment, h} from "preact";
 
-import { TableauxCalculusType } from "../../../../types/calculus";
-import {
-    FOTableauxState,
-    PropTableauxState,
-} from "../../../../types/calculus/tableaux";
-import { useAppState } from "../../../../util/app-state";
-import { nextOpenLeaf, sendBacktrack } from "../../../../util/tableaux";
+import {TableauxCalculusType} from "../../../../types/calculus";
+import {FOTableauxState, PropTableauxState,} from "../../../../types/calculus/tableaux";
+import {useAppState} from "../../../../util/app-state";
 import AddIcon from "../../../icons/add";
-import ExploreIcon from "../../../icons/explore";
 import LemmaIcon from "../../../icons/lemma";
-import UndoIcon from "../../../icons/undo";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";
 import CenterFAB from "../../../input/fab/center";
 import CheckCloseFAB from "../../../input/fab/check-close";
 import DownloadFAB from "../../../input/fab/download";
+import NextLeafFAB from "../../../input/fab/next-leaf";
+import UndoFAB from "../../../input/fab/undo";
 
 interface Props {
     /**
@@ -62,12 +58,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
     resetDragTransform,
     resetDragTransforms,
 }) => {
-    const {
-        server,
-        smallScreen,
-        onChange,
-        notificationHandler,
-    } = useAppState();
+    const { smallScreen } = useAppState();
 
     const showUndoFAB = state.backtracking && state.moveHistory.length > 0;
 
@@ -86,56 +77,13 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             type={calculus}
                         />
                         {state.nodes.filter((node) => !node.isClosed).length >
-                            0 && (
-                            <FAB
-                                icon={<ExploreIcon />}
-                                label="Next Leaf"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    const node = nextOpenLeaf(state!.nodes);
-                                    if (node === undefined) {
-                                        return;
-                                    }
-                                    dispatchEvent(
-                                        new CustomEvent("go-to", {
-                                            detail: { node },
-                                        }),
-                                    );
-                                }}
-                            />
-                        )}
+                            0 && <NextLeafFAB calculus={calculus} />}
                         <CenterFAB resetDragTransforms={resetDragTransforms} />
                         <CheckCloseFAB calculus={calculus} />
                         {showUndoFAB && (
-                            <FAB
-                                icon={<UndoIcon />}
-                                label="Undo"
-                                mini={true}
-                                extended={true}
-                                showIconAtEnd={true}
-                                onClick={() => {
-                                    // If the last move added a node, and we undo this, remove the corresponding drag
-                                    if (state.moveHistory.length > 0) {
-                                        const move =
-                                            state.moveHistory[
-                                                state.moveHistory.length - 1
-                                            ];
-                                        if (move.type === "tableaux-expand") {
-                                            resetDragTransform(
-                                                state.nodes.length - 1,
-                                            );
-                                        }
-                                    }
-                                    sendBacktrack(
-                                        calculus,
-                                        server,
-                                        state,
-                                        onChange,
-                                        notificationHandler,
-                                    );
-                                }}
+                            <UndoFAB
+                                calculus={calculus}
+                                resetDragTransform={resetDragTransform}
                             />
                         )}
                     </Fragment>

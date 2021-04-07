@@ -1,27 +1,20 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
-import { useCallback, useEffect, useState } from "preact/hooks";
+import {Fragment, h} from "preact";
+import {route} from "preact-router";
+import {useCallback, useEffect, useState} from "preact/hooks";
 
 import ModalTableauxFAB from "../../../components/calculus/modal-tableaux/fab";
 import ModalTableauxTreeView from "../../../components/calculus/modal-tableaux/tree";
 import PrefixDialog from "../../../components/dialog/prefix-dialog";
 import SaveStatsDialog from "../../../components/dialog/save-stats-dialog";
 import TutorialDialog from "../../../components/tutorial/dialog";
-import { Statistics } from "../../../types/app/statistics";
-import { Calculus, ModalCalculusType } from "../../../types/calculus";
-import {
-    ExpandMove,
-    ModalTableauxTreeLayoutNode,
-} from "../../../types/calculus/modal-tableaux";
-import { DragTransform } from "../../../types/ui";
-import { saveStatistics, sendMove } from "../../../util/api";
-import { useAppState } from "../../../util/app-state";
-import {
-    getLeaves,
-    nodeName,
-    sendBacktrack,
-} from "../../../util/modal-tableaux";
-import { updateDragTransform } from "../../../util/tableaux";
+import {Statistics} from "../../../types/app/statistics";
+import {Calculus, ModalCalculusType} from "../../../types/calculus";
+import {ExpandMove, ModalTableauxTreeLayoutNode,} from "../../../types/calculus/modal-tableaux";
+import {DragTransform} from "../../../types/ui";
+import {saveStatistics, sendMove} from "../../../util/api";
+import {useAppState} from "../../../util/app-state";
+import {getLeaves, nodeName, sendBacktrack,} from "../../../util/modal-tableaux";
+import {updateDragTransform} from "../../../util/tableaux";
 
 interface Props {
     calculus: ModalCalculusType;
@@ -119,35 +112,36 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
      * @returns {void}
      */
     const sendPrefix = (prefix: number) => {
-        if (selectedNodeId !== undefined) {
-            const leaves = getLeaves(state.nodes, state.nodes[selectedNodeId]);
-            if (leaves.length > 1) {
-                setLeafSelection(true);
-                setSelectedMove({
+        if (selectedNodeId === undefined) {
+            return;
+        }
+        const leaves = getLeaves(state.nodes, state.nodes[selectedNodeId]);
+        if (leaves.length > 1) {
+            setLeafSelection(true);
+            setSelectedMove({
+                type: selectedMove?.type,
+                nodeID: selectedNodeId,
+                leafID: selectedMove?.leafID,
+                prefix,
+            });
+        } else {
+            sendMove(
+                server,
+                calculus,
+                state,
+                {
                     type: selectedMove?.type,
                     nodeID: selectedNodeId,
-                    leafID: selectedMove?.leafID,
+                    leafID: leaves[0],
                     prefix,
-                });
-            } else {
-                sendMove(
-                    server,
-                    calculus,
-                    state,
-                    {
-                        type: selectedMove?.type,
-                        nodeID: selectedNodeId,
-                        leafID: leaves[0],
-                        prefix,
-                    },
-                    onChange,
-                    notificationHandler,
-                );
-                setSelectedNodeId(undefined);
-                setSelectedMove(undefined);
-            }
-            setShowPrefixDialog(false);
+                },
+                onChange,
+                notificationHandler,
+            );
+            setSelectedNodeId(undefined);
+            setSelectedMove(undefined);
         }
+        setShowPrefixDialog(false);
     };
 
     useEffect(() => {
@@ -180,16 +174,11 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
      * @returns {void}
      */
     const saveStatisticsCallback = (userName: string) => {
-        if (userName !== "") {
-            saveStatistics(
-                server,
-                calculus,
-                state,
-                notificationHandler,
-                userName,
-            );
-            setShowSaveDialog(false);
+        if (userName === "") {
+            return;
         }
+        saveStatistics(server, calculus, state, notificationHandler, userName);
+        setShowSaveDialog(false);
     };
 
     return (
