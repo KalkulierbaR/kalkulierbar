@@ -4,7 +4,7 @@
 }
 
 .f-closed {
-    fill: rgb(218, 218, 218);
+    fill: var(--kbar-8dp-color);
 }
 
 .f-default {
@@ -16,7 +16,7 @@
 }
 
 .text--selected {
-    fill: --kbar-primary-text-color;
+    fill: var(--kbar-primary-text-color);
 }
 
 .text--closed {

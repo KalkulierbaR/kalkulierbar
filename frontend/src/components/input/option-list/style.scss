@@ -37,9 +37,8 @@
 }
 
 .option--disabled {
-    // FIXME: Use color variables or define new ones.
     background-color: #ff009d00;
-    color: rgb(109, 109, 109);
+    color: var(--kbar-option-disabled);
     pointer-events: none;
 }
 
