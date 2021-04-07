@@ -18,8 +18,8 @@ import kalkulierbar.logic.Or
  * @return new state after applying move
  */
 fun applyNegation(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): SignedModalTableauxState {
-    val nodes = state.nodes
-    checkNodeRestrictions(nodes, nodeID)
+    val nodes = state.tree
+    checkNodeRestrictions(state, nodeID)
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
         val leaves = state.childLeavesOf(nodeID)
@@ -30,15 +30,13 @@ fun applyNegation(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): S
     }
 
     val node = nodes[nodeID]
-    val leaf = nodes[leafID]
     val formula = node.formula
 
     if (formula !is Not)
         throw IllegalMove("Negation rule can only be applied on a negation")
 
     // new node with negated node sigh is added as a child of the given node
-    nodes.add(SignedModalTableauxNode(leafID, node.prefix, !node.sign, formula.child))
-    leaf.children.add(state.nodes.size - 1)
+    state.addChildren(leafID, SignedModalTableauxNode(leafID, node.prefix, !node.sign, formula.child))
 
     // Add move to history
     if (state.backtracking)
@@ -56,8 +54,8 @@ fun applyNegation(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): S
  */
 @Suppress("ThrowsCount", "ComplexMethod")
 fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): SignedModalTableauxState {
-    val nodes = state.nodes
-    checkNodeRestrictions(nodes, nodeID)
+    val nodes = state.tree
+    checkNodeRestrictions(state, nodeID)
 
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
@@ -69,7 +67,6 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
     }
 
     val node = nodes[nodeID]
-    val leaf = nodes[leafID]
     val formula = node.formula
 
     // Check if the node is T And , F Or or F Impl: only then can be Alpha move applied
@@ -102,10 +99,8 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
     }
 
     // The left formula is will be add to the node first, right formula will be added as the child of left formula
-    nodes.add(alpha1)
-    leaf.children.add(nodes.size - 1)
-    nodes.add(alpha2)
-    alpha1.children.add(nodes.size - 1)
+    state.addChildren(leafID, alpha1)
+    state.addChildren(nodes.size - 1, alpha2)
 
     // Add move to history
     if (state.backtracking)
@@ -123,8 +118,8 @@ fun applyAlpha(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Sign
  */
 @Suppress("ThrowsCount", "ComplexMethod")
 fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): SignedModalTableauxState {
-    val nodes = state.nodes
-    checkNodeRestrictions(nodes, nodeID)
+    val nodes = state.tree
+    checkNodeRestrictions(state, nodeID)
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
         val leaves = state.childLeavesOf(nodeID)
@@ -135,7 +130,6 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
     }
 
     val node = nodes[nodeID]
-    val leaf = nodes[leafID]
     val formula = node.formula
 
     val beta1: SignedModalTableauxNode
@@ -166,10 +160,7 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
 
     // The formula will be split, the leftFormula will be added to the leftBranch of the leaf and the
     // the right formula will be added to the right branch fo the leaf.
-    nodes.add(beta1)
-    leaf.children.add(nodes.size - 1)
-    nodes.add(beta2)
-    leaf.children.add(nodes.size - 1)
+    state.addChildren(leafID, beta1, beta2)
 
     // Add move to history
     if (state.backtracking)
@@ -189,8 +180,8 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
  */
 @Suppress("ThrowsCount", "ComplexMethod")
 fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: Int?): SignedModalTableauxState {
-    val nodes = state.nodes
-    checkNodeRestrictions(nodes, nodeID)
+    val nodes = state.tree
+    checkNodeRestrictions(state, nodeID)
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
         val leaves = state.childLeavesOf(nodeID)
@@ -201,7 +192,6 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     }
 
     val node = nodes[nodeID]
-    val leaf = nodes[leafID]
     val formula = node.formula
 
     // The new prefix will be 𝜎.n, where n is already used
@@ -226,8 +216,7 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
         else -> throw IllegalMove("Nu rule can not be applied on the node '$node'")
     }
 
-    nodes.add(nu0)
-    leaf.children.add(nodes.size - 1)
+    state.addChildren(leafID, nu0)
 
     // Add move to history
     if (state.backtracking)
@@ -247,8 +236,8 @@ fun applyNu(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
  */
 @Suppress("ThrowsCount", "ComplexMethod")
 fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: Int?): SignedModalTableauxState {
-    val nodes = state.nodes
-    checkNodeRestrictions(nodes, nodeID)
+    val nodes = state.tree
+    checkNodeRestrictions(state, nodeID)
 
     // If the leafID is not given, the new node will be added to all the available leaves
     if (leafID == null) {
@@ -260,7 +249,6 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     }
 
     val node = nodes[nodeID]
-    val leaf = nodes[leafID]
     val formula = node.formula
 
     // The new prefix will be 𝜎.n, where n is a new prefix
@@ -270,7 +258,7 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     if (state.prefixIsUsedOnBranch(leafID, newPrefix))
         throw IllegalMove("Prefix is already in use on the selected branch")
     // Check if the node is F Box ( [] ) or T DIAMOND ( <> ) : only then can be NU move applied
-    val nu0 = when (formula) {
+    val pi0 = when (formula) {
         is Box -> {
             if (node.sign)
                 throw IllegalMove("Operation can only be applied in box if the sign is False")
@@ -284,8 +272,7 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
         else -> throw IllegalMove("Pi Rule can not be applied on the node '$node'")
     }
 
-    nodes.add(nu0)
-    leaf.children.add(nodes.size - 1)
+    state.addChildren(leafID, pi0)
 
     // Add move to history
     if (state.backtracking)
@@ -304,55 +291,7 @@ fun applyPrune(state: SignedModalTableauxState, nodeID: Int): SignedModalTableau
         throw IllegalMove("Backtracking is not enabled for this proof")
 
     state.moveHistory.add(Prune(nodeID))
-    return applyPruneRecursive(state, nodeID)
-}
-
-/**
- * Prune all the children of the given node.
- * @param state: SignedModalTableaux state to apply move on
- * @param nodeID: ID of node to apply move on
- * @return new state after applying move
- */
-@Suppress("ComplexMethod")
-fun applyPruneRecursive(state: SignedModalTableauxState, nodeID: Int): SignedModalTableauxState {
-    val nodes = state.nodes
-    val node = nodes[nodeID]
-
-    if (nodes.size <= 1 || node.isLeaf)
-        return state
-
-    for (child in node.children) {
-        applyPruneRecursive(state, child)
-        nodes.removeAt(child)
-        // Update left side of removalNode 
-        for (i in 0 until child) {
-            val currentNode = nodes.elementAt(i)
-
-            for (j in 0 until currentNode.children.size) {
-                if (currentNode.children[j] > child)
-                    currentNode.children[j] -= 1
-            }
-
-            if (currentNode.closeRef != null && currentNode.closeRef!! > child)
-                currentNode.closeRef = currentNode.closeRef!! - 1
-        }
-        // Update right side of removalNode
-        for (i in child until nodes.size) {
-            val currentNode = nodes.elementAt(i)
-
-            for (j in 0 until currentNode.children.size) {
-                currentNode.children[j] -= 1
-                if (currentNode.parent != null && currentNode.parent!! > child)
-                    currentNode.parent = currentNode.parent!! - 1
-            }
-
-            if (currentNode.closeRef != null && currentNode.closeRef!! > child)
-                currentNode.closeRef = currentNode.closeRef!! - 1
-        }
-    }
-    node.children.clear()
-    node.isClosed = false
-
+    state.pruneBranch(nodeID)
     return state
 }
 
@@ -368,7 +307,7 @@ fun applyPruneRecursive(state: SignedModalTableauxState, nodeID: Int): SignedMod
  */
 @Suppress("ThrowsCount")
 fun applyClose(state: SignedModalTableauxState, nodeID: Int, closeID: Int): SignedModalTableauxState {
-    val nodes = state.nodes
+    val nodes = state.tree
 
     if (closeID < nodeID)
         return applyClose(state, closeID, nodeID)
@@ -400,28 +339,20 @@ fun applyClose(state: SignedModalTableauxState, nodeID: Int, closeID: Int): Sign
  * Check restrictions for nodeID and closeID
  */
 private fun checkCloseIDRestrictions(state: SignedModalTableauxState, nodeID: Int, closeID: Int) {
-    val nodes = state.nodes
-
-    checkNodeRestrictions(nodes, nodeID)
-
-    if (closeID >= nodes.size || closeID < 0)
-        throw IllegalMove("Node with ID $closeID does not exist")
-
-    val node = state.nodes[nodeID]
-    val closeNode = state.nodes[closeID]
+    checkNodeRestrictions(state, nodeID)
+    state.checkNodeID(closeID)
+    
     // Verify that closeNode is transitive parent of node
     if (!state.nodeIsParentOf(nodeID, closeID))
-        throw IllegalMove("Node '$closeNode' is not an ancestor of node '$node'")
+        throw IllegalMove("Node '${state.tree[closeID]}' is not an ancestor of node '${state.tree[nodeID]}'")
 }
 
 /**
  * Check nodeID valid + already closed
  */
-fun checkNodeRestrictions(nodes: List<SignedModalTableauxNode>, nodeID: Int) {
-    if (nodeID < 0 || nodeID >= nodes.size)
-        throw IllegalMove("Node with ID $nodeID does not exist")
+fun checkNodeRestrictions(state: SignedModalTableauxState, nodeID: Int) {
+    state.checkNodeID(nodeID)
     // Verify that node is not already closed
-    val node = nodes[nodeID]
-    if (node.isClosed)
-        throw IllegalMove("Node '$node' is already closed")
+    if (state.tree[nodeID].isClosed)
+        throw IllegalMove("Node '${state.tree[nodeID]}' is already closed")
 }

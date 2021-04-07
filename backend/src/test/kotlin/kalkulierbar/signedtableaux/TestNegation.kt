@@ -1,7 +1,6 @@
 package kalkulierbar.test.signedtableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.*
 import kalkulierbar.parsers.ModalLogicParser
 import kalkulierbar.signedtableaux.BetaMove
 import kalkulierbar.signedtableaux.Negation
@@ -21,7 +20,7 @@ class TestNegation {
 
         val formula1 = parser.parse("!a")
         val formula2 = parser.parse("a")
-        val nodes = state.nodes
+        val nodes = state.tree
 
         assertTrue(nodes[1].formula.synEq(formula1))
         assertTrue(nodes[2].formula.synEq(formula2))
@@ -37,12 +36,12 @@ class TestNegation {
         val formula = parser.parse("a | b")
 
         val state1 = instance.applyMoveOnState(state, Negation(0, 2))
-        val nodes1 = state1.nodes
+        val nodes1 = state1.tree
 
         assertTrue(nodes1[4].formula.synEq(formula))
 
         val state2 = instance.applyMoveOnState(state, Negation(0, 3))
-        val nodes2 = state2.nodes
+        val nodes2 = state2.tree
         assertTrue(nodes2[4].formula.synEq(formula))
     }
 

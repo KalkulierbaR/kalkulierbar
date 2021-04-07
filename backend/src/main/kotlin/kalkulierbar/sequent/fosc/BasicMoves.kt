@@ -9,7 +9,6 @@ import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.parsers.Tokenizer
 import kalkulierbar.sequent.*
-import kalkulierbar.sequent.GenericSequentCalculusNode
 import kalkulierbar.sequent.TreeNode
 import kalkulierbar.sequent.fosc.FOSCState
 import kalkulierbar.sequent.moveImplementations.checkLeft
@@ -27,7 +26,7 @@ import kalkulierbar.sequent.moveImplementations.checkRight
 fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkLeft(state, nodeID, listIndex)
 
-    val node: GenericSequentCalculusNode = state.tree[nodeID]
+    val node = state.tree[nodeID]
     val formula: LogicNode = node.leftFormulas[listIndex]
 
     if (formula !is UniversalQuantifier)
@@ -35,7 +34,7 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
 
     // No need to check if swapVariable is already in use for rule allLeft
 
-    var replaceWithString = varAssign.get(formula.varName)
+    var replaceWithString = varAssign[formula.varName]
 
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
@@ -47,7 +46,7 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
     // The newFormula which will be added to the left side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
 
-    // Replace all occurances of the quantifiedVariable with swapVariable
+    // Replace all occurrences of the quantifiedVariable with swapVariable
     val replaceWith = Constant(replaceWithString)
     val map = mapOf(formula.varName to replaceWith)
     newFormula = LogicNodeVariableInstantiator.transform(newFormula, map)
@@ -63,8 +62,8 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
         node.rightFormulas.distinct().toMutableList(),
         AllLeft(nodeID, listIndex, varAssign)
     )
-    state.tree.add(newLeaf)
-    node.children = arrayOf(state.tree.size - 1)
+
+    state.addChildren(nodeID, newLeaf)
 
     return state
 }
@@ -81,13 +80,13 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
 fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkRight(state, nodeID, listIndex)
 
-    val node: GenericSequentCalculusNode = state.tree[nodeID]
+    val node = state.tree[nodeID]
     val formula: LogicNode = node.rightFormulas[listIndex]
 
     if (formula !is UniversalQuantifier)
         throw IllegalMove("Rule allRight can only be applied on a universal quantifier")
 
-    var replaceWithString = varAssign.get(formula.varName)
+    var replaceWithString = varAssign[formula.varName]
 
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
@@ -96,14 +95,14 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<
     // Check if varAssign is a valid string for a constant
     isAllowedVarAssign(replaceWithString)
 
-    // Check if swapVariable is not already in use in the current seqeuence
+    // Check if swapVariable is not already in use in the current sequence
     if (checkIfVariableNameIsAlreadyInUse(node, replaceWithString))
         throw IllegalMove("Identifier '$replaceWithString' is already in use")
 
     // The newFormula which will be added to the right side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
 
-    // Replace all occurances of the quantifiedVariable with swapVariable
+    // Replace all occurrences of the quantifiedVariable with swapVariable
     val replaceWith = Constant(replaceWithString)
     val map = mapOf(formula.varName to replaceWith)
     newFormula = LogicNodeVariableInstantiator.transform(newFormula, map)
@@ -120,8 +119,8 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<
         newRightFormulas,
         AllRight(nodeID, listIndex, varAssign)
     )
-    state.tree.add(newLeaf)
-    node.children = arrayOf(state.tree.size - 1)
+
+    state.addChildren(nodeID, newLeaf)
 
     return state
 }
@@ -138,13 +137,13 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<
 fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkLeft(state, nodeID, listIndex)
 
-    val node: GenericSequentCalculusNode = state.tree[nodeID]
+    val node = state.tree[nodeID]
     val formula: LogicNode = node.leftFormulas[listIndex]
 
     if (formula !is ExistentialQuantifier)
         throw IllegalMove("Rule exLeft can only be applied on an existential quantifier")
 
-    var replaceWithString = varAssign.get(formula.varName)
+    var replaceWithString = varAssign[formula.varName]
 
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
@@ -153,14 +152,14 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<St
     // Check if varAssign is a valid string for a constant
     isAllowedVarAssign(replaceWithString)
 
-    // Check if swapVariable is not already in use in the current seqeuence
+    // Check if swapVariable is not already in use in the current sequence
     if (checkIfVariableNameIsAlreadyInUse(node, replaceWithString))
         throw IllegalMove("Identifier '$replaceWithString' is already in use")
 
     // The newFormula which will be added to the left side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
 
-    // Replace all occurances of the quantifiedVariable with swapVariable
+    // Replace all occurrences of the quantifiedVariable with swapVariable
     val replaceWith = Constant(replaceWithString)
     val map = mapOf(formula.varName to replaceWith)
     newFormula = LogicNodeVariableInstantiator.transform(newFormula, map)
@@ -177,8 +176,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<St
         node.rightFormulas.distinct().toMutableList(),
         ExLeft(nodeID, listIndex, varAssign)
     )
-    state.tree.add(newLeaf)
-    node.children = arrayOf(state.tree.size - 1)
+    state.addChildren(nodeID, newLeaf)
 
     return state
 }
@@ -195,13 +193,13 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<St
 fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<String, String>): FOSCState {
     checkRight(state, nodeID, listIndex)
 
-    val node: GenericSequentCalculusNode = state.tree[nodeID]
+    val node = state.tree[nodeID]
     val formula: LogicNode = node.rightFormulas[listIndex]
 
     if (formula !is ExistentialQuantifier)
         throw IllegalMove("Rule exRight can only be applied on an existential quantifier")
 
-    var replaceWithString = varAssign.get(formula.varName)
+    var replaceWithString = varAssign[formula.varName]
 
     // When swapVariable is not defined try to automatically find a fitting variableName
     if (replaceWithString == null)
@@ -215,7 +213,7 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
     // The newFormula which will be added to the right side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
 
-    // Replace all occurances of the quantifiedVariable with swapVariable
+    // Replace all occurrences of the quantifiedVariable with swapVariable
     val replaceWith = Constant(replaceWithString)
     val map = mapOf(formula.varName to replaceWith)
     newFormula = LogicNodeVariableInstantiator.transform(newFormula, map)
@@ -231,8 +229,7 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
         newRightFormulas,
         ExRight(nodeID, listIndex, varAssign)
     )
-    state.tree.add(newLeaf)
-    node.children = arrayOf(state.tree.size - 1)
+    state.addChildren(nodeID, newLeaf)
 
     return state
 }
@@ -243,7 +240,7 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
  * @param node The sequence in which to look for the variableName
  * @param varName The variable name to be compared with
  */
-private fun checkIfVariableNameIsAlreadyInUse(node: GenericSequentCalculusNode, varName: String): Boolean {
+private fun checkIfVariableNameIsAlreadyInUse(node: TreeNode, varName: String): Boolean {
     val usedNames = (node.leftFormulas + node.rightFormulas).flatMap { IdentifierCollector.collect(it) }.toSet()
     return usedNames.contains(varName)
 }
@@ -251,7 +248,7 @@ private fun checkIfVariableNameIsAlreadyInUse(node: GenericSequentCalculusNode, 
 /**
  * Tries to find a variable Name which leads to solving the proof
  */
-private fun findFittingVariableName(node: GenericSequentCalculusNode): String {
+private fun findFittingVariableName(node: TreeNode): String {
     throw IllegalMove("Not yet implemented")
 }
 
@@ -260,13 +257,13 @@ private fun findFittingVariableName(node: GenericSequentCalculusNode): String {
  */
 @Suppress("ThrowsCount")
 private fun isAllowedVarAssign(str: String) {
-    if (str.length <= 0)
+    if (str.isEmpty())
         throw IllegalMove("Can't instantiate with empty identifier")
-    else if (str.get(0).isUpperCase())
+    else if (str[0].isUpperCase())
         throw IllegalMove("Constant '$str' does not start with a lowercase letter")
 
     for (i in str.indices) {
-        if (!Tokenizer.isAllowedChar(str.get(i)))
-            throw IllegalMove("Character at position " + i.toString() + " in '$str' is not allowed in constants")
+        if (!Tokenizer.isAllowedChar(str[i]))
+            throw IllegalMove("Character at position $i in '$str' is not allowed in constants")
     }
 }

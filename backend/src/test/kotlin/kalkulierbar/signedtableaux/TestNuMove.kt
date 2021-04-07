@@ -1,7 +1,6 @@
 package kalkulierbar.test.signedtableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.*
 import kalkulierbar.parsers.ModalLogicParser
 import kalkulierbar.signedtableaux.AlphaMove
 import kalkulierbar.signedtableaux.NuMove
@@ -24,7 +23,7 @@ class TestNuMove {
 
         val formula = parser.parse("a")
 
-        val nodes = state.nodes
+        val nodes = state.tree
 
         assertTrue(nodes[4].formula.synEq(formula))
         assertTrue(nodes[4].prefix.equals(listOf(1, 1)))
@@ -40,7 +39,7 @@ class TestNuMove {
 
         val formula = parser.parse("a")
 
-        val nodes = state.nodes
+        val nodes = state.tree
 
         assertTrue(nodes[4].formula.synEq(formula))
         assertTrue(nodes[4].prefix.equals(listOf(1, 1)))

@@ -22,13 +22,13 @@ class FoTableauxState(
     override val backtracking: Boolean = false,
     val manualVarAssign: Boolean = false
 ) : GenericTableauxState<Relation>, ProtectedState() {
-    override val nodes = mutableListOf<FoTableauxNode>(FoTableauxNode(null, Relation("true", listOf()), false))
+    override val nodes = mutableListOf(FoTableauxNode(null, Relation("true", listOf()), false))
     val moveHistory = mutableListOf<TableauxMove>()
     override var usedBacktracking = false
     var expansionCounter = 0
 
     override var seal = ""
-    var renderedClauseSet = listOf<String>()
+    private var renderedClauseSet = listOf<String>()
     var statusMessage: String? = null
 
     /**
@@ -37,7 +37,7 @@ class FoTableauxState(
      * @return true is the node can be closed, false otherwise
      */
     override fun nodeIsCloseable(nodeID: Int): Boolean {
-        val node = nodes.get(nodeID)
+        val node = nodes[nodeID]
         return node.isLeaf && nodeAncestryContainsUnifiable(nodeID, node.toAtom())
     }
 
@@ -52,16 +52,12 @@ class FoTableauxState(
             return false
         val parent = nodes[node.parent]
 
-        var res: Boolean
-
-        try {
+        return try {
             Unification.unify(node.relation, parent.relation)
-            res = true
+            true
         } catch (e: UnificationImpossible) {
-            res = false
+            false
         }
-
-        return res
     }
 
     /**
@@ -113,7 +109,7 @@ class FoTableauxState(
     /**
      * Apply a global variable instantiation in the proof tree
      * @param varAssign Map of which variables to replace with which terms
-     * @return State with all occurences of variables in the map replaced with their respective terms
+     * @return State with all occurrences of variables in the map replaced with their respective terms
      */
     fun applyVarInstantiation(varAssign: Map<String, FirstOrderTerm>) {
         val instantiator = VariableInstantiator(varAssign)
@@ -146,9 +142,9 @@ class FoTableauxState(
 /**
  * Class representing a single node in the proof tree
  * @param parent ID of the parent node in the proof tree
- * @param spelling Name of the variable the node represents
- * @param negated True if the variable is negated, false otherwise
- * @param isLemma Marks the node as created using a Lemma rule instantiation
+ * @param relation Name of the relation the node represents
+ * @param negated True if the relation is negated, false otherwise
+ * @param lemmaSource Marks the node as created using a Lemma rule instantiation
  */
 @Serializable
 class FoTableauxNode(

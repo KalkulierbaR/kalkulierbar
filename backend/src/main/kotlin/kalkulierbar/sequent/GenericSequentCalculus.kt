@@ -4,22 +4,21 @@ import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
+import main.kotlin.kalkulierbar.tree.GenericTreeNode
+import main.kotlin.kalkulierbar.tree.TreeGardener
 import kotlin.math.sqrt
 
 interface GenericSequentCalculus
 
-interface GenericSequentCalculusState {
-    val tree: MutableList<GenericSequentCalculusNode>
+interface GenericSequentCalculusState : TreeGardener<TreeNode> {
+    override val tree: MutableList<TreeNode>
     var showOnlyApplicableRules: Boolean
 
     /**
      * Closes the branch specified by the leaf is its closeable
      * @param leaf the leaf to closeS
      */
-    fun setNodeClosed(leaf: GenericSequentCalculusNode) {
+    fun setNodeClosed(leaf: TreeNode) {
         var node = leaf
         while (node.isLeaf || node.children.all { tree[it].isClosed }) {
             node.isClosed = true
@@ -29,52 +28,6 @@ interface GenericSequentCalculusState {
             node = tree[node.parent!!]
         }
     }
-
-    /**
-     * Returns the width of the tree specified by nodeID
-     * @param nodeID the node id of the root
-     * @return the width of the tree
-     */
-    fun getWidth(nodeID: Int): Int {
-        val node = tree[nodeID]
-        return if (node.children.isEmpty())
-            1
-        else
-            node.children.sumBy { getWidth(it) }
-    }
-
-    /**
-     * Returns the maxmimum depth of the tree specified by nodeID
-     * @param nodeID the node id of the root
-     * @return the width of the tree
-     */
-    fun getDepth(nodeID: Int): Int {
-        val node = tree[nodeID]
-        return if (node.children.isEmpty())
-            1
-        else
-            node.children.maxByOrNull { getDepth(it) }!! + 1
-    }
-}
-
-val GenericSequentCalculusNodeModule = SerializersModule {
-    polymorphic(GenericSequentCalculusNode::class) {
-        subclass(TreeNode::class)
-    }
-}
-
-interface GenericSequentCalculusNode {
-    var parent: Int?
-    var children: Array<Int>
-    val leftFormulas: MutableList<LogicNode>
-    val rightFormulas: MutableList<LogicNode>
-    var isClosed: Boolean
-    val lastMove: SequentCalculusMove?
-
-    val isLeaf
-        get() = children.isEmpty()
-
-    override fun toString(): String
 }
 
 @Serializable
@@ -82,25 +35,24 @@ interface GenericSequentCalculusNode {
 @Suppress("LongParameterList")
 class TreeNode(
     override var parent: Int?,
-    override var children: Array<Int>,
-    override val leftFormulas: MutableList<LogicNode>,
-    override val rightFormulas: MutableList<LogicNode>,
-    override var isClosed: Boolean,
-    override val lastMove: SequentCalculusMove?
+    override var children: MutableList<Int>,
+    val leftFormulas: MutableList<LogicNode>,
+    val rightFormulas: MutableList<LogicNode>,
+    var isClosed: Boolean,
+    val lastMove: SequentCalculusMove?
 
-) : GenericSequentCalculusNode {
-
+) : GenericTreeNode {
     constructor(
         parent: Int,
         leftFormulas: MutableList<LogicNode>,
         rightFormulas: MutableList<LogicNode>,
         lastMove: SequentCalculusMove
-    ) : this (parent, emptyArray<Int>(), leftFormulas, rightFormulas, false, lastMove)
+    ) : this (parent, mutableListOf(), leftFormulas, rightFormulas, false, lastMove)
 
     constructor(
         leftFormulas: MutableList<LogicNode>,
         rightFormulas: MutableList<LogicNode>
-    ) : this(null, emptyArray<Int>(), leftFormulas, rightFormulas, false, null)
+    ) : this(null, mutableListOf(), leftFormulas, rightFormulas, false, null)
 
     override fun toString(): String {
         return leftFormulas.joinToString() + " ⊢ " + rightFormulas.joinToString()

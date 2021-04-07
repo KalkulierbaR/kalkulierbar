@@ -41,11 +41,11 @@ class TestBeta {
 
         state = instance.applyMoveOnState(state, BetaMove(0))
 
-        assertEquals("P(d)", state.nodes[1].spelling)
-        assertEquals(0, state.nodes[1].parent)
-        assertEquals("P(c)", state.nodes[2].spelling)
-        assertEquals(0, state.nodes[2].parent)
-        assertEquals(3, state.nodes.size)
+        assertEquals("P(d)", state.tree[1].spelling)
+        assertEquals(0, state.tree[1].parent)
+        assertEquals("P(c)", state.tree[2].spelling)
+        assertEquals(0, state.tree[2].parent)
+        assertEquals(3, state.tree.size)
     }
 
     @Test
@@ -55,15 +55,15 @@ class TestBeta {
 
         state = instance.applyMoveOnState(state, BetaMove(0))
 
-        assertEquals("P(f)", state.nodes[1].spelling)
-        assertEquals(0, state.nodes[1].parent)
-        assertEquals("P(e)", state.nodes[2].spelling)
-        assertEquals(0, state.nodes[2].parent)
-        assertEquals("P(d)", state.nodes[3].spelling)
-        assertEquals(0, state.nodes[3].parent)
-        assertEquals("P(c)", state.nodes[4].spelling)
-        assertEquals(0, state.nodes[4].parent)
-        assertEquals(5, state.nodes.size)
+        assertEquals("P(f)", state.tree[1].spelling)
+        assertEquals(0, state.tree[1].parent)
+        assertEquals("P(e)", state.tree[2].spelling)
+        assertEquals(0, state.tree[2].parent)
+        assertEquals("P(d)", state.tree[3].spelling)
+        assertEquals(0, state.tree[3].parent)
+        assertEquals("P(c)", state.tree[4].spelling)
+        assertEquals(0, state.tree[4].parent)
+        assertEquals(5, state.tree.size)
     }
 
     @Test
@@ -75,6 +75,6 @@ class TestBeta {
         state = instance.applyMoveOnState(state, BetaMove(2))
 
         val expected = "[(null|[1]|false|null|((P(c) ∨ (P(d) ∧ Q(c))) ∧ Q(c))), (0|[2]|false|null|Q(c)), (1|[3, 4]|false|null|(P(c) ∨ (P(d) ∧ Q(c)))), (2|[]|false|null|(P(d) ∧ Q(c))), (2|[]|false|null|P(c))]"
-        assertEquals(expected, state.nodes.map { it.getHash() }.toString())
+        assertEquals(expected, state.tree.map { it.getHash() }.toString())
     }
 }

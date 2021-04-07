@@ -89,12 +89,12 @@ class SignedModalTableaux :
     override fun checkCloseOnState(state: SignedModalTableauxState): CloseMessage {
         var msg = "The proof tree is not closed"
 
-        if (state.nodes[0].isClosed) {
+        if (state.tree[0].isClosed) {
             val withWithoutBT = if (state.usedBacktracking) "with" else "without"
             msg = "The proof is closed and valid in signed modal-logic tableaux $withWithoutBT backtracking"
         }
 
-        return CloseMessage(state.nodes[0].isClosed, msg)
+        return CloseMessage(state.tree[0].isClosed, msg)
     }
 
     override fun stateToJson(state: SignedModalTableauxState): String {
@@ -153,6 +153,6 @@ class SignedModalTableaux :
      * @return string representing the initial formula of the state
      */
     override fun getStartingFormula(state: String): String {
-        return jsonToState(state).nodes[0].toString()
+        return jsonToState(state).tree[0].toString()
     }
 }

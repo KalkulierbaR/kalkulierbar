@@ -14,7 +14,7 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
     override val identifier = "psc"
 
     override val serializer = Json {
-        serializersModule = LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule
+        serializersModule = LogicModule + SequentCalculusMoveModule
         encodeDefaults = true
     }
     override val stateSerializer = PSCState.serializer()

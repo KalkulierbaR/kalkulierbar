@@ -11,9 +11,9 @@ import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.FirstOrderSequentParser
 import kalkulierbar.sequent.*
 import kalkulierbar.sequent.GenericSequentCalculus
-import kalkulierbar.sequent.GenericSequentCalculusNodeModule
 import kalkulierbar.sequent.SequentCalculusMove
 import kalkulierbar.sequent.SequentCalculusMoveModule
+import kalkulierbar.sequent.TreeNode
 import kalkulierbar.sequent.fosc.moveImplementations.*
 import kalkulierbar.sequent.moveImplementations.*
 import kotlinx.serialization.decodeFromString
@@ -28,7 +28,7 @@ class FOSC :
     override val identifier = "fosc"
 
     override val serializer = Json {
-        serializersModule = FoTermModule + LogicModule + SequentCalculusMoveModule + GenericSequentCalculusNodeModule
+        serializersModule = FoTermModule + LogicModule + SequentCalculusMoveModule
         encodeDefaults = true
     }
     override val stateSerializer = FOSCState.serializer()

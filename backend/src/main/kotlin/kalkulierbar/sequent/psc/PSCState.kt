@@ -1,13 +1,13 @@
 package kalkulierbar.sequent.psc
 
-import kalkulierbar.sequent.GenericSequentCalculusNode
 import kalkulierbar.sequent.GenericSequentCalculusState
+import kalkulierbar.sequent.TreeNode
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
 @Serializable
 class PSCState(
-    override val tree: MutableList<GenericSequentCalculusNode> = mutableListOf<GenericSequentCalculusNode>(),
+    override val tree: MutableList<TreeNode> = mutableListOf(),
     override var showOnlyApplicableRules: Boolean = false
 ) : GenericSequentCalculusState, ProtectedState() {
     override var seal = ""

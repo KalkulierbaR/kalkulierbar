@@ -99,7 +99,7 @@ class TestModalLogicParser {
     fun testValidStringsWithSign() {
         for ((formula, expected) in validSigned) {
             val state = instance.parseFormulaToState(formula, null)
-            assertEquals(expected, state.nodes[0].formula.toString())
+            assertEquals(expected, state.tree[0].formula.toString())
             if (formula.contains("T")) {
                 assertEquals(true, state.assumption)
             } else {

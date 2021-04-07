@@ -14,9 +14,7 @@ import kalkulierbar.sequent.TreeNode
 @Suppress("ThrowsCount")
 fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalculusState {
 
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of bounds")
-
+    state.checkNodeID(nodeID)
     val leaf = state.tree[nodeID]
 
     if (!leaf.isLeaf)
@@ -26,14 +24,13 @@ fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalc
         if (leaf.rightFormulas.any { it.synEq(leftFormula) }) {
             val newLeaf = TreeNode(
                 nodeID,
-                emptyArray(),
+                mutableListOf(),
                 mutableListOf(),
                 mutableListOf(),
                 true,
                 Ax(nodeID)
             )
-            state.tree.add(newLeaf)
-            state.tree[nodeID].children = arrayOf(state.tree.size - 1)
+            state.addChildren(nodeID, newLeaf)
             state.setNodeClosed(newLeaf)
             return state
         }
@@ -70,8 +67,7 @@ fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
         newRightFormula.distinct().toMutableList(),
         NotRight(nodeID, listIndex)
     )
-    state.tree.add(newLeaf)
-    state.tree[nodeID].children = arrayOf(state.tree.size - 1)
+    state.addChildren(nodeID, newLeaf)
     return state
 }
 
@@ -104,8 +100,7 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
         newRightFormula.distinct().toMutableList(),
         NotLeft(nodeID, listIndex)
     )
-    state.tree.add(newLeaf)
-    state.tree[nodeID].children = arrayOf(state.tree.size - 1)
+    state.addChildren(nodeID, newLeaf)
     return state
 }
 
@@ -138,8 +133,7 @@ fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
         newRightFormula.distinct().toMutableList(),
         OrRight(nodeID, listIndex)
     )
-    state.tree.add(newLeaf)
-    state.tree[nodeID].children = arrayOf(state.tree.size - 1)
+    state.addChildren(nodeID, newLeaf)
     return state
 }
 
@@ -188,9 +182,7 @@ fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int)
         OrLeft(nodeID, listIndex)
     )
 
-    state.tree.add(newLeftLeaf)
-    state.tree.add(newRightLeaf)
-    state.tree[nodeID].children = arrayOf(state.tree.size - 2, state.tree.size - 1)
+    state.addChildren(nodeID, newLeftLeaf, newRightLeaf)
     return state
 }
 
@@ -238,9 +230,8 @@ fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
         newRightFormulaOnRightChild.distinct().toMutableList(),
         AndRight(nodeID, listIndex)
     )
-    state.tree.add(newLeftLeaf)
-    state.tree.add(newRightLeaf)
-    state.tree[nodeID].children = arrayOf(state.tree.size - 2, state.tree.size - 1)
+    state.addChildren(nodeID, newLeftLeaf, newRightLeaf)
+
     return state
 }
 
@@ -273,8 +264,7 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
         newRightFormula.distinct().toMutableList(),
         AndLeft(nodeID, listIndex)
     )
-    state.tree.add(newLeaf)
-    state.tree[nodeID].children = arrayOf(state.tree.size - 1)
+    state.addChildren(nodeID, newLeaf)
     return state
 }
 
@@ -321,9 +311,7 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
         ImpLeft(nodeID, listIndex)
     )
 
-    state.tree.add(newLeftLeaf)
-    state.tree.add(newRightLeaf)
-    state.tree[nodeID].children = arrayOf(state.tree.size - 2, state.tree.size - 1)
+    state.addChildren(nodeID, newLeftLeaf, newRightLeaf)
     return state
 }
 
@@ -356,8 +344,7 @@ fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
         newRightFormula.distinct().toMutableList(),
         ImpRight(nodeID, listIndex)
     )
-    state.tree.add(newLeaf)
-    state.tree[nodeID].children = arrayOf(state.tree.size - 1)
+    state.addChildren(nodeID, newLeaf)
     return state
 }
 
@@ -372,9 +359,7 @@ fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
  */
 @Suppress("ThrowsCount")
 fun checkRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) {
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of bounds")
-
+    state.checkNodeID(nodeID)
     val leaf = state.tree[nodeID]
 
     if (!leaf.isLeaf)
@@ -394,9 +379,7 @@ fun checkRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) 
  */
 @Suppress("ThrowsCount")
 fun checkLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) {
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of bounds")
-
+    state.checkNodeID(nodeID)
     val leaf = state.tree[nodeID]
 
     if (!leaf.isLeaf)
@@ -422,7 +405,7 @@ fun applyUndo(state: GenericSequentCalculusState): GenericSequentCalculusState {
     val parentID: Int? = latestNode.parent
     val parentNode = state.tree.elementAt(parentID!!)
 
-    applyPrune(state, parentID)
+    state.pruneBranch(parentID)
 
     var currentNode = parentNode
     parentNode.isClosed = false
@@ -439,46 +422,8 @@ fun applyUndo(state: GenericSequentCalculusState): GenericSequentCalculusState {
  * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-@Suppress("EmptyCatchBlock", "ComplexMethod", "NestedBlockDepth", "ThrowsCount")
 fun applyPrune(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalculusState {
-    if (nodeID < 0 || state.tree.size <= nodeID)
-        throw IllegalMove("nodeID out of bounds")
-
-    if (state.tree.size <= 1)
-        throw IllegalMove("Nothing to prune")
-
-    val node = state.tree.elementAt(nodeID)
-
-    if (node.isLeaf)
-        throw IllegalMove("Nothing to prune")
-
-    for (child: Int in node.children) {
-        try {
-            applyPrune(state, child)
-        } catch (e: IllegalMove) {
-        }
-        state.tree.removeAt(child)
-        // Update left side of removalNode 
-        for (i in 0 until child) {
-            val currentNode = state.tree.elementAt(i)
-
-            for (j in currentNode.children.indices) {
-                if (currentNode.children[j] > child)
-                    currentNode.children[j] -= 1
-            }
-        }
-        // Update right side of removalNode
-        for (i in child until state.tree.size) {
-            val currentNode = state.tree.elementAt(i)
-
-            for (j in currentNode.children.indices) {
-                currentNode.children[j] -= 1
-                if (currentNode.parent != null && currentNode.parent!! > child)
-                    currentNode.parent = currentNode.parent!! - 1
-            }
-        }
-    }
-    node.children = emptyArray()
-    node.isClosed = false
+    state.checkNodeID(nodeID)
+    state.pruneBranch(nodeID)
     return state
 }

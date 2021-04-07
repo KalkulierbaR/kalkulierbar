@@ -70,12 +70,17 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
     override fun checkCloseOnState(state: NcTableauxState): CloseMessage {
         var msg = "The proof tree is not closed"
 
-        if (state.nodes[0].isClosed) {
+        if (state.tree[0].isClosed) {
             val withWithoutBT = if (state.usedBacktracking) "with" else "without"
             msg = "The proof is closed and valid in non-clausal tableaux $withWithoutBT backtracking"
         }
 
-        return CloseMessage(state.nodes[0].isClosed, msg)
+        return CloseMessage(state.tree[0].isClosed, msg)
+    }
+
+    override fun stateToJson(state: NcTableauxState): String {
+        state.render()
+        return super.stateToJson(state)
     }
 
     /*

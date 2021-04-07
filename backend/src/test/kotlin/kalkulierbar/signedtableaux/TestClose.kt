@@ -1,6 +1,5 @@
 package kalkulierbar.test.signedtableaux
 
-import kalkulierbar.logic.*
 import kalkulierbar.parsers.ModalLogicParser
 import kalkulierbar.signedtableaux.AlphaMove
 import kalkulierbar.signedtableaux.CloseMove
@@ -31,7 +30,7 @@ class TestClose {
         val stateTopDown = instance.applyMoveOnState(state, CloseMove(4, 6))
         // val stateDownTop = instance.applyMoveOnState(state, CloseMove(6, 4))
 
-        stateTopDown.nodes.forEach { node -> assertEquals(true, node.isClosed) }
+        stateTopDown.tree.forEach { node -> assertEquals(true, node.isClosed) }
         // stateDownTop.nodes.forEach { node -> assertEquals(true, node.isClosed) }
     }
 }

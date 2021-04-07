@@ -1,7 +1,6 @@
 package kalkulierbar.test.signedtableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.*
 import kalkulierbar.parsers.ModalLogicParser
 import kalkulierbar.signedtableaux.AlphaMove
 import kalkulierbar.signedtableaux.BetaMove
@@ -24,7 +23,7 @@ class TestPruneMove {
 
         state = instance.applyMoveOnState(state, Prune(0))
 
-        assertEquals(1, state.nodes.size)
+        assertEquals(1, state.tree.size)
     }
 
     @Test
@@ -37,7 +36,7 @@ class TestPruneMove {
 
         state = instance.applyMoveOnState(state, Prune(3))
 
-        assertEquals(5, state.nodes.size)
+        assertEquals(5, state.tree.size)
     }
 
     @Test
