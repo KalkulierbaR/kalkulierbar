@@ -29,7 +29,7 @@ const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format
-                foLogic={calculus === Calculus.fosc}
+                foLogic={calculus === Calculus.foSequent}
                 allowClauses={false}
                 allowSequences={true}
             />
@@ -37,7 +37,7 @@ const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 calculus={calculus}
                 params={params}
                 placeholder={
-                    calculus === Calculus.fosc
+                    calculus === Calculus.foSequent
                         ? "\\all X: (\\all Y: !(P(X) -> P(Y)) |- \\all X: !P(X)"
                         : "!(a -> b) |- !b"
                 }

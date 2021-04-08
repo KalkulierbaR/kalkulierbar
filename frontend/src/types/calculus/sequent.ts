@@ -45,13 +45,13 @@ export function instanceOfPSCState(
     object: any,
     calculus: SequentCalculusType,
 ): object is PSCState {
-    return "tree" in object && calculus === Calculus.psc;
+    return "tree" in object && calculus === Calculus.propSequent;
 }
 export function instanceOfFOSCState(
     object: any,
     calculus: SequentCalculusType,
 ): object is FOSCState {
-    return "tree" in object && calculus === Calculus.fosc;
+    return "tree" in object && calculus === Calculus.foSequent;
 }
 
 export type PSCMove =

@@ -198,7 +198,7 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                         />
                     </div>
                 )}
-                {calculus === Calculus.psc && (
+                {calculus === Calculus.propSequent && (
                     <div class={style.container}>
                         <VideoTutorial
                             title="Applying rules"
@@ -232,7 +232,7 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                         />
                     </div>
                 )}
-                {calculus === Calculus.fosc && (
+                {calculus === Calculus.foSequent && (
                     <div class={style.container}>
                         <VideoTutorial
                             title="Applying rules"
