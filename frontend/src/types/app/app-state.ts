@@ -61,13 +61,13 @@ export interface AppState {
      */
     dpll?: DPLLState;
     /**
-     * The current psc state
+     * The current prop-sequent state
      */
-    psc?: PSCState;
+    "prop-sequent"?: PSCState;
     /**
-     * The current fosc state
+     * The current fo-sequent state
      */
-    fosc?: FOSCState;
+    "fo-sequent"?: FOSCState;
     /**
      * The current signed-modal-tableaux state
      */

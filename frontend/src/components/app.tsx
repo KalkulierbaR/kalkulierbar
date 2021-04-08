@@ -168,20 +168,20 @@ const App: preact.FunctionalComponent = () => {
                     <DPLL path={`/${Calculus.dpll}`} />
                     <DPLLView path={`/${Calculus.dpll}/view`} />
                     <SequentCalculus
-                        path={`/${Calculus.psc}`}
-                        calculus={Calculus.psc}
+                        path={`/${Calculus.propSequent}`}
+                        calculus={Calculus.propSequent}
                     />
                     <SequentView
-                        path={`/${Calculus.psc}/view`}
-                        calculus={Calculus.psc}
+                        path={`/${Calculus.propSequent}/view`}
+                        calculus={Calculus.propSequent}
                     />
                     <SequentCalculus
-                        path={`/${Calculus.fosc}`}
-                        calculus={Calculus.fosc}
+                        path={`/${Calculus.foSequent}`}
+                        calculus={Calculus.foSequent}
                     />
                     <SequentView
-                        path={`/${Calculus.fosc}/view`}
-                        calculus={Calculus.fosc}
+                        path={`/${Calculus.foSequent}/view`}
+                        calculus={Calculus.foSequent}
                     />
                     <ModalTableaux
                         path={`/${Calculus.modalTableaux}`}

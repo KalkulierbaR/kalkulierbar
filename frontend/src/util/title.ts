@@ -46,8 +46,8 @@ const getTitle = (url: string) => {
         case "/signed-modal-tableaux":
         case "/signed-modal-tableaux/view":
             return "Modal Tableaux";
-        case "/psc":
-        case "/psc/view":
+        case "/prop-sequent":
+        case "/fo-sequent/view":
             return "Propositional Sequent";
         case "/fosc":
         case "/fosc/view":

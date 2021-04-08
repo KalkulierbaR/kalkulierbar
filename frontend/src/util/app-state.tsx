@@ -25,8 +25,8 @@ const INIT_APP_STATE: AppState = {
         [Calculus.foTableaux]: "",
         [Calculus.ncTableaux]: "",
         [Calculus.dpll]: "",
-        [Calculus.psc]: "",
-        [Calculus.fosc]: "",
+        [Calculus.propSequent]: "",
+        [Calculus.foSequent]: "",
         [Calculus.modalTableaux]: "",
     },
     server: isDeployed
