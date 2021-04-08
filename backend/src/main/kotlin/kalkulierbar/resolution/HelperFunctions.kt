@@ -120,11 +120,9 @@ fun <AtomType> findResCandidates(
  * @return Boolean
  */
 fun <AtomType> literalsAreEqual(a: AtomType, b: AtomType): Boolean {
-    val eq: Boolean
     // Use syntactic equality for literal comparison if defined
-    if (a is SyntacticEquality && b is SyntacticEquality)
-        eq = a.synEq(b)
+    return if (a is SyntacticEquality && b is SyntacticEquality)
+        a.synEq(b)
     else
-        eq = (a == b)
-    return eq
+        (a == b)
 }

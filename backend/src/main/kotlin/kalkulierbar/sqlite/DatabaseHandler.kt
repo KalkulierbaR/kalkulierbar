@@ -37,7 +37,7 @@ class DatabaseHandler {
             statisticsJSON.replace("\"", "\\\"")
             if (connection != null) {
                 val stmt = (connection as Connection).createStatement()
-                val insert: String =
+                val insert =
                     "INSERT INTO $sqlIdentifier VALUES (\"$keyFormula\", '$statisticsJSON', CURRENT_TIMESTAMP);"
                 stmt.execute(insert)
                 stmt.close()

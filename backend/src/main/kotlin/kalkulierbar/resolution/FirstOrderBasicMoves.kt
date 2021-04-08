@@ -105,7 +105,7 @@ private fun instantiateReturn(
     baseClause.atoms.forEach {
         val relationArgs = it.lit.arguments.map { it.clone().accept(instantiator) }
         val newRelation = Relation(it.lit.spelling, relationArgs)
-        val newAtom = Atom<Relation>(newRelation, it.negated)
+        val newAtom = Atom(newRelation, it.negated)
         newClause.add(newAtom)
     }
     return newClause
@@ -115,7 +115,7 @@ private fun instantiateReturn(
  * Applies the factorize move
  * @param state The state to apply the move on
  * @param clauseID Id of clause to apply the move on
- * @param atoms List of IDs of literals for unification (The literals should be equal)
+ * @param atomIDs List of IDs of literals for unification (The literals should be equal)
  */
 @Suppress("ThrowsCount")
 fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
@@ -147,7 +147,7 @@ fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
 
             // Change every unified atom to placeholder (except last) -> later remove all placeholder
             // -> One Atom remains
-            newClause.atoms[atomIDs[i]] = Atom<Relation>(Relation("%placeholder%", mutableListOf()), false)
+            newClause.atoms[atomIDs[i]] = Atom(Relation("%placeholder%", mutableListOf()), false)
         }
     }
     // Remove placeholder atoms
@@ -251,7 +251,7 @@ private fun resolveSidePremiss(
     mainResolveSide.atoms.forEach {
         val relationArgs = it.lit.arguments.map { it.clone().accept(instantiator) }
         val newRelation = Relation(it.lit.spelling, relationArgs)
-        val newAtom = Atom<Relation>(newRelation, it.negated)
+        val newAtom = Atom(newRelation, it.negated)
         newClause.add(newAtom)
     }
     return newClause

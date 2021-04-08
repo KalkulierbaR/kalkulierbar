@@ -108,7 +108,7 @@ private fun <AtomType> checkConnectedSubtree(
     root: Int,
     strong: Boolean
 ): Boolean {
-    val node = state.nodes.get(root)
+    val node = state.nodes[root]
 
     // A subtree is weakly/strongly connected iff:
     // 1. The root is a leaf OR at least one child of the root is a closed leaf

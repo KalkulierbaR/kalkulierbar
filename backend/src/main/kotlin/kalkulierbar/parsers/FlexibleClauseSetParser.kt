@@ -20,7 +20,7 @@ object FlexibleClauseSetParser {
         var errorMsg: String
 
         val likelyFormula = (Regex(".*(&|\\||->|<=>).*", RegexOption.DOT_MATCHES_ALL) matches formula)
-        val likelyClauseSet = (Regex(".*(;|,).*", RegexOption.DOT_MATCHES_ALL) matches formula)
+        val likelyClauseSet = (Regex(".*([;,]).*", RegexOption.DOT_MATCHES_ALL) matches formula)
 
         // Try parsing as Dimacs-Like
         try {
@@ -63,8 +63,8 @@ object FlexibleClauseSetParser {
      * @param strategy conversion strategy to apply
      * @return ClauseSet representation of the input formula
      */
-    fun convertToCNF(formula: LogicNode, strategy: CnfStrategy): ClauseSet<String> {
-        var res: ClauseSet<String>
+    private fun convertToCNF(formula: LogicNode, strategy: CnfStrategy): ClauseSet<String> {
+        val res: ClauseSet<String>
 
         when (strategy) {
             CnfStrategy.NAIVE -> res = NaiveCNF.transform(formula)
@@ -73,14 +73,14 @@ object FlexibleClauseSetParser {
                 val tseytin = TseytinCNF.transform(formula)
                 // Naive transformation might fail for large a large formula
                 // Fall back to tseytin if so
-                try {
+                res = try {
                     val naive = NaiveCNF.transform(formula)
                     if (naive.clauses.size > tseytin.clauses.size)
-                        res = tseytin
+                        tseytin
                     else
-                        res = naive
+                        naive
                 } catch (e: FormulaConversionException) {
-                    res = tseytin
+                    tseytin
                 }
             }
         }

@@ -15,7 +15,6 @@ interface GenericResolutionState<AtomType> {
 
     /**
      * Get information about a proof state
-     * @param state Current proof state
      * @return CloseMessage containing information about the proof status
      */
     fun getCloseMessage(): CloseMessage {
@@ -27,7 +26,6 @@ interface GenericResolutionState<AtomType> {
     /**
      * Create a new clause by resolving two existing clauses and add it to the clause set
      * If the given literal is null, a suitable literal will be chosen automatically
-     * @param state Proof state to apply resolution in
      * @param clause1 ID of the first clause to use for resolution
      * @param clause2 ID of the second clause to use for resolution
      * @param literal Literal present in both clauses to use for resolution
@@ -51,14 +49,13 @@ interface GenericResolutionState<AtomType> {
 
         val c1 = clauses[clause1]
         val c2 = clauses[clause2]
-        val resCandidates: Pair<Atom<AtomType>, Atom<AtomType>>
 
         // If the frontend did not pass a resolution target, we'll try to find one ourselves
-        if (literal == null) {
-            resCandidates = getAutoResolutionCandidates(c1, c2)
+        val resCandidates = if (literal == null) {
+            getAutoResolutionCandidates(c1, c2)
         } else {
             // Filter clauses for atoms with correct literal
-            resCandidates = filterClause(c1, c2, literal)
+            filterClause(c1, c2, literal)
         }
 
         val (a1, a2) = resCandidates
@@ -72,7 +69,6 @@ interface GenericResolutionState<AtomType> {
 
     /**
      * Hide a clause from the main view
-     * @param state Current proof state
      * @param clauseID ID of the clause to be hidden
      */
     fun hide(clauseID: Int) {
@@ -87,7 +83,6 @@ interface GenericResolutionState<AtomType> {
 
     /**
      * Show all hidden clauses
-     * @param state Current proof state
      */
     fun show() {
         clauseSet.unite(hiddenClauses)

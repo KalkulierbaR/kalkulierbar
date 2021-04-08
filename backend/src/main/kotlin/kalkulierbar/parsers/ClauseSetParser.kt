@@ -62,12 +62,10 @@ object ClauseSetParser {
             for (member in members) {
                 // Check if the member variable is negated and set a boolean flag accordingly
                 // true -> positive variable / false -> negated variable
-                val atom: Atom<String>
-
-                if (member[0] == negSign)
-                    atom = Atom(member.substring(1), true)
+                val atom = if (member[0] == negSign)
+                    Atom(member.substring(1), true)
                 else
-                    atom = Atom(member)
+                    Atom(member)
 
                 parsedClause.add(atom)
             }

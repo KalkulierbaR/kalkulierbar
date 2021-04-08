@@ -35,7 +35,7 @@ object PropositionalSequentParser {
 
     private fun parseFormulas(formulaList: String, inputPosition: Int): List<LogicNode> {
         val rawFormulas = formulaList.split(",")
-        var position = inputPosition
+        val position = inputPosition
 
         return rawFormulas.mapIndexedNotNull { i, formula ->
             try {

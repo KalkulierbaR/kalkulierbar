@@ -18,7 +18,7 @@ class TableauxState(
     override val regular: Boolean = false,
     override val backtracking: Boolean = false
 ) : GenericTableauxState<String>, ProtectedState() {
-    override val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
+    override val nodes = mutableListOf(TableauxNode(null, "true", false))
     val moveHistory = mutableListOf<TableauxMove>()
     override var usedBacktracking = false
     override var seal = ""
@@ -29,7 +29,7 @@ class TableauxState(
      * @return true is the node can be closed, false otherwise
      */
     override fun nodeIsCloseable(nodeID: Int): Boolean {
-        val node = nodes.get(nodeID)
+        val node = nodes[nodeID]
         return node.isLeaf && nodeAncestryContainsAtom(nodeID, node.toAtom().not())
     }
 
