@@ -24,9 +24,9 @@ interface GenericTableauxState<AtomType> {
     val usedBacktracking: Boolean
 
     val clauseSet: ClauseSet<AtomType>
-    val nodes: List<GenericTableauxNode<AtomType>>
+    val tree: List<GenericTableauxNode<AtomType>>
     val root
-        get() = nodes[0]
+        get() = tree[0]
 
     /**
      * Check whether a node is a (transitive) parent of another node
@@ -36,7 +36,7 @@ interface GenericTableauxState<AtomType> {
      */
     @Suppress("ReturnCount")
     fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
-        val child = nodes[childID]
+        val child = tree[childID]
         if (child.parent == parentID)
             return true
         if (child.parent == 0 || child.parent == null)
@@ -54,11 +54,11 @@ interface GenericTableauxState<AtomType> {
         var node = leaf
 
         // Set isClosed to true for all nodes dominated by leaf in reverse tree
-        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && nodes[e].isClosed }) {
+        while (node.isLeaf || node.children.fold(true) { acc, e -> acc && tree[e].isClosed }) {
             node.isClosed = true
             if (node.parent == null)
                 break
-            node = nodes[node.parent!!]
+            node = tree[node.parent!!]
         }
     }
 
@@ -103,14 +103,14 @@ interface GenericTableauxState<AtomType> {
     @Suppress("ThrowsCount", "ComplexMethod")
     fun getLemma(leafID: Int, lemmaID: Int): Atom<AtomType> {
         // Verify that subtree root for lemma creation exists
-        if (lemmaID >= nodes.size || lemmaID < 0)
+        if (lemmaID >= tree.size || lemmaID < 0)
             throw IllegalMove("Node with ID $lemmaID does not exist")
         // Verify that subtree root for lemma creation exists
-        if (leafID >= nodes.size || leafID < 0)
+        if (leafID >= tree.size || leafID < 0)
             throw IllegalMove("Node with ID $leafID does not exist")
 
-        val leaf = nodes[leafID]
-        val lemmaNode = nodes[lemmaID]
+        val leaf = tree[leafID]
+        val lemmaNode = tree[lemmaID]
 
         if (!leaf.isLeaf)
             throw IllegalMove("Node '$leaf' is not a leaf")

@@ -46,21 +46,21 @@ class TestParseFormulaState {
         val state2 = instance.parseFormulaToState(validString2, opts)
         val state3 = instance.parseFormulaToState(validString3, opts)
 
-        val root1 = state1.nodes[0]
-        val root2 = state2.nodes[0]
-        val root3 = state3.nodes[0]
+        val root1 = state1.tree[0]
+        val root2 = state2.tree[0]
+        val root3 = state3.tree[0]
 
-        assertEquals(state1.nodes.size, 1)
+        assertEquals(state1.tree.size, 1)
         assertEquals(root1.parent, null)
         assertEquals(root1.spelling, "true")
         assertEquals(root1.negated, false)
 
-        assertEquals(state2.nodes.size, 1)
+        assertEquals(state2.tree.size, 1)
         assertEquals(root2.parent, null)
         assertEquals(root2.spelling, "true")
         assertEquals(root2.negated, false)
 
-        assertEquals(state3.nodes.size, 1)
+        assertEquals(state3.tree.size, 1)
         assertEquals(root3.parent, null)
         assertEquals(root3.spelling, "true")
         assertEquals(root3.negated, false)

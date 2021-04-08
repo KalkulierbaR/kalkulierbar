@@ -66,7 +66,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
         <Fragment>
             <ControlFAB
                 alwaysOpen={!smallScreen}
-                couldShowCheckCloseHint={state.nodes[0].isClosed}
+                couldShowCheckCloseHint={state.tree[0].isClosed}
                 checkFABPositionFromBottom={showUndoFAB ? 2 : 1}
             >
                 {selectedNodeId === undefined ? (
@@ -76,7 +76,7 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                             name={calculus}
                             type={calculus}
                         />
-                        {state.nodes.filter((node) => !node.isClosed).length >
+                        {state.tree.filter((node) => !node.isClosed).length >
                             0 && <NextLeafFAB calculus={calculus} />}
                         <CenterFAB resetDragTransforms={resetDragTransforms} />
                         <CheckCloseFAB calculus={calculus} />
@@ -109,9 +109,9 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 active={true}
                             />
                         ) : (
-                            state!.nodes[selectedNodeId].children.length ===
+                            state!.tree[selectedNodeId].children.length ===
                                 0 &&
-                            state!.nodes.filter((node) => node.isClosed)
+                            state!.tree.filter((node) => node.isClosed)
                                 .length > 0 && (
                                 <FAB
                                     icon={<LemmaIcon />}

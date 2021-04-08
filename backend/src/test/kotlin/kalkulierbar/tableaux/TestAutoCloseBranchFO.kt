@@ -38,7 +38,7 @@ class TestAutoCloseBranchFO {
         state = instance.applyMoveOnState(state, MoveAutoClose(4, 2))
         state = instance.applyMoveOnState(state, MoveAutoClose(5, 2))
 
-        val nodes = state.nodes
+        val nodes = state.tree
         // check for leaf closed and close ref
         assertEquals(nodes[6].isClosed, true)
         assertEquals(nodes[6].closeRef, 2)
@@ -62,7 +62,7 @@ class TestAutoCloseBranchFO {
         state = instance.applyMoveOnState(state, MoveAutoClose(6, 3))
         state = instance.applyMoveOnState(state, MoveAutoClose(9, 4))
 
-        val nodes = state.nodes
+        val nodes = state.tree
         // check for leaf closed and close ref
         assertEquals(nodes[6].isClosed, true)
         assertEquals(nodes[6].closeRef, 3)
@@ -88,7 +88,7 @@ class TestAutoCloseBranchFO {
         state = instance.applyMoveOnState(state, MoveExpand(2, 2))
         state = instance.applyMoveOnState(state, MoveAutoClose(3, 1))
 
-        val nodes = state.nodes
+        val nodes = state.tree
         // check for leaf closed and close ref
         assertEquals(nodes[3].isClosed, true)
         assertEquals(nodes[3].closeRef, 1)

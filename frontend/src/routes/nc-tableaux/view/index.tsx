@@ -53,7 +53,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
     const [varOrigins, setVarOrigins] = useState<string[]>([]);
 
     const selectedNode =
-        selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
+        selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined;
     const selectedNodeIsLeaf =
         selectedNode !== undefined
             ? selectedNode.children.length === 0
@@ -124,7 +124,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
 
             <div class="card no-pad">
                 <NCTabTree
-                    nodes={state.nodes}
+                    nodes={state.tree}
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={handleNodeSelect}
                     dragTransforms={dragTransforms}

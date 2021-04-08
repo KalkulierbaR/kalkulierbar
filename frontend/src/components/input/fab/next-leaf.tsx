@@ -25,7 +25,7 @@ const NextLeafFAB: preact.FunctionalComponent<Props> = ({ calculus }) => {
             extended={true}
             showIconAtEnd={true}
             onClick={() => {
-                const node = nextOpenLeaf(state!.nodes);
+                const node = nextOpenLeaf(state!.tree);
                 if (node === undefined) {
                     return;
                 }

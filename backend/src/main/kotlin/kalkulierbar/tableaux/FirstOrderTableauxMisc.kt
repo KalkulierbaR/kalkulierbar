@@ -22,7 +22,7 @@ class FoTableauxState(
     override val backtracking: Boolean = false,
     val manualVarAssign: Boolean = false
 ) : GenericTableauxState<Relation>, ProtectedState() {
-    override val nodes = mutableListOf(FoTableauxNode(null, Relation("true", listOf()), false))
+    override val tree = mutableListOf(FoTableauxNode(null, Relation("true", listOf()), false))
     val moveHistory = mutableListOf<TableauxMove>()
     override var usedBacktracking = false
     var expansionCounter = 0
@@ -37,7 +37,7 @@ class FoTableauxState(
      * @return true is the node can be closed, false otherwise
      */
     override fun nodeIsCloseable(nodeID: Int): Boolean {
-        val node = nodes[nodeID]
+        val node = tree[nodeID]
         return node.isLeaf && nodeAncestryContainsUnifiable(nodeID, node.toAtom())
     }
 
@@ -47,10 +47,10 @@ class FoTableauxState(
      * @return true is the node can be closed directly, false otherwise
      */
     override fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
-        val node = nodes[nodeID]
-        if (node.parent == null || !node.isLeaf || node.negated == nodes[node.parent].negated)
+        val node = tree[nodeID]
+        if (node.parent == null || !node.isLeaf || node.negated == tree[node.parent].negated)
             return false
-        val parent = nodes[node.parent]
+        val parent = tree[node.parent]
 
         return try {
             Unification.unify(node.relation, parent.relation)
@@ -89,11 +89,11 @@ class FoTableauxState(
      */
     @Suppress("EmptyCatchBlock")
     private fun nodeAncestryContainsUnifiable(nodeID: Int, atom: Atom<Relation>): Boolean {
-        var node = nodes[nodeID]
+        var node = tree[nodeID]
 
         // Walk up the tree from start node
         while (node.parent != null) {
-            node = nodes[node.parent!!]
+            node = tree[node.parent!!]
             // Check if current node can be unified with given atom
             if (node.negated != atom.negated && node.relation.spelling == atom.lit.spelling) {
                 try {
@@ -114,7 +114,7 @@ class FoTableauxState(
     fun applyVarInstantiation(varAssign: Map<String, FirstOrderTerm>) {
         val instantiator = VariableInstantiator(varAssign)
 
-        nodes.forEach {
+        tree.forEach {
             it.relation.arguments = it.relation.arguments.map { it.accept(instantiator) }
         }
     }
@@ -124,13 +124,13 @@ class FoTableauxState(
      */
     fun render() {
         renderedClauseSet = clauseSet.clauses.map { it.atoms.joinToString(", ") }
-        nodes.forEach {
+        tree.forEach {
             it.render()
         }
     }
 
     override fun getHash(): String {
-        val nodesHash = nodes.joinToString("|") { it.getHash() }
+        val nodesHash = tree.joinToString("|") { it.getHash() }
         val clauseSetHash = clauseSet.toString()
         val optsHash = "$type|$regular|$backtracking|$usedBacktracking|$manualVarAssign"
         val variousHash = "$formula|$expansionCounter"

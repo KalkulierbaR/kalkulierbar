@@ -48,7 +48,7 @@ const UndoFAB: preact.FunctionalComponent<Props> = ({
                             move.type,
                         )
                     ) {
-                        resetDragTransform(state!.nodes.length - 1);
+                        resetDragTransform(state!.tree.length - 1);
                     }
                 }
                 sendMove(

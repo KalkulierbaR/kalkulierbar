@@ -90,7 +90,7 @@ class SignedModalTableauxNode(
     override val children = mutableListOf<Int>()
     var spelling = formula.toString()
 
-    override fun toString() = prefix.toString() + sign.toString() + formula.toString()
+    override fun toString() = "${prefix.joinToString(".")} $sign $formula"
 
     fun render() {
         spelling = formula.toString()

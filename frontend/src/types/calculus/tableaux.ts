@@ -19,7 +19,7 @@ export type TableauxTreeLayoutNode = TableauxNode & { id: number };
 export interface PropTableauxState {
     seal: string;
     clauseSet: ClauseSet;
-    nodes: TableauxNode[];
+    tree: TableauxNode[];
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;
@@ -92,7 +92,7 @@ export interface SelectNodeOptions {
 export interface FOTableauxState {
     seal: string;
     clauseSet: FOClauseSet;
-    nodes: TableauxNode[];
+    tree: TableauxNode[];
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;

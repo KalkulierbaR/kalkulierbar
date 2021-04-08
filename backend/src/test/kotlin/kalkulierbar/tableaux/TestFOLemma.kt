@@ -43,8 +43,8 @@ class TestFOLemma {
         state = instance.applyMoveOnState(state, MoveCloseAssign(6, 2, map))
 
         state = instance.applyMoveOnState(state, MoveLemma(1, 2))
-        assertEquals(2, state.nodes[7].lemmaSource)
-        assertEquals(true, state.nodes[7].negated)
+        assertEquals(2, state.tree[7].lemmaSource)
+        assertEquals(true, state.tree[7].negated)
     }
 
     @Test
@@ -59,8 +59,8 @@ class TestFOLemma {
         state = instance.applyMoveOnState(state, MoveAutoClose(6, 2))
 
         state = instance.applyMoveOnState(state, MoveLemma(1, 2))
-        assertEquals(2, state.nodes[7].lemmaSource)
-        assertEquals(true, state.nodes[7].negated)
+        assertEquals(2, state.tree[7].lemmaSource)
+        assertEquals(true, state.tree[7].negated)
     }
 
     @Test
@@ -75,8 +75,8 @@ class TestFOLemma {
         state = instance.applyMoveOnState(state, MoveAutoClose(5, 2))
 
         state = instance.applyMoveOnState(state, MoveLemma(1, 2))
-        assertEquals(2, state.nodes[6].lemmaSource)
-        assertEquals(true, state.nodes[6].negated)
+        assertEquals(2, state.tree[6].lemmaSource)
+        assertEquals(true, state.tree[6].negated)
 
         state = instance.applyMoveOnState(state, MoveExpand(6, 0))
         instance.applyMoveOnState(state, MoveAutoClose(8, 6))
@@ -118,7 +118,7 @@ class TestFOLemma {
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, MoveLemma(5, 3))
         }
-        assertEquals(8, state.nodes.size)
+        assertEquals(8, state.tree.size)
     }
 
     @Test

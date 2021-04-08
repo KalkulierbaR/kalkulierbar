@@ -91,7 +91,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
         <Fragment>
             <ControlFAB
                 alwaysOpen={!smallScreen}
-                couldShowCheckCloseHint={state.nodes[0].isClosed}
+                couldShowCheckCloseHint={state.tree[0].isClosed}
             >
                 {selectedNodeId === undefined ? (
                     <Fragment>
@@ -100,7 +100,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                             name={calculus}
                             type={calculus}
                         />
-                        {state.nodes.filter((node) => !node.isClosed).length >
+                        {state.tree.filter((node) => !node.isClosed).length >
                             0 && <NextLeafFAB calculus={calculus} />}
                         <CenterFAB resetDragTransforms={resetDragTransforms} />
                         <CheckCloseFAB
@@ -130,7 +130,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                                     "negation",
                                     onChange,
                                     notificationHandler,
-                                    state.nodes,
+                                    state.tree,
                                     selectedNodeId,
                                     setLeafSelected,
                                     setSelectedMove,
@@ -152,7 +152,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                                     "alphaMove",
                                     onChange,
                                     notificationHandler,
-                                    state.nodes,
+                                    state.tree,
                                     selectedNodeId,
                                     setLeafSelected,
                                     setSelectedMove,
@@ -174,7 +174,7 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                                     "betaMove",
                                     onChange,
                                     notificationHandler,
-                                    state.nodes,
+                                    state.tree,
                                     selectedNodeId,
                                     setLeafSelected,
                                     setSelectedMove,

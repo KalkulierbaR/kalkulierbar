@@ -24,9 +24,9 @@ class TestCheckClose {
             TableauxNode(1, "a", true)
         )
 
-        state.nodes.addAll(nodes)
-        state.nodes.get(0).children.add(1)
-        state.nodes.get(1).children.add(2)
+        state.tree.addAll(nodes)
+        state.tree.get(0).children.add(1)
+        state.tree.get(1).children.add(2)
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
@@ -48,11 +48,11 @@ class TestCheckClose {
             TableauxNode(2, "b", true)
         )
 
-        state.nodes.addAll(nodes)
-        state.nodes.get(0).children.add(1)
-        state.nodes.get(0).children.add(2)
-        state.nodes.get(1).children.add(3)
-        state.nodes.get(2).children.add(4)
+        state.tree.addAll(nodes)
+        state.tree.get(0).children.add(1)
+        state.tree.get(0).children.add(2)
+        state.tree.get(1).children.add(3)
+        state.tree.get(2).children.add(4)
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
@@ -101,11 +101,11 @@ class TestCheckClose {
             TableauxNode(3, "c", true)
         )
 
-        state.nodes.addAll(nodes)
-        state.nodes.get(0).children.addAll(listOf(1, 2, 3))
-        state.nodes.get(1).children.add(4)
-        state.nodes.get(2).children.add(5)
-        state.nodes.get(3).children.add(6)
+        state.tree.addAll(nodes)
+        state.tree.get(0).children.addAll(listOf(1, 2, 3))
+        state.tree.get(1).children.add(4)
+        state.tree.get(2).children.add(5)
+        state.tree.get(3).children.add(6)
 
         // Don't close proof completely
         state = propTableaux.applyMoveOnState(state, MoveAutoClose(6, 3))

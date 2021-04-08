@@ -76,7 +76,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
             setSelectedNodeId(newNode.id);
         } else if (
             leafSelection && selectedMove !== undefined &&
-            getLeaves(state.nodes, state.nodes[selectedNodeId]).includes(
+            getLeaves(state.tree, state.tree[selectedNodeId]).includes(
                 newNode.id,
             )
         ) {
@@ -113,7 +113,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
     const sendPrefix = (prefix: number) => {
         if (selectedNodeId === undefined) return;
 
-        const leaves = getLeaves(state.nodes, state.nodes[selectedNodeId]);
+        const leaves = getLeaves(state.tree, state.tree[selectedNodeId]);
         if (leaves.length > 1) {
             setLeafSelection(true);
             setSelectedMove({
@@ -183,7 +183,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
             <h2>Modal Tableaux View</h2>
 
             <ModalTableauxTreeView
-                nodes={state.nodes}
+                nodes={state.tree}
                 smallScreen={smallScreen}
                 selectedNodeId={selectedNodeId}
                 selectNodeCallback={selectNodeCallback}
@@ -221,7 +221,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
             <PrefixDialog
                 open={showPrefixDialog}
                 onClose={() => setShowPrefixDialog(false)}
-                prefixOrigin={nodeName(state.nodes[selectedNodeId!])}
+                prefixOrigin={nodeName(state.tree[selectedNodeId!])}
                 submitPrefixCallback={sendPrefix}
                 notificationHandler={notificationHandler}
             />

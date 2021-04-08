@@ -16,9 +16,9 @@ The input to a Signed Modal Tableaux proof is the extensions of Propositional Fo
 The state representation returned by most endpoints is a JSON object.
 Some of the object's properties are for internal use only and are subject to change at any time.
 The state object is intended to be read-only and any modification may lead to the state being rejected by the API.
-The only property that a visualization frontend should rely on is the `nodes` list.
+The only property that a visualization frontend should rely on is the `tree` list.
 
-The `nodes` lists contains all TreeNodes of the current proof tree.
+The `tree` lists contains all TreeNodes of the current proof tree.
 A TreeNode is identified by its position in the list starting at zero.
 Each TreeNode has the properties `parent` and `children`, containing the IDs of the respective parent and child TreeNodes.
 The parent of the root TreeNode is `null`. Additionally, TreeNodes have an `isClosed` flag, `prefix` list and `sign` flag.

@@ -104,13 +104,13 @@ class TestCloseBranchFO {
         state = instance.applyMoveOnState(state, MoveCloseAssign(4, 2, map))
         state = instance.applyMoveOnState(state, MoveCloseAssign(5, 2, map))
 
-        assertEquals(state.nodes[2].isClosed, true)
-        assertEquals(state.nodes[4].isClosed, true)
-        assertEquals(state.nodes[4].closeRef, 2)
-        assertEquals(state.nodes[5].isClosed, true)
-        assertEquals(state.nodes[5].closeRef, 2)
-        assertEquals(state.nodes[6].isClosed, true)
-        assertEquals(state.nodes[6].closeRef, 2)
+        assertEquals(state.tree[2].isClosed, true)
+        assertEquals(state.tree[4].isClosed, true)
+        assertEquals(state.tree[4].closeRef, 2)
+        assertEquals(state.tree[5].isClosed, true)
+        assertEquals(state.tree[5].closeRef, 2)
+        assertEquals(state.tree[6].isClosed, true)
+        assertEquals(state.tree[6].closeRef, 2)
     }
 
     @Test

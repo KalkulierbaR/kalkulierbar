@@ -92,7 +92,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const [lemmaMode, setLemmaMode] = useState(false);
 
     const selectedNode =
-        selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
+        selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined;
     const selectedNodeIsLeaf =
         selectedNode !== undefined && selectedNode.children.length === 0;
 
@@ -295,7 +295,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 )}
 
                 <TableauxTreeView
-                    nodes={state.nodes}
+                    nodes={state.tree}
                     smallScreen={smallScreen}
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={selectNodeCallback}

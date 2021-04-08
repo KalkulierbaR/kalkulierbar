@@ -38,8 +38,8 @@ class TestLemma {
         state = instance.applyMoveOnState(state, MoveAutoClose(5, 4))
         state = instance.applyMoveOnState(state, MoveLemma(2, 1))
 
-        assertEquals(1, state.nodes[6].lemmaSource)
-        assertEquals(true, state.nodes[6].negated)
+        assertEquals(1, state.tree[6].lemmaSource)
+        assertEquals(true, state.tree[6].negated)
 
         instance.applyMoveOnState(state, MoveAutoClose(6, 2))
     }
@@ -56,8 +56,8 @@ class TestLemma {
         state = instance.applyMoveOnState(state, MoveAutoClose(5, 2))
         state = instance.applyMoveOnState(state, MoveLemma(3, 2))
 
-        assertEquals(2, state.nodes[6].lemmaSource)
-        assertEquals(true, state.nodes[6].negated)
+        assertEquals(2, state.tree[6].lemmaSource)
+        assertEquals(true, state.tree[6].negated)
 
         instance.applyMoveOnState(state, MoveAutoClose(6, 3))
     }
@@ -75,8 +75,8 @@ class TestLemma {
         state = instance.applyMoveOnState(state, MoveAutoClose(5, 3))
         state = instance.applyMoveOnState(state, MoveLemma(2, 1))
 
-        assertEquals(1, state.nodes[6].lemmaSource)
-        assertEquals(false, state.nodes[6].negated)
+        assertEquals(1, state.tree[6].lemmaSource)
+        assertEquals(false, state.tree[6].negated)
     }
 
     @Test
@@ -100,7 +100,7 @@ class TestLemma {
             instance.applyMoveOnState(state, MoveLemma(5, 3))
         }
 
-        assertEquals(6, state.nodes.size)
+        assertEquals(6, state.tree.size)
     }
 
     @Test

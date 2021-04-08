@@ -11,7 +11,7 @@ export interface ModalTableauxNode {
 }
 
 export interface ModalTableauxState {
-    nodes: ModalTableauxNode[];
+    tree: ModalTableauxNode[];
     assumption: boolean;
     seal: string;
     backtracking: boolean;

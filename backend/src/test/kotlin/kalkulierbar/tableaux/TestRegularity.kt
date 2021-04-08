@@ -18,11 +18,11 @@ class TestRegularity {
 
     // State creation helper function
     private fun createState(nodes: List<TableauxNode>, state: TableauxState): TableauxState {
-        state.nodes.addAll(nodes)
+        state.tree.addAll(nodes)
 
         for (i in nodes.indices) {
             val parentThisNode = nodes[i].parent
-            state.nodes[parentThisNode!!].children.add(i + 1)
+            state.tree[parentThisNode!!].children.add(i + 1)
         }
         return state
     }

@@ -57,7 +57,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
     } = useAppState();
 
     const selectedNode =
-        selectedNodeId === undefined ? undefined : state.nodes[selectedNodeId];
+        selectedNodeId === undefined ? undefined : state.tree[selectedNodeId];
 
     const showAlpha =
         selectedNode &&
@@ -89,7 +89,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
         <ControlFAB
             alwaysOpen={!smallScreen}
             checkFABPositionFromBottom={showUndoFAB ? 2 : 1}
-            couldShowCheckCloseHint={state.nodes[0].isClosed}
+            couldShowCheckCloseHint={state.tree[0].isClosed}
         >
             {selectedNodeId === undefined ? (
                 <Fragment>
@@ -118,8 +118,8 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                                         return;
                                     }
                                     for (
-                                        let i = s.nodes.length;
-                                        i < state.nodes.length;
+                                        let i = s.tree.length;
+                                        i < state.tree.length;
                                         i++
                                     ) {
                                         resetDragTransform(i);

@@ -27,8 +27,8 @@ class TestCloseLeaf {
         state = createArtificialExpandState(nodes, state)
         state = instance.applyMoveOnState(state, MoveAutoClose(3, 2))
 
-        assertEquals(true, state.nodes[3].isClosed)
-        assertEquals(2, state.nodes[3].closeRef)
+        assertEquals(true, state.tree[3].isClosed)
+        assertEquals(2, state.tree[3].closeRef)
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!b}|" +
                 "[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]|[]",
@@ -49,12 +49,12 @@ class TestCloseLeaf {
         state = createArtificialExpandState(nodes, state)
         state = instance.applyMoveOnState(state, MoveAutoClose(3, 1))
 
-        assertEquals(true, state.nodes[3].isClosed)
+        assertEquals(true, state.tree[3].isClosed)
 
-        assertEquals(false, state.nodes[2].isClosed)
-        assertEquals(false, state.nodes[4].isClosed)
+        assertEquals(false, state.tree[2].isClosed)
+        assertEquals(false, state.tree[4].isClosed)
 
-        assertEquals(1, state.nodes[3].closeRef)
+        assertEquals(1, state.tree[3].closeRef)
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
                 "[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|" +
@@ -79,13 +79,13 @@ class TestCloseLeaf {
         state = instance.applyMoveOnState(state, MoveAutoClose(4, 1))
         state = instance.applyMoveOnState(state, MoveAutoClose(5, 2))
 
-        assertEquals(true, state.nodes[4].isClosed)
-        assertEquals(true, state.nodes[5].isClosed)
+        assertEquals(true, state.tree[4].isClosed)
+        assertEquals(true, state.tree[5].isClosed)
 
-        assertEquals(false, state.nodes[3].isClosed)
+        assertEquals(false, state.tree[3].isClosed)
 
-        assertEquals(1, state.nodes[4].closeRef)
-        assertEquals(2, state.nodes[5].closeRef)
+        assertEquals(1, state.tree[4].closeRef)
+        assertEquals(2, state.tree[5].closeRef)
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
                 "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|" +
@@ -249,19 +249,19 @@ class TestCloseLeaf {
 
         state = instance.applyMoveOnState(state, MoveAutoClose(7, 5))
 
-        assertEquals(true, state.nodes.get(7).isClosed)
-        assertEquals(false, state.nodes.get(5).isClosed)
+        assertEquals(true, state.tree.get(7).isClosed)
+        assertEquals(false, state.tree.get(5).isClosed)
 
         state = instance.applyMoveOnState(state, MoveAutoClose(6, 2))
 
         println(state.getHash())
 
-        assertEquals(true, state.nodes.get(7).isClosed)
-        assertEquals(true, state.nodes.get(6).isClosed)
-        assertEquals(true, state.nodes.get(5).isClosed)
-        assertEquals(true, state.nodes.get(2).isClosed)
-        assertEquals(false, state.nodes.get(0).isClosed)
-        assertEquals(null, state.nodes.get(5).closeRef)
-        assertEquals(null, state.nodes.get(2).closeRef)
+        assertEquals(true, state.tree.get(7).isClosed)
+        assertEquals(true, state.tree.get(6).isClosed)
+        assertEquals(true, state.tree.get(5).isClosed)
+        assertEquals(true, state.tree.get(2).isClosed)
+        assertEquals(false, state.tree.get(0).isClosed)
+        assertEquals(null, state.tree.get(5).closeRef)
+        assertEquals(null, state.tree.get(2).closeRef)
     }
 }

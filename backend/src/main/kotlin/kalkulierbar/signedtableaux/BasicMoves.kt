@@ -139,19 +139,19 @@ fun applyBeta(state: SignedModalTableauxState, nodeID: Int, leafID: Int?): Signe
     when (formula) {
         is And -> {
             if (node.sign)
-                throw IllegalMove("Beta rule can only be applied on a conjunction if the sign is True")
+                throw IllegalMove("Beta rule can only be applied on a conjunction if the sign is False")
             beta1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
             beta2 = SignedModalTableauxNode(leafID, node.prefix, false, formula.rightChild)
         }
         is Or -> {
             if (!node.sign)
-                throw IllegalMove("Beta rule can only be applied on a disjunction if the sign is False")
+                throw IllegalMove("Beta rule can only be applied on a disjunction if the sign is True")
             beta1 = SignedModalTableauxNode(leafID, node.prefix, true, formula.leftChild)
             beta2 = SignedModalTableauxNode(leafID, node.prefix, true, formula.rightChild)
         }
         is Impl -> {
             if (!node.sign)
-                throw IllegalMove("Beta rule can only be applied on an implication if the sign is False")
+                throw IllegalMove("Beta rule can only be applied on an implication if the sign is True")
             beta1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
             beta2 = SignedModalTableauxNode(leafID, node.prefix, true, formula.rightChild)
         }
@@ -261,15 +261,15 @@ fun applyPi(state: SignedModalTableauxState, prefix: Int, nodeID: Int, leafID: I
     val pi0 = when (formula) {
         is Box -> {
             if (node.sign)
-                throw IllegalMove("Operation can only be applied in box if the sign is False")
+                throw IllegalMove("Pi rule can only be applied on box if the sign is False")
             SignedModalTableauxNode(leafID, newPrefix, false, formula.child)
         }
         is Diamond -> {
             if (!node.sign)
-                throw IllegalMove("Operation can only be applied in diamond if the sign is True")
+                throw IllegalMove("Pi rule can only be applied on diamond if the sign is True")
             SignedModalTableauxNode(leafID, newPrefix, true, formula.child)
         }
-        else -> throw IllegalMove("Pi Rule can not be applied on the node '$node'")
+        else -> throw IllegalMove("Pi rule can not be applied on the node '$node'")
     }
 
     state.addChildren(leafID, pi0)

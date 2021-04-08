@@ -15,6 +15,7 @@ val LogicModule = SerializersModule {
         subclass(And::class)
         subclass(Or::class)
         subclass(Equiv::class)
+        subclass(Impl::class)
         subclass(Relation::class)
         subclass(ExistentialQuantifier::class)
         subclass(UniversalQuantifier::class)

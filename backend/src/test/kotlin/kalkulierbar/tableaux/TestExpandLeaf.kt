@@ -42,8 +42,8 @@ class TestExpandLeaf {
 
         state = instance.applyMoveOnState(state, MoveExpand(0, 0))
 
-        assertEquals(4, state.nodes.size)
-        assertEquals(3, state.nodes.get(0).children.size)
+        assertEquals(4, state.tree.size)
+        assertEquals(3, state.tree.get(0).children.size)
 
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|" +
@@ -58,8 +58,8 @@ class TestExpandLeaf {
 
         state = instance.applyMoveOnState(state, MoveExpand(0, 1))
 
-        assertEquals(2, state.nodes.size)
-        assertEquals(1, state.nodes.get(0).children.size)
+        assertEquals(2, state.tree.size)
+        assertEquals(1, state.tree.get(0).children.size)
 
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1)|" +
@@ -75,9 +75,9 @@ class TestExpandLeaf {
         state = instance.applyMoveOnState(state, MoveExpand(0, 0))
         state = instance.applyMoveOnState(state, MoveExpand(3, 1))
 
-        assertEquals(5, state.nodes.size)
-        assertEquals(3, state.nodes.get(0).children.size)
-        assertEquals(1, state.nodes.get(3).children.size)
+        assertEquals(5, state.tree.size)
+        assertEquals(3, state.tree.get(0).children.size)
+        assertEquals(1, state.tree.get(3).children.size)
 
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {d}|" +
@@ -148,7 +148,7 @@ class TestExpandLeaf {
         state = instance.applyMoveOnState(state, MoveExpand(0, 0))
         state = instance.applyMoveOnState(state, MoveExpand(1, 1))
 
-        val leaf = state.nodes.get(2)
+        val leaf = state.tree.get(2)
         leaf.isClosed = true
         leaf.closeRef = 1
 

@@ -56,6 +56,8 @@ You can then operate on these classes when implementing the calculus logic - the
 class CommonCalculus : JSONCalculus<State, Move, Param>() {
 
     override val identifier = "com-calc"
+    override val stateSerializer = State.serializer()
+    override val moveSerializer = Move.serializer()
 
     override fun parseFormulaToState(formula: String, params: Param?): State {
         /*...*/

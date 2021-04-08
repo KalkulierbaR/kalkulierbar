@@ -15,9 +15,9 @@ the input formula is transformed into Negation Norm Form.
 The state representation returned by most endpoints is a JSON object.
 Some of the object's properties are for internal use only and are subject to change at any time.
 The state object is intended to be read-only and any modification may lead to the state being rejected by the API.
-The only property that a visualization frontend should rely on is the `nodes` list.
+The only property that a visualization frontend should rely on is the `tree` list.
 
-The `node` lists contains all nodes of the current proof tree.
+The `tree` lists contains all nodes of the current proof tree.
 A node is identified by its position in the list starting at zero.
 Each node has the properties `parent` and `children`, containing the IDs of the respective parent and child nodes.
 The parent of the root node is `null`. Additionally, nodes have a `spelling` and a `isClosed` flag.
@@ -42,7 +42,7 @@ Alpha moves are encoded as
   "nodeID": <ID of node to apply on>
 } 
 ```
-A node's ID is defined as its respective position in the `nodes` list in the state JSON object.  
+A node's ID is defined as its respective position in the `tree` list in the state JSON object.  
 
 ### Beta β
 
