@@ -11,7 +11,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>(), StatisticCalculus<PSCState> {
-    override val identifier = "psc"
+    override val identifier = "prop-sequent"
 
     override val serializer = Json {
         serializersModule = LogicModule + SequentCalculusMoveModule

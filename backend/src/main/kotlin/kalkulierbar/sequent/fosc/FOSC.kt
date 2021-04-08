@@ -25,7 +25,7 @@ class FOSC :
     GenericSequentCalculus,
     JSONCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>(),
     StatisticCalculus<FOSCState> {
-    override val identifier = "fosc"
+    override val identifier = "fo-sequent"
 
     override val serializer = Json {
         serializersModule = FoTermModule + LogicModule + SequentCalculusMoveModule
