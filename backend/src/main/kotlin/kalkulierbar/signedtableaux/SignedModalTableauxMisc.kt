@@ -1,13 +1,10 @@
 package kalkulierbar.signedtableaux
 
-import kalkulierbar.Statistic
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.tamperprotect.ProtectedState
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import main.kotlin.kalkulierbar.tree.GenericTreeNode
 import main.kotlin.kalkulierbar.tree.TreeGardener
-import kotlin.math.sqrt
 
 @Serializable
 class SignedModalTableauxState(
@@ -103,37 +100,3 @@ class SignedModalTableauxNode(
 data class SignedModalTableauxParam(
     val backtracking: Boolean
 )
-
-@Serializable
-@SerialName("signedModalTableauxStatistic")
-class SignedModalTableauxStatistic(
-    override var userName: String?,
-    val numberOfMoves: Int,
-    val depth: Int,
-    val width: Int,
-    val usedBacktracking: Boolean
-) : Statistic {
-
-    constructor(state: SignedModalTableauxState) : this(
-        null,
-        state.moveHistory.size,
-        state.getDepth(0),
-        state.getWidth(0),
-        state.usedBacktracking
-    )
-
-    val score: Int = calculateScore()
-
-    @Suppress("MagicNumber")
-    fun calculateScore(): Int {
-        var ret = ((1 / sqrt(numberOfMoves.toDouble())) * 1000).toInt()
-        if (usedBacktracking) {
-            ret = (ret * 0.9).toInt()
-        }
-        return ret
-    }
-
-    override fun columnNames(): List<String> {
-        return listOf("Name", "Number of Rules", "Depth", "Branches", "Used backtracking", "Score")
-    }
-}

@@ -19,7 +19,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("io.javalin:javalin:3.13.4")
     implementation("org.slf4j:slf4j-simple:1.8.0-beta4")
-    implementation("org.xerial:sqlite-jdbc:3.32.3.2")
     implementation("com.github.komputing:khash:1.1.0")
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.5.2")

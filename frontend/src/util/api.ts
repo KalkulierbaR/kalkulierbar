@@ -71,7 +71,7 @@ export const getStatistics = async <C extends CalculusType = CalculusType>(
     notificationHandler: NotificationHandler,
     onProoven: (stats: Statistics) => void,
 ) => {
-    const url = `${server}/${calculus}/statistics`;
+    const url = `${server}/${calculus}/scoreboard`;
     try {
         const response = await fetch(url, {
             headers: {
@@ -97,7 +97,7 @@ export const saveStatistics = async <C extends CalculusType = CalculusType>(
     notificationHandler: NotificationHandler,
     name: string,
 ) => {
-    const url = `${server}/${calculus}/save-statistics`;
+    const url = `${server}/${calculus}/submit-score`;
     try {
         const response = await fetch(url, {
             headers: {

@@ -206,8 +206,8 @@ object StateKeeper {
             throw StorageLimitHit("Example formula exceeds size limit of $EXAMPLE_FORMULA_SIZE B")
         if (ex.params.length > EXAMPLE_PARAM_SIZE)
             throw StorageLimitHit("Example parameters exceed size limit of $EXAMPLE_PARAM_SIZE B")
-        if (ex.calculus.length > EXAMPLE_CALCNAME_SIZE)
-            throw StorageLimitHit("Example calculus name exceeds size limit of $EXAMPLE_CALCNAME_SIZE B")
+        if (ex.calculus.length > EXAMPLE_CALC_NAME_SIZE)
+            throw StorageLimitHit("Example calculus name exceeds size limit of $EXAMPLE_CALC_NAME_SIZE B")
 
         if (state.examples.size >= MAX_EXAMPLE_COUNT)
             throw StorageLimitHit("Maximum number of stored examples ($MAX_EXAMPLE_COUNT) exceeded")

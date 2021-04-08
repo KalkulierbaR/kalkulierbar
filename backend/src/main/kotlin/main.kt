@@ -9,11 +9,13 @@ import kalkulierbar.resolution.PropositionalResolution
 import kalkulierbar.sequent.fosc.FOSC
 import kalkulierbar.sequent.psc.PSC
 import kalkulierbar.signedtableaux.SignedModalTableaux
-import kalkulierbar.sqlite.DatabaseHandler
 import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.PropositionalTableaux
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
+import statekeeper.Scoreboard
 import statekeeper.StateKeeper
 
 // List of all active calculi
@@ -46,21 +48,10 @@ fun main(args: Array<String>) {
     // Only listen globally if cli argument is present
     val listenGlobally = args.isNotEmpty() && (args[0] == "--global" || args[0] == "-g")
 
-    initDatabase(endpoints)
-
     httpApi(port, endpoints, listenGlobally)
 }
 
 fun getEnvPort() = System.getenv("PORT")?.toInt() ?: KBAR_DEFAULT_PORT
-
-fun initDatabase(endpoints: Set<Calculus>) {
-    DatabaseHandler.init()
-
-    for (endpoint in endpoints) {
-        if (endpoint is StatisticCalculus<*>)
-            DatabaseHandler.createTable(endpoint.identifier)
-    }
-}
 
 /**
  * Starts a Javalin Server and creates API methods for active calculus objects
@@ -111,75 +102,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
 
     // Create API methods for each calculus
     for (endpoint in endpoints) {
-        val name = endpoint.identifier
-
-        // Small documentation at the main calculus endpoint
-        app.get("/$name") { ctx ->
-            ctx.result(
-                """Calculus "$name" loaded.
-                |Interact via the /parse /move /close and /validate endpoints""".trimMargin()
-            )
-        }
-
-        // Parse endpoint takes formula parameter and passes it to calculus implementation
-        app.post("/$name/parse") { ctx ->
-            val map = ctx.formParamMap()
-            val formula = getParam(map, "formula")!!
-            val params = getParam(map, "params", true)
-            ctx.result(endpoint.parseFormula(formula, params))
-        }
-
-        app.post("/$name/validate") { ctx ->
-            val map = ctx.formParamMap()
-            val state = getParam(map, "state")!!
-            ctx.result(endpoint.validate(state))
-        }
-
-        // Move endpoint takes state and move parameter values and passes them to calculus implementation
-        app.post("/$name/move") { ctx ->
-            val map = ctx.formParamMap()
-            val state = getParam(map, "state")!!
-            val move = getParam(map, "move")!!
-            ctx.result(endpoint.applyMove(state, move))
-        }
-
-        // Close endpoint takes state parameter value and passes it to calculus implementation
-        app.post("/$name/close") { ctx ->
-            val state = ctx.formParam("state")
-                ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
-            ctx.result(endpoint.checkClose(state))
-        }
-
-        if (endpoint is StatisticCalculus<*>) {
-
-            // Get statistics for a calculus and a formula
-            app.post("/$name/statistics") { ctx ->
-                val state = ctx.formParam("state")
-                    ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
-
-                // Read the statistics which are currently saved in the database (saved as Json-Strings)
-                val statisticsAsStrings = DatabaseHandler.query(endpoint.identifier, endpoint.getStartingFormula(state))
-                // add the current statistic without name to the resultset
-                statisticsAsStrings.add(endpoint.getStatistic(state, null))
-
-                val statistics = Statistics(statisticsAsStrings.toList(), endpoint.getStartingFormula(state), endpoint)
-
-                ctx.result(statistics.toJson())
-            }
-
-            // Save the statistic under the given name
-            app.post("/$name/save-statistics") { ctx ->
-                val map = ctx.formParamMap()
-                val state = getParam(map, "state")!!
-                val userName = getParam(map, "name")!!
-
-                val identifier = endpoint.identifier
-                val rootFormula = endpoint.getStartingFormula(state)
-                val statistic = endpoint.getStatistic(state, userName)
-                DatabaseHandler.insert(identifier, rootFormula, statistic)
-                ctx.result("name: $userName")
-            }
-        }
+        createCalculusEndpoints(app, endpoint)
     }
 
     // Create admin interface and config endpoints
@@ -217,6 +140,76 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         val mac = ctx.formParam("mac")
             ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
         ctx.result(StateKeeper.delExample(exampleID, mac))
+    }
+}
+
+@Suppress("ThrowsCount")
+fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
+    val name = calculus.identifier
+
+    // Small documentation at the main calculus endpoint
+    app.get("/$name") { ctx ->
+        ctx.result(
+            """Calculus "$name" loaded.
+                |Interact via the /parse /move /close and /validate endpoints""".trimMargin()
+        )
+    }
+
+    // Parse endpoint takes formula parameter and passes it to calculus implementation
+    app.post("/$name/parse") { ctx ->
+        val map = ctx.formParamMap()
+        val formula = getParam(map, "formula")!!
+        val params = getParam(map, "params", true)
+        ctx.result(calculus.parseFormula(formula, params))
+    }
+
+    app.post("/$name/validate") { ctx ->
+        val map = ctx.formParamMap()
+        val state = getParam(map, "state")!!
+        ctx.result(calculus.validate(state))
+    }
+
+    // Move endpoint takes state and move parameter values and passes them to calculus implementation
+    app.post("/$name/move") { ctx ->
+        val map = ctx.formParamMap()
+        val state = getParam(map, "state")!!
+        val move = getParam(map, "move")!!
+        ctx.result(calculus.applyMove(state, move))
+    }
+
+    // Close endpoint takes state parameter value and passes it to calculus implementation
+    app.post("/$name/close") { ctx ->
+        val state = ctx.formParam("state")
+            ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
+        ctx.result(calculus.checkClose(state))
+    }
+
+    if (calculus is ScoredCalculus<*, *, *>) {
+        // Get scores for a calculus and a formula
+        app.post("/$name/scoreboard") { ctx ->
+            val state = ctx.formParam("state")
+                ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
+
+            // Read the statistics which are currently saved in the database (saved as Json-Strings)
+            val oldScores = Scoreboard.getScores(calculus.identifier, calculus.getStartingFormula(state))
+            val newScore = calculus.getScore(state, null)
+
+            val scores = Scores(oldScores + listOf(newScore), calculus.getStartingFormula(state))
+            ctx.result(Json.encodeToString(scores))
+        }
+
+        // Save the score under the given name
+        app.post("/$name/submit-score") { ctx ->
+            val state = ctx.formParam("state")
+                ?: throw ApiMisuseException("POST parameter 'state' with state representation must be present")
+            val userName = ctx.formParam("name")
+                ?: throw ApiMisuseException("POST parameter 'name' with the user name must be present")
+
+            val rootFormula = calculus.getStartingFormula(state)
+            val score = calculus.getScore(state, userName)
+            Scoreboard.addScore(calculus.identifier, rootFormula, score)
+            ctx.result("name: $userName")
+        }
     }
 }
 

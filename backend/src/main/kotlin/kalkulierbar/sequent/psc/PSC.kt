@@ -1,16 +1,18 @@
 package kalkulierbar.sequent.psc
 
-import kalkulierbar.*
+import kalkulierbar.CloseMessage
+import kalkulierbar.IllegalMove
+import kalkulierbar.JsonParseException
+import kalkulierbar.ScoredCalculus
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.PropositionalSequentParser
 import kalkulierbar.sequent.*
 import kalkulierbar.sequent.moveImplementations.*
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>(), StatisticCalculus<PSCState> {
+class PSC : GenericSequentCalculus, ScoredCalculus<PSCState, SequentCalculusMove, SequentCalculusParam>() {
     override val identifier = "prop-sequent"
 
     override val serializer = Json {
@@ -69,42 +71,6 @@ class PSC : GenericSequentCalculus, JSONCalculus<PSCState, SequentCalculusMove, 
         }
     }
 
-    /**
-     * Calculates the statistics for a given proof
-     * @param state A closed state
-     * @return The statistics for the given state
-     */
-    override fun getStatistic(state: String, name: String?): String {
-        val statistic = SequentCalculusStatistic(jsonToState(state))
-        if (name != null)
-            statistic.userName = name
-        return statisticToJson(statistic)
-    }
-
-    /**
-     * Serializes a statistics object to JSON
-     * @param statistic Statistics object
-     * @return JSON statistics representation
-     */
-    override fun statisticToJson(statistic: Statistic): String {
-        return serializer.encodeToString(statistic as SequentCalculusStatistic)
-    }
-
-    /**
-     * Parses a json object to Statistic
-     * @param json JSON statistics representation
-     * @return Statistics object
-     */
-    override fun jsonToStatistic(json: String): Statistic {
-        return serializer.decodeFromString(json)
-    }
-
-    /**
-     * Returns the initial formula of the state.
-     * @param state state representation
-     * @return string representing the initial formula of the state
-     */
-    override fun getStartingFormula(state: String): String {
-        return jsonToState(state).tree[0].toString()
-    }
+    override fun scoreFromState(state: PSCState, name: String?): Map<String, String> = stateToStat(state, name)
+    override fun formulaFromState(state: PSCState) = state.tree[0].toString()
 }

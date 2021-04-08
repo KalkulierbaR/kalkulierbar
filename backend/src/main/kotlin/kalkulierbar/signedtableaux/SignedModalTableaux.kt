@@ -2,21 +2,18 @@ package kalkulierbar.signedtableaux
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
-import kalkulierbar.JSONCalculus
 import kalkulierbar.JsonParseException
-import kalkulierbar.Statistic
-import kalkulierbar.StatisticCalculus
+import kalkulierbar.ScoredCalculus
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.ModalLogicParser
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
+import kotlin.math.sqrt
 
 class SignedModalTableaux :
-    JSONCalculus<SignedModalTableauxState, SignedModalTableauxMove, SignedModalTableauxParam>(),
-    StatisticCalculus<SignedModalTableauxState> {
+    ScoredCalculus<SignedModalTableauxState, SignedModalTableauxMove, SignedModalTableauxParam>() {
 
     override val serializer = Json {
         serializersModule = FoTermModule + LogicModule + SignedModalTableauxMoveModule
@@ -122,37 +119,19 @@ class SignedModalTableaux :
      * @param state A closed state
      * @return The statistics for the given state
      */
-    override fun getStatistic(state: String, name: String?): String {
-        val statistic = SignedModalTableauxStatistic(jsonToState(state))
-        if (name != null)
-            statistic.userName = name
-        return statisticToJson(statistic)
+    @Suppress("MagicNumber")
+    override fun scoreFromState(state: SignedModalTableauxState, name: String?): Map<String, String> {
+        val multiplier = if (state.usedBacktracking) 0.9 else 1.0
+        val score = multiplier * ((1 / sqrt(state.moveHistory.size.toDouble())) * 1000)
+        return mapOf(
+            "Name" to (name ?: ""),
+            "Number of rules" to state.moveHistory.size.toString(),
+            "Depth" to state.getDepth(0).toString(),
+            "Branches" to state.getWidth(0).toString(),
+            "Used backtracking" to state.usedBacktracking.toString(),
+            "Score" to score.toInt().toString(),
+        )
     }
 
-    /**
-     * Serializes a statistics object to JSON
-     * @param statistic Statistics object
-     * @return JSON statistics representation
-     */
-    override fun statisticToJson(statistic: Statistic): String {
-        return serializer.encodeToString(statistic as SignedModalTableauxStatistic)
-    }
-
-    /**
-     * Parses a json object to Statistic
-     * @param json JSON statistics representation
-     * @return Statistics object
-     */
-    override fun jsonToStatistic(json: String): Statistic {
-        return serializer.decodeFromString(json)
-    }
-
-    /**
-     * Returns the initial formula of the state.
-     * @param state state representation
-     * @return string representing the initial formula of the state
-     */
-    override fun getStartingFormula(state: String): String {
-        return jsonToState(state).tree[0].toString()
-    }
+    override fun formulaFromState(state: SignedModalTableauxState) = state.tree[0].toString()
 }

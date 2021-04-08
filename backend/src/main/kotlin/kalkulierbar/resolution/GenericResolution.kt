@@ -2,7 +2,6 @@ package kalkulierbar.resolution
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
-import kalkulierbar.clause.Atom
 import kalkulierbar.clause.ClauseSet
 
 interface GenericResolution<AtomType>
