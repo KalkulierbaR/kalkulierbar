@@ -28,7 +28,7 @@ def resolutionBogoATP(trq, formula, iterations = 10, verbose = false)
 				next if possible.length == 0
 
 				possible.each { |sp|
-					newstate = trq.getPostResponse('/prop-resolution/move', "state=#{state}&move={type:\"res-resolve\",literal:\"#{sp.to_s}\",c1:#{c1.to_s},c2:#{c2.to_s}}", false, true)
+					newstate = trq.getPostResponse('/prop-resolution/move', "state=#{state}&move={\"type\":\"res-resolve\",\"literal\":\"#{sp.to_s}\",\"c1\":#{c1.to_s},\"c2\":#{c2.to_s}}", false, true)
 					rqcount += 1
 					if newstate != nil
 						logMsg "Resolved clause #{c1.to_s} with clause #{c2.to_s} with literal #{sp}" if verbose

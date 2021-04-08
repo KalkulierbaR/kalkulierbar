@@ -477,6 +477,8 @@ def testLemma(trq, iterations = 5, verbose = true)
 	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-close\",\"id1\":5,\"id2\":2}")
 	state = trq.getPostResponse('/prop-tableaux/move', "state=#{CGI.escape(state)}&move={\"type\":\"tableaux-expand\",\"id1\":4,\"id2\":0}")
 
+	puts state
+
 	16.times() {
 		state = bogoATPapplyRandomMove(state, trq)
 	}
