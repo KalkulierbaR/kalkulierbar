@@ -9,8 +9,9 @@ import java.util.Timer
 import java.util.TimerTask
 
 object Scoreboard {
-    private val data: MutableMap<String, MutableMap<String, MutableList<Map<String, String>>>>
+    private var data: MutableMap<String, MutableMap<String, MutableList<Map<String, String>>>>
     private val storage = File("kbar-scoreboard.json")
+    private var scoreboardCounter: Int
     private val timer = Timer()
     private var flushScheduled = false
     private val flusher = object : TimerTask() {
@@ -34,13 +35,12 @@ object Scoreboard {
             val msg = "Could not parse stored scoreboard: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
+
+        scoreboardCounter = data.values.sumBy { it.size }
     }
 
     fun getScores(calculus: String, formula: String): List<Map<String, String>> {
-        return if (data.containsKey(calculus) && data[calculus]!!.containsKey(formula))
-            data[calculus]!![formula]!!
-        else
-            emptyList()
+        return data.getOrDefault(calculus, mapOf()).getOrDefault(formula, emptyList())
     }
 
     fun addScore(calculus: String, formula: String, score: Map<String, String>) {
@@ -48,20 +48,33 @@ object Scoreboard {
             return
 
         checkSanity(calculus, formula, score)
+        if (scoreboardCounter >= SCORE_MAX_NUM_SCOREBOARDS)
+            cleanScoreboards()
 
-        if (!data.containsKey(calculus))
-            data[calculus] = mutableMapOf()
+        val calculusScores = data.getOrPut(calculus) { mutableMapOf() }
+        val formulaScores = calculusScores.getOrPut(formula) { scoreboardCounter += 1; mutableListOf() }
 
-        val calculusScores = data[calculus]!!
-        if (!calculusScores.containsKey(formula))
-            calculusScores[formula] = mutableListOf()
+        insertScore(formulaScores, score)
 
-        calculusScores[formula]!!.add(score)
-
+        // Schedule backup to disk
         if (!flushScheduled) {
             flushScheduled = true
             timer.schedule(flusher, SCORE_FLUSH_DELAY_MS)
         }
+    }
+
+    /**
+     * Insert a new score into a scoreboard, keeping the board sorted by field "Score" if present
+     * @param scoreboard Scoreboard to insert into
+     * @param score New score to insert
+     */
+    private fun insertScore(scoreboard: MutableList<Map<String, String>>, score: Map<String, String>) {
+        scoreboard.add(score)
+        scoreboard.sortByDescending {
+            it["Score"]?.toInt() ?: 0
+        }
+        if (scoreboard.size > SCORE_MAX_ENTRIES_PER_FORMULA)
+            scoreboard.removeLast()
     }
 
     /**
@@ -88,5 +101,18 @@ object Scoreboard {
     private fun flush() {
         storage.writeText(Json.encodeToString(data))
         flushScheduled = false
+    }
+
+    /**
+     * Remove likely unused scoreboards to make space for new ones
+     */
+    private fun cleanScoreboards() {
+        data = data.mapValues { entry ->
+            entry.value.filter { it.value.size > 1 }.toMutableMap()
+        }.toMutableMap()
+        scoreboardCounter = data.values.sumBy { it.size }
+
+        if (scoreboardCounter >= SCORE_MAX_NUM_SCOREBOARDS)
+            throw StorageLimitHit("Maximum scoreboard count of $SCORE_MAX_NUM_SCOREBOARDS exceeded")
     }
 }

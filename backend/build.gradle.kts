@@ -34,6 +34,12 @@ tasks {
     }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
 detekt {
     toolVersion = "1.16.0"
     input = files("src/main/kotlin")
