@@ -29,9 +29,7 @@ const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format
-                foLogic={calculus === Calculus.foSequent}
-                allowClauses={false}
-                allowSequences={true}
+                logicType={calculus === Calculus.foSequent ? "fo-sequent" : "prop-sequent"}
             />
             <FormulaInput
                 calculus={calculus}

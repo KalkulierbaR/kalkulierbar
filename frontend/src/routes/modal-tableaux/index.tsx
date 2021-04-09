@@ -30,10 +30,7 @@ const ModalTableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
     return (
         <Fragment>
             <Format
-                foLogic={false}
-                allowClauses={false}
-                allowSequences={false}
-                modalLogic={true}
+                logicType={"modal"}
             />
             <FormulaInput
                 calculus={calculus}

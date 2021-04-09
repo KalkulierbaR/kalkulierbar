@@ -10,7 +10,7 @@ interface Props {}
 const DPLL: preact.FunctionalComponent<Props> = () => {
     return (
         <Fragment>
-            <Format foLogic={false} />
+            <Format logicType={"prop"} />
             <FormulaInput
                 calculus={Calculus.dpll}
                 placeholder={"!a, c; a; !c"}

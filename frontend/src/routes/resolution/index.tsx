@@ -54,7 +54,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     return (
         <Fragment>
-            <Format foLogic={fo} />
+            <Format logicType={fo ? "fo" : "prop-clause"} />
             <FormulaInput
                 calculus={calculus}
                 params={params}

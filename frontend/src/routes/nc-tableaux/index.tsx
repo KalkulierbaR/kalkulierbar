@@ -8,7 +8,7 @@ import { Calculus } from "../../types/calculus";
 const NCTableaux: preact.FunctionalComponent = () => {
     return (
         <Fragment>
-            <Format foLogic={true} />
+            <Format logicType={"fo"} />
             <FormulaInput
                 calculus={Calculus.ncTableaux}
                 params={null}

@@ -10,28 +10,21 @@ import * as style from "./style.scss";
 
 interface Props {
     /**
-     * Choose weather to allow clause sets or not
+     * Which logic type to display explainers for
      */
-    allowClauses?: boolean;
-    /**
-     * Choose wether to allow sequences or not
-     */
-    allowSequences?: boolean;
-    /**
-     * Display the format for First Order logic
-     */
-    foLogic?: boolean;
-    /**
-     * Display the format for Modal Logic
-     */
-    modalLogic?: boolean;
+    logicType: LogicType
 }
 
+export type LogicType =
+    | "prop"
+    | "prop-clause"
+    | "prop-sequent"
+    | "fo"
+    | "fo-sequent"
+    | "modal";
+
 const Format: preact.FunctionalComponent<Props> = ({
-    foLogic = false,
-    allowClauses = true,
-    allowSequences = false,
-    modalLogic = false,
+    logicType = "prop"
 }) => {
     const { tutorialMode, smallScreen } = useAppState();
 
@@ -53,16 +46,15 @@ const Format: preact.FunctionalComponent<Props> = ({
             <p>
                 Use
                 <code class={style.padRight}>{" ,"}</code>
-                to seperate multiple formulas from each other and the
+                to seperate multiple formulas from each other and
                 <code class={style.padRight}>{" |-"}</code>
-                symbol to to either define formulas on the left or on the right
-                side of the sequence.
+                to to seperate the right and left side of the sequence.
             </p>
             <p>
-                Example:{" "}
+                Example: &nbsp;
                 <code class={style.padRight}>
-                    {foLogic !== true && "!(a -> b), b |- a"}
-                    {foLogic === true &&
+                    {logicType === "prop-sequent" && "!(a -> b), b |- a"}
+                    {logicType === "fo-sequent" &&
                         "\\all X: P(X), \\all X: (P(X) -> Q(X)) |- \\ex X: Q(X)"}
                 </code>
             </p>
@@ -76,15 +68,17 @@ const Format: preact.FunctionalComponent<Props> = ({
                     <b>Modal Formula</b>
                 </p>
                 <p>
-                    Use uppercase T and F to set the appropriate assumption to
-                    TRUE or FALSE.
-                    <br />
-                    Assumptions can be set like this:{" "}
+                    Set the assumption to true or false using &nbsp;
                     <code class={style.padRight}>
-                        {"\\sign T:"} or {"\\sign F:"}
+                        {"\\sign T:"}
+                    </code> 
+                    or &nbsp;
+                    <code class={style.padRight}>
+                        {"\\sign F:"}
                     </code>
+                    at the start of your formula.
                     <br />
-                    Box and Diamond can be used like this:{" "}
+                    For the formula itself, use the usual ascii-notation: &nbsp;
                     <code class={style.padRight}>{"!(<>(!a)) -> []a"}</code>
                 </p>
                 <p>
@@ -95,7 +89,16 @@ const Format: preact.FunctionalComponent<Props> = ({
                             <th>Example</th>
                         </tr>
                         <tr>
-                            <td>Box Operator</td>
+                            <td>Assumption</td>
+                            <td>
+                                <code>\sign</code>
+                            </td>
+                            <td>
+                                <code>\sign T: a</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Box modality</td>
                             <td>
                                 <code>[]a</code>
                             </td>
@@ -104,7 +107,7 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Diamond Operator</td>
+                            <td>Diamond modality</td>
                             <td>
                                 <code>{`<>`}a</code>
                             </td>
@@ -115,19 +118,62 @@ const Format: preact.FunctionalComponent<Props> = ({
                             </td>
                         </tr>
                         <tr>
-                            <td>Assumption</td>
+                            <td>Parentheses</td>
                             <td>
-                                <code>\sign</code>
+                                <code>()</code>
                             </td>
                             <td>
-                                <code>\sign T: a | b</code>
+                                <code>(a | b) & c</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Not</td>
+                            <td>
+                                <code>!</code>
+                            </td>
+                            <td>
+                                <code>!valid</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>And</td>
+                            <td>
+                                <code>&</code>
+                            </td>
+                            <td>
+                                <code>a & b</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Or</td>
+                            <td>
+                                <code>|</code>
+                            </td>
+                            <td>
+                                <code>a | b</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Implication</td>
+                            <td>
+                                <code>{"->"}</code>
+                            </td>
+                            <td>
+                                <code>{"rain -> wet"}</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Equivalence</td>
+                            <td>
+                                <code>{"<=>"}</code> or <code>{"<->"}</code>
+                            </td>
+                            <td>
+                                <code>{"right <=> !left"}</code>
                             </td>
                         </tr>
                     </table>
                 </p>
             </li>
-            <br />
-            {allowSequences && sequentFormat}
         </Fragment>
     );
 
@@ -234,8 +280,6 @@ const Format: preact.FunctionalComponent<Props> = ({
                     first-order logic.
                 </p>
             </li>
-            <br />
-            {allowSequences && sequentFormat}
         </Fragment>
     );
 
@@ -243,94 +287,17 @@ const Format: preact.FunctionalComponent<Props> = ({
         <Fragment>
             <li>
                 <p>
-                    <b>Propositional Formula</b>
-                </p>
-                <p>
-                    Use the usual ascii-notation like in this example:{" "}
-                    <code class={style.padRight}>
-                        {"!(a -> b) & (c <=> d | e) & !a"}
-                    </code>
-                </p>
-                <p>
-                    <table>
-                        <tr>
-                            <th>Operator</th>
-                            <th>Symbol</th>
-                            <th>Example</th>
-                        </tr>
-                        <tr>
-                            <td>Parentheses</td>
-                            <td>
-                                <code>()</code>
-                            </td>
-                            <td>
-                                <code>(a | b) & c</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Not</td>
-                            <td>
-                                <code>!</code>
-                            </td>
-                            <td>
-                                <code>!valid</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>And</td>
-                            <td>
-                                <code>&</code>
-                            </td>
-                            <td>
-                                <code>a & b</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Or</td>
-                            <td>
-                                <code>|</code>
-                            </td>
-                            <td>
-                                <code>a | b</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Implication</td>
-                            <td>
-                                <code>{"->"}</code>
-                            </td>
-                            <td>
-                                <code>{"rain -> wet"}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Equivalence</td>
-                            <td>
-                                <code>{"<=>"}</code> or <code>{"<->"}</code>
-                            </td>
-                            <td>
-                                <code>{"right <=> !left"}</code>
-                            </td>
-                        </tr>
-                    </table>
-                </p>
-                <p>
-                    <code class={style.padRight}>{"<=>"}</code>
-                    and
-                    <code class={style.padLeft}>{"<->"}</code> are synonymous,
-                    operator precedence follows the conventions for
-                    propositional logic. Whitespace is ignored.
-                </p>
-            </li>
-            <br />
-            <li>
-                <p>
                     <b>Clause Set</b>
                 </p>
                 <p>
                     <code class={style.padRight}>{"{{a, ¬b}, {¬a}, {b}}"}</code>
                     needs to be entered as{" "}
-                    <code class={style.padLeft}>a,!b;!a;b</code>
+                    <code class={classMap({
+                        [style.padLeft]: true,
+                        [style.padRight]: true,
+                    })}>a,!b;!a;b</code>
+                    {" "}or in DIMACS format{" "}
+                    <code class={style.padLeft}>a -b 0 -a 0 b</code>
                 </p>
                 <p>
                     Separate variables with commas, use a semicolon or linebreak
@@ -424,22 +391,17 @@ const Format: preact.FunctionalComponent<Props> = ({
                     propositional logic. Whitespace is ignored.
                 </p>
             </li>
-            <br />
-            {allowSequences && sequentFormat}
         </Fragment>
     );
 
     const content = (
         <div class={style.formatContent}>
             <ul>
-                {foLogic ? ( // Todo: Styling
-                    foLogicFormat
-                ) : (
-                    <Fragment>
-                        {allowClauses ? propClauseFormat : propFormat}
-                    </Fragment>
-                )}
-                {modalLogic && modalFormat}
+                {logicType === "modal" && modalFormat}
+                {(logicType === "prop-sequent" || logicType === "fo-sequent") && sequentFormat}
+                {(logicType === "prop" || logicType === "prop-sequent" || logicType === "prop-clause") && propFormat}
+                {(logicType === "fo" || logicType === "fo-sequent") && foLogicFormat}
+                {logicType === "prop-clause" && propClauseFormat}
             </ul>
         </div>
     );

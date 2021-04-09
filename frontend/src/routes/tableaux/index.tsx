@@ -106,7 +106,7 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     return (
         <Fragment>
-            <Format foLogic={calculus === Calculus.foTableaux} />
+            <Format logicType={calculus === Calculus.foTableaux ? "fo" : "prop-clause"} />
             <FormulaInput
                 calculus={calculus}
                 params={params}
