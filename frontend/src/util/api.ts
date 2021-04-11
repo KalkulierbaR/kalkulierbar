@@ -85,7 +85,7 @@ const getScores = async <C extends CalculusType = CalculusType>(
         } else {
             const raw = (await response.json())
             // convert json hash to Map
-            raw.entries = raw.entries.map(entry => {
+            raw.entries = (raw.entries as {[key: string]: string}[]).map(entry => {
                 const map = new Map<string, string>();
                 for (const key of Object.keys(entry)) {
                     map.set(key, entry[key]);

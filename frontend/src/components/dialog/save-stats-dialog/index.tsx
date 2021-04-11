@@ -67,26 +67,19 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
 
     const [sortedBy, setSortedBy] = useState<string>("");
 
+    const [nameInput, setNameInput] = useState("");
+
     /**
      * Submit the close proof with the users name
      * @returns {void}
      */
     const submit = () => {
-        // FIXME: Use state instead of DOM-read (and never read DOM, ever)
-        const textInput = document.getElementById("name");
-        if (
-            !(
-                textInput &&
-                textInput instanceof HTMLInputElement &&
-                textInput.value
-            )
-        ) {
+        if (nameInput === "")
             return;
-        }
         setEntries([]);
         setAsc(false);
         setSortedBy("");
-        submitCallback(textInput.value);
+        submitCallback(nameInput);
     };
 
     /**
@@ -174,12 +167,13 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
                                     (index === 0 && val === "" && (
                                         <td>
                                             <TextInput
-                                                id={"name"}
                                                 label={"Your name: "}
                                                 inline={true}
                                                 onKeyDown={onKeyDown}
                                                 onFocus={onFocus}
                                                 autoFocus={!smallScreen}
+                                                syncValue={nameInput}
+                                                onChange={setNameInput}
                                             />
                                         </td>
                                     )) ||
