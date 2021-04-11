@@ -47,10 +47,10 @@ const getTitle = (url: string) => {
         case "/signed-modal-tableaux/view":
             return "Modal Tableaux";
         case "/prop-sequent":
-        case "/fo-sequent/view":
+        case "/prop-sequent/view":
             return "Propositional Sequent";
-        case "/fosc":
-        case "/fosc/view":
+        case "/fo-sequent":
+        case "/fo-sequent/view":
             return "First Order Sequent";
         default:
             return "Not Found";
