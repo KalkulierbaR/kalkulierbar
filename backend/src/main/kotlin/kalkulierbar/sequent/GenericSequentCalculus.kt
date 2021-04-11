@@ -14,10 +14,10 @@ interface GenericSequentCalculus {
         val score = multiplier * (1 / sqrt(state.tree.size.toDouble())) * 1000
         return mapOf(
             "Name" to (name ?: ""),
-            "Number of sequences" to state.tree.size.toString(),
+            "#sequences" to state.tree.size.toString(),
             "Depth" to state.getDepth(0).toString(),
             "Branches" to state.getWidth(0).toString(),
-            "Used Help" to state.showOnlyApplicableRules.toString(),
+            "Used Help" to if (state.showOnlyApplicableRules) "yes" else "no",
             "Score" to score.toInt().toString(),
         )
     }

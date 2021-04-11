@@ -91,12 +91,3 @@ export interface SequentPruneMove {
 export interface SequentParams {
     showOnlyApplicableRules: boolean;
 }
-
-export interface SequentCalculusStatistic {
-    userName: string;
-    nodeAmount: number;
-    depth: number;
-    width: number;
-    usedStupidMode: boolean;
-    score: number;
-}

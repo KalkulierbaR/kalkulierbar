@@ -47,7 +47,7 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
                 notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));
                 if (onProven !== undefined) {
-                    getStatistics(
+                    getScores(
                         server,
                         calculus,
                         state,
@@ -64,12 +64,12 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     }
 };
 
-export const getStatistics = async <C extends CalculusType = CalculusType>(
+const getScores = async <C extends CalculusType = CalculusType>(
     server: string,
     calculus: C,
     state: AppState[C],
     notificationHandler: NotificationHandler,
-    onProoven: (stats: Statistics) => void,
+    onProven: (stats: Statistics) => void,
 ) => {
     const url = `${server}/${calculus}/scoreboard`;
     try {
@@ -83,7 +83,16 @@ export const getStatistics = async <C extends CalculusType = CalculusType>(
         if (response.status !== 200) {
             notificationHandler.error(await response.text());
         } else {
-            onProoven((await response.json()) as Statistics);
+            const raw = (await response.json())
+            // convert json hash to Map
+            raw.entries = raw.entries.map(entry => {
+                const map = new Map<string, string>();
+                for (const key of Object.keys(entry)) {
+                    map.set(key, entry[key]);
+                }
+                return map;
+            })
+            onProven(raw as Statistics);
         }
     } catch (e) {
         notificationHandler.error((e as Error).message);
@@ -113,7 +122,7 @@ export const saveStatistics = async <C extends CalculusType = CalculusType>(
         } else {
             notificationHandler.message(
                 NotificationType.Success,
-                "Proof saved as " + (await response.text()),
+                "Score saved as " + name,
             );
         }
     } catch (e) {

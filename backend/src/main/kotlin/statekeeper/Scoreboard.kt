@@ -27,7 +27,7 @@ object Scoreboard {
     init {
         @Suppress("TooGenericExceptionCaught")
         data = try {
-            if (READONLY || storage.createNewFile())
+            if (READONLY || !storage.exists())
                 mutableMapOf()
             else
                 Json.decodeFromString(storage.readText())
@@ -99,6 +99,8 @@ object Scoreboard {
      * Save the current scoreboard data to the scoreboard file
      */
     private fun flush() {
+        if (!storage.exists())
+            storage.createNewFile()
         storage.writeText(Json.encodeToString(data))
         flushScheduled = false
     }

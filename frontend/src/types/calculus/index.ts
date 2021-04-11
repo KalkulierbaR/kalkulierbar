@@ -2,7 +2,6 @@ import { DPLLMove } from "./dpll";
 import {
     ModalTableauxMove,
     ModalTableauxParams,
-    SignedModalTableauxStatistic,
 } from "./modal-tableaux";
 import { NCTableauxMove } from "./nc-tableaux";
 import {
@@ -14,7 +13,6 @@ import {
 import {
     FOSCMove,
     PSCMove,
-    SequentCalculusStatistic,
     SequentParams,
 } from "./sequent";
 import {
@@ -104,12 +102,6 @@ export interface Params {
     "prop-sequent": SequentParams;
     "fo-sequent": SequentParams;
     "signed-modal-tableaux": ModalTableauxParams;
-}
-
-export interface StatisticEntry {
-    "prop-sequent": SequentCalculusStatistic;
-    "fo-sequent": SequentCalculusStatistic;
-    "signed-modal-tableaux": SignedModalTableauxStatistic;
 }
 
 /**

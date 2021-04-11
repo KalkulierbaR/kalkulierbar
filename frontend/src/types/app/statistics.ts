@@ -1,7 +1,4 @@
-import { StatisticEntry } from "../calculus";
-
 export interface Statistics {
-    formula: string;
-    entries: StatisticEntry[];
-    columnNames: string[];
+    entries: Map<string, string>[];
+    keys: string[];
 }

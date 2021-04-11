@@ -125,10 +125,10 @@ class SignedModalTableaux :
         val score = multiplier * ((1 / sqrt(state.moveHistory.size.toDouble())) * 1000)
         return mapOf(
             "Name" to (name ?: ""),
-            "Number of rules" to state.moveHistory.size.toString(),
+            "#rules" to state.moveHistory.size.toString(),
             "Depth" to state.getDepth(0).toString(),
             "Branches" to state.getWidth(0).toString(),
-            "Used backtracking" to state.usedBacktracking.toString(),
+            "Backtracked" to if (state.usedBacktracking) "yes" else "no",
             "Score" to score.toInt().toString(),
         )
     }

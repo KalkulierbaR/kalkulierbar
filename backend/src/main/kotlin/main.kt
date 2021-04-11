@@ -194,8 +194,8 @@ fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
             val oldScores = Scoreboard.getScores(calculus.identifier, calculus.getStartingFormula(state))
             val newScore = calculus.getScore(state, null)
 
-            val scores = Scores(oldScores + listOf(newScore), calculus.getStartingFormula(state))
-            ctx.result(Json.encodeToString(scores))
+            val scores = Scores(oldScores + listOf(newScore))
+            ctx.result(Json { encodeDefaults = true }.encodeToString(scores))
         }
 
         // Save the score under the given name
@@ -208,7 +208,7 @@ fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
             val rootFormula = calculus.getStartingFormula(state)
             val score = calculus.getScore(state, userName)
             Scoreboard.addScore(calculus.identifier, rootFormula, score)
-            ctx.result("name: $userName")
+            ctx.result("OK")
         }
     }
 }

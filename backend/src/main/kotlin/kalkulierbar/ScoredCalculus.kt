@@ -41,6 +41,7 @@ abstract class ScoredCalculus<State, Move, Param> : JSONCalculus<State, Move, Pa
 
 @Serializable
 data class Scores(
-    val entries: List<Map<String, String>>,
-    val formula: String
-)
+    val entries: List<Map<String, String>>
+) {
+    val keys = if (entries.isEmpty()) emptyList() else entries[0].keys.toList()
+}
