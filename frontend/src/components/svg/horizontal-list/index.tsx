@@ -313,7 +313,7 @@ const horizontalList: preact.FunctionalComponent<Props> = ({
                 dims.x,
                 selectFormulaCallback,
                 selected,
-            ).map((el) => el)}
+            )}
         </g>
     );
 };
