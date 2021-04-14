@@ -139,26 +139,8 @@ const sequentNodeToTree = (
     i: number = 0,
     y: number = 160,
 ): Tree<SequentTreeLayoutNode> => {
-    const n = nodes[i];
+    const n = nodes[i]!!;
 
-    // FIXME: When does this happen? Prefer === over ==.
-    if (n == null)
-        return tree(
-            72,
-            y,
-            y,
-            {
-                type: "TreeNode",
-                parent: null,
-                children: [],
-                leftFormulas: [],
-                rightFormulas: [],
-                isClosed: false,
-                lastMove: null,
-                id: i,
-            },
-            [],
-        );
     const width =
         estimateSVGTextWidth(nodeName(n)) +
         56 +
