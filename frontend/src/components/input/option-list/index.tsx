@@ -1,8 +1,8 @@
-import { h } from "preact";
+import {h} from "preact";
 
-import { SequentNode } from "../../../types/calculus/sequent";
-import { classMap } from "../../../util/class-map";
-import { parseFormula, parseStringToListIndex } from "../../../util/sequent";
+import {SequentNode} from "../../../types/calculus/sequent";
+import {classMap} from "../../../util/class-map";
+import {parseFormula, parseStringToListIndex} from "../../../util/sequent";
 
 import * as style from "./style.scss";
 
@@ -34,7 +34,7 @@ interface Props {
     /**
      * Function to decide if an option should be disabled
      */
-    disableOption?: (option: number) => boolean;
+    shouldDisableOption?: (option: number) => boolean;
 }
 
 const OptionList: preact.FunctionalComponent<Props> = ({
@@ -44,12 +44,12 @@ const OptionList: preact.FunctionalComponent<Props> = ({
     className,
     node,
     listIndex,
-    disableOption = () => {
+    shouldDisableOption = () => {
         return true;
     },
 }) => {
     const handleClick = (keyValuePair: [number, string]) => {
-        if (disableOption(keyValuePair[0])) {
+        if (shouldDisableOption(keyValuePair[0])) {
             selectOptionCallback(keyValuePair);
         }
     };
@@ -77,7 +77,7 @@ const OptionList: preact.FunctionalComponent<Props> = ({
             )}
             {Array.from(options).map(
                 (keyValuePair: [number, string]) =>
-                    (disableOption(keyValuePair[0]) ||
+                    (shouldDisableOption(keyValuePair[0]) ||
                         listIndex === undefined) && (
                         <p
                             onClick={() => handleClick(keyValuePair)}
@@ -87,9 +87,9 @@ const OptionList: preact.FunctionalComponent<Props> = ({
                                     keyValuePair[0],
                                 ),
                                 [style.optionDisabled]:
-                                    disableOption(keyValuePair[0]) === false,
+                                    !shouldDisableOption(keyValuePair[0]),
                                 [style.optionEnabled]:
-                                    disableOption(keyValuePair[0]) === true,
+                                    shouldDisableOption(keyValuePair[0]),
                             })}
                         >
                             {keyValuePair[1]}

@@ -1,4 +1,4 @@
-package kalkulierbar.sequent.fosc.moveImplementations
+package kalkulierbar.sequent.fosc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.Constant
@@ -9,8 +9,6 @@ import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.parsers.Tokenizer
 import kalkulierbar.sequent.*
-import kalkulierbar.sequent.TreeNode
-import kalkulierbar.sequent.fosc.FOSCState
 import kalkulierbar.sequent.moveImplementations.checkLeft
 import kalkulierbar.sequent.moveImplementations.checkRight
 

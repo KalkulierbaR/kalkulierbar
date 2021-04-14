@@ -277,12 +277,13 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         setSelectedNodeId(nodeId);
         trySendMove(selectedRuleId, nodeId, newFormula.id);
     };
+
     /**
      * Disables options inside the option list wether it should be or not
      * @param {number} option index of the rule
      * @returns {boolean} return true or false depending if some rules should be grayed out
      */
-    const disableOptions = (option: number) => {
+    const shouldDisableOption = (option: number) => {
         if (selectedNodeId === undefined) return true;
         if (state.showOnlyApplicableRules === false) return true;
         const rules = getFORuleSet();
@@ -348,7 +349,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             selectOptionCallback={(keyValuePair) =>
                                 selectRuleCallback(keyValuePair[0])
                             }
-                            disableOption={disableOptions}
+                            shouldDisableOption={shouldDisableOption}
                         />
                     </div>
                 )}
@@ -380,7 +381,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                             : undefined
                     }
                     listIndex={selectedListIndex}
-                    disableOption={disableOptions}
+                    shouldDisableOption={shouldDisableOption}
                 />
             </Dialog>
 
