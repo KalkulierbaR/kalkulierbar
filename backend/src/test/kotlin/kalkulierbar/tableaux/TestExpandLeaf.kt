@@ -20,7 +20,7 @@ class TestExpandLeaf {
         val state = instance.parseFormula(
             "a,b;c",
             "{\"type\":\"UNCONNECTED\",\"regular\":" +
-                    "false,\"backtracking\":false}"
+                "false,\"backtracking\":false}"
         )
 
         assertFailsWith<JsonParseException> {
@@ -47,7 +47,7 @@ class TestExpandLeaf {
 
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1,2,3)|" +
-                    "a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]|[]",
+                "a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]|[]",
             state.getHash()
         )
     }
@@ -63,7 +63,7 @@ class TestExpandLeaf {
 
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {d}|[true;p;null;-;i;o;(1)|" +
-                    "d;p;0;-;l;o;()]|[]",
+                "d;p;0;-;l;o;()]|[]",
             state.getHash()
         )
     }
@@ -81,8 +81,8 @@ class TestExpandLeaf {
 
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {d}|" +
-                    "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;i;o;(4)|" +
-                    "d;p;3;-;l;o;()]|[]",
+                "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;i;o;(4)|" +
+                "d;p;3;-;l;o;()]|[]",
             state.getHash()
         )
     }

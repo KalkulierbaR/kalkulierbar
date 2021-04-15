@@ -97,7 +97,8 @@ class TestFirstOrderJson {
                 regular = false,
                 backtracking = false,
                 manualVarAssign = true
-            ), param
+            ),
+            param
         )
     }
 
