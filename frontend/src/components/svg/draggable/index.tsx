@@ -90,7 +90,7 @@ const Draggable: preact.FunctionalComponent<Props> = ({
             if (!moved) {
                 const xChange = e.clientX - x;
                 const yChange = e.clientY - y;
-                moved = xChange * xChange + yChange * yChange > 0;
+                moved = xChange * xChange + yChange * yChange > 10;
             }
 
             // Calculate how much we have moved (consider the zoom!)

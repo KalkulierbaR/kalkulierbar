@@ -122,7 +122,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
             if (!moved) {
                 const xChange = e.clientX - x;
                 const yChange = e.clientY - y;
-                moved = xChange * xChange + yChange * yChange > 0;
+                moved = xChange * xChange + yChange * yChange > 10;
             }
 
             // Calculate how much we have moved (consider the zoom!)
@@ -235,7 +235,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
             return;
         }
 
-        const moved = dx * dx + dy * dy > 0;
+        const moved = dx * dx + dy * dy > 10;
 
         enableDrag(moved);
 
