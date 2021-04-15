@@ -3,12 +3,7 @@ package kalkulierbar.tests.logic
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
-import kalkulierbar.logic.And
-import kalkulierbar.logic.Equiv
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.Var
+import kalkulierbar.logic.*
 import kalkulierbar.logic.transform.NaiveCNF
 import kalkulierbar.logic.transform.ToBasicOps
 import kalkulierbar.logic.transform.TseytinCNF
@@ -92,7 +87,7 @@ class TestPropositionalLogic {
         assertEquals(expected1.toString(), NaiveCNF.transform(n1).toString())
 
         val expected2 = "{b, a}, {b, !b}, {!a, a}, {!a, !b}"
-        assertEquals(expected2.toString(), NaiveCNF.transform(n2).toString())
+        assertEquals(expected2, NaiveCNF.transform(n2).toString())
 
         val expected3 = ClauseSet(
             mutableListOf(

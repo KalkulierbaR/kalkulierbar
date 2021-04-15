@@ -1,14 +1,9 @@
-import { Fragment, h } from "preact";
-import { useState } from "preact/hooks";
+import {Fragment, h} from "preact";
+import {useState} from "preact/hooks";
 
-import {
-    Calculus,
-    CalculusType,
-    ResolutionCalculus,
-    TableauxCalculus,
-} from "../../../types/calculus";
-import { useAppState } from "../../../util/app-state";
-import { getHighlightCheck } from "../../../util/tutorial-mode";
+import {Calculus, CalculusType, ResolutionCalculus, TableauxCalculus,} from "../../../types/calculus";
+import {useAppState} from "../../../util/app-state";
+import {getHighlightCheck} from "../../../util/tutorial-mode";
 import Dialog from "../../dialog";
 import InfoIcon from "../../icons/info";
 import FAB from "../../input/fab";
@@ -225,10 +220,12 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                         <img
                             class={style.rules}
                             src="../../../assets/images/PSCLeftRules.jpg"
+                            alt="Left rules"
                         />
                         <img
                             class={style.rules}
                             src="../../../assets/images/PSCRightRules.jpg"
+                            alt="Right rules"
                         />
                     </div>
                 )}
@@ -259,10 +256,12 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                         <img
                             class={style.rules}
                             src="../../../assets/images/FOSCLeftRules.jpg"
+                            alt="Left rules"
                         />
                         <img
                             class={style.rules}
                             src="../../../assets/images/FOSCRightRules.jpg"
+                            alt="Right rules"
                         />
                     </div>
                 )}

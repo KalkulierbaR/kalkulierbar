@@ -1,9 +1,9 @@
-import { h } from "preact";
-import { useCallback, useState } from "preact/hooks";
+import {h} from "preact";
+import {useCallback, useState} from "preact/hooks";
 
 import Dialog from "..";
-import { Statistics } from "../../../types/app/statistics";
-import { useAppState } from "../../../util/app-state";
+import {Statistics} from "../../../types/app/statistics";
+import {useAppState} from "../../../util/app-state";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
 
@@ -56,10 +56,10 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
     const { smallScreen } = useAppState();
 
     const memoizedCallback = useCallback(() => {
-        setEntries(stats === undefined ? [] : stats.entries)
+        setEntries(stats === undefined ? [] : stats.entries);
     }, [stats]);
 
-    const [entries, setEntries] = useState<Map<string,string>[]>(
+    const [entries, setEntries] = useState<Map<string, string>[]>(
         stats === undefined ? [] : stats.entries,
     );
 
@@ -74,8 +74,7 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
      * @returns {void}
      */
     const submit = () => {
-        if (nameInput === "")
-            return;
+        if (nameInput === "") return;
         setEntries([]);
         setAsc(false);
         setSortedBy("");
@@ -122,22 +121,20 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
         }
         setSortedBy(key);
 
-        const tmp: Map<string,string>[] = [];
-        stats.entries.forEach(statEntry => {
+        const tmp: Map<string, string>[] = [];
+        stats.entries.forEach((statEntry) => {
             tmp.push(statEntry);
         });
         tmp.sort((a, b) => {
             const av = a.get(key)!!;
             const bv = b.get(key)!!;
-            if (av === bv)
-                return 0;
+            if (av === bv) return 0;
 
             const an = parseFloat(av);
             const bn = parseFloat(bv);
-            if (isNaN(an) || isNaN(bn))
-                return (av < bv) !== currentAsc ? 1 : -1;
-            
-                return (an < bn) !== currentAsc ? 1 : -1;
+            if (isNaN(an) || isNaN(bn)) return av < bv !== currentAsc ? 1 : -1;
+
+            return an < bn !== currentAsc ? 1 : -1;
         });
 
         setEntries(tmp);
@@ -154,10 +151,8 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
             {stats !== undefined && (
                 <table>
                     <tr>
-                        {stats.keys.map(key => (
-                            <td onClick={() => sortByColumn(key)}>
-                                {key}
-                            </td>
+                        {stats.keys.map((key) => (
+                            <td onClick={() => sortByColumn(key)}>{key}</td>
                         ))}
                     </tr>
                     {entries.map((stat) => (

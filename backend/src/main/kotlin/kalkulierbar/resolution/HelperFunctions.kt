@@ -27,9 +27,8 @@ fun <AtomType> filterClause(
         throw IllegalMove("Clause '$c2' does not contain atom '$literal'")
 
     val msg = "Clauses '$c1' and '$c2' do not contain atom '$literal' in both positive and negated form"
-    val resCandidates = findResCandidates(atomsInC1, atomsInC2)
+    return findResCandidates(atomsInC1, atomsInC2)
         ?: throw IllegalMove(msg)
-    return resCandidates
 }
 
 /**

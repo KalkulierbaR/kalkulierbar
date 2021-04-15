@@ -28,8 +28,8 @@ class TestAdmin {
 
     @Test
     fun testInitialConfig() {
-        var config = StateKeeper.getConfig()
-        var expected = """{"disabled": [], "examples": []}"""
+        val config = StateKeeper.getConfig()
+        val expected = """{"disabled": [], "examples": []}"""
         assertEquals(expected, config)
     }
 

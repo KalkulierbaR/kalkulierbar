@@ -104,7 +104,7 @@ fun split(state: DPLLState, branchID: Int, literal: String) {
     // Add a case distinction for $literal
     val trueClause = Clause(mutableListOf(Atom(lit, false)))
     val falseClause = Clause(mutableListOf(Atom(lit, true)))
-    val nodeTrue = TreeNode(branchID, NodeType.SPLIT, "$lit", AddClause(trueClause))
+    val nodeTrue = TreeNode(branchID, NodeType.SPLIT, lit, AddClause(trueClause))
     val nodeFalse = TreeNode(branchID, NodeType.SPLIT, "¬$lit", AddClause(falseClause))
 
     state.tree.add(nodeTrue)

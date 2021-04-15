@@ -8,7 +8,6 @@ import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.FirstOrderSequentParser
 import kalkulierbar.sequent.*
-import kalkulierbar.sequent.moveImplementations.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus

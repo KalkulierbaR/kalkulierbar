@@ -115,14 +115,14 @@ The verify seal method checks if checksum in the `seal` variable matches the sta
 returning `false` if the state appears to have been modified.
 
 ```kotlin
-class SampleState(): ProtectedState() {
+class SampleState : ProtectedState() {
     val shouldNotBeModified = 42
-    
+
     override var seal = ""
     override fun getHash(): String {
         return shouldNotBeModified.toString()
     }
-    
+
     fun serializeOrSomething(): String {
         computeSeal()
         /*...*/

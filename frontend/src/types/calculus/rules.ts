@@ -6,7 +6,7 @@ export interface Rule<L = string> {
 export interface RuleSet<L = string> {
     rules: Rule<L>[];
 }
-export function getNormalRuleSet(): RuleSet<string> {
+export function getNormalRuleSet(): RuleSet {
     return {
         rules: [
             { name: "Ax", site: "both" },
@@ -22,7 +22,7 @@ export function getNormalRuleSet(): RuleSet<string> {
     };
 }
 
-export function getFORuleSet(): RuleSet<string> {
+export function getFORuleSet(): RuleSet {
     return {
         rules: [
             { name: "Ax", site: "both" },

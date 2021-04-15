@@ -9,13 +9,23 @@ import kotlin.test.assertFailsWith
 class TestFOLemma {
 
     val instance = FirstOrderTableaux()
-    val automaticParam = FoTableauxParam(TableauxType.UNCONNECTED, false, false, false)
-    val manualParam = FoTableauxParam(TableauxType.UNCONNECTED, false, false, true)
+    val automaticParam = FoTableauxParam(
+        TableauxType.UNCONNECTED,
+        regular = false,
+        backtracking = false,
+        manualVarAssign = false
+    )
+    val manualParam = FoTableauxParam(
+        TableauxType.UNCONNECTED,
+        regular = false,
+        backtracking = false,
+        manualVarAssign = true
+    )
 
     var autoStates = mutableListOf<FoTableauxState>()
     var manualStates = mutableListOf<FoTableauxState>()
 
-    val formula = listOf<String>(
+    val formula = listOf(
         "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
         "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) & R(A)))"
     )

@@ -1,6 +1,6 @@
-import { KStringMap } from "../kotlin";
+import {KStringMap} from "../kotlin";
 
-import { Calculus, SequentCalculusType } from ".";
+import {Calculus, SequentCalculusType} from ".";
 
 export type SequentNodeType = "";
 

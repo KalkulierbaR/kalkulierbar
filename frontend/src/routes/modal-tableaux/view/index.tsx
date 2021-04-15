@@ -75,7 +75,8 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
         } else if (selectedNodeId === undefined) {
             setSelectedNodeId(newNode.id);
         } else if (
-            leafSelection && selectedMove !== undefined &&
+            leafSelection &&
+            selectedMove !== undefined &&
             getLeaves(state.tree, state.tree[selectedNodeId]).includes(
                 newNode.id,
             )

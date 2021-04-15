@@ -43,7 +43,7 @@ class TestTamperProtect {
         }
     }
 
-    fun genPoem(): String {
+    private fun genPoem(): String {
         val length = Random.nextInt(2, 15)
         var poem = ""
         for (i in 1..length) {
@@ -52,7 +52,7 @@ class TestTamperProtect {
         return poem
     }
 
-    fun ranWord(): String {
+    private fun ranWord(): String {
         return words.random()
     }
 }

@@ -1,5 +1,5 @@
 .text--selected {
-    fill: --kbar-primary-text-color;
+    fill: var(--kbar-primary-text-color);
     cursor: pointer;
 }
 .text {

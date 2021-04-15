@@ -35,14 +35,13 @@ object PropositionalSequentParser {
 
     private fun parseFormulas(formulaList: String, inputPosition: Int): List<LogicNode> {
         val rawFormulas = formulaList.split(",")
-        val position = inputPosition
 
         return rawFormulas.mapIndexedNotNull { i, formula ->
             try {
-                ChangeEquivalences.transform(PropositionalParser().parse(formula, position))
+                ChangeEquivalences.transform(PropositionalParser().parse(formula, inputPosition))
             } catch (e: EmptyFormulaException) {
                 if (i != 0 || rawFormulas.size != 1)
-                    throw InvalidFormulaFormat("Empty formula at char $position")
+                    throw InvalidFormulaFormat("Empty formula at char $inputPosition")
                 else
                     null
             }

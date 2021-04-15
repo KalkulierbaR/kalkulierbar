@@ -1,10 +1,11 @@
-package kalkulierbar.sequent.moveImplementations
+package kalkulierbar.sequent
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.*
-import kalkulierbar.sequent.*
-import kalkulierbar.sequent.GenericSequentCalculusState
-import kalkulierbar.sequent.TreeNode
+import kalkulierbar.logic.And
+import kalkulierbar.logic.Impl
+import kalkulierbar.logic.Not
+import kalkulierbar.logic.Or
+
 /**
  * Rule Ax is applied, if formulas of the same kind are on both sides of the Node.
  * @param state: GenericSequentCalculusState state to apply move on

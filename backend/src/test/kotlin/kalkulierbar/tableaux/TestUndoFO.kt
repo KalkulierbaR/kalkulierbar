@@ -7,12 +7,17 @@ import kotlin.test.assertEquals
 class TestUndoFO {
 
     val instance = FirstOrderTableaux()
-    val param = FoTableauxParam(TableauxType.UNCONNECTED, false, true, false)
-    val paramManual = FoTableauxParam(TableauxType.UNCONNECTED, false, true, true)
+    val param = FoTableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = true, manualVarAssign = false)
+    val paramManual = FoTableauxParam(
+        TableauxType.UNCONNECTED,
+        regular = false,
+        backtracking = true,
+        manualVarAssign = true
+    )
     var states = mutableListOf<FoTableauxState>()
     var statesManual = mutableListOf<FoTableauxState>()
 
-    val formula = mutableListOf<String>(
+    val formula = mutableListOf(
         "\\all X: R(X) & R(c) & !R(c)",
         "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
         "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))"

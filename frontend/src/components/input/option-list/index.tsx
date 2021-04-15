@@ -86,10 +86,12 @@ const OptionList: preact.FunctionalComponent<Props> = ({
                                 [style.optionSelected]: selectedOptionIds.includes(
                                     keyValuePair[0],
                                 ),
-                                [style.optionDisabled]:
-                                    !shouldDisableOption(keyValuePair[0]),
-                                [style.optionEnabled]:
-                                    shouldDisableOption(keyValuePair[0]),
+                                [style.optionDisabled]: !shouldDisableOption(
+                                    keyValuePair[0],
+                                ),
+                                [style.optionEnabled]: shouldDisableOption(
+                                    keyValuePair[0],
+                                ),
                             })}
                         >
                             {keyValuePair[1]}

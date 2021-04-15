@@ -16,7 +16,7 @@ export type checkCloseFn<C extends CalculusType = CalculusType> = (
  * @param {string} server - Server
  * @param {NotificationHandler} notificationHandler - Notification handler
  * @param {C} calculus - Calculus endpoint
- * @param {any} state - Current state for the calculus
+ * @param {AppState} state - Current state for the calculus
  * @param {void} onProven - the function to call if proof is valid
  * @returns {Promise<void>} - Resolves when the request is done
  */
@@ -83,15 +83,17 @@ const getScores = async <C extends CalculusType = CalculusType>(
         if (response.status !== 200) {
             notificationHandler.error(await response.text());
         } else {
-            const raw = (await response.json())
+            const raw = await response.json();
             // convert json hash to Map
-            raw.entries = (raw.entries as {[key: string]: string}[]).map(entry => {
-                const map = new Map<string, string>();
-                for (const key of Object.keys(entry)) {
-                    map.set(key, entry[key]);
-                }
-                return map;
-            })
+            raw.entries = (raw.entries as { [key: string]: string }[]).map(
+                (entry) => {
+                    const map = new Map<string, string>();
+                    for (const key of Object.keys(entry)) {
+                        map.set(key, entry[key]);
+                    }
+                    return map;
+                },
+            );
             onProven(raw as Statistics);
         }
     } catch (e) {
@@ -173,8 +175,8 @@ export const checkValid = async <C extends CalculusType = CalculusType>(
  * Updates app state with response from backend
  * @param {string} server - URL of the server
  * @param {C} calculus - Calculus endpoint
- * @param {any} state - Current state for the calculus
- * @param {any} move - Move to send
+ * @param {AppState} state - Current state for the calculus
+ * @param {Move} move - Move to send
  * @param {AppStateUpdater} stateChanger - Function to update the state
  * @param {NotificationHandler} notificationHandler - Notification handler
  * @returns {Promise<void>} - Promise that resolves after the request has been handled

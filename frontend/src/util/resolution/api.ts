@@ -1,12 +1,9 @@
-import { APIInformation } from "../../types/app/api";
-import { AppState } from "../../types/app/app-state";
-import { Calculus, ResolutionCalculusType } from "../../types/calculus";
-import {
-    FOResolutionState,
-    PropResolutionState,
-} from "../../types/calculus/resolution";
-import { VarAssign } from "../../types/calculus/tableaux";
-import { sendMove } from "../api";
+import {APIInformation} from "../../types/app/api";
+import {AppState} from "../../types/app/app-state";
+import {Calculus, ResolutionCalculusType} from "../../types/calculus";
+import {FOResolutionState, PropResolutionState,} from "../../types/calculus/resolution";
+import {VarAssign} from "../../types/calculus/tableaux";
+import {sendMove} from "../api";
 
 /**
  * Send a resolve move (propositional) to the backend
@@ -17,7 +14,6 @@ import { sendMove } from "../api";
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
- * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendResolve = (
@@ -50,7 +46,6 @@ export const sendResolve = (
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
- * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendResolveUnify = (
@@ -85,7 +80,6 @@ export const sendResolveUnify = (
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
- * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendResolveCustom = (
@@ -118,7 +112,6 @@ export const sendResolveCustom = (
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
- * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const hideClause = <
@@ -154,7 +147,6 @@ export const hideClause = <
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
- * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const showHiddenClauses = <
@@ -190,7 +182,6 @@ export const showHiddenClauses = <
  * @param {AppState} state - The apps state
  * @param {AppStateUpdater} onChange - The AppStateUpdater
  * @param {VoidFunction} onError - The function to call when an error is encountered
- * @param {VoidFunction} onWarning - The function to call when an warning is encountered
  * @returns {void}
  */
 export const sendFactorize = <

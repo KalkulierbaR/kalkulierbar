@@ -1,18 +1,13 @@
 package kalkulierbar.tests.tableaux
 
-import kalkulierbar.tableaux.MoveAutoClose
-import kalkulierbar.tableaux.MoveExpand
-import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxNode
-import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxType
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestCheckClose {
 
     val propTableaux = PropositionalTableaux()
-    val tableauxOpts = TableauxParam(TableauxType.UNCONNECTED, false, false)
+    val tableauxOpts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
 
     @Test
     fun testCheckCloseSimple() {
@@ -25,8 +20,8 @@ class TestCheckClose {
         )
 
         state.tree.addAll(nodes)
-        state.tree.get(0).children.add(1)
-        state.tree.get(1).children.add(2)
+        state.tree[0].children.add(1)
+        state.tree[1].children.add(2)
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
@@ -49,10 +44,10 @@ class TestCheckClose {
         )
 
         state.tree.addAll(nodes)
-        state.tree.get(0).children.add(1)
-        state.tree.get(0).children.add(2)
-        state.tree.get(1).children.add(3)
-        state.tree.get(2).children.add(4)
+        state.tree[0].children.add(1)
+        state.tree[0].children.add(2)
+        state.tree[1].children.add(3)
+        state.tree[2].children.add(4)
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
@@ -102,10 +97,10 @@ class TestCheckClose {
         )
 
         state.tree.addAll(nodes)
-        state.tree.get(0).children.addAll(listOf(1, 2, 3))
-        state.tree.get(1).children.add(4)
-        state.tree.get(2).children.add(5)
-        state.tree.get(3).children.add(6)
+        state.tree[0].children.addAll(listOf(1, 2, 3))
+        state.tree[1].children.add(4)
+        state.tree[2].children.add(5)
+        state.tree[3].children.add(6)
 
         // Don't close proof completely
         state = propTableaux.applyMoveOnState(state, MoveAutoClose(6, 3))

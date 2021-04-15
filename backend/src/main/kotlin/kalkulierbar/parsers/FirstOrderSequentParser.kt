@@ -35,14 +35,13 @@ object FirstOrderSequentParser {
 
     private fun parseFormulas(formulaList: String, inputPosition: Int): List<LogicNode> {
         val rawFormulas = splitToFormulas(formulaList)
-        val position = inputPosition
 
         return rawFormulas.mapIndexedNotNull { i, formula ->
             try {
-                ChangeEquivalences.transform(FirstOrderParser().parse(formula, position))
+                ChangeEquivalences.transform(FirstOrderParser().parse(formula, inputPosition))
             } catch (e: EmptyFormulaException) {
                 if (i != 0 || rawFormulas.size != 1)
-                    throw InvalidFormulaFormat("Empty formula at char $position")
+                    throw InvalidFormulaFormat("Empty formula at char $inputPosition")
                 else
                     null
             }

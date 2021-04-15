@@ -151,7 +151,7 @@ class FoTableauxNode(
     override val parent: Int?,
     val relation: Relation,
     override val negated: Boolean,
-    override val lemmaSource: Int? = null
+    override val lemmaSource: Int? = null,
 ) : GenericTableauxNode<Relation> {
 
     override var isClosed = false
@@ -185,8 +185,8 @@ class FoTableauxNode(
         val neg = if (negated) "n" else "p"
         val closed = if (isClosed) "c" else "o"
         val ref = if (closeRef != null) closeRef.toString() else "-"
-        val childlist = children.joinToString(",")
-        return "$relation;$neg;$parent;$ref;$closed;($childlist)"
+        val childList = children.joinToString(",")
+        return "$relation;$neg;$parent;$ref;$closed;($childList)"
     }
 }
 
@@ -195,5 +195,5 @@ data class FoTableauxParam(
     val type: TableauxType,
     val regular: Boolean,
     val backtracking: Boolean,
-    val manualVarAssign: Boolean
+    val manualVarAssign: Boolean,
 )

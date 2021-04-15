@@ -1,20 +1,15 @@
-import { Fragment, h } from "preact";
-import { useState } from "preact/hooks";
+import {Fragment, h} from "preact";
+import {useState} from "preact/hooks";
 
-import HintIcon, { Hint } from "../../components/hint";
+import HintIcon, {Hint} from "../../components/hint";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/input/radio";
 import Switch from "../../components/input/switch";
-import { Calculus, TableauxCalculusType } from "../../types/calculus";
-import {
-    CnfStrategy,
-    FOTableauxParams,
-    PropTableauxParams,
-    TableauxType,
-} from "../../types/calculus/tableaux";
-import { useAppState } from "../../util/app-state";
+import {Calculus, TableauxCalculusType} from "../../types/calculus";
+import {CnfStrategy, FOTableauxParams, PropTableauxParams, TableauxType,} from "../../types/calculus/tableaux";
+import {useAppState} from "../../util/app-state";
 
 interface Props {
     /**
@@ -106,7 +101,11 @@ const Tableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     return (
         <Fragment>
-            <Format logicType={calculus === Calculus.foTableaux ? "fo" : "prop-clause"} />
+            <Format
+                logicType={
+                    calculus === Calculus.foTableaux ? "fo" : "prop-clause"
+                }
+            />
             <FormulaInput
                 calculus={calculus}
                 params={params}

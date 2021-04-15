@@ -1,17 +1,11 @@
 package kalkulierbar.test.signedtableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.*
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.AlphaMove
-import kalkulierbar.signedtableaux.BetaMove
-import kalkulierbar.signedtableaux.Negation
-import kalkulierbar.signedtableaux.NuMove
-import kalkulierbar.signedtableaux.PiMove
-import kalkulierbar.signedtableaux.SignedModalTableaux
-import kalkulierbar.signedtableaux.SignedModalTableauxParam
-import kalkulierbar.signedtableaux.UndoMove
-import kotlin.test.*
+import kalkulierbar.signedtableaux.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class TestUndo {
     val instance = SignedModalTableaux()
@@ -66,7 +60,7 @@ class TestUndo {
     @Test
     fun testUndoTwoChild() {
         var state = instance.parseFormulaToState("a & b", null)
-        var state2 = instance.parseFormulaToState("a & b", null)
+        val state2 = instance.parseFormulaToState("a & b", null)
 
         state2.usedBacktracking = true
         val prestateHash = state2.getHash()
@@ -79,7 +73,7 @@ class TestUndo {
 
     @Test
     fun testWrongUndo() {
-        var state = instance.parseFormulaToState("!(a -> b)", SignedModalTableauxParam(false))
+        val state = instance.parseFormulaToState("!(a -> b)", SignedModalTableauxParam(false))
         assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, UndoMove()) }
     }
 }

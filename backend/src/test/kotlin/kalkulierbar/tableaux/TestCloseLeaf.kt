@@ -1,11 +1,7 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.MoveAutoClose
-import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxNode
-import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxType
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -13,7 +9,7 @@ import kotlin.test.assertFailsWith
 class TestCloseLeaf {
 
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
+    val opts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
 
     @Test
     fun testApplyCloseValidA() {
@@ -31,7 +27,7 @@ class TestCloseLeaf {
         assertEquals(2, state.tree[3].closeRef)
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!b}|" +
-                "[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]|[]",
+                    "[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]|[]",
             state.getHash()
         )
     }
@@ -57,8 +53,8 @@ class TestCloseLeaf {
         assertEquals(1, state.tree[3].closeRef)
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
-                "[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|" +
-                "b;p;1;1;l;c;()|c;p;1;-;l;o;()]|[]",
+                    "[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|" +
+                    "b;p;1;1;l;c;()|c;p;1;-;l;o;()]|[]",
             state.getHash()
         )
     }
@@ -88,8 +84,8 @@ class TestCloseLeaf {
         assertEquals(2, state.tree[5].closeRef)
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
-                "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|" +
-                "b;n;2;2;l;c;()]|[]",
+                    "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|" +
+                    "b;n;2;2;l;c;()]|[]",
             state.getHash()
         )
     }
@@ -249,19 +245,19 @@ class TestCloseLeaf {
 
         state = instance.applyMoveOnState(state, MoveAutoClose(7, 5))
 
-        assertEquals(true, state.tree.get(7).isClosed)
-        assertEquals(false, state.tree.get(5).isClosed)
+        assertEquals(true, state.tree[7].isClosed)
+        assertEquals(false, state.tree[5].isClosed)
 
         state = instance.applyMoveOnState(state, MoveAutoClose(6, 2))
 
         println(state.getHash())
 
-        assertEquals(true, state.tree.get(7).isClosed)
-        assertEquals(true, state.tree.get(6).isClosed)
-        assertEquals(true, state.tree.get(5).isClosed)
-        assertEquals(true, state.tree.get(2).isClosed)
-        assertEquals(false, state.tree.get(0).isClosed)
-        assertEquals(null, state.tree.get(5).closeRef)
-        assertEquals(null, state.tree.get(2).closeRef)
+        assertEquals(true, state.tree[7].isClosed)
+        assertEquals(true, state.tree[6].isClosed)
+        assertEquals(true, state.tree[5].isClosed)
+        assertEquals(true, state.tree[2].isClosed)
+        assertEquals(false, state.tree[0].isClosed)
+        assertEquals(null, state.tree[5].closeRef)
+        assertEquals(null, state.tree[2].closeRef)
     }
 }

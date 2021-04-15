@@ -1,20 +1,14 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.MoveExpand
-import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxNode
-import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxState
-import kalkulierbar.tableaux.TableauxType
-import kalkulierbar.tableaux.checkRegularity
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestRegularity {
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, true, false)
+    val opts = TableauxParam(TableauxType.UNCONNECTED, regular = true, backtracking = false)
 
     // State creation helper function
     private fun createState(nodes: List<TableauxNode>, state: TableauxState): TableauxState {
@@ -77,7 +71,7 @@ class TestRegularity {
 
     @Test
     fun testRegularityValidD() {
-        var state = instance.parseFormulaToState("true,false;!true", opts)
+        val state = instance.parseFormulaToState("true,false;!true", opts)
         assertEquals(true, checkRegularity(state))
     }
 
@@ -156,7 +150,7 @@ class TestRegularity {
         state = instance.applyMoveOnState(state, MoveExpand(0, 0))
 
         val expectedHash = "tableauxstate|UNCONNECTED|true|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
-            "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]|[]"
+                "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;l;o;()|b;p;0;-;l;o;()|c;p;0;-;l;o;()]|[]"
         assertEquals(expectedHash, state.getHash())
     }
 
@@ -167,7 +161,7 @@ class TestRegularity {
         state = instance.applyMoveOnState(state, MoveExpand(1, 0))
 
         val expectedHash = "tableauxstate|UNCONNECTED|true|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
-            "[true;p;null;-;i;o;(1)|a;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;-;l;o;()|c;p;1;-;l;o;()]|[]"
+                "[true;p;null;-;i;o;(1)|a;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|b;p;1;-;l;o;()|c;p;1;-;l;o;()]|[]"
         assertEquals(expectedHash, state.getHash())
     }
 

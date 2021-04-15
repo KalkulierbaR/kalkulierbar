@@ -109,10 +109,9 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 active={true}
                             />
                         ) : (
-                            state!.tree[selectedNodeId].children.length ===
-                                0 &&
-                            state!.tree.filter((node) => node.isClosed)
-                                .length > 0 && (
+                            state!.tree[selectedNodeId].children.length === 0 &&
+                            state!.tree.filter((node) => node.isClosed).length >
+                                0 && (
                                 <FAB
                                     icon={<LemmaIcon />}
                                     label="Lemma"

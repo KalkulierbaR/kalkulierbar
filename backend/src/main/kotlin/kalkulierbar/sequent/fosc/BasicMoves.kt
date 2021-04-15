@@ -9,8 +9,6 @@ import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.parsers.Tokenizer
 import kalkulierbar.sequent.*
-import kalkulierbar.sequent.moveImplementations.checkLeft
-import kalkulierbar.sequent.moveImplementations.checkRight
 
 /**
  * Rule AllLeft is applied, if the LogicNode is the leftChild of node and is of type All(UniversalQuantifier).

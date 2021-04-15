@@ -1,26 +1,9 @@
-import { DPLLMove } from "./dpll";
-import {
-    ModalTableauxMove,
-    ModalTableauxParams,
-} from "./modal-tableaux";
-import { NCTableauxMove } from "./nc-tableaux";
-import {
-    FOResolutionMove,
-    FOResolutionParams,
-    PropResolutionMove,
-    PropResolutionParams,
-} from "./resolution";
-import {
-    FOSCMove,
-    PSCMove,
-    SequentParams,
-} from "./sequent";
-import {
-    FOTableauxMove,
-    FOTableauxParams,
-    PropTableauxParams,
-    TableauxMove,
-} from "./tableaux";
+import {DPLLMove} from "./dpll";
+import {ModalTableauxMove, ModalTableauxParams} from "./modal-tableaux";
+import {NCTableauxMove} from "./nc-tableaux";
+import {FOResolutionMove, FOResolutionParams, PropResolutionMove, PropResolutionParams,} from "./resolution";
+import {FOSCMove, PSCMove, SequentParams} from "./sequent";
+import {FOTableauxMove, FOTableauxParams, PropTableauxParams, TableauxMove,} from "./tableaux";
 
 export type TableauxCalculusType = "prop-tableaux" | "fo-tableaux";
 export type ResolutionCalculusType = "prop-resolution" | "fo-resolution";

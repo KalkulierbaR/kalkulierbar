@@ -1,12 +1,7 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.MoveAutoClose
-import kalkulierbar.tableaux.MoveExpand
-import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxType
-import kalkulierbar.tableaux.checkConnectedness
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -15,8 +10,8 @@ import kotlin.test.assertTrue
 class TestConnectedness {
 
     val instance = PropositionalTableaux()
-    val optsWeak = TableauxParam(TableauxType.WEAKLYCONNECTED, false, false)
-    val optsStrong = TableauxParam(TableauxType.STRONGLYCONNECTED, false, false)
+    val optsWeak = TableauxParam(TableauxType.WEAKLYCONNECTED, regular = false, backtracking = false)
+    val optsStrong = TableauxParam(TableauxType.STRONGLYCONNECTED, regular = false, backtracking = false)
 
     @Test
     fun testConnectednessValidA() {
@@ -33,8 +28,8 @@ class TestConnectedness {
 
         assertEquals(
             "tableauxstate|WEAKLYCONNECTED|false|false|false|{a, b, c}, {!a, b}|" +
-                "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;o;(4,5)|b;p;0;-;l;o;()|c;p;0;-;l;o;()|a;n;1;1;l;c;()|" +
-                "b;p;1;-;i;o;(6,7)|a;n;5;1;l;c;()|b;p;5;-;l;o;()]|[]",
+                    "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;o;(4,5)|b;p;0;-;l;o;()|c;p;0;-;l;o;()|a;n;1;1;l;c;()|" +
+                    "b;p;1;-;i;o;(6,7)|a;n;5;1;l;c;()|b;p;5;-;l;o;()]|[]",
             state.getHash()
         )
     }
@@ -54,7 +49,7 @@ class TestConnectedness {
         println(state.getHash())
         assertEquals(
             "tableauxstate|WEAKLYCONNECTED|false|false|false|{!a, b}, {a}|[true;p;null;-;i;o;(1)|" +
-                "a;p;0;-;i;o;(2,3)|a;n;1;1;l;c;()|b;p;1;-;i;o;(4,5)|a;n;3;1;l;c;()|b;p;3;-;l;o;()]|[]",
+                    "a;p;0;-;i;o;(2,3)|a;n;1;1;l;c;()|b;p;1;-;i;o;(4,5)|a;n;3;1;l;c;()|b;p;3;-;l;o;()]|[]",
             state.getHash()
         )
     }
@@ -76,8 +71,8 @@ class TestConnectedness {
 
         assertEquals(
             "tableauxstate|STRONGLYCONNECTED|false|false|false|{a, b, c}, {!a, b}|" +
-                "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;o;(4,5)|b;p;0;-;l;o;()|c;p;0;-;l;o;()|a;n;1;1;l;c;()|" +
-                "b;p;1;-;i;o;(6,7)|a;n;5;-;l;o;()|b;p;5;-;l;o;()]|[]",
+                    "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;o;(4,5)|b;p;0;-;l;o;()|c;p;0;-;l;o;()|a;n;1;1;l;c;()|" +
+                    "b;p;1;-;i;o;(6,7)|a;n;5;-;l;o;()|b;p;5;-;l;o;()]|[]",
             state.getHash()
         )
     }
@@ -99,7 +94,7 @@ class TestConnectedness {
         println(state.getHash())
         assertEquals(
             "tableauxstate|STRONGLYCONNECTED|false|false|false|{!a, b}, {a}|[true;p;null;-;i;o;(1)|" +
-                "a;p;0;-;i;o;(2,3)|a;n;1;1;l;c;()|b;p;1;-;i;o;(4,5)|a;n;3;-;l;o;()|b;p;3;-;l;o;()]|[]",
+                    "a;p;0;-;i;o;(2,3)|a;n;1;1;l;c;()|b;p;1;-;i;o;(4,5)|a;n;3;-;l;o;()|b;p;3;-;l;o;()]|[]",
             state.getHash()
         )
     }
@@ -122,7 +117,7 @@ class TestConnectedness {
 
         assertEquals(
             "tableauxstate|WEAKLYCONNECTED|false|false|false|{!a, b}, {a}|[true;p;null;-;i;o;(1)|" +
-                "a;p;0;-;i;o;(2,3)|a;n;1;1;l;c;()|b;p;1;-;i;o;(4,5)|a;n;3;-;l;o;()|b;p;3;-;l;o;()]|[]",
+                    "a;p;0;-;i;o;(2,3)|a;n;1;1;l;c;()|b;p;1;-;i;o;(4,5)|a;n;3;-;l;o;()|b;p;3;-;l;o;()]|[]",
             state.getHash()
         )
     }
@@ -140,8 +135,8 @@ class TestConnectedness {
         println(state.getHash())
         assertEquals(
             "tableauxstate|STRONGLYCONNECTED|false|false|false|{!a, b}, {a}|" +
-                "[true;p;null;-;i;o;(1,2)|a;n;0;-;i;o;(3,4)|b;p;0;-;l;o;()|a;n;1;-;l;o;()|" +
-                "b;p;1;-;l;o;()]|[]",
+                    "[true;p;null;-;i;o;(1,2)|a;n;0;-;i;o;(3,4)|b;p;0;-;l;o;()|a;n;1;-;l;o;()|" +
+                    "b;p;1;-;l;o;()]|[]",
             state.getHash()
         )
     }

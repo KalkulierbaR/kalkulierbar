@@ -1,12 +1,7 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.MoveAutoClose
-import kalkulierbar.tableaux.MoveExpand
-import kalkulierbar.tableaux.MoveUndo
-import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxType
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -14,7 +9,7 @@ import kotlin.test.assertFailsWith
 class TestUndo {
 
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, false, true)
+    val opts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = true)
 
     @Test
     fun testUndoDisabled() {

@@ -9,10 +9,10 @@ import kotlin.test.assertFailsWith
 class TestLemma {
 
     val instance = PropositionalTableaux()
-    val param = TableauxParam(TableauxType.UNCONNECTED, false, false)
+    val param = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
     var states = mutableListOf<TableauxState>()
 
-    val formula = mutableListOf<String>(
+    val formula = mutableListOf(
         "a,a;!a,b;!b",
         "a;b,b;!a,!b",
         "!a,b;!b;a,b",

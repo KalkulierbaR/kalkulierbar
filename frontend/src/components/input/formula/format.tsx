@@ -1,9 +1,9 @@
-import { Fragment, h } from "preact";
-import { useCallback, useState } from "preact/hooks";
+import {Fragment, h} from "preact";
+import {useCallback, useState} from "preact/hooks";
 
-import { TutorialMode } from "../../../types/app/tutorial";
-import { useAppState } from "../../../util/app-state";
-import { classMap } from "../../../util/class-map";
+import {TutorialMode} from "../../../types/app/tutorial";
+import {useAppState} from "../../../util/app-state";
+import {classMap} from "../../../util/class-map";
 import ChevronRightIcon from "../../icons/chevron-right";
 
 import * as style from "./style.scss";
@@ -12,7 +12,7 @@ interface Props {
     /**
      * Which logic type to display explainers for
      */
-    logicType: LogicType
+    logicType: LogicType;
 }
 
 export type LogicType =
@@ -23,9 +23,7 @@ export type LogicType =
     | "fo-sequent"
     | "modal";
 
-const Format: preact.FunctionalComponent<Props> = ({
-    logicType = "prop"
-}) => {
+const Format: preact.FunctionalComponent<Props> = ({ logicType = "prop" }) => {
     const { tutorialMode, smallScreen } = useAppState();
 
     const firstVisit =
@@ -69,13 +67,9 @@ const Format: preact.FunctionalComponent<Props> = ({
                 </p>
                 <p>
                     Set the assumption to true or false using &nbsp;
-                    <code class={style.padRight}>
-                        {"\\sign T:"}
-                    </code> 
+                    <code class={style.padRight}>{"\\sign T:"}</code>
                     or &nbsp;
-                    <code class={style.padRight}>
-                        {"\\sign F:"}
-                    </code>
+                    <code class={style.padRight}>{"\\sign F:"}</code>
                     at the start of your formula.
                     <br />
                     For the formula itself, use the usual ascii-notation: &nbsp;
@@ -292,11 +286,15 @@ const Format: preact.FunctionalComponent<Props> = ({
                 <p>
                     <code class={style.padRight}>{"{{a, ¬b}, {¬a}, {b}}"}</code>
                     needs to be entered as{" "}
-                    <code class={classMap({
-                        [style.padLeft]: true,
-                        [style.padRight]: true,
-                    })}>a,!b;!a;b</code>
-                    {" "}or in DIMACS format{" "}
+                    <code
+                        class={classMap({
+                            [style.padLeft]: true,
+                            [style.padRight]: true,
+                        })}
+                    >
+                        a,!b;!a;b
+                    </code>{" "}
+                    or in DIMACS format{" "}
                     <code class={style.padLeft}>a -b 0 -a 0 b</code>
                 </p>
                 <p>
@@ -398,9 +396,14 @@ const Format: preact.FunctionalComponent<Props> = ({
         <div class={style.formatContent}>
             <ul>
                 {logicType === "modal" && modalFormat}
-                {(logicType === "prop-sequent" || logicType === "fo-sequent") && sequentFormat}
-                {(logicType === "prop" || logicType === "prop-sequent" || logicType === "prop-clause") && propFormat}
-                {(logicType === "fo" || logicType === "fo-sequent") && foLogicFormat}
+                {(logicType === "prop-sequent" || logicType === "fo-sequent") &&
+                    sequentFormat}
+                {(logicType === "prop" ||
+                    logicType === "prop-sequent" ||
+                    logicType === "prop-clause") &&
+                    propFormat}
+                {(logicType === "fo" || logicType === "fo-sequent") &&
+                    foLogicFormat}
                 {logicType === "prop-clause" && propClauseFormat}
             </ul>
         </div>
