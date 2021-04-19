@@ -2,17 +2,26 @@
 
 ## Requirements
 
--   Install [Java JRE](https://www.java.com/de/download/win10.jsp) or [Java JDK](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html) > 8
--   Install [Gradle](https://gradle.org/install/) > 6.0.1
--   Go into `backend` and use command `gradle`
--   Done
+### Automatic
+
+On `Linux` systems you can use the main install script `./install`, also described in the main README.md.
+
+### Manual
+
+- Install a Java Version >= 9: [Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
+  / [OpenJDK](https://openjdk.java.net/install/index.html)
+- Go into `backend` and use command `./gradlew`
+- Done
 
 ## CLI Commands
 
--   `gradle`: Installs dependencies
+- `./gradlew`: Installs dependencies
 
--   `gradle build`: build, test, and analyze the project
+- `./gradlew build`: build, test, and analyze the project
 
--   `gradle run`: creates build and runs it
+- `./gradlew run`: creates build, runs it and by default listens on http://localhost:7000/
 
--   `gradle run --args='--global'` or `gradle run --args='-g'`: same as run, but listens on `0.0.0.0` rather than `localhost`
+- `./gradlew run --args='--global'` or `./gradlew run --args='-g'`: same as run, but listens on http://0.0.0.0:7000/ by
+  default
+
+- On `Windows` replace `./gradlew` with `./gradlew.bat` for all commands mentioned above

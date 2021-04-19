@@ -2,6 +2,12 @@
 
 ## Requirements
 
+### Automatic
+
+On `Linux` systems you can use the main install script `./install`, also described in the main README.md.
+
+### Manual
+
 -   Install [Node.JS](https://nodejs.org/en/download/)
 -   Install [yarn](https://yarnpkg.com/en/docs/install#debian-stable)
 -   Go into `frontend` and use command `yarn`
@@ -23,4 +29,5 @@
 
 -   `yarn test`: Run Jest and [`preact-render-spy`](https://github.com/mzgoddard/preact-render-spy) for your tests
 
-For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
+For detailed explanation on how things work, checkout
+the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
