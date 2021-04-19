@@ -17,12 +17,22 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+
+    // Hashing
     implementation("com.github.komputing:khash:0.9")
+
+    // Linting
+    implementation("io.javalin:javalin:3.6.0")
+
+    // Logging
+    implementation("org.slf4j:slf4j-simple:1.8.0-beta4")
+
+    // JVM dependency
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0")
+
+    // Testing
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.5.2")
-    compile("io.javalin:javalin:3.6.0")
-    compile("org.slf4j:slf4j-simple:1.8.0-beta4")
-    compile("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0") // JVM dependency
 }
 
 application {
