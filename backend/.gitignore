@@ -3,8 +3,5 @@ build
 .classpath
 .settings
 .project
-#gradlew
-gradlew.bat
 .idea/*
 *.xml
-#gradle-wrapper.*
