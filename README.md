@@ -46,9 +46,8 @@ On `Windows` install these manually:
 
 - [Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
   / [OpenJDK](https://openjdk.java.net/install/index.html) >= Java version 9
-- [Gradle](https://gradle.org/install/) >= version 6.1
 - [Node.JS](https://nodejs.org/en/download/)
-- [yarn](https://yarnpkg.com/en/docs/install#debian-stable)
+- [yarn](https://yarnpkg.com/en/docs/install)
 
 ### Run
 
