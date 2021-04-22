@@ -1,13 +1,13 @@
-import { createRef, h } from "preact";
-import { useState } from "preact/hooks";
+import {createRef, h} from "preact";
+import {useState} from "preact/hooks";
 
-import { CandidateClause } from "../../../../types/calculus/clause";
-import { DragTransform, Point } from "../../../../types/ui";
-import { classMap } from "../../../../util/class-map";
-import { clauseToString } from "../../../../util/clause";
-import { disableDrag, enableDrag } from "../../../../util/zoom/drag";
-import { mousePos } from "../../../../util/zoom/mouse";
-import { touchPos } from "../../../../util/zoom/touch";
+import {CandidateClause} from "../../../../types/calculus/clause";
+import {DragTransform, Point} from "../../../../types/ui";
+import {classMap} from "../../../../util/class-map";
+import {clauseToString} from "../../../../util/clause";
+import {disableDrag, enableDrag} from "../../../../util/zoom/drag";
+import {mousePos} from "../../../../util/zoom/mouse";
+import {touchPos} from "../../../../util/zoom/touch";
 import Rectangle from "../../../svg/rectangle";
 
 import * as style from "./style.scss";
@@ -124,7 +124,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
             if (!moved) {
                 const xChange = e.clientX - x;
                 const yChange = e.clientY - y;
-                moved = xChange * xChange + yChange * yChange > 0;
+                moved = xChange * xChange + yChange * yChange > 10;
             }
 
             // Calculate how much we have moved (consider the zoom!)
@@ -237,7 +237,7 @@ const ResolutionNode: preact.FunctionalComponent<Props> = ({
             return;
         }
 
-        const moved = dx * dx + dy * dy > 0;
+        const moved = dx * dx + dy * dy > 10;
 
         enableDrag(moved);
 

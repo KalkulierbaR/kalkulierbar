@@ -1,2 +1,2 @@
 cd ../backend || exit
-gradle && gradle run --args='--global'
+./gradlew.bat && ./gradlew.bat run --args='--global'

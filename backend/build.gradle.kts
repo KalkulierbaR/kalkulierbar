@@ -16,10 +16,20 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+
+    // JVM dependency
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+
+    // Web framework
     implementation("io.javalin:javalin:3.13.4")
+
+    // Logging
     implementation("org.slf4j:slf4j-simple:1.8.0-beta4")
+
+    // Hashing
     implementation("com.github.komputing:khash:1.1.0")
+
+    // Testing
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.5.2")
 }
