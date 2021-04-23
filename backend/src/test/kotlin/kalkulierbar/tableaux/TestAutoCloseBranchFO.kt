@@ -9,16 +9,21 @@ import kotlin.test.assertFailsWith
 class TestAutoCloseBranchFO {
 
     val instance = FirstOrderTableaux()
-    val param = FoTableauxParam(TableauxType.UNCONNECTED, false, false, false)
+    val param = FoTableauxParam(
+        TableauxType.UNCONNECTED,
+        regular = false,
+        backtracking = false,
+        manualVarAssign = false
+    )
     var states = mutableListOf<FoTableauxState>()
 
-    val formula = mutableListOf<String>(
-            "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-            "(R(a) <-> !R(b)) | (!R(a) -> R(b))",
-            "\\ex A : (R(A) & (\\all B: !R(B) & !R(A)))",
-            "\\ex Usk: (R(Usk) -> (!\\ex Usk: (R(sk1) & !R(Usk) | R(Usk) & !R(sk1))))",
-            "\\all A: (Sk1(A) -> !\\ex B: (R(A) & !R(B) -> Sk1(B) | !Sk1(A)))",
-            "\\all X: (R(g(X)) & !R(f(X)))"
+    val formula = mutableListOf(
+        "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
+        "(R(a) <-> !R(b)) | (!R(a) -> R(b))",
+        "\\ex A : (R(A) & (\\all B: !R(B) & !R(A)))",
+        "\\ex Usk: (R(Usk) -> (!\\ex Usk: (R(sk1) & !R(Usk) | R(Usk) & !R(sk1))))",
+        "\\all A: (Sk1(A) -> !\\ex B: (R(A) & !R(B) -> Sk1(B) | !Sk1(A)))",
+        "\\all X: (R(g(X)) & !R(f(X)))"
     )
 
     @BeforeTest
@@ -38,7 +43,7 @@ class TestAutoCloseBranchFO {
         state = instance.applyMoveOnState(state, MoveAutoClose(4, 2))
         state = instance.applyMoveOnState(state, MoveAutoClose(5, 2))
 
-        val nodes = state.nodes
+        val nodes = state.tree
         // check for leaf closed and close ref
         assertEquals(nodes[6].isClosed, true)
         assertEquals(nodes[6].closeRef, 2)
@@ -62,7 +67,7 @@ class TestAutoCloseBranchFO {
         state = instance.applyMoveOnState(state, MoveAutoClose(6, 3))
         state = instance.applyMoveOnState(state, MoveAutoClose(9, 4))
 
-        val nodes = state.nodes
+        val nodes = state.tree
         // check for leaf closed and close ref
         assertEquals(nodes[6].isClosed, true)
         assertEquals(nodes[6].closeRef, 3)
@@ -88,7 +93,7 @@ class TestAutoCloseBranchFO {
         state = instance.applyMoveOnState(state, MoveExpand(2, 2))
         state = instance.applyMoveOnState(state, MoveAutoClose(3, 1))
 
-        val nodes = state.nodes
+        val nodes = state.tree
         // check for leaf closed and close ref
         assertEquals(nodes[3].isClosed, true)
         assertEquals(nodes[3].closeRef, 1)

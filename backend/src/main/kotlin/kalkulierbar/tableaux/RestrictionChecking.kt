@@ -19,18 +19,18 @@ fun <AtomType> verifyExpandRegularity(
     applyPreprocessing: Boolean = true
 ) {
     // Create list of predecessor
-    val leaf = state.nodes[leafID]
+    val leaf = state.tree[leafID]
     val lst = mutableListOf(leaf.toAtom())
 
     // Check Leaf for having parent
     var predecessor: GenericTableauxNode<AtomType>? = null
     if (leaf.parent != null)
-        predecessor = state.nodes[leaf.parent!!]
+        predecessor = state.tree[leaf.parent!!]
 
     // Fill list of predecessor
     while (predecessor?.parent != null) {
         lst.add(predecessor.toAtom())
-        predecessor = state.nodes[predecessor.parent!!]
+        predecessor = state.tree[predecessor.parent!!]
     }
 
     // Apply expand preprocessing unless specified otherwise
@@ -38,8 +38,10 @@ fun <AtomType> verifyExpandRegularity(
 
     for (atom in processedClause) {
         if (lst.contains(atom))
-            throw IllegalMove("Expanding this clause would introduce a duplicate " +
-                "node '$atom' on the branch, making the tree irregular")
+            throw IllegalMove(
+                "Expanding this clause would introduce a duplicate " +
+                    "node '$atom' on the branch, making the tree irregular"
+            )
     }
 }
 
@@ -50,7 +52,7 @@ fun <AtomType> verifyExpandRegularity(
  * @param leafID ID of the expanded leaf
  */
 fun <AtomType> verifyExpandConnectedness(state: GenericTableauxState<AtomType>, leafID: Int) {
-    val leaf = state.nodes[leafID]
+    val leaf = state.tree[leafID]
     val children = leaf.children
 
     // Expansion on root does not need to fulfill connectedness
@@ -62,8 +64,10 @@ fun <AtomType> verifyExpandConnectedness(state: GenericTableauxState<AtomType>, 
             throw IllegalMove("No literal in this clause would be closeable, making the tree unconnected")
     } else if (state.type == TableauxType.STRONGLYCONNECTED) {
         if (!children.fold(false) { acc, id -> acc || state.nodeIsDirectlyCloseable(id) })
-            throw IllegalMove("""No literal in this clause would be closeable with '$leaf',
-                making the tree not strongly connected""")
+            throw IllegalMove(
+                """No literal in this clause would be closeable with '$leaf',
+                making the tree not strongly connected"""
+            )
     }
 }
 
@@ -104,7 +108,7 @@ private fun <AtomType> checkConnectedSubtree(
     root: Int,
     strong: Boolean
 ): Boolean {
-    val node = state.nodes.get(root)
+    val node = state.tree[root]
 
     // A subtree is weakly/strongly connected iff:
     // 1. The root is a leaf OR at least one child of the root is a closed leaf
@@ -119,7 +123,7 @@ private fun <AtomType> checkConnectedSubtree(
     var allChildrenConnected = true
 
     for (id in node.children) {
-        val child = state.nodes[id]
+        val child = state.tree[id]
 
         val closedCondition = child.isClosed && (!strong || child.closeRef == root)
 
@@ -161,7 +165,7 @@ private fun <AtomType> checkRegularitySubtree(
     root: Int,
     lst: List<Atom<AtomType>>
 ): Boolean {
-    val node = state.nodes[root]
+    val node = state.tree[root]
 
     // If node is in list of predecessors return false
     if (lst.contains(node.toAtom()))
@@ -191,16 +195,18 @@ private fun <AtomType> checkRegularitySubtree(
 fun <AtomType> ensureExpandability(state: GenericTableauxState<AtomType>, leafID: Int, clauseID: Int) {
     // Don't allow further expand moves if connectedness requires close moves to be applied first
     if (!checkConnectedness(state, state.type))
-        throw IllegalMove("The proof tree is currently not sufficiently connected, " +
-                "please close branches first to restore connectedness before expanding more leaves")
+        throw IllegalMove(
+            "The proof tree is currently not sufficiently connected, " +
+                "please close branches first to restore connectedness before expanding more leaves"
+        )
 
     // Verify that both leaf and clause are valid
-    if (leafID >= state.nodes.size || leafID < 0)
+    if (leafID >= state.tree.size || leafID < 0)
         throw IllegalMove("Node with ID $leafID does not exist")
     if (clauseID >= state.clauseSet.clauses.size || clauseID < 0)
         throw IllegalMove("Clause with ID $clauseID does not exist")
 
-    val leaf = state.nodes[leafID]
+    val leaf = state.tree[leafID]
     val clause = state.clauseSet.clauses[clauseID]
 
     // Verify that leaf is actually a leaf
@@ -232,13 +238,13 @@ fun <AtomType> ensureExpandability(state: GenericTableauxState<AtomType>, leafID
 @Suppress("ComplexMethod", "ThrowsCount")
 fun <AtomType> ensureBasicCloseability(state: GenericTableauxState<AtomType>, leafID: Int, closeNodeID: Int) {
     // Verify that both leaf and closeNode are valid nodes
-    if (leafID >= state.nodes.size || leafID < 0)
+    if (leafID >= state.tree.size || leafID < 0)
         throw IllegalMove("Node with ID $leafID does not exist")
-    if (closeNodeID >= state.nodes.size || closeNodeID < 0)
+    if (closeNodeID >= state.tree.size || closeNodeID < 0)
         throw IllegalMove("Node with ID $closeNodeID does not exist")
 
-    val leaf = state.nodes[leafID]
-    val closeNode = state.nodes[closeNodeID]
+    val leaf = state.tree[leafID]
+    val closeNode = state.tree[closeNodeID]
 
     // Verify that leaf is actually a leaf
     if (!leaf.isLeaf)

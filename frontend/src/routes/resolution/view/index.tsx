@@ -1,12 +1,14 @@
 import { Fragment, h } from "preact";
+import { route } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
-import TutorialDialog from "../../../components/tutorial/dialog";
-import VarAssignDialog from "../../../components/dialog/var-assign";
+
 import ResolutionCircle from "../../../components/calculus/resolution/circle";
 import ResolutionFactorizeDialog from "../../../components/calculus/resolution/dialog/factorize";
 import ResolutionResolveDialog from "../../../components/calculus/resolution/dialog/resolve";
 import ResolutionFAB from "../../../components/calculus/resolution/fab";
 import ResolutionGrid from "../../../components/calculus/resolution/grid";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import TutorialDialog from "../../../components/tutorial/dialog";
 import { ResolutionCalculusType } from "../../../types/calculus";
 import {
     CandidateClause,
@@ -46,7 +48,6 @@ import {
     sendResolveCustom,
     sendResolveUnify,
 } from "../../../util/resolution";
-import { route } from "preact-router";
 
 interface Props {
     /**

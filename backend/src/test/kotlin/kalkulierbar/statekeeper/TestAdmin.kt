@@ -1,18 +1,18 @@
 package kalkulierbar.tests.statekeeper
 
-import java.time.Instant
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import kalkulierbar.JsonParseException
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import org.komputing.khash.keccak.KeccakParameter
 import org.komputing.khash.keccak.extensions.digestKeccak
 import statekeeper.AuthenticationException
 import statekeeper.InvalidRequest
 import statekeeper.StateKeeper
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class TestAdmin {
 
@@ -28,8 +28,8 @@ class TestAdmin {
 
     @Test
     fun testInitialConfig() {
-        var config = StateKeeper.getConfig()
-        var expected = """{"disabled": [], "examples": []}"""
+        val config = StateKeeper.getConfig()
+        val expected = """{"disabled": [], "examples": []}"""
         assertEquals(expected, config)
     }
 

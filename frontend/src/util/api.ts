@@ -1,7 +1,8 @@
-import { CalculusType, Move } from "../types/calculus";
-import { AppState, AppStateUpdater } from "../types/app/app-state";
-import { NotificationHandler } from "../types/app/notification";
-import { CheckCloseResponse } from "../types/app/api";
+import {CheckCloseResponse} from "../types/app/api";
+import {AppState, AppStateUpdater} from "../types/app/app-state";
+import {NotificationHandler, NotificationType,} from "../types/app/notification";
+import {Statistics} from "../types/app/statistics";
+import {CalculusType, Move} from "../types/calculus";
 
 export type checkCloseFn<C extends CalculusType = CalculusType> = (
     calculus: C,
@@ -15,7 +16,8 @@ export type checkCloseFn<C extends CalculusType = CalculusType> = (
  * @param {string} server - Server
  * @param {NotificationHandler} notificationHandler - Notification handler
  * @param {C} calculus - Calculus endpoint
- * @param {any} state - Current state for the calculus
+ * @param {AppState} state - Current state for the calculus
+ * @param {void} onProven - the function to call if proof is valid
  * @returns {Promise<void>} - Resolves when the request is done
  */
 export const checkClose = async <C extends CalculusType = CalculusType>(
@@ -23,6 +25,7 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
     notificationHandler: NotificationHandler,
     calculus: C,
     state: AppState[C],
+    onProven?: (stats: Statistics) => void,
 ) => {
     const url = `${server}/${calculus}/close`;
     try {
@@ -43,9 +46,86 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
             if (closed) {
                 notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));
+                if (onProven !== undefined) {
+                    getScores(
+                        server,
+                        calculus,
+                        state,
+                        notificationHandler,
+                        onProven,
+                    );
+                }
             } else {
                 notificationHandler.error(msg);
             }
+        }
+    } catch (e) {
+        notificationHandler.error((e as Error).message);
+    }
+};
+
+const getScores = async <C extends CalculusType = CalculusType>(
+    server: string,
+    calculus: C,
+    state: AppState[C],
+    notificationHandler: NotificationHandler,
+    onProven: (stats: Statistics) => void,
+) => {
+    const url = `${server}/${calculus}/scoreboard`;
+    try {
+        const response = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `state=${encodeURIComponent(JSON.stringify(state))}`,
+        });
+        if (response.status !== 200) {
+            notificationHandler.error(await response.text());
+        } else {
+            const raw = await response.json();
+            // convert json hash to Map
+            raw.entries = (raw.entries as { [key: string]: string }[]).map(
+                (entry) => {
+                    const map = new Map<string, string>();
+                    for (const key of Object.keys(entry)) {
+                        map.set(key, entry[key]);
+                    }
+                    return map;
+                },
+            );
+            onProven(raw as Statistics);
+        }
+    } catch (e) {
+        notificationHandler.error((e as Error).message);
+    }
+};
+
+export const saveStatistics = async <C extends CalculusType = CalculusType>(
+    server: string,
+    calculus: C,
+    state: AppState[C],
+    notificationHandler: NotificationHandler,
+    name: string,
+) => {
+    const url = `${server}/${calculus}/submit-score`;
+    try {
+        const response = await fetch(url, {
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            method: "POST",
+            body: `name=${name}&state=${encodeURIComponent(
+                JSON.stringify(state),
+            )}`,
+        });
+        if (response.status !== 200) {
+            notificationHandler.error(await response.text());
+        } else {
+            notificationHandler.message(
+                NotificationType.Success,
+                "Score saved as " + name,
+            );
         }
     } catch (e) {
         notificationHandler.error((e as Error).message);
@@ -95,8 +175,8 @@ export const checkValid = async <C extends CalculusType = CalculusType>(
  * Updates app state with response from backend
  * @param {string} server - URL of the server
  * @param {C} calculus - Calculus endpoint
- * @param {any} state - Current state for the calculus
- * @param {any} move - Move to send
+ * @param {AppState} state - Current state for the calculus
+ * @param {Move} move - Move to send
  * @param {AppStateUpdater} stateChanger - Function to update the state
  * @param {NotificationHandler} notificationHandler - Notification handler
  * @returns {Promise<void>} - Promise that resolves after the request has been handled

@@ -124,7 +124,7 @@ class IdentifierCollector : DoNothingCollector() {
  * from first order terms
  * @param identifiers Set of identifiers to add found identifiers to
  */
-class TermIdentifierCollector(val identifiers: MutableSet<String>) : FirstOrderTermVisitor<Unit>() {
+class TermIdentifierCollector(private val identifiers: MutableSet<String>) : FirstOrderTermVisitor<Unit>() {
     override fun visit(node: Constant) {
         identifiers.add(node.spelling)
     }

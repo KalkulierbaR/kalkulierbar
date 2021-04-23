@@ -4,14 +4,16 @@ import kalkulierbar.logic.transform.FirstOrderTermVisitor
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 // Context object for FO term serialization
 // Tells kotlinx.serialize about child types of FirstOrderTerm
 val FoTermModule = SerializersModule {
     polymorphic(FirstOrderTerm::class) {
-        QuantifiedVariable::class with QuantifiedVariable.serializer()
-        Function::class with Function.serializer()
-        Constant::class with Constant.serializer()
+        subclass(QuantifiedVariable::class)
+        subclass(Function::class)
+        subclass(Constant::class)
     }
 }
 

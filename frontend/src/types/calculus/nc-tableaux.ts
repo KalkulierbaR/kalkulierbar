@@ -3,7 +3,7 @@ import { VarAssign } from "./tableaux";
 export interface NCTableauxState {
     formula: LogicNode;
     backtracking: boolean;
-    nodes: NCTableauxNode[];
+    tree: NCTableauxNode[];
     moveHistory: NCTableauxMove[];
     usedBacktracking: boolean;
     identifiers: string[];

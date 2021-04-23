@@ -1,19 +1,25 @@
 package kalkulierbar.tests.tableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.FirstOrderTableaux
-import kalkulierbar.tableaux.FoTableauxParam
-import kalkulierbar.tableaux.MoveAutoClose
-import kalkulierbar.tableaux.MoveExpand
-import kalkulierbar.tableaux.TableauxType
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 class TestConnectednessFO {
 
     val instance = FirstOrderTableaux()
-    val weak = FoTableauxParam(TableauxType.WEAKLYCONNECTED, false, true, false)
-    val strong = FoTableauxParam(TableauxType.STRONGLYCONNECTED, false, true, false)
+    val weak = FoTableauxParam(
+        TableauxType.WEAKLYCONNECTED,
+        regular = false,
+        backtracking = true,
+        manualVarAssign = false
+    )
+    val strong = FoTableauxParam(
+        TableauxType.STRONGLYCONNECTED,
+        regular = false,
+        backtracking = true,
+        manualVarAssign = false
+    )
 
     /*
         Test strong connectedness

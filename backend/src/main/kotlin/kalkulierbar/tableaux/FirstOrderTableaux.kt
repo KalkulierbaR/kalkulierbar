@@ -7,6 +7,7 @@ import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderCNF
 import kalkulierbar.parsers.FirstOrderParser
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
@@ -15,7 +16,12 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
 
     override val identifier = "fo-tableaux"
 
-    private val serializer = Json(context = FoTermModule + tableauxMoveModule)
+    override val serializer = Json {
+        serializersModule = FoTermModule + tableauxMoveModule
+        encodeDefaults = true
+    }
+    override val stateSerializer = FoTableauxState.serializer()
+    override val moveSerializer = TableauxMove.serializer()
 
     override fun parseFormulaToState(formula: String, params: FoTableauxParam?): FoTableauxState {
         val clauses = FirstOrderCNF.transform(FirstOrderParser.parse(formula))
@@ -24,12 +30,12 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             return FoTableauxState(clauses, formula)
 
         return FoTableauxState(
-                clauses,
-                formula,
-                params.type,
-                params.regular,
-                params.backtracking,
-                params.manualVarAssign
+            clauses,
+            formula,
+            params.type,
+            params.regular,
+            params.backtracking,
+            params.manualVarAssign
         )
     }
 
@@ -79,54 +85,9 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
 
     override fun checkCloseOnState(state: FoTableauxState) = state.getCloseMessage()
 
-    /**
-     * Parses a JSON state representation into a TableauxState object
-     * @param json JSON state representation
-     * @return parsed state object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    @kotlinx.serialization.UnstableDefault
-    override fun jsonToState(json: String): FoTableauxState {
-        try {
-            val parsed = serializer.parse(FoTableauxState.serializer(), json)
-
-            // Ensure valid, unmodified state object
-            if (!parsed.verifySeal())
-                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
-
-            return parsed
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON state: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
-    /**
-     * Serializes internal state object to JSON
-     * @param state State object
-     * @return JSON state representation
-     */
-    @kotlinx.serialization.UnstableDefault
     override fun stateToJson(state: FoTableauxState): String {
         state.render()
-        state.computeSeal()
-        return serializer.stringify(FoTableauxState.serializer(), state)
-    }
-
-    /*
-     * Parses a JSON move representation into a TableauxMove object
-     * @param json JSON move representation
-     * @return parsed move object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    @kotlinx.serialization.UnstableDefault
-    override fun jsonToMove(json: String): TableauxMove {
-        try {
-            return serializer.parse(TableauxMove.serializer(), json)
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON move: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
+        return super.stateToJson(state)
     }
 
     /*
@@ -135,10 +96,9 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
      * @return parsed param object
      */
     @Suppress("TooGenericExceptionCaught")
-    @kotlinx.serialization.UnstableDefault
     override fun jsonToParam(json: String): FoTableauxParam {
         try {
-            return serializer.parse(FoTableauxParam.serializer(), json)
+            return serializer.decodeFromString(json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON params"
             throw JsonParseException(msg + (e.message ?: "Unknown error"))

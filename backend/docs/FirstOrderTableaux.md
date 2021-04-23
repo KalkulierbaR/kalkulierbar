@@ -15,9 +15,9 @@ then converted into a clause set with implicitly universally quantified variable
 The state representation returned by most endpoints is a JSON object.
 Some of the object's properties are for internal use only and are subject to change at any time.
 The state object is intended to be read-only and any modification may lead to the state being rejected by the API.
-The only properties that a visualization frontend should rely on are the `nodes` list and the `renderedClauses` list.
+The only properties that a visualization frontend should rely on are the `tree` list and the `renderedClauses` list.
 
-The `node` lists contains all nodes of the current proof tree.
+The `tree` lists contains all nodes of the current proof tree.
 A node is identified by its position in the list starting at zero.
 Each node has the properties `parent` and `children`, containing the IDs of the respective parent and child nodes.
 The parent of the root node is `null`. Additionally, nodes have a `spelling` and a `negated` flag.
@@ -57,7 +57,7 @@ Expand moves are encoded as
   "id2": <ID of clause to expand>
 }
 ```
-A node's or clause's ID is defined as its respective position in the `nodes` or `renderedClauses`
+A node's or clause's ID is defined as its respective position in the `tree` or `renderedClauses`
 list in the state JSON object.
 
 ### Close (manual)

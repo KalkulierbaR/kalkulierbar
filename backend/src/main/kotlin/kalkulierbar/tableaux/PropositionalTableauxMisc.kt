@@ -18,7 +18,7 @@ class TableauxState(
     override val regular: Boolean = false,
     override val backtracking: Boolean = false
 ) : GenericTableauxState<String>, ProtectedState() {
-    override val nodes = mutableListOf<TableauxNode>(TableauxNode(null, "true", false))
+    override val tree = mutableListOf(TableauxNode(null, "true", false))
     val moveHistory = mutableListOf<TableauxMove>()
     override var usedBacktracking = false
     override var seal = ""
@@ -29,7 +29,7 @@ class TableauxState(
      * @return true is the node can be closed, false otherwise
      */
     override fun nodeIsCloseable(nodeID: Int): Boolean {
-        val node = nodes.get(nodeID)
+        val node = tree[nodeID]
         return node.isLeaf && nodeAncestryContainsAtom(nodeID, node.toAtom().not())
     }
 
@@ -39,10 +39,10 @@ class TableauxState(
      * @return true is the node can be closed directly, false otherwise
      */
     override fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
-        val node = nodes[nodeID]
+        val node = tree[nodeID]
         if (node.parent == null)
             return false
-        val parent = nodes[node.parent]
+        val parent = tree[node.parent]
 
         return node.isLeaf && node.toAtom() == parent.toAtom().not()
     }
@@ -61,11 +61,11 @@ class TableauxState(
      * @return true iff the node's transitive parents include the given atom
      */
     private fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom<String>): Boolean {
-        var node = nodes[nodeID]
+        var node = tree[nodeID]
 
         // Walk up the tree from start node
         while (node.parent != null) {
-            node = nodes[node.parent!!]
+            node = tree[node.parent!!]
             // Check if current node is identical to atom
             if (node.toAtom() == atom)
                 return true
@@ -75,7 +75,7 @@ class TableauxState(
     }
 
     override fun getHash(): String {
-        val nodesHash = nodes.joinToString("|") { it.getHash() }
+        val nodesHash = tree.joinToString("|") { it.getHash() }
         val clauseSetHash = clauseSet.toString()
         val optsHash = "$type|$regular|$backtracking|$usedBacktracking"
         val historyHash = moveHistory.joinToString(",")

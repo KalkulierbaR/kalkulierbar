@@ -1,6 +1,7 @@
-import { ClauseSet, FOArgument, FOClauseSet } from "./clause";
 import { KStringMap } from "../kotlin";
-import { TableauxCalculusType, Calculus } from ".";
+
+import { Calculus, TableauxCalculusType } from ".";
+import { ClauseSet, FOArgument, FOClauseSet } from "./clause";
 
 export interface TableauxNode {
     parent: number | null;
@@ -18,7 +19,7 @@ export type TableauxTreeLayoutNode = TableauxNode & { id: number };
 export interface PropTableauxState {
     seal: string;
     clauseSet: ClauseSet;
-    nodes: TableauxNode[];
+    tree: TableauxNode[];
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;
@@ -91,7 +92,7 @@ export interface SelectNodeOptions {
 export interface FOTableauxState {
     seal: string;
     clauseSet: FOClauseSet;
-    nodes: TableauxNode[];
+    tree: TableauxNode[];
     type: TableauxType;
     regular: boolean;
     backtracking: boolean;

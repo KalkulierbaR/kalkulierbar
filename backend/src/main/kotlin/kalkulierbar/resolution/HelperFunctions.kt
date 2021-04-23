@@ -27,9 +27,8 @@ fun <AtomType> filterClause(
         throw IllegalMove("Clause '$c2' does not contain atom '$literal'")
 
     val msg = "Clauses '$c1' and '$c2' do not contain atom '$literal' in both positive and negated form"
-    val resCandidates = findResCandidates(atomsInC1, atomsInC2)
-            ?: throw IllegalMove(msg)
-    return resCandidates
+    return findResCandidates(atomsInC1, atomsInC2)
+        ?: throw IllegalMove(msg)
 }
 
 /**
@@ -58,8 +57,10 @@ fun <AtomType> getAutoResolutionCandidates(
     }
 
     if (sharedAtoms.isEmpty())
-        throw IllegalMove("Clauses '$c1' and '$c2' contain no common literals that appear" +
-                "in positive and negated form")
+        throw IllegalMove(
+            "Clauses '$c1' and '$c2' contain no common literals that appear" +
+                "in positive and negated form"
+        )
 
     // Choose the first shared literal
     val a1 = sharedAtoms[0]
@@ -83,7 +84,7 @@ fun <AtomType> buildClause(
     a2: Atom<AtomType>
 ): Clause<AtomType> {
     val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
-            c2.atoms.filter { it != a2 }.toMutableList()
+        c2.atoms.filter { it != a2 }.toMutableList()
     return Clause(atoms.toMutableList())
 }
 
@@ -118,11 +119,9 @@ fun <AtomType> findResCandidates(
  * @return Boolean
  */
 fun <AtomType> literalsAreEqual(a: AtomType, b: AtomType): Boolean {
-    val eq: Boolean
     // Use syntactic equality for literal comparison if defined
-    if (a is SyntacticEquality && b is SyntacticEquality)
-        eq = a.synEq(b)
+    return if (a is SyntacticEquality && b is SyntacticEquality)
+        a.synEq(b)
     else
-        eq = (a == b)
-    return eq
+        (a == b)
 }

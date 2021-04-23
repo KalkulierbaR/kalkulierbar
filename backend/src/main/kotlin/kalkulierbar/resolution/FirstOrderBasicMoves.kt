@@ -105,7 +105,7 @@ private fun instantiateReturn(
     baseClause.atoms.forEach {
         val relationArgs = it.lit.arguments.map { it.clone().accept(instantiator) }
         val newRelation = Relation(it.lit.spelling, relationArgs)
-        val newAtom = Atom<Relation>(newRelation, it.negated)
+        val newAtom = Atom(newRelation, it.negated)
         newClause.add(newAtom)
     }
     return newClause
@@ -115,7 +115,7 @@ private fun instantiateReturn(
  * Applies the factorize move
  * @param state The state to apply the move on
  * @param clauseID Id of clause to apply the move on
- * @param atoms List of IDs of literals for unification (The literals should be equal)
+ * @param atomIDs List of IDs of literals for unification (The literals should be equal)
  */
 @Suppress("ThrowsCount")
 fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
@@ -140,12 +140,14 @@ fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
 
             // Check equality of both atoms
             if (newClause.atoms[firstID] != newClause.atoms[secondID])
-                throw IllegalMove("Atom '${newClause.atoms[firstID]}' and '${newClause.atoms[secondID]}'" +
-                        " are not equal after instantiation")
+                throw IllegalMove(
+                    "Atom '${newClause.atoms[firstID]}' and '${newClause.atoms[secondID]}'" +
+                        " are not equal after instantiation"
+                )
 
             // Change every unified atom to placeholder (except last) -> later remove all placeholder
             // -> One Atom remains
-            newClause.atoms[atomIDs[i]] = Atom<Relation>(Relation("%placeholder%", mutableListOf()), false)
+            newClause.atoms[atomIDs[i]] = Atom(Relation("%placeholder%", mutableListOf()), false)
         }
     }
     // Remove placeholder atoms
@@ -192,10 +194,10 @@ fun hyper(
 
         // Resolve side premiss into main premiss every iteration
         mainPremiss = resolveSidePremiss(
-                mainPremiss,
-                oldMainPremiss.atoms[mAtomID],
-                sidePremiss,
-                sidePremiss.atoms[sAtomID]
+            mainPremiss,
+            oldMainPremiss.atoms[mAtomID],
+            sidePremiss,
+            sidePremiss.atoms[sAtomID]
         )
     }
 
@@ -235,8 +237,10 @@ private fun resolveSidePremiss(
     try {
         mgu = Unification.unify(literal1, literal2)
     } catch (e: UnificationImpossible) {
-        throw IllegalMove("Could not unify '$mAtom' of main premiss with " +
-                "'$sAtom' of side premiss $sidePremiss: ${e.message}")
+        throw IllegalMove(
+            "Could not unify '$mAtom' of main premiss with " +
+                "'$sAtom' of side premiss $sidePremiss: ${e.message}"
+        )
     }
     // Resolve mainPremiss with side premiss by given atom
     val mainResolveSide = buildClause(mainPremiss, mAtom, sidePremiss, sAtom)
@@ -247,7 +251,7 @@ private fun resolveSidePremiss(
     mainResolveSide.atoms.forEach {
         val relationArgs = it.lit.arguments.map { it.clone().accept(instantiator) }
         val newRelation = Relation(it.lit.spelling, relationArgs)
-        val newAtom = Atom<Relation>(newRelation, it.negated)
+        val newAtom = Atom(newRelation, it.negated)
         newClause.add(newAtom)
     }
     return newClause

@@ -3,7 +3,7 @@
 }
 
 .disabled {
-    fill: rgb(209, 209, 209);
+    fill: var(--kbar-rectangle-disabled);
 }
 
 .selected {

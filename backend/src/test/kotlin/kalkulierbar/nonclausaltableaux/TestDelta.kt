@@ -41,9 +41,9 @@ class TestDelta {
 
         state = instance.applyMoveOnState(state, DeltaMove(0))
 
-        assertEquals("P(sk1)", state.nodes[1].spelling)
-        assertEquals(0, state.nodes[1].parent)
-        assertEquals(2, state.nodes.size)
+        assertEquals("P(sk1)", state.tree[1].spelling)
+        assertEquals(0, state.tree[1].parent)
+        assertEquals(2, state.tree.size)
     }
 
     @Test
@@ -53,9 +53,9 @@ class TestDelta {
 
         state = instance.applyMoveOnState(state, DeltaMove(0))
 
-        assertEquals("((P(sk1, f(sk1, g(c, sk1))) ∧ Q(sk1)) ∧ (∀X: C(X)))", state.nodes[1].spelling)
-        assertEquals(0, state.nodes[1].parent)
-        assertEquals(2, state.nodes.size)
+        assertEquals("((P(sk1, f(sk1, g(c, sk1))) ∧ Q(sk1)) ∧ (∀X: C(X)))", state.tree[1].spelling)
+        assertEquals(0, state.tree[1].parent)
+        assertEquals(2, state.tree.size)
     }
 
     @Test
@@ -66,9 +66,9 @@ class TestDelta {
         state = instance.applyMoveOnState(state, GammaMove(0))
         state = instance.applyMoveOnState(state, DeltaMove(1))
 
-        assertEquals("(P(sk1(Y_1), f(sk1(Y_1), g(Y_1, sk1(Y_1)))) ∧ Q(sk1(Y_1)))", state.nodes[2].spelling)
-        assertEquals(1, state.nodes[2].parent)
-        assertEquals(3, state.nodes.size)
+        assertEquals("(P(sk1(Y_1), f(sk1(Y_1), g(Y_1, sk1(Y_1)))) ∧ Q(sk1(Y_1)))", state.tree[2].spelling)
+        assertEquals(1, state.tree[2].parent)
+        assertEquals(3, state.tree.size)
     }
 
     @Test
@@ -79,8 +79,8 @@ class TestDelta {
         state = instance.applyMoveOnState(state, DeltaMove(0))
         state = instance.applyMoveOnState(state, DeltaMove(1))
 
-        assertEquals("P(sk2, sk1, sk3)", state.nodes[2].spelling)
-        assertEquals(1, state.nodes[2].parent)
-        assertEquals(3, state.nodes.size)
+        assertEquals("P(sk2, sk1, sk3)", state.tree[2].spelling)
+        assertEquals(1, state.tree[2].parent)
+        assertEquals(3, state.tree.size)
     }
 }

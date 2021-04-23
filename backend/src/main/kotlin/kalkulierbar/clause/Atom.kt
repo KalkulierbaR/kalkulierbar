@@ -16,10 +16,10 @@ data class Atom<AtomType>(val lit: AtomType, val negated: Boolean = false) : Syn
 
         if (other is Atom<*> && other.negated == negated) {
             // Use syntactic equality for literal comparison if defined
-            if (lit is SyntacticEquality)
-                eq = lit.synEq(other.lit)
+            eq = if (lit is SyntacticEquality)
+                lit.synEq(other.lit)
             else
-                eq = (lit == other.lit)
+                (lit == other.lit)
         }
 
         return eq

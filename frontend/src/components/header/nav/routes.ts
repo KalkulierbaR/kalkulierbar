@@ -32,6 +32,7 @@ export const ROUTES: LinkGroup[] = [
             },
             { name: "Resolution", path: Calculus.propResolution },
             { name: "DPLL", path: Calculus.dpll },
+            { name: "Sequent", path: Calculus.propSequent },
         ],
     },
     {
@@ -43,6 +44,16 @@ export const ROUTES: LinkGroup[] = [
             },
             { name: "Resolution", path: Calculus.foResolution },
             { name: "NC Tableaux", path: Calculus.ncTableaux },
+            { name: "Sequent", path: Calculus.foSequent },
+        ],
+    },
+    {
+        name: "Modal",
+        routes: [
+            {
+                name: "Tableaux",
+                path: Calculus.modalTableaux,
+            },
         ],
     },
 ];

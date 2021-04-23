@@ -12,15 +12,18 @@ import kalkulierbar.logic.transform.VariableSuffixStripper
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 class FirstOrderResolution :
-        GenericResolution<Relation>,
-        JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
+    GenericResolution<Relation>,
+    JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
     override val identifier = "fo-resolution"
 
-    private val serializer = Json(context = resolutionMoveModule + FoTermModule)
+    override val serializer = Json { serializersModule = resolutionMoveModule + FoTermModule; encodeDefaults = true }
+    override val stateSerializer = FoResolutionState.serializer()
+    override val moveSerializer = ResolutionMove.serializer()
 
     override fun parseFormulaToState(formula: String, params: FoResolutionParam?): FoResolutionState {
         val parsed = FirstOrderParser.parse(formula)
@@ -55,37 +58,6 @@ class FirstOrderResolution :
 
     override fun checkCloseOnState(state: FoResolutionState) = state.getCloseMessage()
 
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToState(json: String): FoResolutionState {
-        try {
-            val parsed = serializer.parse(FoResolutionState.serializer(), json)
-
-            // Ensure valid, unmodified state object
-            if (!parsed.verifySeal())
-                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
-
-            return parsed
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON state: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
-    override fun stateToJson(state: FoResolutionState): String {
-        state.computeSeal()
-        return serializer.stringify(FoResolutionState.serializer(), state)
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToMove(json: String): ResolutionMove {
-        try {
-            return serializer.parse(ResolutionMove.serializer(), json)
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON move: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
     /*
      * Parses a JSON parameter representation into a ResolutionParam object
      * @param json JSON parameter representation
@@ -94,7 +66,7 @@ class FirstOrderResolution :
     @Suppress("TooGenericExceptionCaught")
     override fun jsonToParam(json: String): FoResolutionParam {
         try {
-            return serializer.parse(FoResolutionParam.serializer(), json)
+            return serializer.decodeFromString(json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON params: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))

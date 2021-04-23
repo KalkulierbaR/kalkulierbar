@@ -1,13 +1,15 @@
-import { createRef, h } from "preact";
-import { useState } from "preact/hooks";
-import { CandidateClause } from "../../../../types/calculus/clause";
-import { DragTransform, Point } from "../../../../types/ui";
-import { classMap } from "../../../../util/class-map";
-import { clauseToString } from "../../../../util/clause";
-import { disableDrag, enableDrag } from "../../../../util/zoom/drag";
-import { mousePos } from "../../../../util/zoom/mouse";
-import { touchPos } from "../../../../util/zoom/touch";
+import {createRef, h} from "preact";
+import {useState} from "preact/hooks";
+
+import {CandidateClause} from "../../../../types/calculus/clause";
+import {DragTransform, Point} from "../../../../types/ui";
+import {classMap} from "../../../../util/class-map";
+import {clauseToString} from "../../../../util/clause";
+import {disableDrag, enableDrag} from "../../../../util/zoom/drag";
+import {mousePos} from "../../../../util/zoom/mouse";
+import {touchPos} from "../../../../util/zoom/touch";
 import Rectangle from "../../../svg/rectangle";
+
 import * as style from "./style.scss";
 
 interface Props {

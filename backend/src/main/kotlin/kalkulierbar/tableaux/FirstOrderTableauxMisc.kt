@@ -13,6 +13,7 @@ import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Suppress("LongParameterList")
 class FoTableauxState(
     override val clauseSet: ClauseSet<Relation>,
     val formula: String,
@@ -21,13 +22,13 @@ class FoTableauxState(
     override val backtracking: Boolean = false,
     val manualVarAssign: Boolean = false
 ) : GenericTableauxState<Relation>, ProtectedState() {
-    override val nodes = mutableListOf<FoTableauxNode>(FoTableauxNode(null, Relation("true", listOf()), false))
+    override val tree = mutableListOf(FoTableauxNode(null, Relation("true", listOf()), false))
     val moveHistory = mutableListOf<TableauxMove>()
     override var usedBacktracking = false
     var expansionCounter = 0
 
     override var seal = ""
-    var renderedClauseSet = listOf<String>()
+    private var renderedClauseSet = listOf<String>()
     var statusMessage: String? = null
 
     /**
@@ -36,7 +37,7 @@ class FoTableauxState(
      * @return true is the node can be closed, false otherwise
      */
     override fun nodeIsCloseable(nodeID: Int): Boolean {
-        val node = nodes.get(nodeID)
+        val node = tree[nodeID]
         return node.isLeaf && nodeAncestryContainsUnifiable(nodeID, node.toAtom())
     }
 
@@ -46,21 +47,17 @@ class FoTableauxState(
      * @return true is the node can be closed directly, false otherwise
      */
     override fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
-        val node = nodes[nodeID]
-        if (node.parent == null || !node.isLeaf || node.negated == nodes[node.parent].negated)
+        val node = tree[nodeID]
+        if (node.parent == null || !node.isLeaf || node.negated == tree[node.parent].negated)
             return false
-        val parent = nodes[node.parent]
+        val parent = tree[node.parent]
 
-        var res: Boolean
-
-        try {
+        return try {
             Unification.unify(node.relation, parent.relation)
-            res = true
+            true
         } catch (e: UnificationImpossible) {
-            res = false
+            false
         }
-
-        return res
     }
 
     /**
@@ -92,11 +89,11 @@ class FoTableauxState(
      */
     @Suppress("EmptyCatchBlock")
     private fun nodeAncestryContainsUnifiable(nodeID: Int, atom: Atom<Relation>): Boolean {
-        var node = nodes[nodeID]
+        var node = tree[nodeID]
 
         // Walk up the tree from start node
         while (node.parent != null) {
-            node = nodes[node.parent!!]
+            node = tree[node.parent!!]
             // Check if current node can be unified with given atom
             if (node.negated != atom.negated && node.relation.spelling == atom.lit.spelling) {
                 try {
@@ -112,12 +109,12 @@ class FoTableauxState(
     /**
      * Apply a global variable instantiation in the proof tree
      * @param varAssign Map of which variables to replace with which terms
-     * @return State with all occurences of variables in the map replaced with their respective terms
+     * @return State with all occurrences of variables in the map replaced with their respective terms
      */
     fun applyVarInstantiation(varAssign: Map<String, FirstOrderTerm>) {
         val instantiator = VariableInstantiator(varAssign)
 
-        nodes.forEach {
+        tree.forEach {
             it.relation.arguments = it.relation.arguments.map { it.accept(instantiator) }
         }
     }
@@ -127,13 +124,13 @@ class FoTableauxState(
      */
     fun render() {
         renderedClauseSet = clauseSet.clauses.map { it.atoms.joinToString(", ") }
-        nodes.forEach {
+        tree.forEach {
             it.render()
         }
     }
 
     override fun getHash(): String {
-        val nodesHash = nodes.joinToString("|") { it.getHash() }
+        val nodesHash = tree.joinToString("|") { it.getHash() }
         val clauseSetHash = clauseSet.toString()
         val optsHash = "$type|$regular|$backtracking|$usedBacktracking|$manualVarAssign"
         val variousHash = "$formula|$expansionCounter"
@@ -145,16 +142,16 @@ class FoTableauxState(
 /**
  * Class representing a single node in the proof tree
  * @param parent ID of the parent node in the proof tree
- * @param spelling Name of the variable the node represents
- * @param negated True if the variable is negated, false otherwise
- * @param isLemma Marks the node as created using a Lemma rule instantiation
+ * @param relation Name of the relation the node represents
+ * @param negated True if the relation is negated, false otherwise
+ * @param lemmaSource Marks the node as created using a Lemma rule instantiation
  */
 @Serializable
 class FoTableauxNode(
     override val parent: Int?,
     val relation: Relation,
     override val negated: Boolean,
-    override val lemmaSource: Int? = null
+    override val lemmaSource: Int? = null,
 ) : GenericTableauxNode<Relation> {
 
     override var isClosed = false
@@ -188,8 +185,8 @@ class FoTableauxNode(
         val neg = if (negated) "n" else "p"
         val closed = if (isClosed) "c" else "o"
         val ref = if (closeRef != null) closeRef.toString() else "-"
-        val childlist = children.joinToString(",")
-        return "$relation;$neg;$parent;$ref;$closed;($childlist)"
+        val childList = children.joinToString(",")
+        return "$relation;$neg;$parent;$ref;$closed;($childList)"
     }
 }
 
@@ -198,5 +195,5 @@ data class FoTableauxParam(
     val type: TableauxType,
     val regular: Boolean,
     val backtracking: Boolean,
-    val manualVarAssign: Boolean
+    val manualVarAssign: Boolean,
 )

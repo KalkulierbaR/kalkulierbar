@@ -44,7 +44,7 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
     override fun visit(node: Relation): ClauseSet<Relation> {
         val atom = Atom(node, false)
         val clause = Clause(mutableListOf(atom))
-        return ClauseSet<Relation>(mutableListOf(clause))
+        return ClauseSet(mutableListOf(clause))
     }
 
     /**

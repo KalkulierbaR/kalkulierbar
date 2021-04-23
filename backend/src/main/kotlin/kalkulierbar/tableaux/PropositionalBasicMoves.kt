@@ -14,7 +14,7 @@ fun applyMoveCloseBranch(state: TableauxState, leafID: Int, closeNodeID: Int): T
 
     ensureBasicCloseability(state, leafID, closeNodeID)
 
-    val leaf = state.nodes[leafID]
+    val leaf = state.tree[leafID]
 
     // Close branch
     leaf.closeRef = closeNodeID
@@ -40,13 +40,13 @@ fun applyMoveCloseBranch(state: TableauxState, leafID: Int, closeNodeID: Int): T
 fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int): TableauxState {
     ensureExpandability(state, leafID, clauseID)
     val clause = state.clauseSet.clauses[clauseID]
-    val leaf = state.nodes[leafID]
+    val leaf = state.tree[leafID]
 
     // Adding every atom in clause to leaf and set parameters
     for (atom in clause.atoms) {
         val newLeaf = TableauxNode(leafID, atom.lit, atom.negated)
-        state.nodes.add(newLeaf)
-        leaf.children.add(state.nodes.size - 1)
+        state.tree.add(newLeaf)
+        leaf.children.add(state.tree.size - 1)
     }
 
     // Verify compliance with connectedness criteria
@@ -74,8 +74,8 @@ fun applyMoveUseLemma(state: TableauxState, leafID: Int, lemmaID: Int): Tableaux
 
     // Add lemma atom to leaf
     val newLeaf = TableauxNode(leafID, atom.lit, atom.negated, lemmaID)
-    state.nodes.add(newLeaf)
-    state.nodes[leafID].children.add(state.nodes.size - 1)
+    state.tree.add(newLeaf)
+    state.tree[leafID].children.add(state.tree.size - 1)
 
     // Verify compliance with connectedness criteria
     verifyExpandConnectedness(state, leafID)
@@ -126,7 +126,7 @@ fun applyMoveUndo(state: TableauxState): TableauxState {
  */
 private fun undoClose(state: TableauxState, move: MoveAutoClose): TableauxState {
     val leafID = move.id1
-    val leaf = state.nodes[leafID]
+    val leaf = state.tree[leafID]
 
     // revert close reference to null
     leaf.closeRef = null
@@ -135,7 +135,7 @@ private fun undoClose(state: TableauxState, move: MoveAutoClose): TableauxState 
 
     while (node != null && node.isClosed) {
         node.isClosed = false
-        node = if (node.parent == null) null else state.nodes[node.parent!!]
+        node = if (node.parent == null) null else state.tree[node.parent!!]
     }
 
     return state
@@ -149,9 +149,9 @@ private fun undoClose(state: TableauxState, move: MoveAutoClose): TableauxState 
  */
 private fun undoExpand(state: TableauxState, move: MoveExpand): TableauxState {
     val leafID = move.id1
-    val leaf = state.nodes[leafID]
+    val leaf = state.tree[leafID]
     val children = leaf.children
-    val nodes = state.nodes
+    val nodes = state.tree
 
     // remove child nodes from nodes list
     for (id in children) {

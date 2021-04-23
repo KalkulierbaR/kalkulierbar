@@ -1,18 +1,13 @@
 package kalkulierbar.tests.tableaux
 
-import kalkulierbar.tableaux.MoveAutoClose
-import kalkulierbar.tableaux.MoveExpand
-import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxNode
-import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxType
+import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestCheckClose {
 
     val propTableaux = PropositionalTableaux()
-    val tableauxOpts = TableauxParam(TableauxType.UNCONNECTED, false, false)
+    val tableauxOpts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
 
     @Test
     fun testCheckCloseSimple() {
@@ -20,13 +15,13 @@ class TestCheckClose {
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(1, "a", true)
+            TableauxNode(0, "a", false),
+            TableauxNode(1, "a", true)
         )
 
-        state.nodes.addAll(nodes)
-        state.nodes.get(0).children.add(1)
-        state.nodes.get(1).children.add(2)
+        state.tree.addAll(nodes)
+        state.tree[0].children.add(1)
+        state.tree[1].children.add(2)
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
@@ -42,17 +37,17 @@ class TestCheckClose {
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(0, "b", false),
-                TableauxNode(1, "a", true),
-                TableauxNode(2, "b", true)
+            TableauxNode(0, "a", false),
+            TableauxNode(0, "b", false),
+            TableauxNode(1, "a", true),
+            TableauxNode(2, "b", true)
         )
 
-        state.nodes.addAll(nodes)
-        state.nodes.get(0).children.add(1)
-        state.nodes.get(0).children.add(2)
-        state.nodes.get(1).children.add(3)
-        state.nodes.get(2).children.add(4)
+        state.tree.addAll(nodes)
+        state.tree[0].children.add(1)
+        state.tree[0].children.add(2)
+        state.tree[1].children.add(3)
+        state.tree[2].children.add(4)
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
@@ -93,19 +88,19 @@ class TestCheckClose {
         var state = propTableaux.parseFormulaToState("a,b,c;!a;!b;!c", tableauxOpts)
 
         val nodes = listOf(
-                TableauxNode(0, "a", false),
-                TableauxNode(0, "b", false),
-                TableauxNode(0, "c", false),
-                TableauxNode(1, "a", true),
-                TableauxNode(2, "b", true),
-                TableauxNode(3, "c", true)
+            TableauxNode(0, "a", false),
+            TableauxNode(0, "b", false),
+            TableauxNode(0, "c", false),
+            TableauxNode(1, "a", true),
+            TableauxNode(2, "b", true),
+            TableauxNode(3, "c", true)
         )
 
-        state.nodes.addAll(nodes)
-        state.nodes.get(0).children.addAll(listOf(1, 2, 3))
-        state.nodes.get(1).children.add(4)
-        state.nodes.get(2).children.add(5)
-        state.nodes.get(3).children.add(6)
+        state.tree.addAll(nodes)
+        state.tree[0].children.addAll(listOf(1, 2, 3))
+        state.tree[1].children.add(4)
+        state.tree[2].children.add(5)
+        state.tree[3].children.add(6)
 
         // Don't close proof completely
         state = propTableaux.applyMoveOnState(state, MoveAutoClose(6, 3))

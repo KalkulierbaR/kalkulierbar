@@ -9,13 +9,13 @@ import kalkulierbar.logic.Relation
  * class to instantiate variables in a logic-node formula
  * @param replacementMap Map of variable instantiations to perform
  */
-class LogicNodeVariableInstantiator(val replacementMap: Map<String, FirstOrderTerm>) : DoNothingVisitor() {
+class LogicNodeVariableInstantiator(private val replacementMap: Map<String, FirstOrderTerm>) : DoNothingVisitor() {
 
     companion object {
         /**
          * Instantiate the variables given in the map with their respective FO Term replacements
          * NOTE: This will break variable quantifier linking
-         * @param term FO term to apply instantiations on
+         * @param formula FO term to apply instantiations on
          * @param map Map of variable instantiations to perform
          * @return Term with instantiations applied
          */
@@ -37,7 +37,7 @@ class LogicNodeVariableInstantiator(val replacementMap: Map<String, FirstOrderTe
  * LogicNode visitor to re-name Quantified Variables in formula
  * @param replacementMap Map of all variables to replace and their new Variable name
  */
-class SelectiveSuffixAppender(val replacementMap: Map<QuantifiedVariable, String>) : DoNothingVisitor() {
+class SelectiveSuffixAppender(private val replacementMap: Map<QuantifiedVariable, String>) : DoNothingVisitor() {
 
     companion object Companion {
 

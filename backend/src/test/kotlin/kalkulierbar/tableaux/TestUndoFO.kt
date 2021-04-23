@@ -7,15 +7,20 @@ import kotlin.test.assertEquals
 class TestUndoFO {
 
     val instance = FirstOrderTableaux()
-    val param = FoTableauxParam(TableauxType.UNCONNECTED, false, true, false)
-    val paramManual = FoTableauxParam(TableauxType.UNCONNECTED, false, true, true)
+    val param = FoTableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = true, manualVarAssign = false)
+    val paramManual = FoTableauxParam(
+        TableauxType.UNCONNECTED,
+        regular = false,
+        backtracking = true,
+        manualVarAssign = true
+    )
     var states = mutableListOf<FoTableauxState>()
     var statesManual = mutableListOf<FoTableauxState>()
 
-    val formula = mutableListOf<String>(
-            "\\all X: R(X) & R(c) & !R(c)",
-            "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-            "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))"
+    val formula = mutableListOf(
+        "\\all X: R(X) & R(c) & !R(c)",
+        "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
+        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))"
     )
 
     @BeforeTest
@@ -33,7 +38,7 @@ class TestUndoFO {
 
         // Kein Error wird geworfen bei Anfangszustand
         state = instance.applyMoveOnState(state, MoveUndo())
-        assertEquals(state.nodes.size, 1)
+        assertEquals(state.tree.size, 1)
         assertEquals(state.moveHistory.isEmpty(), true)
         // assertEquals(state.usedBacktracking, true)
     }
@@ -51,7 +56,7 @@ class TestUndoFO {
         state = instance.applyMoveOnState(state, MoveUndo())
         state = instance.applyMoveOnState(state, MoveUndo())
 
-        val nodes = state.nodes
+        val nodes = state.tree
         // check for leaf closed and close ref
         assertEquals(nodes[6].isClosed, true)
         assertEquals(nodes[6].closeRef, 2)
@@ -82,14 +87,14 @@ class TestUndoFO {
         state = instance.applyMoveOnState(state, MoveUndo())
         state = instance.applyMoveOnState(state, MoveUndo())
 
-        var nodes = state.nodes
+        var nodes = state.tree
 
         // Spelling of nodes remain same
         assertEquals(nodes[2].spelling, "R(A_1)")
         assertEquals(nodes[3].spelling, "R(A_2)")
         assertEquals(nodes[4].spelling, "R(B_2)")
 
-        nodes = state.nodes
+        nodes = state.tree
 
         // Check spelling after undo
         assertEquals(nodes[2].spelling, "R(A_1)")
@@ -113,6 +118,6 @@ class TestUndoFO {
 
         assertEquals(state.moveHistory.size, 1)
         assertEquals(state.usedBacktracking, true)
-        assertEquals(state.nodes.size, 3)
+        assertEquals(state.tree.size, 3)
     }
 }

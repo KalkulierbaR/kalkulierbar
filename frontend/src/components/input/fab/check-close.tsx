@@ -1,21 +1,32 @@
-import CheckCircleIcon from "../../icons/check-circle";
-import { disableTutorial, getHighlightCheck } from "../../../util/tutorial-mode";
-import { TutorialMode } from "../../../types/app/tutorial";
-import { checkClose} from "../../../util/api";
-import FAB from "./index";
-import { useAppState } from "../../../util/app-state";
-import { CalculusType } from "../../../types/calculus";
 import { h } from "preact";
+
+import { Statistics } from "../../../types/app/statistics";
+import { TutorialMode } from "../../../types/app/tutorial";
+import { CalculusType } from "../../../types/calculus";
+import { checkClose } from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
+import {
+    disableTutorial,
+    getHighlightCheck,
+} from "../../../util/tutorial-mode";
+import CheckCircleIcon from "../../icons/check-circle";
+
+import FAB from "./index";
 
 interface Props {
     /**
      * Which calculus to use
      */
     calculus: CalculusType;
+    /**
+     * Function to call when the proof is valid
+     */
+    onProven?: (stats: Statistics) => void;
 }
 
 const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
     calculus,
+    onProven,
 }) => {
     const {
         tutorialMode,
@@ -45,6 +56,7 @@ const CheckCloseFAB: preact.FunctionalComponent<Props> = ({
                     notificationHandler,
                     calculus,
                     state,
+                    onProven,
                 );
             }}
         />

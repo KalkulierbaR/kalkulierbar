@@ -18,8 +18,8 @@ fun applyAutoCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int):
         throw IllegalMove("Auto-close is not enabled for this proof")
 
     ensureBasicCloseability(state, leafID, closeNodeID)
-    val leaf = state.nodes[leafID]
-    val closeNode = state.nodes[closeNodeID]
+    val leaf = state.tree[leafID]
+    val closeNode = state.tree[closeNodeID]
 
     // Try to find a unifying variable assignment and pass it to the internal close method
     // which will handle the verification, tree modification, and history management for us
@@ -47,8 +47,8 @@ fun applyMoveCloseBranch(
 ): FoTableauxState {
     ensureBasicCloseability(state, leafID, closeNodeID)
 
-    val leaf = state.nodes[leafID]
-    val closeNode = state.nodes[closeNodeID]
+    val leaf = state.tree[leafID]
+    val closeNode = state.tree[closeNodeID]
     // Check that given var assignment is a mgu, warn if not
     if (!UnifierEquivalence.isMGUorNotUnifiable(varAssign, leaf.relation, closeNode.relation))
         state.statusMessage = "The unifier you specified is not an MGU"
@@ -74,8 +74,8 @@ private fun closeBranchCommon(
     varAssign: Map<String, FirstOrderTerm>
 ): FoTableauxState {
 
-    val leaf = state.nodes[leafID]
-    val closeNode = state.nodes[closeNodeID]
+    val leaf = state.tree[leafID]
+    val closeNode = state.tree[closeNodeID]
 
     // Apply all specified variable instantiations globally
     state.applyVarInstantiation(varAssign)
@@ -113,7 +113,7 @@ fun applyMoveExpandLeaf(state: FoTableauxState, leafID: Int, clauseID: Int): FoT
     // Ensure that preconditions (correct indices, regularity) are met
     ensureExpandability(state, leafID, clauseID)
     val clause = state.clauseSet.clauses[clauseID]
-    val leaf = state.nodes[leafID]
+    val leaf = state.tree[leafID]
 
     // Quantified variables need to be unique in every newly expanded clause
     // So we append a suffix with the number of the current expansion to every variable
@@ -122,8 +122,8 @@ fun applyMoveExpandLeaf(state: FoTableauxState, leafID: Int, clauseID: Int): FoT
     // Add new leaves to the proof tree
     for (atom in atoms) {
         val newLeaf = FoTableauxNode(leafID, atom.lit, atom.negated)
-        state.nodes.add(newLeaf)
-        leaf.children.add(state.nodes.size - 1)
+        state.tree.add(newLeaf)
+        leaf.children.add(state.tree.size - 1)
     }
 
     // Verify compliance with connectedness criteria
@@ -153,8 +153,8 @@ fun applyMoveUseLemma(state: FoTableauxState, leafID: Int, lemmaID: Int): FoTabl
     // Add lemma atom to leaf
     // NOTE: We explicitly do not apply clause preprocessing for Lemma expansions
     val newLeaf = FoTableauxNode(leafID, atom.lit, atom.negated, lemmaID)
-    state.nodes.add(newLeaf)
-    state.nodes[leafID].children.add(state.nodes.size - 1)
+    state.tree.add(newLeaf)
+    state.tree[leafID].children.add(state.tree.size - 1)
 
     // Verify compliance with connectedness criteria
     verifyExpandConnectedness(state, leafID)

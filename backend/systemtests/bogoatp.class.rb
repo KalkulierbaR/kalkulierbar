@@ -148,13 +148,13 @@ def bogoATPapplyRandomMove(state, trq, isFO: false)
 end
 
 def genExpandMove(id1, id2, isFO = false)
-	"{type:\"tableaux-expand\",id1:#{id1.to_s},id2:#{id2.to_s}}"
+	"{\"type\":\"tableaux-expand\",\"id1\":#{id1.to_s},\"id2\":#{id2.to_s}}"
 end
 
 def genCloseMove(id1, id2, isFO = false)
-	"{type:\"tableaux-close\",id1:#{id1.to_s},id2:#{id2.to_s}}"
+	"{\"type\":\"tableaux-close\",\"id1\":#{id1.to_s},\"id2\":#{id2.to_s}}"
 end
 
 def genLemmaMove(id1, id2, isFO = false)
-	"{type:\"tableaux-lemma\",id1:#{id1.to_s},id2:#{id2.to_s}}"
+	"{\"type\":\"tableaux-lemma\",\"id1\":#{id1.to_s},\"id2\":#{id2.to_s}}"
 end

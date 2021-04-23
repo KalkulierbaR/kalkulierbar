@@ -1,17 +1,17 @@
+import {ResolutionCalculusType} from "../../types/calculus";
 import {
     CandidateClause,
     Clause,
-    FOLiteral,
     ClauseSet,
-    instanceOfPropClauseSet,
+    FOLiteral,
+    instanceOfFOAtom,
+    instanceOfFOClause,
     instanceOfFOClauseSet,
     instanceOfPropAtom,
-    instanceOfFOAtom,
     instanceOfPropClause,
-    instanceOfFOClause,
+    instanceOfPropClauseSet,
 } from "../../types/calculus/clause";
-import { HyperResolutionMove } from "../../types/calculus/resolution";
-import { ResolutionCalculusType } from "../../types/calculus";
+import {HyperResolutionMove} from "../../types/calculus/resolution";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible
@@ -169,7 +169,7 @@ export const recalculateCandidateClauses = (
         if (instanceOfPropClauseSet(clauseSet, calculus)) {
             clauses.forEach((clause, clauseIndex) => {
                 newCandidateClauses[clauseIndex] = {
-                    clause: clause.clause as Clause<string>,
+                    clause: clause.clause as Clause,
                     candidateAtomMap: new Map<number, number[]>(),
                     index: clause.index,
                 };
