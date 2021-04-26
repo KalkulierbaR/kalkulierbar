@@ -1,8 +1,10 @@
-import { h } from "preact";
-import Btn from "../input/btn";
+import {h} from "preact";
+
+import {enableDrag} from "../../util/zoom/drag";
 import CloseIcon from "../icons/close";
+import Btn from "../input/btn";
+
 import * as style from "./style.scss";
-import { enableDrag } from "../../util/zoom/drag";
 
 interface Props {
     /**
@@ -91,7 +93,7 @@ const Dialog: preact.FunctionalComponent<Props> = ({
                 <div class={style.content}>{children}</div>
                 {onConfirm && (
                     <div class={style.actions}>
-                        {onConfirm && <Btn onClick={onConfirm} label="Okay"/>}
+                        {onConfirm && <Btn onClick={onConfirm} label="Okay" />}
                     </div>
                 )}
             </div>

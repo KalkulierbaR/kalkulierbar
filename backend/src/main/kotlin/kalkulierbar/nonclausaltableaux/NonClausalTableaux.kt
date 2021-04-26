@@ -3,7 +3,6 @@ package kalkulierbar.nonclausaltableaux
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
-import kalkulierbar.JsonParseException
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.logic.transform.NegationNormalForm
@@ -13,13 +12,14 @@ import kotlinx.serialization.modules.plus
 
 class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>() {
 
-    private val serializer = Json(context = FoTermModule + LogicModule + NcMoveModule)
+    override val serializer = Json { serializersModule = FoTermModule + LogicModule + NcMoveModule; encodeDefaults = true }
+    override val stateSerializer = NcTableauxState.serializer()
+    override val moveSerializer = NcTableauxMove.serializer()
 
     override val identifier = "nc-tableaux"
 
     override fun parseFormulaToState(formula: String, params: Unit?): NcTableauxState {
         val parsedFormula = NegationNormalForm.transform(FirstOrderParser.parse(formula))
-
         return NcTableauxState(parsedFormula)
     }
 
@@ -70,59 +70,17 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
     override fun checkCloseOnState(state: NcTableauxState): CloseMessage {
         var msg = "The proof tree is not closed"
 
-        if (state.nodes[0].isClosed) {
+        if (state.tree[0].isClosed) {
             val withWithoutBT = if (state.usedBacktracking) "with" else "without"
             msg = "The proof is closed and valid in non-clausal tableaux $withWithoutBT backtracking"
         }
 
-        return CloseMessage(state.nodes[0].isClosed, msg)
+        return CloseMessage(state.tree[0].isClosed, msg)
     }
 
-    /**
-     * Parses a JSON state representation into a TableauxState object
-     * @param json JSON state representation
-     * @return parsed state object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToState(json: String): NcTableauxState {
-        try {
-            val parsed = serializer.parse(NcTableauxState.serializer(), json)
-
-            // Ensure valid, unmodified state object
-            if (!parsed.verifySeal())
-                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
-
-            return parsed
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON state: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
-    /**
-     * Serializes internal state object to JSON
-     * @param state State object
-     * @return JSON state representation
-     */
     override fun stateToJson(state: NcTableauxState): String {
         state.render()
-        state.computeSeal()
-        return serializer.stringify(NcTableauxState.serializer(), state)
-    }
-
-    /*
-     * Parses a JSON move representation into a TableauxMove object
-     * @param json JSON move representation
-     * @return parsed move object
-     */
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToMove(json: String): NcTableauxMove {
-        try {
-            return serializer.parse(NcTableauxMove.serializer(), json)
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON move: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
+        return super.stateToJson(state)
     }
 
     /*

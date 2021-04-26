@@ -4,7 +4,6 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.parsers.FirstOrderParser
 import kotlin.test.Test
-import kotlin.test.assert
 import kotlin.test.assertFailsWith
 
 class TestClose {

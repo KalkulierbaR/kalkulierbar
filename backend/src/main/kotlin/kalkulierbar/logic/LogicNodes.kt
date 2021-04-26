@@ -13,6 +13,13 @@ class Var(var spelling: String) : LogicNode() {
     override fun clone(qm: Map<String, Quantifier>) = Var(spelling)
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Var)
+            return false
+
+        return this.spelling == other.spelling
+    }
 }
 
 @Serializable
@@ -24,6 +31,13 @@ class Not(override var child: LogicNode) : UnaryOp() {
     override fun clone(qm: Map<String, Quantifier>) = Not(child.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Not)
+            return false
+
+        return this.child.synEq(other.child)
+    }
 }
 
 @Serializable
@@ -35,6 +49,13 @@ class And(override var leftChild: LogicNode, override var rightChild: LogicNode)
     override fun clone(qm: Map<String, Quantifier>) = And(leftChild.clone(qm), rightChild.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is And)
+            return false
+
+        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
+    }
 }
 
 @Serializable
@@ -46,17 +67,31 @@ class Or(override var leftChild: LogicNode, override var rightChild: LogicNode) 
     override fun clone(qm: Map<String, Quantifier>) = Or(leftChild.clone(qm), rightChild.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Or)
+            return false
+
+        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
+    }
 }
 
 @Serializable
 @SerialName("impl")
 class Impl(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
 
-    override fun toString() = "($leftChild --> $rightChild)"
+    override fun toString() = "($leftChild → $rightChild)"
 
     override fun clone(qm: Map<String, Quantifier>) = Impl(leftChild.clone(qm), rightChild.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Impl)
+            return false
+
+        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
+    }
 }
 
 @Serializable
@@ -68,6 +103,13 @@ class Equiv(override var leftChild: LogicNode, override var rightChild: LogicNod
     override fun clone(qm: Map<String, Quantifier>) = Equiv(leftChild.clone(qm), rightChild.clone(qm))
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Equiv)
+            return false
+
+        return this.leftChild.synEq(other.leftChild) && this.rightChild.synEq(other.rightChild)
+    }
 }
 
 @Serializable
@@ -93,7 +135,7 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Synt
      */
     @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
-        if (other == null || !(other is Relation))
+        if (other == null || other !is Relation)
             return false
 
         if (spelling != other.spelling || arguments.size != other.arguments.size)
@@ -131,6 +173,27 @@ class UniversalQuantifier(
     }
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    @Suppress("ReturnCount")
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is UniversalQuantifier)
+            return false
+
+        if (this.varName != other.varName)
+            return false
+
+        if (!this.child.synEq(other.child))
+            return false
+
+        if (this.boundVariables.size != other.boundVariables.size)
+            return false
+
+        for (i in this.boundVariables.indices) {
+            if (!this.boundVariables[i].synEq(other.boundVariables[i]))
+                return false
+        }
+        return true
+    }
 }
 
 @Serializable
@@ -156,4 +219,61 @@ class ExistentialQuantifier(
     }
 
     override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    @Suppress("ReturnCount")
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is ExistentialQuantifier)
+            return false
+
+        if (this.varName != other.varName)
+            return false
+
+        if (!this.child.synEq(other.child))
+            return false
+
+        if (this.boundVariables.size != other.boundVariables.size)
+            return false
+
+        for (i in this.boundVariables.indices) {
+            if (!this.boundVariables[i].synEq(other.boundVariables[i]))
+                return false
+        }
+        return true
+    }
+}
+
+@Serializable
+@SerialName("box")
+class Box(override var child: LogicNode) : UnaryOp() {
+
+    override fun toString() = "□$child"
+
+    override fun clone(qm: Map<String, Quantifier>) = Box(child.clone(qm))
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Box)
+            return false
+
+        return this.child.synEq(other.child)
+    }
+}
+
+@Serializable
+@SerialName("diamond")
+class Diamond(override var child: LogicNode) : UnaryOp() {
+
+    override fun toString() = "◇$child"
+
+    override fun clone(qm: Map<String, Quantifier>) = Diamond(child.clone(qm))
+
+    override fun <ReturnType> accept(visitor: LogicNodeVisitor<ReturnType>) = visitor.visit(this)
+
+    override fun synEq(other: Any?): Boolean {
+        if (other == null || other !is Diamond)
+            return false
+
+        return this.child.synEq(other.child)
+    }
 }

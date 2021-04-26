@@ -41,9 +41,9 @@ class TestGamma {
 
         state = instance.applyMoveOnState(state, GammaMove(0))
 
-        assertEquals("P(X_1)", state.nodes[1].spelling)
-        assertEquals(0, state.nodes[1].parent)
-        assertEquals(2, state.nodes.size)
+        assertEquals("P(X_1)", state.tree[1].spelling)
+        assertEquals(0, state.tree[1].parent)
+        assertEquals(2, state.tree.size)
     }
 
     @Test
@@ -53,9 +53,9 @@ class TestGamma {
 
         state = instance.applyMoveOnState(state, GammaMove(0))
 
-        assertEquals("((P(X_1, f(X_1, g(c, X_1))) ∧ Q(X_1)) ∧ (∀X: C(X)))", state.nodes[1].spelling)
-        assertEquals(0, state.nodes[1].parent)
-        assertEquals(2, state.nodes.size)
+        assertEquals("((P(X_1, f(X_1, g(c, X_1))) ∧ Q(X_1)) ∧ (∀X: C(X)))", state.tree[1].spelling)
+        assertEquals(0, state.tree[1].parent)
+        assertEquals(2, state.tree.size)
     }
 
     @Test
@@ -65,17 +65,17 @@ class TestGamma {
 
         state = instance.applyMoveOnState(state, GammaMove(0))
 
-        assertEquals("(∀Y: (∀Z: R(X_1, Y, Z)))", state.nodes[1].spelling)
-        assertEquals(0, state.nodes[1].parent)
+        assertEquals("(∀Y: (∀Z: R(X_1, Y, Z)))", state.tree[1].spelling)
+        assertEquals(0, state.tree[1].parent)
 
         state = instance.applyMoveOnState(state, GammaMove(1))
 
-        assertEquals("(∀Z: R(X_1, Y_2, Z))", state.nodes[2].spelling)
-        assertEquals(1, state.nodes[2].parent)
+        assertEquals("(∀Z: R(X_1, Y_2, Z))", state.tree[2].spelling)
+        assertEquals(1, state.tree[2].parent)
 
         state = instance.applyMoveOnState(state, GammaMove(2))
 
-        assertEquals("R(X_1, Y_2, Z_3)", state.nodes[3].spelling)
-        assertEquals(2, state.nodes[3].parent)
+        assertEquals("R(X_1, Y_2, Z_3)", state.tree[3].spelling)
+        assertEquals(2, state.tree[3].parent)
     }
 }

@@ -1,19 +1,13 @@
 package kalkulierbar.nonclausaltableaux
 
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.ExistentialQuantifier
-import kalkulierbar.logic.FirstOrderTerm
+import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.DoNothingVisitor
 import kalkulierbar.logic.transform.FirstOrderTermVisitor
 import kalkulierbar.logic.transform.FreeVariableCollector
 
 /**
  * Class to apply skolemization for Delta Move of non-clausal-tableaux
- * @param replacementMap maps free-variables to skolem-term
  */
 class DeltaSkolemization(
     private val toReplace: List<QuantifiedVariable>,
@@ -66,7 +60,7 @@ class DeltaSkolemization(
             nameBlacklist.add(skolemName)
 
             // Constant iff no free vars
-            if (freeVariables.size == 0)
+            if (freeVariables.isEmpty())
                 return Constant(skolemName)
 
             // Create skolem term with free variables
@@ -94,7 +88,6 @@ class DeltaSkolemization(
 
 /**
  * Replaces QuantifiedVariables with their respective Skolem terms
- * @param replacementMap Map of variable instances to replace alongside their Skolem term
  */
 class DeltaSkolemTermReplacer(
     private val toReplace: List<QuantifiedVariable>,

@@ -1,4 +1,4 @@
-import { PropCalculus, FOCalculus } from ".";
+import {FOCalculus, PropCalculus} from ".";
 
 /**
  * The Atom object received from the backend
@@ -8,10 +8,7 @@ export interface Atom<L = string> {
     negated: boolean;
 }
 
-export function instanceOfPropAtom(
-    object: any,
-    calculus: any,
-): object is Atom<string> {
+export function instanceOfPropAtom(object: any, calculus: any): object is Atom {
     return "lit" in object && PropCalculus.includes(calculus);
 }
 
@@ -32,7 +29,7 @@ export interface Clause<L = string> {
 export function instanceOfPropClause(
     object: any,
     calculus: any,
-): object is Clause<string> {
+): object is Clause {
     return "atoms" in object && PropCalculus.includes(calculus);
 }
 
@@ -53,7 +50,7 @@ export interface ClauseSet<L = string> {
 export function instanceOfPropClauseSet(
     object: any,
     calculus: any,
-): object is ClauseSet<string> {
+): object is ClauseSet {
     return "clauses" in object && PropCalculus.includes(calculus);
 }
 

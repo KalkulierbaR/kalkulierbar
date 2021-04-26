@@ -1,14 +1,15 @@
-import { Fragment, h } from "preact";
-import { useCallback, useState } from "preact/hooks";
-import { useAppState } from "../../util/app-state";
-import Btn from "../input/btn";
+import {Fragment, h} from "preact";
+import {useCallback, useState} from "preact/hooks";
+
 import Dialog from "../dialog";
 import SettingsIcon from "../icons/settings";
-import * as style from "./style.scss";
-import Nav from "./nav";
+import Btn from "../input/btn";
+
 import Drawer from "./drawer";
-import Settings from "./settings";
 import Hamburger from "./hamburger";
+import Nav from "./nav";
+import Settings from "./settings";
+import * as style from "./style.scss";
 
 interface HeaderProps {
     /**
@@ -18,27 +19,28 @@ interface HeaderProps {
 }
 
 const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
-    const { smallScreen } = useAppState();
     const [open, setOpen] = useState(false);
     const toggle = useCallback(() => setOpen(!open), [open]);
     const setClosed = useCallback(() => setOpen(false), [setOpen]);
 
-    const right = smallScreen ? (
-        <Hamburger open={open} onClick={toggle} />
-    ) : (
-        <Fragment>
-            <Nav
-                hamburger={false}
-                onLinkClick={setClosed}
-                currentUrl={currentUrl}
-            />
-            <Btn
-                className={style.settingsBtn}
-                onClick={toggle}
-                icon={<SettingsIcon />}
-            />
-        </Fragment>
-    );
+    // FIXME: Adjust `smallScreen` or find another solution?
+    const right =
+        window.innerWidth < 950 ? (
+            <Hamburger open={open} onClick={toggle} />
+        ) : (
+            <Fragment>
+                <Nav
+                    hamburger={false}
+                    onLinkClick={setClosed}
+                    currentUrl={currentUrl}
+                />
+                <Btn
+                    className={style.settingsBtn}
+                    onClick={toggle}
+                    icon={<SettingsIcon />}
+                />
+            </Fragment>
+        );
 
     return (
         <header class={style.header}>
@@ -59,7 +61,8 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
             />
             <Dialog
                 class={style.dialog}
-                open={!smallScreen && open}
+                // FIXME: Why 900?
+                open={!(window.innerWidth < 900) && open}
                 label="Settings"
                 onClose={setClosed}
             >

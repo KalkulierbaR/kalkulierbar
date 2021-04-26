@@ -3,15 +3,17 @@ package kalkulierbar.dpll
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 // Context object for move serialization
 // Tells kotlinx.serialize about child types of DPLLMove
 val dpllMoveModule = SerializersModule {
     polymorphic(DPLLMove::class) {
-        MoveSplit::class with MoveSplit.serializer()
-        MovePropagate::class with MovePropagate.serializer()
-        MovePrune::class with MovePrune.serializer()
-        MoveModelCheck::class with MoveModelCheck.serializer()
+        subclass(MoveSplit::class)
+        subclass(MovePropagate::class)
+        subclass(MovePrune::class)
+        subclass(MoveModelCheck::class)
     }
 }
 

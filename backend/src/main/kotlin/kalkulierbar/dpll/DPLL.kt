@@ -3,16 +3,16 @@ package kalkulierbar.dpll
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
 import kalkulierbar.JSONCalculus
-import kalkulierbar.JsonParseException
 import kalkulierbar.parsers.FlexibleClauseSetParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 class DPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
-
     override val identifier = "dpll"
 
-    private val serializer = Json(context = dpllMoveModule + clausesetDiffModule)
+    override val serializer = Json { serializersModule = dpllMoveModule + clausesetDiffModule; encodeDefaults = true }
+    override val moveSerializer = DPLLMove.serializer()
+    override val stateSerializer = DPLLState.serializer()
 
     override fun parseFormulaToState(formula: String, params: Unit?): DPLLState {
         val clauses = FlexibleClauseSetParser.parse(formula)
@@ -40,47 +40,15 @@ class DPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         // There are no more rules to be applied if every leaf is an annotation
         // (-> every proper leaf is either closed or has a model)
         val done = state.tree.all { !it.isLeaf || it.isAnnotation }
-        val msg: String
 
-        if (closed)
-            msg = "The proof is closed and proves the unsatisfiability of the clause set"
+        val msg = if (closed)
+            "The proof is closed and proves the unsatisfiability of the clause set"
         else {
             val donemsg = if (done) "- however, all branches are completed. The clause set is satisfiable." else "yet."
-            msg = "The proof is not closed $donemsg"
+            "The proof is not closed $donemsg"
         }
 
         return CloseMessage(closed, msg)
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToState(json: String): DPLLState {
-        try {
-            val parsed = serializer.parse(DPLLState.serializer(), json)
-
-            // Ensure valid, unmodified state object
-            if (!parsed.verifySeal())
-                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
-
-            return parsed
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON state: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
-    override fun stateToJson(state: DPLLState): String {
-        state.computeSeal()
-        return serializer.stringify(DPLLState.serializer(), state)
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToMove(json: String): DPLLMove {
-        try {
-            return serializer.parse(DPLLMove.serializer(), json)
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON move: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
     }
 
     override fun jsonToParam(json: String) = Unit

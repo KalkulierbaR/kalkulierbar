@@ -1,10 +1,12 @@
-import { h } from "preact";
-import { useState } from "preact/hooks";
-import { VarAssign } from "../../../types/calculus/tableaux";
+import {h} from "preact";
+import {useState} from "preact/hooks";
+
+import {VarAssign} from "../../../types/calculus/tableaux";
+import {useAppState} from "../../../util/app-state";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
 import Dialog from "../index";
-import { useAppState } from "../../../util/app-state";
+
 import * as style from "./style.scss";
 
 interface Props {

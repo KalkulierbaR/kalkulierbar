@@ -5,15 +5,17 @@ import kalkulierbar.clause.ClauseSet
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 // Context object for clause set diff serialization
 // Tells kotlinx.serialize about child types of CsDiff
 val clausesetDiffModule = SerializersModule {
     polymorphic(CsDiff::class) {
-        Identity::class with Identity.serializer()
-        RemoveClause::class with RemoveClause.serializer()
-        AddClause::class with AddClause.serializer()
-        RemoveAtom::class with RemoveAtom.serializer()
+        subclass(Identity::class)
+        subclass(RemoveClause::class)
+        subclass(AddClause::class)
+        subclass(RemoveAtom::class)
     }
 }
 

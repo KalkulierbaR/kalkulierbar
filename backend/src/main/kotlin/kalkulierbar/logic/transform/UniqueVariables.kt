@@ -1,13 +1,8 @@
 package kalkulierbar.logic.transform
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.ExistentialQuantifier
+import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
 
 /**
  * Visitor-based variable renaming transformation
@@ -113,10 +108,9 @@ class UniqueVariables : DoNothingVisitor() {
  * @param strict Set to false to allow variables with no associated replacement
  */
 class VariableRenamer(
-    val replacementMap: Map<QuantifiedVariable, String>,
+    private val replacementMap: Map<QuantifiedVariable, String>,
     val strict: Boolean = true
 ) : FirstOrderTermVisitor<Unit>() {
-
     /**
      * Change the variable name to the new spelling
      * Throw an exception if no new variable name is specified for the encountered variable

@@ -1,18 +1,12 @@
-import { h } from "preact";
-import {
-    SelectNodeOptions,
-    TableauxNode,
-    TableauxTreeLayoutNode,
-} from "../../../../types/calculus/tableaux";
-import { DragTransform } from "../../../../types/ui";
-import {
-    findSubTree,
-    getAbsoluteDragTransform,
-    getClosedLeaves,
-} from "../../../../util/layout/tree";
-import { tableauxTreeLayout } from "../../../../util/tableaux";
+import {h} from "preact";
+
+import {SelectNodeOptions, TableauxNode, TableauxTreeLayoutNode,} from "../../../../types/calculus/tableaux";
+import {DragTransform} from "../../../../types/ui";
+import {findSubTree, getAbsoluteDragTransform, getClosedLeaves,} from "../../../../util/layout/tree";
+import {tableauxTreeLayout} from "../../../../util/tableaux";
 import ClosingEdge from "../../../svg/closing-edge";
 import Zoomable from "../../../svg/zoomable";
+
 import * as style from "./style.scss";
 import SubTree from "./subtree";
 

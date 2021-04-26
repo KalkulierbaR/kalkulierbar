@@ -2,14 +2,7 @@ package kalkulierbar.nonclausaltableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.UnificationImpossible
-import kalkulierbar.logic.And
-import kalkulierbar.logic.ExistentialQuantifier
-import kalkulierbar.logic.FirstOrderTerm
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
+import kalkulierbar.logic.*
 import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.logic.transform.SelectiveSuffixAppender
@@ -24,8 +17,8 @@ import kalkulierbar.logic.util.UnifierEquivalence
  * @return new state after applying move
  */
 fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
-    val nodes = state.nodes
-    checkNodeRestrictions(nodes, nodeID)
+    val nodes = state.tree
+    checkNodeRestrictions(state, nodeID)
 
     val node = nodes[nodeID]
     val savedChildren = node.children.toMutableList() // Save a copy of the node's children
@@ -66,10 +59,8 @@ fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
  * @return new state after applying move
  */
 fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
-    val nodes = state.nodes
-    checkNodeRestrictions(nodes, nodeID)
-
-    val node = nodes[nodeID]
+    checkNodeRestrictions(state, nodeID)
+    val node = state.tree[nodeID]
 
     if (node.formula !is Or)
         throw IllegalMove("Outermost logic operator is not OR")
@@ -89,9 +80,8 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
             workList.add(subFormula.leftChild)
         } else {
             // Append the split nodes to every leaf that is not closed
-            branchLeaveIDs.filter { !nodes[it].isClosed }.forEach {
-                nodes.add(NcTableauxNode(it, subFormula.clone()))
-                nodes[it].children.add(nodes.size - 1)
+            branchLeaveIDs.filter { !state.tree[it].isClosed }.forEach {
+                state.addChildren(it, NcTableauxNode(it, subFormula.clone()))
             }
         }
     }
@@ -110,8 +100,8 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
  * @return new state after applying move
  */
 fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
-    val nodes = state.nodes
-    checkNodeRestrictions(nodes, nodeID)
+    val nodes = state.tree
+    checkNodeRestrictions(state, nodeID)
 
     val node = nodes[nodeID]
     // Note: This clone() is important as it restores quantifier linking
@@ -141,13 +131,12 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
     val newNode = NcTableauxNode(nodeID, newFormula)
     newNode.children.addAll(savedChildren)
 
-    nodes.add(newNode)
-    node.children.add(nodes.size - 1)
+    state.addChildren(nodeID, newNode)
     state.setParent(savedChildren, nodes.size - 1)
+
     // Add move to history
     if (state.backtracking)
         state.moveHistory.add(GammaMove(nodeID))
-
     return state
 }
 
@@ -161,8 +150,8 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
  * @return new state after applying move
  */
 fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
-    val nodes = state.nodes
-    checkNodeRestrictions(nodes, nodeID)
+    val nodes = state.tree
+    checkNodeRestrictions(state, nodeID)
 
     val node = nodes[nodeID]
     // Note: This clone() is important as it restores quantifier linking
@@ -185,8 +174,7 @@ fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
     // Add new node to tree
     val newNode = NcTableauxNode(nodeID, newFormula)
     newNode.children.addAll(savedChildren)
-    nodes.add(newNode)
-    node.children.add(nodes.size - 1)
+    state.addChildren(nodeID, newNode)
     state.setParent(savedChildren, nodes.size - 1)
 
     // Add move to history
@@ -215,8 +203,8 @@ fun applyClose(
 ): NcTableauxState {
     checkCloseIDRestrictions(state, nodeID, closeID)
 
-    val node = state.nodes[nodeID]
-    val closeNode = state.nodes[closeID]
+    val node = state.tree[nodeID]
+    val closeNode = state.tree[closeID]
     val nodeFormula = node.formula
     val closeNodeFormula = closeNode.formula
 
@@ -224,27 +212,28 @@ fun applyClose(
     val (nodeRelation, closeRelation) = checkCloseRelation(nodeFormula, closeNodeFormula)
 
     // Use user-supplied variable assignment if given, calculate MGU otherwise
-    val unifier: Map<String, FirstOrderTerm>
-    unifier = varAssign
-            ?: try {
-                Unification.unify(nodeRelation, closeRelation)
-            } catch (e: UnificationImpossible) {
-                throw IllegalMove("Cannot unify '$nodeRelation' and '$closeRelation': ${e.message}")
-            }
+    val unifier: Map<String, FirstOrderTerm> = varAssign
+        ?: try {
+            Unification.unify(nodeRelation, closeRelation)
+        } catch (e: UnificationImpossible) {
+            throw IllegalMove("Cannot unify '$nodeRelation' and '$closeRelation': ${e.message}")
+        }
 
     if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, nodeRelation, closeRelation))
         state.statusMessage = "The unifier you specified is not an MGU"
 
     // Apply all specified variable instantiations globally
     val instantiator = LogicNodeVariableInstantiator(unifier)
-    state.nodes.forEach {
+    state.tree.forEach {
         it.formula = it.formula.accept(instantiator)
     }
 
     // Check relations after instantiation
     if (!nodeRelation.synEq(closeRelation))
-        throw IllegalMove("Relations '$nodeRelation' and '$closeRelation' are" +
-                " not equal after variable instantiation")
+        throw IllegalMove(
+            "Relations '$nodeRelation' and '$closeRelation' are" +
+                " not equal after variable instantiation"
+        )
 
     // Close branch
     node.closeRef = closeID
@@ -264,15 +253,11 @@ fun applyClose(
  * Check restrictions for nodeID and closeID
  */
 private fun checkCloseIDRestrictions(state: NcTableauxState, nodeID: Int, closeID: Int) {
-    val nodes = state.nodes
+    checkNodeRestrictions(state, nodeID)
+    state.checkNodeID(closeID)
 
-    checkNodeRestrictions(nodes, nodeID)
-
-    if (closeID >= nodes.size || closeID < 0)
-        throw IllegalMove("Node with ID $closeID does not exist")
-
-    val node = state.nodes[nodeID]
-    val closeNode = state.nodes[closeID]
+    val node = state.tree[nodeID]
+    val closeNode = state.tree[closeID]
     // Verify that closeNode is transitive parent of node
     if (!state.nodeIsParentOf(closeID, nodeID))
         throw IllegalMove("Node '$closeNode' is not an ancestor of node '$node'")
@@ -310,11 +295,10 @@ private fun checkCloseRelation(nodeFormula: LogicNode, closeNodeFormula: LogicNo
 /**
  * Check nodeID valid + already closed
  */
-fun checkNodeRestrictions(nodes: List<NcTableauxNode>, nodeID: Int) {
-    if (nodeID < 0 || nodeID >= nodes.size)
-        throw IllegalMove("Node with ID $nodeID does not exist")
+fun checkNodeRestrictions(state: NcTableauxState, nodeID: Int) {
+    state.checkNodeID(nodeID)
     // Verify that node is not already closed
-    val node = nodes[nodeID]
+    val node = state.tree[nodeID]
     if (node.isClosed)
         throw IllegalMove("Node '$node' is already closed")
 }

@@ -64,13 +64,16 @@
 
 .link {
     fill: none;
-    stroke: rgb(218, 218, 218);
+    stroke: var(--kbar-8dp-color);
     stroke-width: 2px;
+}
+.changeabletext {
+    fill: var(--kbar-primary-text-color);
 }
 
 .sparkle {
     vertical-align: middle;
-    margin: 0rem 0.5rem;
+    margin: 0 0.5rem;
     height: 1rem;
 }
 

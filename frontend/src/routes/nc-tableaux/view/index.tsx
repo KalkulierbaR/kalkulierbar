@@ -1,17 +1,18 @@
-import { Fragment, h } from "preact";
-import { useCallback, useState } from "preact/hooks";
-import TutorialDialog from "../../../components/tutorial/dialog";
-import VarAssignDialog from "../../../components/dialog/var-assign";
+import {Fragment, h} from "preact";
+import {route} from "preact-router";
+import {useCallback, useState} from "preact/hooks";
+
 import NCTabFAB from "../../../components/calculus/nc-tableaux/fab";
 import NCTabTree from "../../../components/calculus/nc-tableaux/tree";
-import { Calculus } from "../../../types/calculus";
-import { NCTabTreeNode } from "../../../types/calculus/nc-tableaux";
-import { VarAssign } from "../../../types/calculus/tableaux";
-import { DragTransform } from "../../../types/ui";
-import { useAppState } from "../../../util/app-state";
-import { collectVarsFromNode, sendClose } from "../../../util/nc-tableaux";
-import { updateDragTransform } from "../../../util/tableaux";
-import { route } from "preact-router";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import TutorialDialog from "../../../components/tutorial/dialog";
+import {Calculus} from "../../../types/calculus";
+import {NCTabTreeNode} from "../../../types/calculus/nc-tableaux";
+import {VarAssign} from "../../../types/calculus/tableaux";
+import {DragTransform} from "../../../types/ui";
+import {useAppState} from "../../../util/app-state";
+import {collectVarsFromNode, sendClose} from "../../../util/nc-tableaux";
+import {updateDragTransform} from "../../../util/tableaux";
 
 const NCTableauxView: preact.FunctionalComponent = () => {
     const {
@@ -52,7 +53,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
     const [varOrigins, setVarOrigins] = useState<string[]>([]);
 
     const selectedNode =
-        selectedNodeId !== undefined ? state.nodes[selectedNodeId] : undefined;
+        selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined;
     const selectedNodeIsLeaf =
         selectedNode !== undefined
             ? selectedNode.children.length === 0
@@ -123,7 +124,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
 
             <div class="card no-pad">
                 <NCTabTree
-                    nodes={state.nodes}
+                    nodes={state.tree}
                     selectedNodeId={selectedNodeId}
                     selectNodeCallback={handleNodeSelect}
                     dragTransforms={dragTransforms}

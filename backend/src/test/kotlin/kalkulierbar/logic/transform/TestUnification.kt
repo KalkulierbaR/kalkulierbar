@@ -13,26 +13,26 @@ class TestUnification {
     private val parser = FirstOrderParser()
 
     private val valid = mapOf(
-            "R(a) & R(a)" to "{}",
-            "\\all X: (R(X) & R(X))" to "{}",
-            "R(a) & \\all X: R(X)" to "{X=a}",
-            "\\all X: R(X) & \\all Y: R(Y)" to "{X=Y}",
-            "\\all X: R(f(a,X)) & R(f(a,b))" to "{X=b}",
-            "\\all X: R(f(X)) & \\all Y: R(f(Y))" to "{X=Y}",
-            "\\all X: R(X) & \\all Y: R(Y)" to "{X=Y}",
-            "\\all X: R(f(g(X))) & \\all Y: R(f(Y))" to "{Y=g(X)}",
-            "\\all X: R(f(g(X),X)) & \\all Y: R(f(Y,a))" to "{X=a, Y=g(a)}",
-            "\\all X: R(X) & \\all Y: R(Y)" to "{X=Y}"
+        "R(a) & R(a)" to "{}",
+        "\\all X: (R(X) & R(X))" to "{}",
+        "R(a) & \\all X: R(X)" to "{X=a}",
+        "\\all X: R(X) & \\all Y: R(Y)" to "{X=Y}",
+        "\\all X: R(f(a,X)) & R(f(a,b))" to "{X=b}",
+        "\\all X: R(f(X)) & \\all Y: R(f(Y))" to "{X=Y}",
+        "\\all X: R(X) & \\all Y: R(Y)" to "{X=Y}",
+        "\\all X: R(f(g(X))) & \\all Y: R(f(Y))" to "{Y=g(X)}",
+        "\\all X: R(f(g(X),X)) & \\all Y: R(f(Y,a))" to "{X=a, Y=g(a)}",
+        "\\all X: R(X) & \\all Y: R(Y)" to "{X=Y}"
     )
 
     private val invalid = listOf(
-            "R(a) & R(b)",
-            "R(f(a)) & R(g(a))",
-            "R(a) & Q(a)",
-            "R(a) & R(a,b)",
-            "\\all X: \\all Y: (R(f(X)) & R(g(Y)))",
-            "\\all X: \\all Y: \\all Z: (R(f(X)) & R(f(Y,Z)))",
-            "\\all X: (R(f(X)) & R(X))"
+        "R(a) & R(b)",
+        "R(f(a)) & R(g(a))",
+        "R(a) & Q(a)",
+        "R(a) & R(a,b)",
+        "\\all X: \\all Y: (R(f(X)) & R(g(Y)))",
+        "\\all X: \\all Y: \\all Z: (R(f(X)) & R(f(Y,Z)))",
+        "\\all X: (R(f(X)) & R(X))"
     )
 
     @Test

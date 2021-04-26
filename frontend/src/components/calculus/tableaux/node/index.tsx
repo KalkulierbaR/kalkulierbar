@@ -1,13 +1,15 @@
-import { h } from "preact";
-import { useRef } from "preact/hooks";
-import { LayoutItem } from "../../../../types/layout";
-import { TableauxTreeLayoutNode } from "../../../../types/calculus/tableaux";
-import { DragTransform } from "../../../../types/ui";
-import { classMap } from "../../../../util/class-map";
+import {h} from "preact";
+import {useRef} from "preact/hooks";
+
+import {TableauxTreeLayoutNode} from "../../../../types/calculus/tableaux";
+import {LayoutItem} from "../../../../types/layout";
+import {DragTransform} from "../../../../types/ui";
+import {classMap} from "../../../../util/class-map";
+import {nodeName} from "../../../../util/tableaux";
 import Draggable from "../../../svg/draggable";
 import Rectangle from "../../../svg/rectangle";
+
 import * as style from "./style.scss";
-import { nodeName } from "../../../../util/tableaux";
 
 interface Props {
     /**

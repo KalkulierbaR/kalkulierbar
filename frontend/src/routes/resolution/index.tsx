@@ -1,15 +1,16 @@
-import { Fragment, h } from "preact";
-import { useState } from "preact/hooks";
-import HintIcon, { Hint } from "../../components/hint";
+import {Fragment, h} from "preact";
+import {useState} from "preact/hooks";
+
+import HintIcon, {Hint} from "../../components/hint";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Radio from "../../components/input/radio";
 import Switch from "../../components/input/switch";
-import { Calculus, ResolutionCalculusType } from "../../types/calculus";
-import { VisualHelp } from "../../types/calculus/resolution";
-import { CnfStrategy } from "../../types/calculus/tableaux";
-import { useAppState } from "../../util/app-state";
+import {Calculus, ResolutionCalculusType} from "../../types/calculus";
+import {VisualHelp} from "../../types/calculus/resolution";
+import {CnfStrategy} from "../../types/calculus/tableaux";
+import {useAppState} from "../../util/app-state";
 
 interface Props {
     /**
@@ -53,8 +54,16 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     return (
         <Fragment>
-            <Format foLogic={fo} />
-            <FormulaInput calculus={calculus} params={params} foLogic={fo} />
+            <Format logicType={fo ? "fo" : "prop-clause"} />
+            <FormulaInput
+                calculus={calculus}
+                params={params}
+                placeholder={
+                    fo
+                        ? "\\all X: !R(f(X)) & (R(f(a)) | !R(f(b))) & \\all X: R(f(X))"
+                        : "!a, c; a; !c"
+                }
+            />
             <div class="card">
                 <h3>Parameters</h3>
                 <Hint top={smallScreen} />

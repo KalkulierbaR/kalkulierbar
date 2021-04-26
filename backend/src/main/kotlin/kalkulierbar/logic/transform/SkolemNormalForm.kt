@@ -21,8 +21,7 @@ class SkolemNormalForm {
             val nnf = NegationNormalForm.transform(formula)
             val uniq = UniqueVariables.transform(nnf)
             val skol = Skolemization.transform(uniq)
-            val prnx = PrenexNormalForm.transform(skol)
-            return prnx
+            return PrenexNormalForm.transform(skol)
         }
     }
 }

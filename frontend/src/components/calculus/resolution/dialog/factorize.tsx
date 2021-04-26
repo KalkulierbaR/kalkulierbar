@@ -1,24 +1,21 @@
-import { h } from "preact";
-import { useState } from "preact/hooks";
+import {h} from "preact";
+import {useState} from "preact/hooks";
+
 import Dialog from "../../../../components/dialog";
 import OptionList from "../../../../components/input/option-list";
-import {
-    Atom,
-    FOAtom,
-    SelectedClauses,
-} from "../../../../types/calculus/clause";
+import {ResolutionCalculusType} from "../../../../types/calculus";
+import {Atom, FOAtom, SelectedClauses,} from "../../../../types/calculus/clause";
 import {
     FOResolutionState,
     instanceOfFOResState,
     instanceOfPropResState,
     PropResolutionState,
 } from "../../../../types/calculus/resolution";
-import { useAppState } from "../../../../util/app-state";
-import { stringArrayToStringMap } from "../../../../util/array-to-map";
-import { atomToString } from "../../../../util/clause";
-import { sendFactorize } from "../../../../util/resolution";
+import {useAppState} from "../../../../util/app-state";
+import {stringArrayToStringMap} from "../../../../util/array-to-map";
+import {atomToString} from "../../../../util/clause";
+import {sendFactorize} from "../../../../util/resolution";
 import Btn from "../../../input/btn";
-import { ResolutionCalculusType } from "../../../../types/calculus";
 
 interface Props {
     /**

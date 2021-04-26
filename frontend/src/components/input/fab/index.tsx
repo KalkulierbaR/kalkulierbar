@@ -1,5 +1,7 @@
-import { ComponentChild, h } from "preact";
-import { classMap } from "../../../util/class-map";
+import {ComponentChild, h} from "preact";
+
+import {classMap} from "../../../util/class-map";
+
 import * as style from "./style.scss";
 
 interface Props {

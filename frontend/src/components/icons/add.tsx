@@ -1,4 +1,5 @@
-import { h } from "preact";
+import preact, {h} from "preact";
+
 import Icon from "./icon";
 
 interface Props {

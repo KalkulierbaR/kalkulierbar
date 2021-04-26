@@ -3,68 +3,12 @@ package kalkulierbar.dpll
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
+import main.kotlin.kalkulierbar.tree.GenericTreeNode
+import main.kotlin.kalkulierbar.tree.TreeGardener
 
 @Serializable
-class DPLLState(val clauseSet: ClauseSet<String>) : ProtectedState() {
-    val tree = mutableListOf<TreeNode>()
-
-    /**
-     * Remove all children of a node from the proof tree
-     * This requires some index shifting magic due to the list representation
-     * of the tree, but I figure it's still better than figuring out a way to
-     * serialize doubly-linked trees and define IDs on that
-     * @param id ID of the node whose children are to be pruned
-     */
-    fun pruneBranch(id: Int) {
-        // Collect all transitive children of the node
-        // (not deleting anything yet to keep index structures intact)
-        val queue = mutableListOf<Int>()
-        val toDelete = mutableListOf<Int>()
-        queue.addAll(tree[id].children)
-
-        while (queue.isNotEmpty()) {
-            val index = queue.removeAt(0)
-            val node = tree[index]
-            queue.addAll(node.children)
-            toDelete.add(index)
-        }
-
-        // Remove each identified child, keeping parent references but not children references
-        // We remove items from the largest index to the smallest to keep the indices of the other
-        // items in the list consistent
-        toDelete.sorted().asReversed().forEach {
-            removeNodeInconsistent(it)
-        }
-
-        // Re-compute children references
-        rebuildChildRefs()
-    }
-
-    /**
-     * Removes a node from the proof tree, keeping parent references intact
-     * NOTE: This will most likely leave the children references in an INCONSISTENT state
-     *       Use rebuildChildRefs() to ensure valid children references
-     * @param id ID of the node to remove
-     */
-    private fun removeNodeInconsistent(id: Int) {
-        tree.removeAt(id)
-        tree.forEach {
-            if (it.parent != null && it.parent!! > id)
-                it.parent = it.parent!! - 1
-        }
-    }
-
-    /**
-     * Rebuilds children references in the entire proof tree from parent references
-     */
-    private fun rebuildChildRefs() {
-        tree.forEach { it.children.clear() }
-
-        for (i in tree.indices) {
-            if (tree[i].parent != null)
-                tree[tree[i].parent!!].children.add(i)
-        }
-    }
+class DPLLState(val clauseSet: ClauseSet<String>) : ProtectedState(), TreeGardener<TreeNode> {
+    override val tree = mutableListOf<TreeNode>()
 
     /**
      * Applies the clause set deltas stored in the proof tree to 'check out'
@@ -94,10 +38,10 @@ class DPLLState(val clauseSet: ClauseSet<String>) : ProtectedState() {
 }
 
 @Serializable
-class TreeNode(var parent: Int?, val type: NodeType, var label: String, val diff: CsDiff) {
-    val children = mutableListOf<Int>()
-    val isLeaf
-        get() = children.size == 0
+class TreeNode(override var parent: Int?, val type: NodeType, var label: String, val diff: CsDiff) : GenericTreeNode {
+    override val children = mutableListOf<Int>()
+    override val isLeaf
+        get() = children.isEmpty()
     val isAnnotation
         get() = (type == NodeType.MODEL || type == NodeType.CLOSED)
     var modelVerified: Boolean? = null

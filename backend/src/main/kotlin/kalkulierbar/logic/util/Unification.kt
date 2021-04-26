@@ -21,13 +21,11 @@ class Unification {
          * @return a map of the executed substitutions
          */
         fun unify(r1: Relation, r2: Relation): Map<String, FirstOrderTerm> {
-            var rel1 = r1
-            var rel2 = r2
-            val arg1 = rel1.arguments
-            val arg2 = rel2.arguments
+            val arg1 = r1.arguments
+            val arg2 = r2.arguments
 
             // Spelling has to be the same
-            if (rel1.spelling != rel2.spelling)
+            if (r1.spelling != r2.spelling)
                 throw UnificationImpossible("Relations '$r1' and '$r2' have different names")
             // Arg size has to be the same length
             if (arg1.size != arg2.size)
@@ -68,7 +66,7 @@ class Unification {
                         throw UnificationImpossible("Variable '$term1' appears in '$term2'")
 
                     // Add substitution to map
-                    map.put(term1.spelling, term2)
+                    map[term1.spelling] = term2
                 } else if (term2 is QuantifiedVariable) {
                     // Swap them around to be processed later
                     terms.add(Pair(term2, term1))

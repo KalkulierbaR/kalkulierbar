@@ -50,7 +50,7 @@ const MyHipCalculus: preact.FunctionalComponent = () => {
         <Fragment>
             <h2>My Hip Calculus</h2>
             <Format foLogic={false} />
-            <FormulaInput calculus="my-hip-calculus" foLogic={false} />
+            <FormulaInput calculus="my-hip-calculus" />
             <ExampleList calculus="my-hip-calculus" />
         </Fragment>
     );

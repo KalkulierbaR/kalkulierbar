@@ -1,10 +1,11 @@
-import { h } from "preact";
-import { ClauseSet, SelectedClauses } from "../../../../types/calculus/clause";
-import { DPLLState } from "../../../../types/calculus/dpll";
-import { useAppState } from "../../../../util/app-state";
-import { stringArrayToStringMap } from "../../../../util/array-to-map";
-import { atomToString } from "../../../../util/clause";
-import { sendProp } from "../../../../util/dpll";
+import {h} from "preact";
+
+import {ClauseSet, SelectedClauses} from "../../../../types/calculus/clause";
+import {DPLLState} from "../../../../types/calculus/dpll";
+import {useAppState} from "../../../../util/app-state";
+import {stringArrayToStringMap} from "../../../../util/array-to-map";
+import {atomToString} from "../../../../util/clause";
+import {sendProp} from "../../../../util/dpll";
 import Dialog from "../../../dialog";
 import OptionList from "../../../input/option-list";
 

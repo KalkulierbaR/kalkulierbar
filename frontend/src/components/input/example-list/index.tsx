@@ -1,13 +1,15 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
-import { delExample } from "../../../util/admin";
-import { useAppState } from "../../../util/app-state";
-import Btn from "../btn";
+import {Fragment, h} from "preact";
+import {route} from "preact-router";
+
+import {AppStateActionType} from "../../../types/app/action";
+import {Example} from "../../../types/app/example";
+import {CalculusType} from "../../../types/calculus";
+import {delExample} from "../../../util/admin";
+import {useAppState} from "../../../util/app-state";
 import DeleteIcon from "../../icons/delete";
+import Btn from "../btn";
+
 import * as style from "./style.scss";
-import { CalculusType } from "../../../types/calculus";
-import { Example } from "../../../types/app/example";
-import { AppStateActionType } from "../../../types/app/action";
 
 interface Props {
     /**

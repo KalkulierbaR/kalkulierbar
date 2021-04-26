@@ -1,13 +1,15 @@
-import { Fragment, h } from "preact";
-import { useEffect, useState } from "preact/hooks";
-import TutorialDialog from "../../../components/tutorial/dialog";
-import VarAssignDialog from "../../../components/dialog/var-assign";
+import {Fragment, h} from "preact";
+import {route} from "preact-router";
+import {useEffect, useState} from "preact/hooks";
+
 import ResolutionCircle from "../../../components/calculus/resolution/circle";
 import ResolutionFactorizeDialog from "../../../components/calculus/resolution/dialog/factorize";
 import ResolutionResolveDialog from "../../../components/calculus/resolution/dialog/resolve";
 import ResolutionFAB from "../../../components/calculus/resolution/fab";
 import ResolutionGrid from "../../../components/calculus/resolution/grid";
-import { ResolutionCalculusType } from "../../../types/calculus";
+import VarAssignDialog from "../../../components/dialog/var-assign";
+import TutorialDialog from "../../../components/tutorial/dialog";
+import {ResolutionCalculusType} from "../../../types/calculus";
 import {
     CandidateClause,
     getCandidateCount,
@@ -21,14 +23,10 @@ import {
     instanceOfPropResState,
     VisualHelp,
 } from "../../../types/calculus/resolution";
-import { VarAssign } from "../../../types/calculus/tableaux";
-import { useAppState } from "../../../util/app-state";
-import { stringArrayToStringMap } from "../../../util/array-to-map";
-import {
-    atomToString,
-    checkAtomsForVars,
-    getCandidateClause,
-} from "../../../util/clause";
+import {VarAssign} from "../../../types/calculus/tableaux";
+import {useAppState} from "../../../util/app-state";
+import {stringArrayToStringMap} from "../../../util/array-to-map";
+import {atomToString, checkAtomsForVars, getCandidateClause,} from "../../../util/clause";
 import {
     addClause,
     addHyperSidePremiss,
@@ -46,7 +44,6 @@ import {
     sendResolveCustom,
     sendResolveUnify,
 } from "../../../util/resolution";
-import { route } from "preact-router";
 
 interface Props {
     /**

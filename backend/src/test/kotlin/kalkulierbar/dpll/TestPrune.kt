@@ -1,11 +1,7 @@
 package kalkulierbar.test.dpll
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.dpll.DPLL
-import kalkulierbar.dpll.MoveModelCheck
-import kalkulierbar.dpll.MovePropagate
-import kalkulierbar.dpll.MovePrune
-import kalkulierbar.dpll.MoveSplit
+import kalkulierbar.dpll.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -20,7 +16,7 @@ class TestPrune {
         state = dpll.applyMoveOnState(state, MovePropagate(0, 1, 0, 1))
 
         assertEquals(3, state.tree.size)
-        assertEquals(listOf<Int>(), state.tree[2].children)
+        assertEquals(listOf(), state.tree[2].children)
         assertEquals(1, state.tree[2].parent)
         assertEquals(true, state.tree[2].isLeaf)
         val clauseSet2 = state.tree[2].diff.apply(state.clauseSet).clone()
@@ -29,7 +25,7 @@ class TestPrune {
         // Nothing happens and tests remain the same
         state = dpll.applyMoveOnState(state, MovePrune(2))
         assertEquals(3, state.tree.size)
-        assertEquals(listOf<Int>(), state.tree[2].children)
+        assertEquals(listOf(), state.tree[2].children)
         assertEquals(1, state.tree[2].parent)
         assertEquals(true, state.tree[2].isLeaf)
         assertEquals(clauseSet2.toString(), state.tree[2].diff.apply(state.clauseSet).toString())
@@ -42,7 +38,7 @@ class TestPrune {
         // Reset to start state
         state = dpll.applyMoveOnState(state, MovePrune(0))
         assertEquals(1, state.tree.size)
-        assertEquals(listOf<Int>(), state.tree[0].children)
+        assertEquals(listOf(), state.tree[0].children)
         assertEquals(true, state.tree[0].isLeaf)
         assertEquals(clauseSet0.toString(), state.tree[0].diff.apply(state.clauseSet).toString())
     }
@@ -57,7 +53,7 @@ class TestPrune {
 
         state = dpll.applyMoveOnState(state, MovePrune(0))
         assertEquals(1, state.tree.size)
-        assertEquals(listOf<Int>(), state.tree[0].children)
+        assertEquals(listOf(), state.tree[0].children)
         assertEquals(true, state.tree[0].isLeaf)
     }
 

@@ -1,5 +1,6 @@
-import { Point, Transform } from "../../types/ui";
-import { invert } from "./transform";
+import {Point, Transform} from "../../types/ui";
+
+import {invert} from "./transform";
 
 // A class to store some gesture data
 export class Gesture {

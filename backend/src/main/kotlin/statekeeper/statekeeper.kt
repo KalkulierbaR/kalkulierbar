@@ -1,22 +1,21 @@
 package statekeeper
 
+import kalkulierbar.JsonParseException
+import kalkulierbar.KalkulierbarException
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import org.komputing.khash.keccak.KeccakParameter
+import org.komputing.khash.keccak.extensions.digestKeccak
 import java.io.File
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import kalkulierbar.JsonParseException
-import kalkulierbar.KalkulierbarException
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import org.komputing.khash.keccak.KeccakParameter
-import org.komputing.khash.keccak.extensions.digestKeccak
 
 @Suppress("TooGenericExceptionCaught", "TooManyFunctions")
 object StateKeeper {
-    private val serializer = Json(JsonConfiguration.Stable)
-
     private val date
         get() = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())
 
@@ -35,7 +34,7 @@ object StateKeeper {
                 state = AppState()
                 flush()
             } else
-                state = serializer.parse(AppState.serializer(), storage.readText())
+                state = Json.decodeFromString(storage.readText())
         } catch (e: Exception) {
             val msg = "Could not parse stored state: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -54,15 +53,15 @@ object StateKeeper {
      * @return JSON config object
      */
     fun getConfig(): String {
-        val calculiJson = state.disabledCalculi.map { "\"$it\"" }.joinToString(", ")
-        val examplesJson = state.examples.map { serializer.stringify(Example.serializer(), it) }.joinToString(", ")
+        val calculiJson = state.disabledCalculi.joinToString(", ") { "\"$it\"" }
+        val examplesJson = state.examples.joinToString(", ") { Json.encodeToString(it) }
 
         state.stats.logHit("config")
 
         return """{"disabled": [$calculiJson], "examples": [$examplesJson]}"""
     }
 
-    fun getStats() = serializer.stringify(Stats.serializer(), state.stats)
+    fun getStats() = Json.encodeToString(state.stats)
 
     /**
      * Allows a frontend implementation to check admin credentials
@@ -95,12 +94,11 @@ object StateKeeper {
 
         val enable = (enableString == "true")
 
-        if (enable)
-            state.disabledCalculi.remove(calculus)
-        else if (availableCalculi.contains(calculus))
-            state.disabledCalculi.add(calculus)
-        else
-            throw InvalidRequest("Calculus '$calculus' does not exist")
+        when {
+            enable -> state.disabledCalculi.remove(calculus)
+            availableCalculi.contains(calculus) -> state.disabledCalculi.add(calculus)
+            else -> throw InvalidRequest("Calculus '$calculus' does not exist")
+        }
 
         flush()
 
@@ -123,7 +121,7 @@ object StateKeeper {
             throw AuthenticationException("Invalid password")
 
         try {
-            parsedExample = serializer.parse(Example.serializer(), example)
+            parsedExample = Json.decodeFromString(example)
         } catch (e: Exception) {
             val msg = "Could not parse JSON example: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -171,7 +169,7 @@ object StateKeeper {
      * NOTE: At the moment for testing purpose only
      */
     fun reset() {
-        availableCalculi = listOf<String>()
+        availableCalculi = listOf()
         storage.delete()
         state.disabledCalculi.clear()
         state.examples.clear()
@@ -191,13 +189,13 @@ object StateKeeper {
         return calculatedMAC == mac.toUpperCase()
     }
 
-    private fun toHex(bytes: ByteArray) = bytes.map { String.format("%02X", it) }.joinToString("")
+    private fun toHex(bytes: ByteArray) = bytes.joinToString("") { String.format("%02X", it) }
 
     /**
      * Save the current AppState to the state file
      */
     private fun flush() {
-        val json = serializer.stringify(AppState.serializer(), state)
+        val json = Json.encodeToString(state)
         storage.writeText(json)
     }
 
@@ -215,8 +213,8 @@ object StateKeeper {
             throw StorageLimitHit("Example formula exceeds size limit of $EXAMPLE_FORMULA_SIZE B")
         if (ex.params.length > EXAMPLE_PARAM_SIZE)
             throw StorageLimitHit("Example parameters exceed size limit of $EXAMPLE_PARAM_SIZE B")
-        if (ex.calculus.length > EXAMPLE_CALCNAME_SIZE)
-            throw StorageLimitHit("Example calculus name exceeds size limit of $EXAMPLE_CALCNAME_SIZE B")
+        if (ex.calculus.length > EXAMPLE_CALC_NAME_SIZE)
+            throw StorageLimitHit("Example calculus name exceeds size limit of $EXAMPLE_CALC_NAME_SIZE B")
 
         if (state.examples.size >= MAX_EXAMPLE_COUNT)
             throw StorageLimitHit("Maximum number of stored examples ($MAX_EXAMPLE_COUNT) exceeded")
@@ -245,17 +243,17 @@ data class Stats(
     var currentMonth: MutableMap<String, Int> = mutableMapOf(),
     var lastMonth: Map<String, Int> = mapOf(),
     val alltime: MutableMap<String, Int> = mutableMapOf(),
-    var monthIndex: Int = LocalDateTime.now().getMonthValue()
+    var monthIndex: Int = LocalDateTime.now().monthValue
 ) {
     fun logHit(key: String) {
-        val month = LocalDateTime.now().getMonthValue()
+        val month = LocalDateTime.now().monthValue
         if (month != monthIndex) {
             monthIndex = month
             lastMonth = currentMonth
             currentMonth = mutableMapOf()
         }
-        currentMonth.put(key, (currentMonth[key] ?: 0) + 1)
-        alltime.put(key, (alltime[key] ?: 0) + 1)
+        currentMonth[key] = (currentMonth[key] ?: 0) + 1
+        alltime[key] = (alltime[key] ?: 0) + 1
     }
 }
 

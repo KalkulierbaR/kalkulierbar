@@ -1,5 +1,7 @@
 package kalkulierbar
 
+import kalkulierbar.tamperprotect.ProtectedState
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -9,6 +11,10 @@ import kotlinx.serialization.json.Json
  */
 @Suppress("TooManyFunctions")
 abstract class JSONCalculus<State, Move, Param> : Calculus {
+
+    protected abstract val serializer: Json
+    protected abstract val moveSerializer: KSerializer<Move>
+    protected abstract val stateSerializer: KSerializer<State>
 
     /**
      * Parses a formula provided as text into a state representation
@@ -70,7 +76,6 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param state state representation to validate
      * @return string representing proof state (closed/open) with an optional message
      */
-    @kotlinx.serialization.UnstableDefault
     override fun checkClose(state: String) = closeToJson(checkCloseOnState(jsonToState(state)))
 
     /**
@@ -85,21 +90,47 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param json JSON state representation
      * @return parsed state object
      */
-    abstract fun jsonToState(json: String): State
+    @Suppress("TooGenericExceptionCaught")
+    open fun jsonToState(json: String): State {
+        try {
+            val parsed: State = serializer.decodeFromString(stateSerializer, json)
+
+            // Ensure valid, unmodified state object
+            if (parsed is ProtectedState && !parsed.verifySeal())
+                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
+
+            return parsed
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON state: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
+        }
+    }
 
     /**
      * Serializes a state object to JSON
      * @param state State object
      * @return JSON state representation
      */
-    abstract fun stateToJson(state: State): String
+    open fun stateToJson(state: State): String {
+        if (state is ProtectedState)
+            state.computeSeal()
+        return serializer.encodeToString(stateSerializer, state)
+    }
 
     /**
      * Parses a JSON move representation into a Move object
      * @param json JSON move representation
      * @return parsed move object
      */
-    abstract fun jsonToMove(json: String): Move
+    @Suppress("TooGenericExceptionCaught")
+    open fun jsonToMove(json: String): Move {
+        try {
+            return serializer.decodeFromString(moveSerializer, json)
+        } catch (e: Exception) {
+            val msg = "Could not parse JSON move: "
+            throw JsonParseException(msg + (e.message ?: "Unknown error"))
+        }
+    }
 
     /**
      * Parses a JSON parameter representation into a Param object
@@ -113,8 +144,7 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param close CloseMessage object to serialize
      * @return JSON close message
      */
-    @kotlinx.serialization.UnstableDefault
-    fun closeToJson(close: CloseMessage) = Json.stringify(CloseMessage.serializer(), close)
+    fun closeToJson(close: CloseMessage) = Json.encodeToString(CloseMessage.serializer(), close)
 }
 
 @Serializable

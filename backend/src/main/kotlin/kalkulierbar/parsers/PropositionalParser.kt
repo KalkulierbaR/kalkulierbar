@@ -1,13 +1,8 @@
 package kalkulierbar.parsers
 
+import kalkulierbar.EmptyFormulaException
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.And
-import kalkulierbar.logic.Equiv
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.Var
+import kalkulierbar.logic.*
 
 /**
  * Recursive descent parser for propositional logic
@@ -25,8 +20,11 @@ open class PropositionalParser {
      * @param formula input formula
      * @return LogicNode representing the formula
      */
-    open fun parse(formula: String): LogicNode {
-        tokens = Tokenizer.tokenize(formula)
+    open fun parse(formula: String, positionInBaseString: Int = 0): LogicNode {
+        tokens = Tokenizer.tokenize(formula, false, positionInBaseString)
+        if (tokens.isEmpty()) {
+            throw EmptyFormulaException("Expected a formula but got an empty String")
+        }
         val res = parseEquiv()
         if (tokens.isNotEmpty())
             throw InvalidFormulaFormat("Expected end of formula but got ${gotMsg()}")
@@ -54,7 +52,7 @@ open class PropositionalParser {
      * Parses a series of 0 or more implications
      * @return LogicNode representing the series of implications
      */
-    protected fun parseImpl(): LogicNode {
+    private fun parseImpl(): LogicNode {
         var stub = parseOr()
 
         while (nextTokenIs(TokenType.IMPLICATION)) {
@@ -70,7 +68,7 @@ open class PropositionalParser {
      * Parses a series of 0 or more or-operations
      * @return LogicNode representing the series of or-operations
      */
-    protected fun parseOr(): LogicNode {
+    private fun parseOr(): LogicNode {
         var stub = parseAnd()
 
         while (nextTokenIs(TokenType.OR)) {
@@ -86,7 +84,7 @@ open class PropositionalParser {
      * Parses a series of 0 or more and-operations
      * @return LogicNode representing the series of and-operations
      */
-    protected fun parseAnd(): LogicNode {
+    private fun parseAnd(): LogicNode {
         var stub = parseNot()
 
         while (nextTokenIs(TokenType.AND)) {
@@ -103,11 +101,11 @@ open class PropositionalParser {
      * @return LogicNode representing the negated formula
      */
     protected open fun parseNot(): LogicNode {
-        if (nextTokenIs(TokenType.NOT)) {
+        return if (nextTokenIs(TokenType.NOT)) {
             consume()
-            return Not(parseParen())
+            Not(parseParen())
         } else {
-            return parseParen()
+            parseParen()
         }
     }
 
@@ -116,13 +114,13 @@ open class PropositionalParser {
      * @return LogicNode representing the contents of the parenthesis
      */
     protected open fun parseParen(): LogicNode {
-        if (nextTokenIs(TokenType.LPAREN)) {
+        return if (nextTokenIs(TokenType.LPAREN)) {
             consume()
             val exp = parseEquiv()
             consume(TokenType.RPAREN)
-            return exp
+            exp
         } else {
-            return parseVar()
+            parseVar()
         }
     }
 
@@ -130,7 +128,7 @@ open class PropositionalParser {
      * Parses a variable in a formula
      * @return LogicNode representing the variable
      */
-    protected fun parseVar(): LogicNode {
+    private fun parseVar(): LogicNode {
         if (!nextTokenIsIdentifier())
             throw InvalidFormulaFormat("Expected identifier but got ${gotMsg()}")
 
@@ -168,7 +166,7 @@ open class PropositionalParser {
     /**
      * Consume the next token from the token list
      * If the token does not match the expected token, throw an exception
-     * @param expected expected token
+     * @param expectedType expected token type
      */
     protected fun consume(expectedType: TokenType) {
         if (!nextTokenIs(expectedType))

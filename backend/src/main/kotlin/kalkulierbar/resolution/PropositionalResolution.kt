@@ -8,13 +8,16 @@ import kalkulierbar.parsers.CnfStrategy
 import kalkulierbar.parsers.FlexibleClauseSetParser
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class PropositionalResolution : GenericResolution<String>,
-        JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
+    JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
     override val identifier = "prop-resolution"
 
-    private val serializer = Json(context = resolutionMoveModule)
+    override val serializer = Json { serializersModule = resolutionMoveModule; encodeDefaults = true }
+    override val stateSerializer = ResolutionState.serializer()
+    override val moveSerializer = ResolutionMove.serializer()
 
     override fun parseFormulaToState(formula: String, params: ResolutionParam?): ResolutionState {
         val parsed = if (params == null)
@@ -118,37 +121,6 @@ class PropositionalResolution : GenericResolution<String>,
 
     override fun checkCloseOnState(state: ResolutionState) = state.getCloseMessage()
 
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToState(json: String): ResolutionState {
-        try {
-            val parsed = serializer.parse(ResolutionState.serializer(), json)
-
-            // Ensure valid, unmodified state object
-            if (!parsed.verifySeal())
-                throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
-
-            return parsed
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON state: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
-    override fun stateToJson(state: ResolutionState): String {
-        state.computeSeal()
-        return serializer.stringify(ResolutionState.serializer(), state)
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    override fun jsonToMove(json: String): ResolutionMove {
-        try {
-            return serializer.parse(ResolutionMove.serializer(), json)
-        } catch (e: Exception) {
-            val msg = "Could not parse JSON move: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
-    }
-
     /*
      * Parses a JSON parameter representation into a ResolutionParam object
      * @param json JSON parameter representation
@@ -157,7 +129,7 @@ class PropositionalResolution : GenericResolution<String>,
     @Suppress("TooGenericExceptionCaught")
     override fun jsonToParam(json: String): ResolutionParam {
         try {
-            return serializer.parse(ResolutionParam.serializer(), json)
+            return serializer.decodeFromString(json)
         } catch (e: Exception) {
             val msg = "Could not parse JSON params: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))

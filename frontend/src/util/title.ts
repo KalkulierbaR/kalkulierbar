@@ -1,4 +1,4 @@
-import { useEffect } from "preact/hooks";
+import {useEffect} from "preact/hooks";
 
 /**
  * Hook to update the title
@@ -43,6 +43,15 @@ const getTitle = (url: string) => {
         case "/nc-tableaux":
         case "/nc-tableaux/view":
             return "NC Tableaux";
+        case "/signed-modal-tableaux":
+        case "/signed-modal-tableaux/view":
+            return "Modal Tableaux";
+        case "/prop-sequent":
+        case "/prop-sequent/view":
+            return "Propositional Sequent";
+        case "/fo-sequent":
+        case "/fo-sequent/view":
+            return "First Order Sequent";
         default:
             return "Not Found";
     }

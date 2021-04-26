@@ -1,15 +1,8 @@
 package kalkulierbar.parsers
 
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.ExistentialQuantifier
-import kalkulierbar.logic.FirstOrderTerm
+import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
 
 /**
  * Recursive descent parser for first-order logic
@@ -37,11 +30,11 @@ class FirstOrderParser : PropositionalParser() {
      * @param formula input formula
      * @return LogicNode representing the formula
      */
-    override fun parse(formula: String): LogicNode {
+    override fun parse(formula: String, positionInBaseString: Int): LogicNode {
         // Clear quantifier scope to avoid problems on instance re-use
         quantifierScope.clear()
         bindQuantifiedVariables = true
-        return super.parse(formula)
+        return super.parse(formula, positionInBaseString)
     }
 
     /**
@@ -78,13 +71,12 @@ class FirstOrderParser : PropositionalParser() {
      * Parses a unary not
      * @return LogicNode representing the negated formula
      */
-    protected override fun parseNot(): LogicNode {
-
-        if (nextTokenIs(TokenType.NOT)) {
+    override fun parseNot(): LogicNode {
+        return if (nextTokenIs(TokenType.NOT)) {
             consume()
-            return Not(parseNot())
+            Not(parseNot())
         } else {
-            return parseQuantifier()
+            parseQuantifier()
         }
     }
 
@@ -109,7 +101,7 @@ class FirstOrderParser : PropositionalParser() {
 
         // Open a new scope for this quantifier
         // All QuantifiedVariables encountered in the subexpression will be added there
-        quantifierScope.add(mutableListOf<QuantifiedVariable>())
+        quantifierScope.add(mutableListOf())
 
         val subexpression = parseNot()
 
@@ -121,17 +113,17 @@ class FirstOrderParser : PropositionalParser() {
 
         // If not yet bound variables remain in our scope, add them to the next higher scope
         // If no scope exists, the variables are unbound and the formula is incorrect
-        if (quantifierScope.size == 0 && boundBefore.size > 0)
+        if (quantifierScope.size == 0 && boundBefore.isNotEmpty())
             throw InvalidFormulaFormat("Unbound Variables found: ${boundBefore.joinToString(", ")}")
-        else if (boundBefore.size > 0)
+        else if (boundBefore.isNotEmpty())
             quantifierScope.last().addAll(boundBefore)
 
         val res: LogicNode
 
-        if (quantType == TokenType.UNIVERSALQUANT)
-            res = UniversalQuantifier(varName, subexpression, boundVariables)
+        res = if (quantType == TokenType.UNIVERSALQUANT)
+            UniversalQuantifier(varName, subexpression, boundVariables)
         else
-            res = ExistentialQuantifier(varName, subexpression, boundVariables)
+            ExistentialQuantifier(varName, subexpression, boundVariables)
 
         return res
     }
@@ -140,14 +132,14 @@ class FirstOrderParser : PropositionalParser() {
      * Parses a parenthesis in a formula
      * @return LogicNode representing the contents of the parenthesis
      */
-    protected override fun parseParen(): LogicNode {
-        if (nextTokenIs(TokenType.LPAREN)) {
+    override fun parseParen(): LogicNode {
+        return if (nextTokenIs(TokenType.LPAREN)) {
             consume()
             val exp = parseEquiv()
             consume(TokenType.RPAREN)
-            return exp
+            exp
         } else {
-            return parseAtomic()
+            parseAtomic()
         }
     }
 
@@ -186,17 +178,17 @@ class FirstOrderParser : PropositionalParser() {
 
         val res: FirstOrderTerm
 
-        if (nextTokenIs(TokenType.CAPID)) {
+        res = if (nextTokenIs(TokenType.CAPID)) {
             // Next token is quantified variable
-            res = parseQuantifiedVariable()
+            parseQuantifiedVariable()
         } else {
             // Next token is constant or function
             val identifier = tokens.first().spelling
             consume()
             if (nextTokenIs(TokenType.LPAREN))
-                res = parseFunction(identifier)
+                parseFunction(identifier)
             else
-                res = Constant(identifier)
+                Constant(identifier)
         }
 
         return res

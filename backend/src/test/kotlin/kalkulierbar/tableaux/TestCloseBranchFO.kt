@@ -9,16 +9,20 @@ import kotlin.test.assertFailsWith
 class TestCloseBranchFO {
 
     val instance = FirstOrderTableaux()
-    val param = FoTableauxParam(TableauxType.UNCONNECTED, true, false, true)
-    val paramNotReg = FoTableauxParam(TableauxType.UNCONNECTED, false, false, true)
+    val param = FoTableauxParam(TableauxType.UNCONNECTED, true, backtracking = false, manualVarAssign = true)
+    val paramNotReg = FoTableauxParam(
+        TableauxType.UNCONNECTED, regular = false,
+        backtracking = false,
+        manualVarAssign = true
+    )
     var states = mutableListOf<FoTableauxState>()
     var notRegStates = mutableListOf<FoTableauxState>()
 
-    val formula = listOf<String>(
-            "\\all X: R(X) & R(c) & !R(c)",
-            "\\all X: \\ex Y: R(X,Y) & \\ex Z: \\all W: !R(Z, W)", // R(X, sk1(X)), !R(sk2, W)
-            "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-            "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))"
+    val formula = listOf(
+        "\\all X: R(X) & R(c) & !R(c)",
+        "\\all X: \\ex Y: R(X,Y) & \\ex Z: \\all W: !R(Z, W)", // R(X, sk1(X)), !R(sk2, W)
+        "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
+        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))"
     )
 
     @BeforeTest
@@ -104,13 +108,13 @@ class TestCloseBranchFO {
         state = instance.applyMoveOnState(state, MoveCloseAssign(4, 2, map))
         state = instance.applyMoveOnState(state, MoveCloseAssign(5, 2, map))
 
-        assertEquals(state.nodes[2].isClosed, true)
-        assertEquals(state.nodes[4].isClosed, true)
-        assertEquals(state.nodes[4].closeRef, 2)
-        assertEquals(state.nodes[5].isClosed, true)
-        assertEquals(state.nodes[5].closeRef, 2)
-        assertEquals(state.nodes[6].isClosed, true)
-        assertEquals(state.nodes[6].closeRef, 2)
+        assertEquals(state.tree[2].isClosed, true)
+        assertEquals(state.tree[4].isClosed, true)
+        assertEquals(state.tree[4].closeRef, 2)
+        assertEquals(state.tree[5].isClosed, true)
+        assertEquals(state.tree[5].closeRef, 2)
+        assertEquals(state.tree[6].isClosed, true)
+        assertEquals(state.tree[6].closeRef, 2)
     }
 
     @Test

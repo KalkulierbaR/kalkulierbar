@@ -21,49 +21,43 @@ fun propagate(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID:
     // Checks all Restrictions according to propagate
     checkPropagateRestrictions(state, branchID, baseID, propID, atomID)
 
-    val branch = state.tree[branchID]
     val clauseSet = state.getClauseSet(branchID)
     val clauses = clauseSet.clauses
     val baseAtom = clauses[baseID].atoms[0]
     val propAtom = clauses[propID].atoms[atomID]
-    val diff: CsDiff
 
     // If the selected clause contains the atom which we know must be true,
     // the whole clause is trivially true and we can remove it from the set
-    if (baseAtom == propAtom)
-        diff = RemoveClause(propID)
-    // If the selected clause contains the negation of the atom known to be true,
-    // that atom cannot be true and can be removed from the clause
-    else if (baseAtom == propAtom.not())
-        diff = RemoveAtom(propID, atomID)
-    else
-        throw IllegalMove("Selected atom '$propAtom' is not compatible with '$baseAtom'")
+    val diff = when (baseAtom) {
+        propAtom -> RemoveClause(propID)
+        // If the selected clause contains the negation of the atom known to be true,
+        // that atom cannot be true and can be removed from the clause
+        propAtom.not() -> RemoveAtom(propID, atomID)
+        else -> throw IllegalMove("Selected atom '$propAtom' is not compatible with '$baseAtom'")
+    }
 
     val propNode = TreeNode(branchID, NodeType.PROP, "prop", diff)
-    val propNodeID = state.tree.size
-    state.tree.add(propNode)
-    branch.children.add(propNodeID)
+    state.addChildren(branchID, propNode)
+    val propNodeID = state.tree.size - 1
 
     // Add proper annotations if the node created by propagation is closed or represents a model
     val newClauses = diff.apply(clauseSet).clauses
 
     // A node is considered closed if the clause set associated with it contains an empty clause
     if (newClauses.any { it.isEmpty() }) {
-        state.tree.add(TreeNode(propNodeID, NodeType.CLOSED, "closed", Identity()))
-        propNode.children.add(state.tree.size - 1)
+        state.addChildren(propNodeID, TreeNode(propNodeID, NodeType.CLOSED, "closed", Identity()))
     }
     // A node is considered a model if it contains only single-atom clauses
     // that do not contradict each other and contain no duplicates
     else if (
-            newClauses.all { it.size == 1 } &&
-            newClauses.map { it.atoms[0].lit }.distinct().size == newClauses.size
+        newClauses.all { it.size == 1 } &&
+        newClauses.map { it.atoms[0].lit }.distinct().size == newClauses.size
     ) {
-        state.tree.add(TreeNode(propNodeID, NodeType.MODEL, "model", Identity()))
-        propNode.children.add(state.tree.size - 1)
+        state.addChildren(propNodeID, TreeNode(propNodeID, NodeType.MODEL, "model", Identity()))
     }
 }
 
-@Suppress("ThrowsCount")
+@Suppress("ThrowsCount", "ComplexMethod")
 private fun checkPropagateRestrictions(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID: Int) {
     // Check branch validity
     if (branchID < 0 || branchID >= state.tree.size)
@@ -110,7 +104,7 @@ fun split(state: DPLLState, branchID: Int, literal: String) {
     // Add a case distinction for $literal
     val trueClause = Clause(mutableListOf(Atom(lit, false)))
     val falseClause = Clause(mutableListOf(Atom(lit, true)))
-    val nodeTrue = TreeNode(branchID, NodeType.SPLIT, "$lit", AddClause(trueClause))
+    val nodeTrue = TreeNode(branchID, NodeType.SPLIT, lit, AddClause(trueClause))
     val nodeFalse = TreeNode(branchID, NodeType.SPLIT, "¬$lit", AddClause(falseClause))
 
     state.tree.add(nodeTrue)

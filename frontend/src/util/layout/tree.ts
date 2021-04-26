@@ -1,7 +1,7 @@
-import { LayoutItem } from "../../types/layout";
-import { LeftSiblingList, Link, Tree, TreeLayout } from "../../types/tree";
-import { DragTransform } from "../../types/ui";
-import { maxBy } from "../max-by";
+import {LayoutItem} from "../../types/layout";
+import {LeftSiblingList, Link, Tree, TreeLayout} from "../../types/tree";
+import {DragTransform} from "../../types/ui";
+import {maxBy} from "../max-by";
 
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
 // https://doi.org/10.1002/spe.2213
@@ -268,9 +268,8 @@ const separate = <T>(t: Tree<T>, i: number, ih: LeftSiblingList) => {
     let mscl = cl.mod;
 
     let ihIt: LeftSiblingList | undefined = ih;
-
     while (sr && cl) {
-        if (bottom(sr) > ihIt!.lowY) {
+        if (bottom(sr) > ihIt!.lowY && ih.next !== undefined) {
             ihIt = ih.next;
         }
         const dist = mssr + sr.prelim + sr.width - (mscl + cl.prelim);
