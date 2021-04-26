@@ -111,10 +111,9 @@ class TestPropagate {
             // Same branch twice
             state = dpll.applyMoveOnState(state, MovePropagate(0, 0, 2, 0))
         }
-        var state1 = dpll.parseFormulaToState("a;a,b", null)
         assertFailsWith<IllegalMove> { // Propagate Annotation
-            state1 = dpll.applyMoveOnState(state, MovePropagate(0, 0, 1, 0))
-            state1 = dpll.applyMoveOnState(state, MovePropagate(2, 0, 1, 0))
+            dpll.applyMoveOnState(state, MovePropagate(0, 0, 1, 0))
+            dpll.applyMoveOnState(state, MovePropagate(2, 0, 1, 0))
         }
         assertFailsWith<IllegalMove> {
             // Base clause with 2 objects
