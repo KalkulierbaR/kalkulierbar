@@ -10,7 +10,6 @@ import org.komputing.khash.keccak.KeccakParameter
 import org.komputing.khash.keccak.extensions.digestKeccak
 import java.io.File
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
@@ -41,8 +40,6 @@ object StateKeeper {
         }
     }
 
-    fun logHit(key: String) = state.stats.logHit(key)
-
     fun importAvailable(calculi: List<String>) {
         availableCalculi = calculi
     }
@@ -56,12 +53,10 @@ object StateKeeper {
         val calculiJson = state.disabledCalculi.joinToString(", ") { "\"$it\"" }
         val examplesJson = state.examples.joinToString(", ") { Json.encodeToString(it) }
 
-        state.stats.logHit("config")
+        Stats.logHit("config")
 
         return """{"disabled": [$calculiJson], "examples": [$examplesJson]}"""
     }
-
-    fun getStats() = Json.encodeToString(state.stats)
 
     /**
      * Allows a frontend implementation to check admin credentials
@@ -225,8 +220,7 @@ object StateKeeper {
 data class AppState(
     val key: String = "WildFlowers/UncomfortableMoons",
     val disabledCalculi: MutableList<String> = mutableListOf(),
-    val examples: MutableList<Example> = mutableListOf(),
-    val stats: Stats = Stats()
+    val examples: MutableList<Example> = mutableListOf()
 )
 
 @Serializable
@@ -237,25 +231,6 @@ data class Example(
     val formula: String,
     val params: String
 )
-
-@Serializable
-data class Stats(
-    var currentMonth: MutableMap<String, Int> = mutableMapOf(),
-    var lastMonth: Map<String, Int> = mapOf(),
-    val alltime: MutableMap<String, Int> = mutableMapOf(),
-    var monthIndex: Int = LocalDateTime.now().monthValue
-) {
-    fun logHit(key: String) {
-        val month = LocalDateTime.now().monthValue
-        if (month != monthIndex) {
-            monthIndex = month
-            lastMonth = currentMonth
-            currentMonth = mutableMapOf()
-        }
-        currentMonth[key] = (currentMonth[key] ?: 0) + 1
-        alltime[key] = (alltime[key] ?: 0) + 1
-    }
-}
 
 class AuthenticationException(msg: String) : KalkulierbarException(msg)
 

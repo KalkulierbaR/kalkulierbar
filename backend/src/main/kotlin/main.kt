@@ -17,6 +17,7 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.Scoreboard
 import statekeeper.StateKeeper
+import statekeeper.Stats
 
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
@@ -111,7 +112,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
     }
 
     app.get("/stats") { ctx ->
-        ctx.result(StateKeeper.getStats())
+        ctx.result(Stats.getStats())
     }
 
     app.post("/admin/checkCredentials") { ctx ->
@@ -161,6 +162,7 @@ fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
 
     // Parse endpoint takes formula parameter and passes it to calculus implementation
     app.post("/$name/parse") { ctx ->
+        Stats.logHit("proofStart-$name")
         val map = ctx.formParamMap()
         val formula = getParam(map, "formula")!!
         val params = getParam(map, "params", true)
