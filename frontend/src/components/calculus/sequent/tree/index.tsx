@@ -1,6 +1,6 @@
 import {h} from "preact";
 
-import {FormulaTreeLayoutNode, SequentNode} from "../../../../types/calculus/sequent";
+import {FormulaTreeLayoutNode, SequentNode,} from "../../../../types/calculus/sequent";
 import {findSubTree} from "../../../../util/layout/tree";
 import {sequentTreeLayout} from "../../../../util/sequent";
 import Zoomable from "../../../svg/zoomable";
