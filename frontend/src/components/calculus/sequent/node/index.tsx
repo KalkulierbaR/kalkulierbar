@@ -1,10 +1,13 @@
-import preact, {h, RefObject} from "preact";
-import {useEffect, useRef, useState} from "preact/hooks";
+import preact, { h, RefObject } from "preact";
+import { useEffect, useRef, useState } from "preact/hooks";
 
-import {FormulaTreeLayoutNode, SequentTreeLayoutNode,} from "../../../../types/calculus/sequent";
-import {LayoutItem} from "../../../../types/layout";
-import {classMap} from "../../../../util/class-map";
-import {nodeName} from "../../../../util/sequent";
+import {
+    FormulaTreeLayoutNode,
+    SequentTreeLayoutNode,
+} from "../../../../types/calculus/sequent";
+import { LayoutItem } from "../../../../types/layout";
+import { classMap } from "../../../../util/class-map";
+import { nodeName } from "../../../../util/sequent";
 import HorizontalList from "../../../svg/horizontal-list";
 import Rectangle from "../../../svg/rectangle";
 

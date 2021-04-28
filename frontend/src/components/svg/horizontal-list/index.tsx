@@ -4,8 +4,8 @@ import { useEffect, useState } from "preact/hooks";
 import {
     FormulaNode,
     FormulaTreeLayoutNode,
+    SequentTreeLayoutNode,
 } from "../../../types/calculus/sequent";
-import { SequentTreeLayoutNode } from "../../../types/calculus/sequent";
 import { LayoutItem } from "../../../types/layout";
 import { classMap } from "../../../util/class-map";
 import { parseFormula } from "../../../util/sequent";

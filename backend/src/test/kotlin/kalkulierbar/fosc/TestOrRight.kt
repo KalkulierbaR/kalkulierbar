@@ -3,9 +3,12 @@ package kalkulierbar.fosc
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.Relation
 import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequent.*
+import kalkulierbar.sequent.OrRight
 import kalkulierbar.sequent.fosc.FOSC
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class TestOrRight {
     val instance = FOSC()

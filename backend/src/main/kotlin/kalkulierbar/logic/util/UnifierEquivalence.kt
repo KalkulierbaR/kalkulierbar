@@ -1,11 +1,8 @@
 package kalkulierbar.logic.util
 
 import kalkulierbar.UnificationImpossible
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.FirstOrderTerm
+import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.FirstOrderTermVisitor
 
 class UnifierEquivalence {

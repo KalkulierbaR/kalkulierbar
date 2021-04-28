@@ -1,14 +1,14 @@
-import {Fragment, h} from "preact";
-import {useState} from "preact/hooks";
+import { Fragment, h } from "preact";
+import { useState } from "preact/hooks";
 
-import HintIcon, {Hint} from "../../components/hint";
+import HintIcon, { Hint } from "../../components/hint";
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Switch from "../../components/input/switch";
-import {ModalCalculusType} from "../../types/calculus";
-import {ModalTableauxParams} from "../../types/calculus/modal-tableaux";
-import {useAppState} from "../../util/app-state";
+import { ModalCalculusType } from "../../types/calculus";
+import { ModalTableauxParams } from "../../types/calculus/modal-tableaux";
+import { useAppState } from "../../util/app-state";
 
 interface Props {
     /**

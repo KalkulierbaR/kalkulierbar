@@ -6,7 +6,9 @@ import kalkulierbar.signedtableaux.AlphaMove
 import kalkulierbar.signedtableaux.NuMove
 import kalkulierbar.signedtableaux.PiMove
 import kalkulierbar.signedtableaux.SignedModalTableaux
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class TestNuMove {
 

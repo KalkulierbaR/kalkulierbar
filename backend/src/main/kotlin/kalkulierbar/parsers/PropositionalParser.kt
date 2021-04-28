@@ -2,13 +2,7 @@ package kalkulierbar.parsers
 
 import kalkulierbar.EmptyFormulaException
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.And
-import kalkulierbar.logic.Equiv
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.Var
+import kalkulierbar.logic.*
 
 /**
  * Recursive descent parser for propositional logic

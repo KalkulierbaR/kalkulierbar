@@ -4,13 +4,7 @@ import kalkulierbar.FormulaConversionException
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
-import kalkulierbar.logic.And
-import kalkulierbar.logic.Equiv
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.Var
+import kalkulierbar.logic.*
 
 /**
  * Recursively applies Tseytin transformation on a logic node

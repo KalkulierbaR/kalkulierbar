@@ -1,13 +1,8 @@
 package kalkulierbar.logic.transform
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.ExistentialQuantifier
+import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
 
 /**
  * Visitor-based variable renaming transformation

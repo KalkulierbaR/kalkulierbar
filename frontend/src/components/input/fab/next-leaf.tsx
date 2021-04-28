@@ -1,8 +1,11 @@
-import {h} from "preact";
+import { h } from "preact";
 
-import {ModalCalculusType, TableauxCalculusType,} from "../../../types/calculus";
-import {useAppState} from "../../../util/app-state";
-import {nextOpenLeaf} from "../../../util/tableaux";
+import {
+    ModalCalculusType,
+    TableauxCalculusType,
+} from "../../../types/calculus";
+import { useAppState } from "../../../util/app-state";
+import { nextOpenLeaf } from "../../../util/tableaux";
 import ExploreIcon from "../../icons/explore";
 
 import FAB from "./index";

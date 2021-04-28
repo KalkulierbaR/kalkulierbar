@@ -1,14 +1,6 @@
 package kalkulierbar.logic.transform
 
-import kalkulierbar.logic.And
-import kalkulierbar.logic.Equiv
-import kalkulierbar.logic.ExistentialQuantifier
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
-import kalkulierbar.logic.Var
+import kalkulierbar.logic.*
 
 /**
  * Implements a default visitor recursively visiting an entire formula.

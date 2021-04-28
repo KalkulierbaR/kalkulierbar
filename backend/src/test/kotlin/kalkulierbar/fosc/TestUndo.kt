@@ -3,7 +3,9 @@ package kalkulierbar.fosc
 import kalkulierbar.IllegalMove
 import kalkulierbar.sequent.*
 import kalkulierbar.sequent.fosc.FOSC
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class TestUndo {
     val instance = FOSC()

@@ -3,9 +3,12 @@ package kalkulierbar.psc
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.Var
 import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.sequent.*
+import kalkulierbar.sequent.NotRight
 import kalkulierbar.sequent.psc.PSC
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class TestNotRight {
     val instance = PSC()

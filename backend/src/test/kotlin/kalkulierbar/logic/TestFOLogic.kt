@@ -1,17 +1,8 @@
 package kalkulierbar.tests.logic
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.And
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.ExistentialQuantifier
+import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
-import kalkulierbar.logic.Var
 import kalkulierbar.logic.transform.NaiveCNF
 import kalkulierbar.logic.transform.ToBasicOps
 import kalkulierbar.logic.transform.TseytinCNF

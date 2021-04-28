@@ -53,6 +53,8 @@ object StateKeeper {
         val calculiJson = state.disabledCalculi.joinToString(", ") { "\"$it\"" }
         val examplesJson = state.examples.joinToString(", ") { Json.encodeToString(it) }
 
+        Stats.logHit("config")
+
         return """{"disabled": [$calculiJson], "examples": [$examplesJson]}"""
     }
 

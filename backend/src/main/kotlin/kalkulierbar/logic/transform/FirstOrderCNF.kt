@@ -5,12 +5,7 @@ import kalkulierbar.FormulaConversionException
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
-import kalkulierbar.logic.And
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
+import kalkulierbar.logic.*
 
 /**
  * Visitor-based implementation of a first order CNF transformation

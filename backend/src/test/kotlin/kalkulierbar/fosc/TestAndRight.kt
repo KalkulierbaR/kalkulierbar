@@ -2,7 +2,7 @@ package kalkulierbar.fosc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequent.*
+import kalkulierbar.sequent.AndRight
 import kalkulierbar.sequent.fosc.FOSC
 import kotlin.test.*
 

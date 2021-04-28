@@ -5,8 +5,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 
 object Scoreboard {
     private var data: MutableMap<String, MutableMap<String, MutableList<Map<String, String>>>>

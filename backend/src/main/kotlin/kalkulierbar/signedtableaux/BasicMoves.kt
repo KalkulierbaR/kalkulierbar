@@ -2,12 +2,7 @@
 package kalkulierbar.signedtableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.And
-import kalkulierbar.logic.Box
-import kalkulierbar.logic.Diamond
-import kalkulierbar.logic.Impl
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
+import kalkulierbar.logic.*
 
 /**
  * If the given node is negated,

@@ -1,11 +1,8 @@
 package kalkulierbar.logic.transform
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.FirstOrderTerm
+import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Quantifier
 
 class VariableInstantiator(private val replacementMap: Map<String, FirstOrderTerm>) : FirstOrderTermVisitor<FirstOrderTerm>() {
 

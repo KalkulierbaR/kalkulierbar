@@ -1,12 +1,7 @@
 package kalkulierbar.nonclausaltableaux
 
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.ExistentialQuantifier
-import kalkulierbar.logic.FirstOrderTerm
+import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.QuantifiedVariable
-import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.DoNothingVisitor
 import kalkulierbar.logic.transform.FirstOrderTermVisitor
 import kalkulierbar.logic.transform.FreeVariableCollector

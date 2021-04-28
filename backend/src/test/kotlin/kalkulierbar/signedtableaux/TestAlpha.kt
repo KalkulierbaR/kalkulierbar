@@ -5,7 +5,9 @@ import kalkulierbar.parsers.ModalLogicParser
 import kalkulierbar.signedtableaux.AlphaMove
 import kalkulierbar.signedtableaux.Negation
 import kalkulierbar.signedtableaux.SignedModalTableaux
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class TestAlpha {
     val instance = SignedModalTableaux()

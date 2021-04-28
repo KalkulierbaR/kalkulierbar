@@ -2,14 +2,7 @@ package kalkulierbar.nonclausaltableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.UnificationImpossible
-import kalkulierbar.logic.And
-import kalkulierbar.logic.ExistentialQuantifier
-import kalkulierbar.logic.FirstOrderTerm
-import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.Not
-import kalkulierbar.logic.Or
-import kalkulierbar.logic.Relation
-import kalkulierbar.logic.UniversalQuantifier
+import kalkulierbar.logic.*
 import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.logic.transform.SelectiveSuffixAppender

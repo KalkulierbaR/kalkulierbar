@@ -1,13 +1,9 @@
 package kalkulierbar.test.signedtableaux
 
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.AlphaMove
-import kalkulierbar.signedtableaux.CloseMove
-import kalkulierbar.signedtableaux.Negation
-import kalkulierbar.signedtableaux.NuMove
-import kalkulierbar.signedtableaux.PiMove
-import kalkulierbar.signedtableaux.SignedModalTableaux
-import kotlin.test.*
+import kalkulierbar.signedtableaux.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class TestClose {
     val instance = SignedModalTableaux()

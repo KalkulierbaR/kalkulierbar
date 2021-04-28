@@ -2,9 +2,12 @@ package kalkulierbar.fosc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequent.*
+import kalkulierbar.sequent.AllLeft
+import kalkulierbar.sequent.ExRight
 import kalkulierbar.sequent.fosc.FOSC
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class TestExRight {
     val instance = FOSC()

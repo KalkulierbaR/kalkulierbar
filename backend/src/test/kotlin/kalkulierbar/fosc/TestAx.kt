@@ -2,9 +2,14 @@ package kalkulierbar.fosc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequent.*
+import kalkulierbar.sequent.Ax
+import kalkulierbar.sequent.NotRight
+import kalkulierbar.sequent.OrRight
 import kalkulierbar.sequent.fosc.FOSC
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class TestAx {
 

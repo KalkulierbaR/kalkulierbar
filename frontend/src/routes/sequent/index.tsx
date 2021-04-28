@@ -1,12 +1,12 @@
-import {Fragment, h} from "preact";
-import {useState} from "preact/hooks";
+import { Fragment, h } from "preact";
+import { useState } from "preact/hooks";
 
 import ExampleList from "../../components/input/example-list";
 import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import Switch from "../../components/input/switch";
-import {Calculus, SequentCalculusType} from "../../types/calculus";
-import {SequentParams} from "../../types/calculus/sequent";
+import { Calculus, SequentCalculusType } from "../../types/calculus";
+import { SequentParams } from "../../types/calculus/sequent";
 
 interface Props {
     /**

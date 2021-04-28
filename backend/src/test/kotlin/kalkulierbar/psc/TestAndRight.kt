@@ -2,10 +2,9 @@ package kalkulierbar.psc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.sequent.*
+import kalkulierbar.sequent.AndRight
 import kalkulierbar.sequent.psc.PSC
 import kotlin.test.*
-import kotlin.test.assertEquals
 
 class TestAndRight {
 

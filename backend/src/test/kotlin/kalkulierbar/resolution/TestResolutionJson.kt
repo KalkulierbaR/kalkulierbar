@@ -2,15 +2,7 @@ package kalkulierbar.tests.resolution
 
 import kalkulierbar.JsonParseException
 import kalkulierbar.parsers.CnfStrategy
-import kalkulierbar.resolution.FirstOrderResolution
-import kalkulierbar.resolution.FoResolutionParam
-import kalkulierbar.resolution.MoveHide
-import kalkulierbar.resolution.MoveResolve
-import kalkulierbar.resolution.MoveResolveUnify
-import kalkulierbar.resolution.MoveShow
-import kalkulierbar.resolution.PropositionalResolution
-import kalkulierbar.resolution.ResolutionParam
-import kalkulierbar.resolution.VisualHelp
+import kalkulierbar.resolution.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

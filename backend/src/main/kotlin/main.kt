@@ -17,6 +17,7 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import statekeeper.Scoreboard
 import statekeeper.StateKeeper
+import statekeeper.Stats
 
 // List of all active calculi
 val endpoints: Set<Calculus> = setOf<Calculus>(
@@ -37,8 +38,8 @@ fun main(args: Array<String>) {
         throw KalkulierbarException("Set of active calculus implementations contains duplicate identifiers")
 
     // Verify that no calculus is overriding /admin and /config endpoints
-    if (endpoints.any { it.identifier == "admin" || it.identifier == "config" })
-        throw KalkulierbarException("Set of active calculi contains forbidden identifiers \"admin\" or \"config\"")
+    if (endpoints.any { it.identifier == "admin" || it.identifier == "config" || it.identifier == "stats" })
+        throw KalkulierbarException("Set of active calculi contains forbidden identifiers \"admin\", \"config\" or \"stats\"")
 
     // Pass list of available calculi to StateKeeper
     StateKeeper.importAvailable(endpoints.map { it.identifier })
@@ -110,6 +111,10 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
         ctx.result(StateKeeper.getConfig())
     }
 
+    app.get("/stats") { ctx ->
+        ctx.result(Stats.getStats())
+    }
+
     app.post("/admin/checkCredentials") { ctx ->
         val mac = ctx.formParam("mac")
             ?: throw ApiMisuseException("POST parameter 'mac' with authentication code must be present")
@@ -157,6 +162,7 @@ fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
 
     // Parse endpoint takes formula parameter and passes it to calculus implementation
     app.post("/$name/parse") { ctx ->
+        Stats.logHit("proofStart-$name")
         val map = ctx.formParamMap()
         val formula = getParam(map, "formula")!!
         val params = getParam(map, "params", true)

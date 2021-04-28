@@ -2,12 +2,10 @@ package kalkulierbar.test.signedtableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.AlphaMove
-import kalkulierbar.signedtableaux.BetaMove
-import kalkulierbar.signedtableaux.Prune
-import kalkulierbar.signedtableaux.SignedModalTableaux
-import kalkulierbar.signedtableaux.SignedModalTableauxParam
-import kotlin.test.*
+import kalkulierbar.signedtableaux.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class TestPruneMove {
 

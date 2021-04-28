@@ -2,9 +2,14 @@ package kalkulierbar.psc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.PropositionalParser
-import kalkulierbar.sequent.*
+import kalkulierbar.sequent.Ax
+import kalkulierbar.sequent.NotRight
+import kalkulierbar.sequent.OrRight
 import kalkulierbar.sequent.psc.PSC
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class TestAx {
 
