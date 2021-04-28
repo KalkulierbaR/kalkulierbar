@@ -1,9 +1,12 @@
-import {h} from "preact";
+import { h } from "preact";
 
-import {NCTableauxNode, NCTabTreeNode,} from "../../../../types/calculus/nc-tableaux";
-import {DragTransform} from "../../../../types/ui";
-import {findSubTree, getClosedLeaves} from "../../../../util/layout/tree";
-import {ncTabTreeLayout} from "../../../../util/nc-tableaux";
+import {
+    NCTableauxNode,
+    NCTabTreeNode,
+} from "../../../../types/calculus/nc-tableaux";
+import { DragTransform } from "../../../../types/ui";
+import { findSubTree, getClosedLeaves } from "../../../../util/layout/tree";
+import { ncTabTreeLayout } from "../../../../util/nc-tableaux";
 import ClosingEdge from "../../../svg/closing-edge";
 import Zoomable from "../../../svg/zoomable";
 

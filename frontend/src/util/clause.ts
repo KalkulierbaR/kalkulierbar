@@ -8,10 +8,10 @@ import {
     FOAtom,
     FOLiteral,
 } from "../types/calculus/clause";
-import {FORelation} from "../types/calculus/tableaux";
+import { FORelation } from "../types/calculus/tableaux";
 
-import {stringArrayToStringMap} from "./array-to-map";
-import {maxBy} from "./max-by";
+import { stringArrayToStringMap } from "./array-to-map";
+import { maxBy } from "./max-by";
 
 /**
  * Parse a First Order argument to a string

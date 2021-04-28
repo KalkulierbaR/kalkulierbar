@@ -1,4 +1,4 @@
-import {ComponentChild, h} from "preact";
+import { ComponentChild, h } from "preact";
 
 import * as style from "./style.scss";
 

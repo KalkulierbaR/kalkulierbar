@@ -1,9 +1,14 @@
-import {Fragment, h} from "preact";
-import {useState} from "preact/hooks";
+import { Fragment, h } from "preact";
+import { useState } from "preact/hooks";
 
-import {Calculus, CalculusType, ResolutionCalculus, TableauxCalculus,} from "../../../types/calculus";
-import {useAppState} from "../../../util/app-state";
-import {getHighlightCheck} from "../../../util/tutorial-mode";
+import {
+    Calculus,
+    CalculusType,
+    ResolutionCalculus,
+    TableauxCalculus,
+} from "../../../types/calculus";
+import { useAppState } from "../../../util/app-state";
+import { getHighlightCheck } from "../../../util/tutorial-mode";
 import Dialog from "../../dialog";
 import InfoIcon from "../../icons/info";
 import FAB from "../../input/fab";

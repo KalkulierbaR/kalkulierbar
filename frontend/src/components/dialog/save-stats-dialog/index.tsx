@@ -1,9 +1,9 @@
-import {h} from "preact";
-import {useCallback, useState} from "preact/hooks";
+import { h } from "preact";
+import { useCallback, useState } from "preact/hooks";
 
 import Dialog from "..";
-import {Statistics} from "../../../types/app/statistics";
-import {useAppState} from "../../../util/app-state";
+import { Statistics } from "../../../types/app/statistics";
+import { useAppState } from "../../../util/app-state";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
 

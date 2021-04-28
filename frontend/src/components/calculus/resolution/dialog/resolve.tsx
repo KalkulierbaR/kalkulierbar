@@ -1,10 +1,14 @@
-import {Fragment, h} from "preact";
-import {useState} from "preact/hooks";
+import { Fragment, h } from "preact";
+import { useState } from "preact/hooks";
 
 import Dialog from "../../../../components/dialog";
 import OptionList from "../../../../components/input/option-list";
-import {ResolutionCalculusType} from "../../../../types/calculus";
-import {CandidateClause, Clause, SelectedClauses,} from "../../../../types/calculus/clause";
+import { ResolutionCalculusType } from "../../../../types/calculus";
+import {
+    CandidateClause,
+    Clause,
+    SelectedClauses,
+} from "../../../../types/calculus/clause";
 import {
     FOResolutionState,
     HyperResolutionMove,
@@ -12,9 +16,13 @@ import {
     instanceOfPropResState,
     PropResolutionState,
 } from "../../../../types/calculus/resolution";
-import {VarAssign} from "../../../../types/calculus/tableaux";
-import {useAppState} from "../../../../util/app-state";
-import {atomToString, checkAtomsForVars, getCandidateClause,} from "../../../../util/clause";
+import { VarAssign } from "../../../../types/calculus/tableaux";
+import { useAppState } from "../../../../util/app-state";
+import {
+    atomToString,
+    checkAtomsForVars,
+    getCandidateClause,
+} from "../../../../util/clause";
 import {
     addHyperSidePremiss,
     findOptimalMainLit,

@@ -1,6 +1,6 @@
-import {ComponentChild, h} from "preact";
+import { ComponentChild, h } from "preact";
 
-import {classMap} from "../../../util/class-map";
+import { classMap } from "../../../util/class-map";
 
 import * as style from "./style.scss";
 

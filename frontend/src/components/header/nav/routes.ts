@@ -1,4 +1,4 @@
-import {Calculus} from "../../../types/calculus";
+import { Calculus } from "../../../types/calculus";
 
 export interface SingleLink {
     /**

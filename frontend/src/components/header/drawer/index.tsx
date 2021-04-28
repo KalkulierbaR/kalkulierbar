@@ -1,6 +1,6 @@
-import {h} from "preact";
+import { h } from "preact";
 
-import {classMap} from "../../../util/class-map";
+import { classMap } from "../../../util/class-map";
 import Nav from "../nav";
 import Settings from "../settings";
 

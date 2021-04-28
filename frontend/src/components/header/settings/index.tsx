@@ -1,10 +1,10 @@
-import {h} from "preact";
-import {useCallback, useState} from "preact/hooks";
+import { h } from "preact";
+import { useCallback, useState } from "preact/hooks";
 
-import {AppStateActionType} from "../../../types/app/action";
-import {Theme} from "../../../types/app/theme";
-import {checkCredentials} from "../../../util/admin";
-import {useAppState} from "../../../util/app-state";
+import { AppStateActionType } from "../../../types/app/action";
+import { Theme } from "../../../types/app/theme";
+import { checkCredentials } from "../../../util/admin";
+import { useAppState } from "../../../util/app-state";
 import LogInIcon from "../../icons/log-in";
 import LogOutIcon from "../../icons/log-out";
 import SaveIcon from "../../icons/save";

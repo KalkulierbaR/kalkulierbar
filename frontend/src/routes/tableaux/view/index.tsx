@@ -1,6 +1,6 @@
-import {Fragment, h} from "preact";
-import {route} from "preact-router";
-import {useCallback, useEffect, useState} from "preact/hooks";
+import { Fragment, h } from "preact";
+import { route } from "preact-router";
+import { useCallback, useEffect, useState } from "preact/hooks";
 
 import TableauxFAB from "../../../components/calculus/tableaux/fab";
 import TableauxTreeView from "../../../components/calculus/tableaux/tree";
@@ -8,7 +8,7 @@ import Dialog from "../../../components/dialog";
 import VarAssignDialog from "../../../components/dialog/var-assign";
 import OptionList from "../../../components/input/option-list";
 import TutorialDialog from "../../../components/tutorial/dialog";
-import {TableauxCalculusType} from "../../../types/calculus";
+import { TableauxCalculusType } from "../../../types/calculus";
 import {
     instanceOfFOTabState,
     instanceOfPropTabState,
@@ -16,10 +16,20 @@ import {
     TableauxTreeLayoutNode,
     VarAssign,
 } from "../../../types/calculus/tableaux";
-import {DragTransform} from "../../../types/ui";
-import {useAppState} from "../../../util/app-state";
-import {checkRelationsForVar, clauseSetToStringMap,} from "../../../util/clause";
-import {nodeName, sendBacktrack, sendClose, sendExtend, sendLemma, updateDragTransform,} from "../../../util/tableaux";
+import { DragTransform } from "../../../types/ui";
+import { useAppState } from "../../../util/app-state";
+import {
+    checkRelationsForVar,
+    clauseSetToStringMap,
+} from "../../../util/clause";
+import {
+    nodeName,
+    sendBacktrack,
+    sendClose,
+    sendExtend,
+    sendLemma,
+    updateDragTransform,
+} from "../../../util/tableaux";
 
 import * as style from "./style.scss";
 

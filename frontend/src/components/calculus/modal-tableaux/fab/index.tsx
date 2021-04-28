@@ -1,10 +1,13 @@
-import {Fragment, h} from "preact";
+import { Fragment, h } from "preact";
 
-import {Statistics} from "../../../../types/app/statistics";
-import {ModalCalculusType} from "../../../../types/calculus";
-import {ExpandMove, ModalTableauxState,} from "../../../../types/calculus/modal-tableaux";
-import {useAppState} from "../../../../util/app-state";
-import {sendNodeExtend} from "../../../../util/modal-tableaux";
+import { Statistics } from "../../../../types/app/statistics";
+import { ModalCalculusType } from "../../../../types/calculus";
+import {
+    ExpandMove,
+    ModalTableauxState,
+} from "../../../../types/calculus/modal-tableaux";
+import { useAppState } from "../../../../util/app-state";
+import { sendNodeExtend } from "../../../../util/modal-tableaux";
 import DeleteIcon from "../../../icons/delete";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";

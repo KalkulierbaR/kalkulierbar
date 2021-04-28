@@ -1,9 +1,9 @@
-import {h} from "preact";
-import {useState} from "preact/hooks";
+import { h } from "preact";
+import { useState } from "preact/hooks";
 
-import {TutorialMode} from "../../../types/app/tutorial";
-import {useAppState} from "../../../util/app-state";
-import {disableTutorial, getHighlightFAB} from "../../../util/tutorial-mode";
+import { TutorialMode } from "../../../types/app/tutorial";
+import { useAppState } from "../../../util/app-state";
+import { disableTutorial, getHighlightFAB } from "../../../util/tutorial-mode";
 import CloseIcon from "../../icons/close";
 import MoreIcon from "../../icons/more";
 import TutorialHint from "../../tutorial/hint";

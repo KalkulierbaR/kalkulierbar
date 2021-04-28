@@ -1,7 +1,10 @@
-import {Fragment, h} from "preact";
+import { Fragment, h } from "preact";
 
-import {FormulaTreeLayoutNode, SequentTreeLayoutNode,} from "../../../../types/calculus/sequent";
-import {Tree} from "../../../../types/tree";
+import {
+    FormulaTreeLayoutNode,
+    SequentTreeLayoutNode,
+} from "../../../../types/calculus/sequent";
+import { Tree } from "../../../../types/tree";
 import SequentTreeNode from "../node";
 
 interface Props {

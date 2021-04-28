@@ -1,8 +1,8 @@
-import {h} from "preact";
+import { h } from "preact";
 
-import {SequentNode} from "../../../types/calculus/sequent";
-import {classMap} from "../../../util/class-map";
-import {parseFormula, parseStringToListIndex} from "../../../util/sequent";
+import { SequentNode } from "../../../types/calculus/sequent";
+import { classMap } from "../../../util/class-map";
+import { parseFormula, parseStringToListIndex } from "../../../util/sequent";
 
 import * as style from "./style.scss";
 

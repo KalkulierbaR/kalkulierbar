@@ -1,10 +1,10 @@
-import {h} from "preact";
-import {useRef} from "preact/hooks";
+import { h } from "preact";
+import { useRef } from "preact/hooks";
 
-import {NCTabTreeNode} from "../../../../types/calculus/nc-tableaux";
-import {Tree} from "../../../../types/tree";
-import {DragTransform} from "../../../../types/ui";
-import {classMap} from "../../../../util/class-map";
+import { NCTabTreeNode } from "../../../../types/calculus/nc-tableaux";
+import { Tree } from "../../../../types/tree";
+import { DragTransform } from "../../../../types/ui";
+import { classMap } from "../../../../util/class-map";
 import Draggable from "../../../svg/draggable";
 import Rectangle from "../../../svg/rectangle";
 

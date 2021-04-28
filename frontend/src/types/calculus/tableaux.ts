@@ -1,7 +1,7 @@
-import {KStringMap} from "../kotlin";
+import { KStringMap } from "../kotlin";
 
-import {Calculus, TableauxCalculusType} from ".";
-import {ClauseSet, FOArgument, FOClauseSet} from "./clause";
+import { Calculus, TableauxCalculusType } from ".";
+import { ClauseSet, FOArgument, FOClauseSet } from "./clause";
 
 export interface TableauxNode {
     parent: number | null;

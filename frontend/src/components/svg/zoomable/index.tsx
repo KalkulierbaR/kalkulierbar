@@ -1,13 +1,13 @@
-import {Component, ComponentChildren, createRef, h} from "preact";
+import { Component, ComponentChildren, createRef, h } from "preact";
 
-import {Extent, GoToEvent, Point, Transform} from "../../../types/ui";
-import {disableDrag, enableDrag} from "../../../util/zoom/drag";
-import {extent} from "../../../util/zoom/extent";
-import {Gesture} from "../../../util/zoom/gesture";
-import {mousePos} from "../../../util/zoom/mouse";
-import {dist} from "../../../util/zoom/point";
-import {touchPos} from "../../../util/zoom/touch";
-import {constrain, IDENTITY, invert} from "../../../util/zoom/transform";
+import { Extent, GoToEvent, Point, Transform } from "../../../types/ui";
+import { disableDrag, enableDrag } from "../../../util/zoom/drag";
+import { extent } from "../../../util/zoom/extent";
+import { Gesture } from "../../../util/zoom/gesture";
+import { mousePos } from "../../../util/zoom/mouse";
+import { dist } from "../../../util/zoom/point";
+import { touchPos } from "../../../util/zoom/touch";
+import { constrain, IDENTITY, invert } from "../../../util/zoom/transform";
 
 // Zoom algorithms taken from d3-zoom
 

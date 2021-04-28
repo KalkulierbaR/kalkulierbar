@@ -1,8 +1,12 @@
-import {FormulaNode, SequentNode, SequentTreeLayoutNode,} from "../types/calculus/sequent";
-import {Tree, TreeLayout} from "../types/tree";
+import {
+    FormulaNode,
+    SequentNode,
+    SequentTreeLayoutNode,
+} from "../types/calculus/sequent";
+import { Tree, TreeLayout } from "../types/tree";
 
-import {tree, treeLayout} from "./layout/tree";
-import {estimateSVGTextWidth} from "./text-width";
+import { tree, treeLayout } from "./layout/tree";
+import { estimateSVGTextWidth } from "./text-width";
 
 /**
  * parse a whole node with all its formulas

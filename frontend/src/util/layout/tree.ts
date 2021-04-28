@@ -1,7 +1,7 @@
-import {LayoutItem} from "../../types/layout";
-import {LeftSiblingList, Link, Tree, TreeLayout} from "../../types/tree";
-import {DragTransform} from "../../types/ui";
-import {maxBy} from "../max-by";
+import { LayoutItem } from "../../types/layout";
+import { LeftSiblingList, Link, Tree, TreeLayout } from "../../types/tree";
+import { DragTransform } from "../../types/ui";
+import { maxBy } from "../max-by";
 
 // Code taken and adjusted from the paper "Drawing Non-layered Tidy Trees in Linear Time".
 // https://doi.org/10.1002/spe.2213

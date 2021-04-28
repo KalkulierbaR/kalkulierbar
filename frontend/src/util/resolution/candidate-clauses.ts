@@ -1,4 +1,4 @@
-import {ResolutionCalculusType} from "../../types/calculus";
+import { ResolutionCalculusType } from "../../types/calculus";
 import {
     CandidateClause,
     Clause,
@@ -11,7 +11,7 @@ import {
     instanceOfPropClause,
     instanceOfPropClauseSet,
 } from "../../types/calculus/clause";
-import {HyperResolutionMove} from "../../types/calculus/resolution";
+import { HyperResolutionMove } from "../../types/calculus/resolution";
 
 /**
  * Groups clauses wo are candidates near the selected clause. Keeps order intact where possible

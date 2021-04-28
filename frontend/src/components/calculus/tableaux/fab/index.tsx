@@ -1,8 +1,11 @@
-import {Fragment, h} from "preact";
+import { Fragment, h } from "preact";
 
-import {TableauxCalculusType} from "../../../../types/calculus";
-import {FOTableauxState, PropTableauxState,} from "../../../../types/calculus/tableaux";
-import {useAppState} from "../../../../util/app-state";
+import { TableauxCalculusType } from "../../../../types/calculus";
+import {
+    FOTableauxState,
+    PropTableauxState,
+} from "../../../../types/calculus/tableaux";
+import { useAppState } from "../../../../util/app-state";
 import AddIcon from "../../../icons/add";
 import LemmaIcon from "../../../icons/lemma";
 import ControlFAB from "../../../input/control-fab";

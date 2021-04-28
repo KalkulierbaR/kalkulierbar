@@ -1,15 +1,18 @@
-import {createContext, h} from "preact";
-import {Reducer, useContext, useEffect, useReducer} from "preact/hooks";
+import { createContext, h } from "preact";
+import { Reducer, useContext, useEffect, useReducer } from "preact/hooks";
 
-import {AppStateAction, AppStateActionType} from "../types/app/action";
-import {AppState, DerivedAppState} from "../types/app/app-state";
-import {Config} from "../types/app/config";
-import {NotificationHandler, NotificationType,} from "../types/app/notification";
-import {Theme} from "../types/app/theme";
-import {TutorialMode} from "../types/app/tutorial";
-import {Calculus, CalculusType} from "../types/calculus";
+import { AppStateAction, AppStateActionType } from "../types/app/action";
+import { AppState, DerivedAppState } from "../types/app/app-state";
+import { Config } from "../types/app/config";
+import {
+    NotificationHandler,
+    NotificationType,
+} from "../types/app/notification";
+import { Theme } from "../types/app/theme";
+import { TutorialMode } from "../types/app/tutorial";
+import { Calculus, CalculusType } from "../types/calculus";
 
-import {localStorageGet, localStorageSet} from "./local-storage";
+import { localStorageGet, localStorageSet } from "./local-storage";
 
 const isDeployed = location.port !== "8080";
 

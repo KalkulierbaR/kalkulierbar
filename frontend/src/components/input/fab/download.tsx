@@ -1,7 +1,7 @@
-import {h} from "preact";
-import {useMemo} from "preact/hooks";
+import { h } from "preact";
+import { useMemo } from "preact/hooks";
 
-import {CalculusType} from "../../../types/calculus";
+import { CalculusType } from "../../../types/calculus";
 import DownloadIcon from "../../icons/download";
 import * as style from "../btn/style.scss";
 

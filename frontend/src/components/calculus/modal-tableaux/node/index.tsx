@@ -1,11 +1,14 @@
-import {h} from "preact";
-import {useRef} from "preact/hooks";
+import { h } from "preact";
+import { useRef } from "preact/hooks";
 
-import {ModalTableauxNode, ModalTableauxTreeLayoutNode,} from "../../../../types/calculus/modal-tableaux";
-import {Tree} from "../../../../types/tree";
-import {DragTransform} from "../../../../types/ui";
-import {classMap} from "../../../../util/class-map";
-import {isChildOf, nodeName} from "../../../../util/modal-tableaux";
+import {
+    ModalTableauxNode,
+    ModalTableauxTreeLayoutNode,
+} from "../../../../types/calculus/modal-tableaux";
+import { Tree } from "../../../../types/tree";
+import { DragTransform } from "../../../../types/ui";
+import { classMap } from "../../../../util/class-map";
+import { isChildOf, nodeName } from "../../../../util/modal-tableaux";
 import Draggable from "../../../svg/draggable";
 import Rectangle from "../../../svg/rectangle";
 

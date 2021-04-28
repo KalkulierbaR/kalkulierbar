@@ -11,17 +11,17 @@ import SequentCalculus from "async!../routes/sequent";
 import SequentView from "async!../routes/sequent/view";
 import Tableaux from "async!../routes/tableaux";
 import TableauxView from "async!../routes/tableaux/view";
-import {h} from "preact";
-import {getCurrentUrl, Router, RouterOnChangeArgs} from "preact-router";
-import {useEffect, useState} from "preact/hooks";
+import { h } from "preact";
+import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
+import { useEffect, useState } from "preact/hooks";
 
-import {AppStateActionType} from "../types/app/action";
-import {NotificationHandler} from "../types/app/notification";
-import {Calculus} from "../types/calculus";
-import {checkCredentials, getConfig} from "../util/admin";
-import {AppStateProvider, useAppState} from "../util/app-state";
+import { AppStateActionType } from "../types/app/action";
+import { NotificationHandler } from "../types/app/notification";
+import { Calculus } from "../types/calculus";
+import { checkCredentials, getConfig } from "../util/admin";
+import { AppStateProvider, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
-import {useTitle} from "../util/title";
+import { useTitle } from "../util/title";
 
 import Page404 from "./404";
 import Header from "./header";

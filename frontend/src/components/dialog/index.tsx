@@ -1,6 +1,6 @@
-import {h} from "preact";
+import { h } from "preact";
 
-import {enableDrag} from "../../util/zoom/drag";
+import { enableDrag } from "../../util/zoom/drag";
 import CloseIcon from "../icons/close";
 import Btn from "../input/btn";
 

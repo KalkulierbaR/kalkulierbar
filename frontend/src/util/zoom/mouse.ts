@@ -1,6 +1,6 @@
-import {Point} from "../../types/ui";
+import { Point } from "../../types/ui";
 
-import {getPoint} from "./point";
+import { getPoint } from "./point";
 
 /**
  * Gets the position of the mouse in the SVG

@@ -1,5 +1,5 @@
-import {Atom, Clause, FOClause} from "../../types/calculus/clause";
-import {HyperResolutionMove} from "../../types/calculus/resolution";
+import { Atom, Clause, FOClause } from "../../types/calculus/clause";
+import { HyperResolutionMove } from "../../types/calculus/resolution";
 
 /**
  * Gets a list of possible literal combination for prop. hyper-res

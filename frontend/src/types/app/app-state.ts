@@ -1,16 +1,16 @@
-import {CalculusType, Formulas} from "../calculus";
-import {DPLLState} from "../calculus/dpll";
-import {ModalTableauxState} from "../calculus/modal-tableaux";
-import {NCTableauxState} from "../calculus/nc-tableaux";
-import {FOResolutionState, PropResolutionState} from "../calculus/resolution";
-import {FOSCState, PSCState} from "../calculus/sequent";
-import {FOTableauxState, PropTableauxState} from "../calculus/tableaux";
+import { CalculusType, Formulas } from "../calculus";
+import { DPLLState } from "../calculus/dpll";
+import { ModalTableauxState } from "../calculus/modal-tableaux";
+import { NCTableauxState } from "../calculus/nc-tableaux";
+import { FOResolutionState, PropResolutionState } from "../calculus/resolution";
+import { FOSCState, PSCState } from "../calculus/sequent";
+import { FOTableauxState, PropTableauxState } from "../calculus/tableaux";
 
-import {AppStateAction} from "./action";
-import {Config} from "./config";
-import {Notification, NotificationHandler} from "./notification";
-import {Theme} from "./theme";
-import {TutorialMode} from "./tutorial";
+import { AppStateAction } from "./action";
+import { Config } from "./config";
+import { Notification, NotificationHandler } from "./notification";
+import { Theme } from "./theme";
+import { TutorialMode } from "./tutorial";
 
 /**
  * The state of the application

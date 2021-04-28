@@ -1,12 +1,12 @@
-import {createRef, h} from "preact";
-import {route} from "preact-router";
-import {useEffect, useState} from "preact/hooks";
+import { createRef, h } from "preact";
+import { route } from "preact-router";
+import { useEffect, useState } from "preact/hooks";
 
-import {AppStateActionType} from "../../../types/app/action";
-import {CalculusType, FOCalculus, Params} from "../../../types/calculus";
-import {addExample} from "../../../util/admin";
-import {useAppState} from "../../../util/app-state";
-import {stringArrayToStringMap} from "../../../util/array-to-map";
+import { AppStateActionType } from "../../../types/app/action";
+import { CalculusType, FOCalculus, Params } from "../../../types/calculus";
+import { addExample } from "../../../util/admin";
+import { useAppState } from "../../../util/app-state";
+import { stringArrayToStringMap } from "../../../util/array-to-map";
 import Dialog from "../../dialog";
 import AddIcon from "../../icons/add";
 import SaveIcon from "../../icons/save";

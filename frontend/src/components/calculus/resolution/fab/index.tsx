@@ -1,17 +1,22 @@
-import {Fragment, h} from "preact";
+import { Fragment, h } from "preact";
 
 import * as style from "../../../../routes/resolution/view/style.scss";
-import {ResolutionCalculusType} from "../../../../types/calculus";
-import {SelectedClauses} from "../../../../types/calculus/clause";
+import { ResolutionCalculusType } from "../../../../types/calculus";
+import { SelectedClauses } from "../../../../types/calculus/clause";
 import {
     FOResolutionState,
     HyperResolutionMove,
     instanceOfPropResState,
     PropResolutionState,
 } from "../../../../types/calculus/resolution";
-import {sendMove} from "../../../../util/api";
-import {useAppState} from "../../../../util/app-state";
-import {containsEmptyClause, hideClause, sendFactorize, showHiddenClauses,} from "../../../../util/resolution";
+import { sendMove } from "../../../../util/api";
+import { useAppState } from "../../../../util/app-state";
+import {
+    containsEmptyClause,
+    hideClause,
+    sendFactorize,
+    showHiddenClauses,
+} from "../../../../util/resolution";
 import CircleIcon from "../../../icons/circle";
 import FactorizeIcon from "../../../icons/factorize";
 import GridIcon from "../../../icons/grid";

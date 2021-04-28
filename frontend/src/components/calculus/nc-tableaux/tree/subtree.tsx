@@ -1,8 +1,8 @@
-import {Fragment, h} from "preact";
+import { Fragment, h } from "preact";
 
-import {NCTabTreeNode} from "../../../../types/calculus/nc-tableaux";
-import {Tree} from "../../../../types/tree";
-import {DragTransform} from "../../../../types/ui";
+import { NCTabTreeNode } from "../../../../types/calculus/nc-tableaux";
+import { Tree } from "../../../../types/tree";
+import { DragTransform } from "../../../../types/ui";
 import NCTabNode from "../node";
 
 import * as style from "./style.scss";

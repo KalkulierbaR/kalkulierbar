@@ -1,8 +1,8 @@
-import {h} from "preact";
+import { h } from "preact";
 
-import {DPLLTreeNode} from "../../../../types/calculus/dpll";
-import {dpllTreeLayout} from "../../../../util/dpll";
-import {treeToLayoutItem} from "../../../../util/layout/tree";
+import { DPLLTreeNode } from "../../../../types/calculus/dpll";
+import { dpllTreeLayout } from "../../../../util/dpll";
+import { treeToLayoutItem } from "../../../../util/layout/tree";
 import Zoomable from "../../../svg/zoomable";
 import DPLLNode from "../node";
 

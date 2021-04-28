@@ -1,10 +1,10 @@
-import {h} from "preact";
-import {PropRef, useState} from "preact/hooks";
+import { h } from "preact";
+import { PropRef, useState } from "preact/hooks";
 
-import {DragTransform, Point} from "../../../types/ui";
-import {disableDrag, enableDrag} from "../../../util/zoom/drag";
-import {mousePos} from "../../../util/zoom/mouse";
-import {touchPos} from "../../../util/zoom/touch";
+import { DragTransform, Point } from "../../../types/ui";
+import { disableDrag, enableDrag } from "../../../util/zoom/drag";
+import { mousePos } from "../../../util/zoom/mouse";
+import { touchPos } from "../../../util/zoom/touch";
 
 interface Props {
     /**

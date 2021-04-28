@@ -1,4 +1,4 @@
-import {Component, h} from "preact";
+import { Component, h } from "preact";
 import ReactHintFactory from "react-hint";
 import "react-hint/css/index.css";
 

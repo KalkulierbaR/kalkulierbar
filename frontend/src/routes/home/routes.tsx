@@ -1,9 +1,9 @@
-import {h} from "preact";
+import { h } from "preact";
 
-import {circle} from "../../components/calculus/resolution/circle/style.scss";
-import {Calculus} from "../../types/calculus";
+import { circle } from "../../components/calculus/resolution/circle/style.scss";
+import { Calculus } from "../../types/calculus";
 
-import {Route} from ".";
+import { Route } from ".";
 import * as style from "./style.scss";
 
 const ROUTES: Route[] = [

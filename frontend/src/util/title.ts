@@ -1,4 +1,4 @@
-import {useEffect} from "preact/hooks";
+import { useEffect } from "preact/hooks";
 
 /**
  * Hook to update the title

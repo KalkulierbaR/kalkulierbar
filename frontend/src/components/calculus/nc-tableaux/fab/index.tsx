@@ -1,9 +1,15 @@
-import {Fragment, h} from "preact";
+import { Fragment, h } from "preact";
 
-import {Calculus} from "../../../../types/calculus";
-import {NCTableauxState} from "../../../../types/calculus/nc-tableaux";
-import {useAppState} from "../../../../util/app-state";
-import {sendAlpha, sendBeta, sendDelta, sendGamma, sendUndo,} from "../../../../util/nc-tableaux";
+import { Calculus } from "../../../../types/calculus";
+import { NCTableauxState } from "../../../../types/calculus/nc-tableaux";
+import { useAppState } from "../../../../util/app-state";
+import {
+    sendAlpha,
+    sendBeta,
+    sendDelta,
+    sendGamma,
+    sendUndo,
+} from "../../../../util/nc-tableaux";
 import UndoIcon from "../../../icons/undo";
 import ControlFAB from "../../../input/control-fab";
 import FAB from "../../../input/fab";

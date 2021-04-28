@@ -1,4 +1,4 @@
-import {VarAssign} from "./tableaux";
+import { VarAssign } from "./tableaux";
 
 export interface NCTableauxState {
     formula: LogicNode;

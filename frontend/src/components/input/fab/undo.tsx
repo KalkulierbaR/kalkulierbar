@@ -1,8 +1,12 @@
-import {h} from "preact";
+import { h } from "preact";
 
-import {Calculus, ModalCalculusType, TableauxCalculusType,} from "../../../types/calculus";
-import {sendMove} from "../../../util/api";
-import {useAppState} from "../../../util/app-state";
+import {
+    Calculus,
+    ModalCalculusType,
+    TableauxCalculusType,
+} from "../../../types/calculus";
+import { sendMove } from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
 import UndoIcon from "../../icons/undo";
 
 import FAB from "./index";

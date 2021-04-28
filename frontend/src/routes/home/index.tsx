@@ -1,10 +1,10 @@
-import {h, VNode} from "preact";
-import {useRef} from "preact/hooks";
+import { h, VNode } from "preact";
+import { useRef } from "preact/hooks";
 
 import Switch from "../../components/input/switch";
-import {Calculus} from "../../types/calculus";
-import {setCalculusState} from "../../util/admin";
-import {useAppState} from "../../util/app-state";
+import { Calculus } from "../../types/calculus";
+import { setCalculusState } from "../../util/admin";
+import { useAppState } from "../../util/app-state";
 
 import ROUTES from "./routes";
 import * as style from "./style.scss";

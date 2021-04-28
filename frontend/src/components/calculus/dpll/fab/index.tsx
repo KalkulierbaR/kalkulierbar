@@ -1,9 +1,9 @@
-import {Fragment, h} from "preact";
+import { Fragment, h } from "preact";
 
-import {Calculus} from "../../../../types/calculus";
-import {DPLLNodeType, DPLLState} from "../../../../types/calculus/dpll";
-import {useAppState} from "../../../../util/app-state";
-import {sendPrune, stateIsClosed} from "../../../../util/dpll";
+import { Calculus } from "../../../../types/calculus";
+import { DPLLNodeType, DPLLState } from "../../../../types/calculus/dpll";
+import { useAppState } from "../../../../util/app-state";
+import { sendPrune, stateIsClosed } from "../../../../util/dpll";
 import CheckCircleFilledIcon from "../../../icons/check-circle-filled";
 import DeleteIcon from "../../../icons/delete";
 import SplitIcon from "../../../icons/split";

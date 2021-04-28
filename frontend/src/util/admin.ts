@@ -1,9 +1,9 @@
-import {Config} from "../types/app/config";
-import {Example} from "../types/app/example";
-import {NotificationHandler} from "../types/app/notification";
-import {CalculusType} from "../types/calculus";
+import { Config } from "../types/app/config";
+import { Example } from "../types/app/example";
+import { NotificationHandler } from "../types/app/notification";
+import { CalculusType } from "../types/calculus";
 
-import {calcMac, getCurrentDate} from "./mac";
+import { calcMac, getCurrentDate } from "./mac";
 
 /**
  * Pulls the current config (kbar-state.json) of the backend sever

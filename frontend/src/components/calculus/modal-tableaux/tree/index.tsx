@@ -1,9 +1,16 @@
-import {h} from "preact";
+import { h } from "preact";
 
-import {ModalTableauxNode, ModalTableauxTreeLayoutNode,} from "../../../../types/calculus/modal-tableaux";
-import {DragTransform} from "../../../../types/ui";
-import {findSubTree, getAbsoluteDragTransform, getClosedLeaves,} from "../../../../util/layout/tree";
-import {modalTableauxTreeLayout} from "../../../../util/modal-tableaux";
+import {
+    ModalTableauxNode,
+    ModalTableauxTreeLayoutNode,
+} from "../../../../types/calculus/modal-tableaux";
+import { DragTransform } from "../../../../types/ui";
+import {
+    findSubTree,
+    getAbsoluteDragTransform,
+    getClosedLeaves,
+} from "../../../../util/layout/tree";
+import { modalTableauxTreeLayout } from "../../../../util/modal-tableaux";
 import ClosingEdge from "../../../svg/closing-edge";
 import Zoomable from "../../../svg/zoomable";
 

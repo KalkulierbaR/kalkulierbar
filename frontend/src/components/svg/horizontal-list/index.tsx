@@ -1,11 +1,15 @@
-import preact, {h, RefObject} from "preact";
-import {useEffect, useState} from "preact/hooks";
+import preact, { h, RefObject } from "preact";
+import { useEffect, useState } from "preact/hooks";
 
-import {FormulaNode, FormulaTreeLayoutNode, SequentTreeLayoutNode,} from "../../../types/calculus/sequent";
-import {LayoutItem} from "../../../types/layout";
-import {classMap} from "../../../util/class-map";
-import {parseFormula} from "../../../util/sequent";
-import {estimateSVGTextWidth} from "../../../util/text-width";
+import {
+    FormulaNode,
+    FormulaTreeLayoutNode,
+    SequentTreeLayoutNode,
+} from "../../../types/calculus/sequent";
+import { LayoutItem } from "../../../types/layout";
+import { classMap } from "../../../util/class-map";
+import { parseFormula } from "../../../util/sequent";
+import { estimateSVGTextWidth } from "../../../util/text-width";
 import FormulaTreeNode from "../../calculus/sequent/formula-node";
 
 import * as style from "./style.scss";

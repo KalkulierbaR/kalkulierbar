@@ -1,20 +1,27 @@
-import {Fragment, h} from "preact";
-import {route} from "preact-router";
-import {useCallback, useEffect, useState} from "preact/hooks";
+import { Fragment, h } from "preact";
+import { route } from "preact-router";
+import { useCallback, useEffect, useState } from "preact/hooks";
 
 import ModalTableauxFAB from "../../../components/calculus/modal-tableaux/fab";
 import ModalTableauxTreeView from "../../../components/calculus/modal-tableaux/tree";
 import PrefixDialog from "../../../components/dialog/prefix-dialog";
 import SaveStatsDialog from "../../../components/dialog/save-stats-dialog";
 import TutorialDialog from "../../../components/tutorial/dialog";
-import {Statistics} from "../../../types/app/statistics";
-import {Calculus, ModalCalculusType} from "../../../types/calculus";
-import {ExpandMove, ModalTableauxTreeLayoutNode,} from "../../../types/calculus/modal-tableaux";
-import {DragTransform} from "../../../types/ui";
-import {saveStatistics, sendMove} from "../../../util/api";
-import {useAppState} from "../../../util/app-state";
-import {getLeaves, nodeName, sendBacktrack,} from "../../../util/modal-tableaux";
-import {updateDragTransform} from "../../../util/tableaux";
+import { Statistics } from "../../../types/app/statistics";
+import { Calculus, ModalCalculusType } from "../../../types/calculus";
+import {
+    ExpandMove,
+    ModalTableauxTreeLayoutNode,
+} from "../../../types/calculus/modal-tableaux";
+import { DragTransform } from "../../../types/ui";
+import { saveStatistics, sendMove } from "../../../util/api";
+import { useAppState } from "../../../util/app-state";
+import {
+    getLeaves,
+    nodeName,
+    sendBacktrack,
+} from "../../../util/modal-tableaux";
+import { updateDragTransform } from "../../../util/tableaux";
 
 interface Props {
     calculus: ModalCalculusType;

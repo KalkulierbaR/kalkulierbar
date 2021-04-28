@@ -1,5 +1,5 @@
-import {Fragment, h} from "preact";
-import {useCallback, useState} from "preact/hooks";
+import { Fragment, h } from "preact";
+import { useCallback, useState } from "preact/hooks";
 
 import Dialog from "../dialog";
 import SettingsIcon from "../icons/settings";

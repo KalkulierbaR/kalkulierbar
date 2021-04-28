@@ -1,5 +1,5 @@
-import {MDCSwitch} from "@material/switch";
-import {Component, createRef, h} from "preact";
+import { MDCSwitch } from "@material/switch";
+import { Component, createRef, h } from "preact";
 
 import * as style from "./style.scss";
 

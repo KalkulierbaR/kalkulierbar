@@ -1,10 +1,10 @@
-import {Fragment, h} from "preact";
+import { Fragment, h } from "preact";
 
-import {Statistics} from "../../../../types/app/statistics";
-import {SequentCalculusType} from "../../../../types/calculus";
-import {FOSCState, PSCState} from "../../../../types/calculus/sequent";
-import {sendMove} from "../../../../util/api";
-import {useAppState} from "../../../../util/app-state";
+import { Statistics } from "../../../../types/app/statistics";
+import { SequentCalculusType } from "../../../../types/calculus";
+import { FOSCState, PSCState } from "../../../../types/calculus/sequent";
+import { sendMove } from "../../../../util/api";
+import { useAppState } from "../../../../util/app-state";
 import DeleteIcon from "../../../icons/delete";
 import RuleIcon from "../../../icons/rule";
 import UndoIcon from "../../../icons/undo";

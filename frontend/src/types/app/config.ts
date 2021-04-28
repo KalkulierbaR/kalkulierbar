@@ -1,6 +1,6 @@
-import {CalculusType} from "../calculus";
+import { CalculusType } from "../calculus";
 
-import {Example} from "./example";
+import { Example } from "./example";
 
 export interface Config {
     disabled: CalculusType[];

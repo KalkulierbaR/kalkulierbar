@@ -1,9 +1,9 @@
-import {StateUpdater} from "preact/hooks";
+import { StateUpdater } from "preact/hooks";
 
-import {AppStateUpdater} from "../types/app/app-state";
-import {NotificationHandler} from "../types/app/notification";
-import {TableauxCalculusType} from "../types/calculus";
-import {ModalTableauxNode} from "../types/calculus/modal-tableaux";
+import { AppStateUpdater } from "../types/app/app-state";
+import { NotificationHandler } from "../types/app/notification";
+import { TableauxCalculusType } from "../types/calculus";
+import { ModalTableauxNode } from "../types/calculus/modal-tableaux";
 import {
     FOTableauxState,
     instanceOfFOTabState,
@@ -13,12 +13,12 @@ import {
     TableauxTreeLayoutNode,
     VarAssign,
 } from "../types/calculus/tableaux";
-import {Tree, TreeLayout} from "../types/tree";
-import {DragTransform} from "../types/ui";
+import { Tree, TreeLayout } from "../types/tree";
+import { DragTransform } from "../types/ui";
 
-import {sendMove} from "./api";
-import {tree, treeFind, treeLayout} from "./layout/tree";
-import {estimateSVGTextWidth} from "./text-width";
+import { sendMove } from "./api";
+import { tree, treeFind, treeLayout } from "./layout/tree";
+import { estimateSVGTextWidth } from "./text-width";
 
 /**
  * Finds the first open leaf and returns its id.
