@@ -156,7 +156,10 @@ class FirstOrderParser : PropositionalParser() {
         consume(TokenType.LPAREN)
 
         // Relation may have an arbitrary amount of argument terms
-        val arguments = mutableListOf(parseTerm())
+        val arguments = mutableListOf<FirstOrderTerm>()
+        if (! nextTokenIs(TokenType.RPAREN)) {
+            arguments.add(parseTerm())
+        }
         while (nextTokenIs(TokenType.COMMA)) {
             consume()
             arguments.add(parseTerm())
@@ -205,7 +208,10 @@ class FirstOrderParser : PropositionalParser() {
     private fun parseFunction(identifier: String): FirstOrderTerm {
         consume(TokenType.LPAREN)
 
-        val arguments = mutableListOf(parseTerm())
+        val arguments = mutableListOf<FirstOrderTerm>()
+        if (! nextTokenIs(TokenType.RPAREN)) {
+            arguments.add(parseTerm())
+        }
         while (nextTokenIs(TokenType.COMMA)) {
             consume()
             arguments.add(parseTerm())
