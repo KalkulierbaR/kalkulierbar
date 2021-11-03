@@ -136,7 +136,7 @@ interface TreeGardener<Node : GenericTreeNode> {
         return if (node.children.isEmpty())
             1
         else
-            node.children.sumBy { getWidth(it) }
+            node.children.sumOf { getWidth(it) }
     }
 
     /**

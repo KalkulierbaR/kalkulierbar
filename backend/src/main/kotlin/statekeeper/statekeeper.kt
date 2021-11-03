@@ -13,6 +13,7 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
+@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 @Suppress("TooGenericExceptionCaught", "TooManyFunctions")
 object StateKeeper {
     private val date
@@ -181,7 +182,7 @@ object StateKeeper {
     private fun verifyMAC(payload: String, mac: String): Boolean {
         val payloadWithKey = "$payload|$date|${state.key}"
         val calculatedMAC = toHex(payloadWithKey.digestKeccak(parameter = KeccakParameter.SHA3_256))
-        return calculatedMAC == mac.toUpperCase()
+        return calculatedMAC == mac.uppercase()
     }
 
     private fun toHex(bytes: ByteArray) = bytes.joinToString("") { String.format("%02X", it) }

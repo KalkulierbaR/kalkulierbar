@@ -26,9 +26,17 @@ console-reports:
      - 'FileBasedFindingsReport'
   #  - 'BuildFailureReport'
 
+output-reports:
+  active: true
+  exclude:
+  #  - 'HtmlOutputReport'
+     - 'TxtOutputReport'
+     - 'XmlOutputReport'
+     - 'SarifOutputReport'
+
 comments:
   active: true
-  excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
+  excludes: ["**/test/**", "**/androidTest/**", "**/*.Test.kt", "**/*.Spec.kt", "**/*.Spek.kt"]
   CommentOverPrivateFunction:
     active: false
   CommentOverPrivateProperty:
@@ -402,7 +410,7 @@ potential-bugs:
   LateinitUsage:
     active: false
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
-    excludeAnnotatedProperties: ""
+    ignoreAnnotated: []
     ignoreOnClassesPattern: ""
   MissingWhenCase:
     active: false
@@ -455,7 +463,7 @@ style:
     active: false
     ignoreOverridableFunction: true
     excludedFunctions: 'describeContents'
-    excludeAnnotatedFunction: "dagger.Provides"
+    ignoreAnnotated: ["dagger.Provides"]
   LibraryCodeMustSpecifyReturnType:
     active: false
   LoopWithTooManyJumpStatements:
@@ -525,10 +533,10 @@ style:
     active: false
   UnderscoresInNumericLiterals:
     active: false
-    acceptableDecimalLength: 5
+    acceptableLength: 5
   UnnecessaryAbstractClass:
     active: false
-    excludeAnnotatedClasses: "dagger.Module"
+    ignoreAnnotated: ["dagger.Module"]
   UnnecessaryApply:
     active: false
   UnnecessaryInheritance:
@@ -552,7 +560,7 @@ style:
     active: false
   UseDataClass:
     active: false
-    excludeAnnotatedClasses: ""
+    ignoreAnnotated: []
     allowVars: false
   UseIfInsteadOfWhen:
     active: false

@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import java.util.*
 
+@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 object Scoreboard {
     private var data: MutableMap<String, MutableMap<String, MutableList<Map<String, String>>>>
     private val storage = File("kbar-scoreboard.json")
@@ -35,7 +36,7 @@ object Scoreboard {
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
         }
 
-        scoreboardCounter = data.values.sumBy { it.size }
+        scoreboardCounter = data.values.sumOf { it.size }
     }
 
     fun getScores(calculus: String, formula: String): List<Map<String, String>> {
@@ -111,7 +112,7 @@ object Scoreboard {
         data = data.mapValues { entry ->
             entry.value.filter { it.value.size > 1 }.toMutableMap()
         }.toMutableMap()
-        scoreboardCounter = data.values.sumBy { it.size }
+        scoreboardCounter = data.values.sumOf { it.size }
 
         if (scoreboardCounter >= SCORE_MAX_NUM_SCOREBOARDS)
             throw StorageLimitHit("Maximum scoreboard count of $SCORE_MAX_NUM_SCOREBOARDS exceeded")

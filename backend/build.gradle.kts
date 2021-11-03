@@ -1,16 +1,16 @@
 plugins {
-    kotlin("jvm") version "1.4.30"
+    kotlin("jvm") version "1.5.30"
     kotlin("plugin.serialization") version "1.4.30"
     application
     id("org.jmailen.kotlinter") version "3.4.0"
-    id("io.gitlab.arturbosch.detekt") version "1.16.0"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("io.gitlab.arturbosch.detekt") version "1.19.0-RC1"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
     id("java")
     id("jacoco")
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
     maven("https://jitpack.io")
 }
 
@@ -35,7 +35,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "main.kotlin.MainKt"
+    mainClass.set("main.kotlin.MainKt")
 }
 
 tasks {
@@ -50,9 +50,14 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     }
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 detekt {
-    toolVersion = "1.16.0"
-    input = files("src/main/kotlin")
+    toolVersion = "1.19.0-RC1"
+    source = files("src/main/kotlin")
     config = files("$projectDir/config/detekt/detekt.yml")
 }
 

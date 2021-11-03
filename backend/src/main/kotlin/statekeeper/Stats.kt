@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 import java.util.Timer
 import java.util.TimerTask
 
+@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 object Stats {
     private var data: StatContainer
     private val storage = File("kbar-stats.json")
