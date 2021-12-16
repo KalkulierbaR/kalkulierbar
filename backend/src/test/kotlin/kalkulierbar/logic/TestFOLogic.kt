@@ -6,6 +6,7 @@ import kalkulierbar.logic.Function
 import kalkulierbar.logic.transform.NaiveCNF
 import kalkulierbar.logic.transform.ToBasicOps
 import kalkulierbar.logic.transform.TseytinCNF
+import kalkulierbar.logic.util.Unification
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -175,6 +176,21 @@ class TestFOLogic {
     fun testExTseytin() {
         assertFailsWith<FormulaConversionException> {
             TseytinCNF.transform(e1)
+        }
+    }
+
+    @Test
+    fun testUnification() {
+        val map = Unification.unify(
+            Relation("R", listOf(Function("f", listOf(QuantifiedVariable("X"), Function("g", listOf(Constant("c"))))))),
+            Relation("R", listOf(Function("f", listOf(QuantifiedVariable("Y"), QuantifiedVariable("Y")))))
+        )
+        val expected = mapOf("X" to Function("g", listOf(Constant("c"))), "Y" to Function("g", listOf(Constant("c"))))
+
+        assertEquals(expected.size, map.size)
+
+        for ((key, value) in expected) {
+            assert(value.synEq(map[key]))
         }
     }
 }
