@@ -8812,7 +8812,7 @@ __metadata:
     preact: 10.3.4
     preact-cli: 3.0.3
     preact-markup: 2.0.0
-    preact-render-to-string: 5.1.4
+    preact-render-to-string: 5.1.19
     preact-router: 3.2.1
     prettier: 2.0.2
     react-hint: 3.2.0
@@ -11987,14 +11987,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact-render-to-string@npm:5.1.4":
-  version: 5.1.4
-  resolution: "preact-render-to-string@npm:5.1.4"
+"preact-render-to-string@npm:5.1.19":
+  version: 5.1.19
+  resolution: "preact-render-to-string@npm:5.1.19"
   dependencies:
     pretty-format: ^3.8.0
   peerDependencies:
-    preact: ">=10 || ^10.0.0-alpha.0 || ^10.0.0-beta.0"
-  checksum: d4964666ffa287f6857aa9e7b57f6fc2b2fc72d1dee0478aee2047b5b15fcac261a6cb7f5bcca0708721ca8523a92d6f144671276d4d9ca12e83e601b5743238
+    preact: ">=10"
+  checksum: b8b454d7b4bd93d6dcfc5e1269cfef1756e850c524e80340be62b88582cb88eb926a3edc0088f4dc2a454f56c1e09faa10bced081f25204342fd338275aa5af1
   languageName: node
   linkType: hard
 
