@@ -1,5 +1,30 @@
 {
   "extends": [
     "config:base"
-  ]
+  ],
+  "baseBranches": [
+    "dev"
+  ],
+  "labels": [
+    "renovate"
+  ],
+  "assignees": [
+    "JuliusHenke"
+  ],
+  "rebaseWhen": "behind-base-branch",
+  "packageRules": [
+    {
+      "description": "Automatically merge all but major updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true
+    }
+  ],
+  "automergeType": "branch",
+  "stabilityDays": 3,
+  "prCreation": "not-pending"
 }
