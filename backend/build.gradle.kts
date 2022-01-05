@@ -27,7 +27,7 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:1.8.0-beta4")
 
     // Hashing
-    implementation("com.github.komputing:khash:1.1.0")
+    implementation("com.github.komputing:khash:1.1.1")
 
     // Testing
     testImplementation(kotlin("test-junit5"))
