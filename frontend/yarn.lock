@@ -8815,7 +8815,7 @@ __metadata:
     preact-render-to-string: 5.1.19
     preact-router: 3.2.1
     prettier: 2.0.2
-    react-hint: 3.2.0
+    react-hint: 3.2.1
     sass-loader: 10.0.5
     serve: 11.3.0
     sha3: 2.1.1
@@ -12406,10 +12406,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hint@npm:3.2.0":
-  version: 3.2.0
-  resolution: "react-hint@npm:3.2.0"
-  checksum: 41a275c46ba092e2add3b0a2d1583ecbdf35ef8805ca6dc7e6216ef98fc66a11502bd9eeacbd0eecd200d6ea3bc159c8a199e0d4b00f77e1245c5158321ac494
+"react-hint@npm:3.2.1":
+  version: 3.2.1
+  resolution: "react-hint@npm:3.2.1"
+  checksum: 2f0a7bc99367a283411c3244c080cb722c283e92f4562fa4bbde1b44307ef4b55681b602ce2b973854f51dff384b327f275dc10fe051f86632ac1720a131a494
   languageName: node
   linkType: hard
 
