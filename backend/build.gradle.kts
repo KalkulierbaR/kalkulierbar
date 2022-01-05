@@ -21,13 +21,13 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
 
     // Web framework
-    implementation("io.javalin:javalin:3.13.4")
+    implementation("io.javalin:javalin:3.13.12")
 
     // Logging
     implementation("org.slf4j:slf4j-simple:1.8.0-beta4")
 
     // Hashing
-    implementation("com.github.komputing:khash:1.1.0")
+    implementation("com.github.komputing:khash:1.1.1")
 
     // Testing
     testImplementation(kotlin("test-junit5"))

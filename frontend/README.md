@@ -8,8 +8,8 @@ On `Linux` systems you can use the main install script `./install`, also describ
 
 ### Manual
 
--   Install [Node.JS](https://nodejs.org/en/download/)
--   Install [yarn](https://yarnpkg.com/en/docs/install#debian-stable)
+-   Install [Node.JS](https://nodejs.org/en/download/) (v12 or v14)
+-   Install [yarn](https://yarnpkg.com/getting-started/install)
 -   Go into `frontend` and use command `yarn`
 -   Done
 

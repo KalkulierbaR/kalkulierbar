@@ -1,10 +1,17 @@
 node_modules
 /build
 /*.log
-package-lock.json
 *.css.d.ts
 *.scss.d.ts
+
+# Please use yarn package manager instead
+package-lock.json
+
+# yarn
 .yarn/*
 !.yarn/cache
-!.yarn/releases
+!.yarn/patches
 !.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
