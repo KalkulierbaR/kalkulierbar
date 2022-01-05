@@ -56,9 +56,9 @@
         "firebase-tools": "8.0.0",
         "preact": "10.3.4",
         "preact-markup": "2.0.0",
-        "preact-render-to-string": "5.1.4",
+        "preact-render-to-string": "5.1.19",
         "preact-router": "3.2.1",
-        "react-hint": "3.2.0",
+        "react-hint": "3.2.1",
         "serve": "11.3.0",
         "sha3": "2.1.1",
         "tslint-etc": "1.13.9"

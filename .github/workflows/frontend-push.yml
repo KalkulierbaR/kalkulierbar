@@ -1,15 +1,14 @@
-name: Build and Deploy to preview URL
+name: frontend-push
 
 on:
-  pull_request:
+  push:
     paths:
       - 'frontend/**'
+      - '.github/workflows/frontend-push.yml'
 
 jobs:
-  build-and-preview:
-    name: Build and Deploy
+  frontend-push:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -19,17 +18,17 @@ jobs:
       - name: Build
         run: |
           cd frontend
-          yarn install --immutable --immutable-cache --check-cache
+          yarn install --immutable --immutable-cache
           yarn build
 
-      - name: Deploy
-        if: github.event.pull_request.head.repo.full_name == github.repository
+      - name: Deploy live channel
+        if: github.ref_name == 'master' || github.ref_name == 'main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KALKULIERBAR_8EDA1 }}'
           projectId: kalkulierbar-8eda1
           entryPoint: ./frontend
-          expires: 30d
+          channelId: live
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
