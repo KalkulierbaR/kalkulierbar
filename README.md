@@ -45,7 +45,7 @@ add `/usr/local/lib/nodejs/node-v12.14.1-linux-x64/bin` to your path.
 On `Windows` install these manually:
 
 - [Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
-  / [OpenJDK](https://openjdk.java.net/install/index.html) >= Java version 11
+  / [OpenJDK](https://openjdk.java.net/install/index.html) >= Java version 8
 - [Node.JS](https://nodejs.org/en/download/) (v12 or v14)
 - [yarn](https://yarnpkg.com/getting-started/install)
 

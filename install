@@ -5,7 +5,7 @@ echo " "
 #Check if java is installed
 if [ -z "$(command -v java)" ]; then
     echo "Java not found"
-    echo "Please install Java JDK >= 11 manually!"
+    echo "Please install Java JDK >= 8 manually!"
     exit 1
 else
     echo "Java found on your system"
