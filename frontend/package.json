@@ -72,5 +72,6 @@
             "pre-commit": "lint-staged",
             "pre-push": "lint-staged"
         }
-    }
+    },
+    "packageManager": "yarn@3.1.1"
 }
