@@ -32,7 +32,7 @@
     "devDependencies": {
         "@types/webpack-env": "1.16.3",
         "css-loader": "1.0.1",
-        "husky": "4.2.3",
+        "husky": "4.3.8",
         "identity-obj-proxy": "3.0.0",
         "lint-staged": "10.0.9",
         "node-sass": "5.0.0",
