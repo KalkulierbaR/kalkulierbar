@@ -8838,7 +8838,7 @@ __metadata:
     tslint-config-prettier: 1.18.0
     tslint-consistent-codestyle: 1.16.0
     tslint-eslint-rules: 5.4.0
-    tslint-etc: 1.13.9
+    tslint-etc: 1.13.10
     tslint-react: 3.6.0
     typescript: 3.8.3
     typings-for-css-modules-loader: 1.7.0
@@ -14759,9 +14759,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslint-etc@npm:1.13.9":
-  version: 1.13.9
-  resolution: "tslint-etc@npm:1.13.9"
+"tslint-etc@npm:1.13.10":
+  version: 1.13.10
+  resolution: "tslint-etc@npm:1.13.10"
   dependencies:
     "@phenomnomnominal/tsquery": ^4.0.0
     tslib: ^2.0.0
@@ -14770,7 +14770,7 @@ __metadata:
   peerDependencies:
     tslint: ^5.0.0 || ^6.0.0
     typescript: ^2.3.0 || ^3.0.0 || ^4.0.0
-  checksum: 02c6d59d2daf90f1ca9b5e1337e1fad7e14af854e4e4c87fc10eadf85ccf1cb5088ce2b392fa40c5158b0dab72a0399379043987edfa062fb4b8a05d97725748
+  checksum: 4b5de99a3aa5e447fa4c4c0578c94bcb8a45b9d473e18a4d72faf434188300c1ee24e7592f5070336de49c1a6b4b2324cea53fb261ba0ca8fffd506d2d3d5836
   languageName: node
   linkType: hard
 

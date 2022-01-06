@@ -61,7 +61,7 @@
         "react-hint": "3.2.1",
         "serve": "11.3.2",
         "sha3": "2.1.4",
-        "tslint-etc": "1.13.9"
+        "tslint-etc": "1.13.10"
     },
     "peerDependencies": {
         "prettier": ">1.0.0",
