@@ -3,7 +3,7 @@ plugins {
     kotlin("plugin.serialization") version "1.4.30"
     application
     id("org.jmailen.kotlinter") version "3.4.0"
-    id("io.gitlab.arturbosch.detekt") version "1.19.0-RC1"
+    id("io.gitlab.arturbosch.detekt") version "1.19.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
     id("jacoco")
