@@ -1929,10 +1929,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack-env@npm:1.15.1":
-  version: 1.15.1
-  resolution: "@types/webpack-env@npm:1.15.1"
-  checksum: 9cd4d60d72e34be18a694c6ed86d9b1c2b6d2f7c3aecc33c139293b0566e347995436248f0ceddb96905fc7d6f563b22575cd98025fac662076bfac7e361c82e
+"@types/webpack-env@npm:1.16.3":
+  version: 1.16.3
+  resolution: "@types/webpack-env@npm:1.16.3"
+  checksum: faefa7c0a75289fb469b9a5ae44059a00009de840e0e62d13b3f837d77647da76808e7839cdc414b8c585969cf6b6a7f290dc2cb437a9ccdf04cb214c68f3223
   languageName: node
   linkType: hard
 
@@ -8814,7 +8814,7 @@ __metadata:
   dependencies:
     "@material/radio": 4.0.0
     "@material/switch": 4.0.0
-    "@types/webpack-env": 1.15.1
+    "@types/webpack-env": 1.16.3
     "@yarnpkg/pnpify": 2.0.0-rc.18
     css-loader: 1.0.1
     firebase-tools: 8.0.0
