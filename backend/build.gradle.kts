@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.6.10"
     kotlin("plugin.serialization") version "1.4.30"
     application
     id("org.jmailen.kotlinter") version "3.4.0"
