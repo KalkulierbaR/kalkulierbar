@@ -10063,7 +10063,7 @@ __metadata:
     preact-router: 3.2.1
     prettier: 2.5.1
     react-hint: 3.2.1
-    sass-loader: 10.0.5
+    sass-loader: 10.2.0
     serve: 11.3.2
     sha3: 2.1.4
     ts-loader: 8.0.11
@@ -14992,9 +14992,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass-loader@npm:10.0.5":
-  version: 10.0.5
-  resolution: "sass-loader@npm:10.0.5"
+"sass-loader@npm:10.2.0":
+  version: 10.2.0
+  resolution: "sass-loader@npm:10.2.0"
   dependencies:
     klona: ^2.0.4
     loader-utils: ^2.0.0
@@ -15003,7 +15003,7 @@ __metadata:
     semver: ^7.3.2
   peerDependencies:
     fibers: ">= 3.1.0"
-    node-sass: ^4.0.0 || ^5.0.0
+    node-sass: ^4.0.0 || ^5.0.0 || ^6.0.0
     sass: ^1.3.0
     webpack: ^4.36.0 || ^5.0.0
   peerDependenciesMeta:
@@ -15013,7 +15013,7 @@ __metadata:
       optional: true
     sass:
       optional: true
-  checksum: ad6e6355fff581193f116a7ea7d5d399190c4aac010460d5f529c654680e1cca4b98e8ba28ac98a78d5ca52255d30727bfc742cd63003b9b4ca09902e9ea3132
+  checksum: d53212e5d199cdd221a67046ab4276c352d56b50ca64347115b36e8ebbb2c68ec396a14d6cf5a08853c830a6b0ec1fd2b016cdc53cbe90a0332a908f50ec2043
   languageName: node
   linkType: hard
 
