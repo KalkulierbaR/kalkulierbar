@@ -10066,7 +10066,7 @@ __metadata:
     sass-loader: 10.2.0
     serve: 11.3.2
     sha3: 2.1.4
-    ts-loader: 8.0.11
+    ts-loader: 8.3.0
     tslint: 6.1.3
     tslint-config-prettier: 1.18.0
     tslint-consistent-codestyle: 1.16.0
@@ -16761,19 +16761,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-loader@npm:8.0.11":
-  version: 8.0.11
-  resolution: "ts-loader@npm:8.0.11"
+"ts-loader@npm:8.3.0":
+  version: 8.3.0
+  resolution: "ts-loader@npm:8.3.0"
   dependencies:
-    chalk: ^2.3.0
+    chalk: ^4.1.0
     enhanced-resolve: ^4.0.0
-    loader-utils: ^1.0.2
+    loader-utils: ^2.0.0
     micromatch: ^4.0.0
-    semver: ^6.0.0
+    semver: ^7.3.4
   peerDependencies:
     typescript: "*"
     webpack: "*"
-  checksum: 2a5b5708168b32f2532c9835d3d7e88d9acd1fc90ac6dcea2a87e8e87c7d841be13ab94c447863a878b15d13ff8d02d14b9c0768eb03d3b0d7f6dc465a3454e3
+  checksum: 93dd15b553a2621f969c4c834e7eb085b9b079adb702cba68a7ee516bcd2c67620e62cc5a8c57345e90c644ff6b689ee5a09f0702e440284fdfe872e9aaeefd8
   languageName: node
   linkType: hard
 
