@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.6.10"
-    kotlin("plugin.serialization") version "1.4.30"
+    kotlin("plugin.serialization") version "1.6.10"
     application
     id("org.jmailen.kotlinter") version "3.4.0"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
