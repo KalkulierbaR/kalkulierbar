@@ -10058,7 +10058,7 @@ __metadata:
     per-env: 1.0.2
     preact: 10.3.4
     preact-cli: 3.3.3
-    preact-markup: 2.0.0
+    preact-markup: 2.1.1
     preact-render-to-string: 5.1.19
     preact-router: 3.2.1
     prettier: 2.0.2
@@ -13728,12 +13728,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact-markup@npm:2.0.0":
-  version: 2.0.0
-  resolution: "preact-markup@npm:2.0.0"
+"preact-markup@npm:2.1.1":
+  version: 2.1.1
+  resolution: "preact-markup@npm:2.1.1"
   peerDependencies:
-    preact: 10.x
-  checksum: 83d91bde23237072e13872719dee280b74e06ce88477db2a3512a7a874dd5760739786c9a5065396360da8fbf140eea920fac1f29b781946991971742a33b98c
+    preact: ">=10"
+  checksum: 225db623c90d407ce7d892d33b20f946b5a79ff7e9e169609804438705517ab0861471b268f6e57db557501e260c97eac4ccc376208ebe0583d24ce5b61a175d
   languageName: node
   linkType: hard
 
