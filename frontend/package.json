@@ -46,7 +46,7 @@
         "tslint-consistent-codestyle": "1.16.0",
         "tslint-eslint-rules": "5.4.0",
         "tslint-react": "3.6.0",
-        "typescript": "3.8.3",
+        "typescript": "3.9.10",
         "typings-for-css-modules-loader": "1.7.0"
     },
     "dependencies": {
