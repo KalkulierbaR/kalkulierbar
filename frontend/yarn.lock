@@ -10061,7 +10061,7 @@ __metadata:
     preact-markup: 2.1.1
     preact-render-to-string: 5.1.19
     preact-router: 3.2.1
-    prettier: 2.0.2
+    prettier: 2.5.1
     react-hint: 3.2.1
     sass-loader: 10.0.5
     serve: 11.3.2
@@ -13778,12 +13778,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.0.2":
-  version: 2.0.2
-  resolution: "prettier@npm:2.0.2"
+"prettier@npm:2.5.1":
+  version: 2.5.1
+  resolution: "prettier@npm:2.5.1"
   bin:
     prettier: bin-prettier.js
-  checksum: 6eba8ee4731fff112fc7e1a83b11b9b9a21bab5c4a2eeff28b17aba50cc495c25d3f892bdcf5e295c85d18b5fa44193e3740cf6eedbf0fc8b1ef0b2a7741ecfb
+  checksum: 21b9408476ea1c544b0e45d51ceb94a84789ff92095abb710942d780c862d0daebdb29972d47f6b4d0f7ebbfb0ffbf56cc2cfa3e3e9d1cca54864af185b15b66
   languageName: node
   linkType: hard
 
