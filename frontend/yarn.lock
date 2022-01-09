@@ -9477,7 +9477,7 @@ __metadata:
     lint-staged: 10.5.4
     node-sass: 5.0.0
     per-env: 1.0.2
-    preact: 10.3.4
+    preact: 10.6.4
     preact-cli: 3.0.3
     preact-markup: 2.1.1
     preact-render-to-string: 5.1.19
@@ -12850,10 +12850,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:10.3.4":
-  version: 10.3.4
-  resolution: "preact@npm:10.3.4"
-  checksum: fc467d5aba133d4e5c6dd164f8b54662f895cc83fb44e9ffb92c9100724da8be3925a1295df2ff8a0de3767a590648e5566b7470fe639d06bf29909b66c035f9
+"preact@npm:10.6.4":
+  version: 10.6.4
+  resolution: "preact@npm:10.6.4"
+  checksum: 09c496bb3cbe231fb6ef218b44d29af53a1f4bf1ae2e5929ef0faf70f9ecffaa475b4459ef72dd8f0f5396c255172c7c26de5c7d2eb6f6849e36e724c7aa86b7
   languageName: node
   linkType: hard
 
