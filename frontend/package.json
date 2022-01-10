@@ -30,11 +30,11 @@
         "build/*"
     ],
     "devDependencies": {
-        "@types/webpack-env": "1.15.1",
+        "@types/webpack-env": "1.16.3",
         "css-loader": "1.0.1",
-        "husky": "4.2.3",
+        "husky": "4.3.8",
         "identity-obj-proxy": "3.0.0",
-        "lint-staged": "10.0.9",
+        "lint-staged": "10.5.4",
         "node-sass": "5.0.0",
         "per-env": "1.0.2",
         "preact-cli": "3.0.3",
@@ -46,22 +46,22 @@
         "tslint-consistent-codestyle": "1.16.0",
         "tslint-eslint-rules": "5.4.0",
         "tslint-react": "3.6.0",
-        "typescript": "3.8.3",
+        "typescript": "3.9.10",
         "typings-for-css-modules-loader": "1.7.0"
     },
     "dependencies": {
         "@material/radio": "4.0.0",
         "@material/switch": "4.0.0",
-        "@yarnpkg/pnpify": "2.0.0-rc.18",
-        "firebase-tools": "8.0.0",
+        "@yarnpkg/pnpify": "2.4.0",
+        "firebase-tools": "8.20.0",
         "preact": "10.3.4",
-        "preact-markup": "2.0.0",
+        "preact-markup": "2.1.1",
         "preact-render-to-string": "5.1.19",
         "preact-router": "3.2.1",
         "react-hint": "3.2.1",
-        "serve": "11.3.0",
-        "sha3": "2.1.1",
-        "tslint-etc": "1.13.9"
+        "serve": "11.3.2",
+        "sha3": "2.1.4",
+        "tslint-etc": "1.13.10"
     },
     "peerDependencies": {
         "prettier": ">1.0.0",
