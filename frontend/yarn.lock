@@ -9695,7 +9695,7 @@ __metadata:
     preact-cli: 3.0.3
     preact-markup: 2.1.1
     preact-render-to-string: 5.1.19
-    preact-router: 3.2.1
+    preact-router: 4.0.0
     prettier: 2.0.2
     react-hint: 3.2.1
     sass-loader: 10.0.5
@@ -13108,12 +13108,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact-router@npm:3.2.1":
-  version: 3.2.1
-  resolution: "preact-router@npm:3.2.1"
+"preact-router@npm:4.0.0":
+  version: 4.0.0
+  resolution: "preact-router@npm:4.0.0"
   peerDependencies:
     preact: ">=10"
-  checksum: 5162b6050850a5d7d679d65c048ffa86739de393429836397e5d2897852ace27bf5fa4fa19ce34a8be9e29d1c9b88cc15cb3caae38ea6acf5785ed6f282a229a
+  checksum: ec4053daaee47086f1a1af6df7815a9d3340d2665060bf9aaa4e09d0395f62d7e982b9cf6dba15eb9ecf9e3d561c2b0a4d96129116953990f5ab0b26e5f354d5
   languageName: node
   linkType: hard
 
