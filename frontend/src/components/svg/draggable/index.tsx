@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { PropRef, useState } from "preact/hooks";
+import { Ref, useState } from "preact/hooks";
 
 import { DragTransform, Point } from "../../../types/ui";
 import { disableDrag, enableDrag } from "../../../util/zoom/drag";
@@ -10,7 +10,7 @@ interface Props {
     /**
      * The element's reference
      */
-    elementRef: PropRef<SVGElement>;
+    elementRef: Ref<SVGElement>;
     /**
      * The element's id
      */

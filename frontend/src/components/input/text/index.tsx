@@ -107,7 +107,7 @@ const TextInput: preact.FunctionalComponent<Props> = ({
     spellcheck = false,
     ...props
 }) => {
-    const input = useRef<HTMLInputElement>();
+    const input = useRef<HTMLInputElement>(null);
 
     const [text, setText] = useState(startValue);
 

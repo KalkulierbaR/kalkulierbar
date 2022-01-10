@@ -45,7 +45,7 @@ const NCTabNode: preact.FunctionalComponent<Props> = ({
     onDrag,
     zoomFactor,
 }) => {
-    const textRef = useRef<SVGTextElement>();
+    const textRef = useRef<SVGTextElement>(null);
 
     // Uses parameter lemmaNodesSelectable to determine if the Node should be selectable
     const nodeIsClickable = true;
