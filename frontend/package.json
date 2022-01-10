@@ -13,6 +13,7 @@
         "serve-only": "serve build/ -s -l ${PORT:-8080}",
         "dev": "preact watch",
         "lint": "tslint --project .",
+        "lint-staged": "lint-staged",
         "test": "",
         "postinstall": "cd .. && husky install frontend/.husky"
     },
@@ -66,12 +67,6 @@
     "peerDependencies": {
         "prettier": ">1.0.0",
         "tslint": ">5.0.0"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged",
-            "pre-push": "lint-staged"
-        }
     },
     "packageManager": "yarn@3.1.1"
 }
