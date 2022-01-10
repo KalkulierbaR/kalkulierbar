@@ -18,15 +18,6 @@ import TextInput from "../text";
 
 import * as style from "./style.scss";
 
-declare module "preact" {
-    namespace JSX {
-        // tslint:disable-next-line:no-unused-declaration
-        interface HTMLAttributes<RefType extends EventTarget = EventTarget> {
-            autocapitalize?: "off";
-        }
-    }
-}
-
 interface Props {
     /**
      * The calculus to use. Specifies API endpoint

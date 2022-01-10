@@ -31,7 +31,7 @@ const DPLLNode: preact.FunctionalComponent<Props> = ({
     selected,
     selectNodeCallback,
 }) => {
-    const textRef = useRef<SVGTextElement>();
+    const textRef = useRef<SVGTextElement>(null);
 
     const isAnnotation =
         node.data.type === DPLLNodeType.MODEL ||

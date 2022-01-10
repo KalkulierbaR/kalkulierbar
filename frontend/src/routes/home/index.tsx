@@ -51,7 +51,7 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
         setConfig,
     } = useAppState();
 
-    const link = useRef<HTMLAnchorElement>();
+    const link = useRef<HTMLAnchorElement>(null);
 
     const handleChange = (checked: boolean) => {
         setCalculusState(
