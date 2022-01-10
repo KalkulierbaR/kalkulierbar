@@ -9111,7 +9111,7 @@ __metadata:
     tslint-consistent-codestyle: 1.16.0
     tslint-eslint-rules: 5.4.0
     tslint-etc: 1.13.10
-    tslint-react: 3.6.0
+    tslint-react: 4.1.0
     typescript: 4.5.4
     typings-for-css-modules-loader: 1.7.0
   peerDependencies:
@@ -15410,15 +15410,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslint-react@npm:3.6.0":
-  version: 3.6.0
-  resolution: "tslint-react@npm:3.6.0"
+"tslint-react@npm:4.1.0":
+  version: 4.1.0
+  resolution: "tslint-react@npm:4.1.0"
   dependencies:
-    tsutils: ^2.13.1
+    tsutils: ^3.9.1
   peerDependencies:
     tslint: ^5.1.0
-    typescript: ">=2.1.0 || >=2.7.0-dev || >=2.8.0-dev || >=2.9.0-dev"
-  checksum: 4c6f3831af906d0d2dcbdcd23809d2a06819817b112c451da429466aaa5b0c5a886d48c3986a82dca76a60b80da6b9b1de801a8f421a1e95e9c892f1d9d13000
+    typescript: ">=2.8.0"
+  checksum: 3549bfaebd708aaa21caafd32d9f506d0d4317aa08cc6373b1af54e433ac4809e06cc9c058fb9133220d960ec92f053aaddde9beed472177d363c65f93ec056f
   languageName: node
   linkType: hard
 
@@ -15462,7 +15462,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsutils@npm:^2.13.1, tsutils@npm:^2.29.0":
+"tsutils@npm:^2.29.0":
   version: 2.29.0
   resolution: "tsutils@npm:2.29.0"
   dependencies:
@@ -15481,6 +15481,17 @@ __metadata:
   peerDependencies:
     typescript: ">=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta"
   checksum: 0dd8c29b2f554d71179dfdd7c3a55b973c0d21ba2b28868ca2acc0bda7469e2ae94f7f454c0f342934b3a653ed4424bfa9c12fa84dac0e126408d6fcd9271510
+  languageName: node
+  linkType: hard
+
+"tsutils@npm:^3.9.1":
+  version: 3.21.0
+  resolution: "tsutils@npm:3.21.0"
+  dependencies:
+    tslib: ^1.8.1
+  peerDependencies:
+    typescript: ">=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta"
+  checksum: 1843f4c1b2e0f975e08c4c21caa4af4f7f65a12ac1b81b3b8489366826259323feb3fc7a243123453d2d1a02314205a7634e048d4a8009921da19f99755cdc48
   languageName: node
   linkType: hard
 
