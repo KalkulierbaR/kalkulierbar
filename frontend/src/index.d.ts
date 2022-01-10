@@ -22,3 +22,6 @@ declare module "async!../routes/resolution*" {
     }>;
     export default component;
 }
+
+// Tell TypeScript to look for './style.scss.d.ts' modules
+declare module '*.scss';
