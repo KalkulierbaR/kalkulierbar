@@ -73,7 +73,7 @@ const LineUnderNode: preact.FunctionalComponent<LineUnderNodeProps> = ({
         });
         const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
 
-        const parentTextRef = useRef<SVGTextElement>();
+        const parentTextRef = useRef<SVGTextElement>(null);
 
         useEffect(() => {
             if (!parentTextRef.current) {
@@ -228,7 +228,7 @@ const SequentTreeNode: preact.FunctionalComponent<Props> = ({
     selectedListIndex,
     selectFormulaCallback,
 }) => {
-    const textRef = useRef<SVGTextElement>();
+    const textRef = useRef<SVGTextElement>(null);
 
     if (
         node.data.leftFormulas.length === 0 &&
