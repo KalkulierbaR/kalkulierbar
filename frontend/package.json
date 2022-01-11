@@ -53,8 +53,8 @@
         "webpack": "4.46.0"
     },
     "dependencies": {
-        "@material/radio": "4.0.0",
-        "@material/switch": "4.0.0",
+        "@material/radio": "13.0.0",
+        "@material/switch": "13.0.0",
         "firebase-tools": "10.0.1",
         "preact": "10.6.4",
         "preact-markup": "2.1.1",
