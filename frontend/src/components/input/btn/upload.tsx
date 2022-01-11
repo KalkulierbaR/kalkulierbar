@@ -20,7 +20,7 @@ interface Props {
 const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const { server, onChange, notificationHandler } = useAppState();
 
-    const input = useRef<HTMLInputElement>();
+    const input = useRef<HTMLInputElement>(null);
 
     const handleClick = () => {
         if (!input.current) {

@@ -43,8 +43,8 @@ object ClauseSetParser {
         // v(,v)* matches arbitrarily long lists of variables, e.g. a,b,!c,d. Let's call that "l"
         // l(;l)* matches arbitrarily many lists, e.g. a,b;c,!d;e
         // Easy, right?
-        val atom = "($nSig)?[a-zA-Z0-9]+"
-        val formulaFormat = "$atom($aSep$atom)*($cSep$atom($aSep$atom)*)*"
+        val atomRegex = "($nSig)?[a-zA-Z0-9]+"
+        val formulaFormat = "$atomRegex($aSep$atomRegex)*($cSep$atomRegex($aSep$atomRegex)*)*"
 
         if (!(Regex(formulaFormat) matches pf))
             throw InvalidFormulaFormat(
