@@ -81,7 +81,7 @@ private fun closeBranchCommon(
     state.applyVarInstantiation(varAssign)
 
     if (!leaf.relation.synEq(closeNode.relation))
-        throw IllegalMove("Node '$leaf' and '$closeNode' are not equal after variable instantiation")
+        throw IllegalMove("Nodes '$leaf' and '$closeNode' are not equal after variable instantiation")
 
     // Instantiating variables globally may violate regularity in unexpected places
     if (state.regular && !checkRegularity(state))
