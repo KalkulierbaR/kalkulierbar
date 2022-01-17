@@ -22,6 +22,10 @@
         "digest"
       ],
       "groupName": "non-major"
+    },
+    {
+      "matchPackageNames": "preact-cli",
+      "allowedVersions": "<=3.0.5"
     }
   ],
   "automergeType": "branch",
