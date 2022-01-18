@@ -21,7 +21,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
     // Web framework
-    implementation("io.javalin:javalin:4.2.0")
+    implementation("io.javalin:javalin:4.3.0")
 
     // Logging
     implementation("org.slf4j:slf4j-simple:1.8.0-beta4")

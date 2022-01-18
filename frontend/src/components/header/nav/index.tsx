@@ -10,7 +10,7 @@ import * as style from "./style.scss";
 
 interface NavProps {
     /**
-     * Whether or not the hamburger is shown
+     * Whether the hamburger is shown
      */
     hamburger: boolean;
     /**
