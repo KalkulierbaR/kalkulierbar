@@ -49,12 +49,8 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
     setShowModelDialog,
     setShowSplitDialog,
 }) => {
-    const {
-        smallScreen,
-        server,
-        onChange,
-        notificationHandler,
-    } = useAppState();
+    const { smallScreen, server, onChange, notificationHandler } =
+        useAppState();
 
     const couldShowCheckCloseHint = stateIsClosed(state.tree);
     const treeIsVisible = !smallScreen || showTree;

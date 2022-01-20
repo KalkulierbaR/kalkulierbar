@@ -72,9 +72,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
     const [textareaValue, setTextareaValue] = useState("");
     const [exampleNameInput, setExampleNameInput] = useState("");
     const [exampleDescriptionInput, setExampleDescriptionInput] = useState("");
-    const [showCreateExampleDialog, setShowCreateExampleDialog] = useState(
-        false,
-    );
+    const [showCreateExampleDialog, setShowCreateExampleDialog] =
+        useState(false);
 
     useEffect(() => {
         setTextareaValue(savedFormulas[calculus]);

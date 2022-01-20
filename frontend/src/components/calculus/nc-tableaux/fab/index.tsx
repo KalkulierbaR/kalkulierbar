@@ -49,12 +49,8 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
     setSelectedNode,
     resetDragTransform,
 }) => {
-    const {
-        smallScreen,
-        server,
-        onChange,
-        notificationHandler,
-    } = useAppState();
+    const { smallScreen, server, onChange, notificationHandler } =
+        useAppState();
 
     const selectedNode =
         selectedNodeId === undefined ? undefined : state.tree[selectedNodeId];

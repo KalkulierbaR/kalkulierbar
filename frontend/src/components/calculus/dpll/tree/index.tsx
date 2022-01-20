@@ -46,8 +46,9 @@ const DPLLTree: preact.FunctionalComponent<Props> = ({
                     <g
                         transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
-                        {links.map((l) => (
+                        {links.map((l, i) => (
                             <line
+                                key={i}
                                 class={style.link}
                                 x1={l.source[0]}
                                 y1={l.source[1] + 6}
@@ -57,6 +58,7 @@ const DPLLTree: preact.FunctionalComponent<Props> = ({
                         ))}
                         {data.map((d) => (
                             <DPLLNode
+                                key={d.data.id}
                                 node={d}
                                 selected={d.data.id === selectedNode}
                                 selectNodeCallback={() => onSelect(d.data.id)}

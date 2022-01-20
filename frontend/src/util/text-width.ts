@@ -1,4 +1,4 @@
-const svg = (document.getElementById("kbar-svg") as unknown) as SVGSVGElement;
+const svg = document.getElementById("kbar-svg") as unknown as SVGSVGElement;
 const svgNS = svg.namespaceURI;
 
 /**

@@ -81,12 +81,8 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
     pruneCallback,
     closeCallback,
 }) => {
-    const {
-        server,
-        smallScreen,
-        onChange,
-        notificationHandler,
-    } = useAppState();
+    const { server, smallScreen, onChange, notificationHandler } =
+        useAppState();
 
     const showUndoFAB = state.backtracking && state.moveHistory.length > 0;
 

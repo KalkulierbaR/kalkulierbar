@@ -48,12 +48,8 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
     pruneCallback,
     closeCallback,
 }) => {
-    const {
-        server,
-        smallScreen,
-        onChange,
-        notificationHandler,
-    } = useAppState();
+    const { server, smallScreen, onChange, notificationHandler } =
+        useAppState();
 
     return (
         <Fragment>
