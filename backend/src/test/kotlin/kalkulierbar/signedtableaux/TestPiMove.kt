@@ -1,10 +1,7 @@
-package kalkulierbar.test.signedtableaux
+package kalkulierbar.signedtableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.NuMove
-import kalkulierbar.signedtableaux.PiMove
-import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue

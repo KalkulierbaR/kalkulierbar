@@ -1,4 +1,4 @@
-package kalkulierbar.tests.regression
+package kalkulierbar.regression
 
 import kalkulierbar.logic.transform.NegationNormalForm
 import kalkulierbar.logic.transform.UniqueVariables
@@ -6,6 +6,7 @@ import kalkulierbar.parsers.FirstOrderParser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+// based on issue #46 in internal gitlab, now inaccessible
 class TestIssue46 {
 
     private val testStrings = mapOf(

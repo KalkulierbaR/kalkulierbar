@@ -1,7 +1,6 @@
-package kalkulierbar.test.signedtableaux
+package kalkulierbar.signedtableaux
 
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

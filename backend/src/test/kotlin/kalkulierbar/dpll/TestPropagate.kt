@@ -1,9 +1,6 @@
-package kalkulierbar.tests.dpll
+package kalkulierbar.dpll
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.dpll.DPLL
-import kalkulierbar.dpll.MovePropagate
-import kalkulierbar.dpll.NodeType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

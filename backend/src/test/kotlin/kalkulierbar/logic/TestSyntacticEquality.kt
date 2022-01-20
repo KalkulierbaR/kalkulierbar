@@ -1,9 +1,6 @@
-package kalkulierbar.tests.logic
+package kalkulierbar.logic
 
 import kalkulierbar.clause.Atom
-import kalkulierbar.logic.Constant
-import kalkulierbar.logic.FirstOrderTerm
-import kalkulierbar.logic.Relation
 import kalkulierbar.parsers.FirstOrderParser
 import kotlin.test.Test
 import kotlin.test.assertEquals

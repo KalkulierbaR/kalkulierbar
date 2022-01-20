@@ -1,7 +1,5 @@
-package kalkulierbar.tests.resolution
+package kalkulierbar.resolution
 
-import kalkulierbar.resolution.MoveResolve
-import kalkulierbar.resolution.PropositionalResolution
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

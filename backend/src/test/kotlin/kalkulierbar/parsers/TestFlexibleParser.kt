@@ -1,8 +1,6 @@
-package kalkulierbar.tests.parsers
+package kalkulierbar.parsers
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.parsers.CnfStrategy
-import kalkulierbar.parsers.FlexibleClauseSetParser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

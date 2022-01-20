@@ -1,4 +1,4 @@
-package kalkulierbar.test.signedtableaux
+package kalkulierbar.signedtableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser

@@ -1,4 +1,4 @@
-package kalkulierbar.tests.tableaux
+package kalkulierbar.tableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.tableaux.*

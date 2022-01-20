@@ -1,7 +1,6 @@
-package kalkulierbar.test.dpll
+package kalkulierbar.dpll
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.dpll.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

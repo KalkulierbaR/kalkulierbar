@@ -1,4 +1,4 @@
-package kalkulierbar.tests.regression
+package kalkulierbar.regression
 
 import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.MoveHyper
@@ -6,6 +6,7 @@ import kalkulierbar.resolution.PropositionalResolution
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+// based on issue #67 in internal gitlab, now inaccessible
 class TestIssue67 {
     @Test
     fun testProp() {

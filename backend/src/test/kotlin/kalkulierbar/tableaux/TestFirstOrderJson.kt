@@ -1,10 +1,6 @@
-package kalkulierbar.tests.tableaux
+package kalkulierbar.tableaux
 
 import kalkulierbar.JsonParseException
-import kalkulierbar.tableaux.FirstOrderTableaux
-import kalkulierbar.tableaux.FoTableauxParam
-import kalkulierbar.tableaux.MoveExpand
-import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
