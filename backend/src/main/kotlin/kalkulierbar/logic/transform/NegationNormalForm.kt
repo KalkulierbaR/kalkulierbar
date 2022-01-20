@@ -43,10 +43,9 @@ class NegationNormalForm : DoNothingVisitor() {
     @Suppress("ComplexMethod")
     override fun visit(node: Not): LogicNode {
         val res: LogicNode
-        val child = node.child
 
         // Perform Negation-Pushdown
-        when (child) {
+        when (val child = node.child) {
             is Not -> {
                 // Eliminate double negation
                 res = child.child.accept(this)

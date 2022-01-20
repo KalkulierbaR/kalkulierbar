@@ -194,11 +194,11 @@ export const getNode = (t: Tree<ModalTableauxTreeLayoutNode>, id: number) =>
  * @param {StateUpdater<Record<number, DragTransform>>} setDragTransform - The update function
  * @returns {Function} - Drag handler
  */
-export const updateDragTransform = (
-    setDragTransform: StateUpdater<Record<number, DragTransform>>,
-) => (id: number, dt: DragTransform) => {
-    setDragTransform((prev) => ({
-        ...prev,
-        [id]: dt,
-    }));
-};
+export const updateDragTransform =
+    (setDragTransform: StateUpdater<Record<number, DragTransform>>) =>
+    (id: number, dt: DragTransform) => {
+        setDragTransform((prev) => ({
+            ...prev,
+            [id]: dt,
+        }));
+    };

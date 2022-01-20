@@ -16,15 +16,15 @@ import kotlin.test.assertFailsWith
 
 class TestAdmin {
 
-    val date = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())!!
-    val key = "WildFlowers/UncomfortableMoons"
+    private val date = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())!!
+    private val key = "WildFlowers/UncomfortableMoons"
 
     @BeforeTest
     fun resetCompanion() {
         StateKeeper.reset()
     }
 
-    private fun toHex(bytes: ByteArray) = bytes.map { String.format("%02X", it) }.joinToString("")
+    private fun toHex(bytes: ByteArray) = bytes.joinToString("") { String.format("%02X", it) }
 
     @Test
     fun testInitialConfig() {

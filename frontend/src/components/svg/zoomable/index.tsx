@@ -151,9 +151,9 @@ export default class Zoomable extends Component<Props, State> {
         g.zoom("mouse", t);
 
         // Remove our wheel event after some time
-        g.wheel = (setTimeout(() => {
+        g.wheel = setTimeout(() => {
             g.wheel = undefined;
-        }, 150) as unknown) as number;
+        }, 150) as unknown as number;
 
         // Propagate changes, re-render
         this.setState({ transform: t, gesture: g });
@@ -270,10 +270,10 @@ export default class Zoomable extends Component<Props, State> {
         }
 
         if (started && g.taps < 2) {
-            this.touchStarting = (setTimeout(
+            this.touchStarting = setTimeout(
                 () => (this.touchStarting = undefined),
                 500,
-            ) as unknown) as number;
+            ) as unknown as number;
         }
 
         this.setState({ transform: t, gesture: g });
@@ -369,10 +369,10 @@ export default class Zoomable extends Component<Props, State> {
             this.touchEnding = undefined;
         }
 
-        this.touchEnding = (setTimeout(
+        this.touchEnding = setTimeout(
             () => (this.touchEnding = undefined),
             500,
-        ) as unknown) as number;
+        ) as unknown as number;
 
         // Delete saved touches, that are gone
         for (let i = 0; i < n; i++) {

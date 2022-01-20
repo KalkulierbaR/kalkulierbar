@@ -52,21 +52,24 @@ const NCTabTree: preact.FunctionalComponent<Props> = ({
                 <g
                     transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                 >
-                    {/* #1 render ClosingEdges -> keep order to avoid overlapping */
-                    getClosedLeaves(root).map((n) => (
-                        <ClosingEdge
-                            root={root}
-                            leaf={n}
-                            pred={
-                                findSubTree(
-                                    root,
-                                    (t) => t.data.id === n.data.closeRef!,
-                                    (t) => t,
-                                )!
-                            }
-                            dragTransforms={dragTransforms}
-                        />
-                    ))}
+                    {
+                        /* #1 render ClosingEdges -> keep order to avoid overlapping */
+                        getClosedLeaves(root).map((n) => (
+                            <ClosingEdge
+                                key={n.data.id}
+                                root={root}
+                                leaf={n}
+                                pred={
+                                    findSubTree(
+                                        root,
+                                        (t) => t.data.id === n.data.closeRef!,
+                                        (t) => t,
+                                    )!
+                                }
+                                dragTransforms={dragTransforms}
+                            />
+                        ))
+                    }
                     <NCSubTree
                         node={root}
                         zoomFactor={transform.k}

@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 
 class TestPropagate {
 
-    val dpll = DPLL()
+    private val dpll = DPLL()
 
     @Test
     fun testValidDiffers() {

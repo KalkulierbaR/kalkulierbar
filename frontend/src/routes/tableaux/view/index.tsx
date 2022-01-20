@@ -68,9 +68,10 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         (id: number) => onDrag(id, { x: 0, y: 0 }),
         [onDrag],
     );
-    const resetDragTransforms = useCallback(() => setDragTransforms({}), [
-        setDragTransforms,
-    ]);
+    const resetDragTransforms = useCallback(
+        () => setDragTransforms({}),
+        [setDragTransforms],
+    );
 
     const clauseOptions = clauseSetToStringMap(state.clauseSet);
 

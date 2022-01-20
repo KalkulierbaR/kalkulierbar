@@ -80,12 +80,8 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
     showGrid,
     setShowGrid,
 }) => {
-    const {
-        server,
-        smallScreen,
-        onChange,
-        notificationHandler,
-    } = useAppState();
+    const { server, smallScreen, onChange, notificationHandler } =
+        useAppState();
     const apiInfo = { onChange, server, notificationHandler, state };
 
     return (

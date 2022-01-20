@@ -5,8 +5,8 @@ import kotlin.test.assertEquals
 
 class TestCheckClose {
 
-    val propTableaux = PropositionalTableaux()
-    val tableauxOpts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
+    private val propTableaux = PropositionalTableaux()
+    private val tableauxOpts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
 
     @Test
     fun testCheckCloseSimple() {

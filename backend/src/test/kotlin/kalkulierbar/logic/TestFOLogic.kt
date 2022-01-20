@@ -1,7 +1,6 @@
 package kalkulierbar.logic
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.*
 import kalkulierbar.logic.transform.NaiveCNF
 import kalkulierbar.logic.transform.ToBasicOps
 import kalkulierbar.logic.transform.TseytinCNF

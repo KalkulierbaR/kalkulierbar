@@ -60,16 +60,18 @@ const OptionList: preact.FunctionalComponent<Props> = ({
                 <div class={`card ${className}`}>
                     <p class={style.originList}>
                         <code class={style.formula}>
-                            {// Sequent calculus
-                            parseFormula(
-                                listIndex?.charAt(0) === "l"
-                                    ? node.leftFormulas[
-                                          parseStringToListIndex(listIndex)
-                                      ]
-                                    : node.rightFormulas[
-                                          parseStringToListIndex(listIndex)
-                                      ],
-                            )}
+                            {
+                                // Sequent calculus
+                                parseFormula(
+                                    listIndex?.charAt(0) === "l"
+                                        ? node.leftFormulas[
+                                              parseStringToListIndex(listIndex)
+                                          ]
+                                        : node.rightFormulas[
+                                              parseStringToListIndex(listIndex)
+                                          ],
+                                )
+                            }
                         </code>
                         <br />
                     </p>
@@ -83,9 +85,8 @@ const OptionList: preact.FunctionalComponent<Props> = ({
                             onClick={() => handleClick(keyValuePair)}
                             class={classMap({
                                 [style.option]: true,
-                                [style.optionSelected]: selectedOptionIds.includes(
-                                    keyValuePair[0],
-                                ),
+                                [style.optionSelected]:
+                                    selectedOptionIds.includes(keyValuePair[0]),
                                 [style.optionDisabled]: !shouldDisableOption(
                                     keyValuePair[0],
                                 ),

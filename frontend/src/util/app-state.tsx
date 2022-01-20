@@ -103,15 +103,17 @@ const reducer: Reducer<AppState, AppStateAction> = (
  * @param {Function} dispatch - dispatch function
  * @returns {Function} - calculus state setter
  */
-export const updateCalculusState = <C extends CalculusType = CalculusType>(
-    dispatch: (state: AppStateAction) => void,
-) => (calculus: C, state: AppState[C]) => {
-    dispatch({
-        type: AppStateActionType.UPDATE_CALCULUS_STATE,
-        calculus,
-        value: state,
-    });
-};
+export const updateCalculusState =
+    <C extends CalculusType = CalculusType>(
+        dispatch: (state: AppStateAction) => void,
+    ) =>
+    (calculus: C, state: AppState[C]) => {
+        dispatch({
+            type: AppStateActionType.UPDATE_CALCULUS_STATE,
+            calculus,
+            value: state,
+        });
+    };
 
 /**
  * Creates a notification handler
@@ -172,44 +174,44 @@ export const AppStateCtx = createContext<DerivedAppState>(
  */
 export const useAppState = () => useContext(AppStateCtx);
 
-export const AppStateProvider = (
-    App: preact.FunctionalComponent,
-): preact.FunctionalComponent => () => {
-    const storedTheme = localStorageGet<Theme>("theme");
-    const storedServer = localStorageGet<string>("server");
-    const tutorialMode =
-        localStorageGet<TutorialMode>("tutorial_mode") ??
-        TutorialMode.HighlightAll;
-    const adminKey = localStorageGet<string>("admin_key");
+export const AppStateProvider =
+    (App: preact.FunctionalComponent): preact.FunctionalComponent =>
+    () => {
+        const storedTheme = localStorageGet<Theme>("theme");
+        const storedServer = localStorageGet<string>("server");
+        const tutorialMode =
+            localStorageGet<TutorialMode>("tutorial_mode") ??
+            TutorialMode.HighlightAll;
+        const adminKey = localStorageGet<string>("admin_key");
 
-    INIT_APP_STATE.theme = storedTheme || INIT_APP_STATE.theme;
-    INIT_APP_STATE.server = storedServer || INIT_APP_STATE.server;
-    INIT_APP_STATE.tutorialMode = tutorialMode;
-    INIT_APP_STATE.adminKey = adminKey || INIT_APP_STATE.adminKey;
+        INIT_APP_STATE.theme = storedTheme || INIT_APP_STATE.theme;
+        INIT_APP_STATE.server = storedServer || INIT_APP_STATE.server;
+        INIT_APP_STATE.tutorialMode = tutorialMode;
+        INIT_APP_STATE.adminKey = adminKey || INIT_APP_STATE.adminKey;
 
-    const [state, dispatch] = useReducer<AppState, AppStateAction>(
-        reducer,
-        INIT_APP_STATE,
-    );
-    const derived = derive(state, dispatch);
+        const [state, dispatch] = useReducer<AppState, AppStateAction>(
+            reducer,
+            INIT_APP_STATE,
+        );
+        const derived = derive(state, dispatch);
 
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", derived.theme);
-        localStorageSet("theme", derived.theme);
-    }, [derived.theme]);
-    useEffect(() => {
-        localStorageSet("server", derived.server);
-    }, [derived.server]);
-    useEffect(() => {
-        localStorageSet("tutorial_mode", derived.tutorialMode);
-    }, [derived.tutorialMode]);
-    useEffect(() => {
-        localStorageSet("admin_key", derived.adminKey);
-    }, [derived.adminKey]);
+        useEffect(() => {
+            document.documentElement.setAttribute("data-theme", derived.theme);
+            localStorageSet("theme", derived.theme);
+        }, [derived.theme]);
+        useEffect(() => {
+            localStorageSet("server", derived.server);
+        }, [derived.server]);
+        useEffect(() => {
+            localStorageSet("tutorial_mode", derived.tutorialMode);
+        }, [derived.tutorialMode]);
+        useEffect(() => {
+            localStorageSet("admin_key", derived.adminKey);
+        }, [derived.adminKey]);
 
-    return (
-        <AppStateCtx.Provider value={derived}>
-            <App />
-        </AppStateCtx.Provider>
-    );
-};
+        return (
+            <AppStateCtx.Provider value={derived}>
+                <App />
+            </AppStateCtx.Provider>
+        );
+    };

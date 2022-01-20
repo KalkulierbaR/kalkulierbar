@@ -7,7 +7,7 @@ import { useState } from "preact/hooks";
  */
 export const localStorageGet = <V>(key: string): V | null => {
     try {
-        const value = (localStorage.getItem(key) as unknown) as V | null;
+        const value = localStorage.getItem(key) as unknown as V | null;
         return !isNaN(value as any) && value !== null
             ? (parseInt(value as any) as any)
             : value;

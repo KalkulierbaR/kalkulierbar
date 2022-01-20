@@ -46,10 +46,9 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
      */
     override fun visit(node: Not): ClauseSet<String> {
         val res: ClauseSet<String>
-        val child = node.child
 
         // Perform Negation-Pushdown
-        when (child) {
+        when (val child = node.child) {
             is Not -> {
                 // Eliminate double negation
                 res = child.child.accept(this)

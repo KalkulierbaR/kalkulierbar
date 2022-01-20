@@ -72,15 +72,15 @@ const ResolutionFactorizeDialog: preact.FunctionalComponent<Props> = ({
         if (selectedClauses !== undefined) {
             if (instanceOfPropResState(state, calculus)) {
                 options = stringArrayToStringMap(
-                    state.clauseSet.clauses[
-                        selectedClauses[0]
-                    ].atoms.map((atom: Atom) => atomToString(atom)),
+                    state.clauseSet.clauses[selectedClauses[0]].atoms.map(
+                        (atom: Atom) => atomToString(atom),
+                    ),
                 );
             } else if (instanceOfFOResState(state, calculus)) {
                 options = stringArrayToStringMap(
-                    state.clauseSet.clauses[
-                        selectedClauses[0]
-                    ].atoms.map((atom: FOAtom) => atomToString(atom)),
+                    state.clauseSet.clauses[selectedClauses[0]].atoms.map(
+                        (atom: FOAtom) => atomToString(atom),
+                    ),
                 );
             }
         }

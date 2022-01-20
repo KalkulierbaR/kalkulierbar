@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 
 class TestPrune {
 
-    val dpll = DPLL()
+    private val dpll = DPLL()
 
     @Test
     fun testValidPropagatePrune() {

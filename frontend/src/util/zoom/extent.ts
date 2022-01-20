@@ -7,7 +7,7 @@ import { Extent } from "../../types/ui";
  */
 export function extent(e: HTMLElement | SVGSVGElement): Extent {
     if (e instanceof SVGElement) {
-        const svg = e.ownerSVGElement || ((e as unknown) as SVGSVGElement);
+        const svg = e.ownerSVGElement || (e as unknown as SVGSVGElement);
         if (svg.hasAttribute("viewBox")) {
             const base = svg.viewBox.baseVal;
             return [

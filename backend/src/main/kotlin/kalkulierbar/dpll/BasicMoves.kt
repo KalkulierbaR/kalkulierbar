@@ -171,18 +171,17 @@ fun checkModel(state: DPLLState, branchID: Int, interpretation: Map<String, Bool
     if (branch.type != NodeType.MODEL)
         throw IllegalMove("Node '$branch' is not a model node")
 
-    if (branch.modelVerified ?: false)
+    if (branch.modelVerified == true)
         throw IllegalMove("This node has already been checked")
 
     val clauseSet = state.getClauseSet(branchID)
 
     // Check that the mapping satisfies every clause
-    clauseSet.clauses.forEach {
-        val atoms = it.atoms
+    clauseSet.clauses.forEach { clause ->
         // Check if any atom in the clause is satisfied by the interpretation
         // (-> the atom's negated value is the opposite of the interp. truth value)
-        if (!atoms.any { !it.negated == interpretation[it.lit] })
-            throw IllegalMove("The given interpretation does not satisfy any atom of clause $it")
+        if (!clause.atoms.any { !it.negated == interpretation[it.lit] })
+            throw IllegalMove("The given interpretation does not satisfy any atom of clause $clause")
     }
 
     branch.modelVerified = true

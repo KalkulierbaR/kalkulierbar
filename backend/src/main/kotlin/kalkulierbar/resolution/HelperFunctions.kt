@@ -43,8 +43,7 @@ fun <AtomType> getAutoResolutionCandidates(
 ): Pair<Atom<AtomType>, Atom<AtomType>> {
 
     // Find literals present in both clauses
-    var sharedAtoms = c1.atoms.filter {
-        val c1atom = it
+    var sharedAtoms = c1.atoms.filter { c1atom ->
         c2.atoms.any { literalsAreEqual(c1atom.lit, it.lit) }
     }
 

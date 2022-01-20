@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 
 class TestSplit {
 
-    val dpll = DPLL()
+    private val dpll = DPLL()
 
     @Test
     fun testValidSingleClause() {

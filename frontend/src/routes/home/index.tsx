@@ -43,13 +43,8 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
     route: { href, name, image, viewBox },
     showSwitch = false,
 }) => {
-    const {
-        config,
-        server,
-        notificationHandler,
-        adminKey,
-        setConfig,
-    } = useAppState();
+    const { config, server, notificationHandler, adminKey, setConfig } =
+        useAppState();
 
     const link = useRef<HTMLAnchorElement>(null);
 

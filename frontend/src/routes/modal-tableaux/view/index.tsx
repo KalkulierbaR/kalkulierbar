@@ -60,9 +60,10 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
         (id: number) => onDrag(id, { x: 0, y: 0 }),
         [onDrag],
     );
-    const resetDragTransforms = useCallback(() => setDragTransforms({}), [
-        setDragTransforms,
-    ]);
+    const resetDragTransforms = useCallback(
+        () => setDragTransforms({}),
+        [setDragTransforms],
+    );
     const [showPrefixDialog, setShowPrefixDialog] = useState<boolean>(false);
 
     const [showSaveDialog, setShowSaveDialog] = useState<boolean>(false);

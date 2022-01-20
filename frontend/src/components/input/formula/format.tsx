@@ -32,9 +32,10 @@ const Format: preact.FunctionalComponent<Props> = ({ logicType = "prop" }) => {
 
     const [collapsed, setCollapsed] = useState(!firstVisit);
 
-    const toggleCollapsed = useCallback(() => setCollapsed(!collapsed), [
-        collapsed,
-    ]);
+    const toggleCollapsed = useCallback(
+        () => setCollapsed(!collapsed),
+        [collapsed],
+    );
 
     const sequentFormat = (
         <li>

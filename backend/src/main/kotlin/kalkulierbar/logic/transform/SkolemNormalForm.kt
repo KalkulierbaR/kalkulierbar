@@ -6,7 +6,7 @@ import kalkulierbar.logic.LogicNode
  * Visitor-based transformation for FO-formulae into Skolem Normal Form
  *
  * A formula in Skolem normal form consists of a string of universal quantifiers
- * followed by a quantor-free formula
+ * followed by a quantifier-free formula
  * For more information, see https://en.wikipedia.org/wiki/Skolem_normal_form
  */
 class SkolemNormalForm {

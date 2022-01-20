@@ -10,7 +10,7 @@ object PropositionalSequentParser {
     /**
      * Parses a string directly into a PSCState using the PropositionalParser
      * to parse single formulas separated by ',' in the input string
-     * and seperated by '|-' to differentiate between left and right side;
+     * and separated by '|-' to differentiate between left and right side;
      */
     fun parse(formula: String): Pair<List<LogicNode>, List<LogicNode>> {
         // Find left and right formulas in the input string

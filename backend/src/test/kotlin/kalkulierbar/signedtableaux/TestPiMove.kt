@@ -41,7 +41,7 @@ class TestPiMove {
 
     @Test
     fun testWrongSignBox() {
-        var state = instance.parseFormulaToState("\\sign T: []a", null)
+        val state = instance.parseFormulaToState("\\sign T: []a", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, PiMove(1, 0, null))
@@ -50,7 +50,7 @@ class TestPiMove {
 
     @Test
     fun testWrongSignDiamond() {
-        var state = instance.parseFormulaToState("\\sign F: <>a", null)
+        val state = instance.parseFormulaToState("\\sign F: <>a", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, NuMove(1, 0, null))
