@@ -114,8 +114,8 @@ class FoTableauxState(
     fun applyVarInstantiation(varAssign: Map<String, FirstOrderTerm>) {
         val instantiator = VariableInstantiator(varAssign)
 
-        tree.forEach {
-            it.relation.arguments = it.relation.arguments.map { it.accept(instantiator) }
+        tree.forEach { node ->
+            node.relation.arguments = node.relation.arguments.map { it.accept(instantiator) }
         }
     }
 

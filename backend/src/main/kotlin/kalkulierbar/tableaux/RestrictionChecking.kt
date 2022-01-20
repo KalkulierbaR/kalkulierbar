@@ -224,7 +224,7 @@ fun <AtomType> ensureExpandability(state: GenericTableauxState<AtomType>, leafID
 /**
  * Ensures that basic conditions for branch closure are met
  * If a condition is not met, an explaining exception will be thrown
- * Conditions inlcude:
+ * Conditions include:
  *  - Both nodes exist
  *  - The specified leaf is a leaf and not yet closed
  *  - Both nodes share the same literal stem (variable name or relation name)

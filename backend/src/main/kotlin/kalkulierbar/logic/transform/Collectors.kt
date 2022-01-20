@@ -14,7 +14,7 @@ class FreeVariableCollector : DoNothingCollector() {
         /**
          * Collects a set of free variables in a logic-node structure
          * @param formula formula to search for free variables
-         * @return a set of free variables not bound to any quantor
+         * @return a set of free variables not bound to any quantifier
          */
         fun collect(formula: LogicNode): Set<QuantifiedVariable> {
             instance.freeVariables.clear()

@@ -118,14 +118,10 @@ class FirstOrderParser : PropositionalParser() {
         else if (boundBefore.isNotEmpty())
             quantifierScope.last().addAll(boundBefore)
 
-        val res: LogicNode
-
-        res = if (quantType == TokenType.UNIVERSALQUANT)
+        return if (quantType == TokenType.UNIVERSALQUANT)
             UniversalQuantifier(varName, subexpression, boundVariables)
         else
             ExistentialQuantifier(varName, subexpression, boundVariables)
-
-        return res
     }
 
     /**
@@ -179,9 +175,7 @@ class FirstOrderParser : PropositionalParser() {
         if (!nextTokenIsIdentifier())
             throw InvalidFormulaFormat("Expected identifier but got ${gotMsg()}")
 
-        val res: FirstOrderTerm
-
-        res = if (nextTokenIs(TokenType.CAPID)) {
+        return if (nextTokenIs(TokenType.CAPID)) {
             // Next token is quantified variable
             parseQuantifiedVariable()
         } else {
@@ -193,8 +187,6 @@ class FirstOrderParser : PropositionalParser() {
             else
                 Constant(identifier)
         }
-
-        return res
     }
 
     /**

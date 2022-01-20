@@ -102,10 +102,10 @@ private fun instantiateReturn(
     val instantiator = VariableInstantiator(varAssign)
 
     // Build the new clause by cloning atoms from the base clause and applying instantiation
-    baseClause.atoms.forEach {
-        val relationArgs = it.lit.arguments.map { it.clone().accept(instantiator) }
-        val newRelation = Relation(it.lit.spelling, relationArgs)
-        val newAtom = Atom(newRelation, it.negated)
+    baseClause.atoms.forEach { atom ->
+        val relationArgs = atom.lit.arguments.map { it.clone().accept(instantiator) }
+        val newRelation = Relation(atom.lit.spelling, relationArgs)
+        val newAtom = Atom(newRelation, atom.negated)
         newClause.add(newAtom)
     }
     return newClause
