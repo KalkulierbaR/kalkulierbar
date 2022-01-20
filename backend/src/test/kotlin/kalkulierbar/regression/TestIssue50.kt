@@ -1,13 +1,13 @@
-package kalkulierbar.tests.resolution
+package kalkulierbar.regression
 
 import kalkulierbar.resolution.FirstOrderResolution
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TestFOResolutionInit {
+// see https://github.com/KalkulierbaR/kalkulierbar/issues/50
+class TestIssue50 {
     private val inst = FirstOrderResolution()
 
-    // See #50 for explanation
     @Test
     fun testSuffixes() {
         val state = inst.parseFormulaToState("/all M: /all N: (Subset(M, N) <-> /all A: (In(A, M) -> In(A, N)))", null)

@@ -1,4 +1,4 @@
-package kalkulierbar.tests.regression
+package kalkulierbar.regression
 
 import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.FoTableauxParam
@@ -10,6 +10,7 @@ import kalkulierbar.tableaux.TableauxType
 import kalkulierbar.tableaux.checkRegularity
 import kotlin.test.Test
 
+// based on issue #56 in internal gitlab, now inaccessible
 class TestIssue56 {
 
     @Test

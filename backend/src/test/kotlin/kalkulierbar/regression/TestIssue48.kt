@@ -1,4 +1,4 @@
-package kalkulierbar.tests.regression
+package kalkulierbar.regression
 
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.transform.Skolemization
@@ -7,6 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
+// based on issue #48 in internal gitlab, now inaccessible
 class TestIssue48 {
 
     private val testStrings = mapOf(

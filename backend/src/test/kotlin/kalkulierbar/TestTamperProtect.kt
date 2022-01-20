@@ -1,4 +1,4 @@
-package kalkulierbar.tests
+package kalkulierbar
 
 import kalkulierbar.tamperprotect.TamperProtect
 import kotlin.random.Random

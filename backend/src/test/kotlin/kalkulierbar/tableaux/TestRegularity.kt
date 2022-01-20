@@ -1,7 +1,6 @@
-package kalkulierbar.tests.tableaux
+package kalkulierbar.tableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

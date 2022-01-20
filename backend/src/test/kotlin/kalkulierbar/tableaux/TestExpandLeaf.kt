@@ -1,11 +1,7 @@
-package kalkulierbar.tests.tableaux
+package kalkulierbar.tableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.JsonParseException
-import kalkulierbar.tableaux.MoveExpand
-import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

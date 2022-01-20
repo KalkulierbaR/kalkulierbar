@@ -1,7 +1,6 @@
-package kalkulierbar.tests.parsers
+package kalkulierbar.parsers
 
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.parsers.ModalLogicParser
 import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.Test
 import kotlin.test.assertEquals

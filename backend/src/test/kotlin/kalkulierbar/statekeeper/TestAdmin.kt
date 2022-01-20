@@ -1,4 +1,4 @@
-package kalkulierbar.tests.statekeeper
+package kalkulierbar.statekeeper
 
 import kalkulierbar.JsonParseException
 import org.komputing.khash.keccak.KeccakParameter
@@ -16,7 +16,7 @@ import kotlin.test.assertFailsWith
 
 class TestAdmin {
 
-    val date = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())
+    val date = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())!!
     val key = "WildFlowers/UncomfortableMoons"
 
     @BeforeTest

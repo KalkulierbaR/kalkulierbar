@@ -1,6 +1,5 @@
-package kalkulierbar.tests.tableaux
+package kalkulierbar.tableaux
 
-import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

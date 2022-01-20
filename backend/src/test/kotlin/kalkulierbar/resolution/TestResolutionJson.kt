@@ -1,4 +1,4 @@
-package kalkulierbar.tests.resolution
+package kalkulierbar.resolution
 
 import kalkulierbar.JsonParseException
 import kalkulierbar.parsers.CnfStrategy
