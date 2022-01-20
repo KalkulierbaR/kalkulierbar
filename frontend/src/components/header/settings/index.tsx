@@ -103,13 +103,8 @@ const AdminKeyInput: preact.FunctionalComponent<ServerInputProps> = ({
     showLabel = true,
     close,
 }) => {
-    const {
-        dispatch,
-        isAdmin,
-        adminKey,
-        notificationHandler,
-        server,
-    } = useAppState();
+    const { dispatch, isAdmin, adminKey, notificationHandler, server } =
+        useAppState();
 
     const [adminKeyInput, setAdminKeyInput] = useState(adminKey);
 

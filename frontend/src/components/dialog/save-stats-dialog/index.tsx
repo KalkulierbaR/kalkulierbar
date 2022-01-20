@@ -152,11 +152,13 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
                 <table>
                     <tr>
                         {stats.keys.map((key) => (
-                            <td onClick={() => sortByColumn(key)}>{key}</td>
+                            <td key={key} onClick={() => sortByColumn(key)}>
+                                {key}
+                            </td>
                         ))}
                     </tr>
-                    {entries.map((stat) => (
-                        <tr>
+                    {entries.map((stat, i) => (
+                        <tr key={i}>
                             {Array.from(stat.values()).map(
                                 (val, index) =>
                                     (index === 0 && val === "" && (

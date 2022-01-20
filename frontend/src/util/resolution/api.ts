@@ -118,7 +118,7 @@ export const sendResolveCustom = (
  * @returns {void}
  */
 export const hideClause = <
-    C extends ResolutionCalculusType = ResolutionCalculusType
+    C extends ResolutionCalculusType = ResolutionCalculusType,
 >(
     clauseId: number,
     calculus: ResolutionCalculusType,
@@ -153,7 +153,7 @@ export const hideClause = <
  * @returns {void}
  */
 export const showHiddenClauses = <
-    C extends ResolutionCalculusType = ResolutionCalculusType
+    C extends ResolutionCalculusType = ResolutionCalculusType,
 >(
     calculus: ResolutionCalculusType,
     {
@@ -188,7 +188,7 @@ export const showHiddenClauses = <
  * @returns {void}
  */
 export const sendFactorize = <
-    C extends ResolutionCalculusType = ResolutionCalculusType
+    C extends ResolutionCalculusType = ResolutionCalculusType,
 >(
     selectedClauseId: number,
     atoms: Set<number>,

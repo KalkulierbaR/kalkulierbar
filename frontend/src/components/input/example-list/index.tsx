@@ -26,7 +26,16 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
     calculus,
     className,
 }) => {
-    const { config, isAdmin, server, notificationHandler, onChange, dispatch, adminKey, setConfig } = useAppState();
+    const {
+        config,
+        isAdmin,
+        server,
+        notificationHandler,
+        onChange,
+        dispatch,
+        adminKey,
+        setConfig,
+    } = useAppState();
 
     /**
      * Parses an example, and changes to the calculus/view
@@ -97,7 +106,13 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                                 <Btn
                                     onClick={(e) => {
                                         e.stopImmediatePropagation();
-                                        delExample(server, index, adminKey, setConfig, notificationHandler);
+                                        delExample(
+                                            server,
+                                            index,
+                                            adminKey,
+                                            setConfig,
+                                            notificationHandler,
+                                        );
                                     }}
                                     label="Delete"
                                     icon={<DeleteIcon />}

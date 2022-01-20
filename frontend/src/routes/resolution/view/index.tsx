@@ -78,9 +78,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         undefined,
     );
 
-    const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
-        undefined,
-    );
+    const [selectedClauses, setSelectedClauses] =
+        useState<SelectedClauses>(undefined);
 
     const [showFactorizeDialog, setShowFactorizeDialog] = useState(false);
 
@@ -258,12 +257,11 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     candidateAtomCount === 1 &&
                     instanceOfFOResState(state, calculus)
                 ) {
-                    const newSelectedClauseAtomIndex = candidateClause.candidateAtomMap
-                        .keys()
-                        .next().value;
-                    const newCandidateAtomIndex = candidateClause.candidateAtomMap
-                        .values()
-                        .next().value[0];
+                    const newSelectedClauseAtomIndex =
+                        candidateClause.candidateAtomMap.keys().next().value;
+                    const newCandidateAtomIndex =
+                        candidateClause.candidateAtomMap.values().next()
+                            .value[0];
 
                     const atom1 =
                         state.clauseSet.clauses[selectedClauseId].atoms[
@@ -330,9 +328,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             candidateClause.candidateAtomMap.forEach(
                 (selectedClauseAtomIndices) =>
                     selectedClauseAtomIndices.forEach((atomIndex) => {
-                        const newOption: string = candidateClause!.clause.atoms[
-                            atomIndex
-                        ].lit;
+                        const newOption: string =
+                            candidateClause!.clause.atoms[atomIndex].lit;
                         if (!options.includes(newOption)) {
                             options[atomIndex] = newOption;
                         }

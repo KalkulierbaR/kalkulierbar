@@ -139,24 +139,30 @@ const ModalTableauxTreeView: preact.FunctionalComponent<Props> = ({
                         transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}
                     >
                         <g>
-                            {/* #1 render ClosingEdges -> keep order to avoid overlapping */
-                            getClosedLeaves(root).map((n) => (
-                                <ClosingEdge
-                                    root={root}
-                                    leaf={n}
-                                    pred={
-                                        findSubTree(
-                                            root,
-                                            (t) =>
-                                                t.data.id === n.data.closeRef!,
-                                            (t) => t,
-                                        )!
-                                    }
-                                    dragTransforms={dragTransforms}
-                                />
-                            ))}
-                            {/* #2 render lemma line if it exists */
-                            lineToLemmaSource()}
+                            {
+                                /* #1 render ClosingEdges -> keep order to avoid overlapping */
+                                getClosedLeaves(root).map((n) => (
+                                    <ClosingEdge
+                                        key={n.data.id}
+                                        root={root}
+                                        leaf={n}
+                                        pred={
+                                            findSubTree(
+                                                root,
+                                                (t) =>
+                                                    t.data.id ===
+                                                    n.data.closeRef!,
+                                                (t) => t,
+                                            )!
+                                        }
+                                        dragTransforms={dragTransforms}
+                                    />
+                                ))
+                            }
+                            {
+                                /* #2 render lemma line if it exists */
+                                lineToLemmaSource()
+                            }
                             {
                                 /* #3 render nodes -> Recursively render each sub tree */
                                 <SubTree

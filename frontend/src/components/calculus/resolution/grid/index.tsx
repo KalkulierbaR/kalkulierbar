@@ -55,15 +55,8 @@ const ResolutionGrid: preact.FunctionalComponent<Props> = ({
     semiSelected,
     shiftCandidateClause,
 }) => {
-    const {
-        width,
-        height,
-        data,
-        columns,
-        rows,
-        rowHeight,
-        columnWidth,
-    } = gridLayout(clauses.map((c) => c.clause));
+    const { width, height, data, columns, rows, rowHeight, columnWidth } =
+        gridLayout(clauses.map((c) => c.clause));
 
     /**
      * Handler for the drag part of drag&drop
