@@ -100,7 +100,7 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
                 val atoms = mutableListOf<Atom<Relation>>()
                 atoms.addAll(lc.atoms)
                 atoms.addAll(rc.atoms)
-                val clause = Clause(atoms)
+                val clause = Clause(atoms).clone()
                 cs.add(clause)
             }
         }
