@@ -9,7 +9,7 @@ import kotlin.test.assertFailsWith
 class TestExpandLeaf {
 
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
+    private val opts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
 
     @Test
     fun testApplyMoveNullValues() {

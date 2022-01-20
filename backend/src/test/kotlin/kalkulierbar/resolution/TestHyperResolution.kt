@@ -7,8 +7,8 @@ import kotlin.test.assertFailsWith
 
 class TestHyperResolution {
 
-    val prop = PropositionalResolution()
-    val fo = FirstOrderResolution()
+    private val prop = PropositionalResolution()
+    private val fo = FirstOrderResolution()
 
     @Test
     fun testIndexBoundsChecking() {

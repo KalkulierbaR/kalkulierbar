@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 class TestExRight {
     val instance = FOSC()
     val parser = FirstOrderParser()
-    val varAssign = mapOf("X" to "a")
+    private val varAssign = mapOf("X" to "a")
 
     @Test
     fun testBasic() {
@@ -37,7 +37,7 @@ class TestExRight {
 
     @Test
     fun testWrongNode() {
-        var state = instance.parseFormulaToState("\\all X: R(X)", null)
+        val state = instance.parseFormulaToState("\\all X: R(X)", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, AllLeft(0, 0, varAssign))

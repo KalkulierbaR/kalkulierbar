@@ -42,7 +42,7 @@ class TestAndLeft {
 
     @Test
     fun testWrongNode() {
-        var state = instance.parseFormulaToState("(P(a) & P(b))", null)
+        val state = instance.parseFormulaToState("(P(a) & P(b))", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, AndLeft(0, 0))

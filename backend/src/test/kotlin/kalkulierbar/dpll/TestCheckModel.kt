@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 
 class TestCheckModel {
 
-    val dpll = DPLL()
+    private val dpll = DPLL()
 
     @Test
     fun testCheckModel1() {

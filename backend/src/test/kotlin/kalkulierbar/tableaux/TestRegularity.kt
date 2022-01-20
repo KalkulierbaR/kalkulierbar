@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 
 class TestRegularity {
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, regular = true, backtracking = false)
+    private val opts = TableauxParam(TableauxType.UNCONNECTED, regular = true, backtracking = false)
 
     // State creation helper function
     private fun createState(nodes: List<TableauxNode>, state: TableauxState): TableauxState {

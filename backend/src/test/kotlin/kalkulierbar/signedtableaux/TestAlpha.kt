@@ -35,7 +35,7 @@ class TestAlpha {
 
     @Test
     fun testWrongAnd() {
-        var state = instance.parseFormulaToState("a & b", null)
+        val state = instance.parseFormulaToState("a & b", null)
         assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, AlphaMove(0, null)) }
     }
 

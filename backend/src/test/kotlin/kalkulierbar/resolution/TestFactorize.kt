@@ -7,8 +7,8 @@ import kotlin.test.assertFailsWith
 
 class TestFactorize {
 
-    val prop = PropositionalResolution()
-    val fo = FirstOrderResolution()
+    private val prop = PropositionalResolution()
+    private val fo = FirstOrderResolution()
 
     @Test
     fun testInvalidClause() {
@@ -124,7 +124,7 @@ class TestFactorize {
 
     @Test
     fun testFactorizeMultipleInvalid() {
-        var state = fo.parseFormulaToState("/all X: (Q(X) | Q(g(c)) | Q(f(X)))", null)
+        val state = fo.parseFormulaToState("/all X: (Q(X) | Q(g(c)) | Q(f(X)))", null)
 
         assertFailsWith<IllegalMove> {
             fo.applyMoveOnState(state, MoveFactorize(0, mutableListOf(0, 1, 2)))

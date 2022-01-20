@@ -43,7 +43,7 @@ class TestOrRight {
 
     @Test
     fun testWrongNode() {
-        var state = instance.parseFormulaToState("a & b", null)
+        val state = instance.parseFormulaToState("a & b", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, OrRight(0, 0))

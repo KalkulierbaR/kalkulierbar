@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 
 class TestDpllJson {
 
-    val dpll = DPLL()
+    private val dpll = DPLL()
 
     @Test
     fun testJsonParam() {

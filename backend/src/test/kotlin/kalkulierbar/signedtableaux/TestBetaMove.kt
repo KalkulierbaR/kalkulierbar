@@ -30,7 +30,7 @@ class TestBetaMove {
 
     @Test
     fun testWrongOr() {
-        var state = instance.parseFormulaToState("a | b", null)
+        val state = instance.parseFormulaToState("a | b", null)
         assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, BetaMove(0, null)) }
     }
 
@@ -77,7 +77,7 @@ class TestBetaMove {
 
     @Test
     fun testWrongImpl() {
-        var state = instance.parseFormulaToState("a -> b", null)
+        val state = instance.parseFormulaToState("a -> b", null)
         assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, BetaMove(0, null)) }
     }
 }
