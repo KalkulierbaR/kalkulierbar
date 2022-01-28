@@ -1,9 +1,6 @@
-package kalkulierbar.tests.tableaux
+package kalkulierbar.tableaux
 
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.tableaux.PropositionalTableaux
-import kalkulierbar.tableaux.TableauxParam
-import kalkulierbar.tableaux.TableauxType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -11,21 +8,21 @@ import kotlin.test.assertFailsWith
 class TestParseFormulaState {
 
     val instance = PropositionalTableaux()
-    val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
+    private val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
 
-    val invalidString1 = "a,b;c,!d;e,&;g,h,i,!j"
-    val invalidString2 = "richtig;\noder,!falsch"
-    val invalidString3 = "mal,am,Ende!"
+    private val invalidString1 = "a,b;c,!d;e,&;g,h,i,!j"
+    private val invalidString2 = "richtig;\noder,!falsch"
+    private val invalidString3 = "mal,am,Ende!"
 
-    val validString1 = "!a,b;c,!d;e,f,g,!h;i,j,!k,l,!m;n;o;p"
-    val validString2 = "hey,was,!geht;bin,!ich,richtig"
-    val validString3 = "!ja;vi;!ell;ei;!ch;t"
+    private val validString1 = "!a,b;c,!d;e,f,g,!h;i,j,!k,l,!m;n;o;p"
+    private val validString2 = "hey,was,!geht;bin,!ich,richtig"
+    private val validString3 = "!ja;vi;!ell;ei;!ch;t"
 
-    val emptyString = ""
+    private val emptyString = ""
 
-    val edgeCase1 = "ein,!im;Wo!rt"
-    val edgeCase2 = "kein,valName,!"
-    val edgeCase3 = "doppelter;Semikolon;;hello"
+    private val edgeCase1 = "ein,!im;Wo!rt"
+    private val edgeCase2 = "kein,valName,!"
+    private val edgeCase3 = "doppelter;Semikolon;;hello"
 
     @Test
     fun testParseInvalidStrings() {

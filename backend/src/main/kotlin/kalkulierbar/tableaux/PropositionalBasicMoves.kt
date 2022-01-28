@@ -144,7 +144,7 @@ private fun undoClose(state: TableauxState, move: MoveAutoClose): TableauxState 
 /**
  *  Undo expand move
  *  @param state Current prove State
- *  @parm move The last move executed
+ *  @param move The last move executed
  *  @return New state after undoing latest expand move
  */
 private fun undoExpand(state: TableauxState, move: MoveExpand): TableauxState {

@@ -45,7 +45,7 @@ class TestAndRight {
 
     @Test
     fun testWrongNode() {
-        var state = instance.parseFormulaToState("(a & b) | (b |c)", null)
+        val state = instance.parseFormulaToState("(a & b) | (b |c)", null)
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, AndRight(0, 0))
         }

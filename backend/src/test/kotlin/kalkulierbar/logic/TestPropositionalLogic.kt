@@ -1,9 +1,8 @@
-package kalkulierbar.tests.logic
+package kalkulierbar.logic
 
 import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
-import kalkulierbar.logic.*
 import kalkulierbar.logic.transform.NaiveCNF
 import kalkulierbar.logic.transform.ToBasicOps
 import kalkulierbar.logic.transform.TseytinCNF

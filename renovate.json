@@ -1,0 +1,34 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "baseBranches": [
+    "dev"
+  ],
+  "labels": [
+    "renovate"
+  ],
+  "assignees": [
+    "JuliusHenke"
+  ],
+  "rebaseWhen": "behind-base-branch",
+  "packageRules": [
+    {
+      "description": "Group all non-major updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "groupName": "non-major"
+    },
+    {
+      "matchPackageNames": "preact-cli",
+      "allowedVersions": "<=3.0.5"
+    }
+  ],
+  "automergeType": "branch",
+  "stabilityDays": 3,
+  "prCreation": "not-pending"
+}

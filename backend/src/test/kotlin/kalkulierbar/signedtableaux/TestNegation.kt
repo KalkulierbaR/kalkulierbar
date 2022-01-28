@@ -1,10 +1,7 @@
-package kalkulierbar.test.signedtableaux
+package kalkulierbar.signedtableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.BetaMove
-import kalkulierbar.signedtableaux.Negation
-import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -49,7 +46,7 @@ class TestNegation {
 
     @Test
     fun testWrongNode() {
-        var state = instance.parseFormulaToState("a & b", null)
+        val state = instance.parseFormulaToState("a & b", null)
         assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, Negation(0, null)) }
     }
 }

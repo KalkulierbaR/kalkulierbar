@@ -116,9 +116,11 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
                             state!.clauseSet.clauses[
                                 selectedClauses[0]
                             ] as Clause,
-                            (state!.clauseSet.clauses[
-                                selectedClauses[1]
-                            ] as Clause).atoms[keyValuePair[0]].lit,
+                            (
+                                state!.clauseSet.clauses[
+                                    selectedClauses[1]
+                                ] as Clause
+                            ).atoms[keyValuePair[0]].lit,
                         ),
                         selectedClauses[1],
                         keyValuePair[0],

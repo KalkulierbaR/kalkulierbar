@@ -8,7 +8,7 @@ On `Linux` systems you can use the main install script `./install`, also describ
 
 ### Manual
 
-- Install a Java Version >= 9: [Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
+- Install a Java Version >= 8: [Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
   / [OpenJDK](https://openjdk.java.net/install/index.html)
 - Go into `backend` and use command `./gradlew`
 - Done

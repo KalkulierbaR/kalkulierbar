@@ -22,59 +22,55 @@ interface Props {
     className?: string;
 }
 
-/**
- * Deletes an example
- * @param {Event} e - The Event that called the function
- * @param {number} index - The index of the Example that should be deleted
- * @returns {void}
- */
-const onDelete = (e: Event, index: number) => {
-    e.stopImmediatePropagation();
-    const { server, notificationHandler, adminKey, setConfig } = useAppState();
-    delExample(server, index, adminKey, setConfig, notificationHandler);
-};
-
-/**
- * Parses an example, and changes to the calculus/view
- * @param {Example} example - The example that should be used
- * @returns {void}
- */
-const useExample = async (example: Example) => {
-    const { server, notificationHandler, onChange, dispatch } = useAppState();
-    const calculus = example.calculus;
-    const url = `${server}/${example.calculus}/parse`;
-
-    dispatch({
-        type: AppStateActionType.UPDATE_SAVED_FORMULA,
-        calculus,
-        value: decodeURIComponent(example.formula),
-    });
-
-    try {
-        const response = await fetch(url, {
-            headers: {
-                "Content-Type": "text/plain",
-            },
-            method: "POST",
-            body: `formula=${example.formula}&params=${example.params}`,
-        });
-        if (response.status !== 200) {
-            notificationHandler.error(await response.text());
-        } else {
-            const parsed = await response.json();
-            onChange(calculus, parsed);
-            route(`/${calculus}/view`);
-        }
-    } catch (e) {
-        notificationHandler.error((e as Error).message);
-    }
-};
-
 const ExampleList: preact.FunctionalComponent<Props> = ({
     calculus,
     className,
 }) => {
-    const { config, isAdmin } = useAppState();
+    const {
+        config,
+        isAdmin,
+        server,
+        notificationHandler,
+        onChange,
+        dispatch,
+        adminKey,
+        setConfig,
+    } = useAppState();
+
+    /**
+     * Parses an example, and changes to the calculus/view
+     * @param {Example} example - The example that should be used
+     * @returns {void}
+     */
+    const useExample = async (example: Example) => {
+        const exampleCalculus = example.calculus;
+        const url = `${server}/${example.calculus}/parse`;
+
+        dispatch({
+            type: AppStateActionType.UPDATE_SAVED_FORMULA,
+            calculus: exampleCalculus,
+            value: decodeURIComponent(example.formula),
+        });
+
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    "Content-Type": "text/plain",
+                },
+                method: "POST",
+                body: `formula=${example.formula}&params=${example.params}`,
+            });
+            if (response.status !== 200) {
+                notificationHandler.error(await response.text());
+            } else {
+                const parsed = await response.json();
+                onChange(exampleCalculus, parsed);
+                route(`/${exampleCalculus}/view`);
+            }
+        } catch (e) {
+            notificationHandler.error((e as Error).message);
+        }
+    };
 
     const examples = config.examples.filter(
         (example) => example.calculus === calculus,
@@ -108,7 +104,16 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                             <Fragment>
                                 <p class={style.params}>{example.params}</p>
                                 <Btn
-                                    onClick={(e) => onDelete(e, index)}
+                                    onClick={(e) => {
+                                        e.stopImmediatePropagation();
+                                        delExample(
+                                            server,
+                                            index,
+                                            adminKey,
+                                            setConfig,
+                                            notificationHandler,
+                                        );
+                                    }}
                                     label="Delete"
                                     icon={<DeleteIcon />}
                                 />

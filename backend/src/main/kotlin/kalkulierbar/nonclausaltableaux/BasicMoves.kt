@@ -141,7 +141,7 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
 }
 
 /**
- * If outermost LogicNode is an existantial quantifier:
+ * If outermost LogicNode is an existential quantifier:
  * Remove quantifier and instantiate with Skolem term
  * -> Iff free variables in current node: term = firstOrderTerm (free variables)
  * -> Iff no free variables: term = constant

@@ -1,10 +1,7 @@
-package kalkulierbar.test.signedtableaux
+package kalkulierbar.signedtableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.BetaMove
-import kalkulierbar.signedtableaux.Negation
-import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -33,7 +30,7 @@ class TestBetaMove {
 
     @Test
     fun testWrongOr() {
-        var state = instance.parseFormulaToState("a | b", null)
+        val state = instance.parseFormulaToState("a | b", null)
         assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, BetaMove(0, null)) }
     }
 
@@ -80,7 +77,7 @@ class TestBetaMove {
 
     @Test
     fun testWrongImpl() {
-        var state = instance.parseFormulaToState("a -> b", null)
+        val state = instance.parseFormulaToState("a -> b", null)
         assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, BetaMove(0, null)) }
     }
 }

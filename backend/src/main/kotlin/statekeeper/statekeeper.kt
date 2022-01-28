@@ -172,7 +172,7 @@ object StateKeeper {
     }
 
     /**
-     * Verfies that a request has a valid Message Authentication Code
+     * Verifies that a request has a valid Message Authentication Code
      * MACs are formed by appending the current date and admin key before hashing the payload
      * This means that requests can be re-played within the same day by an attacker
      * @param payload String the MAC was computed over, without date and key components

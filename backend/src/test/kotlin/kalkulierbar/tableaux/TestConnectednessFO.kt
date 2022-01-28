@@ -1,20 +1,19 @@
-package kalkulierbar.tests.tableaux
+package kalkulierbar.tableaux
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.tableaux.*
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 class TestConnectednessFO {
 
     val instance = FirstOrderTableaux()
-    val weak = FoTableauxParam(
+    private val weak = FoTableauxParam(
         TableauxType.WEAKLYCONNECTED,
         regular = false,
         backtracking = true,
         manualVarAssign = false
     )
-    val strong = FoTableauxParam(
+    private val strong = FoTableauxParam(
         TableauxType.STRONGLYCONNECTED,
         regular = false,
         backtracking = true,

@@ -9,14 +9,14 @@ import kotlin.test.assertFailsWith
 class TestCloseBranchFO {
 
     val instance = FirstOrderTableaux()
-    val param = FoTableauxParam(TableauxType.UNCONNECTED, true, backtracking = false, manualVarAssign = true)
-    val paramNotReg = FoTableauxParam(
+    private val param = FoTableauxParam(TableauxType.UNCONNECTED, true, backtracking = false, manualVarAssign = true)
+    private val paramNotReg = FoTableauxParam(
         TableauxType.UNCONNECTED, regular = false,
         backtracking = false,
         manualVarAssign = true
     )
-    var states = mutableListOf<FoTableauxState>()
-    var notRegStates = mutableListOf<FoTableauxState>()
+    private var states = mutableListOf<FoTableauxState>()
+    private var notRegStates = mutableListOf<FoTableauxState>()
 
     val formula = listOf(
         "\\all X: R(X) & R(c) & !R(c)",

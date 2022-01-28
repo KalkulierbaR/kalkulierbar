@@ -1,8 +1,7 @@
-package kalkulierbar.tests.resolution
+package kalkulierbar.resolution
 
 import kalkulierbar.JsonParseException
 import kalkulierbar.parsers.CnfStrategy
-import kalkulierbar.resolution.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -10,7 +9,7 @@ import kotlin.test.assertFailsWith
 class TestResolutionJson {
 
     val instance = PropositionalResolution()
-    val foInstance = FirstOrderResolution()
+    private val foInstance = FirstOrderResolution()
 
     /*
         Test jsonToParam

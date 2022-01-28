@@ -1,11 +1,6 @@
-package kalkulierbar.tests.resolution
+package kalkulierbar.resolution
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.resolution.MoveHide
-import kalkulierbar.resolution.MoveResolve
-import kalkulierbar.resolution.MoveResolveUnify
-import kalkulierbar.resolution.MoveShow
-import kalkulierbar.resolution.PropositionalResolution
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

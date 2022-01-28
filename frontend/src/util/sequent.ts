@@ -143,8 +143,9 @@ const sequentNodeToTree = (
 
     const width =
         estimateSVGTextWidth(nodeName(n)) +
-        56 +
-        (n.lastMove === null ? 0 : estimateSVGTextWidth(n.lastMove!.type));
+        (n.lastMove === null
+            ? 56
+            : estimateSVGTextWidth(n.lastMove.type) + 184);
 
     const resultTree: Tree<SequentTreeLayoutNode> = tree(
         width,

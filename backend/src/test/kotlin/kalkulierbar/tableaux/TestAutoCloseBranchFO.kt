@@ -9,13 +9,13 @@ import kotlin.test.assertFailsWith
 class TestAutoCloseBranchFO {
 
     val instance = FirstOrderTableaux()
-    val param = FoTableauxParam(
+    private val param = FoTableauxParam(
         TableauxType.UNCONNECTED,
         regular = false,
         backtracking = false,
         manualVarAssign = false
     )
-    var states = mutableListOf<FoTableauxState>()
+    private var states = mutableListOf<FoTableauxState>()
 
     val formula = mutableListOf(
         "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",

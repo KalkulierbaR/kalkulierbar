@@ -33,6 +33,6 @@ class TamperProtect {
             return seal(string) == hash
         }
 
-        private fun toHex(bytes: ByteArray) = bytes.map { String.format("%02X", it) }.joinToString("")
+        private fun toHex(bytes: ByteArray) = bytes.joinToString("") { String.format("%02X", it) }
     }
 }

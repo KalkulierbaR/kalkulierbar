@@ -40,7 +40,7 @@ class TestNotRight {
 
     @Test
     fun testWrongNode() {
-        var state = instance.parseFormulaToState("a & !a", null)
+        val state = instance.parseFormulaToState("a & !a", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, NotRight(0, 0))

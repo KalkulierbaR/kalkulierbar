@@ -44,7 +44,7 @@ const DPLLModelInput: preact.FunctionalComponent<Props> = ({
     return (
         <Dialog label="Enter Model" open={open} onClose={onClose}>
             {lits.map((l) => (
-                <div class={style.listItem}>
+                <div key={l} class={style.listItem}>
                     <Switch
                         label={l}
                         onChange={(checked) => (model[l] = checked)}

@@ -45,7 +45,7 @@ class TestAx {
 
     @Test
     fun testFail() {
-        var state = instance.parseFormulaToState("P(a) | !P(a)", null)
+        val state = instance.parseFormulaToState("P(a) | !P(a)", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, Ax(0))

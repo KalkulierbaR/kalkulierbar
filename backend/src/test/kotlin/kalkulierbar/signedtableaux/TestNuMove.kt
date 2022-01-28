@@ -1,12 +1,9 @@
-package kalkulierbar.test.signedtableaux
+package kalkulierbar.signedtableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.AlphaMove
-import kalkulierbar.signedtableaux.NuMove
-import kalkulierbar.signedtableaux.PiMove
-import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
@@ -28,7 +25,7 @@ class TestNuMove {
         val nodes = state.tree
 
         assertTrue(nodes[4].formula.synEq(formula))
-        assertTrue(nodes[4].prefix.equals(listOf(1, 1)))
+        assertEquals(listOf(1, 1), nodes[4].prefix)
     }
 
     @Test
@@ -44,7 +41,7 @@ class TestNuMove {
         val nodes = state.tree
 
         assertTrue(nodes[4].formula.synEq(formula))
-        assertTrue(nodes[4].prefix.equals(listOf(1, 1)))
+        assertEquals(listOf(1, 1), nodes[4].prefix)
     }
 
     @Test

@@ -1,14 +1,13 @@
-package kalkulierbar.tests.parsers
+package kalkulierbar.parsers
 
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.parsers.ClauseSetParser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestClauseSetParser {
 
-    val invalidStrings = listOf("", ",a", ";a", "a,b,;c", "a,b,", "a;;b,c;d", "!!a", "a,!!b;c", "a,!", "a\n;", "a\n\n", "a;;")
+    private val invalidStrings = listOf("", ",a", ";a", "a,b,;c", "a,b,", "a;;b,c;d", "!!a", "a,!!b;c", "a,!", "a\n;", "a\n\n", "a;;")
 
     val valid = listOf(
         Pair("a", "{a}"),
@@ -22,7 +21,7 @@ class TestClauseSetParser {
         Pair("fUnkYvAR;!McVariable,thefirst", "{fUnkYvAR}, {!McVariable, thefirst}")
     )
 
-    val validNonGeneric = listOf(
+    private val validNonGeneric = listOf(
         Pair("a", "{a}"),
         Pair("-a", "{!a}"),
         Pair("a|b", "{a}, {b}"),

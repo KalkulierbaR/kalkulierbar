@@ -5,7 +5,7 @@ echo " "
 #Check if java is installed
 if [ -z "$(command -v java)" ]; then
     echo "Java not found"
-    echo "Please install Java > 8 manually!"
+    echo "Please install Java JDK >= 8 manually!"
     exit 1
 else
     echo "Java found on your system"
@@ -43,8 +43,14 @@ rm node.tar.xz
 export PATH=/usr/local/lib/nodejs/node-v12.14.1-linux-x64/bin:$PATH
 . ~/.profile
 
-#Install yarn (Ubuntu v1.21.1)
-curl -o- -L https://yarnpkg.com/install.sh | bash
-
-echo 'If you want to use yarn in your command line, please save the following line in your user profile:'
-echo 'export PATH=/usr/local/lib/nodejs/node-v12.14.1-linux-x64/bin:$PATH'
+# Check if yarn is installed
+if [ "$(command -v yarn)" ]; then
+  echo 'yarn found on your system'
+elif [ "$(command -v npm)" ]; then
+  # Install yarn via npm
+  sudo npm install --global yarn
+else
+  echo 'Could not find npm package manager.'
+  echo 'Please install yarn manually!'
+  exit 1
+fi

@@ -1,18 +1,13 @@
-package kalkulierbar.tests.dpll
+package kalkulierbar.dpll
 
 import kalkulierbar.JsonParseException
-import kalkulierbar.dpll.DPLL
-import kalkulierbar.dpll.MoveModelCheck
-import kalkulierbar.dpll.MovePropagate
-import kalkulierbar.dpll.MovePrune
-import kalkulierbar.dpll.MoveSplit
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestDpllJson {
 
-    val dpll = DPLL()
+    private val dpll = DPLL()
 
     @Test
     fun testJsonParam() {

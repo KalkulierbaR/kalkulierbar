@@ -1,17 +1,14 @@
-package kalkulierbar.tests.resolution
+package kalkulierbar.resolution
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.resolution.FirstOrderResolution
-import kalkulierbar.resolution.MoveHyper
-import kalkulierbar.resolution.PropositionalResolution
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestHyperResolution {
 
-    val prop = PropositionalResolution()
-    val fo = FirstOrderResolution()
+    private val prop = PropositionalResolution()
+    private val fo = FirstOrderResolution()
 
     @Test
     fun testIndexBoundsChecking() {

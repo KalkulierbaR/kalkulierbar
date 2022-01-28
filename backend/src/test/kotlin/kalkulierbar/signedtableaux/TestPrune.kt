@@ -1,8 +1,7 @@
-package kalkulierbar.test.signedtableaux
+package kalkulierbar.signedtableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -39,13 +38,13 @@ class TestPruneMove {
 
     @Test
     fun testWrongPrune() {
-        var state = instance.parseFormulaToState("!(a -> b)", SignedModalTableauxParam(false))
+        val state = instance.parseFormulaToState("!(a -> b)", SignedModalTableauxParam(false))
         assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, Prune(0)) }
     }
 
     @Test
     fun testNoActionPrune() {
-        var state = instance.parseFormulaToState("!(a -> b)", null)
+        val state = instance.parseFormulaToState("!(a -> b)", null)
         assertEquals(state, instance.applyMoveOnState(state, Prune(0)))
     }
 }

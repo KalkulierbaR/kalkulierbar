@@ -5,7 +5,7 @@ package kalkulierbar.tamperprotect
  * computeSeal must be called before serialization
  * verifySeal must be called after deserialization
  * getHash must be implemented to capture all state information relevant for proof correctness
- * seal must be overriden in implementing classes to be included in serialization
+ * seal must be overridden in implementing classes to be included in serialization
  */
 abstract class ProtectedState {
     abstract var seal: String

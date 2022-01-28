@@ -1,4 +1,4 @@
-package kalkulierbar.tests
+package kalkulierbar
 
 import kalkulierbar.tamperprotect.TamperProtect
 import kotlin.random.Random
@@ -7,10 +7,10 @@ import kotlin.test.assertEquals
 
 class TestTamperProtect {
 
-    val tv1 = Pair("", "0D9A6E6CCA519AEFA10F211186D8F4F8BCC5132816027D6260134B59A440CA6C")
-    val tv2 = Pair("smoke&mirrors", "7323EC61EE548AF565BA2D874AD8E9FC3F363E4726833283B25B9AC9F54E42EF")
+    private val tv1 = Pair("", "0D9A6E6CCA519AEFA10F211186D8F4F8BCC5132816027D6260134B59A440CA6C")
+    private val tv2 = Pair("smoke&mirrors", "7323EC61EE548AF565BA2D874AD8E9FC3F363E4726833283B25B9AC9F54E42EF")
 
-    val words = listOf("fog", "haze", "watermelon", "zombie", "factory", "dance", "dream", "silent", "weep", "lightbulb", "shine", "dim", "utopia")
+    private val words = listOf("fog", "haze", "watermelon", "zombie", "factory", "dance", "dream", "silent", "weep", "lightbulb", "shine", "dim", "utopia")
 
     @Test
     fun testSealGeneration() {

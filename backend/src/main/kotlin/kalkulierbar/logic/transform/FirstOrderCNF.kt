@@ -16,7 +16,7 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
     companion object Companion {
         /**
          * Transforms a first order formula into an equivalent ClauseSet
-         * The output clause set is a CNF representation of the quantor-free
+         * The output clause set is a CNF representation of the quantifier-free
          * core of the formula in Skolem normal form, with all variables
          * implicitly universally quantified
          *
@@ -49,11 +49,10 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
      */
     override fun visit(node: Not): ClauseSet<Relation> {
         val res: ClauseSet<Relation>
-        val child = node.child
 
         // Negation pushdown has already been performed by SNF conversion,
         // negations can only occur in front of relations
-        when (child) {
+        when (val child = node.child) {
             is Relation -> {
                 val atom = Atom(child, true)
                 val clause = Clause(mutableListOf(atom))
@@ -100,7 +99,7 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
                 val atoms = mutableListOf<Atom<Relation>>()
                 atoms.addAll(lc.atoms)
                 atoms.addAll(rc.atoms)
-                val clause = Clause(atoms)
+                val clause = Clause(atoms).clone()
                 cs.add(clause)
             }
         }

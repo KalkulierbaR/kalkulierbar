@@ -42,10 +42,8 @@ export const checkClose = async <C extends CalculusType = CalculusType>(
         if (response.status !== 200) {
             notificationHandler.error(await response.text());
         } else {
-            const {
-                closed,
-                msg,
-            } = (await response.json()) as CheckCloseResponse;
+            const { closed, msg } =
+                (await response.json()) as CheckCloseResponse;
             if (closed) {
                 notificationHandler.success(msg);
                 dispatchEvent(new CustomEvent("kbar-confetti"));

@@ -16,9 +16,8 @@ interface Props {
 }
 
 const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
-    const [showOnlyApplicableRules, setShowOnlyApplicableRules] = useState(
-        false,
-    );
+    const [showOnlyApplicableRules, setShowOnlyApplicableRules] =
+        useState(false);
 
     const params: SequentParams = {
         showOnlyApplicableRules,
@@ -38,7 +37,7 @@ const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 params={params}
                 placeholder={
                     calculus === Calculus.foSequent
-                        ? "\\all X: (\\all Y: !(P(X) -> P(Y)) |- \\all X: !P(X)"
+                        ? "\\all X: (\\all Y: !(P(X) -> P(Y))) |- \\all X: !P(X)"
                         : "!(a -> b) |- !b"
                 }
             />

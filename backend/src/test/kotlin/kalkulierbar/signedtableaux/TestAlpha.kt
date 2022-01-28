@@ -1,10 +1,7 @@
-package kalkulierbar.test.signedtableaux
+package kalkulierbar.signedtableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.AlphaMove
-import kalkulierbar.signedtableaux.Negation
-import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -38,7 +35,7 @@ class TestAlpha {
 
     @Test
     fun testWrongAnd() {
-        var state = instance.parseFormulaToState("a & b", null)
+        val state = instance.parseFormulaToState("a & b", null)
         assertFailsWith<IllegalMove> { instance.applyMoveOnState(state, AlphaMove(0, null)) }
     }
 

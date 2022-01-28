@@ -1,14 +1,13 @@
-package kalkulierbar.tests.parsers
+package kalkulierbar.parsers
 
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.parsers.DimacsLikeParser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestDimacsLikeParser {
 
-    val invalidStrings = listOf("", " a", "0 a", "a b  0 c", "a b ", "a 0 0 b c 0 d", "--a", "a --b 0 c", "a -", "a 0 0")
+    private val invalidStrings = listOf("", " a", "0 a", "a b  0 c", "a b ", "a 0 0 b c 0 d", "--a", "a --b 0 c", "a -", "a 0 0")
 
     val valid = listOf(
         Pair("a", "{a}"),

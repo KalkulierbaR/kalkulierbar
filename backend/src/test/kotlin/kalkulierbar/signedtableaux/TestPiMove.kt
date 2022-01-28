@@ -1,10 +1,7 @@
-package kalkulierbar.test.signedtableaux
+package kalkulierbar.signedtableaux
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser
-import kalkulierbar.signedtableaux.NuMove
-import kalkulierbar.signedtableaux.PiMove
-import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -44,7 +41,7 @@ class TestPiMove {
 
     @Test
     fun testWrongSignBox() {
-        var state = instance.parseFormulaToState("\\sign T: []a", null)
+        val state = instance.parseFormulaToState("\\sign T: []a", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, PiMove(1, 0, null))
@@ -53,7 +50,7 @@ class TestPiMove {
 
     @Test
     fun testWrongSignDiamond() {
-        var state = instance.parseFormulaToState("\\sign F: <>a", null)
+        val state = instance.parseFormulaToState("\\sign F: <>a", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, NuMove(1, 0, null))

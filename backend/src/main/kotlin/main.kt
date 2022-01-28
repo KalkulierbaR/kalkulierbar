@@ -148,6 +148,8 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
     }
 }
 
+private val scoreboardJson = Json { encodeDefaults = true }
+
 @Suppress("ThrowsCount")
 fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
     val name = calculus.identifier
@@ -201,7 +203,7 @@ fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
             val newScore = calculus.getScore(state, null)
 
             val scores = Scores(oldScores + listOf(newScore))
-            ctx.result(Json { encodeDefaults = true }.encodeToString(scores))
+            ctx.result(scoreboardJson.encodeToString(scores))
         }
 
         // Save the score under the given name

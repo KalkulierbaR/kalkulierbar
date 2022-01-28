@@ -34,15 +34,15 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
     } = useAppState();
 
     const [showTree, setShowTree] = useState(false);
-    const toggleShowTree = useCallback(() => setShowTree(!showTree), [
-        showTree,
-    ]);
+    const toggleShowTree = useCallback(
+        () => setShowTree(!showTree),
+        [showTree],
+    );
 
     const [branch, setBranch] = useState<number>(0);
 
-    const [selectedClauses, setSelectedClauses] = useState<SelectedClauses>(
-        undefined,
-    );
+    const [selectedClauses, setSelectedClauses] =
+        useState<SelectedClauses>(undefined);
 
     const showPropDialog =
         selectedClauses !== undefined && selectedClauses.length === 2;
