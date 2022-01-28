@@ -223,13 +223,18 @@ fun hyper(
     }
 
     var newMainPremiss = instantiateReturn(mainPremiss, mgu)
-    
+
     for ((mAtomID, pair) in atomMap) {
         val (sClauseID, sAtomID) = pair
         val sidePremiss = clauses[sClauseID]
 
         val newSidePremis = instantiateReturn(sidePremiss, mgu)
-        newMainPremiss = buildClause(newMainPremiss, instantiateReturn(mainPremiss.atoms[mAtomID], mgu), newSidePremis, newSidePremis.atoms[sAtomID])
+        newMainPremiss = buildClause(
+            newMainPremiss,
+            instantiateReturn(mainPremiss.atoms[mAtomID], mgu),
+            newSidePremis,
+            newSidePremis.atoms[sAtomID]
+        )
     }
 
     // Check there are no negative atoms anymore
