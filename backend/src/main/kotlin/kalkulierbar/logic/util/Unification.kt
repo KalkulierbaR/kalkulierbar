@@ -65,6 +65,10 @@ class Unification {
                     if (term2 is Function && TermContainsVariable.check(term2, term1.spelling))
                         throw UnificationImpossible("Variable '$term1' appears in '$term2'")
 
+                    // Update the right side of all substitutions
+                    map.mapValuesTo(map) {
+                        VariableInstantiator.transform(it.value, mapOf(term1.spelling to term2))
+                    }
                     // Add substitution to map
                     map[term1.spelling] = term2
                 } else if (term2 is QuantifiedVariable) {
