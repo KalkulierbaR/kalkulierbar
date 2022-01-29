@@ -9392,10 +9392,10 @@ __metadata:
     firebase-tools: 10.1.2
     husky: 7.0.4
     identity-obj-proxy: 3.0.0
-    lint-staged: 12.3.1
+    lint-staged: 12.3.2
     node-sass: 5.0.0
     per-env: 1.0.2
-    preact: 10.6.4
+    preact: 10.6.5
     preact-cli: 3.0.5
     preact-markup: 2.1.1
     preact-render-to-string: 5.1.19
@@ -9557,9 +9557,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:12.3.1":
-  version: 12.3.1
-  resolution: "lint-staged@npm:12.3.1"
+"lint-staged@npm:12.3.2":
+  version: 12.3.2
+  resolution: "lint-staged@npm:12.3.2"
   dependencies:
     cli-truncate: ^3.1.0
     colorette: ^2.0.16
@@ -9576,7 +9576,7 @@ __metadata:
     yaml: ^1.10.2
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 53e4a0e6021221f8d712397996d4a10374f2ee287a0d62dab2e84ddd1e06f5cc4cb42ac909337c52feba20a13f89bfefe7939683003ccedc04ac6ec20fd65651
+  checksum: 35cab689dfc967ff95afeeaa7be7d1e19a131f36eeac9ac1d80240e0b20108286ce04f2d6bdf0b77fdf58db3ca5313bcbf2667dc6017335e604ff455caf69e33
   languageName: node
   linkType: hard
 
@@ -12732,10 +12732,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:10.6.4":
-  version: 10.6.4
-  resolution: "preact@npm:10.6.4"
-  checksum: 09c496bb3cbe231fb6ef218b44d29af53a1f4bf1ae2e5929ef0faf70f9ecffaa475b4459ef72dd8f0f5396c255172c7c26de5c7d2eb6f6849e36e724c7aa86b7
+"preact@npm:10.6.5":
+  version: 10.6.5
+  resolution: "preact@npm:10.6.5"
+  checksum: 020718a187e12d73cfb036dabb29fb64914c166633f255867ebcf6afca43d61a984d02375f90fe16fa93be662256a05c273e808cf60b08562c4440d2744d9b66
   languageName: node
   linkType: hard
 
