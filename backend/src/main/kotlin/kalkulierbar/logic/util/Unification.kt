@@ -21,6 +21,24 @@ class Unification {
          * @return a map of the executed substitutions
          */
         fun unify(r1: Relation, r2: Relation): Map<String, FirstOrderTerm> {
+            val terms = mutableListOf<Pair<FirstOrderTerm, FirstOrderTerm>>()
+
+            findTermsToUnify(terms, r1, r2)
+
+            return unifyTerms(terms)
+        }
+
+        fun unifyAll(relations: List<Pair<Relation, Relation>>): Map<String, FirstOrderTerm> {
+            val terms = mutableListOf<Pair<FirstOrderTerm, FirstOrderTerm>>()
+
+            for ((r1, r2) in relations) {
+                findTermsToUnify(terms, r1, r2)
+            }
+
+            return unifyTerms(terms)
+        }
+
+        private fun findTermsToUnify(terms: MutableList<Pair<FirstOrderTerm, FirstOrderTerm>>, r1: Relation, r2: Relation) {
             val arg1 = r1.arguments
             val arg2 = r2.arguments
 
@@ -31,12 +49,8 @@ class Unification {
             if (arg1.size != arg2.size)
                 throw UnificationImpossible("Relations '$r1' and '$r2' have different numbers of arguments")
 
-            val terms = mutableListOf<Pair<FirstOrderTerm, FirstOrderTerm>>()
-
             for (i in arg1.indices)
                 terms.add(Pair(arg1[i], arg2[i]))
-
-            return unifyTerms(terms)
         }
 
         /**
@@ -65,6 +79,10 @@ class Unification {
                     if (term2 is Function && TermContainsVariable.check(term2, term1.spelling))
                         throw UnificationImpossible("Variable '$term1' appears in '$term2'")
 
+                    // Update the right side of all substitutions
+                    map.mapValuesTo(map) {
+                        VariableInstantiator.transform(it.value, mapOf(term1.spelling to term2))
+                    }
                     // Add substitution to map
                     map[term1.spelling] = term2
                 } else if (term2 is QuantifiedVariable) {
