@@ -6956,9 +6956,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-tools@npm:10.1.2":
-  version: 10.1.2
-  resolution: "firebase-tools@npm:10.1.2"
+"firebase-tools@npm:10.1.4":
+  version: 10.1.4
+  resolution: "firebase-tools@npm:10.1.4"
   dependencies:
     "@google-cloud/pubsub": ^2.18.4
     abort-controller: ^3.0.0
@@ -7001,6 +7001,7 @@ __metadata:
     progress: ^2.0.3
     proxy-agent: ^5.0.0
     request: ^2.87.0
+    retry: ^0.13.1
     rimraf: ^3.0.0
     semver: ^5.7.1
     stream-chain: ^2.2.4
@@ -7011,7 +7012,7 @@ __metadata:
     tmp: 0.0.33
     triple-beam: ^1.3.0
     tweetsodium: 0.0.5
-    universal-analytics: ^0.4.16
+    universal-analytics: ^0.5.3
     unzipper: ^0.10.10
     update-notifier: ^5.1.0
     uuid: ^8.3.2
@@ -7020,7 +7021,7 @@ __metadata:
     ws: ^7.2.3
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 014f2e486d1a5020130236525a22df0c68b7657fcb93c6299ded9cf79ee23ef634df7c77ce864f9fc433577d209a33ed77a4936cfd58f887358e643c15296c95
+  checksum: 9083e0df5afa76cf5b36c530d6fc6fec7b39f0e308efc84e51dba6f3d43dd674011288057311f9944cadca9a2fec5d4dcc7e93bd7f48607ec604db5da7096f42
   languageName: node
   linkType: hard
 
@@ -9389,10 +9390,10 @@ __metadata:
     "@material/switch": 4.0.0
     "@types/webpack-env": 1.16.3
     css-loader: 1.0.1
-    firebase-tools: 10.1.2
+    firebase-tools: 10.1.4
     husky: 7.0.4
     identity-obj-proxy: 3.0.0
-    lint-staged: 12.3.2
+    lint-staged: 12.3.3
     node-sass: 5.0.0
     per-env: 1.0.2
     preact: 10.6.5
@@ -9557,9 +9558,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:12.3.2":
-  version: 12.3.2
-  resolution: "lint-staged@npm:12.3.2"
+"lint-staged@npm:12.3.3":
+  version: 12.3.3
+  resolution: "lint-staged@npm:12.3.3"
   dependencies:
     cli-truncate: ^3.1.0
     colorette: ^2.0.16
@@ -9576,7 +9577,7 @@ __metadata:
     yaml: ^1.10.2
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 35cab689dfc967ff95afeeaa7be7d1e19a131f36eeac9ac1d80240e0b20108286ce04f2d6bdf0b77fdf58db3ca5313bcbf2667dc6017335e604ff455caf69e33
+  checksum: a9147eb5def6345622d1b772d5920b1282808738abf53e6034d8da2d21d6baf80135ea22f799bf4092867a3dba13cd875493b8e32e47f3b4574e4e8871a0aa8e
   languageName: node
   linkType: hard
 
@@ -13756,6 +13757,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"retry@npm:^0.13.1":
+  version: 0.13.1
+  resolution: "retry@npm:0.13.1"
+  checksum: 47c4d5be674f7c13eee4cfe927345023972197dbbdfba5d3af7e461d13b44de1bfd663bfc80d2f601f8ef3fc8164c16dd99655a221921954a65d044a2fc1233b
+  languageName: node
+  linkType: hard
+
 "rfdc@npm:^1.3.0":
   version: 1.3.0
   resolution: "rfdc@npm:1.3.0"
@@ -16137,14 +16145,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"universal-analytics@npm:^0.4.16":
-  version: 0.4.20
-  resolution: "universal-analytics@npm:0.4.20"
+"universal-analytics@npm:^0.5.3":
+  version: 0.5.3
+  resolution: "universal-analytics@npm:0.5.3"
   dependencies:
-    debug: ^3.0.0
-    request: ^2.88.0
-    uuid: ^3.0.0
-  checksum: abe27a6c771136c530693c687eefb0b3853112ac20a7e64cc46c28ea9563ee488d48ba3258ec967f732bf5e911359fb8e9e8621a324c79a3d819986e72772e04
+    debug: ^4.3.1
+    uuid: ^8.0.0
+  checksum: 5a8d4d4206bcd2b1b64a6206b01f8fe597222e0d41623a1adf3e692038a32ab9377ca47c1c220f2eddd52ee1edc9ea82d44a80a8c5dc0247611f956b3f51dfdb
   languageName: node
   linkType: hard
 
@@ -16411,7 +16418,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^3.0.0, uuid@npm:^3.3.2":
+"uuid@npm:^3.3.2":
   version: 3.4.0
   resolution: "uuid@npm:3.4.0"
   bin:
@@ -16420,7 +16427,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^8.3.2":
+"uuid@npm:^8.0.0, uuid@npm:^8.3.2":
   version: 8.3.2
   resolution: "uuid@npm:8.3.2"
   bin:
