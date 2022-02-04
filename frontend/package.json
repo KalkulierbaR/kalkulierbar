@@ -36,7 +36,7 @@
         "css-loader": "1.0.1",
         "husky": "7.0.4",
         "identity-obj-proxy": "3.0.0",
-        "lint-staged": "12.3.2",
+        "lint-staged": "12.3.3",
         "node-sass": "5.0.0",
         "per-env": "1.0.2",
         "preact-cli": "3.0.5",
@@ -54,7 +54,7 @@
     "dependencies": {
         "@material/radio": "4.0.0",
         "@material/switch": "4.0.0",
-        "firebase-tools": "10.1.2",
+        "firebase-tools": "10.1.4",
         "preact": "10.6.5",
         "preact-markup": "2.1.1",
         "preact-render-to-string": "5.1.19",
