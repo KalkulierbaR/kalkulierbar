@@ -6955,9 +6955,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-tools@npm:10.1.4":
-  version: 10.1.4
-  resolution: "firebase-tools@npm:10.1.4"
+"firebase-tools@npm:10.2.0":
+  version: 10.2.0
+  resolution: "firebase-tools@npm:10.2.0"
   dependencies:
     "@google-cloud/pubsub": ^2.18.4
     abort-controller: ^3.0.0
@@ -7020,7 +7020,7 @@ __metadata:
     ws: ^7.2.3
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 9083e0df5afa76cf5b36c530d6fc6fec7b39f0e308efc84e51dba6f3d43dd674011288057311f9944cadca9a2fec5d4dcc7e93bd7f48607ec604db5da7096f42
+  checksum: 0c2e760c6c95283bfecb587c685a36341be738896eae6922e0a77527b46453eeeaa743c9ff225bb545de4e6f722e9398a9d239c39808826d8e5e1b70c85a05cf
   languageName: node
   linkType: hard
 
@@ -9382,13 +9382,13 @@ __metadata:
     "@material/switch": 4.0.0
     "@types/webpack-env": 1.16.3
     css-loader: 1.0.1
-    firebase-tools: 10.1.4
+    firebase-tools: 10.2.0
     husky: 7.0.4
     identity-obj-proxy: 3.0.0
-    lint-staged: 12.3.3
+    lint-staged: 12.3.4
     node-sass: 6.0.1
     per-env: 1.0.2
-    preact: 10.6.5
+    preact: 10.6.6
     preact-cli: 3.0.5
     preact-markup: 2.1.1
     preact-render-to-string: 5.1.19
@@ -9551,9 +9551,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:12.3.3":
-  version: 12.3.3
-  resolution: "lint-staged@npm:12.3.3"
+"lint-staged@npm:12.3.4":
+  version: 12.3.4
+  resolution: "lint-staged@npm:12.3.4"
   dependencies:
     cli-truncate: ^3.1.0
     colorette: ^2.0.16
@@ -9570,7 +9570,7 @@ __metadata:
     yaml: ^1.10.2
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: a9147eb5def6345622d1b772d5920b1282808738abf53e6034d8da2d21d6baf80135ea22f799bf4092867a3dba13cd875493b8e32e47f3b4574e4e8871a0aa8e
+  checksum: 4e0b4b9da4183a0daeab35d41e4d243fb1270a39db997efa0c3745fa148a7a4b8b723a51cb757595fc8bb118796ca1465e67aede72f25e9ea48165aec36cec3b
   languageName: node
   linkType: hard
 
@@ -12712,10 +12712,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:10.6.5":
-  version: 10.6.5
-  resolution: "preact@npm:10.6.5"
-  checksum: 020718a187e12d73cfb036dabb29fb64914c166633f255867ebcf6afca43d61a984d02375f90fe16fa93be662256a05c273e808cf60b08562c4440d2744d9b66
+"preact@npm:10.6.6":
+  version: 10.6.6
+  resolution: "preact@npm:10.6.6"
+  checksum: d6a9581b222c60595f987be28738b68dabb3045f72043e2619af81e9ca00b2b0942717642bcfcaab77a0afa50a97cd35039139c7f425a62a4f02ceb793d8ef83
   languageName: node
   linkType: hard
 
