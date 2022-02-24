@@ -65,7 +65,7 @@ fun <AtomType> verifyExpandConnectedness(state: GenericTableauxState<AtomType>, 
     } else if (state.type == TableauxType.STRONGLYCONNECTED) {
         if (!children.fold(false) { acc, id -> acc || state.nodeIsDirectlyCloseable(id) })
             throw IllegalMove(
-            """
+                """
                     No literal in this clause would be closeable with '$leaf',
                     making the tree not strongly connected
                 """
