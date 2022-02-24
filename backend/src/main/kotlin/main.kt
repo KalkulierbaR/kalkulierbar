@@ -94,10 +94,12 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
     app.get("/") { ctx ->
         val ids = endpoints.map { it.identifier }
         ctx.result(
-            """KalkulierbaR API Server
-            |
-            |Available calculus endpoints:
-            |${ids.joinToString("\n")}""".trimMargin()
+            """
+                |KalkulierbaR API Server
+                |
+                |Available calculus endpoints:
+                |${ids.joinToString("\n")}
+            """.trimMargin()
         )
     }
 
@@ -157,8 +159,10 @@ fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
     // Small documentation at the main calculus endpoint
     app.get("/$name") { ctx ->
         ctx.result(
-            """Calculus "$name" loaded.
-                |Interact via the /parse /move /close and /validate endpoints""".trimMargin()
+            """
+                |Calculus "$name" loaded.
+                |Interact via the /parse /move /close and /validate endpoints
+            """.trimMargin()
         )
     }
 
