@@ -26,7 +26,7 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, varAssign: Map<S
     val formula: LogicNode = node.leftFormulas[listIndex]
 
     if (formula !is UniversalQuantifier)
-        throw IllegalMove("Rule allRight can only be applied on a universal quantifier")
+        throw IllegalMove("Rule allLeft can only be applied on a universal quantifier")
 
     // No need to check if swapVariable is already in use for rule allLeft
 
