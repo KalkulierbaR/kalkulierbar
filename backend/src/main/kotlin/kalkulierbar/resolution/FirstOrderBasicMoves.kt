@@ -154,7 +154,7 @@ fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
             // Check equality of both atoms
             if (newClause.atoms[firstID] != newClause.atoms[secondID])
                 throw IllegalMove(
-                    "Atom '${newClause.atoms[firstID]}' and '${newClause.atoms[secondID]}'" +
+                    "Atoms '${newClause.atoms[firstID]}' and '${newClause.atoms[secondID]}'" +
                         " are not equal after instantiation"
                 )
 
