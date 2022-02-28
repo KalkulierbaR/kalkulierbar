@@ -15,8 +15,8 @@ class ChangeEquivalences : DoNothingVisitor() {
     }
 
     override fun visit(node: Equiv): LogicNode {
-        val left = node.leftChild
-        val right = node.rightChild
+        val left = node.leftChild.accept(this)
+        val right = node.rightChild.accept(this)
 
         // Cloning the sub-terms here is important!
         // Not cloning leads to object-reuse which causes all sorts of weirdness
