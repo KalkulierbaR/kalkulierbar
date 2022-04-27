@@ -67,7 +67,7 @@
     "peerDependencies": {
         "prettier": ">1.0.0",
         "tslint": ">5.0.0",
-        "webpack": "^4.36.0"
+        "webpack": "^4.36.0 || ^5.0.0"
     },
     "packageManager": "yarn@3.2.0"
 }
