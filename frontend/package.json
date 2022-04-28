@@ -25,6 +25,9 @@
             "tslint --fix"
         ]
     },
+    "engines": {
+        "node": "^12 || ^14"
+    },
     "eslintConfig": {
         "extends": "eslint-config-aerian"
     },
