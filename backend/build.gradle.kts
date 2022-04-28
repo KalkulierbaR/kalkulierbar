@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.serialization") version "1.6.10"
+    kotlin("jvm") version "1.6.21"
+    kotlin("plugin.serialization") version "1.6.21"
     application
-    id("org.jmailen.kotlinter") version "3.9.0"
-    id("io.gitlab.arturbosch.detekt") version "1.19.0"
+    id("org.jmailen.kotlinter") version "3.10.0"
+    id("io.gitlab.arturbosch.detekt") version "1.20.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
     id("jacoco")
@@ -21,7 +21,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
     // Web framework
-    implementation("io.javalin:javalin:4.3.0")
+    implementation("io.javalin:javalin:4.5.0")
 
     // Logging
     implementation("org.slf4j:slf4j-simple:1.8.0-beta4")
