@@ -63,7 +63,6 @@ detekt {
 
 kotlinter {
     ignoreFailures = false
-    indentSize = 4
     reporters = arrayOf("checkstyle", "plain")
     experimentalRules = false
     disabledRules = arrayOf("no-wildcard-imports", "filename")
