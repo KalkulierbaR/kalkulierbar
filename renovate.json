@@ -12,6 +12,12 @@
     "JuliusHenke"
   ],
   "rebaseWhen": "behind-base-branch",
+  "automergeType": "branch",
+  "stabilityDays": 3,
+  "prCreation": "immediate",
+  "schedule": [
+    "before 9am on Saturday"
+  ],
   "packageRules": [
     {
       "description": "Group all non-major updates",
@@ -24,11 +30,18 @@
       "groupName": "non-major"
     },
     {
+      "description": "Group major dev updates",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "groupName": "major-dev"
+    },
+    {
       "matchPackageNames": "preact-cli",
       "allowedVersions": "<=3.0.5"
     }
-  ],
-  "automergeType": "branch",
-  "stabilityDays": 3,
-  "prCreation": "not-pending"
+  ]
 }
