@@ -19,9 +19,9 @@ On `Linux` systems you can use the main install script `./install`, also describ
 
 - `./gradlew build`: build, test, and analyze the project
 
-- `./gradlew run`: creates build, runs it and by default listens on http://localhost:7000/
+- `./gradlew run`: creates build, runs it and by default listens on http://localhost:8080/
 
-- `./gradlew run --args='--global'` or `./gradlew run --args='-g'`: same as run, but listens on http://0.0.0.0:7000/ by
+- `./gradlew run --args='--global'` or `./gradlew run --args='-g'`: same as run, but listens on http://0.0.0.0:8080/ by
   default
 
 - On `Windows` replace `./gradlew` with `./gradlew.bat` for all commands mentioned above
