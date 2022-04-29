@@ -33,7 +33,7 @@ jobs:
           sudo chmod 600 /tmp/id_rsa
           echo "${{ secrets.GCE_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
           scp -i /tmp/id_rsa backend/build/libs/kalkulierbar-backend-all.jar user@gce.kbar.app:kalkulierbar/fresh.jar
-          ssh -i /tmp/id_rsa user@gce.kbar.app 'mv kalkulierbar/fresh.jar kalkulierbar/production.jar && PORT=7000 sudo systemctl restart kalkulierbar'
+          ssh -i /tmp/id_rsa user@gce.kbar.app 'mv kalkulierbar/fresh.jar kalkulierbar/production.jar && sudo systemctl restart kalkulierbar'
 
       - name: Cleanup Gradle Cache
         run: |
