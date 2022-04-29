@@ -1,4 +1,5 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
   ],
@@ -42,6 +43,18 @@
     {
       "matchPackageNames": "preact-cli",
       "allowedVersions": "<=3.0.5"
+    },
+    {
+      "matchPackageNames": ["@material/radio", "@material/switch"],
+      "allowedVersions": "<5.0.0"
+    },
+    {
+      "matchPackageNames": ["@types/node", "node"],
+      "allowedVersions": "^14"
+    },
+    {
+      "matchPackageNames": ["css-loader", "sass-loader"],
+      "enabled": false
     }
   ]
 }
