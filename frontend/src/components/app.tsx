@@ -15,11 +15,11 @@ import { h } from "preact";
 import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 
-import { AppStateActionType } from "../types/app/action";
+import { AppStateAction, AppStateActionType } from "../types/app/action";
 import { NotificationHandler } from "../types/app/notification";
 import { Calculus } from "../types/calculus";
 import { checkCredentials, getConfig } from "../util/admin";
-import { AppStateProvider, useAppState } from "../util/app-state";
+import { AppStateProvider, defaultBackendServer, useAppState } from "../util/app-state";
 import Confetti from "../util/confetti";
 import { useTitle } from "../util/title";
 
@@ -34,16 +34,24 @@ const SMALL_SCREEN_THRESHOLD = 750;
  * Check if server is online
  * @param {string} url - The url to send a request to
  * @param {NotificationHandler} notificationHandler - Notification Handler
+ * @param {Function} dispatch - Dispatch state actions
  * @returns {Promise} - Promise that resolves when check is done
  */
 async function checkServer(
     url: string,
     notificationHandler: NotificationHandler,
+    dispatch: (a: AppStateAction) => void,
 ) {
     try {
         await fetch(url);
     } catch (e) {
-        notificationHandler.error(`Server ${url} appears to be offline`);
+        fetch(defaultBackendServer).then(() => {
+            dispatch({
+                type: AppStateActionType.SET_SERVER,
+                value: defaultBackendServer,
+            });
+            notificationHandler.error(`Switched to default server ${defaultBackendServer} since ${url} was offline`);
+        }).catch(() => notificationHandler.error(`Server ${url} appears to be offline`))
     }
 }
 
@@ -94,7 +102,7 @@ const App: preact.FunctionalComponent = () => {
     };
 
     useEffect(() => {
-        checkServer(server, notificationHandler);
+        checkServer(server, notificationHandler, dispatch);
         getConfig(server, setConfig);
     }, [server]);
 
