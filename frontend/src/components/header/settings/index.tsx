@@ -46,13 +46,20 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
     const [serverInput, setServerInput] = useState(server);
 
     const dispatchServer = useCallback(() => {
-        const value = serverInput.trim();
+        let serverLocation = serverInput.trim();
+        const simpleDomainRegex = "^[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+$"
+        const localhostRegex = "^localhost:\\d+$"
+        if (serverLocation.match(simpleDomainRegex)) {
+            serverLocation = `https://${serverLocation}`
+        } else if (serverLocation.match(localhostRegex)) {
+            serverLocation = `http://${serverLocation}`
+        }
         dispatch({
             type: AppStateActionType.SET_SERVER,
-            value,
+            value: serverLocation,
         });
-        fetch(value).then(() =>
-            notificationHandler.success("Server was successfully changed"),
+        fetch(serverLocation).then(() =>
+            notificationHandler.success(`Server was successfully changed to ${serverLocation}`),
         );
     }, [serverInput]);
 

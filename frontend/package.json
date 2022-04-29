@@ -9,8 +9,8 @@
         "start:development": "npm run -s dev",
         "build": "preact build --prerender=false",
         "format": "tslint --config tslintAutoFix.json --fix --project . && prettier src/\\{components,routes,style,types,util\\}/**/* --write",
-        "serve": "preact build --prerender=false && serve build/ -s -l ${PORT:-8080}",
-        "serve-only": "serve build/ -s -l ${PORT:-8080}",
+        "serve": "preact build --prerender=false && serve build/ -s -l ${PORT:-3000}",
+        "serve-only": "serve build/ -s -l ${PORT:-3000}",
         "dev": "preact watch",
         "lint": "tslint --project .",
         "lint-staged": "lint-staged",
@@ -25,6 +25,9 @@
             "tslint --fix"
         ]
     },
+    "engines": {
+        "node": "^12 || ^14"
+    },
     "eslintConfig": {
         "extends": "eslint-config-aerian"
     },
@@ -34,10 +37,10 @@
     "dependencies": {
         "@material/radio": "4.0.0",
         "@material/switch": "4.0.0",
-        "firebase-tools": "10.2.1",
-        "preact": "10.6.6",
+        "firebase-tools": "10.7.1",
+        "preact": "10.7.1",
         "preact-markup": "2.1.1",
-        "preact-render-to-string": "5.1.20",
+        "preact-render-to-string": "5.1.21",
         "preact-router": "4.0.1",
         "react-hint": "3.2.1",
         "serve": "13.0.2",
@@ -45,29 +48,29 @@
         "tslint-etc": "1.13.10"
     },
     "devDependencies": {
-        "@types/webpack-env": "1.16.3",
+        "@types/webpack-env": "1.16.4",
         "css-loader": "1.0.1",
         "husky": "7.0.4",
         "identity-obj-proxy": "3.0.0",
-        "lint-staged": "12.3.4",
+        "lint-staged": "12.4.1",
         "node-sass": "6.0.1",
         "per-env": "1.0.2",
         "preact-cli": "3.0.5",
-        "prettier": "2.5.1",
+        "prettier": "2.6.2",
         "sass-loader": "10.2.1",
-        "ts-loader": "8.3.0",
+        "ts-loader": "9.2.9",
         "tslint": "6.1.3",
         "tslint-config-prettier": "1.18.0",
         "tslint-consistent-codestyle": "1.16.0",
         "tslint-eslint-rules": "5.4.0",
         "tslint-react": "4.1.0",
-        "typescript": "4.5.5",
+        "typescript": "4.6.3",
         "typings-for-css-modules-loader": "1.7.0"
     },
     "peerDependencies": {
         "prettier": ">1.0.0",
         "tslint": ">5.0.0",
-        "webpack": "^4.36.0"
+        "webpack": "^4.36.0 || ^5.0.0"
     },
     "packageManager": "yarn@3.2.0"
 }

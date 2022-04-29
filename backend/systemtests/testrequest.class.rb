@@ -2,7 +2,7 @@
 class TestRequest
 
 	# Open a connection to the specified host
-	def initialize(host = 'localhost', port = 7000, headers = 'default')
+	def initialize(host = 'localhost', port = 8080, headers = 'default')
 		@host = host
 		@port = port
 		@headers = headers

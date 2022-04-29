@@ -14,7 +14,7 @@ import { Calculus, CalculusType } from "../types/calculus";
 
 import { localStorageGet, localStorageSet } from "./local-storage";
 
-const isDeployed = location.port !== "8080";
+export const defaultBackendServer = "https://api.kbar.app"
 
 const INIT_APP_STATE: AppState = {
     smallScreen: false,
@@ -29,9 +29,7 @@ const INIT_APP_STATE: AppState = {
         [Calculus.foSequent]: "",
         [Calculus.modalTableaux]: "",
     },
-    server: isDeployed
-        ? "https://api.kbar.app"
-        : `http://${location.hostname}:7000`,
+    server: defaultBackendServer,
     theme: Theme.auto,
     tutorialMode: TutorialMode.HighlightAll,
     isAdmin: false,

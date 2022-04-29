@@ -2170,10 +2170,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack-env@npm:1.16.3":
-  version: 1.16.3
-  resolution: "@types/webpack-env@npm:1.16.3"
-  checksum: faefa7c0a75289fb469b9a5ae44059a00009de840e0e62d13b3f837d77647da76808e7839cdc414b8c585969cf6b6a7f290dc2cb437a9ccdf04cb214c68f3223
+"@types/webpack-env@npm:1.16.4":
+  version: 1.16.4
+  resolution: "@types/webpack-env@npm:1.16.4"
+  checksum: 97554238364dae6b7369f9e6d409c7eab4b0235f99b16c69e7458afbb9c29cde128b3fd3a79a14b9bbb8b09d9f0ba377b51cc040f0a2bd2c8eddaf22657136be
   languageName: node
   linkType: hard
 
@@ -6122,17 +6122,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enhanced-resolve@npm:^4.0.0":
-  version: 4.3.0
-  resolution: "enhanced-resolve@npm:4.3.0"
-  dependencies:
-    graceful-fs: ^4.1.2
-    memory-fs: ^0.5.0
-    tapable: ^1.0.0
-  checksum: aaef4c07e7288d67cfd4ed2dad16a5e8a175bb45eaf91f7c9f0d7c1186577f78047452a9d8d5d136473c30c769b7a322c1bf837ccf7f5c6fbde3266d043a633c
-  languageName: node
-  linkType: hard
-
 "enhanced-resolve@npm:^4.1.0":
   version: 4.1.1
   resolution: "enhanced-resolve@npm:4.1.1"
@@ -6141,6 +6130,16 @@ __metadata:
     memory-fs: ^0.5.0
     tapable: ^1.0.0
   checksum: 7447303aa87204f14f4a43efb03771395b12ff95e8f16dff081bc1ed84235e1e0da0abc8ed71e46dd723c924b95b4323e50a30dade18765cdb4de7e12fe3a501
+  languageName: node
+  linkType: hard
+
+"enhanced-resolve@npm:^5.0.0":
+  version: 5.9.3
+  resolution: "enhanced-resolve@npm:5.9.3"
+  dependencies:
+    graceful-fs: ^4.2.4
+    tapable: ^2.2.0
+  checksum: 64c2dbbdd608d1a4df93b6e60786c603a1faf3b2e66dfd051d62cf4cfaeeb5e800166183685587208d62e9f7afff3f78f3d5978e32cd80125ba0c83b59a79d78
   languageName: node
   linkType: hard
 
@@ -6964,9 +6963,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-tools@npm:10.2.1":
-  version: 10.2.1
-  resolution: "firebase-tools@npm:10.2.1"
+"firebase-frameworks@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "firebase-frameworks@npm:0.3.0"
+  dependencies:
+    tslib: ^2.3.1
+  checksum: 9786a2355b00fe3b30f0549d2275c0f03600e259b689e2a35b0a14e95c7aa2bb980ed0617623b9d65bac4a264cc616e0ed6728962c57ea2f6946d6666ae326eb
+  languageName: node
+  linkType: hard
+
+"firebase-tools@npm:10.7.1":
+  version: 10.7.1
+  resolution: "firebase-tools@npm:10.7.1"
   dependencies:
     "@google-cloud/pubsub": ^2.18.4
     abort-controller: ^3.0.0
@@ -6989,6 +6997,7 @@ __metadata:
     exit-code: ^1.0.2
     express: ^4.16.4
     filesize: ^6.1.0
+    firebase-frameworks: ^0.3.0
     fs-extra: ^5.0.0
     glob: ^7.1.2
     google-auth-library: ^7.11.0
@@ -7029,7 +7038,7 @@ __metadata:
     ws: ^7.2.3
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 14cb7fe31cedfbec7ffa9f6d6d521ef49e47bc294dfae8d6b6d84f1fa708d537ea8e3afd9efd2c3a56bdc45dbef28079ef1442a9bfb42e74e64f63db59c49149
+  checksum: e9162e263718222f3971275d9df0b4026cabc90bd0cc06917fb552cae6b964ce282e1f679e4c0185fecee07363b5ab7a2f3d39621d4c955e8066748e98eb7548
   languageName: node
   linkType: hard
 
@@ -7671,6 +7680,13 @@ __metadata:
   version: 4.2.4
   resolution: "graceful-fs@npm:4.2.4"
   checksum: 9d58c444eb4f391ce30b451aae8a8af2bd675d9f6f624719e97306f571ab89b2bd2b5f9025199bc63a2edfe2e53e7701554012f32a708148d53aa689163728cc
+  languageName: node
+  linkType: hard
+
+"graceful-fs@npm:^4.2.4":
+  version: 4.2.10
+  resolution: "graceful-fs@npm:4.2.10"
+  checksum: 3f109d70ae123951905d85032ebeae3c2a5a7a997430df00ea30df0e3a6c60cf6689b109654d6fdacd28810a053348c4d14642da1d075049e6be1ba5216218da
   languageName: node
   linkType: hard
 
@@ -9389,37 +9405,37 @@ __metadata:
   dependencies:
     "@material/radio": 4.0.0
     "@material/switch": 4.0.0
-    "@types/webpack-env": 1.16.3
+    "@types/webpack-env": 1.16.4
     css-loader: 1.0.1
-    firebase-tools: 10.2.1
+    firebase-tools: 10.7.1
     husky: 7.0.4
     identity-obj-proxy: 3.0.0
-    lint-staged: 12.3.4
+    lint-staged: 12.4.1
     node-sass: 6.0.1
     per-env: 1.0.2
-    preact: 10.6.6
+    preact: 10.7.1
     preact-cli: 3.0.5
     preact-markup: 2.1.1
-    preact-render-to-string: 5.1.20
+    preact-render-to-string: 5.1.21
     preact-router: 4.0.1
-    prettier: 2.5.1
+    prettier: 2.6.2
     react-hint: 3.2.1
     sass-loader: 10.2.1
     serve: 13.0.2
     sha3: 2.1.4
-    ts-loader: 8.3.0
+    ts-loader: 9.2.9
     tslint: 6.1.3
     tslint-config-prettier: 1.18.0
     tslint-consistent-codestyle: 1.16.0
     tslint-eslint-rules: 5.4.0
     tslint-etc: 1.13.10
     tslint-react: 4.1.0
-    typescript: 4.5.5
+    typescript: 4.6.3
     typings-for-css-modules-loader: 1.7.0
   peerDependencies:
     prettier: ">1.0.0"
     tslint: ">5.0.0"
-    webpack: ^4.36.0
+    webpack: ^4.36.0 || ^5.0.0
   languageName: unknown
   linkType: soft
 
@@ -9560,9 +9576,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:12.3.4":
-  version: 12.3.4
-  resolution: "lint-staged@npm:12.3.4"
+"lint-staged@npm:12.4.1":
+  version: 12.4.1
+  resolution: "lint-staged@npm:12.4.1"
   dependencies:
     cli-truncate: ^3.1.0
     colorette: ^2.0.16
@@ -9574,12 +9590,13 @@ __metadata:
     micromatch: ^4.0.4
     normalize-path: ^3.0.0
     object-inspect: ^1.12.0
+    pidtree: ^0.5.0
     string-argv: ^0.3.1
     supports-color: ^9.2.1
     yaml: ^1.10.2
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 4e0b4b9da4183a0daeab35d41e4d243fb1270a39db997efa0c3745fa148a7a4b8b723a51cb757595fc8bb118796ca1465e67aede72f25e9ea48165aec36cec3b
+  checksum: b57183b537064cda6caef6679918bf271903145f7c28d09567e918b8b13094048b579f8df808ea590dbd7ea2ec332327c5e372cf3d77e85b7b0254f6541ce4c3
   languageName: node
   linkType: hard
 
@@ -12027,6 +12044,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pidtree@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "pidtree@npm:0.5.0"
+  bin:
+    pidtree: bin/pidtree.js
+  checksum: 371cd14bbc9bdee2a6a44596dd521dd3565e223481e0b1afffdca3f1c29831850bfa7784114dc30d245d37e7d186cec035e036256b39f75d878d19498fe0df6a
+  languageName: node
+  linkType: hard
+
 "pify@npm:^2.0.0":
   version: 2.3.0
   resolution: "pify@npm:2.3.0"
@@ -12715,14 +12741,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact-render-to-string@npm:5.1.20":
-  version: 5.1.20
-  resolution: "preact-render-to-string@npm:5.1.20"
+"preact-render-to-string@npm:5.1.21":
+  version: 5.1.21
+  resolution: "preact-render-to-string@npm:5.1.21"
   dependencies:
     pretty-format: ^3.8.0
   peerDependencies:
     preact: ">=10"
-  checksum: 69e36751415cd81b68ac23811122e674f761efca0f5365b5ac90e62498ee1f4d25abe718b6c21f52faa8764582a667378fe1817dadba69ad24259033fddd6d21
+  checksum: 573aac15dd67e5f329ad2962378e4959e732af4772009d1787c24923c6cdcf53e17112160553985f82e4326cfc8e6caee188e0051ceab642cf840b4cc26362e7
   languageName: node
   linkType: hard
 
@@ -12735,10 +12761,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:10.6.6":
-  version: 10.6.6
-  resolution: "preact@npm:10.6.6"
-  checksum: d6a9581b222c60595f987be28738b68dabb3045f72043e2619af81e9ca00b2b0942717642bcfcaab77a0afa50a97cd35039139c7f425a62a4f02ceb793d8ef83
+"preact@npm:10.7.1":
+  version: 10.7.1
+  resolution: "preact@npm:10.7.1"
+  checksum: e99d08bd38372e78ce1c84e68685cad66adf076bd95069bc8bcd32c9903a4df09c01d5b04aad849527362b67cc2c09446b647f72de4e67d0578fdea0f904f28f
   languageName: node
   linkType: hard
 
@@ -12763,12 +12789,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.5.1":
-  version: 2.5.1
-  resolution: "prettier@npm:2.5.1"
+"prettier@npm:2.6.2":
+  version: 2.6.2
+  resolution: "prettier@npm:2.6.2"
   bin:
     prettier: bin-prettier.js
-  checksum: 21b9408476ea1c544b0e45d51ceb94a84789ff92095abb710942d780c862d0daebdb29972d47f6b4d0f7ebbfb0ffbf56cc2cfa3e3e9d1cca54864af185b15b66
+  checksum: 48d08dde8e9fb1f5bccdd205baa7f192e9fc8bc98f86e1b97d919de804e28c806b0e6cc685e4a88211aa7987fa9668f30baae19580d87ced3ed0f2ec6572106f
   languageName: node
   linkType: hard
 
@@ -15275,6 +15301,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tapable@npm:^2.2.0":
+  version: 2.2.1
+  resolution: "tapable@npm:2.2.1"
+  checksum: 3b7a1b4d86fa940aad46d9e73d1e8739335efd4c48322cb37d073eb6f80f5281889bf0320c6d8ffcfa1a0dd5bfdbd0f9d037e252ef972aca595330538aac4d51
+  languageName: node
+  linkType: hard
+
 "tar-stream@npm:^2.2.0":
   version: 2.2.0
   resolution: "tar-stream@npm:2.2.0"
@@ -15659,19 +15692,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-loader@npm:8.3.0":
-  version: 8.3.0
-  resolution: "ts-loader@npm:8.3.0"
+"ts-loader@npm:9.2.9":
+  version: 9.2.9
+  resolution: "ts-loader@npm:9.2.9"
   dependencies:
     chalk: ^4.1.0
-    enhanced-resolve: ^4.0.0
-    loader-utils: ^2.0.0
+    enhanced-resolve: ^5.0.0
     micromatch: ^4.0.0
     semver: ^7.3.4
   peerDependencies:
     typescript: "*"
-    webpack: "*"
-  checksum: 93dd15b553a2621f969c4c834e7eb085b9b079adb702cba68a7ee516bcd2c67620e62cc5a8c57345e90c644ff6b689ee5a09f0702e440284fdfe872e9aaeefd8
+    webpack: ^5.0.0
+  checksum: de817d4b7073bb029ca3e0742b5ef9432fdebb9f80707249b2121c09bb6ae6332ec755ab8e572f475ebfe5525a380a78b4e78a32b4d1c207a8fb1a2a0a490bac
   languageName: node
   linkType: hard
 
@@ -15707,6 +15739,13 @@ __metadata:
   version: 2.3.1
   resolution: "tslib@npm:2.3.1"
   checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.3.1":
+  version: 2.4.0
+  resolution: "tslib@npm:2.4.0"
+  checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113
   languageName: node
   linkType: hard
 
@@ -15985,13 +16024,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.5.5":
-  version: 4.5.5
-  resolution: "typescript@npm:4.5.5"
+"typescript@npm:4.6.3":
+  version: 4.6.3
+  resolution: "typescript@npm:4.6.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 506f4c919dc8aeaafa92068c997f1d213b9df4d9756d0fae1a1e7ab66b585ab3498050e236113a1c9e57ee08c21ec6814ca7a7f61378c058d79af50a4b1f5a5e
+  checksum: 255bb26c8cb846ca689dd1c3a56587af4f69055907aa2c154796ea28ee0dea871535b1c78f85a6212c77f2657843a269c3a742d09d81495b97b914bf7920415b
   languageName: node
   linkType: hard
 
@@ -16005,13 +16044,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.5.5#~builtin<compat/typescript>":
-  version: 4.5.5
-  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=bda367"
+"typescript@patch:typescript@4.6.3#~builtin<compat/typescript>":
+  version: 4.6.3
+  resolution: "typescript@patch:typescript@npm%3A4.6.3#~builtin<compat/typescript>::version=4.6.3&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 858c61fa63f7274ca4aaaffeced854d550bf416cff6e558c4884041b3311fb662f476f167cf5c9f8680c607239797e26a2ee0bcc6467fbc05bfcb218e1c6c671
+  checksum: 6bf45caf847062420592e711bc9c28bf5f9a9a7fa8245343b81493e4ededae33f1774009d1234d911422d1646a2c839f44e1a23ecb111b40a60ac2ea4c1482a8
   languageName: node
   linkType: hard
 
