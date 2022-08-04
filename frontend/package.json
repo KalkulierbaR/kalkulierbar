@@ -50,9 +50,9 @@
     "devDependencies": {
         "@types/webpack-env": "1.16.4",
         "css-loader": "1.0.1",
-        "husky": "7.0.4",
+        "husky": "8.0.1",
         "identity-obj-proxy": "3.0.0",
-        "lint-staged": "12.4.1",
+        "lint-staged": "13.0.3",
         "node-sass": "6.0.1",
         "per-env": "1.0.2",
         "preact-cli": "3.0.5",
