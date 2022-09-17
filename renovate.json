@@ -20,6 +20,14 @@
       "allowedVersions": "^14"
     },
     {
+      "matchPackageNames": ["husky"],
+      "allowedVersions": "<8.0.0"
+    },
+    {
+      "matchPackageNames": ["lint-staged"],
+      "allowedVersions": "<13.0.0"
+    },
+    {
       "matchPackageNames": ["css-loader", "sass-loader"],
       "enabled": false
     }
