@@ -53,7 +53,7 @@
         "husky": "7.0.4",
         "identity-obj-proxy": "3.0.0",
         "lint-staged": "12.4.1",
-        "node-sass": "6.0.1",
+        "node-sass": "7.0.0",
         "per-env": "1.0.2",
         "preact-cli": "3.0.5",
         "prettier": "2.6.2",
