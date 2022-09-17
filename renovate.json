@@ -6,9 +6,6 @@
   "assignees": [
     "JuliusHenke"
   ],
-  "baseBranches": [
-    "dev"
-  ],
   "packageRules": [
     {
       "matchPackageNames": "preact-cli",
