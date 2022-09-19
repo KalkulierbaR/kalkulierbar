@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("jvm") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.10"
     application
     id("org.jmailen.kotlinter") version "3.10.0"
-    id("io.gitlab.arturbosch.detekt") version "1.20.0"
+    id("io.gitlab.arturbosch.detekt") version "1.21.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
     id("jacoco")
@@ -18,20 +18,20 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // JVM dependency
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 
     // Web framework
-    implementation("io.javalin:javalin:4.5.0")
+    implementation("io.javalin:javalin:4.6.4")
 
     // Logging
-    implementation("org.slf4j:slf4j-simple:1.8.0-beta4")
+    implementation("org.slf4j:slf4j-simple:2.0.1")
 
     // Hashing
     implementation("com.github.komputing:khash:1.1.1")
 
     // Testing
     testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.8.2")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.9.0")
 }
 
 application {
