@@ -66,7 +66,11 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
 
     val app = Javalin.create { config ->
         // Enable CORS headers
-        config.enableCorsForAllOrigins()
+        config.plugins.enableCors(cors -> {
+            cors.add(it -> {
+                it.anyHost();
+            });
+        });
 
         // Set a Jetty server manually for more config options
         config.server {
