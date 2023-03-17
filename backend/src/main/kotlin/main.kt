@@ -13,8 +13,6 @@ import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.PropositionalTableaux
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.server.ServerConnector
 import statekeeper.Scoreboard
 import statekeeper.StateKeeper
 import statekeeper.Stats
@@ -66,27 +64,16 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
 
     val app = Javalin.create { config ->
         // Enable CORS headers
-        config.plugins.enableCors(cors -> {
-            cors.add(it -> {
-                it.anyHost();
-            });
-        });
-
-        // Set a Jetty server manually for more config options
-        config.server {
-            // Create and configure Jetty server
-            Server().apply {
-                connectors = arrayOf(
-                    ServerConnector(this).apply {
-                        this.host = host
-                        this.port = port
-                    }
-                )
+        config.plugins.enableCors { cors ->
+            cors.add {
+                it.anyHost()
             }
         }
+
+        config.compression.brotliAndGzip(); // use both gzip and brotli
     }
 
-    app.start()
+    app.start(host, port)
 
     // Catch explicitly thrown exceptions
     app.exception(KalkulierbarException::class.java) { e, ctx ->
