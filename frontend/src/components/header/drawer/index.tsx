@@ -1,10 +1,8 @@
-import { h } from "preact";
-
 import { classMap } from "../../../util/class-map";
 import Nav from "../nav";
 import Settings from "../settings";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface DrawerProps {
     /**

@@ -1,4 +1,5 @@
-import preact, { h, RefObject } from "preact";
+import type preact from "preact";
+import type { RefObject } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 import {
@@ -11,7 +12,7 @@ import { nodeName } from "../../../../util/sequent";
 import HorizontalList from "../../../svg/horizontal-list";
 import Rectangle from "../../../svg/rectangle";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

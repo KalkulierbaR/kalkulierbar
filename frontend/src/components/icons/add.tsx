@@ -1,4 +1,4 @@
-import preact, { h } from "preact";
+import type preact from "preact";
 
 import Icon from "./icon";
 

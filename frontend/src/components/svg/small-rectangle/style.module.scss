@@ -1,0 +1,11 @@
+.active {
+    fill: var(--kbar-accent-light-color);
+}
+
+.disabled {
+    fill: var(--kbar-rectangle-disabled);
+}
+
+.selected {
+    fill: var(--kbar-accent-2-color);
+}

@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useRef } from "preact/hooks";
 
 import { TableauxTreeLayoutNode } from "../../../../types/calculus/tableaux";
@@ -9,7 +8,7 @@ import { nodeName } from "../../../../util/tableaux";
 import Draggable from "../../../svg/draggable";
 import Rectangle from "../../../svg/rectangle";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

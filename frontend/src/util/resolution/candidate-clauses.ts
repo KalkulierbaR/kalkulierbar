@@ -10,6 +10,7 @@ import {
     instanceOfPropAtom,
     instanceOfPropClause,
     instanceOfPropClauseSet,
+    BaseCandidateClause,
 } from "../../types/calculus/clause";
 import { HyperResolutionMove } from "../../types/calculus/resolution";
 
@@ -248,14 +249,14 @@ export const recalculateCandidateClauses = (
 
 /**
  * Add a clause to the clause set
- * @param {ClauseSet<string | FOLiteral>} clauseSet - The clause set to work on
- * @param {CandidateClause[]} clauses - The candidate clauses
+ * @param {ClauseSet<T>} clauseSet - The clause set to work on
+ * @param {BaseCandidateClause<T>[]} clauses - The candidate clauses
  * @param {number} newClauseId - The id of the new clause (might be changed if already occupied)
  * @returns {void}
  */
-export const addClause = (
-    clauseSet: ClauseSet<string | FOLiteral>,
-    clauses: CandidateClause[],
+export const addClause = <T>(
+    clauseSet: ClauseSet<T>,
+    clauses: BaseCandidateClause<T>[],
     newClauseId: number,
 ) => {
     const newClause = clauseSet.clauses[newClauseId];
@@ -273,7 +274,7 @@ export const addClause = (
     }
 
     clauses.splice(newIndex, 0, {
-        clause: newClause as any,
+        clause: newClause,
         index: newClauseId,
         candidateAtomMap: new Map(),
     });
@@ -303,15 +304,15 @@ export const removeClause = (clauses: CandidateClause[], id: number) => {
 
 /**
  * Replaces a clause from the candidate clauses
- * @param {CandidateClause[]} clauses - the candidate clauses
+ * @param {BaseCandidateClause<T>[]} clauses - the candidate clauses
  * @param {number} id - id of the clause to remove
- * @param {Clause} newClause - the clause to insert
+ * @param {Clause<T>} newClause - the clause to insert
  * @returns {void} - void
  */
-export const replaceClause = (
-    clauses: CandidateClause[],
+export const replaceClause = <T>(
+    clauses: BaseCandidateClause<T>[],
     id: number,
-    newClause: Clause<string | FOLiteral>,
+    newClause: Clause<T>,
 ) => {
     let candidateIndex: number = id;
 
@@ -323,7 +324,7 @@ export const replaceClause = (
     }
 
     clauses.splice(candidateIndex, 1, {
-        clause: newClause as any,
+        clause: newClause,
         index: id,
         candidateAtomMap: new Map(),
     });

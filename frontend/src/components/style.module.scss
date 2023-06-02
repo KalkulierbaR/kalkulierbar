@@ -1,0 +1,29 @@
+.main {
+    padding: 72px 8px 0 8px;
+    min-height: 100%;
+    width: 100%;
+}
+
+.notifications {
+    position: fixed;
+    bottom: 16px;
+    z-index: 999;
+}
+
+:global {
+    #kbar-svg {
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+}
+
+@media (min-width: 700px) {
+    .main {
+        width: 80%;
+        margin: auto;
+        padding: 72px 0 0 0;
+    }
+}

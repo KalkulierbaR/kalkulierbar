@@ -1,0 +1,82 @@
+/* Styles for the home component */
+
+.calculus-grid {
+    list-style: none;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-flow: row;
+    gap: 16px;
+}
+
+.calculus-item {
+    border-radius: 5px;
+    background-color: var(--kbar-3dp-color);
+    box-shadow: var(--kbar-shadow-3dp);
+    cursor: pointer;
+    transition: transform 0.2s ease-in;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+
+    &-title {
+        padding: 8px;
+        text-align: center;
+        margin: 0;
+
+        &-wrapper {
+            display: flex;
+            justify-content: center;
+
+            &--showSwitch {
+                justify-content: space-between;
+            }
+        }
+    }
+
+    &-image {
+        height: 200px;
+        display: block;
+        width: 100%;
+    }
+}
+
+.home a {
+    text-decoration: none;
+    color: var(--kbar-link-color);
+    opacity: 0.8;
+    transition: opacity 0.2s ease-in;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}
+
+.rect {
+    fill: var(--kbar-accent-light-color);
+
+    &--accent {
+        fill: var(--kbar-accent-2-color);
+    }
+}
+
+.link {
+    fill: none;
+    stroke: var(--kbar-8dp-color);
+    stroke-width: 2px;
+}
+.changeabletext {
+    fill: var(--kbar-primary-text-color);
+}
+
+.sparkle {
+    vertical-align: middle;
+    margin: 0 0.5rem;
+    height: 1rem;
+}
+
+.sparkle path {
+    fill: var(--kbar-primary-text-color);
+}

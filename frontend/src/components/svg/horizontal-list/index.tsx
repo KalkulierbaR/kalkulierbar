@@ -12,7 +12,7 @@ import { parseFormula } from "../../../util/sequent";
 import { estimateSVGTextWidth } from "../../../util/text-width";
 import FormulaTreeNode from "../../calculus/sequent/formula-node";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     textRef: RefObject<SVGTextElement>;

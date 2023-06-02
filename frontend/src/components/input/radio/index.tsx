@@ -1,6 +1,4 @@
-import { h } from "preact";
-
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

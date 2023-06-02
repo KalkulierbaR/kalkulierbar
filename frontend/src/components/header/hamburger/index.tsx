@@ -1,8 +1,6 @@
-import { h } from "preact";
-
 import { classMap } from "../../../util/class-map";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface HamburgerProps {
     /**

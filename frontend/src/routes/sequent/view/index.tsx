@@ -1,7 +1,5 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
 import { useState } from "preact/hooks";
-
+import { useLocation } from "preact-iso";
 import SequentFAB from "../../../components/calculus/sequent/fab";
 import SequentTreeView from "../../../components/calculus/sequent/tree";
 import Dialog from "../../../components/dialog";
@@ -24,7 +22,7 @@ import { stringArrayToStringMap } from "../../../util/array-to-map";
 import { ruleSetToStringArray } from "../../../util/rule";
 import { nodeName, parseStringToListIndex } from "../../../util/sequent";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**
@@ -42,7 +40,9 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         onChange,
     } = useAppState();
 
-    const selectedRule: string = "";
+    const { route } = useLocation();
+
+    const selectedRule = "";
 
     const state = cState;
     if (!state) {
@@ -237,7 +237,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     notificationHandler,
                 );
             } else {
-                if (Object.keys(varAssign).length === 0) return;
+                if (Object.keys(varAssign).length !== 1) return;
                 sendMove(
                     server,
                     calculus,
@@ -246,7 +246,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         type: ruleOptions.get(selectedRuleId)!,
                         nodeID: selectedNodeId!,
                         listIndex: parseStringToListIndex(selectedListIndex),
-                        varAssign,
+                        instTerm: Object.values(varAssign)[0],
                     },
                     onChange,
                     notificationHandler,
@@ -333,7 +333,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     };
 
     return (
-        <Fragment>
+        <>
             <h2>Sequent Calculus View</h2>
 
             <div class={style.view}>
@@ -425,7 +425,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 }}
             />
             <TutorialDialog calculus={calculus} />
-        </Fragment>
+        </>
     );
 };
 

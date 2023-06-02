@@ -1,14 +1,14 @@
 import { createParticle, Particle, resetParticle } from "./particle";
 import { ConfettiOptions } from "./types";
 
-/* tslint:disable:no-bitwise */
+/* eslint "@typescript-eslint/no-explicit-any": "off" */
 
 let supportsAnimationFrame = false;
 
 if (typeof window !== "undefined") {
     supportsAnimationFrame =
         (window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
+            (window as any).webkitRequestAnimationFrame ||
             (window as any).mozRequestAnimationFrame ||
             (window as any).oRequestAnimationFrame ||
             (window as any).msRequestAnimationFrame) !== undefined;
@@ -26,7 +26,7 @@ export default class Confetti {
     protected alpha: number; // the alpha opacity of the confetti (between 0 and 1, where 1 is opaque and 0 is invisible)
     protected particles: Particle[] = [];
 
-    private pause: boolean = false;
+    private pause = false;
     private lastFrameTime = Date.now();
     private waveAngle = 0;
     private streamingConfetti = false;
@@ -88,7 +88,7 @@ export default class Confetti {
         window.requestAnimationFrame = (() => {
             return (
                 window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
+                (window as any).webkitRequestAnimationFrame ||
                 (window as any).mozRequestAnimationFrame ||
                 (window as any).oRequestAnimationFrame ||
                 (window as any).msRequestAnimationFrame ||

@@ -205,8 +205,8 @@ export const tableauxTreeLayout = (
 const tabNodeToTree = (
     nodes: TableauxNode[],
     n: TableauxNode = nodes[0],
-    i: number = 0,
-    y: number = 16,
+    i = 0,
+    y = 16,
 ): Tree<TableauxTreeLayoutNode> => {
     const width = estimateSVGTextWidth(nodeName(n)) + 56;
     return tree(

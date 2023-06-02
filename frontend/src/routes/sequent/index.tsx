@@ -1,4 +1,3 @@
-import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 
 import ExampleList from "../../components/input/example-list";
@@ -24,7 +23,7 @@ const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
     };
 
     return (
-        <Fragment>
+        <>
             <Format
                 logicType={
                     calculus === Calculus.foSequent
@@ -55,7 +54,7 @@ const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 </div>
             </div>
             <ExampleList calculus={calculus} />
-        </Fragment>
+        </>
     );
 };
 

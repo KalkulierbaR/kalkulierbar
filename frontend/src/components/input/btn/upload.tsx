@@ -1,6 +1,5 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
 import { useRef } from "preact/hooks";
+import { useLocation } from "preact-iso";
 
 import { CalculusType } from "../../../types/calculus";
 import { checkValid } from "../../../util/api";
@@ -21,6 +20,8 @@ const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const { server, onChange, notificationHandler } = useAppState();
 
     const input = useRef<HTMLInputElement>(null);
+
+    const loc = useLocation();
 
     const handleClick = () => {
         if (!input.current) {
@@ -65,7 +66,7 @@ const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
             if (valid) {
                 onChange(calculus, jsonState);
-                route(`/${calculus}/view`);
+                loc.route(`/${calculus}/view`);
             }
         } catch (e) {
             notificationHandler.error("" + e);
@@ -73,7 +74,7 @@ const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
     };
 
     return (
-        <Fragment>
+        <>
             <input
                 onChange={handleUpload}
                 ref={input}
@@ -86,7 +87,7 @@ const UploadButton: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 label="Load proof"
                 icon={<UploadIcon />}
             />
-        </Fragment>
+        </>
     );
 };
 

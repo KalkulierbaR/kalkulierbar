@@ -1,5 +1,3 @@
-import { h } from "preact";
-
 import CenterIcon from "../../icons/center";
 
 import FAB from "./index";

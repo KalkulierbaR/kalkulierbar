@@ -1,0 +1,70 @@
+@import "vars";
+
+.header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 56px;
+    padding: 0;
+    background: var(--kbar-accent-color);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+
+    @media (min-width: $hamburgerBreakpoint) {
+        padding: 0 10vw;
+    }
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    margin: 0 0 0 8px;
+
+    @media (min-width: $hamburgerBreakpoint) {
+        margin: 0;
+    }
+}
+
+.header h1 {
+    margin: 0;
+    padding: 0 16px;
+    font-size: 24px;
+    line-height: 56px;
+    font-weight: 400;
+    color: #fff;
+}
+
+.main-link {
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.dialog {
+    display: none;
+
+    @media (min-width: $hamburgerBreakpoint) {
+        display: block;
+        max-width: 720px;
+    }
+}
+
+.settings-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    height: 48px;
+    width: 48px;
+
+    @media (min-width: $hamburgerBreakpoint) {
+        margin: 0;
+    }
+}

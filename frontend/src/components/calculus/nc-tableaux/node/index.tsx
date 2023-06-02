@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useRef } from "preact/hooks";
 
 import { NCTabTreeNode } from "../../../../types/calculus/nc-tableaux";
@@ -8,7 +7,7 @@ import { classMap } from "../../../../util/class-map";
 import Draggable from "../../../svg/draggable";
 import Rectangle from "../../../svg/rectangle";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

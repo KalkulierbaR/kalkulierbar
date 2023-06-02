@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useState } from "preact/hooks";
 
 import { VarAssign } from "../../../types/calculus/tableaux";
@@ -7,7 +6,7 @@ import Btn from "../../input/btn";
 import TextInput from "../../input/text";
 import Dialog from "../index";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

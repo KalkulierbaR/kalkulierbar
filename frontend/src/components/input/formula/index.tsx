@@ -1,5 +1,4 @@
-import { createRef, h } from "preact";
-import { route } from "preact-router";
+import { createRef } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
 import { AppStateActionType } from "../../../types/app/action";
@@ -16,7 +15,8 @@ import UploadButton from "../btn/upload";
 import OptionList from "../option-list";
 import TextInput from "../text";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
+import { useLocation } from "preact-iso";
 
 interface Props {
     /**
@@ -79,6 +79,8 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
         setTextareaValue(savedFormulas[calculus]);
     }, [savedFormulas[calculus]]);
 
+    const loc = useLocation();
+
     /**
      * Handle the Submit event of the form
      * @param {Event} event - The submit event (if none is provided we add an example)
@@ -123,7 +125,7 @@ const FormulaInput: preact.FunctionalComponent<Props> = ({
                     setExampleDescriptionInput("");
                 } else {
                     onChange(calculus, parsed);
-                    route(`/${calculus}/view`);
+                    loc.route(`/${calculus}/view`);
                 }
             }
         } catch (e) {

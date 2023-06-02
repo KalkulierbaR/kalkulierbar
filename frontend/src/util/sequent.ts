@@ -136,10 +136,10 @@ export const sequentTreeLayout = (
  */
 const sequentNodeToTree = (
     nodes: SequentNode[],
-    i: number = 0,
-    y: number = 160,
+    i = 0,
+    y = 160,
 ): Tree<SequentTreeLayoutNode> => {
-    const n = nodes[i]!!;
+    const n = nodes[i]!;
 
     const width =
         estimateSVGTextWidth(nodeName(n)) +

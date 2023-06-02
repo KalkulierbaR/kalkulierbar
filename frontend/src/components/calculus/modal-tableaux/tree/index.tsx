@@ -1,5 +1,3 @@
-import { h } from "preact";
-
 import {
     ModalTableauxNode,
     ModalTableauxTreeLayoutNode,
@@ -14,7 +12,7 @@ import { modalTableauxTreeLayout } from "../../../../util/modal-tableaux";
 import ClosingEdge from "../../../svg/closing-edge";
 import Zoomable from "../../../svg/zoomable";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 import SubTree from "./subtree";
 
 interface Props {
@@ -62,11 +60,11 @@ const ModalTableauxTreeView: preact.FunctionalComponent<Props> = ({
 
     /**
      * Go to a node in the tree
-     * @param {any} d - The node to go to
+     * @param {unknown} d - The node to go to
      * @returns {[number, number]} - The target coordinates
      */
-    const transformGoTo = (d: any): [number, number] => {
-        const n = d.node as number;
+    const transformGoTo = (d: unknown): [number, number] => {
+        const n = (d as { node: number }).node;
 
         const node = findSubTree(
             root,

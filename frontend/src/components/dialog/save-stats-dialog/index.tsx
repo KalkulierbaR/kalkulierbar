@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useCallback, useState } from "preact/hooks";
 
 import Dialog from "..";
@@ -126,8 +125,8 @@ const SaveStatsDialog: preact.FunctionalComponent<Props> = ({
             tmp.push(statEntry);
         });
         tmp.sort((a, b) => {
-            const av = a.get(key)!!;
-            const bv = b.get(key)!!;
+            const av = a.get(key)!;
+            const bv = b.get(key)!;
             if (av === bv) return 0;
 
             const an = parseFloat(av);

@@ -1,12 +1,10 @@
-import { h } from "preact";
-
 import { DPLLTreeNode } from "../../../../types/calculus/dpll";
 import { dpllTreeLayout } from "../../../../util/dpll";
 import { treeToLayoutItem } from "../../../../util/layout/tree";
 import Zoomable from "../../../svg/zoomable";
 import DPLLNode from "../node";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

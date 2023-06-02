@@ -1,5 +1,4 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
+import { useLocation } from "preact-iso";
 import { useCallback, useEffect, useState } from "preact/hooks";
 
 import ModalTableauxFAB from "../../../components/calculus/modal-tableaux/fab";
@@ -35,6 +34,8 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
         notificationHandler,
         onChange,
     } = useAppState();
+
+    const { route } = useLocation();
 
     const state = cState;
     if (!state) {
@@ -188,7 +189,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
     };
 
     return (
-        <Fragment>
+        <>
             <h2>Modal Tableaux View</h2>
 
             <ModalTableauxTreeView
@@ -243,7 +244,7 @@ const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {
             />
 
             <TutorialDialog calculus={calculus} />
-        </Fragment>
+        </>
     );
 };
 

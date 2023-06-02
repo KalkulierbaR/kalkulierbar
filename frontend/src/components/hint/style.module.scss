@@ -1,0 +1,30 @@
+.hint {
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:global {
+    .react-hint__content {
+        font-size: 0.75rem;
+        background: var(--kbar-primary-text-color);
+        color: var(--kbar-card-color);
+    }
+
+    .react-hint--top::after {
+        border-top-color: var(--kbar-primary-text-color);
+    }
+
+    .react-hint--right::after {
+        border-right-color: var(--kbar-primary-text-color);
+    }
+
+    .react-hint--left::after {
+        border-left-color: var(--kbar-primary-text-color);
+    }
+
+    .react-hint--bottom::after {
+        border-bottom-color: var(--kbar-primary-text-color);
+    }
+}

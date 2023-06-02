@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useRef } from "preact/hooks";
 
 import {
@@ -9,7 +8,7 @@ import { LayoutItem } from "../../../../types/layout";
 import { classMap } from "../../../../util/class-map";
 import Rectangle from "../../../svg/rectangle";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

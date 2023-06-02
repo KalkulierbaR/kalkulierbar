@@ -1,7 +1,7 @@
 import { MDCSwitch } from "@material/switch";
-import { Component, createRef, h } from "preact";
+import { Component, createRef } from "preact";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**
@@ -18,7 +18,7 @@ interface Props {
     initialState?: boolean;
 }
 
-export default class Switch extends Component<Props, {}> {
+export default class Switch extends Component<Props> {
     public MDComponent?: MDCSwitch;
     public formElement = createRef<HTMLInputElement>();
     public switch = createRef<HTMLDivElement>();

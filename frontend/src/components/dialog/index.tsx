@@ -1,10 +1,8 @@
-import { h } from "preact";
-
 import { enableDrag } from "../../util/zoom/drag";
 import CloseIcon from "../icons/close";
 import Btn from "../input/btn";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

@@ -1,5 +1,4 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
+import { useLocation } from "preact-iso";
 import { useCallback, useState } from "preact/hooks";
 
 import DPLLPropLitDialog from "../../../components/calculus/dpll/dialog/prop";
@@ -21,17 +20,17 @@ import {
     sendProp,
 } from "../../../util/dpll";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
-interface Props {}
-
-const DPLLView: preact.FunctionalComponent<Props> = () => {
+const DPLLView: preact.FunctionalComponent = () => {
     const {
         dpll: cState,
         server,
         onChange,
         notificationHandler,
     } = useAppState();
+
+    const { route } = useLocation();
 
     const [showTree, setShowTree] = useState(false);
     const toggleShowTree = useCallback(
@@ -99,7 +98,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
     };
 
     return (
-        <Fragment>
+        <>
             <h2>DPLL View</h2>
             <div
                 class={classMap({
@@ -165,7 +164,7 @@ const DPLLView: preact.FunctionalComponent<Props> = () => {
                 setShowSplitDialog={setShowSplitDialog}
             />
             <TutorialDialog calculus={Calculus.dpll} />
-        </Fragment>
+        </>
     );
 };
 

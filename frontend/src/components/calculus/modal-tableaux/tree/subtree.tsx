@@ -1,4 +1,4 @@
-import { Fragment, h } from "preact";
+import { Fragment } from "preact";
 
 import {
     ModalTableauxNode,
@@ -8,7 +8,7 @@ import { Tree } from "../../../../types/tree";
 import { DragTransform } from "../../../../types/ui";
 import SMTabNode from "../node";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

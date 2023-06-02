@@ -36,8 +36,8 @@ export const dpllTreeLayout = (
 const dpllNodesToTree = (
     nodes: DPLLTreeNode[],
     n = nodes[0],
-    i: number = 0,
-    y: number = 16,
+    i = 0,
+    y = 16,
 ): Tree<DPLLTreeLayoutNode> => {
     const width = estimateSVGTextWidth(n.label) + 56;
     return tree(

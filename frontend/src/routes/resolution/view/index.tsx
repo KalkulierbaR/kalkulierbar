@@ -1,5 +1,4 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
+import { useLocation } from "preact-iso";
 import { useEffect, useState } from "preact/hooks";
 
 import ResolutionCircle from "../../../components/calculus/resolution/circle";
@@ -12,6 +11,7 @@ import TutorialDialog from "../../../components/tutorial/dialog";
 import { ResolutionCalculusType } from "../../../types/calculus";
 import {
     CandidateClause,
+    FOLiteral,
     getCandidateCount,
     instanceOfPropCandidateClause,
     PropCandidateClause,
@@ -63,6 +63,8 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         notificationHandler,
         onChange,
     } = useAppState();
+
+    const { route } = useLocation();
 
     const state = cState;
     if (!state) {
@@ -133,7 +135,11 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             (lastMove.type === "res-factorize" &&
                 instanceOfFOResState(state, calculus))
         ) {
-            addClause(state!.clauseSet, candidateClauses, state!.newestNode);
+            addClause<string | FOLiteral>(
+                state!.clauseSet,
+                candidateClauses,
+                state!.newestNode,
+            );
             setCandidateClauses([...candidateClauses]);
         }
         // I have no idea, how to do this better
@@ -146,10 +152,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             lastMove.type === "res-factorize" &&
             instanceOfPropResState(state, calculus)
         ) {
-            replaceClause(
+            replaceClause<string | FOLiteral>(
                 candidateClauses,
                 lastMove.c1,
-                state!.clauseSet.clauses[lastMove.c1] as any,
+                state!.clauseSet.clauses[lastMove.c1],
             );
             setCandidateClauses([...candidateClauses]);
         }
@@ -386,7 +392,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const semiSelected = hyperRes ? getHyperClauseIds(hyperRes) : [];
 
     return (
-        <Fragment>
+        <>
             <h2>Resolution View</h2>
 
             {showGrid ? (
@@ -456,7 +462,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             />
 
             <TutorialDialog calculus={calculus} />
-        </Fragment>
+        </>
     );
 };
 
