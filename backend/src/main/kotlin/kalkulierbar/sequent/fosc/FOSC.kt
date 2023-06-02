@@ -45,10 +45,10 @@ class FOSC :
             is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex) as FOSCState
             is ImpRight -> applyImpRight(state, move.nodeID, move.listIndex) as FOSCState
             is ImpLeft -> applyImpLeft(state, move.nodeID, move.listIndex) as FOSCState
-            is AllRight -> applyAllRight(state, move.nodeID, move.listIndex, move.varAssign)
-            is AllLeft -> applyAllLeft(state, move.nodeID, move.listIndex, move.varAssign)
-            is ExRight -> applyExRight(state, move.nodeID, move.listIndex, move.varAssign)
-            is ExLeft -> applyExLeft(state, move.nodeID, move.listIndex, move.varAssign)
+            is AllRight -> applyAllRight(state, move.nodeID, move.listIndex, move.instTerm)
+            is AllLeft -> applyAllLeft(state, move.nodeID, move.listIndex, move.instTerm)
+            is ExRight -> applyExRight(state, move.nodeID, move.listIndex, move.instTerm)
+            is ExLeft -> applyExLeft(state, move.nodeID, move.listIndex, move.instTerm)
             is UndoMove -> applyUndo(state) as FOSCState
             is PruneMove -> applyPrune(state, move.nodeID) as FOSCState
             else -> throw IllegalMove("Unknown move")

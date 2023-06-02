@@ -11,13 +11,13 @@ import kotlin.test.assertTrue
 class TestExLeft {
     val instance = FOSC()
     val parser = FirstOrderParser()
-    private val varAssign = mapOf("X" to "a")
+    private val instTerm = "a"
 
     @Test
     fun testBasic() {
         var state = instance.parseFormulaToState("\\ex X: R(X) |-", null)
 
-        state = instance.applyMoveOnState(state, ExLeft(0, 0, varAssign))
+        state = instance.applyMoveOnState(state, ExLeft(0, 0, instTerm))
 
         assertTrue(state.tree.size == 2)
         assertTrue(state.tree[0].parent == null)
@@ -37,7 +37,7 @@ class TestExLeft {
         val state = instance.parseFormulaToState("\\ex X: R(X), P(a) |-", null)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, ExLeft(0, 0, varAssign))
+            instance.applyMoveOnState(state, ExLeft(0, 0, instTerm))
         }
     }
 
@@ -46,7 +46,7 @@ class TestExLeft {
         val state = instance.parseFormulaToState("\\all X: R(X) |-", null)
 
         assertFailsWith<IllegalMove> {
-            instance.applyMoveOnState(state, ExLeft(0, 0, varAssign))
+            instance.applyMoveOnState(state, ExLeft(0, 0, instTerm))
         }
     }
 }

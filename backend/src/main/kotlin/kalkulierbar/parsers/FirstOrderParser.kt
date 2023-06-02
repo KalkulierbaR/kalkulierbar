@@ -19,6 +19,8 @@ class FirstOrderParser : PropositionalParser() {
         fun parseTerm(term: String) = instance.parseTerm(term)
 
         fun parseRelation(relation: String) = instance.parseRelation(relation)
+
+        fun parseConstant(constant: String) = instance.parseConstant(constant)
     }
 
     // List of quantifier scopes for correct variable binding
@@ -65,6 +67,27 @@ class FirstOrderParser : PropositionalParser() {
             throw InvalidFormulaFormat("Expected end of term but got ${gotMsg()}")
 
         return res
+    }
+
+    /**
+     * Parses a first order constant
+     * @param constant input constant
+     * @return FirstOrderTerm representing the constant
+     */
+    fun parseConstant(constant: String): FirstOrderTerm {
+        tokens = Tokenizer.tokenize(constant, extended = true) // Allow extended identifier chars
+        bindQuantifiedVariables = false
+        if (!nextTokenIsIdentifier())
+            throw InvalidFormulaFormat("Expected identifier but got ${gotMsg()}")
+        if (!nextTokenIs(TokenType.LOWERID))
+            throw InvalidFormulaFormat("Expected '${TokenType.LOWERID}' but got ${gotMsg()}")
+        // Next token is constant or function
+        val identifier = tokens.first().spelling
+        consume()
+        if (tokens.isNotEmpty())
+            throw InvalidFormulaFormat("Expected end of constant but got ${gotMsg()}")
+
+        return Constant(identifier)
     }
 
     /**
