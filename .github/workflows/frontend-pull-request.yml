@@ -18,7 +18,7 @@ jobs:
       - name: Check yarn cache and build
         run: |
           cd frontend
-          yarn install --immutable --immutable-cache --check-cache
+          yarn install --check-cache
           yarn build
 
       - name: Deploy preview channel
