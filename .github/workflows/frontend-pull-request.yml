@@ -3,8 +3,8 @@ name: frontend-pull-request
 on:
   pull_request:
     paths:
-      - 'frontend/**'
-      - '.github/workflows/frontend-pull-request.yml'
+      - "frontend/**"
+      - ".github/workflows/frontend-pull-request.yml"
 
 jobs:
   frontend-pull-request:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: "18"
 
       - name: Check yarn cache and build
         run: |
@@ -25,8 +25,8 @@ jobs:
         if: github.event.pull_request.head.repo.full_name == github.repository
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KALKULIERBAR_8EDA1 }}'
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KALKULIERBAR_8EDA1 }}"
           projectId: kalkulierbar-8eda1
           entryPoint: ./frontend
           expires: 30d
