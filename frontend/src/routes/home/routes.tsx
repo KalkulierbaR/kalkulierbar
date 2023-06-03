@@ -1,4 +1,4 @@
-import { circle } from "../../components/calculus/resolution/circle/style.module.scss";
+import circleStyle from "../../components/calculus/resolution/circle/style.module.scss";
 import { Calculus } from "../../types/calculus";
 
 import { Route } from ".";
@@ -233,7 +233,12 @@ const ROUTES: Route[] = [
         name: "Propositional Resolution",
         image: (
             <g transform="translate(0 0) scale(1)">
-                <circle class={circle} cx="0" cy="0" r="204.13606202731324" />
+                <circle
+                    class={circleStyle.circle}
+                    cx="0"
+                    cy="0"
+                    r="204.13606202731324"
+                />
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}
@@ -370,7 +375,12 @@ const ROUTES: Route[] = [
         name: "First Order Resolution",
         image: (
             <g transform="translate(0 0) scale(1)">
-                <circle class={circle} cx="0" cy="0" r="285.44197308735096" />
+                <circle
+                    class={circleStyle.circle}
+                    cx="0"
+                    cy="0"
+                    r="285.44197308735096"
+                />
                 <g class="_1ALIMVtYlwE7FauJk6qo-n">
                     <rect
                         class={style.rect}

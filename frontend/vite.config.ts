@@ -13,7 +13,7 @@ export default defineConfig({
                 outFile: path.resolve(__dirname, "./src/style.d.ts"),
             },
             sourceDir: path.resolve(__dirname, "./src"),
-            outputDir: path.resolve(__dirname, "./build"),
+            outputDir: path.resolve(__dirname, "./src"),
         }),
     ],
     css: {
