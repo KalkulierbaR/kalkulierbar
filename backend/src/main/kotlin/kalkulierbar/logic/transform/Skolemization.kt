@@ -90,7 +90,6 @@ class Skolemization(private val usedNames: Set<String>) : DoNothingVisitor() {
      * @return Skolem term
      */
     private fun getSkolemTerm(): FirstOrderTerm {
-
         skolemCounter += 1
         var skolemName = "sk$skolemCounter"
 

@@ -6,6 +6,8 @@ import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.sequent.*
+import main.kotlin.kalkulierbar.logic.transform.Signature
+import main.kotlin.kalkulierbar.logic.transform.SignatureExtractor
 
 /**
  * Rule AllLeft is applied, if the LogicNode is the leftChild of node and is of type All(UniversalQuantifier).
@@ -70,7 +72,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: Strin
         throw IllegalMove("Rule allRight can only be applied on a universal quantifier")
 
     // When swapVariable is not defined try to automatically find a fitting variableName
-    val replaceWithString = instTerm ?: findFittingVariableName(node)
+    val replaceWithString = instTerm ?: findFittingVariableName(node, formula.varName)
 
     // Check if varAssign is a valid string for a constant
     val replaceWith = FirstOrderParser.parseConstant(replaceWithString)
@@ -123,7 +125,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String?
         throw IllegalMove("Rule exLeft can only be applied on an existential quantifier")
 
     // When swapVariable is not defined try to automatically find a fitting variableName
-    val replaceWithString = instTerm ?: findFittingVariableName(node)
+    val replaceWithString = instTerm ?: findFittingVariableName(node, formula.varName)
 
     // Check if varAssign is a valid string for a constant
     val replaceWith = FirstOrderParser.parseConstant(replaceWithString)
@@ -205,13 +207,25 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String
  * @param varName The variable name to be compared with
  */
 private fun checkIfVariableNameIsAlreadyInUse(node: TreeNode, varName: String): Boolean {
-    val usedNames = (node.leftFormulas + node.rightFormulas).flatMap { IdentifierCollector.collect(it) }.toSet()
-    return usedNames.contains(varName)
+    val sig = Signature.of(node.leftFormulas + node.rightFormulas)
+    return sig.hasConstOrFunction(varName)
 }
+
+val REGEX_NUMERIC_SUFFIX = Regex("^(.+)_(\\d+)$")
 
 /**
  * Tries to find a variable Name which leads to solving the proof
  */
-private fun findFittingVariableName(node: TreeNode): String {
-    throw IllegalMove("Not yet implemented")
+private fun findFittingVariableName(node: TreeNode, quantVar: String): String {
+    val sig = Signature.of(node.leftFormulas + node.rightFormulas)
+
+    val lower = quantVar.lowercase()
+    var newName = lower + "_0"
+
+    while (sig.hasConstOrFunction(newName)) {
+        val m = REGEX_NUMERIC_SUFFIX.find(newName)!!
+        newName = m.groupValues[0] + "_" + (m.groupValues[1].toInt() + 1)
+    }
+
+    return newName
 }
