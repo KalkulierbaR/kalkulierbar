@@ -2,6 +2,7 @@ package kalkulierbar.sequent.fosc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.*
+import kalkulierbar.logic.Function
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.sequent.*
@@ -26,6 +27,7 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String
         throw IllegalMove("Rule allLeft can only be applied on a universal quantifier")
 
     val replaceWith = FirstOrderParser.parseTerm(instTerm)
+    checkAdherenceToSignature(replaceWith, node)
 
     // The newFormula which will be added to the left side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
@@ -175,6 +177,7 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String
         throw IllegalMove("Rule exRight can only be applied on an existential quantifier")
 
     val replaceWith = FirstOrderParser.parseTerm(instTerm)
+    checkAdherenceToSignature(replaceWith, node)
 
     // The newFormula which will be added to the right side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
@@ -196,6 +199,26 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String
     state.addChildren(nodeID, newLeaf)
 
     return state
+}
+
+fun checkAdherenceToSignature(term: FirstOrderTerm, node: TreeNode) {
+    if (term is Constant) return
+    val sig = Signature.of(node.leftFormulas + node.rightFormulas)
+    checkAdherenceToSignature(term, sig)
+}
+
+fun checkAdherenceToSignature(term: FirstOrderTerm, sig: Signature) {
+    if (term is Constant) return
+    val f = term as Function
+    if (!sig.hasFunction(f.spelling)) {
+        throw IllegalMove("Unknown function '${f.spelling}'")
+    }
+    val arity = f.arguments.size
+    val expectedArity = sig.getFunctionArity(f.spelling)!!
+    if (expectedArity != arity) {
+        throw IllegalMove("Function '${f.spelling}' should have arity $expectedArity but has $arity")
+    }
+    f.arguments.forEach { checkAdherenceToSignature(it, sig) }
 }
 
 /**

@@ -33,11 +33,15 @@ data class Signature(
     }
 
     fun getAllIdentifiers(): Set<String> {
-        return constants + functions.map { it.name } + relations.map { it.name } + boundVariables
+        return getConstantsAndFunctionNames() + relations.map { it.name } + boundVariables
     }
 
     fun getConstantsAndFunctionNames(): Set<String> {
         return constants + functions.map { it.name }
+    }
+
+    fun getFunctionArity(name: String): Int? {
+        return functions.find { it.name == name }?.arity
     }
 
     operator fun plus(sig: Signature): Signature {
@@ -122,4 +126,6 @@ class TermSignatureExtractor(
         functions.add(CompoundSignature(name = node.spelling, arity = node.arguments.size))
         node.arguments.forEach { it.accept(this) }
     }
+
+    override fun visit(node: QuantifiedVariable) {}
 }
