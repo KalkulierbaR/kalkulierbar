@@ -26,6 +26,7 @@ class FirstOrderParser : PropositionalParser() {
     // List of quantifier scopes for correct variable binding
     private val quantifierScope = mutableListOf<MutableList<QuantifiedVariable>>()
     private var bindQuantifiedVariables = true
+    private val arities = mutableMapOf<String, Int>()
 
     /**
      * Parses a first order formula
@@ -186,6 +187,16 @@ class FirstOrderParser : PropositionalParser() {
 
         consume(TokenType.RPAREN)
 
+        if (arities.contains(relationIdentifier)) {
+            val expected = arities[relationIdentifier]
+            val arity = arguments.size
+            if (arity != expected) {
+                throw InvalidFormulaFormat("Relation $relationIdentifier should have arity $expected but has $arity")
+            }
+        } else {
+            arities[relationIdentifier] = arguments.size
+        }
+
         return Relation(relationIdentifier, arguments)
     }
 
@@ -224,7 +235,7 @@ class FirstOrderParser : PropositionalParser() {
         consume(TokenType.LPAREN)
 
         val arguments = mutableListOf<FirstOrderTerm>()
-        if (! nextTokenIs(TokenType.RPAREN)) {
+        if (!nextTokenIs(TokenType.RPAREN)) {
             arguments.add(parseTerm())
         }
         while (nextTokenIs(TokenType.COMMA)) {
@@ -233,6 +244,16 @@ class FirstOrderParser : PropositionalParser() {
         }
 
         consume(TokenType.RPAREN)
+
+        if (arities.contains(identifier)) {
+            val expected = arities[identifier]
+            val arity = arguments.size
+            if (arity != expected) {
+                throw InvalidFormulaFormat("Function $identifier should have arity $expected but has $arity")
+            }
+        } else {
+            arities[identifier] = arguments.size
+        }
 
         return Function(identifier, arguments)
     }
