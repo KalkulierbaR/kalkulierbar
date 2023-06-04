@@ -1,9 +1,9 @@
 package kalkulierbar.nonclausaltableaux
 
 import kalkulierbar.logic.LogicNode
-import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
+import main.kotlin.kalkulierbar.logic.transform.Signature
 import main.kotlin.kalkulierbar.tree.GenericTreeNode
 import main.kotlin.kalkulierbar.tree.TreeGardener
 
@@ -14,7 +14,7 @@ class NcTableauxState(
 ) : ProtectedState(), TreeGardener<NcTableauxNode> {
     override val tree = mutableListOf(NcTableauxNode(null, formula.clone()))
     val moveHistory = mutableListOf<NcTableauxMove>()
-    val identifiers = IdentifierCollector.collect(formula).toMutableSet()
+    val identifiers = Signature.of(formula).getConstantsAndFunctionNames().toMutableSet()
     var usedBacktracking = false
     var gammaSuffixCounter = 0
     var skolemCounter = 0

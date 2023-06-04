@@ -36,6 +36,10 @@ data class Signature(
         return constants + functions.map { it.name } + relations.map { it.name } + boundVariables
     }
 
+    fun getConstantsAndFunctionNames(): Set<String> {
+        return constants + functions.map { it.name }
+    }
+
     operator fun plus(sig: Signature): Signature {
         return Signature(
             constants = constants + sig.constants,

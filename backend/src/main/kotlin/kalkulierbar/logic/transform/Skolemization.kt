@@ -3,6 +3,7 @@ package kalkulierbar.logic.transform
 import kalkulierbar.FormulaConversionException
 import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
+import main.kotlin.kalkulierbar.logic.transform.Signature
 
 /**
  * Visitor-based Skolemization transformation
@@ -16,9 +17,9 @@ import kalkulierbar.logic.Function
  * Note: I'm unsure if this implementation produces correct results
  *       if it is not applied as part of the Skolem Normal Form transformation,
  *       especially if only a subformula is being skolemized
- * @param usedNames Set of names already used in the tree to avoid for skolem constants
+ * @param signature signature of the formula; used to avoid duplicate names skolem constants
  */
-class Skolemization(private val usedNames: Set<String>) : DoNothingVisitor() {
+class Skolemization(private val signature: Signature) : DoNothingVisitor() {
 
     companion object Companion {
         /**
@@ -28,8 +29,8 @@ class Skolemization(private val usedNames: Set<String>) : DoNothingVisitor() {
          */
         fun transform(formula: LogicNode): LogicNode {
             // Collect all identifiers already in use and add to blacklist
-            val usedNames = IdentifierCollector.collect(formula)
-            val instance = Skolemization(usedNames)
+            val sig = Signature.of(formula)
+            val instance = Skolemization(sig)
             return formula.accept(instance)
         }
     }
@@ -94,7 +95,7 @@ class Skolemization(private val usedNames: Set<String>) : DoNothingVisitor() {
         var skolemName = "sk$skolemCounter"
 
         // Ensure freshness
-        while (usedNames.contains(skolemName)) {
+        while (signature.hasConstOrFunction(skolemName)) {
             skolemCounter += 1
             skolemName = "sk$skolemCounter"
         }
