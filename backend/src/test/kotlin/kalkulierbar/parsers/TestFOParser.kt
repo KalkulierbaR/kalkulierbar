@@ -34,7 +34,7 @@ class TestFOParser {
         "\\all X: P(X)" to "(∀X: P(X))",
         "\\all X:P(X)" to "(∀X: P(X))",
         "\\all X:           P(X)" to "(∀X: P(X))",
-        "\\all X: \\all Y: \\all Z: R(m(X, m(Y, Z)), m(m(X,Y, Z)))" to "(∀X: (∀Y: (∀Z: R(m(X, m(Y, Z)), m(m(X, Y, Z))))))",
+        "\\all X: \\all Y: \\all Z: R(m(X, m(Y, Z)), m(m(X,Y), Z))" to "(∀X: (∀Y: (∀Z: R(m(X, m(Y, Z)), m(m(X, Y), Z)))))",
         "\\ex Xyz: P(Xyz)" to "(∃Xyz: P(Xyz))",
         "!\\ex X: (P(X) <-> !P(X))" to "¬(∃X: (P(X) <=> ¬P(X)))",
         "!(\\ex X: (P(X) <-> !P(X)))" to "¬(∃X: (P(X) <=> ¬P(X)))",

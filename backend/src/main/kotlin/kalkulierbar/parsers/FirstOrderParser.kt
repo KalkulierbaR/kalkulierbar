@@ -1,5 +1,6 @@
 package kalkulierbar.parsers
 
+import kalkulierbar.IncorrectArityException
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
@@ -36,6 +37,7 @@ class FirstOrderParser : PropositionalParser() {
     override fun parse(formula: String, positionInBaseString: Int): LogicNode {
         // Clear quantifier scope to avoid problems on instance re-use
         quantifierScope.clear()
+        arities.clear()
         bindQuantifiedVariables = true
         return super.parse(formula, positionInBaseString)
     }
@@ -48,6 +50,7 @@ class FirstOrderParser : PropositionalParser() {
     fun parseTerm(term: String): FirstOrderTerm {
         tokens = Tokenizer.tokenize(term, extended = true) // Allow extended identifier chars
         bindQuantifiedVariables = false
+        arities.clear()
         val res = parseTerm()
         if (tokens.isNotEmpty())
             throw InvalidFormulaFormat("Expected end of term but got ${gotMsg()}")
@@ -191,7 +194,7 @@ class FirstOrderParser : PropositionalParser() {
             val expected = arities[relationIdentifier]
             val arity = arguments.size
             if (arity != expected) {
-                throw InvalidFormulaFormat("Relation $relationIdentifier should have arity $expected but has $arity")
+                throw IncorrectArityException("Relation $relationIdentifier should have arity $expected but has $arity")
             }
         } else {
             arities[relationIdentifier] = arguments.size
@@ -249,7 +252,7 @@ class FirstOrderParser : PropositionalParser() {
             val expected = arities[identifier]
             val arity = arguments.size
             if (arity != expected) {
-                throw InvalidFormulaFormat("Function $identifier should have arity $expected but has $arity")
+                throw IncorrectArityException("Function $identifier should have arity $expected but has $arity")
             }
         } else {
             arities[identifier] = arguments.size
