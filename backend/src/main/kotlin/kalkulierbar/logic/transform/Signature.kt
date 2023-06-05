@@ -8,7 +8,27 @@ import kalkulierbar.logic.Function
 import kalkulierbar.logic.transform.DoNothingCollector
 import kalkulierbar.logic.transform.FirstOrderTermVisitor
 
-data class CompoundSignature(val name: String, val arity: Int)
+data class CompoundSignature(val name: String, val arity: Int) {
+    override fun toString(): String {
+        return "$name($arity)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CompoundSignature
+
+        if (name != other.name) return false
+        return arity == other.arity
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + arity
+        return result
+    }
+}
 
 data class Signature(
     val constants: Set<String>,
@@ -78,6 +98,34 @@ data class Signature(
         val checker = SignatureAdherenceChecker(this)
         term.accept(checker)
     }
+
+    override fun toString(): String {
+        val c = constants.joinToString(", ")
+        val f = functions.joinToString(", ")
+        val r = relations.joinToString(", ")
+        val b = boundVariables.joinToString(", ")
+        return "Σ(constants={$c}, functions={$f}, relations={$r}, bound={$b})"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Signature
+
+        if (constants != other.constants) return false
+        if (functions != other.functions) return false
+        if (relations != other.relations) return false
+        return boundVariables == other.boundVariables
+    }
+
+    override fun hashCode(): Int {
+        var result = constants.hashCode()
+        result = 31 * result + functions.hashCode()
+        result = 31 * result + relations.hashCode()
+        result = 31 * result + boundVariables.hashCode()
+        return result
+    }
 }
 
 class SignatureExtractor : DoNothingCollector() {
@@ -110,7 +158,7 @@ class SignatureExtractor : DoNothingCollector() {
     private val relations = mutableSetOf<CompoundSignature>()
     private val boundVariables = mutableSetOf<String>()
 
-    private val termSigExtr = TermSignatureExtractor(constants, functions)
+    private val termSigExtr = TermSignatureExtractor(constants, functions, boundVariables)
 
     override fun visit(node: Relation) {
         relations.add(CompoundSignature(name = node.spelling, arity = node.arguments.size))
@@ -131,6 +179,7 @@ class SignatureExtractor : DoNothingCollector() {
 class TermSignatureExtractor(
     private val constants: MutableSet<String>,
     private val functions: MutableSet<CompoundSignature>,
+    private val boundVars: MutableSet<String>,
 ) : FirstOrderTermVisitor<Unit>() {
     override fun visit(node: Constant) {
         constants.add(node.spelling)
@@ -141,7 +190,9 @@ class TermSignatureExtractor(
         node.arguments.forEach { it.accept(this) }
     }
 
-    override fun visit(node: QuantifiedVariable) {}
+    override fun visit(node: QuantifiedVariable) {
+        boundVars.add(node.spelling)
+    }
 }
 
 class SignatureAdherenceChecker(
@@ -152,6 +203,9 @@ class SignatureAdherenceChecker(
     override fun visit(node: Constant) {
         if (!allowNewConstants && !sig.hasConst(node.spelling)) {
             throw UnknownFunctionException("Unknown constant '${node.spelling}'")
+        }
+        if (sig.hasFunction(node.spelling)) {
+            throw IncorrectArityException("Identifier '${node.spelling}' is used both as a function and a constant")
         }
     }
 
@@ -167,5 +221,10 @@ class SignatureAdherenceChecker(
         if (arity != expected) {
             throw IncorrectArityException("Function '${node.spelling}' should have arity $expected but has $arity")
         }
+        if (sig.hasConst(node.spelling)) {
+            throw IncorrectArityException("Identifier '${node.spelling}' is used both as a function and a constant")
+        }
+
+        node.arguments.forEach { it.accept(this) }
     }
 }
