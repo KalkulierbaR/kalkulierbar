@@ -9,6 +9,7 @@ import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
+import main.kotlin.kalkulierbar.logic.transform.Signature
 
 @Suppress("ThrowsCount", "LongParameterList")
 /**
@@ -44,8 +45,12 @@ fun resolveMove(
             throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
         }
     } // Else check varAssign == mgu
-    else if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, literal1, literal2)) {
-        state.statusMessage = "The unifier you specified is not an MGU"
+    else {
+        val sig = Signature.of(state.clauseSet)
+        unifier.values.forEach { sig.check(it) }
+        if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, literal1, literal2)) {
+            state.statusMessage = "The unifier you specified is not an MGU"
+        }
     }
 
     instantiate(state, c1, unifier)
@@ -193,7 +198,7 @@ fun hyper(
         throw IllegalMove("Please select side premisses for hyper resolution")
 
     val clauses = state.clauseSet.clauses
-    var mainPremiss = clauses[mainID].clone()
+    val mainPremiss = clauses[mainID].clone()
 
     val sidePremisses = mutableListOf<Clause<Relation>>()
     val relations = mutableListOf<Pair<Relation, Relation>>()

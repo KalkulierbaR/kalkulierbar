@@ -2,7 +2,6 @@ package kalkulierbar.sequent.fosc
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.*
-import kalkulierbar.logic.Function
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.sequent.*
@@ -204,21 +203,7 @@ fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String
 fun checkAdherenceToSignature(term: FirstOrderTerm, node: TreeNode) {
     if (term is Constant) return
     val sig = Signature.of(node.leftFormulas + node.rightFormulas)
-    checkAdherenceToSignature(term, sig)
-}
-
-fun checkAdherenceToSignature(term: FirstOrderTerm, sig: Signature) {
-    if (term is Constant) return
-    val f = term as Function
-    if (!sig.hasFunction(f.spelling)) {
-        throw IllegalMove("Unknown function '${f.spelling}'")
-    }
-    val arity = f.arguments.size
-    val expectedArity = sig.getFunctionArity(f.spelling)!!
-    if (expectedArity != arity) {
-        throw IllegalMove("Function '${f.spelling}' should have arity $expectedArity but has $arity")
-    }
-    f.arguments.forEach { checkAdherenceToSignature(it, sig) }
+    sig.check(term)
 }
 
 /**

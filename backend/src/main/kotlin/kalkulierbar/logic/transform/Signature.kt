@@ -1,5 +1,8 @@
 package main.kotlin.kalkulierbar.logic.transform
 
+import kalkulierbar.IncorrectArityException
+import kalkulierbar.UnknownFunctionException
+import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
 import kalkulierbar.logic.transform.DoNothingCollector
@@ -28,6 +31,12 @@ data class Signature(
         fun of(formulas: Collection<LogicNode>): Signature {
             var sig = empty()
             formulas.forEach { sig += of(it) }
+            return sig
+        }
+
+        fun of(clauseSet: ClauseSet<Relation>): Signature {
+            var sig = empty()
+            clauseSet.clauses.flatMap { it.atoms }.forEach { sig += of(it.lit) }
             return sig
         }
     }
@@ -63,6 +72,11 @@ data class Signature(
 
     fun hasConstOrFunction(name: String): Boolean {
         return hasConst(name) || hasFunction(name)
+    }
+
+    fun check(term: FirstOrderTerm) {
+        val checker = SignatureAdherenceChecker(this)
+        term.accept(checker)
     }
 }
 
@@ -128,4 +142,30 @@ class TermSignatureExtractor(
     }
 
     override fun visit(node: QuantifiedVariable) {}
+}
+
+class SignatureAdherenceChecker(
+    private val sig: Signature,
+    private val allowNewConstants: Boolean = true
+) : FirstOrderTermVisitor<Unit>() {
+
+    override fun visit(node: Constant) {
+        if (!allowNewConstants && !sig.hasConst(node.spelling)) {
+            throw UnknownFunctionException("Unknown constant '${node.spelling}'")
+        }
+    }
+
+    override fun visit(node: QuantifiedVariable) {}
+
+    override fun visit(node: Function) {
+        if (!sig.hasFunction(node.spelling)) {
+            throw UnknownFunctionException("Unknown function '${node.spelling}'")
+        }
+        val arity = node.arguments.size
+        val expected = sig.getFunctionArity(node.spelling)
+
+        if (arity != expected) {
+            throw IncorrectArityException("Function '${node.spelling}' should have arity $expected but has $arity")
+        }
+    }
 }

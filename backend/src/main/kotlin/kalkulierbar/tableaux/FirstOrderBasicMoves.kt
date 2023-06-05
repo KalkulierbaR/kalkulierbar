@@ -5,6 +5,7 @@ import kalkulierbar.UnificationImpossible
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
+import main.kotlin.kalkulierbar.logic.transform.Signature
 
 /**
  * Attempt to close a branch using automatic unification
@@ -52,6 +53,8 @@ fun applyMoveCloseBranch(
     // Check that given var assignment is a mgu, warn if not
     if (!UnifierEquivalence.isMGUorNotUnifiable(varAssign, leaf.relation, closeNode.relation))
         state.statusMessage = "The unifier you specified is not an MGU"
+    val sig = Signature.of(state.clauseSet)
+    varAssign.values.forEach { sig.check(it) }
 
     return closeBranchCommon(state, leafID, closeNodeID, varAssign)
 }

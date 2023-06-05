@@ -15,3 +15,7 @@ class JsonParseException(msg: String) : KalkulierbarException(msg)
 class FormulaConversionException(msg: String) : KalkulierbarException(msg)
 
 class UnificationImpossible(msg: String) : KalkulierbarException(msg)
+
+class UnknownFunctionException(msg: String) : KalkulierbarException(msg)
+
+class IncorrectArityException(msg: String) : KalkulierbarException(msg)
