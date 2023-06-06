@@ -1,8 +1,6 @@
 package kalkulierbar.logic.transform
 
 import kalkulierbar.parsers.FirstOrderParser
-import main.kotlin.kalkulierbar.logic.transform.CompoundSignature
-import main.kotlin.kalkulierbar.logic.transform.Signature
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails

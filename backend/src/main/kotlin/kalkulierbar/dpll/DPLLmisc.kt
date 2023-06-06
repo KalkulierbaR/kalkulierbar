@@ -3,8 +3,8 @@ package kalkulierbar.dpll
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.tamperprotect.ProtectedState
 import kotlinx.serialization.Serializable
-import main.kotlin.kalkulierbar.tree.GenericTreeNode
-import main.kotlin.kalkulierbar.tree.TreeGardener
+import kalkulierbar.tree.GenericTreeNode
+import kalkulierbar.tree.TreeGardener
 
 @Serializable
 class DPLLState(val clauseSet: ClauseSet<String>) : ProtectedState(), TreeGardener<TreeNode> {

@@ -9,7 +9,7 @@ import kalkulierbar.logic.Relation
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
-import main.kotlin.kalkulierbar.logic.transform.Signature
+import kalkulierbar.logic.transform.Signature
 
 @Suppress("ThrowsCount", "LongParameterList")
 /**

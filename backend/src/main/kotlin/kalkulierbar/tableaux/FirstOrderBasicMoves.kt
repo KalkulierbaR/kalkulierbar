@@ -5,7 +5,7 @@ import kalkulierbar.UnificationImpossible
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
-import main.kotlin.kalkulierbar.logic.transform.Signature
+import kalkulierbar.logic.transform.Signature
 
 /**
  * Attempt to close a branch using automatic unification

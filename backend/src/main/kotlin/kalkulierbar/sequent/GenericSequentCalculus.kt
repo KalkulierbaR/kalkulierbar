@@ -3,8 +3,8 @@ package kalkulierbar.sequent
 import kalkulierbar.logic.LogicNode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import main.kotlin.kalkulierbar.tree.GenericTreeNode
-import main.kotlin.kalkulierbar.tree.TreeGardener
+import kalkulierbar.tree.GenericTreeNode
+import kalkulierbar.tree.TreeGardener
 import kotlin.math.sqrt
 
 interface GenericSequentCalculus {

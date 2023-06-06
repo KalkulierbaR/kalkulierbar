@@ -7,7 +7,7 @@ import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.logic.transform.SelectiveSuffixAppender
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
-import main.kotlin.kalkulierbar.logic.transform.Signature
+import kalkulierbar.logic.transform.Signature
 
 /**
  * While the outermost LogicNode is an AND:
