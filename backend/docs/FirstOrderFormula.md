@@ -35,13 +35,16 @@ First order terms are defined as follows:
 4. Nothing else is a term
 
 Please note that functions must have at least one argument and that different functions
-with the same name but different numbers of arguments may exist.
+with the same name but different numbers of arguments must not exist. Neither can functions and constants share names.
 
 ### Atomic Formulae
 
 An atomic formula is a relation with one or more terms as arguments,
 written as `R(t1, t2, ... tn)` where `R` is an identifier with an uppercase first character.
 Please note that relations with the same name but different numbers of arguments may exist.
+
+Note that relations and variables are not allowed to share the same name and that no two relations with different arity 
+may share a name.
 
 ### First Order Formulae
 
