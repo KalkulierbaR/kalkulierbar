@@ -71,7 +71,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: Strin
         throw IllegalMove("Rule allRight can only be applied on a universal quantifier")
 
     // When swapVariable is not defined try to automatically find a fitting variableName
-    val replaceWithString = instTerm ?: findFittingVariableName(node, formula.varName)
+    val replaceWithString = instTerm ?: getFreshConstantName(node, formula.varName)
 
     // Check if varAssign is a valid string for a constant
     val replaceWith = FirstOrderParser.parseConstant(replaceWithString)
@@ -124,7 +124,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String?
         throw IllegalMove("Rule exLeft can only be applied on an existential quantifier")
 
     // When swapVariable is not defined try to automatically find a fitting variableName
-    val replaceWithString = instTerm ?: findFittingVariableName(node, formula.varName)
+    val replaceWithString = instTerm ?: getFreshConstantName(node, formula.varName)
 
     // Check if varAssign is a valid string for a constant
     val replaceWith = FirstOrderParser.parseConstant(replaceWithString)
@@ -220,7 +220,7 @@ private fun checkIfVariableNameIsAlreadyInUse(node: TreeNode, varName: String): 
 /**
  * Tries to find a variable Name which leads to solving the proof
  */
-private fun findFittingVariableName(node: TreeNode, quantVar: String): String {
+private fun getFreshConstantName(node: TreeNode, quantVar: String): String {
     val sig = Signature.of(node.leftFormulas + node.rightFormulas)
 
     val baseName = quantVar.lowercase()
