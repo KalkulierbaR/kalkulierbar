@@ -217,21 +217,18 @@ private fun checkIfVariableNameIsAlreadyInUse(node: TreeNode, varName: String): 
     return sig.hasConstOrFunction(varName)
 }
 
-val REGEX_NUMERIC_SUFFIX = Regex("^(.+)_(\\d+)$")
-
 /**
  * Tries to find a variable Name which leads to solving the proof
  */
 private fun findFittingVariableName(node: TreeNode, quantVar: String): String {
     val sig = Signature.of(node.leftFormulas + node.rightFormulas)
 
-    val lower = quantVar.lowercase()
-    var newName = lower + "_0"
+    val baseName = quantVar.lowercase()
+    var idx = 0
 
-    while (sig.hasConstOrFunction(newName)) {
-        val m = REGEX_NUMERIC_SUFFIX.find(newName)!!
-        newName = m.groupValues[0] + "_" + (m.groupValues[1].toInt() + 1)
+    while (sig.hasConstOrFunction("${baseName}_$idx")) {
+        idx++
     }
 
-    return newName
+    return "${baseName}_$idx"
 }
