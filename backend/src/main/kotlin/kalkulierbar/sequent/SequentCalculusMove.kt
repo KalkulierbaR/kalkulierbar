@@ -117,7 +117,7 @@ class AllLeft(
 class AllRight(
     val nodeID: Int,
     val listIndex: Int,
-    val instTerm: String?
+    val instTerm: String? = null
 ) : SequentCalculusMove()
 
 @Serializable
@@ -125,7 +125,7 @@ class AllRight(
 class ExLeft(
     val nodeID: Int,
     val listIndex: Int,
-    val instTerm: String?
+    val instTerm: String? = null
 ) : SequentCalculusMove()
 
 @Serializable

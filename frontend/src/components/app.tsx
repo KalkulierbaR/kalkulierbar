@@ -103,7 +103,6 @@ const App: preact.FunctionalComponent = () => {
      * @returns {void}
      */
     const onChangeRoute = (url: string) => {
-        console.log(url);
         setCurrentUrl(url);
         notificationHandler.remove();
     };

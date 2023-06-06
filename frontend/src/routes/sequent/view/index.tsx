@@ -73,6 +73,8 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
 
     const [showVarAssignDialog, setShowVarAssignDialog] = useState(false);
 
+    const [showAutoAssignment, setShowAutoAssignment] = useState(false);
+
     const [showSaveDialog, setShowSaveDialog] = useState(false);
 
     const [varsToAssign, setVarsToAssign] = useState<string[]>([]);
@@ -124,6 +126,8 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 if (formula.type === "allquant" || formula.type === "exquant") {
                     setVarsToAssign([formula.varName!]);
                     setShowVarAssignDialog(true);
+                    // Allow auto assignment for exLeft
+                    setShowAutoAssignment(formula.type == "exquant");
                     return;
                 }
             } else {
@@ -132,6 +136,8 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 if (formula.type === "allquant" || formula.type === "exquant") {
                     setVarsToAssign([formula.varName!]);
                     setShowVarAssignDialog(true);
+                    // Allow auto assignment for allRight
+                    setShowAutoAssignment(formula.type == "allquant");
                     return;
                 }
             }
@@ -255,6 +261,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
         }
         resetSelection();
         setShowVarAssignDialog(false);
+        setShowAutoAssignment(false);
     };
 
     /**
@@ -395,12 +402,15 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             {instanceOfFOSCState(state, calculus) && (
                 <VarAssignDialog
                     open={showVarAssignDialog}
-                    onClose={() => setShowVarAssignDialog(false)}
+                    onClose={() => {
+                        setShowVarAssignDialog(false);
+                        setShowAutoAssignment(false);
+                    }}
                     varOrigins={varOrigins}
                     vars={Array.from(varsToAssign)}
-                    manualVarAssignOnly={true}
                     submitVarAssignCallback={quantifierCallback}
-                    secondSubmitEvent={() => {}}
+                    secondSubmitEvent={quantifierCallback}
+                    manualVarAssignOnly={!showAutoAssignment}
                 />
             )}
 
