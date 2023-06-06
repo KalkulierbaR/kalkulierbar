@@ -3,7 +3,6 @@ package kalkulierbar.logic.transform
 import kalkulierbar.FormulaConversionException
 import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import main.kotlin.kalkulierbar.logic.transform.Signature
 
 /**
  * Visitor-based Skolemization transformation

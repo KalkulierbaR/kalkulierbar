@@ -1,12 +1,10 @@
-package main.kotlin.kalkulierbar.logic.transform
+package kalkulierbar.logic.transform
 
 import kalkulierbar.IncorrectArityException
 import kalkulierbar.UnknownFunctionException
 import kalkulierbar.clause.ClauseSet
 import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
-import kalkulierbar.logic.transform.DoNothingCollector
-import kalkulierbar.logic.transform.FirstOrderTermVisitor
 
 data class CompoundSignature(val name: String, val arity: Int) {
     override fun toString(): String {
