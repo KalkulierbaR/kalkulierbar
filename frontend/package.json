@@ -40,7 +40,7 @@
         "firebase-tools": "11.13.0",
         "preact": "10.11.0",
         "preact-markup": "2.1.1",
-        "preact-render-to-string": "5.2.4",
+        "preact-render-to-string": "6.1.0",
         "preact-router": "4.1.0",
         "react-hint": "3.2.1",
         "serve": "13.0.4",
