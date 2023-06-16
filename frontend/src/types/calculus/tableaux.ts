@@ -3,6 +3,8 @@ import { KStringMap } from "../kotlin";
 import { Calculus, TableauxCalculusType } from ".";
 import { ClauseSet, FOArgument, FOClauseSet } from "./clause";
 
+/* eslint "@typescript-eslint/no-explicit-any": "off" */
+
 export interface TableauxNode {
     parent: number | null;
     spelling: string;

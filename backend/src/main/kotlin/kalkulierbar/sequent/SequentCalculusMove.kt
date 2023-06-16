@@ -109,7 +109,7 @@ class PruneMove(
 class AllLeft(
     val nodeID: Int,
     val listIndex: Int,
-    val varAssign: Map<String, String>
+    val instTerm: String
 ) : SequentCalculusMove()
 
 @Serializable
@@ -117,7 +117,7 @@ class AllLeft(
 class AllRight(
     val nodeID: Int,
     val listIndex: Int,
-    val varAssign: Map<String, String>
+    val instTerm: String? = null
 ) : SequentCalculusMove()
 
 @Serializable
@@ -125,7 +125,7 @@ class AllRight(
 class ExLeft(
     val nodeID: Int,
     val listIndex: Int,
-    val varAssign: Map<String, String>
+    val instTerm: String? = null
 ) : SequentCalculusMove()
 
 @Serializable
@@ -133,5 +133,5 @@ class ExLeft(
 class ExRight(
     val nodeID: Int,
     val listIndex: Int,
-    val varAssign: Map<String, String>
+    val instTerm: String
 ) : SequentCalculusMove()

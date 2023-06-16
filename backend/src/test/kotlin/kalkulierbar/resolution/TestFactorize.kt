@@ -1,6 +1,7 @@
 package kalkulierbar.resolution
 
 import kalkulierbar.IllegalMove
+import kalkulierbar.IncorrectArityException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -79,10 +80,7 @@ class TestFactorize {
             fo.applyMoveOnState(fostate, MoveFactorize(0, mutableListOf(0, 1)))
         }
 
-        fostate = fo.parseFormulaToState("\\all X: \\all Y: (R(X,X) | R(Y))", null)
-        assertFailsWith<IllegalMove> {
-            fo.applyMoveOnState(fostate, MoveFactorize(0, mutableListOf(0, 1)))
-        }
+        assertFailsWith<IncorrectArityException> { fo.parseFormulaToState("\\all X: \\all Y: (R(X,X) | R(Y))", null) }
     }
 
     @Test

@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useState } from "preact/hooks";
 
 import Dialog from "..";
@@ -7,7 +6,7 @@ import { useAppState } from "../../../util/app-state";
 import Btn from "../../input/btn";
 import TextInput from "../../input/text";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

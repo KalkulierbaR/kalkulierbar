@@ -1,12 +1,10 @@
-import { h } from "preact";
-
 import { ClauseSet } from "../../../../types/calculus/clause";
 import { getAllLits } from "../../../../util/dpll";
 import Dialog from "../../../dialog";
 import Btn from "../../../input/btn";
 import Switch from "../../../input/switch";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

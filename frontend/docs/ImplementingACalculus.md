@@ -23,8 +23,6 @@ The next step is to add a page where users can enter their formulas and configur
 Create a new component at `src/routes/my-hip-calculus/index.tsx`. As a refresher, a basic setup for components looks like this:
 
 ```tsx
-import { h } from "preact";
-
 const MyHipCalculus: preact.FunctionalComponent = () => {
     return (
         <div class="card">

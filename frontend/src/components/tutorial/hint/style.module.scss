@@ -1,0 +1,16 @@
+.tut {
+    position: fixed;
+
+    max-width: 200px;
+    box-shadow: var(--kbar-shadow-3dp) !important;
+    background-color: var(--kbar-primary-text-color) !important;
+    color: var(--kbar-card-color) !important;
+}
+
+.svg {
+    position: absolute;
+    left: 100%;
+    bottom: 23%;
+    width: 60px;
+    height: 30px;
+}

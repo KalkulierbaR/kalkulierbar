@@ -1,4 +1,4 @@
-import { createContext, h } from "preact";
+import { createContext } from "preact";
 import { Reducer, useContext, useEffect, useReducer } from "preact/hooks";
 
 import { AppStateAction, AppStateActionType } from "../types/app/action";
@@ -14,7 +14,7 @@ import { Calculus, CalculusType } from "../types/calculus";
 
 import { localStorageGet, localStorageSet } from "./local-storage";
 
-export const defaultBackendServer = "https://api.kbar.app"
+export const defaultBackendServer = "https://api.kbar.app";
 
 const INIT_APP_STATE: AppState = {
     smallScreen: false,
@@ -201,7 +201,10 @@ export const AppStateProvider =
             localStorageSet("server", derived.server);
         }, [derived.server]);
         useEffect(() => {
-            localStorageSet("tutorial_mode", derived.tutorialMode);
+            localStorageSet(
+                "tutorial_mode",
+                derived.tutorialMode as unknown as string,
+            );
         }, [derived.tutorialMode]);
         useEffect(() => {
             localStorageSet("admin_key", derived.adminKey);

@@ -1,10 +1,8 @@
-import { h } from "preact";
-
 import { Tree } from "../../../types/tree";
 import { DragTransform } from "../../../types/ui";
 import { getAbsoluteDragTransform } from "../../../util/layout/tree";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface ClosingEdgeProps<T> {
     /**

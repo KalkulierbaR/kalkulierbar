@@ -7,12 +7,12 @@
         "start": "per-env",
         "start:production": "npm run -s serve",
         "start:development": "npm run -s dev",
-        "build": "preact build --prerender=false",
-        "format": "tslint --config tslintAutoFix.json --fix --project . && prettier src/\\{components,routes,style,types,util\\}/**/* --write",
-        "serve": "preact build --prerender=false && serve build/ -s -l ${PORT:-3000}",
+        "build": "tsc && vite build",
+        "format": "prettier src/\\{components,routes,style,types,util\\}/**/* --write",
+        "serve": "tsc && vite build && serve build/ -s -l ${PORT:-3000}",
         "serve-only": "serve build/ -s -l ${PORT:-3000}",
-        "dev": "preact watch",
-        "lint": "tslint --project .",
+        "dev": "vite",
+        "lint": "eslint .",
         "lint-staged": "lint-staged",
         "test": "",
         "postinstall": "cd .. && husky install frontend/.husky"
@@ -22,55 +22,41 @@
             "prettier --write"
         ],
         "*.{ts,tsx}": [
-            "tslint --fix"
+            "eslint src/**/*.{ts,tsx,js,jsx} --fix"
         ]
     },
     "engines": {
-        "node": "^12 || ^14"
+        "node": "^18"
     },
-    "eslintConfig": {
-        "extends": "eslint-config-aerian"
-    },
-    "eslintIgnore": [
-        "build/*"
-    ],
     "dependencies": {
         "@material/radio": "4.0.0",
         "@material/switch": "4.0.0",
         "firebase-tools": "11.13.0",
-        "preact": "10.11.0",
+        "preact": "10.15.1",
+        "preact-iso": "2.3.1",
         "preact-markup": "2.1.1",
-        "preact-render-to-string": "5.2.4",
-        "preact-router": "4.1.0",
+        "preact-render-to-string": "6.0.3",
         "react-hint": "3.2.1",
-        "serve": "13.0.4",
-        "sha3": "2.1.4",
-        "tslint-etc": "1.13.10"
+        "serve": "14.2.0",
+        "sha3": "2.1.4"
     },
     "devDependencies": {
-        "@types/webpack-env": "1.18.0",
-        "css-loader": "1.0.1",
-        "husky": "7.0.4",
-        "identity-obj-proxy": "3.0.0",
-        "lint-staged": "12.5.0",
-        "node-sass": "6.0.1",
+        "@preact/preset-vite": "2.5.0",
+        "@types/eslint": "^8",
+        "@typescript-eslint/eslint-plugin": "5.59.8",
+        "@typescript-eslint/parser": "5.59.8",
+        "eslint": "8.41.0",
+        "husky": "8.0.3",
+        "lint-staged": "13.2.2",
         "per-env": "1.0.2",
-        "preact-cli": "3.0.5",
-        "prettier": "2.7.1",
-        "sass-loader": "10.2.1",
-        "ts-loader": "9.4.1",
-        "tslint": "6.1.3",
-        "tslint-config-prettier": "1.18.0",
-        "tslint-consistent-codestyle": "1.16.0",
-        "tslint-eslint-rules": "5.4.0",
-        "tslint-react": "4.1.0",
-        "typescript": "4.8.4",
-        "typings-for-css-modules-loader": "1.7.0"
+        "prettier": "2.8.8",
+        "sass": "1.62.1",
+        "typescript": "5.1.3",
+        "vite": "4.3.9",
+        "vite-plugin-sass-dts": "1.3.6"
     },
     "peerDependencies": {
-        "prettier": ">1.0.0",
-        "tslint": ">5.0.0",
-        "webpack": "^4.36.0 || ^5.0.0"
+        "prettier": ">2.0.0"
     },
     "packageManager": "yarn@3.2.3"
 }

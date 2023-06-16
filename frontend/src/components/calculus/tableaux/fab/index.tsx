@@ -1,5 +1,3 @@
-import { Fragment, h } from "preact";
-
 import { TableauxCalculusType } from "../../../../types/calculus";
 import {
     FOTableauxState,
@@ -66,14 +64,14 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
     const showUndoFAB = state.backtracking && state.moveHistory.length > 0;
 
     return (
-        <Fragment>
+        <>
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={state.tree[0].isClosed}
                 checkFABPositionFromBottom={showUndoFAB ? 2 : 1}
             >
                 {selectedNodeId === undefined ? (
-                    <Fragment>
+                    <>
                         <DownloadFAB
                             state={state}
                             name={calculus}
@@ -89,9 +87,9 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 resetDragTransform={resetDragTransform}
                             />
                         )}
-                    </Fragment>
+                    </>
                 ) : (
-                    <Fragment>
+                    <>
                         <CenterFAB resetDragTransforms={resetDragTransforms} />
                         <FAB
                             icon={<AddIcon />}
@@ -125,10 +123,10 @@ const TableauxFAB: preact.FunctionalComponent<Props> = ({
                                 />
                             )
                         )}
-                    </Fragment>
+                    </>
                 )}
             </ControlFAB>
-        </Fragment>
+        </>
     );
 };
 

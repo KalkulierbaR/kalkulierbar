@@ -9,15 +9,15 @@ import kotlin.test.assertNotEquals
 class TestSyntacticEquality {
 
     private val equalPairs = listOf(
-        Pair("f(g(f(q)), c)", "f(g(f(q)), c)"),
+        Pair("f(g(f(q, a)), c)", "f(g(f(q, a)), c)"),
         Pair("a", "a"),
         Pair("f(X)", "f(X)")
     )
 
     private val unequalPairs = listOf(
-        Pair("f(g(f(q)), c)", "f(g(f(q)), d)"),
+        Pair("f(g(f(q, a)), c)", "f(g(f(q, a)), d)"),
         Pair("a", "d"),
-        Pair("f(X)", "f(X, X)"),
+        Pair("f(X, Y)", "f(X, X)"),
         Pair("f(g(f(c)))", "f(g(f(g(c))))"),
         Pair("X", "Y"),
         Pair("X", "x")

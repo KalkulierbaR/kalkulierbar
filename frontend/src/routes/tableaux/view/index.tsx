@@ -1,5 +1,4 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
+import { useLocation } from "preact-iso";
 import { useCallback, useEffect, useState } from "preact/hooks";
 
 import TableauxFAB from "../../../components/calculus/tableaux/fab";
@@ -31,7 +30,7 @@ import {
     updateDragTransform,
 } from "../../../util/tableaux";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**
@@ -50,6 +49,8 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     } = useAppState();
 
     const state = cState;
+
+    const { route } = useLocation();
 
     if (!state) {
         route(`/${calculus}`);
@@ -275,7 +276,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     }, [state, server, onChange, notificationHandler]);
 
     return (
-        <Fragment>
+        <>
             <h2>Tableaux View</h2>
 
             <div class={style.view}>
@@ -344,7 +345,7 @@ const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
             />
 
             <TutorialDialog calculus={calculus} />
-        </Fragment>
+        </>
     );
 };
 

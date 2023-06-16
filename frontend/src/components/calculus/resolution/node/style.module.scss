@@ -1,0 +1,35 @@
+.node {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.node--new {
+    fill: var(--kbar-accent-2-color);
+}
+
+.node--disabled {
+    cursor: default;
+    font-size: 24px;
+}
+
+.text--selected {
+    fill: var(--kbar-text-selected-color);
+}
+
+.text--closed {
+    fill: var(--kbar-text-closed-color);
+}
+
+.no-text-highlight {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.semi-selected {
+    stroke: var(--kbar-accent-color);
+    stroke-width: 4px;
+}

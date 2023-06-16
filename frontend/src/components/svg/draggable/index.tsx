@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { Ref, useState } from "preact/hooks";
 
 import { DragTransform, Point } from "../../../types/ui";

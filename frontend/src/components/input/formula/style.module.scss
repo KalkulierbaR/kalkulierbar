@@ -1,0 +1,83 @@
+/* Styles for the Clause input component */
+.input {
+    padding: 8px;
+    border: 2px solid var(--kbar-accent-color);
+    border-radius: var(--kbar-border-radius);
+    resize: none;
+    width: 100%;
+    min-height: 92px;
+    font-size: 1.3em;
+    margin-block-end: 8px;
+    background-color: var(--kbar-3dp-color);
+    color: var(--kbar-primary-text-color);
+}
+
+p ul li {
+    padding: 5px;
+}
+
+table tr {
+    padding: 5px;
+    text-align: center;
+}
+
+table tr td {
+    padding: 3px;
+    border: 1px solid #666666;
+}
+
+code {
+    color: var(--kbar-secondary-text-color);
+    font-weight: bold;
+}
+
+.pad-right {
+    margin-right: 8px;
+}
+
+.pad-left {
+    margin-left: 8px;
+}
+
+.format-header {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.format-heading {
+    display: inline;
+    margin: 0;
+}
+
+.format-content {
+    padding: 0 16px 16px;
+}
+
+.btn-icon {
+    border: none;
+    box-shadow: none;
+    background: none;
+    height: 32px;
+    max-height: 32px;
+    width: 32px;
+    max-width: 32px;
+    margin-right: 8px;
+    padding: 0;
+    cursor: pointer;
+    transform: rotate(0);
+    transition: 0.15s transform ease;
+
+    &.expand {
+        transform: rotate(90deg);
+    }
+}
+
+.no-pad {
+    padding: 0;
+}
+
+.hide {
+    display: none;
+}

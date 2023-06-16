@@ -2,6 +2,8 @@ import { KStringMap } from "../kotlin";
 
 import { Calculus, SequentCalculusType } from ".";
 
+/* eslint "@typescript-eslint/no-explicit-any": "off" */
+
 export type SequentNodeType = "";
 
 export interface SequentNode {
@@ -66,7 +68,7 @@ export interface SCCloseAssignMove {
     type: string;
     nodeID: number;
     listIndex: number;
-    varAssign: VarAssign;
+    instTerm: string | null;
 }
 export interface SequentRuleMove {
     type: string;

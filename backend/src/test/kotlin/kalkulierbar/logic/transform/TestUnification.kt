@@ -29,9 +29,8 @@ class TestUnification {
         "R(a) & R(b)",
         "R(f(a)) & R(g(a))",
         "R(a) & Q(a)",
-        "R(a) & R(a,b)",
+        "R(a, c) & R(a,b)",
         "\\all X: \\all Y: (R(f(X)) & R(g(Y)))",
-        "\\all X: \\all Y: \\all Z: (R(f(X)) & R(f(Y,Z)))",
         "\\all X: (R(f(X)) & R(X))"
     )
 

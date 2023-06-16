@@ -1,8 +1,6 @@
 node_modules
 /build
 /*.log
-*.css.d.ts
-*.scss.d.ts
 
 # Please use yarn package manager instead
 package-lock.json

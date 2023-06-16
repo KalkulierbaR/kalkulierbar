@@ -1,0 +1,35 @@
+.tree {
+    visibility: hidden;
+}
+
+.list {
+    display: block;
+}
+
+.dpll-view {
+    display: block;
+
+    &.show-tree {
+        .list {
+            display: none;
+        }
+
+        .tree {
+            visibility: unset;
+        }
+    }
+
+    @media (min-width: 700px) {
+        display: grid;
+        grid-template-columns: 300px auto;
+        column-gap: 16px;
+
+        .list {
+            display: block !important;
+        }
+
+        .tree {
+            visibility: unset;
+        }
+    }
+}

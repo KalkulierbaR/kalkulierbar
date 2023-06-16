@@ -1,5 +1,3 @@
-import { Fragment, h } from "preact";
-
 import { Calculus } from "../../../../types/calculus";
 import { NCTableauxState } from "../../../../types/calculus/nc-tableaux";
 import { useAppState } from "../../../../util/app-state";
@@ -17,7 +15,7 @@ import CenterFAB from "../../../input/fab/center";
 import CheckCloseFAB from "../../../input/fab/check-close";
 import DownloadFAB from "../../../input/fab/download";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**
@@ -88,7 +86,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
             couldShowCheckCloseHint={state.tree[0].isClosed}
         >
             {selectedNodeId === undefined ? (
-                <Fragment>
+                <>
                     <DownloadFAB
                         state={state}
                         name="nc-tableaux"
@@ -124,9 +122,9 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                             }}
                         />
                     )}
-                </Fragment>
+                </>
             ) : (
-                <Fragment>
+                <>
                     <CenterFAB resetDragTransforms={resetDragTransforms} />
                     {showAlpha && (
                         <FAB
@@ -204,7 +202,7 @@ const NCTabFAB: preact.FunctionalComponent<Props> = ({
                             }}
                         />
                     )}
-                </Fragment>
+                </>
             )}
         </ControlFAB>
     );

@@ -1,4 +1,4 @@
-import { Component, ComponentChildren, createRef, h } from "preact";
+import { Component, ComponentChildren, createRef } from "preact";
 
 import { Extent, GoToEvent, Point, Transform } from "../../../types/ui";
 import { disableDrag, enableDrag } from "../../../util/zoom/drag";
@@ -32,7 +32,7 @@ interface Props {
     /**
      * Transformer to handle GoToEvents
      */
-    transformGoTo?: (detail: any) => [number, number];
+    transformGoTo?: (detail: unknown) => [number, number];
     /**
      * Additional class for styling
      */

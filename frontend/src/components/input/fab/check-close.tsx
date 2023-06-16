@@ -1,5 +1,3 @@
-import { h } from "preact";
-
 import { Statistics } from "../../../types/app/statistics";
 import { TutorialMode } from "../../../types/app/tutorial";
 import { CalculusType } from "../../../types/calculus";

@@ -1,5 +1,3 @@
-import { h } from "preact";
-
 import { CandidateClause } from "../../../../types/calculus/clause";
 import { VisualHelp } from "../../../../types/calculus/resolution";
 import { DragTransform } from "../../../../types/ui";
@@ -8,7 +6,7 @@ import { normalize } from "../../../../util/normalize";
 import Zoomable from "../../../svg/zoomable";
 import ResolutionNode from "../node";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

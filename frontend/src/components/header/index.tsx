@@ -1,4 +1,3 @@
-import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
 
 import Dialog from "../dialog";
@@ -9,7 +8,8 @@ import Drawer from "./drawer";
 import Hamburger from "./hamburger";
 import Nav from "./nav";
 import Settings from "./settings";
-import * as style from "./style.scss";
+
+import * as style from "./style.module.scss";
 
 interface HeaderProps {
     /**
@@ -28,7 +28,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
         window.innerWidth < 950 ? (
             <Hamburger open={open} onClick={toggle} />
         ) : (
-            <Fragment>
+            <>
                 <Nav
                     hamburger={false}
                     onLinkClick={setClosed}
@@ -39,7 +39,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
                     onClick={toggle}
                     icon={<SettingsIcon />}
                 />
-            </Fragment>
+            </>
         );
 
     return (
@@ -47,7 +47,7 @@ const Header: preact.FunctionalComponent<HeaderProps> = ({ currentUrl }) => {
             <a href="/" class={style.mainLink} onClick={() => setOpen(false)}>
                 <img
                     class={style.logo}
-                    src="/assets/icons/logo-plain.svg"
+                    src="/icons/logo-plain.svg"
                     alt="KalkulierbaR logo"
                 />
                 <h1>KalkulierbaR</h1>

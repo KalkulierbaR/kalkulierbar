@@ -1,5 +1,3 @@
-import { Fragment, h } from "preact";
-
 import { Statistics } from "../../../../types/app/statistics";
 import { SequentCalculusType } from "../../../../types/calculus";
 import { FOSCState, PSCState } from "../../../../types/calculus/sequent";
@@ -52,14 +50,14 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
         useAppState();
 
     return (
-        <Fragment>
+        <>
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={false}
                 checkFABPositionFromBottom={1}
             >
                 {selectedNodeId === undefined ? (
-                    <Fragment>
+                    <>
                         <DownloadFAB
                             state={state}
                             name={calculus}
@@ -90,9 +88,9 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
                                 );
                             }}
                         />
-                    </Fragment>
+                    </>
                 ) : (
-                    <Fragment>
+                    <>
                         <FAB
                             icon={<DeleteIcon />}
                             label="Prune"
@@ -113,10 +111,10 @@ const SequentFAB: preact.FunctionalComponent<Props> = ({
                                 ruleCallback();
                             }}
                         />
-                    </Fragment>
+                    </>
                 )}
             </ControlFAB>
-        </Fragment>
+        </>
     );
 };
 

@@ -1,5 +1,3 @@
-import { Fragment, h } from "preact";
-
 import { Statistics } from "../../../../types/app/statistics";
 import { ModalCalculusType } from "../../../../types/calculus";
 import {
@@ -17,7 +15,7 @@ import DownloadFAB from "../../../input/fab/download";
 import NextLeafFAB from "../../../input/fab/next-leaf";
 import UndoFAB from "../../../input/fab/undo";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 // import { sendMove } from "../../../../util/api";
 
@@ -87,13 +85,13 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
     const showUndoFAB = state.backtracking && state.moveHistory.length > 0;
 
     return (
-        <Fragment>
+        <>
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={state.tree[0].isClosed}
             >
                 {selectedNodeId === undefined ? (
-                    <Fragment>
+                    <>
                         <DownloadFAB
                             state={state}
                             name={calculus}
@@ -112,9 +110,9 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                                 resetDragTransform={resetDragTransform}
                             />
                         )}
-                    </Fragment>
+                    </>
                 ) : (
-                    <Fragment>
+                    <>
                         <FAB
                             icon={<span class={style.greekLetter}>!</span>}
                             label="Negation"
@@ -221,10 +219,10 @@ const ModalTableauxFAB: preact.FunctionalComponent<Props> = ({
                                 }}
                             />
                         )}
-                    </Fragment>
+                    </>
                 )}
             </ControlFAB>
-        </Fragment>
+        </>
     );
 };
 

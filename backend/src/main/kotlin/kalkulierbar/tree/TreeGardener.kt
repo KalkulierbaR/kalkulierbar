@@ -1,4 +1,4 @@
-package main.kotlin.kalkulierbar.tree
+package kalkulierbar.tree
 
 import kalkulierbar.IllegalMove
 

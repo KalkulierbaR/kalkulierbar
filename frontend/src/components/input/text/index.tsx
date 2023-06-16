@@ -1,9 +1,9 @@
-import { ComponentChild, h } from "preact";
+import { ComponentChild } from "preact";
 import { useRef, useState } from "preact/hooks";
 
 import { classMap } from "../../../util/class-map";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

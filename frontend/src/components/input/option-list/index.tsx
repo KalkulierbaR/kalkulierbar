@@ -1,10 +1,8 @@
-import { h } from "preact";
-
 import { SequentNode } from "../../../types/calculus/sequent";
 import { classMap } from "../../../util/class-map";
 import { parseFormula, parseStringToListIndex } from "../../../util/sequent";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

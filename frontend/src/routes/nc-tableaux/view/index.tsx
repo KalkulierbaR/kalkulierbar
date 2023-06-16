@@ -1,5 +1,4 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
+import { useLocation } from "preact-iso";
 import { useCallback, useState } from "preact/hooks";
 
 import NCTabFAB from "../../../components/calculus/nc-tableaux/fab";
@@ -23,6 +22,8 @@ const NCTableauxView: preact.FunctionalComponent = () => {
     } = useAppState();
 
     const state = cState;
+
+    const { route } = useLocation();
 
     if (!state) {
         route(`/${Calculus.ncTableaux}`);
@@ -119,7 +120,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
     };
 
     return (
-        <Fragment>
+        <>
             <h2>NC Tableaux View</h2>
 
             <div class="card no-pad">
@@ -150,7 +151,7 @@ const NCTableauxView: preact.FunctionalComponent = () => {
             />
 
             <TutorialDialog calculus={Calculus.ncTableaux} />
-        </Fragment>
+        </>
     );
 };
 
