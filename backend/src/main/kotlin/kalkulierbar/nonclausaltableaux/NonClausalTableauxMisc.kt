@@ -1,11 +1,11 @@
 package kalkulierbar.nonclausaltableaux
 
 import kalkulierbar.logic.LogicNode
-import kalkulierbar.tamperprotect.ProtectedState
-import kotlinx.serialization.Serializable
 import kalkulierbar.logic.transform.Signature
+import kalkulierbar.tamperprotect.ProtectedState
 import kalkulierbar.tree.GenericTreeNode
 import kalkulierbar.tree.TreeGardener
+import kotlinx.serialization.Serializable
 
 @Serializable
 class NcTableauxState(

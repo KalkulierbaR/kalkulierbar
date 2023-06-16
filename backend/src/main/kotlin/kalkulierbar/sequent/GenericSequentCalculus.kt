@@ -1,10 +1,10 @@
 package kalkulierbar.sequent
 
 import kalkulierbar.logic.LogicNode
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import kalkulierbar.tree.GenericTreeNode
 import kalkulierbar.tree.TreeGardener
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlin.math.sqrt
 
 interface GenericSequentCalculus {

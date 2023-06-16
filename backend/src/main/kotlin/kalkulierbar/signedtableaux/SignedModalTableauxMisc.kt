@@ -2,9 +2,9 @@ package kalkulierbar.signedtableaux
 
 import kalkulierbar.logic.LogicNode
 import kalkulierbar.tamperprotect.ProtectedState
-import kotlinx.serialization.Serializable
 import kalkulierbar.tree.GenericTreeNode
 import kalkulierbar.tree.TreeGardener
+import kotlinx.serialization.Serializable
 
 @Serializable
 class SignedModalTableauxState(

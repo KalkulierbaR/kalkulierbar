@@ -5,9 +5,9 @@ import kalkulierbar.UnificationImpossible
 import kalkulierbar.logic.*
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.logic.transform.SelectiveSuffixAppender
+import kalkulierbar.logic.transform.Signature
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
-import kalkulierbar.logic.transform.Signature
 
 /**
  * While the outermost LogicNode is an AND:

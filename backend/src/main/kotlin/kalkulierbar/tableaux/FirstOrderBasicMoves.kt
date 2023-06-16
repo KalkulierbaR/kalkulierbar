@@ -3,9 +3,9 @@ package kalkulierbar.tableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.UnificationImpossible
 import kalkulierbar.logic.FirstOrderTerm
+import kalkulierbar.logic.transform.Signature
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
-import kalkulierbar.logic.transform.Signature
 
 /**
  * Attempt to close a branch using automatic unification

@@ -6,10 +6,10 @@ import kalkulierbar.clause.Atom
 import kalkulierbar.clause.Clause
 import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Relation
+import kalkulierbar.logic.transform.Signature
 import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
-import kalkulierbar.logic.transform.Signature
 
 @Suppress("ThrowsCount", "LongParameterList")
 /**

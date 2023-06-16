@@ -3,9 +3,9 @@ package kalkulierbar.sequent.fosc
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.*
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
+import kalkulierbar.logic.transform.Signature
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.sequent.*
-import kalkulierbar.logic.transform.Signature
 
 /**
  * Rule AllLeft is applied, if the LogicNode is the leftChild of node and is of type All(UniversalQuantifier).
