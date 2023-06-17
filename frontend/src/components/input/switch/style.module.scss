@@ -1,0 +1,21 @@
+:global {
+    @import "@material/switch/mdc-switch";
+}
+
+.container {
+    display: inline-flex;
+    padding-left: 12px;
+    height: 40px;
+    align-items: center;
+}
+
+/* Fixes Google's stupid ripple bug */
+.no-ripple::before {
+    content: none !important;
+}
+
+.label {
+    margin-left: 8px;
+    margin-right: 10px;
+    cursor: pointer;
+}

@@ -1,6 +1,6 @@
-import { ComponentChild, h } from "preact";
+import type { ComponentChild } from "preact";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

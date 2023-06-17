@@ -1,0 +1,37 @@
+.label {
+    display: block;
+}
+
+.input {
+    width: 100%;
+    padding: 8px;
+    flex-grow: 1;
+    margin-right: 8px;
+    border: 2px solid var(--kbar-accent-color);
+    border-radius: var(--kbar-border-radius);
+    background-color: var(--kbar-3dp-color);
+    color: var(--kbar-primary-text-color);
+    font-size: 1em;
+    min-width: 230px;
+
+    @media (max-width: 340px) {
+        margin-right: 0;
+    }
+}
+
+.row {
+    display: flex;
+
+    @media (max-width: 340px) {
+        flex-wrap: wrap;
+
+        button {
+            margin-top: 16px;
+        }
+    }
+}
+
+.inline {
+    display: inline;
+    width: auto;
+}

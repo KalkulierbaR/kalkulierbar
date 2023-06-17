@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useState } from "preact/hooks";
 
 import { TutorialMode } from "../../../types/app/tutorial";
@@ -9,7 +8,8 @@ import MoreIcon from "../../icons/more";
 import TutorialHint from "../../tutorial/hint";
 import FAB from "../fab";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
+import type { ComponentChildren } from "preact";
 
 interface MenuProps {
     /**
@@ -23,7 +23,7 @@ interface MenuProps {
     /**
      * The components DOM children
      */
-    children: any;
+    children: ComponentChildren;
 }
 
 const Menu: preact.FunctionalComponent<MenuProps> = ({
@@ -49,7 +49,7 @@ interface ControlFABProps {
     /**
      * The components DOM children
      */
-    children: any;
+    children: ComponentChildren;
     /**
      * Whether the close hint could be shown
      */

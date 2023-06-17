@@ -4,6 +4,8 @@ import { Calculus, ResolutionCalculusType } from ".";
 import { ClauseSet, FOClauseSet } from "./clause";
 import { CnfStrategy, VarAssign } from "./tableaux";
 
+/* eslint "@typescript-eslint/no-explicit-any": "off" */
+
 export interface PropResolutionState {
     seal: string;
     clauseSet: ClauseSet;

@@ -1,0 +1,31 @@
+.no-pad {
+    padding: 0;
+}
+
+.node {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.node--disabled {
+    cursor: default;
+    font-size: 24px;
+}
+
+.text--selected {
+    fill: var(--kbar-text-selected-color);
+}
+
+.text--closed {
+    fill: var(--kbar-text-closed-color);
+}
+
+.svg {
+    display: block;
+}
+
+.circle {
+    fill: none;
+    stroke: var(--kbar-accent-color);
+    stroke-width: 2px;
+}

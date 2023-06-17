@@ -1,4 +1,4 @@
-import { createRef, h } from "preact";
+import { createRef } from "preact";
 import { useState } from "preact/hooks";
 
 import { CandidateClause } from "../../../../types/calculus/clause";
@@ -10,7 +10,7 @@ import { mousePos } from "../../../../util/zoom/mouse";
 import { touchPos } from "../../../../util/zoom/touch";
 import Rectangle from "../../../svg/rectangle";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

@@ -1,4 +1,4 @@
-package main.kotlin.kalkulierbar.tree
+package kalkulierbar.tree
 
 interface GenericTreeNode {
     var parent: Int?

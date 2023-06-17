@@ -1,5 +1,4 @@
-import { Fragment, h } from "preact";
-import { route } from "preact-router";
+import { useLocation } from "preact-iso";
 
 import { AppStateActionType } from "../../../types/app/action";
 import { Example } from "../../../types/app/example";
@@ -9,7 +8,7 @@ import { useAppState } from "../../../util/app-state";
 import DeleteIcon from "../../icons/delete";
 import Btn from "../btn";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**
@@ -45,6 +44,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
     const useExample = async (example: Example) => {
         const exampleCalculus = example.calculus;
         const url = `${server}/${example.calculus}/parse`;
+        const loc = useLocation();
 
         dispatch({
             type: AppStateActionType.UPDATE_SAVED_FORMULA,
@@ -65,7 +65,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
             } else {
                 const parsed = await response.json();
                 onChange(exampleCalculus, parsed);
-                route(`/${exampleCalculus}/view`);
+                loc.route(`/${exampleCalculus}/view`);
             }
         } catch (e) {
             notificationHandler.error((e as Error).message);
@@ -101,7 +101,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                                 .join("; ")}
                         </p>
                         {isAdmin && (
-                            <Fragment>
+                            <>
                                 <p class={style.params}>{example.params}</p>
                                 <Btn
                                     onClick={(e) => {
@@ -117,7 +117,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
                                     label="Delete"
                                     icon={<DeleteIcon />}
                                 />
-                            </Fragment>
+                            </>
                         )}
                     </div>
                 ) : undefined,

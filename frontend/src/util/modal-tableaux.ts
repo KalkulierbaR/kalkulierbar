@@ -167,8 +167,8 @@ export const modalTableauxTreeLayout = (
 const modalTabNodeToTree = (
     nodes: ModalTableauxNode[],
     n: ModalTableauxNode = nodes[0],
-    i: number = 0,
-    y: number = 16,
+    i = 0,
+    y = 16,
 ): Tree<ModalTableauxTreeLayoutNode> => {
     const width = estimateSVGTextWidth(nodeName(n)) + 56;
     return tree(

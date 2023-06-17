@@ -1,4 +1,3 @@
-import { Fragment, h } from "preact";
 import { useCallback, useState } from "preact/hooks";
 
 import { TutorialMode } from "../../../types/app/tutorial";
@@ -6,7 +5,7 @@ import { useAppState } from "../../../util/app-state";
 import { classMap } from "../../../util/class-map";
 import ChevronRightIcon from "../../icons/chevron-right";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**
@@ -61,7 +60,7 @@ const Format: preact.FunctionalComponent<Props> = ({ logicType = "prop" }) => {
     );
 
     const modalFormat = (
-        <Fragment>
+        <>
             <li>
                 <p>
                     <b>Modal Formula</b>
@@ -169,11 +168,11 @@ const Format: preact.FunctionalComponent<Props> = ({ logicType = "prop" }) => {
                     </table>
                 </p>
             </li>
-        </Fragment>
+        </>
     );
 
     const foLogicFormat = (
-        <Fragment>
+        <>
             <li>
                 <p>
                     <b>FO Formula</b>
@@ -275,11 +274,11 @@ const Format: preact.FunctionalComponent<Props> = ({ logicType = "prop" }) => {
                     first-order logic.
                 </p>
             </li>
-        </Fragment>
+        </>
     );
 
     const propClauseFormat = (
-        <Fragment>
+        <>
             <li>
                 <p>
                     <b>Clause Set</b>
@@ -303,11 +302,11 @@ const Format: preact.FunctionalComponent<Props> = ({ logicType = "prop" }) => {
                     to signal a new clause. Whitespace is ignored.
                 </p>
             </li>
-        </Fragment>
+        </>
     );
 
     const propFormat = (
-        <Fragment>
+        <>
             <li>
                 <p>
                     <b>Propositional Formula</b>
@@ -390,7 +389,7 @@ const Format: preact.FunctionalComponent<Props> = ({ logicType = "prop" }) => {
                     propositional logic. Whitespace is ignored.
                 </p>
             </li>
-        </Fragment>
+        </>
     );
 
     const content = (

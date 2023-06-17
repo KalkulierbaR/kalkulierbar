@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useRef } from "preact/hooks";
 
 import {
@@ -10,7 +9,7 @@ import { classMap } from "../../../../util/class-map";
 import { parseFormula } from "../../../../util/sequent";
 import SmallRec from "../../../svg/small-rectangle";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     node: LayoutItem<SequentTreeLayoutNode>;

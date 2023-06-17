@@ -53,7 +53,7 @@ Ax is encoded as
 ```
 
 Additionaly to the PSC Moves FOSC has Moves for: `allLeft`, `allRight`, `exLeft`, `exRight`.
-These Moves can be used to assign a Constant to the BoundVariable of the respective Quantifier.
+These Moves can be used to assign a Constant (in the case of `allRight` and `exLeft`) or any complex term (in the case of `allLeft` and `exRight`) to the BoundVariable of the respective Quantifier.
 
 These FOSC moves are encoded as 
 ```json
@@ -61,7 +61,7 @@ These FOSC moves are encoded as
   "type": <identifier for the move>, 
   "nodeID": <ID of the TreeNode to to apply the move on>, 
   "listIndex": <the index in the list `(left/right)Formulas`>, 
-  "varAssign": <assignment map>
+  "instTerm": <the term to instantiate with as a string>
 }
 ```
 

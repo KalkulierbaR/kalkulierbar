@@ -1,5 +1,7 @@
 import { FOCalculus, PropCalculus } from ".";
 
+/* eslint "@typescript-eslint/no-explicit-any": "off" */
+
 /**
  * The Atom object received from the backend
  */

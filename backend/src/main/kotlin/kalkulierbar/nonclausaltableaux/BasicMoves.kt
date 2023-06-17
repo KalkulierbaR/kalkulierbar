@@ -3,9 +3,9 @@ package kalkulierbar.nonclausaltableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.UnificationImpossible
 import kalkulierbar.logic.*
-import kalkulierbar.logic.transform.IdentifierCollector
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.logic.transform.SelectiveSuffixAppender
+import kalkulierbar.logic.transform.Signature
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
 
@@ -125,7 +125,7 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
     // This is not strictly speaking necessary as skolem term names can never be in
     // conflict with suffixed variable names, but we'll do it still to ensure
     // that state.identifiers contains _all_ identifiers in the tableaux
-    state.identifiers.addAll(IdentifierCollector.collect(newFormula))
+    state.identifiers.addAll(Signature.of(newFormula).getConstantsAndFunctionNames())
 
     // Add new node to tree
     val newNode = NcTableauxNode(nodeID, newFormula)

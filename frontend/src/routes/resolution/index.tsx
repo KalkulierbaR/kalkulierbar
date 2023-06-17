@@ -1,4 +1,3 @@
-import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 
 import HintIcon, { Hint } from "../../components/hint";
@@ -53,7 +52,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
     };
 
     return (
-        <Fragment>
+        <>
             <Format logicType={fo ? "fo" : "prop-clause"} />
             <FormulaInput
                 calculus={calculus}
@@ -109,7 +108,7 @@ const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 </div>
             </div>
             <ExampleList calculus={calculus} />
-        </Fragment>
+        </>
     );
 };
 

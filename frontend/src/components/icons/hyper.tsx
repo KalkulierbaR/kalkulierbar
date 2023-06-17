@@ -1,5 +1,3 @@
-import { h } from "preact";
-
 interface Props {
     /**
      * Width and height of the icon. Defaults to `24`.

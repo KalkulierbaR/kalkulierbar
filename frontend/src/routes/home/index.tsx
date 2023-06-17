@@ -1,4 +1,4 @@
-import { h, VNode } from "preact";
+import { VNode } from "preact";
 import { useRef } from "preact/hooks";
 
 import Switch from "../../components/input/switch";
@@ -7,7 +7,7 @@ import { setCalculusState } from "../../util/admin";
 import { useAppState } from "../../util/app-state";
 
 import ROUTES from "./routes";
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 export interface Route {
     /**
@@ -21,7 +21,7 @@ export interface Route {
     /**
      * The SVG to display
      */
-    image: VNode<any>;
+    image: VNode;
     /**
      * The viewBox of the SVG
      */

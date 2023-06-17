@@ -153,7 +153,7 @@ export const findOptimalMainLit = (
     const candidates = main.atoms
         .map((a, i): [Atom, number] => [a, i])
         .filter(([a]) => a.negated && a.lit === lit)
-        .map(([_, i]) => i);
+        .map(([, i]) => i);
 
     if (candidates.length === 1) {
         return candidates[0];

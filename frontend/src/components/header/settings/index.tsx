@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useCallback, useState } from "preact/hooks";
 
 import { AppStateActionType } from "../../../types/app/action";
@@ -15,7 +14,7 @@ import Btn from "../../input/btn";
 import FAB from "../../input/fab";
 import TextInput from "../../input/text";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 const Settings: preact.FunctionalComponent = () => {
     return (
@@ -47,19 +46,21 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
 
     const dispatchServer = useCallback(() => {
         let serverLocation = serverInput.trim();
-        const simpleDomainRegex = "^[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+$"
-        const localhostRegex = "^localhost:\\d+$"
+        const simpleDomainRegex = "^[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+$";
+        const localhostRegex = "^localhost:\\d+$";
         if (serverLocation.match(simpleDomainRegex)) {
-            serverLocation = `https://${serverLocation}`
+            serverLocation = `https://${serverLocation}`;
         } else if (serverLocation.match(localhostRegex)) {
-            serverLocation = `http://${serverLocation}`
+            serverLocation = `http://${serverLocation}`;
         }
         dispatch({
             type: AppStateActionType.SET_SERVER,
             value: serverLocation,
         });
         fetch(serverLocation).then(() =>
-            notificationHandler.success(`Server was successfully changed to ${serverLocation}`),
+            notificationHandler.success(
+                `Server was successfully changed to ${serverLocation}`,
+            ),
         );
     }, [serverInput]);
 

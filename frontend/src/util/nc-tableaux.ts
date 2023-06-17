@@ -185,8 +185,8 @@ export const ncTabTreeLayout = (nodes: NCTableauxNode[]) =>
 const ncTabNodeToTree = (
     nodes: NCTableauxNode[],
     n: NCTableauxNode = nodes[0],
-    i: number = 0,
-    y: number = 16,
+    i = 0,
+    y = 16,
 ): Tree<NCTabTreeNode> => {
     const width = estimateSVGTextWidth(n.spelling) + 56;
     return tree(

@@ -79,7 +79,7 @@ class TestClose {
             instance.applyMoveOnState(state, CloseMove(2, 1, null))
         }
 
-        state = instance.parseFormulaToState("P(c) & P(c,q)", null)
+        state = instance.parseFormulaToState("P(c,c) & P(c,q)", null)
 
         state = instance.applyMoveOnState(state, AlphaMove(0))
 

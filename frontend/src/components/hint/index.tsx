@@ -4,7 +4,9 @@ import "react-hint/css/index.css";
 
 import InfoIcon from "../icons/info";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
+
+/* eslint "@typescript-eslint/no-explicit-any": "off" */
 
 const ReactHint = ReactHintFactory({ createElement: h, Component, createRef });
 

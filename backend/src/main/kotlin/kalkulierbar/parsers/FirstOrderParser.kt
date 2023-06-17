@@ -1,5 +1,6 @@
 package kalkulierbar.parsers
 
+import kalkulierbar.IncorrectArityException
 import kalkulierbar.InvalidFormulaFormat
 import kalkulierbar.logic.*
 import kalkulierbar.logic.Function
@@ -19,11 +20,18 @@ class FirstOrderParser : PropositionalParser() {
         fun parseTerm(term: String) = instance.parseTerm(term)
 
         fun parseRelation(relation: String) = instance.parseRelation(relation)
+
+        fun parseConstant(constant: String) = instance.parseConstant(constant)
     }
 
     // List of quantifier scopes for correct variable binding
     private val quantifierScope = mutableListOf<MutableList<QuantifiedVariable>>()
     private var bindQuantifiedVariables = true
+    private val arities = mutableMapOf<String, Int>()
+    private val constants = mutableSetOf<String>()
+    private val functionNames = mutableSetOf<String>()
+    private val boundVars = mutableSetOf<String>()
+    private val relationNames = mutableSetOf<String>()
 
     /**
      * Parses a first order formula
@@ -33,6 +41,11 @@ class FirstOrderParser : PropositionalParser() {
     override fun parse(formula: String, positionInBaseString: Int): LogicNode {
         // Clear quantifier scope to avoid problems on instance re-use
         quantifierScope.clear()
+        arities.clear()
+        constants.clear()
+        functionNames.clear()
+        boundVars.clear()
+        relationNames.clear()
         bindQuantifiedVariables = true
         return super.parse(formula, positionInBaseString)
     }
@@ -45,6 +58,11 @@ class FirstOrderParser : PropositionalParser() {
     fun parseTerm(term: String): FirstOrderTerm {
         tokens = Tokenizer.tokenize(term, extended = true) // Allow extended identifier chars
         bindQuantifiedVariables = false
+        arities.clear()
+        constants.clear()
+        functionNames.clear()
+        boundVars.clear()
+        relationNames.clear()
         val res = parseTerm()
         if (tokens.isNotEmpty())
             throw InvalidFormulaFormat("Expected end of term but got ${gotMsg()}")
@@ -65,6 +83,27 @@ class FirstOrderParser : PropositionalParser() {
             throw InvalidFormulaFormat("Expected end of term but got ${gotMsg()}")
 
         return res
+    }
+
+    /**
+     * Parses a first order constant
+     * @param constant input constant
+     * @return FirstOrderTerm representing the constant
+     */
+    fun parseConstant(constant: String): FirstOrderTerm {
+        tokens = Tokenizer.tokenize(constant, extended = true) // Allow extended identifier chars
+        bindQuantifiedVariables = false
+        if (!nextTokenIsIdentifier())
+            throw InvalidFormulaFormat("Expected identifier but got ${gotMsg()}")
+        if (!nextTokenIs(TokenType.LOWERID))
+            throw InvalidFormulaFormat("Expected '${TokenType.LOWERID}' but got ${gotMsg()}")
+        // Next token is constant or function
+        val identifier = tokens.first().spelling
+        consume()
+        if (tokens.isNotEmpty())
+            throw InvalidFormulaFormat("Expected end of constant but got ${gotMsg()}")
+
+        return Constant(identifier)
     }
 
     /**
@@ -118,6 +157,10 @@ class FirstOrderParser : PropositionalParser() {
         else if (boundBefore.isNotEmpty())
             quantifierScope.last().addAll(boundBefore)
 
+        if (relationNames.contains(varName))
+            throw InvalidFormulaFormat("Identifier '$varName' is used both as a relation and bound variable")
+        boundVars.add(varName)
+
         return if (quantType == TokenType.UNIVERSALQUANT)
             UniversalQuantifier(varName, subexpression, boundVariables)
         else
@@ -163,6 +206,20 @@ class FirstOrderParser : PropositionalParser() {
 
         consume(TokenType.RPAREN)
 
+        if (arities.contains(relationIdentifier)) {
+            val expected = arities[relationIdentifier]
+            val arity = arguments.size
+            if (arity != expected) {
+                throw IncorrectArityException("Relation $relationIdentifier should have arity $expected but has $arity")
+            }
+        } else {
+            arities[relationIdentifier] = arguments.size
+        }
+
+        if (boundVars.contains(relationIdentifier))
+            throw InvalidFormulaFormat("Identifier '$relationIdentifier' is used both as a relation and bound variable")
+        relationNames.add(relationIdentifier)
+
         return Relation(relationIdentifier, arguments)
     }
 
@@ -184,8 +241,12 @@ class FirstOrderParser : PropositionalParser() {
             consume()
             if (nextTokenIs(TokenType.LPAREN))
                 parseFunction(identifier)
-            else
+            else {
+                if (functionNames.contains(identifier))
+                    throw InvalidFormulaFormat("Identifier '$identifier' is used both as a function and constant")
+                constants.add(identifier)
                 Constant(identifier)
+            }
         }
     }
 
@@ -201,7 +262,7 @@ class FirstOrderParser : PropositionalParser() {
         consume(TokenType.LPAREN)
 
         val arguments = mutableListOf<FirstOrderTerm>()
-        if (! nextTokenIs(TokenType.RPAREN)) {
+        if (!nextTokenIs(TokenType.RPAREN)) {
             arguments.add(parseTerm())
         }
         while (nextTokenIs(TokenType.COMMA)) {
@@ -210,6 +271,20 @@ class FirstOrderParser : PropositionalParser() {
         }
 
         consume(TokenType.RPAREN)
+
+        if (arities.contains(identifier)) {
+            val expected = arities[identifier]
+            val arity = arguments.size
+            if (arity != expected) {
+                throw IncorrectArityException("Function $identifier should have arity $expected but has $arity")
+            }
+        } else {
+            arities[identifier] = arguments.size
+        }
+
+        if (constants.contains(identifier))
+            throw InvalidFormulaFormat("Identifier '$identifier' is used both as a function and constant")
+        functionNames.add(identifier)
 
         return Function(identifier, arguments)
     }
@@ -227,6 +302,10 @@ class FirstOrderParser : PropositionalParser() {
 
         if (bindQuantifiedVariables)
             quantifierScope.last().add(res)
+
+        if (relationNames.contains(res.spelling))
+            throw InvalidFormulaFormat("Identifier '${res.spelling}' is used both as a relation and bound variable")
+        boundVars.add(res.spelling)
 
         consume(TokenType.CAPID)
         return res

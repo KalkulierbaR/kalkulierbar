@@ -1,34 +1,38 @@
-import DPLL from "async!../routes/dpll";
-import DPLLView from "async!../routes/dpll/view";
-import Home from "async!../routes/home";
-import ModalTableaux from "async!../routes/modal-tableaux";
-import ModalTableauxView from "async!../routes/modal-tableaux/view";
-import NCTableaux from "async!../routes/nc-tableaux";
-import NCTableauxView from "async!../routes/nc-tableaux/view";
-import Resolution from "async!../routes/resolution";
-import ResolutionView from "async!../routes/resolution/view";
-import SequentCalculus from "async!../routes/sequent";
-import SequentView from "async!../routes/sequent/view";
-import Tableaux from "async!../routes/tableaux";
-import TableauxView from "async!../routes/tableaux/view";
-import { h } from "preact";
-import { getCurrentUrl, Router, RouterOnChangeArgs } from "preact-router";
+import { ErrorBoundary, LocationProvider, Router, lazy } from "preact-iso";
 import { useEffect, useState } from "preact/hooks";
 
 import { AppStateAction, AppStateActionType } from "../types/app/action";
 import { NotificationHandler } from "../types/app/notification";
 import { Calculus } from "../types/calculus";
 import { checkCredentials, getConfig } from "../util/admin";
-import { AppStateProvider, defaultBackendServer, useAppState } from "../util/app-state";
+import {
+    AppStateProvider,
+    defaultBackendServer,
+    useAppState,
+} from "../util/app-state";
 import Confetti from "../util/confetti";
 import { useTitle } from "../util/title";
 
 import Page404 from "./404";
 import Header from "./header";
 import Snackbar from "./snackbar";
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 const SMALL_SCREEN_THRESHOLD = 750;
+
+const Home = lazy(() => import("../routes/home"));
+const Tableaux = lazy(() => import("../routes/tableaux"));
+const TableauxView = lazy(() => import("../routes/tableaux/view"));
+const Resolution = lazy(() => import("../routes/resolution"));
+const ResolutionView = lazy(() => import("../routes/resolution/view"));
+const NCTableaux = lazy(() => import("../routes/nc-tableaux"));
+const NCTableauxView = lazy(() => import("../routes/nc-tableaux/view"));
+const DPLL = lazy(() => import("../routes/dpll"));
+const DPLLView = lazy(() => import("../routes/dpll/view"));
+const Sequent = lazy(() => import("../routes/sequent"));
+const SequentView = lazy(() => import("../routes/sequent/view"));
+const ModalTableaux = lazy(() => import("../routes/modal-tableaux"));
+const ModalTableauxView = lazy(() => import("../routes/modal-tableaux/view"));
 
 /**
  * Check if server is online
@@ -45,13 +49,21 @@ async function checkServer(
     try {
         await fetch(url);
     } catch (e) {
-        fetch(defaultBackendServer).then(() => {
-            dispatch({
-                type: AppStateActionType.SET_SERVER,
-                value: defaultBackendServer,
-            });
-            notificationHandler.error(`Switched to default server ${defaultBackendServer} since ${url} was offline`);
-        }).catch(() => notificationHandler.error(`Server ${url} appears to be offline`))
+        fetch(defaultBackendServer)
+            .then(() => {
+                dispatch({
+                    type: AppStateActionType.SET_SERVER,
+                    value: defaultBackendServer,
+                });
+                notificationHandler.error(
+                    `Switched to default server ${defaultBackendServer} since ${url} was offline`,
+                );
+            })
+            .catch(() =>
+                notificationHandler.error(
+                    `Server ${url} appears to be offline`,
+                ),
+            );
     }
 }
 
@@ -65,12 +77,6 @@ const updateScreenSize = (setter: (s: boolean) => void) => {
     const smallScreen = width < SMALL_SCREEN_THRESHOLD;
     setter(smallScreen);
 };
-
-// Used for debugging with Yarn
-if ((module as any).hot) {
-    // tslint:disable-next-line:no-var-requires
-    require("preact/debug");
-}
 
 // This is the main App component which handles routing and calls other components
 const App: preact.FunctionalComponent = () => {
@@ -87,7 +93,7 @@ const App: preact.FunctionalComponent = () => {
             type: AppStateActionType.UPDATE_SCREEN_SIZE,
             smallScreen,
         });
-    const [currentUrl, setCurrentUrl] = useState<string>(getCurrentUrl());
+    const [currentUrl, setCurrentUrl] = useState<string>("/");
 
     useTitle(currentUrl);
 
@@ -96,8 +102,8 @@ const App: preact.FunctionalComponent = () => {
      * @param {RouterOnChangeArgs} args - The arguments of the current route change
      * @returns {void}
      */
-    const onChangeRoute = (args: RouterOnChangeArgs) => {
-        setCurrentUrl(args.url);
+    const onChangeRoute = (url: string) => {
+        setCurrentUrl(url);
         notificationHandler.remove();
     };
 
@@ -137,70 +143,76 @@ const App: preact.FunctionalComponent = () => {
         <div id="app">
             <Header currentUrl={currentUrl} />
             <main class={style.main}>
-                <Router onChange={onChangeRoute}>
-                    <Home path="/" />
-                    <Tableaux
-                        path={`/${Calculus.propTableaux}`}
-                        calculus={Calculus.propTableaux}
-                    />
-                    <TableauxView
-                        path={`/${Calculus.propTableaux}/view`}
-                        calculus={Calculus.propTableaux}
-                    />
-                    <Tableaux
-                        path="/fo-tableaux"
-                        calculus={Calculus.foTableaux}
-                    />
-                    <TableauxView
-                        path={`/${Calculus.foTableaux}/view`}
-                        calculus={Calculus.foTableaux}
-                    />
-                    <Resolution
-                        path={`/${Calculus.propResolution}`}
-                        calculus={Calculus.propResolution}
-                    />
-                    <ResolutionView
-                        path={`/${Calculus.propResolution}/view`}
-                        calculus={Calculus.propResolution}
-                    />
-                    <Resolution
-                        path={`/${Calculus.foResolution}`}
-                        calculus={Calculus.foResolution}
-                    />
-                    <ResolutionView
-                        path={`/${Calculus.foResolution}/view`}
-                        calculus={Calculus.foResolution}
-                    />
-                    <NCTableaux path={`/${Calculus.ncTableaux}`} />
-                    <NCTableauxView path={`/${Calculus.ncTableaux}/view`} />
-                    <DPLL path={`/${Calculus.dpll}`} />
-                    <DPLLView path={`/${Calculus.dpll}/view`} />
-                    <SequentCalculus
-                        path={`/${Calculus.propSequent}`}
-                        calculus={Calculus.propSequent}
-                    />
-                    <SequentView
-                        path={`/${Calculus.propSequent}/view`}
-                        calculus={Calculus.propSequent}
-                    />
-                    <SequentCalculus
-                        path={`/${Calculus.foSequent}`}
-                        calculus={Calculus.foSequent}
-                    />
-                    <SequentView
-                        path={`/${Calculus.foSequent}/view`}
-                        calculus={Calculus.foSequent}
-                    />
-                    <ModalTableaux
-                        path={`/${Calculus.modalTableaux}`}
-                        calculus={Calculus.modalTableaux}
-                    />
-                    <ModalTableauxView
-                        path={`/${Calculus.modalTableaux}/view`}
-                        calculus={Calculus.modalTableaux}
-                    />
-                    <Page404 default={true} />
-                </Router>
+                <LocationProvider>
+                    <ErrorBoundary onError={(e) => console.log(e)}>
+                        <Router onRouteChange={onChangeRoute}>
+                            <Home path="/" />
+                            <Tableaux
+                                path={`/${Calculus.propTableaux}`}
+                                calculus={Calculus.propTableaux}
+                            />
+                            <TableauxView
+                                path={`/${Calculus.propTableaux}/view`}
+                                calculus={Calculus.propTableaux}
+                            />
+                            <Tableaux
+                                path="/fo-tableaux"
+                                calculus={Calculus.foTableaux}
+                            />
+                            <TableauxView
+                                path={`/${Calculus.foTableaux}/view`}
+                                calculus={Calculus.foTableaux}
+                            />
+                            <Resolution
+                                path={`/${Calculus.propResolution}`}
+                                calculus={Calculus.propResolution}
+                            />
+                            <ResolutionView
+                                path={`/${Calculus.propResolution}/view`}
+                                calculus={Calculus.propResolution}
+                            />
+                            <Resolution
+                                path={`/${Calculus.foResolution}`}
+                                calculus={Calculus.foResolution}
+                            />
+                            <ResolutionView
+                                path={`/${Calculus.foResolution}/view`}
+                                calculus={Calculus.foResolution}
+                            />
+                            <NCTableaux path={`/${Calculus.ncTableaux}`} />
+                            <NCTableauxView
+                                path={`/${Calculus.ncTableaux}/view`}
+                            />
+                            <DPLL path={`/${Calculus.dpll}`} />
+                            <DPLLView path={`/${Calculus.dpll}/view`} />
+                            <Sequent
+                                path={`/${Calculus.propSequent}`}
+                                calculus={Calculus.propSequent}
+                            />
+                            <SequentView
+                                path={`/${Calculus.propSequent}/view`}
+                                calculus={Calculus.propSequent}
+                            />
+                            <Sequent
+                                path={`/${Calculus.foSequent}`}
+                                calculus={Calculus.foSequent}
+                            />
+                            <SequentView
+                                path={`/${Calculus.foSequent}/view`}
+                                calculus={Calculus.foSequent}
+                            />
+                            <ModalTableaux
+                                path={`/${Calculus.modalTableaux}`}
+                                calculus={Calculus.modalTableaux}
+                            />
+                            <ModalTableauxView
+                                path={`/${Calculus.modalTableaux}/view`}
+                                calculus={Calculus.modalTableaux}
+                            />
+                            <Page404 default={true} />
+                        </Router>
+                    </ErrorBoundary>
+                </LocationProvider>
             </main>
             <div class={style.notifications}>
                 {notification && (

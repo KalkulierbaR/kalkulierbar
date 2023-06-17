@@ -1,0 +1,41 @@
+@import "../vars";
+
+.settings {
+    padding: 0 16px;
+
+    @media (min-width: $hamburgerBreakpoint) {
+        padding: 0;
+    }
+}
+
+.theme-switcher {
+    display: none;
+
+    @supports (--foo: green) {
+        display: inline-flex;
+        border: none;
+        transition: all 0.3s;
+        outline: none;
+        height: 100%;
+        margin-right: 16px;
+
+        img {
+            width: 1.6rem;
+        }
+    }
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 0 10px 0;
+    margin-bottom: 15px;
+}
+
+.settings-input-wrapper {
+    margin-bottom: 20px;
+}
+
+.settings-input {
+    overflow-scrolling: unset;
+}

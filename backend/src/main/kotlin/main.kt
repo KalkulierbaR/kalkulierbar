@@ -70,7 +70,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
             }
         }
 
-        config.compression.brotliAndGzip(); // use both gzip and brotli
+        config.compression.gzipOnly()
     }
 
     app.start(host, port)

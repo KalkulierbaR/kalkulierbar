@@ -1,5 +1,3 @@
-import { h } from "preact";
-
 import {
     FormulaTreeLayoutNode,
     SequentNode,
@@ -8,7 +6,7 @@ import { findSubTree } from "../../../../util/layout/tree";
 import { sequentTreeLayout } from "../../../../util/sequent";
 import Zoomable from "../../../svg/zoomable";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 import { SubTree } from "./subtree";
 
 interface Props {

@@ -1,6 +1,4 @@
-import { Fragment, h } from "preact";
-
-import * as style from "../../../../routes/resolution/view/style.scss";
+import * as style from "../../../../routes/resolution/view/style.module.scss";
 import { ResolutionCalculusType } from "../../../../types/calculus";
 import { SelectedClauses } from "../../../../types/calculus/clause";
 import {
@@ -85,7 +83,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
     const apiInfo = { onChange, server, notificationHandler, state };
 
     return (
-        <Fragment>
+        <>
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={
@@ -95,7 +93,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                 checkFABPositionFromBottom={1}
             >
                 {selectedClauseId !== undefined ? (
-                    <Fragment>
+                    <>
                         <FAB
                             mini={true}
                             extended={true}
@@ -164,9 +162,9 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                                 }}
                             />
                         )}
-                    </Fragment>
+                    </>
                 ) : (
-                    <Fragment>
+                    <>
                         <FAB
                             label={showGrid ? "Show Circle" : "Show Grid"}
                             icon={showGrid ? <CircleIcon /> : <GridIcon />}
@@ -180,7 +178,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                             name={calculus}
                             type={calculus}
                         />
-                    </Fragment>
+                    </>
                 )}
                 {state.hiddenClauses.clauses.length > 0 && (
                     <FAB
@@ -222,7 +220,7 @@ const ResolutionFAB: preact.FunctionalComponent<Props> = ({
                     }}
                 />
             )}
-        </Fragment>
+        </>
     );
 };
 

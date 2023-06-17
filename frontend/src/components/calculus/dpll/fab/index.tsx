@@ -1,5 +1,3 @@
-import { Fragment, h } from "preact";
-
 import { Calculus } from "../../../../types/calculus";
 import { DPLLNodeType, DPLLState } from "../../../../types/calculus/dpll";
 import { useAppState } from "../../../../util/app-state";
@@ -56,7 +54,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
     const treeIsVisible = !smallScreen || showTree;
 
     return (
-        <Fragment>
+        <>
             <ControlFAB
                 alwaysOpen={!smallScreen}
                 couldShowCheckCloseHint={couldShowCheckCloseHint}
@@ -111,7 +109,7 @@ const DPLLControlFAB: preact.FunctionalComponent<Props> = ({
                     onClick={() => setShowSplitDialog(true)}
                 />
             </ControlFAB>
-        </Fragment>
+        </>
     );
 };
 

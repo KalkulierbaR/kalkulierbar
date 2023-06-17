@@ -1,4 +1,3 @@
-import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 
 import Dialog from "../../../../components/dialog";
@@ -359,7 +358,7 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
             />
         </Dialog>
     ) : (
-        <Fragment>
+        <>
             <Dialog
                 open={showDialog}
                 label="Choose one atom of each clause to resolve them"
@@ -395,7 +394,7 @@ const ResolutionResolveDialog: preact.FunctionalComponent<Props> = ({
                 submitVarAssignCallback={sendFOResolve}
                 secondSubmitEvent={sendFOResolve}
             />
-        </Fragment>
+        </>
     );
 };
 

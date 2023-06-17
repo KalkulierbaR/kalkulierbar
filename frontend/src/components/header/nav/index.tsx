@@ -1,12 +1,11 @@
-import { Component, h } from "preact";
-import { Link } from "preact-router";
+import { Component } from "preact";
 
 import { TableauxCalculusType } from "../../../types/calculus";
 import { useAppState } from "../../../util/app-state";
 import { classMap } from "../../../util/class-map";
 
 import { LinkGroup, ROUTES, SingleLink } from "./routes";
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface NavProps {
     /**
@@ -98,7 +97,7 @@ class NavGroup extends Component<NavGroupProps, NavGroupState> {
             if (target === this.base) {
                 return;
             }
-            target = (target as any).parentNode;
+            target = (target as HTMLElement).parentNode;
         } while (target);
         this.close();
     };
@@ -175,13 +174,13 @@ const NavLink: preact.FunctionalComponent<{
     onClick: (e: MouseEvent) => void;
     currentUrl: string;
 }> = ({ link, onClick, currentUrl }) => (
-    <Link
+    <a
         href={`/${link.path}`}
         class={currentUrl.includes(link.path) ? style.current : undefined}
         onClick={onClick}
     >
         {link.name}
-    </Link>
+    </a>
 );
 
 export default Nav;

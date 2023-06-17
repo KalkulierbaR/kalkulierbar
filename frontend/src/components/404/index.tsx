@@ -1,6 +1,4 @@
-import { h } from "preact";
-
-import * as style from "./style.scss";
+import style from "./style.module.scss";
 
 const Page404: preact.FunctionalComponent = () => (
     <div class="card">

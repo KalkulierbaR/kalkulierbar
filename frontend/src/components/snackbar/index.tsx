@@ -1,9 +1,7 @@
-import { h } from "preact";
-
 import { Notification, NotificationType } from "../../types/app/notification";
 import CloseIcon from "../icons/close";
 
-import * as style from "./style.scss";
+import * as style from "./style.module.scss";
 
 interface Props {
     /**

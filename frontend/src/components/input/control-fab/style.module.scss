@@ -1,0 +1,47 @@
+$offset: 260px;
+
+.control {
+    position: fixed;
+    z-index: 2;
+    bottom: 16px;
+    right: 16px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    position: absolute;
+    bottom: 48px;
+    right: -$offset;
+    pointer-events: none;
+    padding: 0;
+
+    &.show {
+        pointer-events: unset;
+
+        > * {
+            transform: translateX(-$offset);
+        }
+    }
+
+    > * {
+        margin-top: 8px;
+        transform: none;
+        transition: transform 0.4s ease-in-out;
+    }
+
+    @for $i from 2 to 10 {
+        :nth-last-child(#{$i}) {
+            transition-delay: 0.04s * ($i - 1);
+        }
+    }
+}
+
+@media (min-width: 700px) {
+    .control {
+        bottom: 32px;
+        right: 32px;
+    }
+}

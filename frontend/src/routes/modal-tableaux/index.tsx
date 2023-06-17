@@ -1,4 +1,3 @@
-import { Fragment, h } from "preact";
 import { useState } from "preact/hooks";
 
 import HintIcon, { Hint } from "../../components/hint";
@@ -27,7 +26,7 @@ const ModalTableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
     };
 
     return (
-        <Fragment>
+        <>
             <Format logicType={"modal"} />
             <FormulaInput
                 calculus={calculus}
@@ -54,7 +53,7 @@ const ModalTableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 </div>
             </div>
             <ExampleList calculus={calculus} />
-        </Fragment>
+        </>
     );
 };
 

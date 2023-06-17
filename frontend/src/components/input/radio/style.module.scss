@@ -1,0 +1,52 @@
+:global {
+    @import "@material/radio/mdc-radio";
+
+    .mdc-radio {
+        @include mdc-radio-unchecked-stroke-color(
+            var(--kbar-primary-text-color)
+        );
+    }
+
+    .mdc-radio__background {
+        opacity: 0.6;
+    }
+
+    .mdc-radio__native-control:checked + .mdc-radio__background {
+        opacity: 1;
+    }
+}
+
+.container {
+    display: inline-flex;
+    height: 40px;
+    align-items: center;
+}
+
+.native {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.radio {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--mdc-theme-secondary, #018786);
+    border-radius: 50%;
+}
+
+.native[checked] ~ .inner {
+    width: 100%;
+    height: 100%;
+    transform: scale(0.6);
+    background-color: var(--mdc-theme-secondary, #018786);
+    border-radius: 50%;
+}
+
+.label {
+    margin-top: 2px;
+    margin-right: 10px;
+    cursor: pointer;
+}
