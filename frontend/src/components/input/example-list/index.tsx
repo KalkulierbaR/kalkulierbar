@@ -35,6 +35,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
         adminKey,
         setConfig,
     } = useAppState();
+    const currentUrlLocation = useLocation();
 
     /**
      * Parses an example, and changes to the calculus/view
@@ -44,7 +45,6 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
     const useExample = async (example: Example) => {
         const exampleCalculus = example.calculus;
         const url = `${server}/${example.calculus}/parse`;
-        const loc = useLocation();
 
         dispatch({
             type: AppStateActionType.UPDATE_SAVED_FORMULA,
@@ -65,7 +65,7 @@ const ExampleList: preact.FunctionalComponent<Props> = ({
             } else {
                 const parsed = await response.json();
                 onChange(exampleCalculus, parsed);
-                loc.route(`/${exampleCalculus}/view`);
+                currentUrlLocation.route(`/${exampleCalculus}/view`);
             }
         } catch (e) {
             notificationHandler.error((e as Error).message);
