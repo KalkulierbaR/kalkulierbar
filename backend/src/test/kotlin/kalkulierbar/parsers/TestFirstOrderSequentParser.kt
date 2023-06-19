@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class TestFOSCParser {
+class TestFirstOrderSequentParser {
     private val parser = FirstOrderSequentParser
 
     private val invalid = listOf(

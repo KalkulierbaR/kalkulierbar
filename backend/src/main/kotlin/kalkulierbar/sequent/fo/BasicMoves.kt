@@ -1,4 +1,4 @@
-package kalkulierbar.sequent.fosc
+package kalkulierbar.sequent.fo
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.logic.*
@@ -16,7 +16,7 @@ import kalkulierbar.sequent.*
  * @param instTerm: The term to instantiate with.
  * @return new state after applying move
  */
-fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String): FOSCState {
+fun applyAllLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, instTerm: String): FirstOrderSequentState {
     checkLeft(state, nodeID, listIndex)
 
     val node = state.tree[nodeID]
@@ -61,7 +61,7 @@ fun applyAllLeft(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String
  * @param instTerm The term to instantiate with. Must be a constant.
  * @return new state after applying move
  */
-fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String?): FOSCState {
+fun applyAllRight(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, instTerm: String?): FirstOrderSequentState {
     checkRight(state, nodeID, listIndex)
 
     val node = state.tree[nodeID]
@@ -114,7 +114,7 @@ fun applyAllRight(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: Strin
  * @param varAssign: instTerm The term to instantiate with. Must be a constant.
  * @return new state after applying move
  */
-fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String?): FOSCState {
+fun applyExLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, instTerm: String?): FirstOrderSequentState {
     checkLeft(state, nodeID, listIndex)
 
     val node = state.tree[nodeID]
@@ -166,7 +166,7 @@ fun applyExLeft(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String?
  * @param instTerm: The term to instantiate with.
  * @return new state after applying move
  */
-fun applyExRight(state: FOSCState, nodeID: Int, listIndex: Int, instTerm: String): FOSCState {
+fun applyExRight(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, instTerm: String): FirstOrderSequentState {
     checkRight(state, nodeID, listIndex)
 
     val node = state.tree[nodeID]

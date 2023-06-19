@@ -1,18 +1,18 @@
-package kalkulierbar.psc
+package kalkulierbar.firstordersequent
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.sequent.*
-import kalkulierbar.sequent.psc.PSC
+import kalkulierbar.sequent.fo.FirstOrderSequent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestUndo {
-    val instance = PSC()
+    val instance = FirstOrderSequent()
 
     @Test
     fun testNothingToUndo() {
-        val state = instance.parseFormulaToState("a | b", null)
+        val state = instance.parseFormulaToState("P(a) | P(b)", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, UndoMove())
@@ -21,7 +21,7 @@ class TestUndo {
 
     @Test
     fun testUndoOneChild() {
-        var state = instance.parseFormulaToState("a | b", null)
+        var state = instance.parseFormulaToState("P(a) | P(b)", null)
 
         val prestateHash = state.getHash()
 
@@ -33,7 +33,7 @@ class TestUndo {
 
     @Test
     fun testUndoTwoChild() {
-        var state = instance.parseFormulaToState("a & b", null)
+        var state = instance.parseFormulaToState("P(a) & P(b)", null)
 
         val prestateHash = state.getHash()
 
@@ -45,7 +45,7 @@ class TestUndo {
 
     @Test
     fun testUndoComplex() {
-        var state = instance.parseFormulaToState("a | !a", null)
+        var state = instance.parseFormulaToState("P(a) | !P(a)", null)
 
         val hash0 = state.getHash()
 
