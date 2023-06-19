@@ -3,7 +3,7 @@ import { DPLLState } from "../calculus/dpll";
 import { ModalTableauxState } from "../calculus/modal-tableaux";
 import { NCTableauxState } from "../calculus/nc-tableaux";
 import { FOResolutionState, PropResolutionState } from "../calculus/resolution";
-import { FOSCState, PSCState } from "../calculus/sequent";
+import { FOSequentState, PropSequentState } from "../calculus/sequent";
 import { FOTableauxState, PropTableauxState } from "../calculus/tableaux";
 
 import { AppStateAction } from "./action";
@@ -63,11 +63,11 @@ export interface AppState {
     /**
      * The current prop-sequent state
      */
-    "prop-sequent"?: PSCState;
+    "prop-sequent"?: PropSequentState;
     /**
      * The current fo-sequent state
      */
-    "fo-sequent"?: FOSCState;
+    "fo-sequent"?: FOSequentState;
     /**
      * The current signed-modal-tableaux state
      */

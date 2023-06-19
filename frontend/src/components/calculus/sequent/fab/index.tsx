@@ -1,6 +1,9 @@
 import { Statistics } from "../../../../types/app/statistics";
 import { SequentCalculusType } from "../../../../types/calculus";
-import { FOSCState, PSCState } from "../../../../types/calculus/sequent";
+import {
+    FOSequentState,
+    PropSequentState,
+} from "../../../../types/calculus/sequent";
 import { sendMove } from "../../../../util/api";
 import { useAppState } from "../../../../util/app-state";
 import DeleteIcon from "../../../icons/delete";
@@ -19,7 +22,7 @@ interface Props {
     /**
      * The current calculus state
      */
-    state: PSCState | FOSCState;
+    state: PropSequentState | FOSequentState;
     /**
      * Which node is currently selected
      */

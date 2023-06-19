@@ -201,34 +201,34 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                     <div class={style.container}>
                         <VideoTutorial
                             title="Applying rules"
-                            videoSrc="/videos/PSC_apply_Rules.mp4"
+                            videoSrc="/videos/prop_sequent_apply_rules.mp4"
                             text="Select a formula and choose a rule to apply"
                         />
                         <VideoTutorial
                             title="Ax rule"
-                            videoSrc="/videos/PSC_Ax.mp4"
+                            videoSrc="/videos/prop_sequent_ax.mp4"
                             text="Close a branch by applying the Ax rule on a node which has the same formula on both sides"
                         />
                         <VideoTutorial
                             title="Closing a proof"
-                            videoSrc="/videos/PSC_Close.mp4"
+                            videoSrc="/videos/prop_sequent_close.mp4"
                             text="When all branches are closed you can check if the proof is valid"
                         />
                         <VideoTutorial
                             title="Prune a branch"
-                            videoSrc="/videos/PSC_Prune.mp4"
+                            videoSrc="/videos/prop_sequent_prune.mp4"
                             text="Use prune to delete a whole branch"
                         />
                         <h3>Rules:</h3>
                         <h3 />
                         <img
                             class={style.rules}
-                            src="/images/PSCLeftRules.jpg"
+                            src="/images/prop_sequent_left_rules.jpg"
                             alt="Left rules"
                         />
                         <img
                             class={style.rules}
-                            src="/images/PSCRightRules.jpg"
+                            src="/images/prop_sequent_right_rules.jpg"
                             alt="Right rules"
                         />
                     </div>
@@ -237,34 +237,34 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                     <div class={style.container}>
                         <VideoTutorial
                             title="Applying rules"
-                            videoSrc="/videos/PSC_apply_Rules.mp4"
+                            videoSrc="/videos/prop_sequent_apply_rules.mp4"
                             text="Select a formula and choose a rule to apply"
                         />
                         <VideoTutorial
                             title="Ax rule"
-                            videoSrc="/videos/PSC_Ax.mp4"
+                            videoSrc="/videos/prop_sequent_ax.mp4"
                             text="Close a branch by applying the Ax rule on a node which has the same formula on both sides"
                         />
                         <VideoTutorial
                             title="Closing a proof"
-                            videoSrc="/videos/PSC_Close.mp4"
+                            videoSrc="/videos/prop_sequent_close.mp4"
                             text="When all branches are closed you can check if the proof is valid"
                         />
                         <VideoTutorial
                             title="Prune a branch"
-                            videoSrc="/videos/PSC_Prune.mp4"
+                            videoSrc="/videos/prop_sequent_prune.mp4"
                             text="Use prune to delete a whole branch"
                         />
                         <h3>Rules:</h3>
                         <h3 />
                         <img
                             class={style.rules}
-                            src="/images/FOSCLeftRules.jpg"
+                            src="/images/fo_sequent_left_rules.jpg"
                             alt="Left rules"
                         />
                         <img
                             class={style.rules}
-                            src="/images/FOSCRightRules.jpg"
+                            src="/images/fo_sequent_left_rules.jpg"
                             alt="Right rules"
                         />
                     </div>
@@ -273,27 +273,27 @@ const TutorialDialog: preact.FunctionalComponent<TutorialDialogProps> = ({
                     <div class={style.container}>
                         <VideoTutorial
                             title="Applying rules"
-                            videoSrc="/videos/Apply_Rule_MT.mp4"
+                            videoSrc="/videos/modal_tableaux_apply_rule.mp4"
                             text="Select a node and choose a rule to apply"
                         />
                         <VideoTutorial
                             title="Prefix rule"
-                            videoSrc="/videos/Prefix_MT.mp4"
+                            videoSrc="/videos/modal_tableaux_prefix.mp4"
                             text="Apply the nu or pi rule and choose a new prefix"
                         />
                         <VideoTutorial
                             title="Prune a branch"
-                            videoSrc="/videos/Prune_MT.mp4"
+                            videoSrc="/videos/modal_tableaux_prune.mp4"
                             text="Use prune to delete a whole branch"
                         />
                         <VideoTutorial
                             title="Closing a branch"
-                            videoSrc="/videos/Close_MT.mp4"
+                            videoSrc="/videos/modal_tableaux_close.mp4"
                             text="Select two nodes with a diffrent assumption but same content to close a branch"
                         />
                         <VideoTutorial
                             title="Checking a proof"
-                            videoSrc="/videos/Check_MT.mp4"
+                            videoSrc="/videos/modal_tableaux_check.mp4"
                             text="When all branches are closed you can check if the proof is valid"
                         />
                     </div>
