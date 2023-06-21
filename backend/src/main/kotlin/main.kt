@@ -6,8 +6,8 @@ import kalkulierbar.dpll.DPLL
 import kalkulierbar.nonclausaltableaux.NonClausalTableaux
 import kalkulierbar.resolution.FirstOrderResolution
 import kalkulierbar.resolution.PropositionalResolution
-import kalkulierbar.sequent.fosc.FOSC
-import kalkulierbar.sequent.psc.PSC
+import kalkulierbar.sequent.fo.FirstOrderSequent
+import kalkulierbar.sequent.prop.PropositionalSequent
 import kalkulierbar.signedtableaux.SignedModalTableaux
 import kalkulierbar.tableaux.FirstOrderTableaux
 import kalkulierbar.tableaux.PropositionalTableaux
@@ -25,8 +25,8 @@ val endpoints: Set<Calculus> = setOf<Calculus>(
     FirstOrderResolution(),
     DPLL(),
     NonClausalTableaux(),
-    PSC(),
-    FOSC(),
+    PropositionalSequent(),
+    FirstOrderSequent(),
     SignedModalTableaux()
 )
 

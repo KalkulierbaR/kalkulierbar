@@ -1,14 +1,14 @@
-package kalkulierbar.psc
+package kalkulierbar.propsequent
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.PropositionalParser
 import kalkulierbar.sequent.AndRight
-import kalkulierbar.sequent.psc.PSC
+import kalkulierbar.sequent.prop.PropositionalSequent
 import kotlin.test.*
 
 class TestAndRight {
 
-    val instance = PSC()
+    val instance = PropositionalSequent()
     val parser = PropositionalParser()
 
     @Test

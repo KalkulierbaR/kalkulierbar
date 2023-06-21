@@ -1,17 +1,17 @@
-package kalkulierbar.fosc
+package kalkulierbar.firstordersequent
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.sequent.NotRight
 import kalkulierbar.sequent.OrLeft
-import kalkulierbar.sequent.fosc.FOSC
+import kalkulierbar.sequent.fo.FirstOrderSequent
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class TestOrLeft {
 
-    val instance = FOSC()
+    val instance = FirstOrderSequent()
     val parser = FirstOrderParser()
 
     @Test

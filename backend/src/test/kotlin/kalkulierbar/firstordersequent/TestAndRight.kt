@@ -1,14 +1,14 @@
-package kalkulierbar.fosc
+package kalkulierbar.firstordersequent
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.sequent.AndRight
-import kalkulierbar.sequent.fosc.FOSC
+import kalkulierbar.sequent.fo.FirstOrderSequent
 import kotlin.test.*
 
 class TestAndRight {
 
-    val instance = FOSC()
+    val instance = FirstOrderSequent()
     val parser = FirstOrderParser()
 
     @Test

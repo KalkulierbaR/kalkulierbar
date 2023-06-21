@@ -1,11 +1,11 @@
-package kalkulierbar.fosc
+package kalkulierbar.propsequent
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.parsers.FirstOrderParser
+import kalkulierbar.parsers.PropositionalParser
 import kalkulierbar.sequent.Ax
 import kalkulierbar.sequent.NotRight
 import kalkulierbar.sequent.OrRight
-import kalkulierbar.sequent.fosc.FOSC
+import kalkulierbar.sequent.prop.PropositionalSequent
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
@@ -13,12 +13,12 @@ import kotlin.test.assertTrue
 
 class TestAx {
 
-    val instance = FOSC()
-    val parser = FirstOrderParser()
+    val instance = PropositionalSequent()
+    val parser = PropositionalParser()
 
     @Test
     fun testBasic() {
-        var state = instance.parseFormulaToState("P(a) | !P(a)", null)
+        var state = instance.parseFormulaToState("a | !a", null)
 
         state = instance.applyMoveOnState(state, OrRight(0, 0))
         state = instance.applyMoveOnState(state, NotRight(1, 1))
@@ -30,7 +30,7 @@ class TestAx {
 
     @Test
     fun testParent() {
-        var state = instance.parseFormulaToState("P(a) | !P(a)", null)
+        var state = instance.parseFormulaToState("a | !a", null)
 
         state = instance.applyMoveOnState(state, OrRight(0, 0))
         state = instance.applyMoveOnState(state, NotRight(1, 1))
@@ -45,7 +45,7 @@ class TestAx {
 
     @Test
     fun testFail() {
-        val state = instance.parseFormulaToState("P(a) | !P(a)", null)
+        val state = instance.parseFormulaToState("a | !a", null)
 
         assertFailsWith<IllegalMove> {
             instance.applyMoveOnState(state, Ax(0))

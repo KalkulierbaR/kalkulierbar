@@ -1,17 +1,17 @@
-package kalkulierbar.psc
+package kalkulierbar.propsequent
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.PropositionalParser
 import kalkulierbar.sequent.NotRight
 import kalkulierbar.sequent.OrLeft
-import kalkulierbar.sequent.psc.PSC
+import kalkulierbar.sequent.prop.PropositionalSequent
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class TestOrLeft {
 
-    val instance = PSC()
+    val instance = PropositionalSequent()
     val parser = PropositionalParser()
 
     @Test

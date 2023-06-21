@@ -1,17 +1,17 @@
-package kalkulierbar.fosc
+package kalkulierbar.firstordersequent
 
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.FirstOrderParser
 import kalkulierbar.sequent.AllLeft
 import kalkulierbar.sequent.ImpRight
-import kalkulierbar.sequent.fosc.FOSC
+import kalkulierbar.sequent.fo.FirstOrderSequent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class TestAllLeft {
-    val instance = FOSC()
+    val instance = FirstOrderSequent()
     val parser = FirstOrderParser()
     private val instTerm = "a"
 

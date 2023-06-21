@@ -1,4 +1,4 @@
-package kalkulierbar.sequent.fosc
+package kalkulierbar.sequent.fo
 
 import kalkulierbar.CloseMessage
 import kalkulierbar.IllegalMove
@@ -12,50 +12,50 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class FOSC :
+class FirstOrderSequent :
     GenericSequentCalculus,
-    ScoredCalculus<FOSCState, SequentCalculusMove, SequentCalculusParam>() {
+    ScoredCalculus<FirstOrderSequentState, SequentCalculusMove, SequentCalculusParam>() {
     override val identifier = "fo-sequent"
 
     override val serializer = Json {
         serializersModule = FoTermModule + LogicModule + SequentCalculusMoveModule
         encodeDefaults = true
     }
-    override val stateSerializer = FOSCState.serializer()
+    override val stateSerializer = FirstOrderSequentState.serializer()
     override val moveSerializer = SequentCalculusMove.serializer()
 
-    override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): FOSCState {
+    override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): FirstOrderSequentState {
         val sequents = FirstOrderSequentParser.parse(formula)
-        return FOSCState(
+        return FirstOrderSequentState(
             mutableListOf(TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())),
             params?.showOnlyApplicableRules ?: false
         )
     }
 
     @Suppress("ComplexMethod")
-    override fun applyMoveOnState(state: FOSCState, move: SequentCalculusMove): FOSCState {
+    override fun applyMoveOnState(state: FirstOrderSequentState, move: SequentCalculusMove): FirstOrderSequentState {
         // Pass moves to relevant subfunction
         return when (move) {
-            is Ax -> applyAx(state, move.nodeID) as FOSCState
-            is NotRight -> applyNotRight(state, move.nodeID, move.listIndex) as FOSCState
-            is NotLeft -> applyNotLeft(state, move.nodeID, move.listIndex) as FOSCState
-            is OrRight -> applyOrRight(state, move.nodeID, move.listIndex) as FOSCState
-            is OrLeft -> applyOrLeft(state, move.nodeID, move.listIndex) as FOSCState
-            is AndRight -> applyAndRight(state, move.nodeID, move.listIndex) as FOSCState
-            is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex) as FOSCState
-            is ImpRight -> applyImpRight(state, move.nodeID, move.listIndex) as FOSCState
-            is ImpLeft -> applyImpLeft(state, move.nodeID, move.listIndex) as FOSCState
+            is Ax -> applyAx(state, move.nodeID) as FirstOrderSequentState
+            is NotRight -> applyNotRight(state, move.nodeID, move.listIndex) as FirstOrderSequentState
+            is NotLeft -> applyNotLeft(state, move.nodeID, move.listIndex) as FirstOrderSequentState
+            is OrRight -> applyOrRight(state, move.nodeID, move.listIndex) as FirstOrderSequentState
+            is OrLeft -> applyOrLeft(state, move.nodeID, move.listIndex) as FirstOrderSequentState
+            is AndRight -> applyAndRight(state, move.nodeID, move.listIndex) as FirstOrderSequentState
+            is AndLeft -> applyAndLeft(state, move.nodeID, move.listIndex) as FirstOrderSequentState
+            is ImpRight -> applyImpRight(state, move.nodeID, move.listIndex) as FirstOrderSequentState
+            is ImpLeft -> applyImpLeft(state, move.nodeID, move.listIndex) as FirstOrderSequentState
             is AllRight -> applyAllRight(state, move.nodeID, move.listIndex, move.instTerm)
             is AllLeft -> applyAllLeft(state, move.nodeID, move.listIndex, move.instTerm)
             is ExRight -> applyExRight(state, move.nodeID, move.listIndex, move.instTerm)
             is ExLeft -> applyExLeft(state, move.nodeID, move.listIndex, move.instTerm)
-            is UndoMove -> applyUndo(state) as FOSCState
-            is PruneMove -> applyPrune(state, move.nodeID) as FOSCState
+            is UndoMove -> applyUndo(state) as FirstOrderSequentState
+            is PruneMove -> applyPrune(state, move.nodeID) as FirstOrderSequentState
             else -> throw IllegalMove("Unknown move")
         }
     }
 
-    override fun checkCloseOnState(state: FOSCState): CloseMessage {
+    override fun checkCloseOnState(state: FirstOrderSequentState): CloseMessage {
         return if (state.tree.all { it.isClosed })
             CloseMessage(true, "The proof is closed and valid in First Order Logic")
         else
@@ -77,6 +77,6 @@ class FOSC :
         }
     }
 
-    override fun scoreFromState(state: FOSCState, name: String?): Map<String, String> = stateToStat(state, name)
-    override fun formulaFromState(state: FOSCState) = state.tree[0].toString()
+    override fun scoreFromState(state: FirstOrderSequentState, name: String?): Map<String, String> = stateToStat(state, name)
+    override fun formulaFromState(state: FirstOrderSequentState) = state.tree[0].toString()
 }

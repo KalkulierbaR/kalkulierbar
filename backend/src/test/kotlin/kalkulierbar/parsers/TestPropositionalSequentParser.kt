@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class TestPSCParser {
+class TestPropositionalSequentParser {
     private val parser = PropositionalSequentParser
 
     private val invalid = listOf(

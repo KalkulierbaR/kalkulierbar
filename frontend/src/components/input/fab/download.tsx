@@ -15,7 +15,10 @@ import {
 } from "../../../types/calculus/resolution";
 import { NCTableauxState } from "../../../types/calculus/nc-tableaux";
 import { DPLLState } from "../../../types/calculus/dpll";
-import { FOSCState, PSCState } from "../../../types/calculus/sequent";
+import {
+    FOSequentState,
+    PropSequentState,
+} from "../../../types/calculus/sequent";
 import { ModalTableauxState } from "../../../types/calculus/modal-tableaux";
 
 interface Props {
@@ -29,8 +32,8 @@ interface Props {
         | FOResolutionState
         | NCTableauxState
         | DPLLState
-        | PSCState
-        | FOSCState
+        | PropSequentState
+        | FOSequentState
         | ModalTableauxState;
     /**
      * The name of the file
