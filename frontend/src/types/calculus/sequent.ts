@@ -13,7 +13,7 @@ export interface SequentNode {
     leftFormulas: FormulaNode[];
     rightFormulas: FormulaNode[];
     isClosed: boolean;
-    lastMove: PSCMove | null;
+    lastMove: PropSequentMove | null;
 }
 
 export interface FormulaNode {
@@ -32,37 +32,37 @@ export type FormulaTreeLayoutNode = FormulaNode & { id: string };
 
 export type VarAssign = KStringMap<string>;
 
-export interface PSCState {
+export interface PropSequentState {
     tree: SequentNode[];
-    moveHistory: PSCMove[];
+    moveHistory: PropSequentMove[];
     showOnlyApplicableRules: boolean;
 }
-export interface FOSCState {
+export interface FOSequentState {
     tree: SequentNode[];
-    moveHistory: PSCMove[];
+    moveHistory: PropSequentMove[];
     showOnlyApplicableRules: boolean;
 }
 
-export function instanceOfPSCState(
+export function instanceOfPropSequentState(
     object: any,
     calculus: SequentCalculusType,
-): object is PSCState {
+): object is PropSequentState {
     return "tree" in object && calculus === Calculus.propSequent;
 }
-export function instanceOfFOSCState(
+export function instanceOfFOSequentState(
     object: any,
     calculus: SequentCalculusType,
-): object is FOSCState {
+): object is FOSequentState {
     return "tree" in object && calculus === Calculus.foSequent;
 }
 
-export type PSCMove =
+export type PropSequentMove =
     | SequentAxMove
     | SequentRuleMove
     | SequentUndoMove
     | SequentPruneMove;
 
-export type FOSCMove = PSCMove | SCCloseAssignMove;
+export type FOSequentMove = PropSequentMove | SCCloseAssignMove;
 
 export interface SCCloseAssignMove {
     type: string;

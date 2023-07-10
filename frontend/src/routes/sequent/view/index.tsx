@@ -12,8 +12,8 @@ import { SequentCalculusType } from "../../../types/calculus";
 import { getFORuleSet, getNormalRuleSet } from "../../../types/calculus/rules";
 import {
     FormulaTreeLayoutNode,
-    instanceOfFOSCState,
-    instanceOfPSCState,
+    instanceOfFOSequentState,
+    instanceOfPropSequentState,
     VarAssign,
 } from "../../../types/calculus/sequent";
 import { saveStatistics, sendMove } from "../../../util/api";
@@ -61,7 +61,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
     const selectedNode =
         selectedNodeId !== undefined ? state.tree[selectedNodeId] : undefined;
 
-    const ruleOptions = instanceOfPSCState(state, calculus)
+    const ruleOptions = instanceOfPropSequentState(state, calculus)
         ? stringArrayToStringMap(ruleSetToStringArray(getNormalRuleSet()))
         : stringArrayToStringMap(ruleSetToStringArray(getFORuleSet()));
 
@@ -399,7 +399,7 @@ const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                 stats={stats}
             />
 
-            {instanceOfFOSCState(state, calculus) && (
+            {instanceOfFOSequentState(state, calculus) && (
                 <VarAssignDialog
                     open={showVarAssignDialog}
                     onClose={() => {

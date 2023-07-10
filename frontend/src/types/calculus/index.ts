@@ -7,7 +7,7 @@ import {
     PropResolutionMove,
     PropResolutionParams,
 } from "./resolution";
-import { FOSCMove, PSCMove, SequentParams } from "./sequent";
+import { FOSequentMove, PropSequentMove, SequentParams } from "./sequent";
 import {
     FOTableauxMove,
     FOTableauxParams,
@@ -77,8 +77,8 @@ export interface Move {
     "fo-resolution": FOResolutionMove;
     "nc-tableaux": NCTableauxMove;
     dpll: DPLLMove;
-    "prop-sequent": PSCMove;
-    "fo-sequent": FOSCMove;
+    "prop-sequent": PropSequentMove;
+    "fo-sequent": FOSequentMove;
     "signed-modal-tableaux": ModalTableauxMove;
 }
 
