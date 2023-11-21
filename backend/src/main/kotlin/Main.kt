@@ -1,7 +1,12 @@
 package main.kotlin
 
 import io.javalin.Javalin
-import kalkulierbar.*
+import kalkulierbar.ApiMisuseException
+import kalkulierbar.Calculus
+import kalkulierbar.KBAR_DEFAULT_PORT
+import kalkulierbar.KalkulierbarException
+import kalkulierbar.ScoredCalculus
+import kalkulierbar.Scores
 import kalkulierbar.dpll.DPLL
 import kalkulierbar.nonclausaltableaux.NonClausalTableaux
 import kalkulierbar.resolution.FirstOrderResolution
@@ -32,13 +37,15 @@ val endpoints: Set<Calculus> = setOf<Calculus>(
 
 fun main(args: Array<String>) {
     // Verify that all calculus implementations have unique names
-    if (endpoints.size != endpoints.map { it.identifier }.distinct().size)
+    if (endpoints.size != endpoints.map { it.identifier }.distinct().size) {
         throw KalkulierbarException("Set of active calculus implementations contains duplicate identifiers")
-
+    }
     // Verify that no calculus is overriding /admin and /config endpoints
-    if (endpoints.any { it.identifier == "admin" || it.identifier == "config" || it.identifier == "stats" })
-        throw KalkulierbarException("Set of active calculi contains forbidden identifiers \"admin\", \"config\" or \"stats\"")
-
+    if (endpoints.any { it.identifier == "admin" || it.identifier == "config" || it.identifier == "stats" }) {
+        throw KalkulierbarException(
+            "Set of active calculi contains forbidden identifiers \"admin\", \"config\" or \"stats\""
+        )
+    }
     // Pass list of available calculi to StateKeeper
     StateKeeper.importAvailable(endpoints.map { it.identifier })
 
@@ -227,10 +234,11 @@ fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
 fun getParam(map: Map<String, List<String>>, key: String, optional: Boolean = false): String? {
     val lst = map[key]
 
-    if (lst == null && !optional)
+    if (lst == null && !optional) {
         throw ApiMisuseException("POST parameter '$key' needs to be present")
-    else if (lst == null)
+    } else if (lst == null) {
         return null
+    }
 
     return lst[0]
 }

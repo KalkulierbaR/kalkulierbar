@@ -51,10 +51,19 @@ class TestPropositionalJson {
     @Test
     fun testJsonStateEmpty() {
         val json =
-            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"b","negated":false}]},{"atoms":[{"lit":"a","negated":true}]},{"atoms":[{"lit":"b","negated":true}]}]},"type":"UNCONNECTED","regular":false,"backtracking":false,"tree":[{"parent":null,"spelling":"true","negated":false,"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],"backtracking":false,"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},
+                |{"lit":"b","negated":false}]},{"atoms":[{"lit":"a","negated":true}]},
+                |{"atoms":[{"lit":"b","negated":true}]}]},
+                |"type":"UNCONNECTED","regular":false,"backtracking":false,
+                |"tree":[{"parent":null,"spelling":"true","negated":false,
+                |"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],
+                |"backtracking":false,
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+                .trimMargin()
         val state = instance.jsonToState(json)
         assertEquals(
-            "tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!a}, {!b}|[true;p;null;-;l;o;()]|[]",
+            "tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!a}, {!b}|" +
+                "[true;p;null;-;l;o;()]|[]",
             state.getHash()
         )
     }
@@ -62,7 +71,15 @@ class TestPropositionalJson {
     @Test
     fun testJsonStateCorrupt() {
         val json =
-            """{"clauseSet":{"clauses":"atoms":[{"lit":"a","negated":false},{"lit":"b","negated":false}]},{"atoms":[{"lit":"a","negated":true}]},{"atoms":[{"lit":"b","negated":true}]}]},"type":"UNCONNECTED","regular":false,"backtracking":false,"tree":[{"parent":null,"spelling":"true","negated":false,"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],"backtracking":false,"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+            """{"clauseSet":{"clauses":"atoms":[{"lit":"a","negated":false},
+                |{"lit":"b","negated":false}]},{"atoms":[{"lit":"a","negated":true}]},
+                |{"atoms":[{"lit":"b","negated":true}]}]},"type":"UNCONNECTED",
+                |"regular":false,"backtracking":false,"tree":
+                |[{"parent":null,"spelling":"true","negated":false,
+                |"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],
+                |"backtracking":false,
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+                .trimMargin()
 
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
@@ -72,7 +89,15 @@ class TestPropositionalJson {
     @Test
     fun testJsonStateMissingField() {
         val json =
-            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{negated":false}]},{"atoms":[{"lit":"a","negated":true}]},{"atoms":[{"lit":"b","negated":true}]}]},"type":"UNCONNECTED","regular":false,"backtracking":false,"tree":[{"parent":null,"spelling":"true","negated":false,"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],"backtracking":false,"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},
+                |{negated":false}]},{"atoms":[{"lit":"a","negated":true}]},
+                |{"atoms":[{"lit":"b","negated":true}]}]},"type":"UNCONNECTED",
+                |"regular":false,"backtracking":false,"tree":
+                |[{"parent":null,"spelling":"true","negated":false,
+                |"isClosed":false,"closeRef":null,"children":[]}],
+                |"moveHistory":[],"backtracking":false,
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+                .trimMargin()
 
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
@@ -82,7 +107,14 @@ class TestPropositionalJson {
     @Test
     fun testJsonStateModify() {
         val json =
-            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},{"lit":"c","negated":false}]},{"atoms":[{"lit":"a","negated":true}]},{"atoms":[{"lit":"b","negated":true}]}]},"type":"UNCONNECTED","regular":false,"backtracking":false,"tree":[{"parent":null,"spelling":"true","negated":false,"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],"backtracking":false,"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false}
+                |,{"lit":"c","negated":false}]},{"atoms":[{"lit":"a","negated":true}]},
+                |{"atoms":[{"lit":"b","negated":true}]}]},"type":"UNCONNECTED","regular":false,
+                |"backtracking":false,"tree":[{"parent":null,"spelling":"true","negated":false,
+                |"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],
+                |"backtracking":false,
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+                .trimMargin()
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
@@ -91,7 +123,14 @@ class TestPropositionalJson {
     @Test
     fun testJsonStateTypeMismatch() {
         val json =
-            """{"clauseSet":{"clauses":[{"atoms":[{"lit":3,"negated":false},{"lit":"b","negated":false}]},{"atoms":[{"lit":"a","negated":true}]},{"atoms":[{"lit":"b","negated":true}]}]},"type":"UNCONNECTED","regular":false,"backtracking":false,"tree":[{"parent":null,"spelling":"true","negated":false,"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],"backtracking":false,"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+            """{"clauseSet":{"clauses":[{"atoms":[{"lit":3,"negated":false},
+                |{"lit":"b","negated":false}]},{"atoms":[{"lit":"a","negated":true}]},
+                |{"atoms":[{"lit":"b","negated":true}]}]},"type":"UNCONNECTED","regular":false,
+                |"backtracking":false,"tree":[{"parent":null,"spelling":"true","negated":false,
+                |"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],
+                |"backtracking":false,
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
+                .trimMargin()
 
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)

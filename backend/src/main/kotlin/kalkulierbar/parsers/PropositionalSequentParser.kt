@@ -40,10 +40,11 @@ object PropositionalSequentParser {
             try {
                 ChangeEquivalences.transform(PropositionalParser().parse(formula, inputPosition))
             } catch (e: EmptyFormulaException) {
-                if (i != 0 || rawFormulas.size != 1)
+                if (i != 0 || rawFormulas.size != 1) {
                     throw InvalidFormulaFormat("Empty formula at char $inputPosition")
-                else
+                } else {
                     null
+                }
             }
         }
     }

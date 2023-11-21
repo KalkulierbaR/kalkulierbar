@@ -3,7 +3,6 @@ package statekeeper
 import kalkulierbar.JsonParseException
 import kalkulierbar.KalkulierbarException
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.komputing.khash.keccak.KeccakParameter
@@ -33,8 +32,9 @@ object StateKeeper {
             if (storage.createNewFile()) {
                 state = AppState()
                 flush()
-            } else
+            } else {
                 state = Json.decodeFromString(storage.readText())
+            }
         } catch (e: Exception) {
             val msg = "Could not parse stored state: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -67,8 +67,9 @@ object StateKeeper {
      */
     fun checkCredentials(mac: String): String {
         val fingerprint = "kbcc"
-        if (!verifyMAC(fingerprint, mac))
+        if (!verifyMAC(fingerprint, mac)) {
             throw AuthenticationException("Invalid password")
+        }
 
         return "true"
     }
@@ -85,8 +86,9 @@ object StateKeeper {
      */
     fun setCalculusState(calculus: String, enableString: String, mac: String): String {
         val fingerprint = "kbsc|$calculus|$enableString"
-        if (!verifyMAC(fingerprint, mac))
+        if (!verifyMAC(fingerprint, mac)) {
             throw AuthenticationException("Invalid password")
+        }
 
         val enable = (enableString == "true")
 
@@ -113,8 +115,9 @@ object StateKeeper {
         val fingerprint = "kbae|$example"
         val parsedExample: Example
 
-        if (!verifyMAC(fingerprint, mac))
+        if (!verifyMAC(fingerprint, mac)) {
             throw AuthenticationException("Invalid password")
+        }
 
         try {
             parsedExample = Json.decodeFromString(example)
@@ -143,13 +146,15 @@ object StateKeeper {
     @Suppress("ThrowsCount")
     fun delExample(exampleIdString: String, mac: String): String {
         val fingerprint = "kbde|$exampleIdString"
-        if (!verifyMAC(fingerprint, mac))
+        if (!verifyMAC(fingerprint, mac)) {
             throw AuthenticationException("Invalid password")
+        }
 
         try {
             val id = exampleIdString.toInt()
-            if (id < 0 || id >= state.examples.size)
+            if (id < 0 || id >= state.examples.size) {
                 throw JsonParseException("Example with ID $id does not exist")
+            }
             state.examples.removeAt(id)
             flush()
         } catch (e: NumberFormatException) {
@@ -201,19 +206,24 @@ object StateKeeper {
      */
     @Suppress("ThrowsCount")
     private fun checkSanity(ex: Example) {
-        if (ex.name.length > EXAMPLE_NAME_SIZE)
+        if (ex.name.length > EXAMPLE_NAME_SIZE) {
             throw StorageLimitHit("Example name exceeds size limit of $EXAMPLE_NAME_SIZE B")
-        if (ex.description.length > EXAMPLE_DESC_SIZE)
+        }
+        if (ex.description.length > EXAMPLE_DESC_SIZE) {
             throw StorageLimitHit("Example description exceeds size limit of $EXAMPLE_DESC_SIZE B")
-        if (ex.formula.length > EXAMPLE_FORMULA_SIZE)
+        }
+        if (ex.formula.length > EXAMPLE_FORMULA_SIZE) {
             throw StorageLimitHit("Example formula exceeds size limit of $EXAMPLE_FORMULA_SIZE B")
-        if (ex.params.length > EXAMPLE_PARAM_SIZE)
+        }
+        if (ex.params.length > EXAMPLE_PARAM_SIZE) {
             throw StorageLimitHit("Example parameters exceed size limit of $EXAMPLE_PARAM_SIZE B")
-        if (ex.calculus.length > EXAMPLE_CALC_NAME_SIZE)
+        }
+        if (ex.calculus.length > EXAMPLE_CALC_NAME_SIZE) {
             throw StorageLimitHit("Example calculus name exceeds size limit of $EXAMPLE_CALC_NAME_SIZE B")
-
-        if (state.examples.size >= MAX_EXAMPLE_COUNT)
+        }
+        if (state.examples.size >= MAX_EXAMPLE_COUNT) {
             throw StorageLimitHit("Maximum number of stored examples ($MAX_EXAMPLE_COUNT) exceeded")
+        }
     }
 }
 

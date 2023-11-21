@@ -33,8 +33,10 @@ class NcTableauxState(
         // Set isClosed to true for all nodes dominated by node in reverse tree
         while (node == tree[nodeID] || node.children.fold(true) { acc, e -> acc && tree[e].isClosed }) {
             node.isClosed = true
-            if (node.parent == null)
+            if (node.parent == null) {
                 break
+            }
+
             node = tree[node.parent!!]
         }
 

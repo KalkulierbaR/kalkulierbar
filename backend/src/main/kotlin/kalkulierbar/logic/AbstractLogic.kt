@@ -56,8 +56,9 @@ abstract class UnaryOp : LogicNode() {
     }
 
     override fun synEq(other: Any?): Boolean {
-        if (other == null || other !is UnaryOp)
+        if (other == null || other !is UnaryOp) {
             return false
+        }
 
         return this.child.synEq(other.child)
     }
@@ -69,18 +70,22 @@ abstract class Quantifier : UnaryOp() {
 
     @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
-        if (other == null || other !is Quantifier)
+        if (other == null || other !is Quantifier) {
             return false
+        }
 
-        if (this.varName != other.varName)
+        if (this.varName != other.varName) {
             return false
+        }
 
-        if (this.boundVariables.size != other.boundVariables.size)
+        if (this.boundVariables.size != other.boundVariables.size) {
             return false
+        }
 
         for (i in this.boundVariables.indices) {
-            if (!this.boundVariables[i].synEq(other.boundVariables[i]))
+            if (!this.boundVariables[i].synEq(other.boundVariables[i])) {
                 return false
+            }
         }
         return true
     }

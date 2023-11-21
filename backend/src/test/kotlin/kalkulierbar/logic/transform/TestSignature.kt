@@ -8,8 +8,10 @@ import kotlin.test.assertFails
 class TestSignature {
     private val validFormulas = mapOf(
         "P(f(a, b))" to "Σ(constants={a, b}, functions={f(2)}, relations={P(1)}, bound={})",
-        "P(a, g(f(f(f(a))), b, f(c))) & Q(a, b, c)" to "Σ(constants={a, b, c}, functions={f(1), g(3)}, relations={P(2), Q(3)}, bound={})",
-        "/all X: /all Y: /all Z: (P(X, Y) & P(Y, Z) -> P(X, Z)) & P(a, f(a, a)) & P(f(a, a), g(a, a, a, a))" to "Σ(constants={a}, functions={f(2), g(4)}, relations={P(2)}, bound={X, Y, Z})"
+        "P(a, g(f(f(f(a))), b, f(c))) & Q(a, b, c)"
+            to "Σ(constants={a, b, c}, functions={f(1), g(3)}, relations={P(2), Q(3)}, bound={})",
+        "/all X: /all Y: /all Z: (P(X, Y) & P(Y, Z) -> P(X, Z)) & P(a, f(a, a)) & P(f(a, a), g(a, a, a, a))"
+            to "Σ(constants={a}, functions={f(2), g(4)}, relations={P(2)}, bound={X, Y, Z})"
     )
 
     private val mixedArity = listOf(
@@ -59,11 +61,13 @@ class TestSignature {
             val cs = FirstOrderCNF.transform(formula)
             val csSig = Signature.of(cs)
 
-            if (csSig.boundVariables.isEmpty())
+            if (csSig.boundVariables.isEmpty()) {
                 assertEquals(signature(expected), csSig)
-            else assertEquals(
-                signature(expected), csSig
-            )
+            } else {
+                assertEquals(
+                    signature(expected), csSig
+                )
+            }
         }
     }
 

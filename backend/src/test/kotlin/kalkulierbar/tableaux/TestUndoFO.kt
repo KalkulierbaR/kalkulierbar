@@ -7,7 +7,12 @@ import kotlin.test.assertEquals
 class TestUndoFO {
 
     val instance = FirstOrderTableaux()
-    private val param = FoTableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = true, manualVarAssign = false)
+    private val param = FoTableauxParam(
+        TableauxType.UNCONNECTED,
+        regular = false,
+        backtracking = true,
+        manualVarAssign = false
+    )
     private val paramManual = FoTableauxParam(
         TableauxType.UNCONNECTED,
         regular = false,

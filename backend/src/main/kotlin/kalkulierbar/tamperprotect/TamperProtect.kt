@@ -7,6 +7,7 @@ import org.komputing.khash.keccak.extensions.digestKeccak
  * Helper class to ensure state integrity
  * Calculates and verifies a cryptographic checksum over a state fingerprint
  * Technically a HMAC with a not strictly speaking secret key
+ *
  * Note:
  * This is designed to protect against semi-accidental misuse, _not_ active malicious interference
  */

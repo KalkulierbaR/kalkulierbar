@@ -4,7 +4,11 @@ import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.PropositionalParser
 import kalkulierbar.sequent.AndRight
 import kalkulierbar.sequent.prop.PropositionalSequent
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class TestAndRight {
 

@@ -43,7 +43,7 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
     /**
      * Takes a state and evaluates whether it is valid
      * @param state The current state
-     * @return Whether or not it is valid
+     * @return Whether it is valid
      */
     open fun validateOnState(state: State): Boolean {
         return true
@@ -96,9 +96,9 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
             val parsed: State = serializer.decodeFromString(stateSerializer, json)
 
             // Ensure valid, unmodified state object
-            if (parsed is ProtectedState && !parsed.verifySeal())
+            if (parsed is ProtectedState && !parsed.verifySeal()) {
                 throw JsonParseException("Invalid tamper protection seal, state object appears to have been modified")
-
+            }
             return parsed
         } catch (e: Exception) {
             val msg = "Could not parse JSON state: "
@@ -112,8 +112,9 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @return JSON state representation
      */
     open fun stateToJson(state: State): String {
-        if (state is ProtectedState)
+        if (state is ProtectedState) {
             state.computeSeal()
+        }
         return serializer.encodeToString(stateSerializer, state)
     }
 

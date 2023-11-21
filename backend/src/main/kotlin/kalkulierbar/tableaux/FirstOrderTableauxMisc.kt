@@ -48,8 +48,9 @@ class FoTableauxState(
      */
     override fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
         val node = tree[nodeID]
-        if (node.parent == null || !node.isLeaf || node.negated == tree[node.parent].negated)
+        if (node.parent == null || !node.isLeaf || node.negated == tree[node.parent].negated) {
             return false
+        }
         val parent = tree[node.parent]
 
         return try {

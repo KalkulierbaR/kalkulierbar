@@ -3,8 +3,14 @@ package kalkulierbar.logic.transform
 import kalkulierbar.IncorrectArityException
 import kalkulierbar.UnknownFunctionException
 import kalkulierbar.clause.ClauseSet
-import kalkulierbar.logic.*
+import kalkulierbar.logic.Constant
+import kalkulierbar.logic.ExistentialQuantifier
+import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.QuantifiedVariable
+import kalkulierbar.logic.Relation
+import kalkulierbar.logic.UniversalQuantifier
 
 data class CompoundSignature(val name: String, val arity: Int) {
     override fun toString(): String {
@@ -207,6 +213,7 @@ class SignatureAdherenceChecker(
         }
     }
 
+    @Suppress("EmptyFunctionBlock")
     override fun visit(node: QuantifiedVariable) {}
 
     override fun visit(node: Function) {

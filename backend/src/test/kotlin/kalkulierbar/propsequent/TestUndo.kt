@@ -1,7 +1,11 @@
 package kalkulierbar.propsequent
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.sequent.*
+import kalkulierbar.sequent.AndRight
+import kalkulierbar.sequent.Ax
+import kalkulierbar.sequent.NotRight
+import kalkulierbar.sequent.OrRight
+import kalkulierbar.sequent.UndoMove
 import kalkulierbar.sequent.prop.PropositionalSequent
 import kotlin.test.Test
 import kotlin.test.assertEquals

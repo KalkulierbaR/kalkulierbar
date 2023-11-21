@@ -32,10 +32,11 @@ class PrenexNormalForm : DoNothingVisitor() {
             // re-create quantifier prefix from saved data
             instance.quantifiers.asReversed().forEach {
                 val (varName, isUniversal, boundVars) = it
-                res = if (isUniversal)
+                res = if (isUniversal) {
                     UniversalQuantifier(varName, res, boundVars)
-                else
+                } else {
                     ExistentialQuantifier(varName, res, boundVars)
+                }
             }
 
             return res
@@ -53,11 +54,12 @@ class PrenexNormalForm : DoNothingVisitor() {
      */
     override fun visit(node: UniversalQuantifier): LogicNode {
 
-        if (encounteredVars.contains(node.varName))
+        if (encounteredVars.contains(node.varName)) {
             throw FormulaConversionException(
                 "Prenex Normal Form conversion encountered " +
                     "double-binding of variable '${node.varName}'"
             )
+        }
 
         quantifiers.add(Triple(node.varName, true, node.boundVariables))
         encounteredVars.add(node.varName)
@@ -73,11 +75,12 @@ class PrenexNormalForm : DoNothingVisitor() {
      */
     override fun visit(node: ExistentialQuantifier): LogicNode {
 
-        if (encounteredVars.contains(node.varName))
+        if (encounteredVars.contains(node.varName)) {
             throw FormulaConversionException(
                 "Prenex Normal Form conversion encountered " +
                     " double-binding of variable '${node.varName}'"
             )
+        }
 
         quantifiers.add(Triple(node.varName, false, node.boundVariables))
         encounteredVars.add(node.varName)

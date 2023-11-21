@@ -1,8 +1,14 @@
 package kalkulierbar.logic.transform
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.*
+import kalkulierbar.logic.Constant
+import kalkulierbar.logic.ExistentialQuantifier
+import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.QuantifiedVariable
+import kalkulierbar.logic.Relation
+import kalkulierbar.logic.UniversalQuantifier
 
 /**
  * Visitor-based Skolemization transformation
@@ -58,11 +64,12 @@ class Skolemization(private val signature: Signature) : DoNothingVisitor() {
      */
     override fun visit(node: ExistentialQuantifier): LogicNode {
 
-        if (quantifierScope.size > quantifierScope.distinctBy { it.varName }.size)
+        if (quantifierScope.size > quantifierScope.distinctBy { it.varName }.size) {
             throw FormulaConversionException(
                 "Double-bound universally quantified variable encountered " +
                     "during Skolemization"
             )
+        }
 
         val term = getSkolemTerm()
 
@@ -99,8 +106,9 @@ class Skolemization(private val signature: Signature) : DoNothingVisitor() {
             skolemName = "sk$skolemCounter"
         }
 
-        if (quantifierScope.size == 0)
+        if (quantifierScope.size == 0) {
             return Constant(skolemName)
+        }
 
         val argList = mutableListOf<FirstOrderTerm>()
 

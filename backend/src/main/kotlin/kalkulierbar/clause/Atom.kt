@@ -16,21 +16,23 @@ data class Atom<AtomType>(val lit: AtomType, val negated: Boolean = false) : Syn
 
         if (other is Atom<*> && other.negated == negated) {
             // Use syntactic equality for literal comparison if defined
-            eq = if (lit is SyntacticEquality)
+            eq = if (lit is SyntacticEquality) {
                 lit.synEq(other.lit)
-            else
-                (lit == other.lit)
+            } else {
+                lit == other.lit
+            }
         }
 
         return eq
     }
 
     override fun clone(): Atom<AtomType> {
-        return if (lit is SyntacticEquality)
+        return if (lit is SyntacticEquality) {
             @Suppress("UNCHECKED_CAST")
             Atom(lit.clone() as AtomType, negated)
-        else
+        } else {
             Atom(lit, negated)
+        }
     }
 
     /**

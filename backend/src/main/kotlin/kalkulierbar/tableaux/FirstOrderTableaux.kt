@@ -26,9 +26,9 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
     override fun parseFormulaToState(formula: String, params: FoTableauxParam?): FoTableauxState {
         val clauses = FirstOrderCNF.transform(FirstOrderParser.parse(formula))
 
-        if (params == null)
+        if (params == null) {
             return FoTableauxState(clauses, formula)
-
+        }
         return FoTableauxState(
             clauses,
             formula,
@@ -60,13 +60,13 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
      * @return Equivalent state with the most recent rule application removed
      */
     private fun applyMoveUndo(state: FoTableauxState): FoTableauxState {
-        if (!state.backtracking)
+        if (!state.backtracking) {
             throw IllegalMove("Backtracking is not enabled for this proof")
-
+        }
         // Can't undo any more moves in initial state
-        if (state.moveHistory.isEmpty())
+        if (state.moveHistory.isEmpty()) {
             return state
-
+        }
         // Create a fresh clone-state with the same parameters and input formula
         val params = FoTableauxParam(state.type, state.regular, state.backtracking, state.manualVarAssign)
         var freshState = parseFormulaToState(state.formula, params)
