@@ -27,10 +27,11 @@ object Scoreboard {
     init {
         @Suppress("TooGenericExceptionCaught")
         data = try {
-            if (READONLY || !storage.exists())
+            if (READONLY || !storage.exists()) {
                 mutableMapOf()
-            else
+            } else {
                 Json.decodeFromString(storage.readText())
+            }
         } catch (e: Exception) {
             val msg = "Could not parse stored scoreboard: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -44,13 +45,14 @@ object Scoreboard {
     }
 
     fun addScore(calculus: String, formula: String, score: Map<String, String>) {
-        if (READONLY)
+        if (READONLY) {
             return
+        }
 
         checkSanity(calculus, formula, score)
-        if (scoreboardCounter >= SCORE_MAX_NUM_SCOREBOARDS)
+        if (scoreboardCounter >= SCORE_MAX_NUM_SCOREBOARDS) {
             cleanScoreboards()
-
+        }
         val calculusScores = data.getOrPut(calculus) { mutableMapOf() }
         val formulaScores = calculusScores.getOrPut(formula) { scoreboardCounter += 1; mutableListOf() }
 
@@ -73,8 +75,9 @@ object Scoreboard {
         scoreboard.sortByDescending {
             it["Score"]?.toInt() ?: 0
         }
-        if (scoreboard.size > SCORE_MAX_ENTRIES_PER_FORMULA)
+        if (scoreboard.size > SCORE_MAX_ENTRIES_PER_FORMULA) {
             scoreboard.removeLast()
+        }
     }
 
     /**
@@ -83,24 +86,30 @@ object Scoreboard {
      */
     @Suppress("ThrowsCount")
     private fun checkSanity(calculus: String, formula: String, score: Map<String, String>) {
-        if (score.size > SCORE_MAX_FIELD_COUNT)
+        if (score.size > SCORE_MAX_FIELD_COUNT) {
             throw StorageLimitHit("Score objects exceeds field limit of $SCORE_MAX_FIELD_COUNT fields")
-        if (formula.length > SCORE_MAX_FORMULA_SIZE)
+        }
+        if (formula.length > SCORE_MAX_FORMULA_SIZE) {
             throw StorageLimitHit("Formula exceed size limit of $SCORE_MAX_FORMULA_SIZE B")
-        if (calculus.length > SCORE_MAX_CALC_NAME_SIZE)
+        }
+        if (calculus.length > SCORE_MAX_CALC_NAME_SIZE) {
             throw StorageLimitHit("Example calculus name exceeds size limit of $SCORE_MAX_CALC_NAME_SIZE B")
-        if (score.keys.any { it.length > SCORE_MAX_KEY_SIZE })
+        }
+        if (score.keys.any { it.length > SCORE_MAX_KEY_SIZE }) {
             throw StorageLimitHit("Score object key exceeds size limit of $SCORE_MAX_KEY_SIZE B")
-        if (score.values.any { it.length > SCORE_MAX_VALUE_SIZE })
+        }
+        if (score.values.any { it.length > SCORE_MAX_VALUE_SIZE }) {
             throw StorageLimitHit("Score object value exceeds size limit of $SCORE_MAX_VALUE_SIZE B")
+        }
     }
 
     /**
      * Save the current scoreboard data to the scoreboard file
      */
     private fun flush() {
-        if (!storage.exists())
+        if (!storage.exists()) {
             storage.createNewFile()
+        }
         storage.writeText(Json.encodeToString(data))
         flushScheduled = false
     }
@@ -114,7 +123,8 @@ object Scoreboard {
         }.toMutableMap()
         scoreboardCounter = data.values.sumOf { it.size }
 
-        if (scoreboardCounter >= SCORE_MAX_NUM_SCOREBOARDS)
+        if (scoreboardCounter >= SCORE_MAX_NUM_SCOREBOARDS) {
             throw StorageLimitHit("Maximum scoreboard count of $SCORE_MAX_NUM_SCOREBOARDS exceeded")
+        }
     }
 }

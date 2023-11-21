@@ -27,10 +27,11 @@ object Stats {
     init {
         @Suppress("TooGenericExceptionCaught")
         data = try {
-            if (!storage.exists())
+            if (!storage.exists()) {
                 StatContainer()
-            else
+            } else {
                 Json.decodeFromString(storage.readText())
+            }
         } catch (e: Exception) {
             val msg = "Could not parse stored stats: "
             throw JsonParseException(msg + (e.message ?: "Unknown error"))
@@ -52,8 +53,9 @@ object Stats {
      * Save the current stats to the stat file
      */
     private fun flush() {
-        if (!storage.exists())
+        if (!storage.exists()) {
             storage.createNewFile()
+        }
         storage.writeText(Json.encodeToString(data))
         flushScheduled = false
     }

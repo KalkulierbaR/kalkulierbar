@@ -41,9 +41,9 @@ class DPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         // (-> every proper leaf is either closed or has a model)
         val done = state.tree.all { !it.isLeaf || it.isAnnotation }
 
-        val msg = if (closed)
+        val msg = if (closed) {
             "The proof is closed and proves the unsatisfiability of the clause set"
-        else {
+        } else {
             val donemsg = if (done) "- however, all branches are completed. The clause set is satisfiable." else "yet."
             "The proof is not closed $donemsg"
         }

@@ -82,9 +82,9 @@ private fun instantiate(
     clauseID: Int,
     varAssign: Map<String, FirstOrderTerm>
 ) {
-    if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size)
+    if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size) {
         throw IllegalMove("There is no clause with id $clauseID")
-
+    }
     val baseClause = state.clauseSet.clauses[clauseID]
     val newClause = instantiateReturn(baseClause, varAssign)
 
@@ -140,10 +140,12 @@ fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
     val clauses = state.clauseSet.clauses
 
     // Verify that clause id is valid
-    if (clauseID < 0 || clauseID >= clauses.size)
+    if (clauseID < 0 || clauseID >= clauses.size) {
         throw IllegalMove("There is no clause with id $clauseID")
-    if (atomIDs.size < 2)
+    }
+    if (atomIDs.size < 2) {
         throw IllegalMove("Please select more than 1 atom to factorize")
+    }
     // Verification of correct ID in atoms -> unifySingleClause
 
     var newClause = clauses[clauseID].clone()
@@ -157,11 +159,12 @@ fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
             newClause = instantiateReturn(newClause, mgu)
 
             // Check equality of both atoms
-            if (newClause.atoms[firstID] != newClause.atoms[secondID])
+            if (newClause.atoms[firstID] != newClause.atoms[secondID]) {
                 throw IllegalMove(
                     "Atoms '${newClause.atoms[firstID]}' and '${newClause.atoms[secondID]}'" +
                         " are not equal after instantiation"
                 )
+            }
 
             // Change every unified atom to placeholder (except last) -> later remove all placeholder
             // -> One Atom remains
@@ -194,9 +197,9 @@ fun hyper(
     // Checks for correct clauseID and IDs in Map
     checkHyperID(state, mainID, atomMap)
 
-    if (atomMap.isEmpty())
+    if (atomMap.isEmpty()) {
         throw IllegalMove("Please select side premisses for hyper resolution")
-
+    }
     val clauses = state.clauseSet.clauses
     val mainPremiss = clauses[mainID].clone()
 
@@ -209,9 +212,9 @@ fun hyper(
         sidePremisses.add(sidePremiss)
 
         // Check side premiss for positiveness
-        if (!sidePremiss.isPositive())
+        if (!sidePremiss.isPositive()) {
             throw IllegalMove("Side premiss $sidePremiss is not positive")
-
+        }
         relations.add(Pair(mainPremiss.atoms[mAtomID].lit, sidePremiss.atoms[sAtomID].lit))
     }
 
@@ -243,9 +246,9 @@ fun hyper(
     }
 
     // Check there are no negative atoms anymore
-    if (!newMainPremiss.isPositive())
+    if (!newMainPremiss.isPositive()) {
         throw IllegalMove("Resulting clause $mainPremiss is not positive")
-
+    }
     // Add resolved clause to clause set
     clauses.add(newMainPremiss)
     state.newestNode = clauses.size - 1
@@ -262,13 +265,15 @@ fun hyper(
 private fun unifySingleClause(clause: Clause<Relation>, a1: Int, a2: Int): Map<String, FirstOrderTerm> {
     val atoms = clause.atoms
     // Verify that atom ids are valid
-    if (a1 == a2)
+    if (a1 == a2) {
         throw IllegalMove("Cannot unify an atom with itself")
-    if (a1 < 0 || a1 >= atoms.size)
+    }
+    if (a1 < 0 || a1 >= atoms.size) {
         throw IllegalMove("There is no atom with id $a1")
-    if (a2 < 0 || a2 >= atoms.size)
+    }
+    if (a2 < 0 || a2 >= atoms.size) {
         throw IllegalMove("There is no atom with id $a2")
-
+    }
     val literal1 = atoms[a1].lit
     val literal2 = atoms[a2].lit
     val mgu: Map<String, FirstOrderTerm>

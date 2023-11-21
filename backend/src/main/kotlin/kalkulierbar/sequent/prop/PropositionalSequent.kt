@@ -6,12 +6,38 @@ import kalkulierbar.JsonParseException
 import kalkulierbar.ScoredCalculus
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.PropositionalSequentParser
-import kalkulierbar.sequent.*
-import kotlinx.serialization.decodeFromString
+import kalkulierbar.sequent.AndLeft
+import kalkulierbar.sequent.AndRight
+import kalkulierbar.sequent.Ax
+import kalkulierbar.sequent.GenericSequentCalculus
+import kalkulierbar.sequent.ImpLeft
+import kalkulierbar.sequent.ImpRight
+import kalkulierbar.sequent.NotLeft
+import kalkulierbar.sequent.NotRight
+import kalkulierbar.sequent.OrLeft
+import kalkulierbar.sequent.OrRight
+import kalkulierbar.sequent.PruneMove
+import kalkulierbar.sequent.SequentCalculusMove
+import kalkulierbar.sequent.SequentCalculusMoveModule
+import kalkulierbar.sequent.SequentCalculusParam
+import kalkulierbar.sequent.TreeNode
+import kalkulierbar.sequent.UndoMove
+import kalkulierbar.sequent.applyAndLeft
+import kalkulierbar.sequent.applyAndRight
+import kalkulierbar.sequent.applyAx
+import kalkulierbar.sequent.applyImpLeft
+import kalkulierbar.sequent.applyImpRight
+import kalkulierbar.sequent.applyNotLeft
+import kalkulierbar.sequent.applyNotRight
+import kalkulierbar.sequent.applyOrLeft
+import kalkulierbar.sequent.applyOrRight
+import kalkulierbar.sequent.applyPrune
+import kalkulierbar.sequent.applyUndo
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class PropositionalSequent : GenericSequentCalculus, ScoredCalculus<PropositionalSequentState, SequentCalculusMove, SequentCalculusParam>() {
+class PropositionalSequent : GenericSequentCalculus,
+    ScoredCalculus<PropositionalSequentState, SequentCalculusMove, SequentCalculusParam>() {
     override val identifier = "prop-sequent"
 
     override val serializer = Json {
@@ -30,7 +56,10 @@ class PropositionalSequent : GenericSequentCalculus, ScoredCalculus<Propositiona
     }
 
     @Suppress("ComplexMethod")
-    override fun applyMoveOnState(state: PropositionalSequentState, move: SequentCalculusMove): PropositionalSequentState {
+    override fun applyMoveOnState(
+        state: PropositionalSequentState,
+        move: SequentCalculusMove
+    ): PropositionalSequentState {
         // Pass moves to relevant subfunction
         return when (move) {
             is Ax -> applyAx(state, move.nodeID) as PropositionalSequentState
@@ -49,10 +78,11 @@ class PropositionalSequent : GenericSequentCalculus, ScoredCalculus<Propositiona
     }
 
     override fun checkCloseOnState(state: PropositionalSequentState): CloseMessage {
-        return if (state.tree.all { it.isClosed })
+        return if (state.tree.all { it.isClosed }) {
             CloseMessage(true, "The proof is closed and valid in Propositional Logic")
-        else
+        } else {
             CloseMessage(false, "Not all branches of the proof tree are closed")
+        }
     }
 
     /*
@@ -70,6 +100,9 @@ class PropositionalSequent : GenericSequentCalculus, ScoredCalculus<Propositiona
         }
     }
 
-    override fun scoreFromState(state: PropositionalSequentState, name: String?): Map<String, String> = stateToStat(state, name)
+    override fun scoreFromState(
+        state: PropositionalSequentState,
+        name: String?
+    ): Map<String, String> = stateToStat(state, name)
     override fun formulaFromState(state: PropositionalSequentState) = state.tree[0].toString()
 }

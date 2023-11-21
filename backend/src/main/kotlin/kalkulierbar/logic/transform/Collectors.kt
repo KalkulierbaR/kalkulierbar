@@ -1,7 +1,12 @@
 package kalkulierbar.logic.transform
 
-import kalkulierbar.logic.*
+import kalkulierbar.logic.Constant
+import kalkulierbar.logic.ExistentialQuantifier
 import kalkulierbar.logic.Function
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.QuantifiedVariable
+import kalkulierbar.logic.Relation
+import kalkulierbar.logic.UniversalQuantifier
 
 /**
  * Collects free variables in a logic-node formula structure
@@ -58,9 +63,11 @@ class FreeVariableTermCollector(
 
     override fun visit(node: QuantifiedVariable): Set<QuantifiedVariable> {
         // return node if free
-        return if (boundVariables.contains(node))
+        return if (boundVariables.contains(node)) {
             mutableSetOf()
-        else mutableSetOf(node)
+        } else {
+            mutableSetOf(node)
+        }
     }
 
     override fun visit(node: Function): Set<QuantifiedVariable> {

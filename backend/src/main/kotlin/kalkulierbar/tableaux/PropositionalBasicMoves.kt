@@ -95,14 +95,14 @@ fun applyMoveUseLemma(state: TableauxState, leafID: Int, lemmaID: Int): Tableaux
  */
 @Suppress("ThrowsCount")
 fun applyMoveUndo(state: TableauxState): TableauxState {
-    if (!state.backtracking)
+    if (!state.backtracking) {
         throw IllegalMove("Backtracking is not enabled for this proof")
-
+    }
     // Throw error if no moves were made already
     val history = state.moveHistory
-    if (history.isEmpty())
+    if (history.isEmpty()) {
         throw IllegalMove("Can't undo in initial state")
-
+    }
     // Retrieve and remove this undo from list
     val top = history.removeAt(state.moveHistory.size - 1)
 

@@ -12,7 +12,10 @@ import kotlinx.serialization.modules.plus
 
 class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>() {
 
-    override val serializer = Json { serializersModule = FoTermModule + LogicModule + NcMoveModule; encodeDefaults = true }
+    override val serializer = Json {
+        serializersModule = FoTermModule + LogicModule + NcMoveModule
+        encodeDefaults = true
+    }
     override val stateSerializer = NcTableauxState.serializer()
     override val moveSerializer = NcTableauxMove.serializer()
 
@@ -45,13 +48,13 @@ class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>()
      * @return Equivalent state with the most recent rule application removed
      */
     private fun applyUndo(state: NcTableauxState): NcTableauxState {
-        if (!state.backtracking)
+        if (!state.backtracking) {
             throw IllegalMove("Backtracking is not enabled for this proof")
-
+        }
         // Can't undo any more moves in initial state
-        if (state.moveHistory.isEmpty())
+        if (state.moveHistory.isEmpty()) {
             return state
-
+        }
         // Create a fresh clone-state with the same parameters and input formula
         var freshState = NcTableauxState(state.formula)
         freshState.usedBacktracking = true

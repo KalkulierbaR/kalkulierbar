@@ -1,10 +1,15 @@
 package kalkulierbar.logic.transform
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.*
+import kalkulierbar.logic.Constant
+import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
+import kalkulierbar.logic.QuantifiedVariable
+import kalkulierbar.logic.Quantifier
 
-class VariableInstantiator(private val replacementMap: Map<String, FirstOrderTerm>) : FirstOrderTermVisitor<FirstOrderTerm>() {
+class VariableInstantiator(
+    private val replacementMap: Map<String, FirstOrderTerm>
+) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     companion object {
         /**
@@ -165,7 +170,10 @@ class TermContainsVariable(val variable: String) : FirstOrderTermVisitor<Boolean
  * @param enforceUnique Set to true to ensure no variable hiding is taking place
  *        (i.e. binding quantifiers are unambiguous)
  */
-class QuantifierLinker(private val quantifiers: List<Quantifier>, private val enforceUnique: Boolean) : FirstOrderTermVisitor<Unit>() {
+class QuantifierLinker(
+    private val quantifiers: List<Quantifier>,
+    private val enforceUnique: Boolean
+) : FirstOrderTermVisitor<Unit>() {
 
     /**
      * Match a QuantifiedVariable to its binding quantifier
@@ -174,16 +182,17 @@ class QuantifierLinker(private val quantifiers: List<Quantifier>, private val en
     override fun visit(node: QuantifiedVariable) {
         val matchingQuantifiers = quantifiers.filter { it.varName == node.spelling }
 
-        if (matchingQuantifiers.isEmpty())
+        if (matchingQuantifiers.isEmpty()) {
             throw FormulaConversionException(
                 "Error linking variables to quantifiers: " +
                     "Variable '${node.spelling}' is not bound by any quantifier"
             )
-        else if (matchingQuantifiers.size > 1 && enforceUnique)
+        } else if (matchingQuantifiers.size > 1 && enforceUnique) {
             throw FormulaConversionException(
                 "Error linking variables to quantifiers: " +
                     "Variable '${node.spelling}' is bound by more than one quantifier"
             )
+        }
 
         // The last-defined quantifier is the binding one for the variable occurrence
         matchingQuantifiers[matchingQuantifiers.size - 1].boundVariables.add(node)

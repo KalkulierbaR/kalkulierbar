@@ -48,7 +48,12 @@ class Tokenizer {
          * @return start offset of the next token
          */
         @Suppress("ComplexMethod", "MagicNumber")
-        private fun extractToken(formula: String, index: Int, tokens: MutableList<Token>, positionInBaseString: Int): Int {
+        private fun extractToken(
+            formula: String,
+            index: Int,
+            tokens: MutableList<Token>,
+            positionInBaseString: Int
+        ): Int {
             var i = index
             val len = formula.length
 

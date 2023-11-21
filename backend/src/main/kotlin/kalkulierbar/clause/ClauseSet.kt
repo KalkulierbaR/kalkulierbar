@@ -10,8 +10,9 @@ class ClauseSet<AtomType>(var clauses: MutableList<Clause<AtomType>> = mutableLi
 
     fun addAll(c: Collection<Clause<AtomType>>) {
         c.forEach {
-            if (!clauses.contains(it))
+            if (!clauses.contains(it)) {
                 add(it)
+            }
         }
     }
 

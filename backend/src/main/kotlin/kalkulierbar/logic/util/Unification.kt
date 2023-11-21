@@ -38,17 +38,22 @@ class Unification {
             return unifyTerms(terms)
         }
 
-        private fun findTermsToUnify(terms: MutableList<Pair<FirstOrderTerm, FirstOrderTerm>>, r1: Relation, r2: Relation) {
+        private fun findTermsToUnify(
+            terms: MutableList<Pair<FirstOrderTerm, FirstOrderTerm>>,
+            r1: Relation,
+            r2: Relation
+        ) {
             val arg1 = r1.arguments
             val arg2 = r2.arguments
 
             // Spelling has to be the same
-            if (r1.spelling != r2.spelling)
+            if (r1.spelling != r2.spelling) {
                 throw UnificationImpossible("Relations '$r1' and '$r2' have different names")
+            }
             // Arg size has to be the same length
-            if (arg1.size != arg2.size)
+            if (arg1.size != arg2.size) {
                 throw UnificationImpossible("Relations '$r1' and '$r2' have different numbers of arguments")
-
+            }
             for (i in arg1.indices)
                 terms.add(Pair(arg1[i], arg2[i]))
         }
@@ -76,9 +81,9 @@ class Unification {
                     continue
                 } else if (term1 is QuantifiedVariable) {
                     // Unification not possible if one is variable and appears in others arguments
-                    if (term2 is Function && TermContainsVariable.check(term2, term1.spelling))
+                    if (term2 is Function && TermContainsVariable.check(term2, term1.spelling)) {
                         throw UnificationImpossible("Variable '$term1' appears in '$term2'")
-
+                    }
                     // Update the right side of all substitutions
                     map.mapValuesTo(map) {
                         VariableInstantiator.transform(it.value, mapOf(term1.spelling to term2))
@@ -109,9 +114,9 @@ class Unification {
          * @return true iff the two terms represent the same functions
          */
         private fun isCompatibleFunction(t1: FirstOrderTerm, t2: FirstOrderTerm): Boolean {
-            if (t1 is Function && t2 is Function)
+            if (t1 is Function && t2 is Function) {
                 return t1.spelling == t2.spelling && t1.arguments.size == t2.arguments.size
-
+            }
             return false
         }
     }

@@ -40,10 +40,11 @@ object FirstOrderSequentParser {
             try {
                 ChangeEquivalences.transform(FirstOrderParser().parse(formula, inputPosition))
             } catch (e: EmptyFormulaException) {
-                if (i != 0 || rawFormulas.size != 1)
+                if (i != 0 || rawFormulas.size != 1) {
                     throw InvalidFormulaFormat("Empty formula at char $inputPosition")
-                else
+                } else {
                     null
+                }
             }
         }
     }
@@ -59,11 +60,11 @@ object FirstOrderSequentParser {
         var startOfFormula = 0
 
         for ((index, value) in it.withIndex()) {
-            if (value == '(')
+            if (value == '(') {
                 openParentheses += 1
-            else if (value == ')')
+            } else if (value == ')') {
                 openParentheses -= 1
-            else if (value == ',' && openParentheses == 0) {
+            } else if (value == ',' && openParentheses == 0) {
                 foundFormulas.add(str.subSequence(startOfFormula, index).toString())
                 startOfFormula = index + 1
             }

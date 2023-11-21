@@ -30,8 +30,10 @@ class SignedModalTableauxState(
         // Set isClosed to true for all nodes dominated by node in reverse tree
         while (node == tree[nodeID] || node.children.fold(true) { acc, e -> acc && tree[e].isClosed }) {
             node.isClosed = true
-            if (node.parent == null)
+            if (node.parent == null) {
                 break
+            }
+
             node = tree[node.parent!!]
         }
         node = tree[nodeID]
@@ -51,12 +53,14 @@ class SignedModalTableauxState(
     @Suppress("ReturnCount")
     fun prefixIsUsedOnBranch(leafID: Int, prefix: List<Int>): Boolean {
         var node = tree[leafID]
-        if (prefix == node.prefix)
+        if (prefix == node.prefix) {
             return true
+        }
         while (node.parent != null) {
             node = tree[node.parent!!]
-            if (prefix == node.prefix)
+            if (prefix == node.prefix) {
                 return true
+            }
         }
         return false
     }

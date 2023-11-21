@@ -18,9 +18,9 @@ fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalc
     state.checkNodeID(nodeID)
     val leaf = state.tree[nodeID]
 
-    if (!leaf.isLeaf)
+    if (!leaf.isLeaf) {
         throw IllegalMove("Rules must be applied on leaf level")
-
+    }
     for (leftFormula in leaf.leftFormulas) {
         if (leaf.rightFormulas.any { it.synEq(leftFormula) }) {
             val newLeaf = TreeNode(
@@ -48,15 +48,14 @@ fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalc
  * @return new state after applying move
  */
 fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
-
     checkRight(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
     val formula = leaf.rightFormulas[listIndex]
 
-    if (formula !is Not)
+    if (formula !is Not) {
         throw IllegalMove("Rule notRight can only be applied on a negation")
-
+    }
     val newLeftFormula = leaf.leftFormulas.toMutableList()
     newLeftFormula.add(formula.child)
     val newRightFormula = leaf.rightFormulas.toMutableList()
@@ -87,9 +86,9 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val leaf = state.tree[nodeID]
     val formula = leaf.leftFormulas[listIndex]
 
-    if (formula !is Not)
+    if (formula !is Not) {
         throw IllegalMove("Rule notLeft can only be applied on a negation")
-
+    }
     val newLeftFormula = leaf.leftFormulas.toMutableList()
     newLeftFormula.removeAt(listIndex)
     val newRightFormula = leaf.rightFormulas.toMutableList()
@@ -120,9 +119,9 @@ fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val leaf = state.tree[nodeID]
     val formula = leaf.rightFormulas[listIndex]
 
-    if (formula !is Or)
+    if (formula !is Or) {
         throw IllegalMove("Rule orRight can only be applied on a disjunction")
-
+    }
     val newLeftFormula = leaf.leftFormulas.toMutableList()
     val newRightFormula = leaf.rightFormulas.toMutableList()
     newRightFormula.removeAt(listIndex)
@@ -157,9 +156,9 @@ fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int)
     val leaf = state.tree[nodeID]
     val formula = leaf.leftFormulas[listIndex]
 
-    if (formula !is Or)
+    if (formula !is Or) {
         throw IllegalMove("Rule orLeft can only be applied on a disjunction")
-
+    }
     val newLeftFormulaOnLeftChild = leaf.leftFormulas.toMutableList()
     newLeftFormulaOnLeftChild.removeAt(listIndex)
     newLeftFormulaOnLeftChild.add(listIndex, formula.leftChild)
@@ -206,9 +205,9 @@ fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
     val leaf = state.tree[nodeID]
     val formula = leaf.rightFormulas[listIndex]
 
-    if (formula !is And)
+    if (formula !is And) {
         throw IllegalMove("Rule andRight can only be applied on a conjunction")
-
+    }
     val newLeftFormulaOnLeftChild = leaf.leftFormulas.toMutableList()
     val newRightFormulaOnLeftChild = leaf.rightFormulas.toMutableList()
     newRightFormulaOnLeftChild.removeAt(listIndex)
@@ -251,9 +250,9 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val leaf = state.tree[nodeID]
     val formula = leaf.leftFormulas[listIndex]
 
-    if (formula !is And)
+    if (formula !is And) {
         throw IllegalMove("Rule andLeft can only be applied on a conjunction")
-
+    }
     val newLeftFormula = leaf.leftFormulas.toMutableList()
     newLeftFormula.removeAt(listIndex)
     newLeftFormula.add(listIndex, formula.leftChild)
@@ -288,8 +287,9 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
     val leaf = state.tree[nodeID]
     val formula = leaf.leftFormulas[listIndex]
 
-    if (formula !is Impl)
+    if (formula !is Impl) {
         throw IllegalMove("Rule impLeft can only be applied on an implication")
+    }
     val newLeftFormulaOnLeftChild = leaf.leftFormulas.toMutableList()
     newLeftFormulaOnLeftChild.removeAt(listIndex)
     val newRightFormulaOnLeftChild = leaf.rightFormulas.toMutableList()
@@ -318,7 +318,7 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
 
 /**
  * Rule ImpRight is applied, if the LogicNode is RightFormula of node and is of type IMPL (Implication).
- * The leftChild of the logicNode will moved to the leftChild of the Node,
+ * The leftChild of the logicNode will be moved to the leftChild of the Node,
  * The rightChild of the logicNode will be moved to the rightChild of the Node.
  * @param state: GenericSequentCalculusState state to apply move on
  * @param nodeID: ID of node to apply move on
@@ -326,14 +326,14 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
  * @return new state after applying move
  */
 fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
-
     checkRight(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
     val formula = leaf.rightFormulas[listIndex]
 
-    if (formula !is Impl)
+    if (formula !is Impl) {
         throw IllegalMove("Rule impRight can only be applied on an implication")
+    }
     val newLeftFormula = leaf.leftFormulas.toMutableList()
     newLeftFormula.add(formula.leftChild)
     val newRightFormula = leaf.rightFormulas.toMutableList()
@@ -363,10 +363,11 @@ fun checkRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) 
     state.checkNodeID(nodeID)
     val leaf = state.tree[nodeID]
 
-    if (!leaf.isLeaf)
+    if (!leaf.isLeaf) {
         throw IllegalMove("Rules can only be applied on leaf level")
-    else if (listIndex < 0 || leaf.rightFormulas.size <= listIndex)
+    } else if (listIndex < 0 || leaf.rightFormulas.size <= listIndex) {
         throw IllegalMove("listIndex out of bounds")
+    }
 }
 
 /**
@@ -383,10 +384,11 @@ fun checkLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) {
     state.checkNodeID(nodeID)
     val leaf = state.tree[nodeID]
 
-    if (!leaf.isLeaf)
+    if (!leaf.isLeaf) {
         throw IllegalMove("Rules can only be applied on leaf level")
-    else if (listIndex < 0 || leaf.leftFormulas.size <= listIndex)
+    } else if (listIndex < 0 || leaf.leftFormulas.size <= listIndex) {
         throw IllegalMove("listIndex out of bounds")
+    }
 }
 
 /**
@@ -395,14 +397,14 @@ fun checkLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int) {
  * @return Equivalent state with the most recent rule application removed
  */
 fun applyUndo(state: GenericSequentCalculusState): GenericSequentCalculusState {
-    if (state.tree.size <= 1)
+    if (state.tree.size <= 1) {
         throw IllegalMove("No move to undo")
-
+    }
     val latestNode = state.tree.elementAt(state.tree.size - 1)
 
-    if (!latestNode.isLeaf)
+    if (!latestNode.isLeaf) {
         throw IllegalMove("Rules can only be applied on leaf level")
-
+    }
     val parentID: Int? = latestNode.parent
     val parentNode = state.tree.elementAt(parentID!!)
 

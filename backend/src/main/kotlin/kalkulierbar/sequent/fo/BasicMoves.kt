@@ -1,11 +1,21 @@
 package kalkulierbar.sequent.fo
 
 import kalkulierbar.IllegalMove
-import kalkulierbar.logic.*
+import kalkulierbar.logic.Constant
+import kalkulierbar.logic.ExistentialQuantifier
+import kalkulierbar.logic.FirstOrderTerm
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.UniversalQuantifier
 import kalkulierbar.logic.transform.LogicNodeVariableInstantiator
 import kalkulierbar.logic.transform.Signature
 import kalkulierbar.parsers.FirstOrderParser
-import kalkulierbar.sequent.*
+import kalkulierbar.sequent.AllLeft
+import kalkulierbar.sequent.AllRight
+import kalkulierbar.sequent.ExLeft
+import kalkulierbar.sequent.ExRight
+import kalkulierbar.sequent.TreeNode
+import kalkulierbar.sequent.checkLeft
+import kalkulierbar.sequent.checkRight
 
 /**
  * Rule AllLeft is applied, if the LogicNode is the leftChild of node and is of type All(UniversalQuantifier).
@@ -22,9 +32,9 @@ fun applyAllLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, ins
     val node = state.tree[nodeID]
     val formula: LogicNode = node.leftFormulas[listIndex]
 
-    if (formula !is UniversalQuantifier)
+    if (formula !is UniversalQuantifier) {
         throw IllegalMove("Rule allLeft can only be applied on a universal quantifier")
-
+    }
     val replaceWith = FirstOrderParser.parseTerm(instTerm)
     checkAdherenceToSignature(replaceWith, node)
 
@@ -61,15 +71,20 @@ fun applyAllLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, ins
  * @param instTerm The term to instantiate with. Must be a constant.
  * @return new state after applying move
  */
-fun applyAllRight(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, instTerm: String?): FirstOrderSequentState {
+fun applyAllRight(
+    state: FirstOrderSequentState,
+    nodeID: Int,
+    listIndex: Int,
+    instTerm: String?
+): FirstOrderSequentState {
     checkRight(state, nodeID, listIndex)
 
     val node = state.tree[nodeID]
     val formula: LogicNode = node.rightFormulas[listIndex]
 
-    if (formula !is UniversalQuantifier)
+    if (formula !is UniversalQuantifier) {
         throw IllegalMove("Rule allRight can only be applied on a universal quantifier")
-
+    }
     // When swapVariable is not defined try to automatically find a fitting variableName
     val replaceWithString = instTerm ?: getFreshConstantName(node, formula.varName)
 
@@ -77,9 +92,9 @@ fun applyAllRight(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, in
     val replaceWith = FirstOrderParser.parseConstant(replaceWithString)
 
     // Check if swapVariable is not already in use in the current sequence
-    if (checkIfVariableNameIsAlreadyInUse(node, replaceWithString))
+    if (checkIfVariableNameIsAlreadyInUse(node, replaceWithString)) {
         throw IllegalMove("Identifier '$replaceWithString' is already in use")
-
+    }
     // The newFormula which will be added to the right side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
 
@@ -120,9 +135,9 @@ fun applyExLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, inst
     val node = state.tree[nodeID]
     val formula: LogicNode = node.leftFormulas[listIndex]
 
-    if (formula !is ExistentialQuantifier)
+    if (formula !is ExistentialQuantifier) {
         throw IllegalMove("Rule exLeft can only be applied on an existential quantifier")
-
+    }
     // When swapVariable is not defined try to automatically find a fitting variableName
     val replaceWithString = instTerm ?: getFreshConstantName(node, formula.varName)
 
@@ -130,9 +145,9 @@ fun applyExLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, inst
     val replaceWith = FirstOrderParser.parseConstant(replaceWithString)
 
     // Check if swapVariable is not already in use in the current sequence
-    if (checkIfVariableNameIsAlreadyInUse(node, replaceWithString))
+    if (checkIfVariableNameIsAlreadyInUse(node, replaceWithString)) {
         throw IllegalMove("Identifier '$replaceWithString' is already in use")
-
+    }
     // The newFormula which will be added to the left side of the sequence. This is the child of the quantifier
     var newFormula = formula.child.clone()
 
@@ -172,9 +187,9 @@ fun applyExRight(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, ins
     val node = state.tree[nodeID]
     val formula: LogicNode = node.rightFormulas[listIndex]
 
-    if (formula !is ExistentialQuantifier)
+    if (formula !is ExistentialQuantifier) {
         throw IllegalMove("Rule exRight can only be applied on an existential quantifier")
-
+    }
     val replaceWith = FirstOrderParser.parseTerm(instTerm)
     checkAdherenceToSignature(replaceWith, node)
 

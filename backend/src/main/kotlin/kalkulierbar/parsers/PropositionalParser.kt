@@ -2,7 +2,13 @@ package kalkulierbar.parsers
 
 import kalkulierbar.EmptyFormulaException
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.*
+import kalkulierbar.logic.And
+import kalkulierbar.logic.Equiv
+import kalkulierbar.logic.Impl
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.Not
+import kalkulierbar.logic.Or
+import kalkulierbar.logic.Var
 
 /**
  * Recursive descent parser for propositional logic
@@ -26,9 +32,9 @@ open class PropositionalParser {
             throw EmptyFormulaException("Expected a formula but got an empty String")
         }
         val res = parseEquiv()
-        if (tokens.isNotEmpty())
+        if (tokens.isNotEmpty()) {
             throw InvalidFormulaFormat("Expected end of formula but got ${gotMsg()}")
-
+        }
         return res
     }
 
@@ -129,9 +135,9 @@ open class PropositionalParser {
      * @return LogicNode representing the variable
      */
     private fun parseVar(): LogicNode {
-        if (!nextTokenIsIdentifier())
+        if (!nextTokenIsIdentifier()) {
             throw InvalidFormulaFormat("Expected identifier but got ${gotMsg()}")
-
+        }
         val exp = Var(tokens.first().spelling)
         consume()
         return exp
@@ -158,8 +164,9 @@ open class PropositionalParser {
      * Consume the next token from the token list
      */
     protected fun consume() {
-        if (tokens.size == 0)
+        if (tokens.size == 0) {
             throw InvalidFormulaFormat("Expected token but got end of input")
+        }
         tokens.removeAt(0)
     }
 
@@ -169,14 +176,16 @@ open class PropositionalParser {
      * @param expectedType expected token type
      */
     protected fun consume(expectedType: TokenType) {
-        if (!nextTokenIs(expectedType))
+        if (!nextTokenIs(expectedType)) {
             throw InvalidFormulaFormat("Expected '$expectedType' but got ${gotMsg()}")
+        }
         consume()
     }
 
     protected fun gotMsg(): String {
-        if (tokens.size > 0)
+        if (tokens.size > 0) {
             return "'${tokens.first()}' at position ${tokens.first().srcPosition}"
+        }
         return "end of input"
     }
 }

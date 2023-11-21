@@ -62,8 +62,9 @@ class CloseMove(
      *         parsed map-values iff varAssign != null
      */
     fun getVarAssignTerms(): Map<String, FirstOrderTerm>? {
-        if (varAssign == null)
+        if (varAssign == null) {
             return null
+        }
         return varAssign.mapValues {
             try {
                 FirstOrderParser.parseTerm(it.value)

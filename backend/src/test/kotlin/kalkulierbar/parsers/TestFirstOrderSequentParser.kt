@@ -65,7 +65,10 @@ class TestFirstOrderSequentParser {
         "!(/ex X: (P(X) <-> !P(X)))  |-     " to "¬(∃X: ((P(X) → ¬P(X)) ∧ (¬P(X) → P(X)))) ⊢ ",
         "/ex Xyz: P(Xyz) & /all X: P(X) |-   " to "((∃Xyz: P(Xyz)) ∧ (∀X: P(X))) ⊢ ",
 
-        "\\ex Xyz: P(Xyz) & \\all X: P(X), P(c) |- /ex Xyz: P(Xyz) & /all X: P(X), \\all X: \\all Y: \\all Z: R(m(X, m(Y, Z)), m(m(X,Y), Z))" to "((∃Xyz: P(Xyz)) ∧ (∀X: P(X))), P(c) ⊢ ((∃Xyz: P(Xyz)) ∧ (∀X: P(X))), (∀X: (∀Y: (∀Z: R(m(X, m(Y, Z)), m(m(X, Y), Z)))))"
+        "\\ex Xyz: P(Xyz) & \\all X: P(X), P(c) |- /ex Xyz: P(Xyz) & " +
+            "/all X: P(X), \\all X: \\all Y: \\all Z: R(m(X, m(Y, Z)), m(m(X,Y), Z))"
+            to "((∃Xyz: P(Xyz)) ∧ (∀X: P(X))), P(c) ⊢ ((∃Xyz: P(Xyz)) ∧ (∀X: P(X))), " +
+                "(∀X: (∀Y: (∀Z: R(m(X, m(Y, Z)), m(m(X, Y), Z)))))"
     )
 
     @Test

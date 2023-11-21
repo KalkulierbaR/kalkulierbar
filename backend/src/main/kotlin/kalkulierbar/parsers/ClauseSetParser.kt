@@ -46,11 +46,12 @@ object ClauseSetParser {
         val atomRegex = "($nSig)?[a-zA-Z0-9]+"
         val formulaFormat = "$atomRegex($aSep$atomRegex)*($cSep$atomRegex($aSep$atomRegex)*)*"
 
-        if (!(Regex(formulaFormat) matches pf))
+        if (!(Regex(formulaFormat) matches pf)) {
             throw InvalidFormulaFormat(
                 "Please use alphanumeric variables only, " +
                     "separate atoms with '$atomSeparator' and clauses with '$clauseSeparator'."
             )
+        }
 
         val parsed = ClauseSet<String>()
         val clauses = pf.split(clauseSeparator)
@@ -62,11 +63,11 @@ object ClauseSetParser {
             for (member in members) {
                 // Check if the member variable is negated and set a boolean flag accordingly
                 // true -> positive variable / false -> negated variable
-                val atom = if (member[0] == negSign)
+                val atom = if (member[0] == negSign) {
                     Atom(member.substring(1), true)
-                else
+                } else {
                     Atom(member)
-
+                }
                 parsedClause.add(atom)
             }
 

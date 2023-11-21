@@ -20,11 +20,11 @@ class PropositionalResolution : GenericResolution<String>,
     override val moveSerializer = ResolutionMove.serializer()
 
     override fun parseFormulaToState(formula: String, params: ResolutionParam?): ResolutionState {
-        val parsed = if (params == null)
+        val parsed = if (params == null) {
             FlexibleClauseSetParser.parse(formula)
-        else
+        } else {
             FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
-
+        }
         return ResolutionState(parsed, params?.visualHelp ?: VisualHelp.NONE)
     }
 
@@ -50,18 +50,18 @@ class PropositionalResolution : GenericResolution<String>,
         val clauses = state.clauseSet.clauses
 
         // Verify that clause id is valid
-        if (clauseID < 0 || clauseID >= clauses.size)
+        if (clauseID < 0 || clauseID >= clauses.size) {
             throw IllegalMove("There is no clause with id $clauseID")
-
+        }
         val oldClause = clauses[clauseID]
         // Copy old clause and factorize
         val newClause = oldClause.clone()
         newClause.atoms = newClause.atoms.distinct().toMutableList()
 
         // Throw message for no possible factorisation
-        if (oldClause.atoms.size == newClause.atoms.size)
+        if (oldClause.atoms.size == newClause.atoms.size) {
             throw IllegalMove("Nothing to factorize")
-
+        }
         // Hide old and add new clause
         clauses.removeAt(clauseID)
         clauses.add(clauseID, newClause)
@@ -85,9 +85,9 @@ class PropositionalResolution : GenericResolution<String>,
         // Checks for correct clauseID and IDs in Map
         checkHyperID(state, mainID, atomMap)
 
-        if (atomMap.isEmpty())
+        if (atomMap.isEmpty()) {
             throw IllegalMove("Please select side premisses for hyper resolution")
-
+        }
         val clauses = state.clauseSet.clauses
         var mainPremiss = clauses[mainID].clone()
 
@@ -97,23 +97,23 @@ class PropositionalResolution : GenericResolution<String>,
             val sidePremiss = clauses[sClauseID]
 
             // Check side premiss for positiveness
-            if (!sidePremiss.isPositive())
+            if (!sidePremiss.isPositive()) {
                 throw IllegalMove("Side premiss $sidePremiss is not positive")
-
+            }
             val mainAtom = clauses[mainID].atoms[mAtomID]
             val sideAtom = sidePremiss.atoms[sAtomID]
             // Check that atom in main premiss is negative
-            if (!mainAtom.negated)
+            if (!mainAtom.negated) {
                 throw IllegalMove("Literal '$mainAtom' in main premiss has to be negative, ")
-
+            }
             // Resolve mainPremiss and sidePremiss
             mainPremiss = buildClause(mainPremiss, mainAtom, sidePremiss, sideAtom)
         }
 
         // Check there are no negative atoms anymore
-        if (!mainPremiss.isPositive())
+        if (!mainPremiss.isPositive()) {
             throw IllegalMove("Resulting clause $mainPremiss is not positive")
-
+        }
         // Add resolved clause to clause set
         clauses.add(mainPremiss)
         state.newestNode = clauses.size - 1
