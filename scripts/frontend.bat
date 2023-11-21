@@ -1,2 +1,2 @@
 cd ../frontend || exit
-yarn && yarn dev
+npm i && npm run dev

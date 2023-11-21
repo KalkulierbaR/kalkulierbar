@@ -6,9 +6,9 @@ if [ -z "$(command -v node)" ]; then
   . ~/.profile
 fi
 
-if [ "$(command -v yarn)" ]; then
-  yarn > /dev/null 2>&1
-  yarn start
+if [ "$(command -v npm)" ]; then
+  npm i > /dev/null 2>&1
+  npm run start
 else
-  echo 'ERROR: Yarn programm not found. Please make sure yarn is installed.'
+  echo 'ERROR: npm programm not found. Please make sure npm is installed.'
 fi
