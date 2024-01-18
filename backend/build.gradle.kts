@@ -18,13 +18,13 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // JVM dependency
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
 
     // Web framework
     implementation("io.javalin:javalin:5.6.3")
 
     // Logging
-    implementation("org.slf4j:slf4j-simple:2.0.9")
+    implementation("org.slf4j:slf4j-simple:2.0.11")
 
     // Hashing
     implementation("com.github.komputing.khash:keccak:1.1.3")
@@ -33,7 +33,7 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.10.1")
 
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.3")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.4")
 }
 
 application {
@@ -58,7 +58,7 @@ java {
 }
 
 detekt {
-    toolVersion = "1.23.3"
+    toolVersion = "1.23.4"
     source.setFrom("src/main/kotlin")
     config.setFrom("$projectDir/config/detekt/detekt.yml")
 }
