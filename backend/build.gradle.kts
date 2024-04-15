@@ -1,9 +1,9 @@
 plugins {
     kotlin("jvm") version "1.7.20"
-    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.23"
     application
     id("org.jmailen.kotlinter") version "3.10.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.3"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
     id("jacoco")
@@ -24,7 +24,7 @@ dependencies {
     implementation("io.javalin:javalin:5.6.4")
 
     // Logging
-    implementation("org.slf4j:slf4j-simple:2.0.12")
+    implementation("org.slf4j:slf4j-simple:2.0.13")
 
     // Hashing
     implementation("com.github.komputing.khash:keccak:1.1.3")
