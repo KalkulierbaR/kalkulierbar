@@ -1,4 +1,5 @@
-declare const classNames: {
+import globalClassNames from "../../style.d";
+declare const classNames: typeof globalClassNames & {
   readonly dialog: "dialog";
   readonly open: "open";
   readonly label: "label";
