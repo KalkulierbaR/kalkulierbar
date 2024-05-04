@@ -1,4 +1,5 @@
-declare const classNames: {
+import globalClassNames from "../../style.d";
+declare const classNames: typeof globalClassNames & {
   readonly calculusGrid: "calculusGrid";
   readonly calculusItem: "calculusItem";
   readonly calculusItemTitle: "calculusItemTitle";

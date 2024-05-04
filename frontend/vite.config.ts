@@ -10,7 +10,7 @@ export default defineConfig({
             enabledMode: ["development", "production"],
             global: {
                 generate: false,
-                outFile: path.resolve(__dirname, "./src/style.d.ts"),
+                outputFilePath: path.resolve(__dirname, "./src/style.d.ts"),
             },
             sourceDir: path.resolve(__dirname, "./src"),
             outputDir: path.resolve(__dirname, "./src"),
