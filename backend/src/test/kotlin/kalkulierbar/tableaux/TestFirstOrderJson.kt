@@ -11,7 +11,7 @@ class TestFirstOrderJson {
 
     /*
         Test jsonToMove
-    */
+     */
 
     @Test
     fun testJsonMoveValid() {
@@ -46,7 +46,7 @@ class TestFirstOrderJson {
 
     /*
         Test jsonToState
-    */
+     */
 
     @Test
     fun testJsonStateEmpty() {
@@ -93,7 +93,7 @@ class TestFirstOrderJson {
 
     /*
         Test stateToJson
-    */
+     */
 
     @Test
     fun testStateToJson() {
@@ -115,7 +115,7 @@ class TestFirstOrderJson {
 
     /*
         Test jsonToParam
-    */
+     */
 
     @Test
     fun testJsonParamValid() {
@@ -126,9 +126,9 @@ class TestFirstOrderJson {
                 TableauxType.UNCONNECTED,
                 regular = false,
                 backtracking = false,
-                manualVarAssign = true
+                manualVarAssign = true,
             ),
-            param
+            param,
         )
     }
 

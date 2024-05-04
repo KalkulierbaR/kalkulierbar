@@ -11,13 +11,13 @@ class TestUndoFO {
         TableauxType.UNCONNECTED,
         regular = false,
         backtracking = true,
-        manualVarAssign = false
+        manualVarAssign = false,
     )
     private val paramManual = FoTableauxParam(
         TableauxType.UNCONNECTED,
         regular = false,
         backtracking = true,
-        manualVarAssign = true
+        manualVarAssign = true,
     )
     private var states = mutableListOf<FoTableauxState>()
     private var statesManual = mutableListOf<FoTableauxState>()
@@ -25,7 +25,7 @@ class TestUndoFO {
     val formula = mutableListOf(
         "\\all X: R(X) & R(c) & !R(c)",
         "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))"
+        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))",
     )
 
     @BeforeTest

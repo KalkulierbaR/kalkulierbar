@@ -62,7 +62,7 @@ class UnifierEquivalence {
          * @return List of pairs of terms with canonical names applied
          */
         private fun canonicalVarNames(
-            list: List<Pair<FirstOrderTerm, FirstOrderTerm>>
+            list: List<Pair<FirstOrderTerm, FirstOrderTerm>>,
         ): List<Pair<FirstOrderTerm, FirstOrderTerm>> {
             val canon1 = VariableCanonicizer()
             val canon2 = VariableCanonicizer()

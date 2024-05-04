@@ -30,6 +30,7 @@ class TestOrRight {
         assertTrue(node1.rightFormulas[0] is Var)
         assertTrue(node1.rightFormulas[1] is Var)
     }
+
     @Test
     fun testParent() {
         var state = instance.parseFormulaToState("a | b", null)

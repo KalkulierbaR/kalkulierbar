@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 class PropositionalSequentState(
     override val tree: MutableList<TreeNode> = mutableListOf(),
-    override var showOnlyApplicableRules: Boolean = false
+    override var showOnlyApplicableRules: Boolean = false,
 ) : GenericSequentCalculusState, ProtectedState() {
     override var seal = ""
 

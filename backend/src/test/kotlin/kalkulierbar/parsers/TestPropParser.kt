@@ -20,7 +20,7 @@ class TestPropParser {
         "<->a",
         "<->",
         "(a&b v2",
-        "(a|b"
+        "(a|b",
     )
 
     private val valid = mapOf(
@@ -31,7 +31,7 @@ class TestPropParser {
         "a    ->b" to "(a → b)",
         "a->b" to "(a → b)",
         "a<->(b -> (!(c)))" to "(a <=> (b → ¬c))",
-        "(b & a <-> (a) | !b)" to "((b ∧ a) <=> (a ∨ ¬b))"
+        "(b & a <-> (a) | !b)" to "((b ∧ a) <=> (a ∨ ¬b))",
     )
 
     @Test

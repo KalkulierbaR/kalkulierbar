@@ -41,7 +41,7 @@ class Unification {
         private fun findTermsToUnify(
             terms: MutableList<Pair<FirstOrderTerm, FirstOrderTerm>>,
             r1: Relation,
-            r2: Relation
+            r2: Relation,
         ) {
             val arg1 = r1.arguments
             val arg2 = r2.arguments
@@ -69,7 +69,6 @@ class Unification {
 
             // As long as both relations aren't the same
             while (terms.isNotEmpty()) {
-
                 var (term1, term2) = terms.removeAt(0)
 
                 // Apply gathered substitutions just-in-time

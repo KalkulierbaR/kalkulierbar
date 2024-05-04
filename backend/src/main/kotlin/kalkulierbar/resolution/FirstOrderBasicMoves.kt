@@ -11,7 +11,6 @@ import kalkulierbar.logic.transform.VariableInstantiator
 import kalkulierbar.logic.util.Unification
 import kalkulierbar.logic.util.UnifierEquivalence
 
-@Suppress("ThrowsCount", "LongParameterList")
 /**
  * Resolve two clauses by unifying two literals by a given variable assignment or automatically
  * @param state Current proof state
@@ -21,13 +20,14 @@ import kalkulierbar.logic.util.UnifierEquivalence
  * @param c2lit The literal to unify of the second clause
  * @param varAssign Variable assignment to be used
  */
+@Suppress("ThrowsCount", "LongParameterList")
 fun resolveMove(
     state: FoResolutionState,
     c1: Int,
     c2: Int,
     c1lit: Int,
     c2lit: Int,
-    varAssign: Map<String, FirstOrderTerm>?
+    varAssign: Map<String, FirstOrderTerm>?,
 ) {
     resolveCheckID(state, c1, c2, c1lit, c2lit)
 
@@ -80,7 +80,7 @@ fun resolveMove(
 private fun instantiate(
     state: FoResolutionState,
     clauseID: Int,
-    varAssign: Map<String, FirstOrderTerm>
+    varAssign: Map<String, FirstOrderTerm>,
 ) {
     if (clauseID < 0 || clauseID >= state.clauseSet.clauses.size) {
         throw IllegalMove("There is no clause with id $clauseID")
@@ -101,7 +101,7 @@ private fun instantiate(
  */
 private fun instantiateReturn(
     baseClause: Clause<Relation>,
-    varAssign: Map<String, FirstOrderTerm>
+    varAssign: Map<String, FirstOrderTerm>,
 ): Clause<Relation> {
     val newClause = Clause<Relation>()
 
@@ -120,7 +120,7 @@ private fun instantiateReturn(
  */
 private fun instantiateReturn(
     baseAtom: Atom<Relation>,
-    varAssign: Map<String, FirstOrderTerm>
+    varAssign: Map<String, FirstOrderTerm>,
 ): Atom<Relation> {
     val instantiator = VariableInstantiator(varAssign)
     val relationArgs = baseAtom.lit.arguments.map { it.clone().accept(instantiator) }
@@ -162,7 +162,7 @@ fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
             if (newClause.atoms[firstID] != newClause.atoms[secondID]) {
                 throw IllegalMove(
                     "Atoms '${newClause.atoms[firstID]}' and '${newClause.atoms[secondID]}'" +
-                        " are not equal after instantiation"
+                        " are not equal after instantiation",
                 )
             }
 
@@ -192,7 +192,7 @@ fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
 fun hyper(
     state: FoResolutionState,
     mainID: Int,
-    atomMap: Map<Int, Pair<Int, Int>>
+    atomMap: Map<Int, Pair<Int, Int>>,
 ) {
     // Checks for correct clauseID and IDs in Map
     checkHyperID(state, mainID, atomMap)
@@ -226,7 +226,7 @@ fun hyper(
     } catch (e: UnificationImpossible) {
         throw IllegalMove(
             "Could not unify main premiss with " +
-                "the side premises: ${e.message}"
+                "the side premises: ${e.message}",
         )
     }
 
@@ -241,7 +241,7 @@ fun hyper(
             newMainPremiss,
             instantiateReturn(mainPremiss.atoms[mAtomID], mgu),
             newSidePremis,
-            newSidePremis.atoms[sAtomID]
+            newSidePremis.atoms[sAtomID],
         )
     }
 

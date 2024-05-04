@@ -15,7 +15,10 @@ class PropositionalResolution : GenericResolution<String>,
     JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
     override val identifier = "prop-resolution"
 
-    override val serializer = Json { serializersModule = resolutionMoveModule; encodeDefaults = true }
+    override val serializer = Json {
+        serializersModule = resolutionMoveModule
+        encodeDefaults = true
+    }
     override val stateSerializer = ResolutionState.serializer()
     override val moveSerializer = ResolutionMove.serializer()
 
@@ -80,7 +83,7 @@ class PropositionalResolution : GenericResolution<String>,
     fun hyper(
         state: ResolutionState,
         mainID: Int,
-        atomMap: Map<Int, Pair<Int, Int>>
+        atomMap: Map<Int, Pair<Int, Int>>,
     ) {
         // Checks for correct clauseID and IDs in Map
         checkHyperID(state, mainID, atomMap)
@@ -140,7 +143,7 @@ class PropositionalResolution : GenericResolution<String>,
 @Serializable
 class ResolutionState(
     override val clauseSet: ClauseSet<String>,
-    override val visualHelp: VisualHelp
+    override val visualHelp: VisualHelp,
 ) : GenericResolutionState<String>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<String>()

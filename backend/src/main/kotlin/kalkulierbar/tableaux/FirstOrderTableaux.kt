@@ -35,7 +35,7 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
             params.type,
             params.regular,
             params.backtracking,
-            params.manualVarAssign
+            params.manualVarAssign,
         )
     }
 

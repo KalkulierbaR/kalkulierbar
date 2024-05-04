@@ -16,7 +16,7 @@ import kalkulierbar.logic.transform.FreeVariableCollector
  */
 class DeltaSkolemization(
     private val toReplace: List<QuantifiedVariable>,
-    private val term: FirstOrderTerm
+    private val term: FirstOrderTerm,
 ) : DoNothingVisitor() {
 
     companion object Companion {
@@ -29,7 +29,7 @@ class DeltaSkolemization(
         fun transform(
             formula: ExistentialQuantifier,
             blacklist: MutableSet<String>,
-            skolemCounter: Int
+            skolemCounter: Int,
         ): LogicNode {
             // Collect free variables in formula
             val freeVariables = FreeVariableCollector.collect(formula)
@@ -50,7 +50,7 @@ class DeltaSkolemization(
         private fun getSkolemTerm(
             skolemBaseCount: Int,
             nameBlacklist: MutableSet<String>,
-            freeVariables: Set<QuantifiedVariable>
+            freeVariables: Set<QuantifiedVariable>,
         ): FirstOrderTerm {
             var skolemCounter = skolemBaseCount
             var skolemName = "sk$skolemCounter"
@@ -96,7 +96,7 @@ class DeltaSkolemization(
  */
 class DeltaSkolemTermReplacer(
     private val toReplace: List<QuantifiedVariable>,
-    private val term: FirstOrderTerm
+    private val term: FirstOrderTerm,
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     /**

@@ -54,7 +54,7 @@ class DeltaMove(val nodeID: Int) : NcTableauxMove() {
 class CloseMove(
     val nodeID: Int,
     val closeID: Int,
-    val varAssign: Map<String, String>?
+    val varAssign: Map<String, String>?,
 ) : NcTableauxMove() {
     /**
      * Parses map values to first-order terms

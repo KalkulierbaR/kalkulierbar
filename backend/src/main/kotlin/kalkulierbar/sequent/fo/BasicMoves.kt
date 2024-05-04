@@ -54,7 +54,7 @@ fun applyAllLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, ins
         nodeID,
         newLeftFormulas,
         node.rightFormulas.distinct().toMutableList(),
-        AllLeft(nodeID, listIndex, instTerm)
+        AllLeft(nodeID, listIndex, instTerm),
     )
 
     state.addChildren(nodeID, newLeaf)
@@ -75,7 +75,7 @@ fun applyAllRight(
     state: FirstOrderSequentState,
     nodeID: Int,
     listIndex: Int,
-    instTerm: String?
+    instTerm: String?,
 ): FirstOrderSequentState {
     checkRight(state, nodeID, listIndex)
 
@@ -112,7 +112,7 @@ fun applyAllRight(
         nodeID,
         node.leftFormulas.distinct().toMutableList(),
         newRightFormulas,
-        AllRight(nodeID, listIndex, instTerm)
+        AllRight(nodeID, listIndex, instTerm),
     )
 
     state.addChildren(nodeID, newLeaf)
@@ -165,7 +165,7 @@ fun applyExLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, inst
         nodeID,
         newLeftFormulas,
         node.rightFormulas.distinct().toMutableList(),
-        ExLeft(nodeID, listIndex, instTerm)
+        ExLeft(nodeID, listIndex, instTerm),
     )
     state.addChildren(nodeID, newLeaf)
 
@@ -208,7 +208,7 @@ fun applyExRight(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, ins
         nodeID,
         node.leftFormulas.distinct().toMutableList(),
         newRightFormulas,
-        ExRight(nodeID, listIndex, instTerm)
+        ExRight(nodeID, listIndex, instTerm),
     )
     state.addChildren(nodeID, newLeaf)
 

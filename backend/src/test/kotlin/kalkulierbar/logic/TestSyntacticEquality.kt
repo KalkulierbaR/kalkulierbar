@@ -11,7 +11,7 @@ class TestSyntacticEquality {
     private val equalPairs = listOf(
         Pair("f(g(f(q, a)), c)", "f(g(f(q, a)), c)"),
         Pair("a", "a"),
-        Pair("f(X)", "f(X)")
+        Pair("f(X)", "f(X)"),
     )
 
     private val unequalPairs = listOf(
@@ -20,7 +20,7 @@ class TestSyntacticEquality {
         Pair("f(X, Y)", "f(X, X)"),
         Pair("f(g(f(c)))", "f(g(f(g(c))))"),
         Pair("X", "Y"),
-        Pair("X", "x")
+        Pair("X", "x"),
     )
 
     @Test

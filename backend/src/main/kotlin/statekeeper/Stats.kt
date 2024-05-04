@@ -66,7 +66,7 @@ data class StatContainer(
     var currentMonth: MutableMap<String, Int> = mutableMapOf(),
     var lastMonth: Map<String, Int> = mapOf(),
     val alltime: MutableMap<String, Int> = mutableMapOf(),
-    var monthIndex: Int = LocalDateTime.now().monthValue
+    var monthIndex: Int = LocalDateTime.now().monthValue,
 ) {
     fun logHit(key: String) {
         val month = LocalDateTime.now().monthValue

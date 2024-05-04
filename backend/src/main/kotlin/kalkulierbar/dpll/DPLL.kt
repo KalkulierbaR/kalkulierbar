@@ -10,7 +10,10 @@ import kotlinx.serialization.modules.plus
 class DPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
     override val identifier = "dpll"
 
-    override val serializer = Json { serializersModule = dpllMoveModule + clausesetDiffModule; encodeDefaults = true }
+    override val serializer = Json {
+        serializersModule = dpllMoveModule + clausesetDiffModule
+        encodeDefaults = true
+    }
     override val moveSerializer = DPLLMove.serializer()
     override val stateSerializer = DPLLState.serializer()
 

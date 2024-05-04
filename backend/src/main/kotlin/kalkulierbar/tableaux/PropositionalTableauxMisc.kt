@@ -16,7 +16,7 @@ class TableauxState(
     override val clauseSet: ClauseSet<String>,
     override val type: TableauxType = TableauxType.UNCONNECTED,
     override val regular: Boolean = false,
-    override val backtracking: Boolean = false
+    override val backtracking: Boolean = false,
 ) : GenericTableauxState<String>, ProtectedState() {
     override val tree = mutableListOf(TableauxNode(null, "true", false))
     val moveHistory = mutableListOf<TableauxMove>()
@@ -96,7 +96,7 @@ class TableauxNode(
     override val parent: Int?,
     override val spelling: String,
     override val negated: Boolean,
-    override val lemmaSource: Int? = null
+    override val lemmaSource: Int? = null,
 ) : GenericTableauxNode<String> {
 
     override var isClosed = false
@@ -139,7 +139,7 @@ data class TableauxParam(
     val type: TableauxType,
     val regular: Boolean,
     val backtracking: Boolean,
-    val cnfStrategy: CnfStrategy = CnfStrategy.OPTIMAL
+    val cnfStrategy: CnfStrategy = CnfStrategy.OPTIMAL,
 )
 
 enum class TableauxType {
