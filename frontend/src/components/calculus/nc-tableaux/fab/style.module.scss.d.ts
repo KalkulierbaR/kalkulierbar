@@ -1,5 +1,4 @@
-import globalClassNames from "../../../../style.d";
-declare const classNames: typeof globalClassNames & {
-    readonly greekLetter: "greekLetter";
+declare const classNames: {
+  readonly greekLetter: "greekLetter";
 };
 export = classNames;
