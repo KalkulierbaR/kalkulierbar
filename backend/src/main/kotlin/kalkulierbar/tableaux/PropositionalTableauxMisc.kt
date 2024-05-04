@@ -40,8 +40,9 @@ class TableauxState(
      */
     override fun nodeIsDirectlyCloseable(nodeID: Int): Boolean {
         val node = tree[nodeID]
-        if (node.parent == null)
+        if (node.parent == null) {
             return false
+        }
         val parent = tree[node.parent]
 
         return node.isLeaf && node.toAtom() == parent.toAtom().not()
@@ -67,8 +68,9 @@ class TableauxState(
         while (node.parent != null) {
             node = tree[node.parent!!]
             // Check if current node is identical to atom
-            if (node.toAtom() == atom)
+            if (node.toAtom() == atom) {
                 return true
+            }
         }
 
         return false

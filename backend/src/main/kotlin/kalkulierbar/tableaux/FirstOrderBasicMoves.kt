@@ -15,8 +15,9 @@ import kalkulierbar.logic.util.UnifierEquivalence
  * @return state with the close move applied
  */
 fun applyAutoCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int): FoTableauxState {
-    if (state.manualVarAssign)
+    if (state.manualVarAssign) {
         throw IllegalMove("Auto-close is not enabled for this proof")
+    }
 
     ensureBasicCloseability(state, leafID, closeNodeID)
     val leaf = state.tree[leafID]
@@ -51,8 +52,9 @@ fun applyMoveCloseBranch(
     val leaf = state.tree[leafID]
     val closeNode = state.tree[closeNodeID]
     // Check that given var assignment is a mgu, warn if not
-    if (!UnifierEquivalence.isMGUorNotUnifiable(varAssign, leaf.relation, closeNode.relation))
+    if (!UnifierEquivalence.isMGUorNotUnifiable(varAssign, leaf.relation, closeNode.relation)) {
         state.statusMessage = "The unifier you specified is not an MGU"
+    }
     val sig = Signature.of(state.clauseSet)
     varAssign.values.forEach { sig.check(it) }
 
@@ -83,12 +85,13 @@ private fun closeBranchCommon(
     // Apply all specified variable instantiations globally
     state.applyVarInstantiation(varAssign)
 
-    if (!leaf.relation.synEq(closeNode.relation))
+    if (!leaf.relation.synEq(closeNode.relation)) {
         throw IllegalMove("Nodes '$leaf' and '$closeNode' are not equal after variable instantiation")
-
+    }
     // Instantiating variables globally may violate regularity in unexpected places
-    if (state.regular && !checkRegularity(state))
+    if (state.regular && !checkRegularity(state)) {
         throw IllegalMove("This variable instantiation would violate the proof regularity")
+    }
 
     // Close branch
     leaf.closeRef = closeNodeID
@@ -133,8 +136,9 @@ fun applyMoveExpandLeaf(state: FoTableauxState, leafID: Int, clauseID: Int): FoT
     verifyExpandConnectedness(state, leafID)
 
     // Record expansion for backtracking
-    if (state.backtracking)
+    if (state.backtracking) {
         state.moveHistory.add(MoveExpand(leafID, clauseID))
+    }
 
     state.expansionCounter += 1
 

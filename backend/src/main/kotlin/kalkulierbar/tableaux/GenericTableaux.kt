@@ -37,10 +37,12 @@ interface GenericTableauxState<AtomType> {
     @Suppress("ReturnCount")
     fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
         val child = tree[childID]
-        if (child.parent == parentID)
+        if (child.parent == parentID) {
             return true
-        if (child.parent == 0 || child.parent == null)
+        }
+        if (child.parent == 0 || child.parent == null) {
             return false
+        }
         return nodeIsParentOf(parentID, child.parent!!)
     }
 
@@ -56,8 +58,9 @@ interface GenericTableauxState<AtomType> {
         // Set isClosed to true for all nodes dominated by leaf in reverse tree
         while (node.isLeaf || node.children.fold(true) { acc, e -> acc && tree[e].isClosed }) {
             node.isClosed = true
-            if (node.parent == null)
+            if (node.parent == null) {
                 break
+            }
             node = tree[node.parent!!]
         }
     }
@@ -72,11 +75,11 @@ interface GenericTableauxState<AtomType> {
 
         if (root.isClosed) {
             var connectedness = "unconnected"
-            if (checkConnectedness(this, TableauxType.STRONGLYCONNECTED))
+            if (checkConnectedness(this, TableauxType.STRONGLYCONNECTED)) {
                 connectedness = "strongly connected"
-            else if (checkConnectedness(this, TableauxType.WEAKLYCONNECTED))
+            } else if (checkConnectedness(this, TableauxType.WEAKLYCONNECTED)) {
                 connectedness = "weakly connected"
-
+            }
             val regularity = if (checkRegularity(this)) "regular " else ""
             val withWithoutBT = if (usedBacktracking) "with" else "without"
 
@@ -103,41 +106,45 @@ interface GenericTableauxState<AtomType> {
     @Suppress("ThrowsCount", "ComplexMethod")
     fun getLemma(leafID: Int, lemmaID: Int): Atom<AtomType> {
         // Verify that subtree root for lemma creation exists
-        if (lemmaID >= tree.size || lemmaID < 0)
+        if (lemmaID >= tree.size || lemmaID < 0) {
             throw IllegalMove("Node with ID $lemmaID does not exist")
-        // Verify that subtree root for lemma creation exists
-        if (leafID >= tree.size || leafID < 0)
+        } // Verify that subtree root for lemma creation exists
+        if (leafID >= tree.size || leafID < 0) {
             throw IllegalMove("Node with ID $leafID does not exist")
-
+        }
         val leaf = tree[leafID]
         val lemmaNode = tree[lemmaID]
 
-        if (!leaf.isLeaf)
+        if (!leaf.isLeaf) {
             throw IllegalMove("Node '$leaf' is not a leaf")
-
-        if (leaf.isClosed)
+        }
+        if (leaf.isClosed) {
             throw IllegalMove("Leaf '$leaf' is already closed")
-
-        if (!lemmaNode.isClosed)
+        }
+        if (!lemmaNode.isClosed) {
             throw IllegalMove("Node '$lemmaNode' is not the root of a closed subtableaux")
+        }
 
-        if (lemmaNode.parent == null)
+        if (lemmaNode.parent == null) {
             throw IllegalMove("Root node cannot be used for lemma creation")
+        }
 
-        if (lemmaNode.isLeaf)
+        if (lemmaNode.isLeaf) {
             throw IllegalMove("Cannot create lemma from a leaf")
+        }
 
         val commonParent: Int = lemmaNode.parent!!
 
-        if (!nodeIsParentOf(commonParent, leafID))
+        if (!nodeIsParentOf(commonParent, leafID)) {
             throw IllegalMove("Nodes '$leaf' and '$lemmaNode' are not siblings")
+        }
 
         val atom = lemmaNode.toAtom().not()
 
         // Verify compliance with regularity criteria
-        if (regular)
+        if (regular) {
             verifyExpandRegularity(this, leafID, Clause(mutableListOf(atom)), applyPreprocessing = false)
-
+        }
         return atom
     }
 

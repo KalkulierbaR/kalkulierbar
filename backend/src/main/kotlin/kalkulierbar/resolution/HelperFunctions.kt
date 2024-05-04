@@ -21,11 +21,12 @@ fun <AtomType> filterClause(
     // Filter clauses for atoms with correct literal
     val atomsInC1 = c1.atoms.filter { literalsAreEqual(it.lit, literal) }
     val atomsInC2 = c2.atoms.filter { literalsAreEqual(it.lit, literal) }
-    if (atomsInC1.isEmpty())
+    if (atomsInC1.isEmpty()) {
         throw IllegalMove("Clause '$c1' does not contain atom '$literal'")
-    if (atomsInC2.isEmpty())
+    }
+    if (atomsInC2.isEmpty()) {
         throw IllegalMove("Clause '$c2' does not contain atom '$literal'")
-
+    }
     val msg = "Clauses '$c1' and '$c2' do not contain atom '$literal' in both positive and negated form"
     return findResCandidates(atomsInC1, atomsInC2)
         ?: throw IllegalMove(msg)
@@ -47,19 +48,21 @@ fun <AtomType> getAutoResolutionCandidates(
         c2.atoms.any { literalsAreEqual(c1atom.lit, it.lit) }
     }
 
-    if (sharedAtoms.isEmpty())
+    if (sharedAtoms.isEmpty()) {
         throw IllegalMove("Clauses '$c1' and '$c2' contain no common literals")
+    }
 
     // Sort out atoms not present in opposite polarity in c2 (shared atoms came from c1 originally)
     sharedAtoms = sharedAtoms.filter {
         c2.atoms.contains(it.not())
     }
 
-    if (sharedAtoms.isEmpty())
+    if (sharedAtoms.isEmpty()) {
         throw IllegalMove(
             "Clauses '$c1' and '$c2' contain no common literals that appear" +
                 "in positive and negated form"
         )
+    }
 
     // Choose the first shared literal
     val a1 = sharedAtoms[0]
@@ -102,8 +105,10 @@ fun <AtomType> findResCandidates(
 
     for (a1 in atoms1) {
         val other = if (a1.negated) pos else neg
-        if (other.isEmpty())
+        if (other.isEmpty()) {
             continue
+        }
+
         val a2 = other[0]
         return Pair(a1, a2)
     }
@@ -119,8 +124,9 @@ fun <AtomType> findResCandidates(
  */
 fun <AtomType> literalsAreEqual(a: AtomType, b: AtomType): Boolean {
     // Use syntactic equality for literal comparison if defined
-    return if (a is SyntacticEquality && b is SyntacticEquality)
+    return if (a is SyntacticEquality && b is SyntacticEquality) {
         a.synEq(b)
-    else
+    } else {
         (a == b)
+    }
 }

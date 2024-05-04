@@ -60,30 +60,37 @@ fun propagate(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID:
 @Suppress("ThrowsCount", "ComplexMethod")
 private fun checkPropagateRestrictions(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID: Int) {
     // Check branch validity
-    if (branchID < 0 || branchID >= state.tree.size)
+    if (branchID < 0 || branchID >= state.tree.size) {
         throw IllegalMove("Branch with ID $branchID does not exist")
+    }
     val branch = state.tree[branchID]
-    if (!branch.isLeaf)
+    if (!branch.isLeaf) {
         throw IllegalMove("ID $branchID does not reference a leaf")
-    if (branch.isAnnotation)
+    }
+    if (branch.isAnnotation) {
         throw IllegalMove("Cannot propagate on annotation '$branch'")
+    }
 
     val clauseSet = state.getClauseSet(branchID)
     val clauses = clauseSet.clauses
 
     // Check baseID, propID, atomID validity
-    if (baseID < 0 || baseID >= clauses.size)
+    if (baseID < 0 || baseID >= clauses.size) {
         throw IllegalMove("Clause set $clauses has no clause with ID $baseID")
-    if (propID < 0 || propID >= clauses.size)
+    }
+    if (propID < 0 || propID >= clauses.size) {
         throw IllegalMove("Clause set $clauses has no clause with ID $propID")
-    if (atomID < 0 || atomID >= clauses[propID].size)
+    }
+    if (atomID < 0 || atomID >= clauses[propID].size) {
         throw IllegalMove("Clause ${clauses[propID]} has no atom with ID $atomID")
-    if (baseID == propID)
+    }
+    if (baseID == propID) {
         throw IllegalMove("Base and propagation clauses have to be different")
-
+    }
     val base = clauses[baseID]
-    if (base.size != 1)
+    if (base.size != 1) {
         throw IllegalMove("Base clause $base may only have exactly one atom")
+    }
 }
 
 /**
@@ -115,24 +122,26 @@ fun split(state: DPLLState, branchID: Int, literal: String) {
 
 @Suppress("ThrowsCount")
 private fun checkSplitRestrictions(state: DPLLState, branchID: Int, literal: String) {
-    if (branchID < 0 || branchID >= state.tree.size)
+    if (branchID < 0 || branchID >= state.tree.size) {
         throw IllegalMove("Branch with ID $branchID does not exist")
-
+    }
     val branch = state.tree[branchID]
-    if (!branch.isLeaf)
+    if (!branch.isLeaf) {
         throw IllegalMove("ID $branchID does not reference a leaf")
-    if (branch.isAnnotation)
+    }
+    if (branch.isAnnotation) {
         throw IllegalMove("Cannot split on annotation '$branch'")
-
+    }
     val tokenized = Tokenizer.tokenize(literal)
 
-    if (tokenized.size != 1)
+    if (tokenized.size != 1) {
         throw IllegalMove("Invalid variable name '$literal'")
-
+    }
     val varToken = tokenized[0]
 
-    if (varToken.type != TokenType.CAPID && varToken.type != TokenType.LOWERID)
+    if (varToken.type != TokenType.CAPID && varToken.type != TokenType.LOWERID) {
         throw IllegalMove("Invalid variable name '$literal'")
+    }
 }
 
 /**
@@ -143,15 +152,15 @@ private fun checkSplitRestrictions(state: DPLLState, branchID: Int, literal: Str
  * @branchID ID of the node whose children will be pruned
  */
 fun prune(state: DPLLState, branchID: Int) {
-    if (branchID < 0 || branchID >= state.tree.size)
+    if (branchID < 0 || branchID >= state.tree.size) {
         throw IllegalMove("Branch with ID $branchID does not exist")
-
+    }
     val node = state.tree[branchID]
 
     // Weird things would happen if we would allow removing annotations
-    if (node.children.size == 1 && state.tree[node.children[0]].isAnnotation)
+    if (node.children.size == 1 && state.tree[node.children[0]].isAnnotation) {
         throw IllegalMove("Cannot prune annotation '${state.tree[node.children[0]]}'")
-
+    }
     state.pruneBranch(branchID)
 }
 
@@ -163,25 +172,26 @@ fun prune(state: DPLLState, branchID: Int) {
  */
 @Suppress("ThrowsCount")
 fun checkModel(state: DPLLState, branchID: Int, interpretation: Map<String, Boolean>) {
-    if (branchID < 0 || branchID >= state.tree.size)
+    if (branchID < 0 || branchID >= state.tree.size) {
         throw IllegalMove("Branch with ID $branchID does not exist")
-
+    }
     val branch = state.tree[branchID]
 
-    if (branch.type != NodeType.MODEL)
+    if (branch.type != NodeType.MODEL) {
         throw IllegalMove("Node '$branch' is not a model node")
-
-    if (branch.modelVerified == true)
+    }
+    if (branch.modelVerified == true) {
         throw IllegalMove("This node has already been checked")
-
+    }
     val clauseSet = state.getClauseSet(branchID)
 
     // Check that the mapping satisfies every clause
     clauseSet.clauses.forEach { clause ->
         // Check if any atom in the clause is satisfied by the interpretation
         // (-> the atom's negated value is the opposite of the interp. truth value)
-        if (!clause.atoms.any { !it.negated == interpretation[it.lit] })
+        if (!clause.atoms.any { !it.negated == interpretation[it.lit] }) {
             throw IllegalMove("The given interpretation does not satisfy any atom of clause $clause")
+        }
     }
 
     branch.modelVerified = true

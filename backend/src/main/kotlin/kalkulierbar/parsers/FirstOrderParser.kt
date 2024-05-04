@@ -2,14 +2,21 @@ package kalkulierbar.parsers
 
 import kalkulierbar.IncorrectArityException
 import kalkulierbar.InvalidFormulaFormat
-import kalkulierbar.logic.*
+import kalkulierbar.logic.Constant
+import kalkulierbar.logic.ExistentialQuantifier
+import kalkulierbar.logic.FirstOrderTerm
 import kalkulierbar.logic.Function
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.Not
+import kalkulierbar.logic.QuantifiedVariable
+import kalkulierbar.logic.Relation
+import kalkulierbar.logic.UniversalQuantifier
 
 /**
  * Recursive descent parser for first-order logic
  * For format specification, see docs/FirstOrderFormula.md
  */
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "ThrowsCount")
 class FirstOrderParser : PropositionalParser() {
 
     companion object {
@@ -64,9 +71,9 @@ class FirstOrderParser : PropositionalParser() {
         boundVars.clear()
         relationNames.clear()
         val res = parseTerm()
-        if (tokens.isNotEmpty())
+        if (tokens.isNotEmpty()) {
             throw InvalidFormulaFormat("Expected end of term but got ${gotMsg()}")
-
+        }
         return res
     }
 
@@ -79,9 +86,9 @@ class FirstOrderParser : PropositionalParser() {
         tokens = Tokenizer.tokenize(relation)
         bindQuantifiedVariables = false
         val res = parseAtomic()
-        if (tokens.isNotEmpty())
+        if (tokens.isNotEmpty()) {
             throw InvalidFormulaFormat("Expected end of term but got ${gotMsg()}")
-
+        }
         return res
     }
 
@@ -93,16 +100,18 @@ class FirstOrderParser : PropositionalParser() {
     fun parseConstant(constant: String): FirstOrderTerm {
         tokens = Tokenizer.tokenize(constant, extended = true) // Allow extended identifier chars
         bindQuantifiedVariables = false
-        if (!nextTokenIsIdentifier())
+        if (!nextTokenIsIdentifier()) {
             throw InvalidFormulaFormat("Expected identifier but got ${gotMsg()}")
-        if (!nextTokenIs(TokenType.LOWERID))
+        }
+        if (!nextTokenIs(TokenType.LOWERID)) {
             throw InvalidFormulaFormat("Expected '${TokenType.LOWERID}' but got ${gotMsg()}")
+        }
         // Next token is constant or function
         val identifier = tokens.first().spelling
         consume()
-        if (tokens.isNotEmpty())
+        if (tokens.isNotEmpty()) {
             throw InvalidFormulaFormat("Expected end of constant but got ${gotMsg()}")
-
+        }
         return Constant(identifier)
     }
 
@@ -125,15 +134,15 @@ class FirstOrderParser : PropositionalParser() {
      */
     private fun parseQuantifier(): LogicNode {
 
-        if (!nextTokenIs(TokenType.UNIVERSALQUANT) && !nextTokenIs(TokenType.EXISTENTIALQUANT))
+        if (!nextTokenIs(TokenType.UNIVERSALQUANT) && !nextTokenIs(TokenType.EXISTENTIALQUANT)) {
             return parseParen()
-
+        }
         val quantType = tokens.first().type
         consume()
 
-        if (!nextTokenIs(TokenType.CAPID))
+        if (!nextTokenIs(TokenType.CAPID)) {
             throw InvalidFormulaFormat("Expected quantified variable but got ${gotMsg()}")
-
+        }
         val varName = tokens.first().spelling
         consume()
         consume(TokenType.COLON)
@@ -152,19 +161,21 @@ class FirstOrderParser : PropositionalParser() {
 
         // If not yet bound variables remain in our scope, add them to the next higher scope
         // If no scope exists, the variables are unbound and the formula is incorrect
-        if (quantifierScope.size == 0 && boundBefore.isNotEmpty())
+        if (quantifierScope.size == 0 && boundBefore.isNotEmpty()) {
             throw InvalidFormulaFormat("Unbound Variables found: ${boundBefore.joinToString(", ")}")
-        else if (boundBefore.isNotEmpty())
+        } else if (boundBefore.isNotEmpty()) {
             quantifierScope.last().addAll(boundBefore)
-
-        if (relationNames.contains(varName))
+        }
+        if (relationNames.contains(varName)) {
             throw InvalidFormulaFormat("Identifier '$varName' is used both as a relation and bound variable")
+        }
         boundVars.add(varName)
 
-        return if (quantType == TokenType.UNIVERSALQUANT)
+        return if (quantType == TokenType.UNIVERSALQUANT) {
             UniversalQuantifier(varName, subexpression, boundVariables)
-        else
+        } else {
             ExistentialQuantifier(varName, subexpression, boundVariables)
+        }
     }
 
     /**
@@ -187,9 +198,9 @@ class FirstOrderParser : PropositionalParser() {
      * @return LogicNode representing the parsed Relation
      */
     private fun parseAtomic(): Relation {
-        if (!nextTokenIs(TokenType.CAPID))
+        if (!nextTokenIs(TokenType.CAPID)) {
             throw InvalidFormulaFormat("Expected relation identifier but got ${gotMsg()}")
-
+        }
         val relationIdentifier = tokens.first().spelling
         consume()
         consume(TokenType.LPAREN)
@@ -216,8 +227,9 @@ class FirstOrderParser : PropositionalParser() {
             arities[relationIdentifier] = arguments.size
         }
 
-        if (boundVars.contains(relationIdentifier))
+        if (boundVars.contains(relationIdentifier)) {
             throw InvalidFormulaFormat("Identifier '$relationIdentifier' is used both as a relation and bound variable")
+        }
         relationNames.add(relationIdentifier)
 
         return Relation(relationIdentifier, arguments)
@@ -229,9 +241,9 @@ class FirstOrderParser : PropositionalParser() {
      * @return FirstOrderTerm representing the parsed term
      */
     private fun parseTerm(): FirstOrderTerm {
-        if (!nextTokenIsIdentifier())
+        if (!nextTokenIsIdentifier()) {
             throw InvalidFormulaFormat("Expected identifier but got ${gotMsg()}")
-
+        }
         return if (nextTokenIs(TokenType.CAPID)) {
             // Next token is quantified variable
             parseQuantifiedVariable()
@@ -239,11 +251,12 @@ class FirstOrderParser : PropositionalParser() {
             // Next token is constant or function
             val identifier = tokens.first().spelling
             consume()
-            if (nextTokenIs(TokenType.LPAREN))
+            if (nextTokenIs(TokenType.LPAREN)) {
                 parseFunction(identifier)
-            else {
-                if (functionNames.contains(identifier))
+            } else {
+                if (functionNames.contains(identifier)) {
                     throw InvalidFormulaFormat("Identifier '$identifier' is used both as a function and constant")
+                }
                 constants.add(identifier)
                 Constant(identifier)
             }
@@ -282,8 +295,9 @@ class FirstOrderParser : PropositionalParser() {
             arities[identifier] = arguments.size
         }
 
-        if (constants.contains(identifier))
+        if (constants.contains(identifier)) {
             throw InvalidFormulaFormat("Identifier '$identifier' is used both as a function and constant")
+        }
         functionNames.add(identifier)
 
         return Function(identifier, arguments)
@@ -297,14 +311,15 @@ class FirstOrderParser : PropositionalParser() {
         val res = QuantifiedVariable(tokens.first().spelling)
 
         // Add variable to list of bound variables so the binding quantifier is informed of its existence
-        if (quantifierScope.size == 0 && bindQuantifiedVariables)
+        if (quantifierScope.size == 0 && bindQuantifiedVariables) {
             throw InvalidFormulaFormat("Unbound variable ${gotMsg()}")
-
-        if (bindQuantifiedVariables)
+        }
+        if (bindQuantifiedVariables) {
             quantifierScope.last().add(res)
-
-        if (relationNames.contains(res.spelling))
+        }
+        if (relationNames.contains(res.spelling)) {
             throw InvalidFormulaFormat("Identifier '${res.spelling}' is used both as a relation and bound variable")
+        }
         boundVars.add(res.spelling)
 
         consume(TokenType.CAPID)

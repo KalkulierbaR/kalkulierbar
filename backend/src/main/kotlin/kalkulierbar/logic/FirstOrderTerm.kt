@@ -41,15 +41,17 @@ class QuantifiedVariable(var spelling: String) : FirstOrderTerm() {
         val newVar = QuantifiedVariable(spelling)
 
         // Register the new variable with a binding quantifier, should one exist
-        if (qm[spelling] != null)
+        if (qm[spelling] != null) {
             qm[spelling]!!.boundVariables.add(newVar)
+        }
 
         return newVar
     }
 
     override fun synEq(other: Any?): Boolean {
-        if (other == null || other !is QuantifiedVariable)
+        if (other == null || other !is QuantifiedVariable) {
             return false
+        }
 
         return spelling == other.spelling
     }
@@ -63,8 +65,9 @@ class Constant(val spelling: String) : FirstOrderTerm() {
     override fun clone(qm: Map<String, Quantifier>) = Constant(spelling)
 
     override fun synEq(other: Any?): Boolean {
-        if (other == null || other !is Constant)
+        if (other == null || other !is Constant) {
             return false
+        }
 
         return spelling == other.spelling
     }
@@ -79,15 +82,18 @@ class Function(val spelling: String, var arguments: List<FirstOrderTerm>) : Firs
 
     @Suppress("ReturnCount")
     override fun synEq(other: Any?): Boolean {
-        if (other == null || other !is Function)
+        if (other == null || other !is Function) {
             return false
+        }
 
-        if (spelling != other.spelling || arguments.size != other.arguments.size)
+        if (spelling != other.spelling || arguments.size != other.arguments.size) {
             return false
+        }
 
         for (i in arguments.indices) {
-            if (!arguments[i].synEq(other.arguments[i]))
+            if (!arguments[i].synEq(other.arguments[i])) {
                 return false
+            }
         }
 
         return true

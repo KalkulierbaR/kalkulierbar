@@ -26,8 +26,9 @@ abstract class ScoredCalculus<State, Move, Param> : JSONCalculus<State, Move, Pa
      */
     fun getScore(json: String, name: String?): Map<String, String> {
         val state = jsonToState(json)
-        if (!checkCloseOnState(state).closed)
+        if (!checkCloseOnState(state).closed) {
             throw IllegalMove("Cannot get score for unclosed proof")
+        }
         return scoreFromState(state, name)
     }
 

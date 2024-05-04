@@ -1,8 +1,13 @@
 package kalkulierbar.logic.transform
 
 import kalkulierbar.FormulaConversionException
-import kalkulierbar.logic.*
+import kalkulierbar.logic.Constant
+import kalkulierbar.logic.ExistentialQuantifier
 import kalkulierbar.logic.Function
+import kalkulierbar.logic.LogicNode
+import kalkulierbar.logic.QuantifiedVariable
+import kalkulierbar.logic.Relation
+import kalkulierbar.logic.UniversalQuantifier
 
 /**
  * Visitor-based variable renaming transformation
@@ -105,7 +110,7 @@ class UniqueVariables : DoNothingVisitor() {
 /**
  * FirstOrderTerm visitor to re-name variables
  * @param replacementMap Map of all variables to replace and their new variable name
- * @param strict Set to false to allow variables with no associated replacement
+ * @param strict Set to false in order to allow variables with no associated replacement
  */
 class VariableRenamer(
     private val replacementMap: Map<QuantifiedVariable, String>,
@@ -117,10 +122,11 @@ class VariableRenamer(
      * @param node: QuantifiedVariable encountered
      */
     override fun visit(node: QuantifiedVariable) {
-        if (replacementMap[node] != null)
+        if (replacementMap[node] != null) {
             node.spelling = replacementMap[node]!!
-        else if (strict)
+        } else if (strict) {
             throw FormulaConversionException("Encountered QuantifiedVariable with no disambiguation replacement: $node")
+        }
     }
 
     @Suppress("EmptyFunctionBlock")

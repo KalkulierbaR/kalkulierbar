@@ -7,8 +7,37 @@ import kalkulierbar.ScoredCalculus
 import kalkulierbar.logic.FoTermModule
 import kalkulierbar.logic.LogicModule
 import kalkulierbar.parsers.FirstOrderSequentParser
-import kalkulierbar.sequent.*
-import kotlinx.serialization.decodeFromString
+import kalkulierbar.sequent.AllLeft
+import kalkulierbar.sequent.AllRight
+import kalkulierbar.sequent.AndLeft
+import kalkulierbar.sequent.AndRight
+import kalkulierbar.sequent.Ax
+import kalkulierbar.sequent.ExLeft
+import kalkulierbar.sequent.ExRight
+import kalkulierbar.sequent.GenericSequentCalculus
+import kalkulierbar.sequent.ImpLeft
+import kalkulierbar.sequent.ImpRight
+import kalkulierbar.sequent.NotLeft
+import kalkulierbar.sequent.NotRight
+import kalkulierbar.sequent.OrLeft
+import kalkulierbar.sequent.OrRight
+import kalkulierbar.sequent.PruneMove
+import kalkulierbar.sequent.SequentCalculusMove
+import kalkulierbar.sequent.SequentCalculusMoveModule
+import kalkulierbar.sequent.SequentCalculusParam
+import kalkulierbar.sequent.TreeNode
+import kalkulierbar.sequent.UndoMove
+import kalkulierbar.sequent.applyAndLeft
+import kalkulierbar.sequent.applyAndRight
+import kalkulierbar.sequent.applyAx
+import kalkulierbar.sequent.applyImpLeft
+import kalkulierbar.sequent.applyImpRight
+import kalkulierbar.sequent.applyNotLeft
+import kalkulierbar.sequent.applyNotRight
+import kalkulierbar.sequent.applyOrLeft
+import kalkulierbar.sequent.applyOrRight
+import kalkulierbar.sequent.applyPrune
+import kalkulierbar.sequent.applyUndo
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
@@ -56,10 +85,11 @@ class FirstOrderSequent :
     }
 
     override fun checkCloseOnState(state: FirstOrderSequentState): CloseMessage {
-        return if (state.tree.all { it.isClosed })
+        return if (state.tree.all { it.isClosed }) {
             CloseMessage(true, "The proof is closed and valid in First Order Logic")
-        else
+        } else {
             CloseMessage(false, "Not all branches of the proof tree are closed")
+        }
     }
 
     /*
@@ -77,6 +107,9 @@ class FirstOrderSequent :
         }
     }
 
-    override fun scoreFromState(state: FirstOrderSequentState, name: String?): Map<String, String> = stateToStat(state, name)
+    override fun scoreFromState(
+        state: FirstOrderSequentState,
+        name: String?
+    ): Map<String, String> = stateToStat(state, name)
     override fun formulaFromState(state: FirstOrderSequentState) = state.tree[0].toString()
 }

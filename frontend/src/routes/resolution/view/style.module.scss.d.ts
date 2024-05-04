@@ -1,5 +1,4 @@
-import globalClassNames from "../../../style.d";
-declare const classNames: typeof globalClassNames & {
-    readonly hyperFab: "hyperFab";
+declare const classNames: {
+  readonly hyperFab: "hyperFab";
 };
 export = classNames;

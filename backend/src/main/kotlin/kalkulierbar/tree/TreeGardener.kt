@@ -15,8 +15,9 @@ interface TreeGardener<Node : GenericTreeNode> {
 
     fun checkNodeID(vararg ids: Int) {
         for (id in ids) {
-            if (id < 0 || tree.size <= id)
+            if (id < 0 || tree.size <= id) {
                 throw IllegalMove("Node with ID $id does not exist")
+            }
         }
     }
 
@@ -29,10 +30,12 @@ interface TreeGardener<Node : GenericTreeNode> {
     @Suppress("ReturnCount")
     fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
         val child = tree[childID]
-        if (child.parent == parentID)
+        if (child.parent == parentID) {
             return true
-        if (child.parent == 0 || child.parent == null)
+        }
+        if (child.parent == 0 || child.parent == null) {
             return false
+        }
         return nodeIsParentOf(parentID, child.parent!!)
     }
 
@@ -61,8 +64,9 @@ interface TreeGardener<Node : GenericTreeNode> {
             val index = worklist.removeAt(0)
             val node = tree[index]
             worklist.addAll(node.children)
-            if (node.isLeaf)
+            if (node.isLeaf) {
                 leaves.add(index)
+            }
         }
 
         return leaves
@@ -109,8 +113,9 @@ interface TreeGardener<Node : GenericTreeNode> {
     private fun removeNodeInconsistent(id: Int) {
         tree.removeAt(id)
         tree.forEach {
-            if (it.parent != null && it.parent!! > id)
+            if (it.parent != null && it.parent!! > id) {
                 it.parent = it.parent!! - 1
+            }
         }
     }
 
@@ -121,8 +126,9 @@ interface TreeGardener<Node : GenericTreeNode> {
         tree.forEach { it.children.clear() }
 
         for (i in tree.indices) {
-            if (tree[i].parent != null)
+            if (tree[i].parent != null) {
                 tree[tree[i].parent!!].children.add(i)
+            }
         }
     }
 
@@ -133,10 +139,11 @@ interface TreeGardener<Node : GenericTreeNode> {
      */
     fun getWidth(nodeID: Int): Int {
         val node = tree[nodeID]
-        return if (node.children.isEmpty())
+        return if (node.children.isEmpty()) {
             1
-        else
+        } else {
             node.children.sumOf { getWidth(it) }
+        }
     }
 
     /**
@@ -146,9 +153,10 @@ interface TreeGardener<Node : GenericTreeNode> {
      */
     fun getDepth(nodeID: Int): Int {
         val node = tree[nodeID]
-        return if (node.children.isEmpty())
+        return if (node.children.isEmpty()) {
             1
-        else
+        } else {
             node.children.maxByOrNull { getDepth(it) }!! + 1
+        }
     }
 }

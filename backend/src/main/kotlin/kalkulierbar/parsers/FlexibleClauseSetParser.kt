@@ -25,7 +25,7 @@ object FlexibleClauseSetParser {
         // Try parsing as Dimacs-Like
         try {
             return DimacsLikeParser.parse(formula)
-        } catch (e: InvalidFormulaFormat) {} // We don't support this officially, so no custom error for invalid dimacs
+        } catch (_: InvalidFormulaFormat) {} // We don't support this officially, so no custom error for invalid dimacs
 
         // Try parsing as ClauseSet
         try {
@@ -40,12 +40,13 @@ object FlexibleClauseSetParser {
         } catch (e: InvalidFormulaFormat) {
 
             // If the input formula is likely intended to be certain input type, only report that error
-            if (likelyFormula && !likelyClauseSet)
+            if (likelyFormula && !likelyClauseSet) {
                 errorMsg = ""
+            }
 
-            if (likelyFormula || !likelyClauseSet)
+            if (likelyFormula || !likelyClauseSet) {
                 errorMsg += "\nParsing as propositional formula failed: ${e.message ?: "unknown error"}"
-
+            }
             throw InvalidFormulaFormat(errorMsg)
         }
     }
@@ -75,10 +76,11 @@ object FlexibleClauseSetParser {
                 // Fall back to tseytin if so
                 res = try {
                     val naive = NaiveCNF.transform(formula)
-                    if (naive.clauses.size > tseytin.clauses.size)
+                    if (naive.clauses.size > tseytin.clauses.size) {
                         tseytin
-                    else
+                    } else {
                         naive
+                    }
                 } catch (e: FormulaConversionException) {
                     tseytin
                 }

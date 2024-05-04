@@ -1,9 +1,9 @@
 plugins {
     kotlin("jvm") version "1.7.20"
-    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("plugin.serialization") version "1.9.23"
     application
     id("org.jmailen.kotlinter") version "3.10.0"
-    id("io.gitlab.arturbosch.detekt") version "1.21.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
     id("jacoco")
@@ -18,20 +18,22 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // JVM dependency
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // Web framework
-    implementation("io.javalin:javalin:5.4.2")
+    implementation("io.javalin:javalin:5.6.4")
 
     // Logging
-    implementation("org.slf4j:slf4j-simple:2.0.3")
+    implementation("org.slf4j:slf4j-simple:2.0.13")
 
     // Hashing
-    implementation("com.github.komputing:khash:1.1.1")
+    implementation("com.github.komputing.khash:keccak:1.1.3")
 
     // Testing
     testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.9.1")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.10.2")
+
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
 }
 
 application {
@@ -56,14 +58,13 @@ java {
 }
 
 detekt {
-    toolVersion = "1.19.0-RC1"
-    source = files("src/main/kotlin")
-    config = files("$projectDir/config/detekt/detekt.yml")
+    toolVersion = "1.23.6"
+    source.setFrom("src/main/kotlin")
+    config.setFrom("$projectDir/config/detekt/detekt.yml")
 }
 
 kotlinter {
     ignoreFailures = false
     reporters = arrayOf("checkstyle", "plain")
     experimentalRules = false
-    disabledRules = arrayOf("no-wildcard-imports", "filename")
 }

@@ -37,7 +37,10 @@ class SignedModalTableaux :
     }
 
     @Suppress("ComplexMethod")
-    override fun applyMoveOnState(state: SignedModalTableauxState, move: SignedModalTableauxMove): SignedModalTableauxState {
+    override fun applyMoveOnState(
+        state: SignedModalTableauxState,
+        move: SignedModalTableauxMove
+    ): SignedModalTableauxState {
         // Clear status message
         state.statusMessage = null
 
@@ -61,13 +64,13 @@ class SignedModalTableaux :
      * @return Equivalent state with the most recent rule application removed
      */
     private fun applyUndo(state: SignedModalTableauxState): SignedModalTableauxState {
-        if (!state.backtracking)
+        if (!state.backtracking) {
             throw IllegalMove("Backtracking is not enabled for this proof")
-
+        }
         // Can't undo any more moves in initial state
-        if (state.moveHistory.isEmpty())
+        if (state.moveHistory.isEmpty()) {
             return state
-
+        }
         // Create a fresh clone-state with the same parameters and input formula
         var freshState = SignedModalTableauxState(state.formula, state.assumption, state.backtracking)
         freshState.usedBacktracking = true

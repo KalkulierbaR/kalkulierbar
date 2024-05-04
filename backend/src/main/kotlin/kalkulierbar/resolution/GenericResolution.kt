@@ -39,13 +39,15 @@ interface GenericResolutionState<AtomType> {
         val clauses = clauseSet.clauses
 
         // Verify that the clause ids are valid
-        if (clause1 == clause2)
+        if (clause1 == clause2) {
             throw IllegalMove("Both ids refer to the same clause")
-        if (clause1 < 0 || clause1 >= clauses.size)
+        }
+        if (clause1 < 0 || clause1 >= clauses.size) {
             throw IllegalMove("There is no clause with id $clause1")
-        if (clause2 < 0 || clause2 >= clauses.size)
+        }
+        if (clause2 < 0 || clause2 >= clauses.size) {
             throw IllegalMove("There is no clause with id $clause2")
-
+        }
         val c1 = clauses[clause1]
         val c2 = clauses[clause2]
 
@@ -71,9 +73,9 @@ interface GenericResolutionState<AtomType> {
      * @param clauseID ID of the clause to be hidden
      */
     fun hide(clauseID: Int) {
-        if (clauseID < 0 || clauseID >= clauseSet.clauses.size)
+        if (clauseID < 0 || clauseID >= clauseSet.clauses.size) {
             throw IllegalMove("There is no clause with id $clauseID")
-
+        }
         // Move clause from main clause set to hidden clause set
         val clauseToHide = clauseSet.clauses.removeAt(clauseID)
         hiddenClauses.add(clauseToHide)
