@@ -38,18 +38,16 @@ Supported OS are `debian/ubuntu`, `RHEL/CentOS/Fedora`, `OpenSUSE`, `ArchLinux`.
 Just open your terminal, `cd` into source directory and type `./install`.
 
 If you want to use command `yarn` and `node` elswhere or run fronted without the run.sh script then
-add `/usr/local/lib/nodejs/node-v12.14.1-linux-x64/bin` to your path.
+add `/usr/local/lib/nodejs/node-v20.12.2-linux-x64/bin` to your path.
 
--> Problems? Then install `java`, `nodeJS` and `yarn`.
-
-On `Windows` install these manually:
+If you experience problems or are on `Windows`, install these manually:
 
 - [Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
   / [OpenJDK](https://openjdk.java.net/install/index.html) >= Java version 8
-- [Node.JS](https://nodejs.org/en/download/) (v12 or v14)
+- [Node.JS](https://nodejs.org/en/download/) (v18+)
 - [yarn](https://yarnpkg.com/getting-started/install)
 
-### Run
+### Run frontend and backend in same terminal
 
 - Linux: type `./run`
 - Windows: `run.bat`

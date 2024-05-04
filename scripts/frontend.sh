@@ -2,7 +2,7 @@ cd ../frontend || exit
 
 #Check for command node and export path
 if [ -z "$(command -v node)" ]; then
-  export PATH=/usr/local/lib/nodejs/node-v12.14.1-linux-x64/bin:$PATH
+  export PATH=/usr/local/lib/nodejs/node-v20.12.2-linux-x64/bin:$PATH
   . ~/.profile
 fi
 
