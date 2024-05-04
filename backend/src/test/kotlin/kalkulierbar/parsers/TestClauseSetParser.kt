@@ -18,7 +18,7 @@ class TestClauseSetParser {
         Pair("a\nb", "{a}, {b}"),
         Pair("a\nb\n", "{a}, {b}"),
         Pair("a; ", "{a}"),
-        Pair("fUnkYvAR;!McVariable,thefirst", "{fUnkYvAR}, {!McVariable, thefirst}")
+        Pair("fUnkYvAR;!McVariable,thefirst", "{fUnkYvAR}, {!McVariable, thefirst}"),
     )
 
     private val validNonGeneric = listOf(
@@ -26,7 +26,7 @@ class TestClauseSetParser {
         Pair("-a", "{!a}"),
         Pair("a|b", "{a}, {b}"),
         Pair("a&b", "{a, b}"),
-        Pair("fUnkYvAR|-McVariable&thefirst", "{fUnkYvAR}, {!McVariable, thefirst}")
+        Pair("fUnkYvAR|-McVariable&thefirst", "{fUnkYvAR}, {!McVariable, thefirst}"),
     )
 
     @Test

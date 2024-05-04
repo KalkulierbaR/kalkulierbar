@@ -28,7 +28,7 @@ class TestRegularity {
             TableauxNode(0, "a", false),
             TableauxNode(0, "b", false),
             TableauxNode(2, "b", true),
-            TableauxNode(1, "a", true)
+            TableauxNode(1, "a", true),
         )
 
         state = createState(nodes, state)
@@ -45,7 +45,7 @@ class TestRegularity {
             TableauxNode(0, "b", false),
             TableauxNode(1, "a", true),
             TableauxNode(2, "b", true),
-            TableauxNode(4, "a", false)
+            TableauxNode(4, "a", false),
         )
 
         state = createState(nodes, state)
@@ -60,7 +60,7 @@ class TestRegularity {
         val nodes = listOf(
             TableauxNode(0, "true", false),
             TableauxNode(0, "false", false),
-            TableauxNode(1, "true", true)
+            TableauxNode(1, "true", true),
         )
 
         state = createState(nodes, state)
@@ -87,7 +87,7 @@ class TestRegularity {
 
         val nodes = listOf(
             TableauxNode(0, "a", false),
-            TableauxNode(1, "a", false)
+            TableauxNode(1, "a", false),
         )
 
         state = createState(nodes, state)
@@ -103,7 +103,7 @@ class TestRegularity {
             TableauxNode(0, "a", false),
             TableauxNode(1, "a", true),
             TableauxNode(2, "b", false),
-            TableauxNode(3, "a", false)
+            TableauxNode(3, "a", false),
         )
 
         state = createState(nodes, state)
@@ -120,7 +120,7 @@ class TestRegularity {
             TableauxNode(0, "b", false),
             TableauxNode(1, "b", false),
             TableauxNode(2, "a", false),
-            TableauxNode(2, "b", false)
+            TableauxNode(2, "b", false),
         )
 
         state = createState(nodes, state)
@@ -135,7 +135,7 @@ class TestRegularity {
         val nodes = listOf(
             TableauxNode(0, "true", false),
             TableauxNode(1, "true", true),
-            TableauxNode(2, "true", false)
+            TableauxNode(2, "true", false),
         )
 
         state = createState(nodes, state)

@@ -55,7 +55,7 @@ class FreeVariableCollector : DoNothingCollector() {
  * @param boundVariables: set of bound variables to compare with variables in first-order term
  */
 class FreeVariableTermCollector(
-    val boundVariables: Set<QuantifiedVariable>
+    val boundVariables: Set<QuantifiedVariable>,
 ) : FirstOrderTermVisitor<Set<QuantifiedVariable>>() {
     override fun visit(node: Constant): Set<QuantifiedVariable> {
         return mutableSetOf()

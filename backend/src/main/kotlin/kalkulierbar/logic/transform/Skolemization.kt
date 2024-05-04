@@ -63,11 +63,10 @@ class Skolemization(private val signature: Signature) : DoNothingVisitor() {
      * @return Skolemized subformula without the existential quantifier
      */
     override fun visit(node: ExistentialQuantifier): LogicNode {
-
         if (quantifierScope.size > quantifierScope.distinctBy { it.varName }.size) {
             throw FormulaConversionException(
                 "Double-bound universally quantified variable encountered " +
-                    "during Skolemization"
+                    "during Skolemization",
             )
         }
 
@@ -127,7 +126,7 @@ class Skolemization(private val signature: Signature) : DoNothingVisitor() {
  */
 class SkolemTermReplacer(
     private val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>,
-    private val bindingQuantifiers: List<UniversalQuantifier>
+    private val bindingQuantifiers: List<UniversalQuantifier>,
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     /**

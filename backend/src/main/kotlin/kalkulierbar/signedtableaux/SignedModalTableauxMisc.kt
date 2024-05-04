@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 class SignedModalTableauxState(
     val formula: LogicNode,
     val assumption: Boolean,
-    val backtracking: Boolean
+    val backtracking: Boolean,
 ) : ProtectedState(), TreeGardener<SignedModalTableauxNode> {
     override val tree = mutableListOf(SignedModalTableauxNode(null, listOf(1), assumption, formula.clone()))
     val moveHistory = mutableListOf<SignedModalTableauxMove>()
@@ -84,7 +84,7 @@ class SignedModalTableauxNode(
     override var parent: Int?,
     var prefix: List<Int>,
     var sign: Boolean,
-    var formula: LogicNode
+    var formula: LogicNode,
 ) : GenericTreeNode {
     var isClosed = false
     var closeRef: Int? = null
@@ -102,5 +102,5 @@ class SignedModalTableauxNode(
 
 @Serializable
 data class SignedModalTableauxParam(
-    val backtracking: Boolean
+    val backtracking: Boolean,
 )

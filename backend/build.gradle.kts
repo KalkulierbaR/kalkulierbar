@@ -1,8 +1,8 @@
 plugins {
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "1.9.23"
     kotlin("plugin.serialization") version "1.9.23"
     application
-    id("org.jmailen.kotlinter") version "3.10.0"
+    id("org.jmailen.kotlinter") version "3.16.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.6"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
@@ -66,5 +66,4 @@ detekt {
 kotlinter {
     ignoreFailures = false
     reporters = arrayOf("checkstyle", "plain")
-    experimentalRules = false
 }

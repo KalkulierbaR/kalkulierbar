@@ -11,7 +11,7 @@ class TestPropositionalJson {
 
     /*
         Test jsonToMove
-    */
+     */
 
     @Test
     fun testJsonMoveValid() {
@@ -46,7 +46,7 @@ class TestPropositionalJson {
 
     /*
         Test jsonToState
-    */
+     */
 
     @Test
     fun testJsonStateEmpty() {
@@ -64,7 +64,7 @@ class TestPropositionalJson {
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!a}, {!b}|" +
                 "[true;p;null;-;l;o;()]|[]",
-            state.getHash()
+            state.getHash(),
         )
     }
 
@@ -139,7 +139,7 @@ class TestPropositionalJson {
 
     /*
         Test jsonToParam
-    */
+     */
 
     @Test
     fun testJsonParamValid() {

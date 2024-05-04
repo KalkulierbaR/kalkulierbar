@@ -32,7 +32,7 @@ val endpoints: Set<Calculus> = setOf<Calculus>(
     NonClausalTableaux(),
     PropositionalSequent(),
     FirstOrderSequent(),
-    SignedModalTableaux()
+    SignedModalTableaux(),
 )
 
 fun main(args: Array<String>) {
@@ -43,7 +43,7 @@ fun main(args: Array<String>) {
     // Verify that no calculus is overriding /admin and /config endpoints
     if (endpoints.any { it.identifier == "admin" || it.identifier == "config" || it.identifier == "stats" }) {
         throw KalkulierbarException(
-            "Set of active calculi contains forbidden identifiers \"admin\", \"config\" or \"stats\""
+            "Set of active calculi contains forbidden identifiers \"admin\", \"config\" or \"stats\"",
         )
     }
     // Pass list of available calculi to StateKeeper
@@ -66,7 +66,6 @@ fun getEnvPort() = System.getenv("PORT")?.toInt() ?: KBAR_DEFAULT_PORT
  */
 @Suppress("ThrowsCount", "MagicNumber", "LongMethod", "ComplexMethod")
 fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false) {
-
     val host = if (listenGlobally) "0.0.0.0" else "localhost"
 
     val app = Javalin.create { config ->
@@ -97,7 +96,7 @@ fun httpApi(port: Int, endpoints: Set<Calculus>, listenGlobally: Boolean = false
                 |
                 |Available calculus endpoints:
                 |${ids.joinToString("\n")}
-            """.trimMargin()
+            """.trimMargin(),
         )
     }
 
@@ -160,7 +159,7 @@ fun createCalculusEndpoints(app: Javalin, calculus: Calculus) {
             """
                 |Calculus "$name" loaded.
                 |Interact via the /parse /move /close and /validate endpoints
-            """.trimMargin()
+            """.trimMargin(),
         )
     }
 

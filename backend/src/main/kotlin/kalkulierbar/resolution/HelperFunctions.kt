@@ -16,7 +16,7 @@ import kalkulierbar.logic.SyntacticEquality
 fun <AtomType> filterClause(
     c1: Clause<AtomType>,
     c2: Clause<AtomType>,
-    literal: AtomType
+    literal: AtomType,
 ): Pair<Atom<AtomType>, Atom<AtomType>> {
     // Filter clauses for atoms with correct literal
     val atomsInC1 = c1.atoms.filter { literalsAreEqual(it.lit, literal) }
@@ -40,9 +40,8 @@ fun <AtomType> filterClause(
  */
 fun <AtomType> getAutoResolutionCandidates(
     c1: Clause<AtomType>,
-    c2: Clause<AtomType>
+    c2: Clause<AtomType>,
 ): Pair<Atom<AtomType>, Atom<AtomType>> {
-
     // Find literals present in both clauses
     var sharedAtoms = c1.atoms.filter { c1atom ->
         c2.atoms.any { literalsAreEqual(c1atom.lit, it.lit) }
@@ -60,7 +59,7 @@ fun <AtomType> getAutoResolutionCandidates(
     if (sharedAtoms.isEmpty()) {
         throw IllegalMove(
             "Clauses '$c1' and '$c2' contain no common literals that appear" +
-                "in positive and negated form"
+                "in positive and negated form",
         )
     }
 
@@ -83,7 +82,7 @@ fun <AtomType> buildClause(
     c1: Clause<AtomType>,
     a1: Atom<AtomType>,
     c2: Clause<AtomType>,
-    a2: Atom<AtomType>
+    a2: Atom<AtomType>,
 ): Clause<AtomType> {
     val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
         c2.atoms.filter { it != a2 }.toMutableList()
@@ -99,7 +98,7 @@ fun <AtomType> buildClause(
  */
 fun <AtomType> findResCandidates(
     atoms1: List<Atom<AtomType>>,
-    atoms2: List<Atom<AtomType>>
+    atoms2: List<Atom<AtomType>>,
 ): Pair<Atom<AtomType>, Atom<AtomType>>? {
     val (pos, neg) = atoms2.partition { !it.negated }
 

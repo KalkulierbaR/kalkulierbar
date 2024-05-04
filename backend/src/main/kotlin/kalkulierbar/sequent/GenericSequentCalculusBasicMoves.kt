@@ -14,7 +14,6 @@ import kalkulierbar.logic.Or
  */
 @Suppress("ThrowsCount")
 fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalculusState {
-
     state.checkNodeID(nodeID)
     val leaf = state.tree[nodeID]
 
@@ -29,7 +28,7 @@ fun applyAx(state: GenericSequentCalculusState, nodeID: Int): GenericSequentCalc
                 mutableListOf(),
                 mutableListOf(),
                 true,
-                Ax(nodeID)
+                Ax(nodeID),
             )
             state.addChildren(nodeID, newLeaf)
             state.setNodeClosed(newLeaf)
@@ -65,7 +64,7 @@ fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
         nodeID,
         newLeftFormula.distinct().toMutableList(),
         newRightFormula.distinct().toMutableList(),
-        NotRight(nodeID, listIndex)
+        NotRight(nodeID, listIndex),
     )
     state.addChildren(nodeID, newLeaf)
     return state
@@ -80,7 +79,6 @@ fun applyNotRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
  * @return new state after applying move
  */
 fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
-
     checkLeft(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
@@ -98,7 +96,7 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
         nodeID,
         newLeftFormula.distinct().toMutableList(),
         newRightFormula.distinct().toMutableList(),
-        NotLeft(nodeID, listIndex)
+        NotLeft(nodeID, listIndex),
     )
     state.addChildren(nodeID, newLeaf)
     return state
@@ -113,7 +111,6 @@ fun applyNotLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
  * @return new state after applying move
  */
 fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
-
     checkRight(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
@@ -131,7 +128,7 @@ fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
         nodeID,
         newLeftFormula.distinct().toMutableList(),
         newRightFormula.distinct().toMutableList(),
-        OrRight(nodeID, listIndex)
+        OrRight(nodeID, listIndex),
     )
     state.addChildren(nodeID, newLeaf)
     return state
@@ -150,7 +147,6 @@ fun applyOrRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
  * @return new state after applying move
  */
 fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
-
     checkLeft(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
@@ -173,13 +169,13 @@ fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int)
         nodeID,
         newLeftFormulaOnLeftChild.distinct().toMutableList(),
         newRightFormulaOnLeftChild.distinct().toMutableList(),
-        OrLeft(nodeID, listIndex)
+        OrLeft(nodeID, listIndex),
     )
     val newRightLeaf = TreeNode(
         nodeID,
         newLeftFormulaOnRightChild.distinct().toMutableList(),
         newRightFormulaOnRightChild.distinct().toMutableList(),
-        OrLeft(nodeID, listIndex)
+        OrLeft(nodeID, listIndex),
     )
 
     state.addChildren(nodeID, newLeftLeaf, newRightLeaf)
@@ -199,7 +195,6 @@ fun applyOrLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int)
  * @return new state after applying move
  */
 fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
-
     checkRight(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
@@ -222,13 +217,13 @@ fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
         nodeID,
         newLeftFormulaOnLeftChild.distinct().toMutableList(),
         newRightFormulaOnLeftChild.distinct().toMutableList(),
-        AndRight(nodeID, listIndex)
+        AndRight(nodeID, listIndex),
     )
     val newRightLeaf = TreeNode(
         nodeID,
         newLeftFormulaOnRightChild.distinct().toMutableList(),
         newRightFormulaOnRightChild.distinct().toMutableList(),
-        AndRight(nodeID, listIndex)
+        AndRight(nodeID, listIndex),
     )
     state.addChildren(nodeID, newLeftLeaf, newRightLeaf)
 
@@ -244,7 +239,6 @@ fun applyAndRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
  * @return new state after applying move
  */
 fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
-
     checkLeft(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
@@ -262,7 +256,7 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
         nodeID,
         newLeftFormula.distinct().toMutableList(),
         newRightFormula.distinct().toMutableList(),
-        AndLeft(nodeID, listIndex)
+        AndLeft(nodeID, listIndex),
     )
     state.addChildren(nodeID, newLeaf)
     return state
@@ -281,7 +275,6 @@ fun applyAndLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
  * @return new state after applying move
  */
 fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int): GenericSequentCalculusState {
-
     checkLeft(state, nodeID, listIndex)
 
     val leaf = state.tree[nodeID]
@@ -303,13 +296,13 @@ fun applyImpLeft(state: GenericSequentCalculusState, nodeID: Int, listIndex: Int
         nodeID,
         newLeftFormulaOnLeftChild.distinct().toMutableList(),
         newRightFormulaOnLeftChild.distinct().toMutableList(),
-        ImpLeft(nodeID, listIndex)
+        ImpLeft(nodeID, listIndex),
     )
     val newRightLeaf = TreeNode(
         nodeID,
         newLeftFormulaOnRightChild.distinct().toMutableList(),
         newRightFormulaOnRightChild.distinct().toMutableList(),
-        ImpLeft(nodeID, listIndex)
+        ImpLeft(nodeID, listIndex),
     )
 
     state.addChildren(nodeID, newLeftLeaf, newRightLeaf)
@@ -343,7 +336,7 @@ fun applyImpRight(state: GenericSequentCalculusState, nodeID: Int, listIndex: In
         nodeID,
         newLeftFormula.distinct().toMutableList(),
         newRightFormula.distinct().toMutableList(),
-        ImpRight(nodeID, listIndex)
+        ImpRight(nodeID, listIndex),
     )
     state.addChildren(nodeID, newLeaf)
     return state

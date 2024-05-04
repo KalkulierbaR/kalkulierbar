@@ -13,13 +13,13 @@ class TestFOLemma {
         TableauxType.UNCONNECTED,
         regular = false,
         backtracking = false,
-        manualVarAssign = false
+        manualVarAssign = false,
     )
     private val manualParam = FoTableauxParam(
         TableauxType.UNCONNECTED,
         regular = false,
         backtracking = false,
-        manualVarAssign = true
+        manualVarAssign = true,
     )
 
     private var autoStates = mutableListOf<FoTableauxState>()
@@ -27,7 +27,7 @@ class TestFOLemma {
 
     val formula = listOf(
         "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) & R(A)))"
+        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) & R(A)))",
     )
 
     @BeforeTest

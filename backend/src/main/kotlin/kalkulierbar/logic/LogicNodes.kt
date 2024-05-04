@@ -164,7 +164,7 @@ class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : Synt
 class UniversalQuantifier(
     override var varName: String,
     override var child: LogicNode,
-    override val boundVariables: MutableList<QuantifiedVariable>
+    override val boundVariables: MutableList<QuantifiedVariable>,
 ) : Quantifier() {
 
     override fun toString() = "(∀$varName: $child)"
@@ -215,7 +215,7 @@ class UniversalQuantifier(
 class ExistentialQuantifier(
     override var varName: String,
     override var child: LogicNode,
-    override val boundVariables: MutableList<QuantifiedVariable>
+    override val boundVariables: MutableList<QuantifiedVariable>,
 ) : Quantifier() {
 
     override fun toString() = "(∃$varName: $child)"

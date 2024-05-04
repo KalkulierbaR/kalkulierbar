@@ -18,7 +18,7 @@ class TestDimacsLikeParser {
         Pair("a\n 0 b", "{a}, {b}"),
         Pair("a 0 b 0", "{a}, {b}"),
         Pair("fUnkYvAR 0 -McVariable thefirst", "{fUnkYvAR}, {!McVariable, thefirst}"),
-        Pair("1 -2 0 3", "{1, !2}, {3}")
+        Pair("1 -2 0 3", "{1, !2}, {3}"),
     )
 
     @Test

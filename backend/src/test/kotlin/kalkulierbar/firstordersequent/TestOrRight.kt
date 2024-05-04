@@ -30,6 +30,7 @@ class TestOrRight {
         assertTrue(node1.rightFormulas[0] is Relation)
         assertTrue(node1.rightFormulas[1] is Relation)
     }
+
     @Test
     fun testParent() {
         var state = instance.parseFormulaToState("P(a) | P(b)", null)

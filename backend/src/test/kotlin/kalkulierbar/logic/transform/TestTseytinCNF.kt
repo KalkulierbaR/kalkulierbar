@@ -20,7 +20,7 @@ class TestTseytinCNF {
             "{vara, not4, !or2}, {!vara, !not6}, {vara, not6}, {or2, impl1}, {!not6, impl1}, " +
             "{!or2, not6, !impl1}, {!vara, !not11}, {vara, not11}, {varb, !and9}, {not11, !and9}, " +
             "{!varb, !not11, and9}, {!and9, or8}, {!varb, or8}, {and9, varb, !or8}, {impl1, !or8, !equiv0}, " +
-            "{!impl1, or8, !equiv0}, {!impl1, !or8, equiv0}, {impl1, or8, equiv0}"
+            "{!impl1, or8, !equiv0}, {!impl1, !or8, equiv0}, {impl1, or8, equiv0}",
     )
 
     @Test

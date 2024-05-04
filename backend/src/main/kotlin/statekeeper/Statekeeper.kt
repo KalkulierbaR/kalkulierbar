@@ -231,7 +231,7 @@ object StateKeeper {
 data class AppState(
     val key: String = "WildFlowers/UncomfortableMoons",
     val disabledCalculi: MutableList<String> = mutableListOf(),
-    val examples: MutableList<Example> = mutableListOf()
+    val examples: MutableList<Example> = mutableListOf(),
 )
 
 @Serializable
@@ -240,7 +240,7 @@ data class Example(
     val description: String,
     val calculus: String,
     val formula: String,
-    val params: String
+    val params: String,
 )
 
 class AuthenticationException(msg: String) : KalkulierbarException(msg)

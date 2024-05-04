@@ -34,7 +34,7 @@ class TestFirstOrderSequentParser {
         "\\all X: P(\\all: X: P(X))",
         "\\all X: P(Y)",
         "\\all x: P(X)",
-        "\\all X P(X)"
+        "\\all X P(X)",
     )
 
     private val valid = mapOf(
@@ -68,7 +68,7 @@ class TestFirstOrderSequentParser {
         "\\ex Xyz: P(Xyz) & \\all X: P(X), P(c) |- /ex Xyz: P(Xyz) & " +
             "/all X: P(X), \\all X: \\all Y: \\all Z: R(m(X, m(Y, Z)), m(m(X,Y), Z))"
             to "((∃Xyz: P(Xyz)) ∧ (∀X: P(X))), P(c) ⊢ ((∃Xyz: P(Xyz)) ∧ (∀X: P(X))), " +
-                "(∀X: (∀Y: (∀Z: R(m(X, m(Y, Z)), m(m(X, Y), Z)))))"
+            "(∀X: (∀Y: (∀Z: R(m(X, m(Y, Z)), m(m(X, Y), Z)))))",
     )
 
     @Test

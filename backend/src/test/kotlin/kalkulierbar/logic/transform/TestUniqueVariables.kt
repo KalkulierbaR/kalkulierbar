@@ -9,7 +9,7 @@ class TestUniqueVariables {
 
     private val formulas = mapOf(
         "\\all X: (R(X) & \\all X: S(X))" to "(∀X: (R(X) ∧ (∀Xv1: S(Xv1))))",
-        "\\all X: R(X) & \\all X: S(X)" to "((∀X: R(X)) ∧ (∀Xv1: S(Xv1)))"
+        "\\all X: R(X) & \\all X: S(X)" to "((∀X: R(X)) ∧ (∀Xv1: S(Xv1)))",
     )
 
     @Test

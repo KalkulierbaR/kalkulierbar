@@ -16,7 +16,7 @@ fun <AtomType> verifyExpandRegularity(
     state: GenericTableauxState<AtomType>,
     leafID: Int,
     clause: Clause<AtomType>,
-    applyPreprocessing: Boolean = true
+    applyPreprocessing: Boolean = true,
 ) {
     // Create list of predecessor
     val leaf = state.tree[leafID]
@@ -41,7 +41,7 @@ fun <AtomType> verifyExpandRegularity(
         if (lst.contains(atom)) {
             throw IllegalMove(
                 "Expanding this clause would introduce a duplicate " +
-                    "node '$atom' on the branch, making the tree irregular"
+                    "node '$atom' on the branch, making the tree irregular",
             )
         }
     }
@@ -72,7 +72,7 @@ fun <AtomType> verifyExpandConnectedness(state: GenericTableauxState<AtomType>, 
                 """
                     No literal in this clause would be closeable with '$leaf',
                     making the tree not strongly connected
-                """
+                """,
             )
         }
     }
@@ -113,7 +113,7 @@ fun <AtomType> checkConnectedness(state: GenericTableauxState<AtomType>, ctype: 
 private fun <AtomType> checkConnectedSubtree(
     state: GenericTableauxState<AtomType>,
     root: Int,
-    strong: Boolean
+    strong: Boolean,
 ): Boolean {
     val node = state.tree[root]
 
@@ -171,7 +171,7 @@ fun <AtomType> checkRegularity(state: GenericTableauxState<AtomType>): Boolean {
 private fun <AtomType> checkRegularitySubtree(
     state: GenericTableauxState<AtomType>,
     root: Int,
-    lst: List<Atom<AtomType>>
+    lst: List<Atom<AtomType>>,
 ): Boolean {
     val node = state.tree[root]
 
@@ -205,7 +205,7 @@ fun <AtomType> ensureExpandability(state: GenericTableauxState<AtomType>, leafID
     if (!checkConnectedness(state, state.type)) {
         throw IllegalMove(
             "The proof tree is currently not sufficiently connected, " +
-                "please close branches first to restore connectedness before expanding more leaves"
+                "please close branches first to restore connectedness before expanding more leaves",
         )
     }
     // Verify that both leaf and clause are valid

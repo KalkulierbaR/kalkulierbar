@@ -26,9 +26,8 @@ object ClauseSetParser {
         formula: String,
         clauseSeparator: String,
         atomSeparator: String,
-        negSign: Char
+        negSign: Char,
     ): ClauseSet<String> {
-
         val aSep = Regex.escape(atomSeparator)
         val cSep = Regex.escape(clauseSeparator)
         val nSig = Regex.escape(negSign.toString())
@@ -49,7 +48,7 @@ object ClauseSetParser {
         if (!(Regex(formulaFormat) matches pf)) {
             throw InvalidFormulaFormat(
                 "Please use alphanumeric variables only, " +
-                    "separate atoms with '$atomSeparator' and clauses with '$clauseSeparator'."
+                    "separate atoms with '$atomSeparator' and clauses with '$clauseSeparator'.",
             )
         }
 

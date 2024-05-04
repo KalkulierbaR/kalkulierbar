@@ -52,19 +52,19 @@ class TreeNode(
     val leftFormulas: MutableList<LogicNode>,
     val rightFormulas: MutableList<LogicNode>,
     var isClosed: Boolean,
-    val lastMove: SequentCalculusMove?
+    val lastMove: SequentCalculusMove?,
 
 ) : GenericTreeNode {
     constructor(
         parent: Int,
         leftFormulas: MutableList<LogicNode>,
         rightFormulas: MutableList<LogicNode>,
-        lastMove: SequentCalculusMove
+        lastMove: SequentCalculusMove,
     ) : this (parent, mutableListOf(), leftFormulas, rightFormulas, false, lastMove)
 
     constructor(
         leftFormulas: MutableList<LogicNode>,
-        rightFormulas: MutableList<LogicNode>
+        rightFormulas: MutableList<LogicNode>,
     ) : this(null, mutableListOf(), leftFormulas, rightFormulas, false, null)
 
     override fun toString(): String {
@@ -74,5 +74,5 @@ class TreeNode(
 
 @Serializable
 data class SequentCalculusParam(
-    val showOnlyApplicableRules: Boolean
+    val showOnlyApplicableRules: Boolean,
 )

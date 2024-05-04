@@ -52,7 +52,7 @@ class Tokenizer {
             formula: String,
             index: Int,
             tokens: MutableList<Token>,
-            positionInBaseString: Int
+            positionInBaseString: Int,
         ): Int {
             var i = index
             val len = formula.length

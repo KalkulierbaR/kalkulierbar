@@ -13,7 +13,7 @@ class TestAutoCloseBranchFO {
         TableauxType.UNCONNECTED,
         regular = false,
         backtracking = false,
-        manualVarAssign = false
+        manualVarAssign = false,
     )
     private var states = mutableListOf<FoTableauxState>()
 
@@ -23,7 +23,7 @@ class TestAutoCloseBranchFO {
         "\\ex A : (R(A) & (\\all B: !R(B) & !R(A)))",
         "\\ex Usk: (R(Usk) -> (!\\ex Usk: (R(sk1) & !R(Usk) | R(Usk) & !R(sk1))))",
         "\\all A: (Sk1(A) -> !\\ex B: (R(A) & !R(B) -> Sk1(B) | !Sk1(A)))",
-        "\\all X: (R(g(X)) & !R(f(X)))"
+        "\\all X: (R(g(X)) & !R(f(X)))",
     )
 
     @BeforeTest
@@ -152,8 +152,8 @@ class TestAutoCloseBranchFO {
         }
     }
 
-    @Test
     // Prints ClauseSet of each state
+    @Test
     fun printStateClauseSet() {
         for (state in states) {
             println(state.clauseSet.toString())

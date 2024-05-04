@@ -43,8 +43,10 @@ data class Signature(
     companion object {
         fun empty(): Signature {
             return Signature(
-                constants = setOf(), functions = setOf(),
-                relations = setOf(), boundVariables = setOf()
+                constants = setOf(),
+                functions = setOf(),
+                relations = setOf(),
+                boundVariables = setOf(),
             )
         }
 
@@ -82,7 +84,7 @@ data class Signature(
             constants = constants + sig.constants,
             functions = functions + sig.functions,
             relations = relations + sig.relations,
-            boundVariables = boundVariables + sig.boundVariables
+            boundVariables = boundVariables + sig.boundVariables,
         )
     }
 
@@ -152,7 +154,7 @@ class SignatureExtractor : DoNothingCollector() {
                 constants = instance.constants,
                 functions = instance.functions,
                 relations = instance.relations,
-                boundVariables = instance.boundVariables
+                boundVariables = instance.boundVariables,
             )
         }
     }
@@ -201,7 +203,7 @@ class TermSignatureExtractor(
 
 class SignatureAdherenceChecker(
     private val sig: Signature,
-    private val allowNewConstants: Boolean = true
+    private val allowNewConstants: Boolean = true,
 ) : FirstOrderTermVisitor<Unit>() {
 
     override fun visit(node: Constant) {

@@ -40,7 +40,7 @@ data class MoveResolveCustom(
     val c2: Int,
     val l1: Int,
     val l2: Int,
-    val varAssign: Map<String, String>
+    val varAssign: Map<String, String>,
 ) : ResolutionMove() {
     fun getVarAssignTerms() = varAssign.mapValues {
         try {

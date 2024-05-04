@@ -210,7 +210,7 @@ fun applyClose(
     state: NcTableauxState,
     nodeID: Int,
     closeID: Int,
-    varAssign: Map<String, FirstOrderTerm>?
+    varAssign: Map<String, FirstOrderTerm>?,
 ): NcTableauxState {
     checkCloseIDRestrictions(state, nodeID, closeID)
 
@@ -243,7 +243,7 @@ fun applyClose(
     if (!nodeRelation.synEq(closeRelation)) {
         throw IllegalMove(
             "Relations '$nodeRelation' and '$closeRelation' are" +
-                " not equal after variable instantiation"
+                " not equal after variable instantiation",
         )
     }
 

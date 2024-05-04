@@ -21,7 +21,10 @@ class FirstOrderResolution :
     JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
     override val identifier = "fo-resolution"
 
-    override val serializer = Json { serializersModule = resolutionMoveModule + FoTermModule; encodeDefaults = true }
+    override val serializer = Json {
+        serializersModule = resolutionMoveModule + FoTermModule
+        encodeDefaults = true
+    }
     override val stateSerializer = FoResolutionState.serializer()
     override val moveSerializer = ResolutionMove.serializer()
 
@@ -77,7 +80,7 @@ class FirstOrderResolution :
 @Serializable
 class FoResolutionState(
     override val clauseSet: ClauseSet<Relation>,
-    override val visualHelp: VisualHelp
+    override val visualHelp: VisualHelp,
 ) : GenericResolutionState<Relation>, ProtectedState() {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<Relation>()
