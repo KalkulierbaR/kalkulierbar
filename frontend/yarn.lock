@@ -1016,9 +1016,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@preact/preset-vite@npm:2.8.1":
-  version: 2.8.1
-  resolution: "@preact/preset-vite@npm:2.8.1"
+"@preact/preset-vite@npm:2.8.2":
+  version: 2.8.2
+  resolution: "@preact/preset-vite@npm:2.8.2"
   dependencies:
     "@babel/plugin-transform-react-jsx": "npm:^7.22.15"
     "@babel/plugin-transform-react-jsx-development": "npm:^7.22.5"
@@ -1030,10 +1030,12 @@ __metadata:
     magic-string: "npm:0.30.5"
     node-html-parser: "npm:^6.1.10"
     resolve: "npm:^1.22.8"
+    source-map: "npm:^0.7.4"
+    stack-trace: "npm:^1.0.0-pre2"
   peerDependencies:
     "@babel/core": 7.x
     vite: 2.x || 3.x || 4.x || 5.x
-  checksum: 10/ac91fc701e078d2910b386b9e793f5429f9db04e3c56ea0f41f5f777fb21f5610acd9091def7bb2da9aaadbb9e687e1c276ff0d636fe3427ebd452dce5f98838
+  checksum: 10/a54b14afbd3a6a09836ec1469bc7924e128778a092cca875c3434989974023bf6f21f09d5c090d12c23fdb81ce9e6499bdf52a2f35c81141e9f2687158c56460
   languageName: node
   linkType: hard
 
@@ -1541,10 +1543,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zeit/schemas@npm:2.29.0":
-  version: 2.29.0
-  resolution: "@zeit/schemas@npm:2.29.0"
-  checksum: 10/ad6afd42e77acdac32651ab594d8caafa0abe121db0de8858b276819a366f257d8b87476949c845e4e4293b24fa7c15def60b6e823ee7d65714dc9f150195e1b
+"@zeit/schemas@npm:2.36.0":
+  version: 2.36.0
+  resolution: "@zeit/schemas@npm:2.36.0"
+  checksum: 10/0d6e2ecf57f0e12c2b17dbdfa2f06f88519c1241275b5b8a1679dd591ee72fe45f5d87ef6ab35e068b07554b768c824dce3e2536f29d03c77cff4259209903e0
   languageName: node
   linkType: hard
 
@@ -1654,15 +1656,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:8.11.0":
-  version: 8.11.0
-  resolution: "ajv@npm:8.11.0"
+"ajv@npm:8.12.0, ajv@npm:^8.0.0, ajv@npm:^8.3.0":
+  version: 8.12.0
+  resolution: "ajv@npm:8.12.0"
   dependencies:
     fast-deep-equal: "npm:^3.1.1"
     json-schema-traverse: "npm:^1.0.0"
     require-from-string: "npm:^2.0.2"
     uri-js: "npm:^4.2.2"
-  checksum: 10/aa0dfd6cebdedde8e77747e84e7b7c55921930974b8547f54b4156164ff70445819398face32dafda4bd4c61bbc7513d308d4c2bf769f8ea6cb9c8449f9faf54
+  checksum: 10/b406f3b79b5756ac53bfe2c20852471b08e122bc1ee4cde08ae4d6a800574d9cd78d60c81c69c63ff81e4da7cd0b638fafbb2303ae580d49cf1600b9059efb85
   languageName: node
   linkType: hard
 
@@ -1675,18 +1677,6 @@ __metadata:
     json-schema-traverse: "npm:^0.4.1"
     uri-js: "npm:^4.2.2"
   checksum: 10/48d6ad21138d12eb4d16d878d630079a2bda25a04e745c07846a4ad768319533031e28872a9b3c5790fa1ec41aabdf2abed30a56e5a03ebc2cf92184b8ee306c
-  languageName: node
-  linkType: hard
-
-"ajv@npm:^8.0.0, ajv@npm:^8.3.0":
-  version: 8.12.0
-  resolution: "ajv@npm:8.12.0"
-  dependencies:
-    fast-deep-equal: "npm:^3.1.1"
-    json-schema-traverse: "npm:^1.0.0"
-    require-from-string: "npm:^2.0.2"
-    uri-js: "npm:^4.2.2"
-  checksum: 10/b406f3b79b5756ac53bfe2c20852471b08e122bc1ee4cde08ae4d6a800574d9cd78d60c81c69c63ff81e4da7cd0b638fafbb2303ae580d49cf1600b9059efb85
   languageName: node
   linkType: hard
 
@@ -5207,7 +5197,7 @@ __metadata:
   dependencies:
     "@material/radio": "npm:4.0.0"
     "@material/switch": "npm:4.0.0"
-    "@preact/preset-vite": "npm:2.8.1"
+    "@preact/preset-vite": "npm:2.8.2"
     "@types/eslint": "npm:^8"
     "@typescript-eslint/eslint-plugin": "npm:7.4.0"
     "@typescript-eslint/parser": "npm:7.4.0"
@@ -5220,14 +5210,14 @@ __metadata:
     preact-iso: "npm:2.3.2"
     preact-markup: "npm:2.1.1"
     preact-render-to-string: "npm:6.3.1"
-    prettier: "npm:3.2.3"
+    prettier: "npm:3.2.5"
     react-hint: "npm:3.2.1"
     sass: "npm:1.69.7"
-    serve: "npm:14.2.1"
+    serve: "npm:14.2.3"
     sha3: "npm:2.1.4"
     typescript: "npm:5.3.3"
     vite: "npm:5.2.10"
-    vite-plugin-sass-dts: "npm:1.3.17"
+    vite-plugin-sass-dts: "npm:1.3.18"
   peerDependencies:
     prettier: ">2.0.0"
   languageName: unknown
@@ -6616,12 +6606,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.2.3":
-  version: 3.2.3
-  resolution: "prettier@npm:3.2.3"
+"prettier@npm:3.2.5":
+  version: 3.2.5
+  resolution: "prettier@npm:3.2.5"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10/cc05f25f22aa18f6b602b4cd923f388f077fe0a9fa15be100b25d4b406e8f1a50d534e5513a129f12f3fc40bc8058006a41dbf68d72c86a1a6b8009e59ffeb66
+  checksum: 10/d509f9da0b70e8cacc561a1911c0d99ec75117faed27b95cc8534cb2349667dee6351b0ca83fa9d5703f14127faa52b798de40f5705f02d843da133fc3aa416a
   languageName: node
   linkType: hard
 
@@ -7368,12 +7358,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serve@npm:14.2.1":
-  version: 14.2.1
-  resolution: "serve@npm:14.2.1"
+"serve@npm:14.2.3":
+  version: 14.2.3
+  resolution: "serve@npm:14.2.3"
   dependencies:
-    "@zeit/schemas": "npm:2.29.0"
-    ajv: "npm:8.11.0"
+    "@zeit/schemas": "npm:2.36.0"
+    ajv: "npm:8.12.0"
     arg: "npm:5.0.2"
     boxen: "npm:7.0.0"
     chalk: "npm:5.0.1"
@@ -7385,7 +7375,7 @@ __metadata:
     update-check: "npm:1.5.4"
   bin:
     serve: build/main.js
-  checksum: 10/d070aed56ac650e8eaca24675e4c2f1ffb44ffce62f7e14eb9bd2cdc01c57c997bb3c1e2eea5a09a9e4667890e30c04138e57c9db6d713d48ba923c5ab8fe2b5
+  checksum: 10/8ca6a8cc0a22bc1eb539c065938c2d7addacf14d09efb7623de1b6ab36ac2eb06a449bc5ac1fb3ef33184a6211fa914a1875c277b761b207f2a812af98e5bd9f
   languageName: node
   linkType: hard
 
@@ -7579,6 +7569,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"source-map@npm:^0.7.4":
+  version: 0.7.4
+  resolution: "source-map@npm:0.7.4"
+  checksum: 10/a0f7c9b797eda93139842fd28648e868a9a03ea0ad0d9fa6602a0c1f17b7fb6a7dcca00c144476cccaeaae5042e99a285723b1a201e844ad67221bf5d428f1dc
+  languageName: node
+  linkType: hard
+
 "source-map@npm:~0.6.1":
   version: 0.6.1
   resolution: "source-map@npm:0.6.1"
@@ -7615,6 +7612,13 @@ __metadata:
   version: 0.0.10
   resolution: "stack-trace@npm:0.0.10"
   checksum: 10/7bd633f0e9ac46e81a0b0fe6538482c1d77031959cf94478228731709db4672fbbed59176f5b9a9fd89fec656b5dae03d084ef2d1b0c4c2f5683e05f2dbb1405
+  languageName: node
+  linkType: hard
+
+"stack-trace@npm:^1.0.0-pre2":
+  version: 1.0.0-pre2
+  resolution: "stack-trace@npm:1.0.0-pre2"
+  checksum: 10/a64099f86acc01980b0a7fbc662f3233bf8626daf95c53e31c835b2252ae11fc3dbfe8f3e77a7f8310132dd488af2795057cd7db599de0c41a6fa99b16068273
   languageName: node
   linkType: hard
 
@@ -8245,9 +8249,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-sass-dts@npm:1.3.17":
-  version: 1.3.17
-  resolution: "vite-plugin-sass-dts@npm:1.3.17"
+"vite-plugin-sass-dts@npm:1.3.18":
+  version: 1.3.18
+  resolution: "vite-plugin-sass-dts@npm:1.3.18"
   dependencies:
     postcss-js: "npm:^4.0.1"
   peerDependencies:
@@ -8255,7 +8259,7 @@ __metadata:
     prettier: ^2.7 || ^3
     sass: "*"
     vite: ">=3"
-  checksum: 10/f90712304ad4c9b4f974aa35b117f4c3da1a7eae57b00a2697c271cb391bdb501cb7c97766d1c4101ef55abeb106e364b7c293d303e0f9172e569462348b11f0
+  checksum: 10/b3eff3b35037b93e362d5a14948850cb9dd77423d022613bfad4a37d1bca6f18313857ca175d9cf8b52f639ff90ea564935700bfeb1d9c460028c0007a460c51
   languageName: node
   linkType: hard
 
