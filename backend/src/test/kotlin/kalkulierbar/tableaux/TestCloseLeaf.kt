@@ -17,7 +17,7 @@ class TestCloseLeaf {
         val nodes = listOf(
             TableauxNode(0, "a", false),
             TableauxNode(0, "b", false),
-            TableauxNode(2, "b", true)
+            TableauxNode(2, "b", true),
         )
         state = createArtificialExpandState(nodes, state)
         state = instance.applyMoveOnState(state, MoveAutoClose(3, 2))
@@ -27,7 +27,7 @@ class TestCloseLeaf {
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!b}|" +
                 "[true;p;null;-;i;o;(1,2)|a;p;0;-;l;o;()|b;p;0;-;i;c;(3)|b;n;2;2;l;c;()]|[]",
-            state.getHash()
+            state.getHash(),
         )
     }
 
@@ -39,7 +39,7 @@ class TestCloseLeaf {
             TableauxNode(0, "b", true),
             TableauxNode(1, "a", false),
             TableauxNode(1, "b", false),
-            TableauxNode(1, "c", false)
+            TableauxNode(1, "c", false),
         )
         state = createArtificialExpandState(nodes, state)
         state = instance.applyMoveOnState(state, MoveAutoClose(3, 1))
@@ -54,7 +54,7 @@ class TestCloseLeaf {
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
                 "[true;p;null;-;i;o;(1)|b;n;0;-;i;o;(2,3,4)|a;p;1;-;l;o;()|" +
                 "b;p;1;1;l;c;()|c;p;1;-;l;o;()]|[]",
-            state.getHash()
+            state.getHash(),
         )
     }
 
@@ -67,7 +67,7 @@ class TestCloseLeaf {
             TableauxNode(0, "b", false),
             TableauxNode(0, "c", false),
             TableauxNode(1, "a", true),
-            TableauxNode(2, "b", true)
+            TableauxNode(2, "b", true),
         )
         state = createArtificialExpandState(nodes, state)
 
@@ -85,7 +85,7 @@ class TestCloseLeaf {
             "tableauxstate|UNCONNECTED|false|false|false|{a, b, c}, {!a}, {!b}, {!c}|" +
                 "[true;p;null;-;i;o;(1,2,3)|a;p;0;-;i;c;(4)|b;p;0;-;i;c;(5)|c;p;0;-;l;o;()|a;n;1;1;l;c;()|" +
                 "b;n;2;2;l;c;()]|[]",
-            state.getHash()
+            state.getHash(),
         )
     }
 
@@ -114,7 +114,7 @@ class TestCloseLeaf {
             TableauxNode(0, "a", false),
             TableauxNode(0, "b", false),
             TableauxNode(1, "a", false),
-            TableauxNode(1, "b", false)
+            TableauxNode(1, "b", false),
         )
         state = createArtificialExpandState(nodes, state)
 
@@ -137,7 +137,7 @@ class TestCloseLeaf {
 
         val nodes = listOf(
             TableauxNode(0, "c", false),
-            TableauxNode(1, "c", false)
+            TableauxNode(1, "c", false),
         )
         state = createArtificialExpandState(nodes, state)
 
@@ -165,7 +165,7 @@ class TestCloseLeaf {
             TableauxNode(1, "b", false),
             TableauxNode(2, "b", true),
             TableauxNode(5, "a", false),
-            TableauxNode(5, "b", false)
+            TableauxNode(5, "b", false),
         )
         state = createArtificialExpandState(nodes, state)
 
@@ -188,7 +188,7 @@ class TestCloseLeaf {
 
         val nodes = listOf(
             TableauxNode(0, "c", false),
-            TableauxNode(1, "c", true)
+            TableauxNode(1, "c", true),
         )
         state = createArtificialExpandState(nodes, state)
         state = instance.applyMoveOnState(state, MoveAutoClose(2, 1))
@@ -204,7 +204,7 @@ class TestCloseLeaf {
 
         val nodes = listOf(
             TableauxNode(0, "a", false),
-            TableauxNode(1, "c", true)
+            TableauxNode(1, "c", true),
         )
         state = createArtificialExpandState(nodes, state)
 
@@ -218,7 +218,7 @@ class TestCloseLeaf {
         var state = instance.parseFormulaToState("!true", opts)
 
         val nodes = listOf(
-            TableauxNode(0, "true", true)
+            TableauxNode(0, "true", true),
         )
         state = createArtificialExpandState(nodes, state)
 
@@ -238,7 +238,7 @@ class TestCloseLeaf {
             TableauxNode(1, "a", false),
             TableauxNode(2, "b", true),
             TableauxNode(5, "a", true),
-            TableauxNode(5, "b", false)
+            TableauxNode(5, "b", false),
         )
         state = createArtificialExpandState(nodes, state)
 

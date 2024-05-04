@@ -22,7 +22,7 @@ class TestModalLogicParser {
         "<->a",
         "<->",
         "(a&b v2",
-        "(a|b"
+        "(a|b",
     )
 
     private val invalidSigned = listOf(
@@ -37,7 +37,7 @@ class TestModalLogicParser {
         "\\sign T: a & b \\sign T: a",
         "a & b \\sign T: a",
         "a & \\sign T: a",
-        "\\sign TF: a"
+        "\\sign TF: a",
     )
 
     private val validSigned = listOf(
@@ -50,7 +50,7 @@ class TestModalLogicParser {
         "\\sign T:      a" to "a",
         "\\sign F:      a" to "a",
         "   \\sign       T: a" to "a",
-        "   \\sign       F: a" to "a"
+        "   \\sign       F: a" to "a",
     )
 
     private val valid = mapOf(
@@ -66,7 +66,7 @@ class TestModalLogicParser {
         "[](a&b)" to "□(a ∧ b)",
         "<>(a&b)" to "◇(a ∧ b)",
         "[]<>(a)" to "□◇a",
-        "[][](a)" to "□□a"
+        "[][](a)" to "□□a",
     )
 
     @Test

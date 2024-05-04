@@ -23,7 +23,7 @@ class TestTamperProtect {
         "lightbulb",
         "shine",
         "dim",
-        "utopia"
+        "utopia",
     )
 
     @Test

@@ -17,7 +17,7 @@ class TestIssue50 {
                 "{!In(A_4, M_4), In(A_4, N_4), !Subset(M_4, N_4)}, {!In(A_5, M_5), " +
                 "In(A_5, N_5), In(sk1(M_5, N_5), M_5)}, " +
                 "{!In(A_6, M_6), In(A_6, N_6), !In(sk1(M_6, N_6), N_6)}",
-            state.clauseSet.toString()
+            state.clauseSet.toString(),
         )
     }
 }

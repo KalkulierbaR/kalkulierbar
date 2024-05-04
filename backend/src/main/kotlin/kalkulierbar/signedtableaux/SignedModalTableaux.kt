@@ -39,7 +39,7 @@ class SignedModalTableaux :
     @Suppress("ComplexMethod")
     override fun applyMoveOnState(
         state: SignedModalTableauxState,
-        move: SignedModalTableauxMove
+        move: SignedModalTableauxMove,
     ): SignedModalTableauxState {
         // Clear status message
         state.statusMessage = null

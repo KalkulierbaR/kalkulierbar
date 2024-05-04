@@ -16,7 +16,7 @@ class TestLemma {
         "a,a;!a,b;!b",
         "a;b,b;!a,!b",
         "!a,b;!b;a,b",
-        "a,b;!b;!a,b"
+        "a,b;!b;!a,b",
     )
 
     @BeforeTest

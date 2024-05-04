@@ -11,18 +11,18 @@ class TestConnectednessFO {
         TableauxType.WEAKLYCONNECTED,
         regular = false,
         backtracking = true,
-        manualVarAssign = false
+        manualVarAssign = false,
     )
     private val strong = FoTableauxParam(
         TableauxType.STRONGLYCONNECTED,
         regular = false,
         backtracking = true,
-        manualVarAssign = false
+        manualVarAssign = false,
     )
 
     /*
         Test strong connectedness
-    */
+     */
 
     @Test
     fun testValidStrongProof() {
@@ -47,7 +47,7 @@ class TestConnectednessFO {
 
     /*
         Test weak connectedness
-    */
+     */
 
     @Test
     fun testValidWeakProof() {

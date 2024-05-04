@@ -34,7 +34,7 @@ interface GenericResolutionState<AtomType> {
         clause1: Int,
         clause2: Int,
         literal: AtomType?,
-        insertAtEnd: Boolean = false
+        insertAtEnd: Boolean = false,
     ) {
         val clauses = clauseSet.clauses
 

@@ -38,7 +38,6 @@ object FlexibleClauseSetParser {
         try {
             return convertToCNF(PropositionalParser().parse(formula), strategy)
         } catch (e: InvalidFormulaFormat) {
-
             // If the input formula is likely intended to be certain input type, only report that error
             if (likelyFormula && !likelyClauseSet) {
                 errorMsg = ""

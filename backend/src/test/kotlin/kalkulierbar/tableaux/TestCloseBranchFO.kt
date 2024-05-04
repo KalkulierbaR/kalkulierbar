@@ -11,9 +11,10 @@ class TestCloseBranchFO {
     val instance = FirstOrderTableaux()
     private val param = FoTableauxParam(TableauxType.UNCONNECTED, true, backtracking = false, manualVarAssign = true)
     private val paramNotReg = FoTableauxParam(
-        TableauxType.UNCONNECTED, regular = false,
+        TableauxType.UNCONNECTED,
+        regular = false,
         backtracking = false,
-        manualVarAssign = true
+        manualVarAssign = true,
     )
     private var states = mutableListOf<FoTableauxState>()
     private var notRegStates = mutableListOf<FoTableauxState>()
@@ -22,7 +23,7 @@ class TestCloseBranchFO {
         "\\all X: R(X) & R(c) & !R(c)",
         "\\all X: \\ex Y: R(X,Y) & \\ex Z: \\all W: !R(Z, W)", // R(X, sk1(X)), !R(sk2, W)
         "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))"
+        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))",
     )
 
     @BeforeTest
@@ -117,8 +118,8 @@ class TestCloseBranchFO {
         assertEquals(state.tree[6].closeRef, 2)
     }
 
-    @Test
     // Prints ClauseSet of each state
+    @Test
     fun printStateClauseSet() {
         for (state in states) {
             println(state.clauseSet.toString())

@@ -113,7 +113,7 @@ class TestHyperResolution {
         val state = fo.parseFormulaToState(
             "(S(a) | !S(b) | !S(c) | !S(d)) & (R(b) " +
                 "| R(c)) & (Q(c) | Q(k)) & (P(d) | P(g) | P(h))",
-            null
+            null,
         )
 
         assertFailsWith<IllegalMove> {
@@ -180,14 +180,14 @@ class TestHyperResolution {
         var state = fo.parseFormulaToState(
             "/all X: (R(a) | !R(X) | R(X) | R(d)) & (R(e) " +
                 "| R(f) | R(b) | R(g))",
-            null
+            null,
         )
         state = fo.applyMoveOnState(state, MoveHyper(0, mapOf(1 to Pair(1, 2))))
 
         assertEquals(
             "{R(a), !R(X_1), R(X_1), R(d)}, {R(e), R(f), R(b), R(g)}, " +
                 "{R(a), R(b), R(d), R(e), R(f), R(g)}",
-            state.clauseSet.toString()
+            state.clauseSet.toString(),
         )
     }
 
@@ -197,7 +197,7 @@ class TestHyperResolution {
             "F(a) & !G(a) & /all W:(!F(W) " +
                 "| H(W)) & /all Z:(!J(Z) | !I(Z) | F(Z)) & /all X: /all Y:(!H(X) " +
                 "| G(X) | !H(Y) | !I(Y)) & J(b) & I(b)",
-            null
+            null,
         )
         state = fo.applyMoveOnState(state, MoveHyper(3, mapOf(0 to Pair(5, 0), 1 to Pair(6, 0))))
 
@@ -205,7 +205,7 @@ class TestHyperResolution {
             "{F(a)}, {!G(a)}, {!F(W_3), H(W_3)}, " +
                 "{!J(Z_4), !I(Z_4), F(Z_4)}, {!H(X_5), G(X_5), !H(Y_5), !I(Y_5)}, " +
                 "{J(b)}, {I(b)}, {F(b)}",
-            state.clauseSet.toString()
+            state.clauseSet.toString(),
         )
     }
 }

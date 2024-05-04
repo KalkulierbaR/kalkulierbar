@@ -16,7 +16,10 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
 
     override val identifier = "prop-tableaux"
 
-    override val serializer = Json { serializersModule = tableauxMoveModule; encodeDefaults = true }
+    override val serializer = Json {
+        serializersModule = tableauxMoveModule
+        encodeDefaults = true
+    }
     override val stateSerializer = TableauxState.serializer()
     override val moveSerializer = TableauxMove.serializer()
 

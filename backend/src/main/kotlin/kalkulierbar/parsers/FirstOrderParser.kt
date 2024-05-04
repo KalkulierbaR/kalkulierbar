@@ -133,7 +133,6 @@ class FirstOrderParser : PropositionalParser() {
      * @return LogicNode representing the series of quantifiers
      */
     private fun parseQuantifier(): LogicNode {
-
         if (!nextTokenIs(TokenType.UNIVERSALQUANT) && !nextTokenIs(TokenType.EXISTENTIALQUANT)) {
             return parseParen()
         }
@@ -207,7 +206,7 @@ class FirstOrderParser : PropositionalParser() {
 
         // Relation may have an arbitrary amount of argument terms
         val arguments = mutableListOf<FirstOrderTerm>()
-        if (! nextTokenIs(TokenType.RPAREN)) {
+        if (!nextTokenIs(TokenType.RPAREN)) {
             arguments.add(parseTerm())
         }
         while (nextTokenIs(TokenType.COMMA)) {

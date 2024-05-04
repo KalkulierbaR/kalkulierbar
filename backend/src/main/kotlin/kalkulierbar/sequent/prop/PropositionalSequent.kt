@@ -51,14 +51,14 @@ class PropositionalSequent : GenericSequentCalculus,
         val sequents = PropositionalSequentParser.parse(formula)
         return PropositionalSequentState(
             mutableListOf(TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())),
-            params?.showOnlyApplicableRules ?: false
+            params?.showOnlyApplicableRules ?: false,
         )
     }
 
     @Suppress("ComplexMethod")
     override fun applyMoveOnState(
         state: PropositionalSequentState,
-        move: SequentCalculusMove
+        move: SequentCalculusMove,
     ): PropositionalSequentState {
         // Pass moves to relevant subfunction
         return when (move) {
@@ -102,7 +102,7 @@ class PropositionalSequent : GenericSequentCalculus,
 
     override fun scoreFromState(
         state: PropositionalSequentState,
-        name: String?
+        name: String?,
     ): Map<String, String> = stateToStat(state, name)
     override fun formulaFromState(state: PropositionalSequentState) = state.tree[0].toString()
 }

@@ -45,7 +45,7 @@ fun applyMoveCloseBranch(
     state: FoTableauxState,
     leafID: Int,
     closeNodeID: Int,
-    varAssign: Map<String, FirstOrderTerm>
+    varAssign: Map<String, FirstOrderTerm>,
 ): FoTableauxState {
     ensureBasicCloseability(state, leafID, closeNodeID)
 
@@ -76,9 +76,8 @@ private fun closeBranchCommon(
     state: FoTableauxState,
     leafID: Int,
     closeNodeID: Int,
-    varAssign: Map<String, FirstOrderTerm>
+    varAssign: Map<String, FirstOrderTerm>,
 ): FoTableauxState {
-
     val leaf = state.tree[leafID]
     val closeNode = state.tree[closeNodeID]
 
@@ -115,7 +114,6 @@ private fun closeBranchCommon(
  * @return State with the expansion applied
  */
 fun applyMoveExpandLeaf(state: FoTableauxState, leafID: Int, clauseID: Int): FoTableauxState {
-
     // Ensure that preconditions (correct indices, regularity) are met
     ensureExpandability(state, leafID, clauseID)
     val clause = state.clauseSet.clauses[clauseID]

@@ -54,7 +54,10 @@ object Scoreboard {
             cleanScoreboards()
         }
         val calculusScores = data.getOrPut(calculus) { mutableMapOf() }
-        val formulaScores = calculusScores.getOrPut(formula) { scoreboardCounter += 1; mutableListOf() }
+        val formulaScores = calculusScores.getOrPut(formula) {
+            scoreboardCounter += 1
+            mutableListOf()
+        }
 
         insertScore(formulaScores, score)
 

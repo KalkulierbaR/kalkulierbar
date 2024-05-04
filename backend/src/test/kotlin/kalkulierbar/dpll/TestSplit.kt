@@ -66,15 +66,15 @@ class TestSplit {
         assertEquals("[{!a}, {b, c}, {b}, {a}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
         assertEquals(
             "[{!a}, {b, c}, {b}, {!a}]",
-            state.tree[2].diff.apply(state.clauseSet).clauses.toString()
+            state.tree[2].diff.apply(state.clauseSet).clauses.toString(),
         )
         assertEquals(
             "[{!a}, {b, c}, {b}, {b}]",
-            state.tree[3].diff.apply(state.clauseSet).clauses.toString()
+            state.tree[3].diff.apply(state.clauseSet).clauses.toString(),
         )
         assertEquals(
             "[{!a}, {b, c}, {b}, {!b}]",
-            state.tree[4].diff.apply(state.clauseSet).clauses.toString()
+            state.tree[4].diff.apply(state.clauseSet).clauses.toString(),
         )
     }
 

@@ -31,8 +31,10 @@ class UniqueVariables : DoNothingVisitor() {
 
     // Keep track of variable version numbers already used
     private val variableDisambCounter = mutableMapOf<String, Int>()
+
     // Keep track of variable names encountered to prevent possible double-binding
     private val seenVarNames = mutableListOf<String>()
+
     // Map of all QuantifiedVariables to be renamed
     private val replacementMap = mutableMapOf<QuantifiedVariable, String>()
 
@@ -114,7 +116,7 @@ class UniqueVariables : DoNothingVisitor() {
  */
 class VariableRenamer(
     private val replacementMap: Map<QuantifiedVariable, String>,
-    val strict: Boolean = true
+    val strict: Boolean = true,
 ) : FirstOrderTermVisitor<Unit>() {
     /**
      * Change the variable name to the new spelling

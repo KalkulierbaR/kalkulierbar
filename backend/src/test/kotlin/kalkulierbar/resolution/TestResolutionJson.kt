@@ -13,7 +13,7 @@ class TestResolutionJson {
 
     /*
         Test jsonToParam
-    */
+     */
 
     @Test
     fun testJsonParamValid() {
@@ -47,7 +47,7 @@ class TestResolutionJson {
 
     /*
         Test jsonToMove
-    */
+     */
 
     @Test
     fun testJsonMoveValid() {
@@ -106,7 +106,7 @@ class TestResolutionJson {
 
     /*
         Test jsonToState
-    */
+     */
 
     @Test
     fun testJsonState() {
@@ -166,7 +166,7 @@ class TestResolutionJson {
 
     /*
         Test stateToJson
-    */
+     */
 
     @Test
     fun testStateToJson() {

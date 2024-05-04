@@ -17,7 +17,7 @@ class TestSkolemNormalForm {
         "!\\all A : (P(A) <-> \\ex C : (R(A) <-> !R(C)))" to
             "(∀C: ((¬P(sk1) ∨ ((¬R(sk1) ∨ R(C)) ∧ (R(sk1) ∨ ¬R(C)))) ∧ (P(sk1) ∨ " +
             "((R(sk1) ∧ ¬R(sk2)) ∨ (¬R(sk1) ∧ R(sk2))))))",
-        "!\\ex A : R(A) -> !\\all B : !(R(B) | !R(B))" to "(R(sk1) ∨ (R(sk2) ∨ ¬R(sk2)))"
+        "!\\ex A : R(A) -> !\\all B : !(R(B) | !R(B))" to "(R(sk1) ∨ (R(sk2) ∨ ¬R(sk2)))",
     )
 
     @Test

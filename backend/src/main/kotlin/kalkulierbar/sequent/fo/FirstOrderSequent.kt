@@ -57,7 +57,7 @@ class FirstOrderSequent :
         val sequents = FirstOrderSequentParser.parse(formula)
         return FirstOrderSequentState(
             mutableListOf(TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())),
-            params?.showOnlyApplicableRules ?: false
+            params?.showOnlyApplicableRules ?: false,
         )
     }
 
@@ -109,7 +109,7 @@ class FirstOrderSequent :
 
     override fun scoreFromState(
         state: FirstOrderSequentState,
-        name: String?
+        name: String?,
     ): Map<String, String> = stateToStat(state, name)
     override fun formulaFromState(state: FirstOrderSequentState) = state.tree[0].toString()
 }

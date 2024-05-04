@@ -11,7 +11,6 @@ import kalkulierbar.IllegalMove
  * @return New state after rule was applied
  */
 fun applyMoveCloseBranch(state: TableauxState, leafID: Int, closeNodeID: Int): TableauxState {
-
     ensureBasicCloseability(state, leafID, closeNodeID)
 
     val leaf = state.tree[leafID]

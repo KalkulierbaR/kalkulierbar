@@ -8,7 +8,7 @@ import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Quantifier
 
 class VariableInstantiator(
-    private val replacementMap: Map<String, FirstOrderTerm>
+    private val replacementMap: Map<String, FirstOrderTerm>,
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
 
     companion object {
@@ -172,7 +172,7 @@ class TermContainsVariable(val variable: String) : FirstOrderTermVisitor<Boolean
  */
 class QuantifierLinker(
     private val quantifiers: List<Quantifier>,
-    private val enforceUnique: Boolean
+    private val enforceUnique: Boolean,
 ) : FirstOrderTermVisitor<Unit>() {
 
     /**
@@ -185,12 +185,12 @@ class QuantifierLinker(
         if (matchingQuantifiers.isEmpty()) {
             throw FormulaConversionException(
                 "Error linking variables to quantifiers: " +
-                    "Variable '${node.spelling}' is not bound by any quantifier"
+                    "Variable '${node.spelling}' is not bound by any quantifier",
             )
         } else if (matchingQuantifiers.size > 1 && enforceUnique) {
             throw FormulaConversionException(
                 "Error linking variables to quantifiers: " +
-                    "Variable '${node.spelling}' is bound by more than one quantifier"
+                    "Variable '${node.spelling}' is bound by more than one quantifier",
             )
         }
 

@@ -20,7 +20,7 @@ class FoTableauxState(
     override val type: TableauxType = TableauxType.UNCONNECTED,
     override val regular: Boolean = false,
     override val backtracking: Boolean = false,
-    val manualVarAssign: Boolean = false
+    val manualVarAssign: Boolean = false,
 ) : GenericTableauxState<Relation>, ProtectedState() {
     override val tree = mutableListOf(FoTableauxNode(null, Relation("true", listOf()), false))
     val moveHistory = mutableListOf<TableauxMove>()

@@ -34,10 +34,10 @@ class TestFOLogic {
                     "f",
                     listOf(
                         Constant("d"),
-                        QuantifiedVariable("X")
-                    )
-                )
-            )
+                        QuantifiedVariable("X"),
+                    ),
+                ),
+            ),
         )
         r3 = Relation(
             "Aefjwadg",
@@ -47,11 +47,11 @@ class TestFOLogic {
                     listOf(
                         Function(
                             "f",
-                            listOf(Constant("c"), Constant("k"))
-                        )
-                    )
-                )
-            )
+                            listOf(Constant("c"), Constant("k")),
+                        ),
+                    ),
+                ),
+            ),
         )
 
         u1 = UniversalQuantifier("X", Or(Var("X"), Not(Var("X"))), mutableListOf())
@@ -66,22 +66,22 @@ class TestFOLogic {
                             "R",
                             listOf(
                                 QuantifiedVariable("X"),
-                                QuantifiedVariable("Y")
-                            )
+                                QuantifiedVariable("Y"),
+                            ),
                         ),
                         Relation(
                             "R",
                             listOf(
                                 QuantifiedVariable("Y"),
-                                QuantifiedVariable("Z")
-                            )
-                        )
+                                QuantifiedVariable("Z"),
+                            ),
+                        ),
                     ),
-                    mutableListOf()
+                    mutableListOf(),
                 ),
-                mutableListOf()
+                mutableListOf(),
             ),
-            mutableListOf()
+            mutableListOf(),
         )
         u3 = UniversalQuantifier(
             "Number1",
@@ -91,12 +91,12 @@ class TestFOLogic {
                     "Greater",
                     listOf(
                         QuantifiedVariable("Number1"),
-                        QuantifiedVariable("Number2")
-                    )
+                        QuantifiedVariable("Number2"),
+                    ),
                 ),
-                mutableListOf()
+                mutableListOf(),
             ),
-            mutableListOf()
+            mutableListOf(),
         )
 
         e1 = ExistentialQuantifier("C", Not(Relation("Q", listOf(QuantifiedVariable("C")))), mutableListOf())
@@ -112,14 +112,14 @@ class TestFOLogic {
                             "m",
                             listOf(
                                 QuantifiedVariable("X"),
-                                QuantifiedVariable("Y")
-                            )
-                        )
-                    )
+                                QuantifiedVariable("Y"),
+                            ),
+                        ),
+                    ),
                 ),
-                mutableListOf()
+                mutableListOf(),
             ),
-            mutableListOf()
+            mutableListOf(),
         )
         e3 = ExistentialQuantifier(
             "El",
@@ -128,10 +128,10 @@ class TestFOLogic {
                 UniversalQuantifier(
                     "Y",
                     Relation("P", listOf(QuantifiedVariable("Y"))),
-                    mutableListOf()
-                )
+                    mutableListOf(),
+                ),
             ),
-            mutableListOf()
+            mutableListOf(),
         )
     }
 
@@ -181,7 +181,7 @@ class TestFOLogic {
     fun testUnification() {
         val map = Unification.unify(
             Relation("R", listOf(Function("f", listOf(QuantifiedVariable("X"), Function("g", listOf(Constant("c"))))))),
-            Relation("R", listOf(Function("f", listOf(QuantifiedVariable("Y"), QuantifiedVariable("Y")))))
+            Relation("R", listOf(Function("f", listOf(QuantifiedVariable("Y"), QuantifiedVariable("Y"))))),
         )
         val expected = mapOf("X" to Function("g", listOf(Constant("c"))), "Y" to Function("g", listOf(Constant("c"))))
 

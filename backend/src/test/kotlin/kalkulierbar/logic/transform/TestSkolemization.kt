@@ -16,7 +16,7 @@ class TestSkolemization {
         "\\ex A: R(A) & Q(sk1)" to "(R(sk2) ∧ Q(sk1))",
         "!\\ex A : !(S(A) & !\\all B : (R(B) -> !R(A)))" to "¬¬(S(sk1) ∧ ¬(∀B: (R(B) → ¬R(sk1))))",
         "!\\all A : (P(A) <-> \\ex C : (R(A) <-> !R(C)))" to "¬(∀A: (P(A) <=> (R(A) <=> ¬R(sk1(A)))))",
-        "!\\ex A : R(A) -> !\\all B : !(R(B) | !R(B))" to "(¬R(sk1) → ¬(∀B: ¬(R(B) ∨ ¬R(B))))"
+        "!\\ex A : R(A) -> !\\all B : !(R(B) | !R(B))" to "(¬R(sk1) → ¬(∀B: ¬(R(B) ∨ ¬R(B))))",
     )
 
     @Test
