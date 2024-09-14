@@ -33,7 +33,7 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.10.3")
 
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
 }
 
 application {
@@ -58,7 +58,7 @@ java {
 }
 
 detekt {
-    toolVersion = "1.23.6"
+    toolVersion = "1.23.7"
     source.setFrom("src/main/kotlin")
     config.setFrom("$projectDir/config/detekt/detekt.yml")
 }
