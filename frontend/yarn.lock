@@ -5247,7 +5247,7 @@ __metadata:
     sha3: "npm:2.1.4"
     typescript: "npm:5.3.3"
     vite: "npm:5.2.14"
-    vite-plugin-sass-dts: "npm:1.3.25"
+    vite-plugin-sass-dts: "npm:1.3.29"
   peerDependencies:
     prettier: ">2.0.0"
   languageName: unknown
@@ -8279,17 +8279,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-sass-dts@npm:1.3.25":
-  version: 1.3.25
-  resolution: "vite-plugin-sass-dts@npm:1.3.25"
+"vite-plugin-sass-dts@npm:1.3.29":
+  version: 1.3.29
+  resolution: "vite-plugin-sass-dts@npm:1.3.29"
   dependencies:
     postcss-js: "npm:^4.0.1"
   peerDependencies:
     postcss: ^8
     prettier: ^2.7 || ^3
-    sass: "*"
+    sass-embedded: ^1.78.0
     vite: ">=3"
-  checksum: 10/91c7b44a2202118cb1bbd4c31eb8d8bcb407108308d64bb79b1d2ea11caa671bd6cd51c80766d1e21b67d83b5ceaf71b5d67f40f71ab823322e89f024de12653
+  checksum: 10/e29cc710d36a29f2b8a5af813e0aa109873e3d7828c53e69b1ad9f0c5ee18fc6287d951ddb2f8119fa605bd5414fc2c7ba373cc8bf0b466b31bfad017893d372
   languageName: node
   linkType: hard
 
