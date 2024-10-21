@@ -18,7 +18,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // JVM dependency
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     // Web framework
     implementation("io.javalin:javalin:5.6.5")
@@ -31,7 +31,7 @@ dependencies {
 
     // Testing
     testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.10.3")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.11.3")
 
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
 }
