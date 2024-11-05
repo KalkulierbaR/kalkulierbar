@@ -1333,13 +1333,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:^8":
-  version: 8.40.0
-  resolution: "@types/eslint@npm:8.40.0"
+"@types/eslint@npm:^9.0.0":
+  version: 9.6.1
+  resolution: "@types/eslint@npm:9.6.1"
   dependencies:
     "@types/estree": "npm:*"
     "@types/json-schema": "npm:*"
-  checksum: 10/8ab7733bd3793def49240d07357882a7882de2005d4d962aa6ddb34291571585572a605152602a77e317671a5b3c3bba760fc79faa507c7850aeef4a986a1f2d
+  checksum: 10/719fcd255760168a43d0e306ef87548e1e15bffe361d5f4022b0f266575637acc0ecb85604ac97879ee8ae83c6a6d0613b0ed31d0209ddf22a0fe6d608fc56fe
   languageName: node
   linkType: hard
 
@@ -5184,7 +5184,7 @@ __metadata:
     "@material/radio": "npm:4.0.0"
     "@material/switch": "npm:4.0.0"
     "@preact/preset-vite": "npm:2.8.3"
-    "@types/eslint": "npm:^8"
+    "@types/eslint": "npm:^9.0.0"
     "@typescript-eslint/eslint-plugin": "npm:8.12.1"
     "@typescript-eslint/parser": "npm:8.12.1"
     eslint: "npm:8.56.0"

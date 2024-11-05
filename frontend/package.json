@@ -43,7 +43,7 @@
     },
     "devDependencies": {
         "@preact/preset-vite": "2.8.3",
-        "@types/eslint": "^8",
+        "@types/eslint": "^9.0.0",
         "@typescript-eslint/eslint-plugin": "8.12.1",
         "@typescript-eslint/parser": "8.12.1",
         "eslint": "8.56.0",
