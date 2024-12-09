@@ -38,26 +38,26 @@
         "preact-markup": "2.1.1",
         "preact-render-to-string": "6.3.1",
         "react-hint": "3.2.1",
-        "serve": "14.2.1",
+        "serve": "14.2.4",
         "sha3": "2.1.4"
     },
     "devDependencies": {
-        "@preact/preset-vite": "2.8.1",
-        "@types/eslint": "^8",
-        "@typescript-eslint/eslint-plugin": "7.4.0",
-        "@typescript-eslint/parser": "7.4.0",
-        "eslint": "8.56.0",
+        "@preact/preset-vite": "2.8.3",
+        "@types/eslint": "^9.0.0",
+        "@typescript-eslint/eslint-plugin": "8.12.1",
+        "@typescript-eslint/parser": "8.12.1",
+        "eslint": "9.13.0",
         "husky": "8.0.3",
         "lint-staged": "13.2.2",
         "per-env": "1.0.2",
-        "prettier": "3.2.3",
+        "prettier": "3.2.5",
         "sass": "1.69.7",
         "typescript": "5.3.3",
-        "vite": "5.2.10",
-        "vite-plugin-sass-dts": "1.3.17"
+        "vite": "6.0.1",
+        "vite-plugin-sass-dts": "1.3.29"
     },
     "peerDependencies": {
         "prettier": ">2.0.0"
     },
-    "packageManager": "yarn@4.2.1"
+    "packageManager": "yarn@4.2.2"
 }
