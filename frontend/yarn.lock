@@ -3203,7 +3203,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.24.0":
+"esbuild@npm:0.24.0":
   version: 0.24.0
   resolution: "esbuild@npm:0.24.0"
   dependencies:
@@ -5271,8 +5271,8 @@ __metadata:
     serve: "npm:14.2.4"
     sha3: "npm:2.1.4"
     typescript: "npm:5.3.3"
-    vite: "npm:6.0.3"
-    vite-plugin-sass-dts: "npm:1.3.29"
+    vite: "npm:6.0.5"
+    vite-plugin-sass-dts: "npm:1.3.30"
   peerDependencies:
     prettier: ">2.0.0"
   languageName: unknown
@@ -8312,9 +8312,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-sass-dts@npm:1.3.29":
-  version: 1.3.29
-  resolution: "vite-plugin-sass-dts@npm:1.3.29"
+"vite-plugin-sass-dts@npm:1.3.30":
+  version: 1.3.30
+  resolution: "vite-plugin-sass-dts@npm:1.3.30"
   dependencies:
     postcss-js: "npm:^4.0.1"
   peerDependencies:
@@ -8322,15 +8322,15 @@ __metadata:
     prettier: ^2.7 || ^3
     sass-embedded: ^1.78.0
     vite: ">=3"
-  checksum: 10/e29cc710d36a29f2b8a5af813e0aa109873e3d7828c53e69b1ad9f0c5ee18fc6287d951ddb2f8119fa605bd5414fc2c7ba373cc8bf0b466b31bfad017893d372
+  checksum: 10/3b329e37aa71bace4d7b4602db26ad2e6fe940eef52688db296263b820feea07f40b29f746d8353b4b7c4e0b4da3b1fc64f1fa18a724d1afdd0ec98cd37e1685
   languageName: node
   linkType: hard
 
-"vite@npm:6.0.3":
-  version: 6.0.3
-  resolution: "vite@npm:6.0.3"
+"vite@npm:6.0.5":
+  version: 6.0.5
+  resolution: "vite@npm:6.0.5"
   dependencies:
-    esbuild: "npm:^0.24.0"
+    esbuild: "npm:0.24.0"
     fsevents: "npm:~2.3.3"
     postcss: "npm:^8.4.49"
     rollup: "npm:^4.23.0"
@@ -8374,7 +8374,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10/eca0949b8cbc887e78977515d8fc22eaa2d03425d60a0a422f2db1da9d26bd1b431b2815a273c798e8e3fe176a99e105c3d87b0ba615ca19b8bf19e0334d807a
+  checksum: 10/582bc53c14ae8c8dcb6887a1a24fb554ad6f19446ae0f9df18a47e7ab8787a08687e94a2f4c8636001233207640f91d081e31b00cc3ef9d90908a4bae26410b4
   languageName: node
   linkType: hard
 
