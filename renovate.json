@@ -20,7 +20,7 @@
     },
     {
       "matchPackageNames": ["@types/node", "node"],
-      "allowedVersions": "^14"
+      "allowedVersions": "^18"
     },
     {
       "matchPackageNames": ["husky"],
@@ -33,6 +33,16 @@
     {
       "matchPackageNames": ["css-loader", "sass-loader"],
       "enabled": false
+    },
+    {
+      "groupName": "frontend-minor",
+      "extends": [
+        "github>juliushenke/renovate-preset:minor.json"
+      ],
+      "matchPackageNames": ["!/^(typescript|preact)$/"],
+      "matchFileNames": [
+        "**/frontend/**"
+      ]
     }
   ]
 }
