@@ -24,7 +24,7 @@ dependencies {
     implementation("io.javalin:javalin:5.6.5")
 
     // Logging
-    implementation("org.slf4j:slf4j-simple:2.0.16")
+    implementation("org.slf4j:slf4j-simple:2.0.17")
 
     // Hashing
     implementation("com.github.komputing.khash:keccak:1.1.3")
@@ -33,7 +33,7 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.11.4")
 
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }
 
 application {
@@ -58,7 +58,7 @@ java {
 }
 
 detekt {
-    toolVersion = "1.23.7"
+    toolVersion = "1.23.8"
     source.setFrom("src/main/kotlin")
     config.setFrom("$projectDir/config/detekt/detekt.yml")
 }
