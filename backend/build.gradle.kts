@@ -3,7 +3,7 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     application
     id("org.jmailen.kotlinter") version "3.16.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.6"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
     id("jacoco")
@@ -18,7 +18,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // JVM dependency
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 
     // Web framework
     implementation("io.javalin:javalin:5.6.5")
