@@ -24,6 +24,7 @@ import { updateDragTransform } from "../../../util/tableaux";
 
 interface Props {
     calculus: ModalCalculusType;
+    path: string;
 }
 
 const ModalTableauxView: preact.FunctionComponent<Props> = ({ calculus }) => {

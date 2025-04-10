@@ -1,4 +1,4 @@
-import { StateUpdater } from "preact/hooks";
+import { Dispatch, StateUpdater } from "preact/hooks";
 
 import { AppStateUpdater } from "../types/app/app-state";
 import { NotificationHandler } from "../types/app/notification";
@@ -195,7 +195,7 @@ export const getNode = (t: Tree<ModalTableauxTreeLayoutNode>, id: number) =>
  * @returns {Function} - Drag handler
  */
 export const updateDragTransform =
-    (setDragTransform: StateUpdater<Record<number, DragTransform>>) =>
+    (setDragTransform: Dispatch<StateUpdater<Record<number, DragTransform>>>) =>
     (id: number, dt: DragTransform) => {
         setDragTransform((prev) => ({
             ...prev,

@@ -585,7 +585,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:^3.3.1":
+"@eslint/eslintrc@npm:3.3.1, @eslint/eslintrc@npm:^3.3.1":
   version: 3.3.1
   resolution: "@eslint/eslintrc@npm:3.3.1"
   dependencies:
@@ -5545,6 +5545,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "kalkulierbar@workspace:."
   dependencies:
+    "@eslint/eslintrc": "npm:3.3.1"
+    "@eslint/js": "npm:9.24.0"
     "@material/radio": "npm:4.0.0"
     "@material/switch": "npm:4.0.0"
     "@preact/preset-vite": "npm:2.10.1"

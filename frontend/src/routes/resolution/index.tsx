@@ -16,6 +16,7 @@ interface Props {
      * Which calculus to use
      */
     calculus: ResolutionCalculusType;
+    path: string;
 }
 
 const Resolution: preact.FunctionalComponent<Props> = ({ calculus }) => {

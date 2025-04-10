@@ -29,6 +29,7 @@ interface Props {
      * Which calculus to use
      */
     calculus: SequentCalculusType;
+    path: string;
 }
 
 const SequentView: preact.FunctionalComponent<Props> = ({ calculus }) => {

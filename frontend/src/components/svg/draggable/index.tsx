@@ -1,6 +1,8 @@
-import { Ref, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
-import { DragTransform, Point } from "../../../types/ui";
+import type { RefObject } from "preact";
+
+import type { DragTransform, Point } from "../../../types/ui";
 import { disableDrag, enableDrag } from "../../../util/zoom/drag";
 import { mousePos } from "../../../util/zoom/mouse";
 import { touchPos } from "../../../util/zoom/touch";
@@ -9,7 +11,7 @@ interface Props {
     /**
      * The element's reference
      */
-    elementRef: Ref<SVGElement>;
+    elementRef: RefObject<SVGElement>;
     /**
      * The element's id
      */

@@ -11,7 +11,7 @@ export const localStorageGet = <V>(key: string): V | null => {
         return !isNaN(value as number) && value !== null
             ? (parseInt(value as string) as unknown as V)
             : value;
-    } catch (e) {
+    } catch {
         return null;
     }
 };

@@ -98,7 +98,7 @@ const CalculusItem: preact.FunctionalComponent<CalculusItemProps> = ({
     );
 };
 
-const Home: preact.FunctionalComponent = () => {
+const Home: preact.FunctionalComponent<{ path: string }> = () => {
     const { isAdmin, config } = useAppState();
 
     return (

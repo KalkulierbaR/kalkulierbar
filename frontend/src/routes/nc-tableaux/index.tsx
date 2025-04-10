@@ -3,7 +3,7 @@ import FormulaInput from "../../components/input/formula";
 import Format from "../../components/input/formula/format";
 import { Calculus } from "../../types/calculus";
 
-const NCTableaux: preact.FunctionalComponent = () => {
+const NCTableaux: preact.FunctionalComponent<{ path: string }> = () => {
     return (
         <>
             <Format logicType={"fo"} />
