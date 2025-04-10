@@ -27,14 +27,13 @@ interface Props {
 
 const Video: preact.FunctionalComponent<Props> = ({
     src,
-    alt,
     type = "video/mp4",
     autoPlay = true,
     loop = true,
     muted = true,
 }) => {
     return (
-        <video loop={loop} muted={muted} alt={alt} autoPlay={autoPlay}>
+        <video loop={loop} muted={muted} autoPlay={autoPlay}>
             <source src={src} type={type} />
         </video>
     );

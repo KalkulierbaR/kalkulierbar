@@ -48,7 +48,7 @@ async function checkServer(
 ) {
     try {
         await fetch(url);
-    } catch (e) {
+    } catch {
         fetch(defaultBackendServer)
             .then(() => {
                 dispatch({

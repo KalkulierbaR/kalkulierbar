@@ -22,7 +22,7 @@ import {
 
 import * as style from "./style.module.scss";
 
-const DPLLView: preact.FunctionalComponent = () => {
+const DPLLView: preact.FunctionalComponent<{ path: string }> = () => {
     const {
         dpll: cState,
         server,

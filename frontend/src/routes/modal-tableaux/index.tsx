@@ -14,6 +14,7 @@ interface Props {
      * The calculus type
      */
     calculus: ModalCalculusType;
+    path: string;
 }
 
 const ModalTableaux: preact.FunctionalComponent<Props> = ({ calculus }) => {
