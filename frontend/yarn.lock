@@ -4091,9 +4091,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-tools@npm:13.35.1":
-  version: 13.35.1
-  resolution: "firebase-tools@npm:13.35.1"
+"firebase-tools@npm:14.1.0":
+  version: 14.1.0
+  resolution: "firebase-tools@npm:14.1.0"
   dependencies:
     "@electric-sql/pglite": "npm:^0.2.16"
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
@@ -4165,7 +4165,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10/633a4569b4f4845b9aeb2054a575526eaf7e5571d41099d7cc936d62fe8e4b6205e53343e147514cd38b79a138a193c989d1d07ff642427d7d1b6f965b728b3a
+  checksum: 10/30619959ba7b9c2667b8717524dc7798b524a1fd69c8dec9d67455c4f52e626c2cd72be9ebc15f389b3e9c2de2745b51b2b18fcfe2050f24ee9825300858cafb
   languageName: node
   linkType: hard
 
@@ -5554,7 +5554,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:8.29.0"
     "@typescript-eslint/parser": "npm:8.29.0"
     eslint: "npm:9.24.0"
-    firebase-tools: "npm:13.35.1"
+    firebase-tools: "npm:14.1.0"
     husky: "npm:8.0.3"
     lint-staged: "npm:13.2.2"
     per-env: "npm:1.0.2"
