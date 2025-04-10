@@ -3,7 +3,7 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     application
     id("org.jmailen.kotlinter") version "3.16.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.6"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
     id("jacoco")
@@ -18,22 +18,22 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // JVM dependency
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 
     // Web framework
     implementation("io.javalin:javalin:5.6.5")
 
     // Logging
-    implementation("org.slf4j:slf4j-simple:2.0.16")
+    implementation("org.slf4j:slf4j-simple:2.0.17")
 
     // Hashing
     implementation("com.github.komputing.khash:keccak:1.1.3")
 
     // Testing
     testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.11.3")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.12.1")
 
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }
 
 application {
@@ -58,7 +58,7 @@ java {
 }
 
 detekt {
-    toolVersion = "1.23.7"
+    toolVersion = "1.23.8"
     source.setFrom("src/main/kotlin")
     config.setFrom("$projectDir/config/detekt/detekt.yml")
 }

@@ -13,7 +13,7 @@ import { useAppState } from "../../../util/app-state";
 import { collectVarsFromNode, sendClose } from "../../../util/nc-tableaux";
 import { updateDragTransform } from "../../../util/tableaux";
 
-const NCTableauxView: preact.FunctionalComponent = () => {
+const NCTableauxView: preact.FunctionalComponent<{ path: string }> = () => {
     const {
         "nc-tableaux": cState,
         onChange,

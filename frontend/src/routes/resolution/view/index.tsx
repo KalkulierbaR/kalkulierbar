@@ -54,6 +54,7 @@ interface Props {
      * Which calculus to use
      */
     calculus: ResolutionCalculusType;
+    path: string;
 }
 
 const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
@@ -251,7 +252,7 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                         sendResolve(
                             selectedClauseId,
                             newClauseId,
-                            options.entries().next().value[1],
+                            options.entries().next().value![1],
                             { ...apiInfo, state },
                         );
                     } else {
@@ -264,10 +265,10 @@ const ResolutionView: preact.FunctionalComponent<Props> = ({ calculus }) => {
                     instanceOfFOResState(state, calculus)
                 ) {
                     const newSelectedClauseAtomIndex =
-                        candidateClause.candidateAtomMap.keys().next().value;
+                        candidateClause.candidateAtomMap.keys().next().value!;
                     const newCandidateAtomIndex =
                         candidateClause.candidateAtomMap.values().next()
-                            .value[0];
+                            .value![0];
 
                     const atom1 =
                         state.clauseSet.clauses[selectedClauseId].atoms[

@@ -12,6 +12,7 @@ interface Props {
      * the calculus to use
      */
     calculus: SequentCalculusType;
+    path: string;
 }
 
 const SequentCalculus: preact.FunctionalComponent<Props> = ({ calculus }) => {

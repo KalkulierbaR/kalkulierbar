@@ -37,6 +37,7 @@ interface Props {
      * Which calculus to use
      */
     calculus: TableauxCalculusType;
+    path: string;
 }
 
 const TableauxView: preact.FunctionalComponent<Props> = ({ calculus }) => {
