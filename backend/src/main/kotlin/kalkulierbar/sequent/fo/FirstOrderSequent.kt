@@ -42,18 +42,22 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 class FirstOrderSequent :
-    GenericSequentCalculus,
-    ScoredCalculus<FirstOrderSequentState, SequentCalculusMove, SequentCalculusParam>() {
+    ScoredCalculus<FirstOrderSequentState, SequentCalculusMove, SequentCalculusParam>(),
+    GenericSequentCalculus {
     override val identifier = "fo-sequent"
 
-    override val serializer = Json {
-        serializersModule = FoTermModule + LogicModule + SequentCalculusMoveModule
-        encodeDefaults = true
-    }
+    override val serializer =
+        Json {
+            serializersModule = FoTermModule + LogicModule + SequentCalculusMoveModule
+            encodeDefaults = true
+        }
     override val stateSerializer = FirstOrderSequentState.serializer()
     override val moveSerializer = SequentCalculusMove.serializer()
 
-    override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): FirstOrderSequentState {
+    override fun parseFormulaToState(
+        formula: String,
+        params: SequentCalculusParam?,
+    ): FirstOrderSequentState {
         val sequents = FirstOrderSequentParser.parse(formula)
         return FirstOrderSequentState(
             mutableListOf(TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())),
@@ -62,7 +66,10 @@ class FirstOrderSequent :
     }
 
     @Suppress("ComplexMethod")
-    override fun applyMoveOnState(state: FirstOrderSequentState, move: SequentCalculusMove): FirstOrderSequentState {
+    override fun applyMoveOnState(
+        state: FirstOrderSequentState,
+        move: SequentCalculusMove,
+    ): FirstOrderSequentState {
         // Pass moves to relevant subfunction
         return when (move) {
             is Ax -> applyAx(state, move.nodeID) as FirstOrderSequentState
@@ -84,13 +91,12 @@ class FirstOrderSequent :
         }
     }
 
-    override fun checkCloseOnState(state: FirstOrderSequentState): CloseMessage {
-        return if (state.tree.all { it.isClosed }) {
+    override fun checkCloseOnState(state: FirstOrderSequentState): CloseMessage =
+        if (state.tree.all { it.isClosed }) {
             CloseMessage(true, "The proof is closed and valid in First Order Logic")
         } else {
             CloseMessage(false, "Not all branches of the proof tree are closed")
         }
-    }
 
     /*
      * Parses a JSON parameter representation into a TableauxParam object
@@ -111,5 +117,6 @@ class FirstOrderSequent :
         state: FirstOrderSequentState,
         name: String?,
     ): Map<String, String> = stateToStat(state, name)
+
     override fun formulaFromState(state: FirstOrderSequentState) = state.tree[0].toString()
 }

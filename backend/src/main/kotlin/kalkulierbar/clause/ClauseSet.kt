@@ -3,7 +3,9 @@ package kalkulierbar.clause
 import kotlinx.serialization.Serializable
 
 @Serializable
-class ClauseSet<AtomType>(var clauses: MutableList<Clause<AtomType>> = mutableListOf()) {
+class ClauseSet<AtomType>(
+    var clauses: MutableList<Clause<AtomType>> = mutableListOf(),
+) {
     fun add(c: Clause<AtomType>) {
         clauses.add(c)
     }
@@ -26,7 +28,5 @@ class ClauseSet<AtomType>(var clauses: MutableList<Clause<AtomType>> = mutableLi
         return newCS
     }
 
-    override fun toString(): String {
-        return clauses.joinToString(", ")
-    }
+    override fun toString(): String = clauses.joinToString(", ")
 }

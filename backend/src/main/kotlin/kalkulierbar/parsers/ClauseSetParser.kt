@@ -6,7 +6,6 @@ import kalkulierbar.clause.Clause
 import kalkulierbar.clause.ClauseSet
 
 object ClauseSetParser {
-
     /**
      * Parses a set of clauses from text into a ClauseSet using default clause and atom separators
      * @param formula set of clauses of logical variables, format: a,b;!b,c;d,!e,!f where variables are [a-zA-Z0-9]+
@@ -62,11 +61,12 @@ object ClauseSetParser {
             for (member in members) {
                 // Check if the member variable is negated and set a boolean flag accordingly
                 // true -> positive variable / false -> negated variable
-                val atom = if (member[0] == negSign) {
-                    Atom(member.substring(1), true)
-                } else {
-                    Atom(member)
-                }
+                val atom =
+                    if (member[0] == negSign) {
+                        Atom(member.substring(1), true)
+                    } else {
+                        Atom(member)
+                    }
                 parsedClause.add(atom)
             }
 

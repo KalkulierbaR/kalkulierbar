@@ -14,7 +14,11 @@ import kalkulierbar.logic.util.UnifierEquivalence
  * @param closeNodeID Node to close the leaf with
  * @return state with the close move applied
  */
-fun applyAutoCloseBranch(state: FoTableauxState, leafID: Int, closeNodeID: Int): FoTableauxState {
+fun applyAutoCloseBranch(
+    state: FoTableauxState,
+    leafID: Int,
+    closeNodeID: Int,
+): FoTableauxState {
     if (state.manualVarAssign) {
         throw IllegalMove("Auto-close is not enabled for this proof")
     }
@@ -113,7 +117,11 @@ private fun closeBranchCommon(
  * @param clauseID Clause to expand
  * @return State with the expansion applied
  */
-fun applyMoveExpandLeaf(state: FoTableauxState, leafID: Int, clauseID: Int): FoTableauxState {
+fun applyMoveExpandLeaf(
+    state: FoTableauxState,
+    leafID: Int,
+    clauseID: Int,
+): FoTableauxState {
     // Ensure that preconditions (correct indices, regularity) are met
     ensureExpandability(state, leafID, clauseID)
     val clause = state.clauseSet.clauses[clauseID]
@@ -151,7 +159,11 @@ fun applyMoveExpandLeaf(state: FoTableauxState, leafID: Int, clauseID: Int): FoT
  * @param lemmaID ID of the proof tree node to create a lemma from
  * @return new proof state with lemma applied
  */
-fun applyMoveUseLemma(state: FoTableauxState, leafID: Int, lemmaID: Int): FoTableauxState {
+fun applyMoveUseLemma(
+    state: FoTableauxState,
+    leafID: Int,
+    lemmaID: Int,
+): FoTableauxState {
     // Get lemma atom and verify all preconditions
     val atom = state.getLemma(leafID, lemmaID)
 

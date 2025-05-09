@@ -9,14 +9,15 @@ import kotlin.test.assertFailsWith
 
 // based on issue #48 in internal gitlab, now inaccessible
 class TestIssue48 {
+    private val testStrings =
+        mapOf(
+            "\\ex X: R(X) & (R(sk1) <-> R(usk1))" to "(R(sk2) ∧ (R(sk1) <=> R(usk1)))",
+        )
 
-    private val testStrings = mapOf(
-        "\\ex X: R(X) & (R(sk1) <-> R(usk1))" to "(R(sk2) ∧ (R(sk1) <=> R(usk1)))",
-    )
-
-    private val invalid = listOf(
-        "\\ex X: R(X) & R(sk-1)",
-    )
+    private val invalid =
+        listOf(
+            "\\ex X: R(X) & R(sk-1)",
+        )
 
     @Test
     fun testTransformation() {

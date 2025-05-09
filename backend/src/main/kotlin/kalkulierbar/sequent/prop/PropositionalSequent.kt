@@ -36,18 +36,23 @@ import kalkulierbar.sequent.applyUndo
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
-class PropositionalSequent : GenericSequentCalculus,
-    ScoredCalculus<PropositionalSequentState, SequentCalculusMove, SequentCalculusParam>() {
+class PropositionalSequent :
+    ScoredCalculus<PropositionalSequentState, SequentCalculusMove, SequentCalculusParam>(),
+    GenericSequentCalculus {
     override val identifier = "prop-sequent"
 
-    override val serializer = Json {
-        serializersModule = LogicModule + SequentCalculusMoveModule
-        encodeDefaults = true
-    }
+    override val serializer =
+        Json {
+            serializersModule = LogicModule + SequentCalculusMoveModule
+            encodeDefaults = true
+        }
     override val stateSerializer = PropositionalSequentState.serializer()
     override val moveSerializer = SequentCalculusMove.serializer()
 
-    override fun parseFormulaToState(formula: String, params: SequentCalculusParam?): PropositionalSequentState {
+    override fun parseFormulaToState(
+        formula: String,
+        params: SequentCalculusParam?,
+    ): PropositionalSequentState {
         val sequents = PropositionalSequentParser.parse(formula)
         return PropositionalSequentState(
             mutableListOf(TreeNode(sequents.first.toMutableList(), sequents.second.toMutableList())),
@@ -77,13 +82,12 @@ class PropositionalSequent : GenericSequentCalculus,
         }
     }
 
-    override fun checkCloseOnState(state: PropositionalSequentState): CloseMessage {
-        return if (state.tree.all { it.isClosed }) {
+    override fun checkCloseOnState(state: PropositionalSequentState): CloseMessage =
+        if (state.tree.all { it.isClosed }) {
             CloseMessage(true, "The proof is closed and valid in Propositional Logic")
         } else {
             CloseMessage(false, "Not all branches of the proof tree are closed")
         }
-    }
 
     /*
      * Parses a JSON parameter representation into a TableauxParam object
@@ -104,5 +108,6 @@ class PropositionalSequent : GenericSequentCalculus,
         state: PropositionalSequentState,
         name: String?,
     ): Map<String, String> = stateToStat(state, name)
+
     override fun formulaFromState(state: PropositionalSequentState) = state.tree[0].toString()
 }

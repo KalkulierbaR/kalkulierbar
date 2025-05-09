@@ -17,7 +17,6 @@ import kalkulierbar.logic.Var
  * so that overriding implementations can replace/transform formula subtrees
  */
 abstract class DoNothingVisitor : LogicNodeVisitor<LogicNode>() {
-
     /**
      * Visit an And-Operator and visit children recursively
      * @param node And-Operator to visit
@@ -78,9 +77,7 @@ abstract class DoNothingVisitor : LogicNodeVisitor<LogicNode>() {
      * @param node Variable to visit
      * @return the Variable node
      */
-    override fun visit(node: Var): LogicNode {
-        return node
-    }
+    override fun visit(node: Var): LogicNode = node
 
     /**
      * Visit a Relation
@@ -89,9 +86,7 @@ abstract class DoNothingVisitor : LogicNodeVisitor<LogicNode>() {
      * @param node Relation to visit
      * @return the Relation node
      */
-    override fun visit(node: Relation): LogicNode {
-        return node
-    }
+    override fun visit(node: Relation): LogicNode = node
 
     /**
      * Visit an Universal Quantifier and visit child recursively

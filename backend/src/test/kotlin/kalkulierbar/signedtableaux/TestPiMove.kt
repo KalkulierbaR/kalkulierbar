@@ -7,7 +7,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class TestPiMove {
-
     val instance = SignedModalTableaux()
     val parser = ModalLogicParser()
 

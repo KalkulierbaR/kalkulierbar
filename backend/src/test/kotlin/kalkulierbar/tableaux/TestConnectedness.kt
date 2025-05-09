@@ -7,7 +7,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class TestConnectedness {
-
     val instance = PropositionalTableaux()
     private val optsWeak = TableauxParam(TableauxType.WEAKLYCONNECTED, regular = false, backtracking = false)
     private val optsStrong = TableauxParam(TableauxType.STRONGLYCONNECTED, regular = false, backtracking = false)

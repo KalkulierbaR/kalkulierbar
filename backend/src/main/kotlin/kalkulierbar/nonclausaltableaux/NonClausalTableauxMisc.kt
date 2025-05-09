@@ -11,7 +11,8 @@ import kotlinx.serialization.Serializable
 class NcTableauxState(
     val formula: LogicNode,
     val backtracking: Boolean = true,
-) : ProtectedState(), TreeGardener<NcTableauxNode> {
+) : ProtectedState(),
+    TreeGardener<NcTableauxNode> {
     override val tree = mutableListOf(NcTableauxNode(null, formula.clone()))
     val moveHistory = mutableListOf<NcTableauxMove>()
     val identifiers = Signature.of(formula).getConstantsAndFunctionNames().toMutableSet()
@@ -69,7 +70,6 @@ class NcTableauxNode(
     override var parent: Int?,
     var formula: LogicNode,
 ) : GenericTreeNode {
-
     var isClosed = false
     var closeRef: Int? = null
     override val children = mutableListOf<Int>()

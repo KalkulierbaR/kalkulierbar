@@ -7,17 +7,17 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestLemma {
-
     val instance = PropositionalTableaux()
     private val param = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
     private var states = mutableListOf<TableauxState>()
 
-    val formula = mutableListOf(
-        "a,a;!a,b;!b",
-        "a;b,b;!a,!b",
-        "!a,b;!b;a,b",
-        "a,b;!b;!a,b",
-    )
+    val formula =
+        mutableListOf(
+            "a,a;!a,b;!b",
+            "a;b,b;!a,!b",
+            "!a,b;!b;a,b",
+            "a,b;!b;!a,b",
+        )
 
     @BeforeTest
     fun createStates() {

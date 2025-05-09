@@ -11,7 +11,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
 class TestPropositionalLogic {
-
     private lateinit var v1: Var
     private lateinit var v2: Var
     private lateinit var v3: Var
@@ -88,12 +87,13 @@ class TestPropositionalLogic {
         val expected2 = "{b, a}, {b, !b}, {!a, a}, {!a, !b}"
         assertEquals(expected2, NaiveCNF.transform(n2).toString())
 
-        val expected3 = ClauseSet(
-            mutableListOf(
-                Clause(mutableListOf(Atom("a", true), Atom("c"))),
-                Clause(mutableListOf(Atom("a"), Atom("c"))),
-            ),
-        )
+        val expected3 =
+            ClauseSet(
+                mutableListOf(
+                    Clause(mutableListOf(Atom("a", true), Atom("c"))),
+                    Clause(mutableListOf(Atom("a"), Atom("c"))),
+                ),
+            )
         assertEquals(expected3.toString(), NaiveCNF.transform(n3).toString())
     }
 

@@ -11,7 +11,8 @@ class SignedModalTableauxState(
     val formula: LogicNode,
     val assumption: Boolean,
     val backtracking: Boolean,
-) : ProtectedState(), TreeGardener<SignedModalTableauxNode> {
+) : ProtectedState(),
+    TreeGardener<SignedModalTableauxNode> {
     override val tree = mutableListOf(SignedModalTableauxNode(null, listOf(1), assumption, formula.clone()))
     val moveHistory = mutableListOf<SignedModalTableauxMove>()
     var usedBacktracking = false
@@ -51,7 +52,10 @@ class SignedModalTableauxState(
      * @return whether the prefix is already in use
      */
     @Suppress("ReturnCount")
-    fun prefixIsUsedOnBranch(leafID: Int, prefix: List<Int>): Boolean {
+    fun prefixIsUsedOnBranch(
+        leafID: Int,
+        prefix: List<Int>,
+    ): Boolean {
         var node = tree[leafID]
         if (prefix == node.prefix) {
             return true

@@ -13,14 +13,16 @@ import kalkulierbar.logic.transform.VariableInstantiator
  */
 class Unification {
     companion object {
-
         /**
          * Unifies two given relations by using "Robinson's Algorithm" (1963)
          * @param r1 the first relation to be unified with r2
          * @param r2 the second relation to be unified with r1
          * @return a map of the executed substitutions
          */
-        fun unify(r1: Relation, r2: Relation): Map<String, FirstOrderTerm> {
+        fun unify(
+            r1: Relation,
+            r2: Relation,
+        ): Map<String, FirstOrderTerm> {
             val terms = mutableListOf<Pair<FirstOrderTerm, FirstOrderTerm>>()
 
             findTermsToUnify(terms, r1, r2)
@@ -54,8 +56,9 @@ class Unification {
             if (arg1.size != arg2.size) {
                 throw UnificationImpossible("Relations '$r1' and '$r2' have different numbers of arguments")
             }
-            for (i in arg1.indices)
+            for (i in arg1.indices) {
                 terms.add(Pair(arg1[i], arg2[i]))
+            }
         }
 
         /**
@@ -96,8 +99,9 @@ class Unification {
                     val t1 = term1 as Function
                     val t2 = term2 as Function
                     // Break down into subterms
-                    for (i in t1.arguments.indices)
+                    for (i in t1.arguments.indices) {
                         terms.add(Pair(t1.arguments[i], t2.arguments[i]))
+                    }
                 } else {
                     throw UnificationImpossible("'$term1' and '$term2' cannot be unified")
                 }
@@ -112,7 +116,10 @@ class Unification {
          * @param t2 Second term
          * @return true iff the two terms represent the same functions
          */
-        private fun isCompatibleFunction(t1: FirstOrderTerm, t2: FirstOrderTerm): Boolean {
+        private fun isCompatibleFunction(
+            t1: FirstOrderTerm,
+            t2: FirstOrderTerm,
+        ): Boolean {
             if (t1 is Function && t2 is Function) {
                 return t1.spelling == t2.spelling && t1.arguments.size == t2.arguments.size
             }

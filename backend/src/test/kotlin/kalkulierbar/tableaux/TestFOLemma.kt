@@ -7,28 +7,30 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestFOLemma {
-
     val instance = FirstOrderTableaux()
-    private val automaticParam = FoTableauxParam(
-        TableauxType.UNCONNECTED,
-        regular = false,
-        backtracking = false,
-        manualVarAssign = false,
-    )
-    private val manualParam = FoTableauxParam(
-        TableauxType.UNCONNECTED,
-        regular = false,
-        backtracking = false,
-        manualVarAssign = true,
-    )
+    private val automaticParam =
+        FoTableauxParam(
+            TableauxType.UNCONNECTED,
+            regular = false,
+            backtracking = false,
+            manualVarAssign = false,
+        )
+    private val manualParam =
+        FoTableauxParam(
+            TableauxType.UNCONNECTED,
+            regular = false,
+            backtracking = false,
+            manualVarAssign = true,
+        )
 
     private var autoStates = mutableListOf<FoTableauxState>()
     private var manualStates = mutableListOf<FoTableauxState>()
 
-    val formula = listOf(
-        "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) & R(A)))",
-    )
+    val formula =
+        listOf(
+            "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
+            "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) & R(A)))",
+        )
 
     @BeforeTest
     fun createStates() {

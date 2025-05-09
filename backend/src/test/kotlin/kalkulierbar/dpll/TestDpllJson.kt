@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestDpllJson {
-
     private val dpll = DPLL()
 
     @Test
@@ -58,12 +57,14 @@ class TestDpllJson {
 
     @Test
     fun testStateToJson() {
-        val expected = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},
+        val expected =
+            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},
             |{"lit":"c","negated":false}]},{"atoms":[{"lit":"a","negated":false},
             |{"lit":"c","negated":true}]}]},"tree":[{"parent":null,"type":"ROOT",
             |"label":"true","diff":{"type":"cd-identity"},"children":[],"modelVerified":null}],
-            |"seal":"9A2C06A4018F47568B0F64B3A9BEA68FE6F83C3CD7E1F45D8B1E925E162E1BA1"}"""
-            .trimMargin().replace("\n", "")
+            |"seal":"9A2C06A4018F47568B0F64B3A9BEA68FE6F83C3CD7E1F45D8B1E925E162E1BA1"}
+            """.trimMargin()
+                .replace("\n", "")
         val got = dpll.parseFormula("!a,c;a,!c", null)
         assertEquals(expected, got)
     }
@@ -74,7 +75,8 @@ class TestDpllJson {
 
     @Test
     fun testJsonToState() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},
+        val json =
+            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},
             |{"lit":"c","negated":false}]},{"atoms":[{"lit":"a","negated":false},
             |{"lit":"c","negated":true}]}]},"tree":[{"parent":null,"type":"ROOT",
             |"label":"true","diff":{"type":"cd-identity"},"children":[1,2],
@@ -88,18 +90,20 @@ class TestDpllJson {
             |{"parent":2,"type":"SPLIT","label":"¬c","diff":{"type":"cd-addclause",
             |"clause":{"atoms":[{"lit":"c","negated":true}]}},"children":[],
             |"modelVerified":null}],
-            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FA2559DBE0945B38BCD64A6806D6C1AD"}"""
-            .trimMargin()
+            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FA2559DBE0945B38BCD64A6806D6C1AD"}
+            """.trimMargin()
         val state = dpll.jsonToState(json)
-        val expected = "pdpll|{!a, c}, {a, !c}|[(null|[1, 2]|ROOT|true|identity|null), " +
-            "(0|[]|SPLIT|a|add-{a}|null), (0|[3, 4]|SPLIT|¬a|add-{!a}|null), " +
-            "(2|[]|SPLIT|c|add-{c}|null), (2|[]|SPLIT|¬c|add-{!c}|null)]"
+        val expected =
+            "pdpll|{!a, c}, {a, !c}|[(null|[1, 2]|ROOT|true|identity|null), " +
+                "(0|[]|SPLIT|a|add-{a}|null), (0|[3, 4]|SPLIT|¬a|add-{!a}|null), " +
+                "(2|[]|SPLIT|c|add-{c}|null), (2|[]|SPLIT|¬c|add-{!c}|null)]"
         assertEquals(expected, state.getHash())
     }
 
     @Test
     fun testJsonStateCorrupt() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},
+        val json =
+            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},
             |{"litc","negated":false}]},{"atoms":[{"lit":"a","negated":false},
             |{"lit":"c","negated":true}]}]},"tree":[{"parent":null,"type":"ROOT",
             |"label":"true","diff":{"type":"cd-identity"},"children":[1,2],
@@ -112,8 +116,8 @@ class TestDpllJson {
             |"children":[],"modelVerified":null},{"parent":2,"type":"SPLIT","label":"¬c",
             |"diff":{"type":"cd-addclause","clause":{"atoms":[{"lit":"c","negated":true}]}},
             |"children":[],"modelVerified":null}],
-            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FA2559DBE0945B38BCD64A6806D6C1AD"}"""
-            .trimMargin()
+            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FA2559DBE0945B38BCD64A6806D6C1AD"}
+            """.trimMargin()
         assertFailsWith<JsonParseException> {
             dpll.jsonToState(json)
         }
@@ -121,7 +125,8 @@ class TestDpllJson {
 
     @Test
     fun testJsonStateMissingField() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"negated":true},
+        val json =
+            """{"clauseSet":{"clauses":[{"atoms":[{"negated":true},
             |{"lit":"c","negated":false}]},{"atoms":[{"lit":"a","negated":false},
             |{"lit":"c","negated":true}]}]},"tree":[{"parent":null,"type":"ROOT",
             |"label":"true","diff":{"type":"cd-identity"},"children":[1,2],
@@ -134,8 +139,8 @@ class TestDpllJson {
             |"children":[],"modelVerified":null},{"parent":2,"type":"SPLIT","label":"¬c",
             |"diff":{"type":"cd-addclause","clause":{"atoms":[{"lit":"c","negated":true}]}},
             |"children":[],"modelVerified":null}],
-            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FA2559DBE0945B38BCD64A6806D6C1AD"}"""
-            .trimMargin()
+            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FA2559DBE0945B38BCD64A6806D6C1AD"}
+            """.trimMargin()
         assertFailsWith<JsonParseException> {
             dpll.jsonToState(json)
         }
@@ -143,7 +148,8 @@ class TestDpllJson {
 
     @Test
     fun testJsonStateModify() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},
+        val json =
+            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":false},
             |{"lit":"c","negated":false}]},{"atoms":[{"lit":"a","negated":false},
             |{"lit":"c","negated":true}]}]},"tree":[{"parent":null,"type":"ROOT",
             |"label":"true","diff":{"type":"cd-identity"},"children":[1,2],"modelVerified":null},
@@ -157,8 +163,8 @@ class TestDpllJson {
             |{"parent":2,"type":"SPLIT","label":"¬c","diff":{"type":"cd-addclause",
             |"clause":{"atoms":[{"lit":"c","negated":true}]}},"children":[],
             |"modelVerified":null}],
-            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FA2559DBE0945B38BCD64A6806D6C1AD"}"""
-            .trimMargin()
+            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FA2559DBE0945B38BCD64A6806D6C1AD"}
+            """.trimMargin()
         assertFailsWith<JsonParseException> {
             dpll.jsonToState(json)
         }
@@ -166,7 +172,8 @@ class TestDpllJson {
 
     @Test
     fun testJsonStateSeal() {
-        val json = """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},
+        val json =
+            """{"clauseSet":{"clauses":[{"atoms":[{"lit":"a","negated":true},
             |{"lit":"c","negated":false}]},{"atoms":[{"lit":"a","negated":false},
             |{"lit":"c","negated":true}]}]},"tree":
             |[{"parent":null,"type":"ROOT","label":"true","diff":{"type":"cd-identity"},
@@ -180,8 +187,8 @@ class TestDpllJson {
             |"children":[],"modelVerified":null},{"parent":2,"type":"SPLIT","label":"¬c",
             |"diff":{"type":"cd-addclause","clause":{"atoms":[{"lit":"c","negated":true}]}},
             |"children":[],"modelVerified":null}],
-            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FAFAFAFADBE0945B38BCD64A6806D6C1AD"}"""
-            .trimMargin()
+            |"seal":"A8651499DDF3E5E9D724CB4E7F35F318FAFAFAFADBE0945B38BCD64A6806D6C1AD"}
+            """.trimMargin()
         assertFailsWith<JsonParseException> {
             dpll.jsonToState(json)
         }

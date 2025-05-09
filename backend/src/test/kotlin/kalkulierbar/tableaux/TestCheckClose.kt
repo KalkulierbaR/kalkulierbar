@@ -4,7 +4,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestCheckClose {
-
     private val propTableaux = PropositionalTableaux()
     private val tableauxOpts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
 
@@ -13,10 +12,11 @@ class TestCheckClose {
         var state = propTableaux.parseFormulaToState("a,!a", tableauxOpts)
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
-        val nodes = listOf(
-            TableauxNode(0, "a", false),
-            TableauxNode(1, "a", true),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "a", false),
+                TableauxNode(1, "a", true),
+            )
 
         state.tree.addAll(nodes)
         state.tree[0].children.add(1)
@@ -35,12 +35,13 @@ class TestCheckClose {
 
         assertEquals(false, propTableaux.checkCloseOnState(state).closed)
 
-        val nodes = listOf(
-            TableauxNode(0, "a", false),
-            TableauxNode(0, "b", false),
-            TableauxNode(1, "a", true),
-            TableauxNode(2, "b", true),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "a", false),
+                TableauxNode(0, "b", false),
+                TableauxNode(1, "a", true),
+                TableauxNode(2, "b", true),
+            )
 
         state.tree.addAll(nodes)
         state.tree[0].children.add(1)
@@ -86,14 +87,15 @@ class TestCheckClose {
     fun testCheckCloseNegative() {
         var state = propTableaux.parseFormulaToState("a,b,c;!a;!b;!c", tableauxOpts)
 
-        val nodes = listOf(
-            TableauxNode(0, "a", false),
-            TableauxNode(0, "b", false),
-            TableauxNode(0, "c", false),
-            TableauxNode(1, "a", true),
-            TableauxNode(2, "b", true),
-            TableauxNode(3, "c", true),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "a", false),
+                TableauxNode(0, "b", false),
+                TableauxNode(0, "c", false),
+                TableauxNode(1, "a", true),
+                TableauxNode(2, "b", true),
+                TableauxNode(3, "c", true),
+            )
 
         state.tree.addAll(nodes)
         state.tree[0].children.addAll(listOf(1, 2, 3))

@@ -10,7 +10,6 @@ import kalkulierbar.logic.Quantifier
 class VariableInstantiator(
     private val replacementMap: Map<String, FirstOrderTerm>,
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
-
     companion object {
         /**
          * Instantiate the variables given in the map with their respective FO Term replacements
@@ -19,7 +18,10 @@ class VariableInstantiator(
          * @param map Map of variable instantiations to perform
          * @return Term with instantiations applied
          */
-        fun transform(term: FirstOrderTerm, map: Map<String, FirstOrderTerm>): FirstOrderTerm {
+        fun transform(
+            term: FirstOrderTerm,
+            map: Map<String, FirstOrderTerm>,
+        ): FirstOrderTerm {
             val instance = VariableInstantiator(map)
             return term.accept(instance)
         }
@@ -58,8 +60,9 @@ class VariableInstantiator(
     }
 }
 
-class VariableSuffixAppend(private val suffix: String) : FirstOrderTermVisitor<FirstOrderTerm>() {
-
+class VariableSuffixAppend(
+    private val suffix: String,
+) : FirstOrderTermVisitor<FirstOrderTerm>() {
     /**
      * Append the suffix to a Variable
      * @param node Variable encountered
@@ -95,8 +98,9 @@ class VariableSuffixAppend(private val suffix: String) : FirstOrderTermVisitor<F
  *        Everything after the first occurrence of this string will be removed
  *        (including the marker itself)
  */
-class VariableSuffixStripper(private val marker: String) : FirstOrderTermVisitor<FirstOrderTerm>() {
-
+class VariableSuffixStripper(
+    private val marker: String,
+) : FirstOrderTermVisitor<FirstOrderTerm>() {
     /**
      * Remove a suffix from a Variable
      * @param node Variable encountered
@@ -126,8 +130,9 @@ class VariableSuffixStripper(private val marker: String) : FirstOrderTermVisitor
     }
 }
 
-class TermContainsVariable(val variable: String) : FirstOrderTermVisitor<Boolean>() {
-
+class TermContainsVariable(
+    val variable: String,
+) : FirstOrderTermVisitor<Boolean>() {
     companion object {
         /**
          * Check if a term contains a given Variable
@@ -135,7 +140,10 @@ class TermContainsVariable(val variable: String) : FirstOrderTermVisitor<Boolean
          * @param variable Variable to check for
          * @return true iff the term contains the variable
          */
-        fun check(term: FirstOrderTerm, variable: String): Boolean {
+        fun check(
+            term: FirstOrderTerm,
+            variable: String,
+        ): Boolean {
             val instance = TermContainsVariable(variable)
             return term.accept(instance)
         }
@@ -174,7 +182,6 @@ class QuantifierLinker(
     private val quantifiers: List<Quantifier>,
     private val enforceUnique: Boolean,
 ) : FirstOrderTermVisitor<Unit>() {
-
     /**
      * Match a QuantifiedVariable to its binding quantifier
      * @param node QuantifiedVariable encountered

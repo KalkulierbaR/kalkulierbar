@@ -17,7 +17,8 @@ class TableauxState(
     override val type: TableauxType = TableauxType.UNCONNECTED,
     override val regular: Boolean = false,
     override val backtracking: Boolean = false,
-) : GenericTableauxState<String>, ProtectedState() {
+) : ProtectedState(),
+    GenericTableauxState<String> {
     override val tree = mutableListOf(TableauxNode(null, "true", false))
     val moveHistory = mutableListOf<TableauxMove>()
     override var usedBacktracking = false
@@ -61,7 +62,10 @@ class TableauxState(
      * @param atom the atom to search for
      * @return true iff the node's transitive parents include the given atom
      */
-    private fun nodeAncestryContainsAtom(nodeID: Int, atom: Atom<String>): Boolean {
+    private fun nodeAncestryContainsAtom(
+        nodeID: Int,
+        atom: Atom<String>,
+    ): Boolean {
         var node = tree[nodeID]
 
         // Walk up the tree from start node
@@ -98,7 +102,6 @@ class TableauxNode(
     override val negated: Boolean,
     override val lemmaSource: Int? = null,
 ) : GenericTableauxNode<String> {
-
     override var isClosed = false
     override var closeRef: Int? = null
     override val children = mutableListOf<Int>()
@@ -108,9 +111,7 @@ class TableauxNode(
 
     override fun toAtom() = Atom(spelling, negated)
 
-    override fun toString(): String {
-        return if (negated) "!$spelling" else spelling
-    }
+    override fun toString(): String = if (negated) "!$spelling" else spelling
 
     /**
      * Pack the node into a well-defined, unambiguous string representation
@@ -143,5 +144,7 @@ data class TableauxParam(
 )
 
 enum class TableauxType {
-    UNCONNECTED, WEAKLYCONNECTED, STRONGLYCONNECTED
+    UNCONNECTED,
+    WEAKLYCONNECTED,
+    STRONGLYCONNECTED,
 }

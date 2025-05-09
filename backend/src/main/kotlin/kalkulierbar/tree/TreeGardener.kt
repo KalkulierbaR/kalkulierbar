@@ -5,7 +5,10 @@ import kalkulierbar.IllegalMove
 interface TreeGardener<Node : GenericTreeNode> {
     val tree: MutableList<Node>
 
-    fun addChildren(parentID: Int, vararg children: Node) {
+    fun addChildren(
+        parentID: Int,
+        vararg children: Node,
+    ) {
         val parent = tree[parentID]
         for (child in children) {
             tree.add(child)
@@ -28,7 +31,10 @@ interface TreeGardener<Node : GenericTreeNode> {
      * @return true iff the parentID is a true ancestor of the childID
      */
     @Suppress("ReturnCount")
-    fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
+    fun nodeIsParentOf(
+        parentID: Int,
+        childID: Int,
+    ): Boolean {
         val child = tree[childID]
         if (child.parent == parentID) {
             return true
@@ -44,7 +50,10 @@ interface TreeGardener<Node : GenericTreeNode> {
      * @param children List of nodes to update
      * @param parent New parent reference
      */
-    fun setParent(children: List<Int>, parent: Int) {
+    fun setParent(
+        children: List<Int>,
+        parent: Int,
+    ) {
         children.forEach {
             tree[it].parent = parent
         }

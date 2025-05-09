@@ -10,64 +10,68 @@ class TestModalLogicParser {
     private val parser = ModalLogicParser()
     private val instance = SignedModalTableaux()
 
-    private val invalid = listOf(
-        "",
-        "-->a",
-        "<--",
-        "--><=>",
-        "!->",
-        "a!",
-        "a-->",
-        "b<=>",
-        "<->a",
-        "<->",
-        "(a&b v2",
-        "(a|b",
-    )
+    private val invalid =
+        listOf(
+            "",
+            "-->a",
+            "<--",
+            "--><=>",
+            "!->",
+            "a!",
+            "a-->",
+            "b<=>",
+            "<->a",
+            "<->",
+            "(a&b v2",
+            "(a|b",
+        )
 
-    private val invalidSigned = listOf(
-        "\\sign B: a",
-        "\\sign T : a",
-        "\\sig n T: a",
-        "\\si gn T: a",
-        "\\s ign T: a",
-        "\\ sign T: a",
-        "\\sign FT: a",
-        "\\signT: a",
-        "\\sign T: a & b \\sign T: a",
-        "a & b \\sign T: a",
-        "a & \\sign T: a",
-        "\\sign TF: a",
-    )
+    private val invalidSigned =
+        listOf(
+            "\\sign B: a",
+            "\\sign T : a",
+            "\\sig n T: a",
+            "\\si gn T: a",
+            "\\s ign T: a",
+            "\\ sign T: a",
+            "\\sign FT: a",
+            "\\signT: a",
+            "\\sign T: a & b \\sign T: a",
+            "a & b \\sign T: a",
+            "a & \\sign T: a",
+            "\\sign TF: a",
+        )
 
-    private val validSigned = listOf(
-        "\\sign T: a" to "a",
-        "\\sign F: a" to "a",
-        "     \\sign T: a" to "a",
-        "     \\sign F: a" to "a",
-        "\\sign       T: a" to "a",
-        "\\sign       F: a" to "a",
-        "\\sign T:      a" to "a",
-        "\\sign F:      a" to "a",
-        "   \\sign       T: a" to "a",
-        "   \\sign       F: a" to "a",
-    )
+    private val validSigned =
+        listOf(
+            "\\sign T: a" to "a",
+            "\\sign F: a" to "a",
+            "     \\sign T: a" to "a",
+            "     \\sign F: a" to "a",
+            "\\sign       T: a" to "a",
+            "\\sign       F: a" to "a",
+            "\\sign T:      a" to "a",
+            "\\sign F:      a" to "a",
+            "   \\sign       T: a" to "a",
+            "   \\sign       F: a" to "a",
+        )
 
-    private val valid = mapOf(
-        "a" to "a",
-        "!a" to "¬a",
-        "a -> b" to "(a → b)",
-        "a-> b" to "(a → b)",
-        "a    ->b" to "(a → b)",
-        "a->b" to "(a → b)",
-        "a<->(b -> (!(c)))" to "(a <=> (b → ¬c))",
-        "(b & a <-> (a) | !b)" to "((b ∧ a) <=> (a ∨ ¬b))",
-        "[]a" to "□a",
-        "[](a&b)" to "□(a ∧ b)",
-        "<>(a&b)" to "◇(a ∧ b)",
-        "[]<>(a)" to "□◇a",
-        "[][](a)" to "□□a",
-    )
+    private val valid =
+        mapOf(
+            "a" to "a",
+            "!a" to "¬a",
+            "a -> b" to "(a → b)",
+            "a-> b" to "(a → b)",
+            "a    ->b" to "(a → b)",
+            "a->b" to "(a → b)",
+            "a<->(b -> (!(c)))" to "(a <=> (b → ¬c))",
+            "(b & a <-> (a) | !b)" to "((b ∧ a) <=> (a ∨ ¬b))",
+            "[]a" to "□a",
+            "[](a&b)" to "□(a ∧ b)",
+            "<>(a&b)" to "◇(a ∧ b)",
+            "[]<>(a)" to "□◇a",
+            "[][](a)" to "□□a",
+        )
 
     @Test
     fun testInvalidStrings() {

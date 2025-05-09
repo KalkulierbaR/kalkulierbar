@@ -17,7 +17,13 @@ import kalkulierbar.parsers.Tokenizer
  * @param atomID Index of the atom used for propagation in the propID clause
  */
 @Suppress("ComplexMethod")
-fun propagate(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID: Int) {
+fun propagate(
+    state: DPLLState,
+    branchID: Int,
+    baseID: Int,
+    propID: Int,
+    atomID: Int,
+) {
     // Checks all Restrictions according to propagate
     checkPropagateRestrictions(state, branchID, baseID, propID, atomID)
 
@@ -28,13 +34,14 @@ fun propagate(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID:
 
     // If the selected clause contains the atom which we know must be true,
     // the whole clause is trivially true and we can remove it from the set
-    val diff = when (baseAtom) {
-        propAtom -> RemoveClause(propID)
-        // If the selected clause contains the negation of the atom known to be true,
-        // that atom cannot be true and can be removed from the clause
-        propAtom.not() -> RemoveAtom(propID, atomID)
-        else -> throw IllegalMove("Selected atom '$propAtom' is not compatible with '$baseAtom'")
-    }
+    val diff =
+        when (baseAtom) {
+            propAtom -> RemoveClause(propID)
+            // If the selected clause contains the negation of the atom known to be true,
+            // that atom cannot be true and can be removed from the clause
+            propAtom.not() -> RemoveAtom(propID, atomID)
+            else -> throw IllegalMove("Selected atom '$propAtom' is not compatible with '$baseAtom'")
+        }
 
     val propNode = TreeNode(branchID, NodeType.PROP, "prop", diff)
     state.addChildren(branchID, propNode)
@@ -46,19 +53,24 @@ fun propagate(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID:
     // A node is considered closed if the clause set associated with it contains an empty clause
     if (newClauses.any { it.isEmpty() }) {
         state.addChildren(propNodeID, TreeNode(propNodeID, NodeType.CLOSED, "closed", Identity()))
-    }
-    // A node is considered a model if it contains only single-atom clauses
-    // that do not contradict each other and contain no duplicates
-    else if (
+    } else if (
         newClauses.all { it.size == 1 } &&
         newClauses.map { it.atoms[0].lit }.distinct().size == newClauses.size
     ) {
+        // A node is considered a model if it contains only single-atom clauses
+        // that do not contradict each other and contain no duplicates
         state.addChildren(propNodeID, TreeNode(propNodeID, NodeType.MODEL, "model", Identity()))
     }
 }
 
 @Suppress("ThrowsCount", "ComplexMethod")
-private fun checkPropagateRestrictions(state: DPLLState, branchID: Int, baseID: Int, propID: Int, atomID: Int) {
+private fun checkPropagateRestrictions(
+    state: DPLLState,
+    branchID: Int,
+    baseID: Int,
+    propID: Int,
+    atomID: Int,
+) {
     // Check branch validity
     if (branchID < 0 || branchID >= state.tree.size) {
         throw IllegalMove("Branch with ID $branchID does not exist")
@@ -99,7 +111,11 @@ private fun checkPropagateRestrictions(state: DPLLState, branchID: Int, baseID: 
  * @param branchID The leaf node in the tree to apply the rule on
  * @param literal The variable to use for case distinction
  */
-fun split(state: DPLLState, branchID: Int, literal: String) {
+fun split(
+    state: DPLLState,
+    branchID: Int,
+    literal: String,
+) {
     // Check Restrictions according to split
     checkSplitRestrictions(state, branchID, literal)
 
@@ -121,7 +137,11 @@ fun split(state: DPLLState, branchID: Int, literal: String) {
 }
 
 @Suppress("ThrowsCount")
-private fun checkSplitRestrictions(state: DPLLState, branchID: Int, literal: String) {
+private fun checkSplitRestrictions(
+    state: DPLLState,
+    branchID: Int,
+    literal: String,
+) {
     if (branchID < 0 || branchID >= state.tree.size) {
         throw IllegalMove("Branch with ID $branchID does not exist")
     }
@@ -151,7 +171,10 @@ private fun checkSplitRestrictions(state: DPLLState, branchID: Int, literal: Str
  * @param state State to apply the rule in
  * @branchID ID of the node whose children will be pruned
  */
-fun prune(state: DPLLState, branchID: Int) {
+fun prune(
+    state: DPLLState,
+    branchID: Int,
+) {
     if (branchID < 0 || branchID >= state.tree.size) {
         throw IllegalMove("Branch with ID $branchID does not exist")
     }
@@ -171,7 +194,11 @@ fun prune(state: DPLLState, branchID: Int) {
  * @param interpretation A map assigning truth values to variables
  */
 @Suppress("ThrowsCount")
-fun checkModel(state: DPLLState, branchID: Int, interpretation: Map<String, Boolean>) {
+fun checkModel(
+    state: DPLLState,
+    branchID: Int,
+    interpretation: Map<String, Boolean>,
+) {
     if (branchID < 0 || branchID >= state.tree.size) {
         throw IllegalMove("Branch with ID $branchID does not exist")
     }

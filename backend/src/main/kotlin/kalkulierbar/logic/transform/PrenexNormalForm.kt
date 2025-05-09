@@ -17,9 +17,7 @@ import kalkulierbar.logic.UniversalQuantifier
  * An exception will be thrown if this requirement is not met
  */
 class PrenexNormalForm : DoNothingVisitor() {
-
     companion object Companion {
-
         /**
          * Apply the PNF transformation to a formula
          * @param formula Formula to transform
@@ -32,11 +30,12 @@ class PrenexNormalForm : DoNothingVisitor() {
             // re-create quantifier prefix from saved data
             instance.quantifiers.asReversed().forEach {
                 val (varName, isUniversal, boundVars) = it
-                res = if (isUniversal) {
-                    UniversalQuantifier(varName, res, boundVars)
-                } else {
-                    ExistentialQuantifier(varName, res, boundVars)
-                }
+                res =
+                    if (isUniversal) {
+                        UniversalQuantifier(varName, res, boundVars)
+                    } else {
+                        ExistentialQuantifier(varName, res, boundVars)
+                    }
             }
 
             return res
