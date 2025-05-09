@@ -8,7 +8,6 @@ import kalkulierbar.logic.transform.NaiveCNF
 import kalkulierbar.logic.transform.TseytinCNF
 
 object FlexibleClauseSetParser {
-
     /**
      * Parses a clause set or a propositional formula into a ClauseSet
      * For format specifications, see ClauseSetParser and PropositionalParser
@@ -16,7 +15,10 @@ object FlexibleClauseSetParser {
      * @return ClauseSet representing the input formula
      */
     @Suppress("ReturnCount", "EmptyCatchBlock", "ComplexMethod")
-    fun parse(formula: String, strategy: CnfStrategy = CnfStrategy.OPTIMAL): ClauseSet<String> {
+    fun parse(
+        formula: String,
+        strategy: CnfStrategy = CnfStrategy.OPTIMAL,
+    ): ClauseSet<String> {
         var errorMsg: String
 
         val likelyFormula = (Regex(".*(&|\\||->|<=>).*", RegexOption.DOT_MATCHES_ALL) matches formula)
@@ -25,7 +27,8 @@ object FlexibleClauseSetParser {
         // Try parsing as Dimacs-Like
         try {
             return DimacsLikeParser.parse(formula)
-        } catch (_: InvalidFormulaFormat) {} // We don't support this officially, so no custom error for invalid dimacs
+        } catch (_: InvalidFormulaFormat) {
+        } // We don't support this officially, so no custom error for invalid dimacs
 
         // Try parsing as ClauseSet
         try {
@@ -63,7 +66,10 @@ object FlexibleClauseSetParser {
      * @param strategy conversion strategy to apply
      * @return ClauseSet representation of the input formula
      */
-    private fun convertToCNF(formula: LogicNode, strategy: CnfStrategy): ClauseSet<String> {
+    private fun convertToCNF(
+        formula: LogicNode,
+        strategy: CnfStrategy,
+    ): ClauseSet<String> {
         val res: ClauseSet<String>
 
         when (strategy) {
@@ -73,16 +79,17 @@ object FlexibleClauseSetParser {
                 val tseytin = TseytinCNF.transform(formula)
                 // Naive transformation might fail for large a large formula
                 // Fall back to tseytin if so
-                res = try {
-                    val naive = NaiveCNF.transform(formula)
-                    if (naive.clauses.size > tseytin.clauses.size) {
+                res =
+                    try {
+                        val naive = NaiveCNF.transform(formula)
+                        if (naive.clauses.size > tseytin.clauses.size) {
+                            tseytin
+                        } else {
+                            naive
+                        }
+                    } catch (e: FormulaConversionException) {
                         tseytin
-                    } else {
-                        naive
                     }
-                } catch (e: FormulaConversionException) {
-                    tseytin
-                }
             }
         }
 
@@ -91,5 +98,7 @@ object FlexibleClauseSetParser {
 }
 
 enum class CnfStrategy {
-    NAIVE, TSEYTIN, OPTIMAL
+    NAIVE,
+    TSEYTIN,
+    OPTIMAL,
 }

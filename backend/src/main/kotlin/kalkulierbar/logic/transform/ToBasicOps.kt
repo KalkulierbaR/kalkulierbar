@@ -12,7 +12,6 @@ import kalkulierbar.logic.Relation
 import kalkulierbar.logic.UniversalQuantifier
 
 class ToBasicOps : DoNothingVisitor() {
-
     companion object Companion {
         /**
          * Transform an arbitrary formula into a formula using

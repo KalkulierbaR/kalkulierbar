@@ -7,7 +7,10 @@ import kalkulierbar.tree.TreeGardener
 import kotlinx.serialization.Serializable
 
 @Serializable
-class DPLLState(val clauseSet: ClauseSet<String>) : ProtectedState(), TreeGardener<TreeNode> {
+class DPLLState(
+    val clauseSet: ClauseSet<String>,
+) : ProtectedState(),
+    TreeGardener<TreeNode> {
     override val tree = mutableListOf<TreeNode>()
 
     /**
@@ -34,11 +37,17 @@ class DPLLState(val clauseSet: ClauseSet<String>) : ProtectedState(), TreeGarden
     }
 
     override var seal = ""
+
     override fun getHash() = "pdpll|$clauseSet|${tree.map{it.getHash()}}"
 }
 
 @Serializable
-class TreeNode(override var parent: Int?, val type: NodeType, var label: String, val diff: CsDiff) : GenericTreeNode {
+class TreeNode(
+    override var parent: Int?,
+    val type: NodeType,
+    var label: String,
+    val diff: CsDiff,
+) : GenericTreeNode {
     override val children = mutableListOf<Int>()
     override val isLeaf
         get() = children.isEmpty()
@@ -46,13 +55,15 @@ class TreeNode(override var parent: Int?, val type: NodeType, var label: String,
         get() = (type == NodeType.MODEL || type == NodeType.CLOSED)
     var modelVerified: Boolean? = null
 
-    fun getHash(): String {
-        return "($parent|$children|$type|$label|$diff|$modelVerified)"
-    }
+    fun getHash(): String = "($parent|$children|$type|$label|$diff|$modelVerified)"
 
     override fun toString() = label
 }
 
 enum class NodeType {
-    ROOT, PROP, SPLIT, MODEL, CLOSED
+    ROOT,
+    PROP,
+    SPLIT,
+    MODEL,
+    CLOSED,
 }

@@ -19,7 +19,6 @@ import kalkulierbar.logic.Var
  * Does NOT support first order formulae
  */
 class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
-
     companion object Companion {
         /**
          * Transforms a propositional formula into an equivalent ClauseSet
@@ -136,16 +135,12 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
      * @param node Implication to transform
      * @return ClauseSet representing the Implication
      */
-    override fun visit(node: Impl): ClauseSet<String> {
-        return ToBasicOps.transform(node).accept(this)
-    }
+    override fun visit(node: Impl): ClauseSet<String> = ToBasicOps.transform(node).accept(this)
 
     /**
      * Transform an Equivalence into an equivalent ClauseSet
      * @param node Equivalence to transform
      * @return ClauseSet representing the Equivalence
      */
-    override fun visit(node: Equiv): ClauseSet<String> {
-        return ToBasicOps.transform(node).accept(this)
-    }
+    override fun visit(node: Equiv): ClauseSet<String> = ToBasicOps.transform(node).accept(this)
 }

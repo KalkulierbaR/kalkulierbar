@@ -7,24 +7,25 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestAutoCloseBranchFO {
-
     val instance = FirstOrderTableaux()
-    private val param = FoTableauxParam(
-        TableauxType.UNCONNECTED,
-        regular = false,
-        backtracking = false,
-        manualVarAssign = false,
-    )
+    private val param =
+        FoTableauxParam(
+            TableauxType.UNCONNECTED,
+            regular = false,
+            backtracking = false,
+            manualVarAssign = false,
+        )
     private var states = mutableListOf<FoTableauxState>()
 
-    val formula = mutableListOf(
-        "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-        "(R(a) <-> !R(b)) | (!R(a) -> R(b))",
-        "\\ex A : (R(A) & (\\all B: !R(B) & !R(A)))",
-        "\\ex Usk: (R(Usk) -> (!\\ex Usk: (R(sk1) & !R(Usk) | R(Usk) & !R(sk1))))",
-        "\\all A: (Sk1(A) -> !\\ex B: (R(A) & !R(B) -> Sk1(B) | !Sk1(A)))",
-        "\\all X: (R(g(X)) & !R(f(X)))",
-    )
+    val formula =
+        mutableListOf(
+            "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
+            "(R(a) <-> !R(b)) | (!R(a) -> R(b))",
+            "\\ex A : (R(A) & (\\all B: !R(B) & !R(A)))",
+            "\\ex Usk: (R(Usk) -> (!\\ex Usk: (R(sk1) & !R(Usk) | R(Usk) & !R(sk1))))",
+            "\\all A: (Sk1(A) -> !\\ex B: (R(A) & !R(B) -> Sk1(B) | !Sk1(A)))",
+            "\\all X: (R(g(X)) & !R(f(X)))",
+        )
 
     @BeforeTest
     fun createStates() {

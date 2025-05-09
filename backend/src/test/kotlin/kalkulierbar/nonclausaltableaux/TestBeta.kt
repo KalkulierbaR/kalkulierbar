@@ -7,7 +7,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestBeta {
-
     val instance = NonClausalTableaux()
 
     @Test
@@ -74,9 +73,10 @@ class TestBeta {
         state = instance.applyMoveOnState(state, AlphaMove(0))
         state = instance.applyMoveOnState(state, BetaMove(2))
 
-        val expected = "[(null|[1]|false|null|((P(c) ∨ (P(d) ∧ Q(c))) ∧ Q(c))), " +
-            "(0|[2]|false|null|Q(c)), (1|[3, 4]|false|null|(P(c) ∨ (P(d) ∧ Q(c)))), " +
-            "(2|[]|false|null|(P(d) ∧ Q(c))), (2|[]|false|null|P(c))]"
+        val expected =
+            "[(null|[1]|false|null|((P(c) ∨ (P(d) ∧ Q(c))) ∧ Q(c))), " +
+                "(0|[2]|false|null|Q(c)), (1|[3, 4]|false|null|(P(c) ∨ (P(d) ∧ Q(c)))), " +
+                "(2|[]|false|null|(P(d) ∧ Q(c))), (2|[]|false|null|P(c))]"
         assertEquals(expected, state.tree.map { it.getHash() }.toString())
     }
 }

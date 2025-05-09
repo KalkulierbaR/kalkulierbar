@@ -16,7 +16,6 @@ import kalkulierbar.logic.Var
  * -> Its purpose is to collect information in a class-variable from given formula
  */
 abstract class DoNothingCollector : LogicNodeVisitor<Unit>() {
-
     /**
      * Visit an And-Operator and visit children recursively
      * @param node And-Operator to visit

@@ -8,25 +8,26 @@ import kotlinx.serialization.modules.subclass
 
 // Context object for move serialization
 // Tells kotlinx.serialize about child types of PSCMove
-val SequentCalculusMoveModule = SerializersModule {
-    polymorphic(SequentCalculusMove::class) {
-        subclass(Ax::class)
-        subclass(NotRight::class)
-        subclass(NotLeft::class)
-        subclass(OrRight::class)
-        subclass(OrLeft::class)
-        subclass(AndRight::class)
-        subclass(AndLeft::class)
-        subclass(ImpLeft::class)
-        subclass(ImpRight::class)
-        subclass(AllRight::class)
-        subclass(AllLeft::class)
-        subclass(ExRight::class)
-        subclass(ExLeft::class)
-        subclass(UndoMove::class)
-        subclass(PruneMove::class)
+val SequentCalculusMoveModule =
+    SerializersModule {
+        polymorphic(SequentCalculusMove::class) {
+            subclass(Ax::class)
+            subclass(NotRight::class)
+            subclass(NotLeft::class)
+            subclass(OrRight::class)
+            subclass(OrLeft::class)
+            subclass(AndRight::class)
+            subclass(AndLeft::class)
+            subclass(ImpLeft::class)
+            subclass(ImpRight::class)
+            subclass(AllRight::class)
+            subclass(AllLeft::class)
+            subclass(ExRight::class)
+            subclass(ExLeft::class)
+            subclass(UndoMove::class)
+            subclass(PruneMove::class)
+        }
     }
-}
 
 @Serializable
 abstract class SequentCalculusMove

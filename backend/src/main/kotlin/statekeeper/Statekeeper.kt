@@ -84,7 +84,11 @@ object StateKeeper {
      *            sha3-256("kbsc|$calculus|$enableString|$date|$state.key"), hex-encoded
      * @return Constant string "true"
      */
-    fun setCalculusState(calculus: String, enableString: String, mac: String): String {
+    fun setCalculusState(
+        calculus: String,
+        enableString: String,
+        mac: String,
+    ): String {
         val fingerprint = "kbsc|$calculus|$enableString"
         if (!verifyMAC(fingerprint, mac)) {
             throw AuthenticationException("Invalid password")
@@ -111,7 +115,10 @@ object StateKeeper {
      * @return Constant string "true"
      */
     @Suppress("TooGenericExceptionCaught")
-    fun addExample(example: String, mac: String): String {
+    fun addExample(
+        example: String,
+        mac: String,
+    ): String {
         val fingerprint = "kbae|$example"
         val parsedExample: Example
 
@@ -144,7 +151,10 @@ object StateKeeper {
      * @return Constant string "true"
      */
     @Suppress("ThrowsCount")
-    fun delExample(exampleIdString: String, mac: String): String {
+    fun delExample(
+        exampleIdString: String,
+        mac: String,
+    ): String {
         val fingerprint = "kbde|$exampleIdString"
         if (!verifyMAC(fingerprint, mac)) {
             throw AuthenticationException("Invalid password")
@@ -184,7 +194,10 @@ object StateKeeper {
      * @param mac The received MAC
      * @return true iff the received MAC is valid for the given payload
      */
-    private fun verifyMAC(payload: String, mac: String): Boolean {
+    private fun verifyMAC(
+        payload: String,
+        mac: String,
+    ): Boolean {
         val payloadWithKey = "$payload|$date|${state.key}"
         val calculatedMAC = toHex(payloadWithKey.digestKeccak(parameter = KeccakParameter.SHA3_256))
         return calculatedMAC == mac.uppercase()
@@ -243,8 +256,14 @@ data class Example(
     val params: String,
 )
 
-class AuthenticationException(msg: String) : KalkulierbarException(msg)
+class AuthenticationException(
+    msg: String,
+) : KalkulierbarException(msg)
 
-class StorageLimitHit(msg: String) : KalkulierbarException(msg)
+class StorageLimitHit(
+    msg: String,
+) : KalkulierbarException(msg)
 
-class InvalidRequest(msg: String) : KalkulierbarException(msg)
+class InvalidRequest(
+    msg: String,
+) : KalkulierbarException(msg)

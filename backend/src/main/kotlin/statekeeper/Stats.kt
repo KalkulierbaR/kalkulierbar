@@ -16,9 +16,10 @@ object Stats {
     private val storage = File("kbar-stats.json")
     private val timer = Timer()
     private var flushScheduled = false
-    private val flusher = object : TimerTask() {
-        override fun run() = flush()
-    }
+    private val flusher =
+        object : TimerTask() {
+            override fun run() = flush()
+        }
 
     /**
      * Read contents of the stats file
@@ -26,16 +27,17 @@ object Stats {
      */
     init {
         @Suppress("TooGenericExceptionCaught")
-        data = try {
-            if (!storage.exists()) {
-                StatContainer()
-            } else {
-                Json.decodeFromString(storage.readText())
+        data =
+            try {
+                if (!storage.exists()) {
+                    StatContainer()
+                } else {
+                    Json.decodeFromString(storage.readText())
+                }
+            } catch (e: Exception) {
+                val msg = "Could not parse stored stats: "
+                throw JsonParseException(msg + (e.message ?: "Unknown error"))
             }
-        } catch (e: Exception) {
-            val msg = "Could not parse stored stats: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
     }
 
     fun getStats() = Json.encodeToString(data)

@@ -1,11 +1,10 @@
 package statekeeper
 
 import kalkulierbar.JsonParseException
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.util.*
+import java.util.Timer
+import java.util.TimerTask
 
 @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 object Scoreboard {
@@ -14,9 +13,10 @@ object Scoreboard {
     private var scoreboardCounter: Int
     private val timer = Timer()
     private var flushScheduled = false
-    private val flusher = object : TimerTask() {
-        override fun run() = flush()
-    }
+    private val flusher =
+        object : TimerTask() {
+            override fun run() = flush()
+        }
 
     private const val READONLY = false
 
@@ -26,25 +26,31 @@ object Scoreboard {
      */
     init {
         @Suppress("TooGenericExceptionCaught")
-        data = try {
-            if (READONLY || !storage.exists()) {
-                mutableMapOf()
-            } else {
-                Json.decodeFromString(storage.readText())
+        data =
+            try {
+                if (READONLY || !storage.exists()) {
+                    mutableMapOf()
+                } else {
+                    Json.decodeFromString(storage.readText())
+                }
+            } catch (e: Exception) {
+                val msg = "Could not parse stored scoreboard: "
+                throw JsonParseException(msg + (e.message ?: "Unknown error"))
             }
-        } catch (e: Exception) {
-            val msg = "Could not parse stored scoreboard: "
-            throw JsonParseException(msg + (e.message ?: "Unknown error"))
-        }
 
         scoreboardCounter = data.values.sumOf { it.size }
     }
 
-    fun getScores(calculus: String, formula: String): List<Map<String, String>> {
-        return data.getOrDefault(calculus, mapOf()).getOrDefault(formula, emptyList())
-    }
+    fun getScores(
+        calculus: String,
+        formula: String,
+    ): List<Map<String, String>> = data.getOrDefault(calculus, mapOf()).getOrDefault(formula, emptyList())
 
-    fun addScore(calculus: String, formula: String, score: Map<String, String>) {
+    fun addScore(
+        calculus: String,
+        formula: String,
+        score: Map<String, String>,
+    ) {
         if (READONLY) {
             return
         }
@@ -54,10 +60,11 @@ object Scoreboard {
             cleanScoreboards()
         }
         val calculusScores = data.getOrPut(calculus) { mutableMapOf() }
-        val formulaScores = calculusScores.getOrPut(formula) {
-            scoreboardCounter += 1
-            mutableListOf()
-        }
+        val formulaScores =
+            calculusScores.getOrPut(formula) {
+                scoreboardCounter += 1
+                mutableListOf()
+            }
 
         insertScore(formulaScores, score)
 
@@ -73,7 +80,10 @@ object Scoreboard {
      * @param scoreboard Scoreboard to insert into
      * @param score New score to insert
      */
-    private fun insertScore(scoreboard: MutableList<Map<String, String>>, score: Map<String, String>) {
+    private fun insertScore(
+        scoreboard: MutableList<Map<String, String>>,
+        score: Map<String, String>,
+    ) {
         scoreboard.add(score)
         scoreboard.sortByDescending {
             it["Score"]?.toInt() ?: 0
@@ -88,7 +98,11 @@ object Scoreboard {
      * @param score Score to be added
      */
     @Suppress("ThrowsCount")
-    private fun checkSanity(calculus: String, formula: String, score: Map<String, String>) {
+    private fun checkSanity(
+        calculus: String,
+        formula: String,
+        score: Map<String, String>,
+    ) {
         if (score.size > SCORE_MAX_FIELD_COUNT) {
             throw StorageLimitHit("Score objects exceeds field limit of $SCORE_MAX_FIELD_COUNT fields")
         }
@@ -121,9 +135,11 @@ object Scoreboard {
      * Remove likely unused scoreboards to make space for new ones
      */
     private fun cleanScoreboards() {
-        data = data.mapValues { entry ->
-            entry.value.filter { it.value.size > 1 }.toMutableMap()
-        }.toMutableMap()
+        data =
+            data
+                .mapValues { entry ->
+                    entry.value.filter { it.value.size > 1 }.toMutableMap()
+                }.toMutableMap()
         scoreboardCounter = data.values.sumOf { it.size }
 
         if (scoreboardCounter >= SCORE_MAX_NUM_SCOREBOARDS) {

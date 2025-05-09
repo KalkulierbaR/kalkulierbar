@@ -8,25 +8,25 @@ import kotlinx.serialization.modules.subclass
 
 // Context object for logic formula serialization
 // Tells kotlinx.serialize about child types of LogicNode
-val LogicModule = SerializersModule {
-    polymorphic(LogicNode::class) {
-        subclass(Var::class)
-        subclass(Not::class)
-        subclass(And::class)
-        subclass(Or::class)
-        subclass(Equiv::class)
-        subclass(Impl::class)
-        subclass(Relation::class)
-        subclass(ExistentialQuantifier::class)
-        subclass(UniversalQuantifier::class)
-        subclass(Box::class)
-        subclass(Diamond::class)
+val LogicModule =
+    SerializersModule {
+        polymorphic(LogicNode::class) {
+            subclass(Var::class)
+            subclass(Not::class)
+            subclass(And::class)
+            subclass(Or::class)
+            subclass(Equiv::class)
+            subclass(Impl::class)
+            subclass(Relation::class)
+            subclass(ExistentialQuantifier::class)
+            subclass(UniversalQuantifier::class)
+            subclass(Box::class)
+            subclass(Diamond::class)
+        }
     }
-}
 
 @Serializable
 abstract class LogicNode : SyntacticEquality {
-
     override fun clone() = clone(mapOf())
 
     /**
@@ -39,21 +39,16 @@ abstract class LogicNode : SyntacticEquality {
 }
 
 abstract class BinaryOp : LogicNode() {
-
     abstract var leftChild: LogicNode
     abstract var rightChild: LogicNode
 
-    override fun toString(): String {
-        return "( $leftChild bop $rightChild)"
-    }
+    override fun toString(): String = "( $leftChild bop $rightChild)"
 }
 
 abstract class UnaryOp : LogicNode() {
     abstract var child: LogicNode
 
-    override fun toString(): String {
-        return "(uop $child)"
-    }
+    override fun toString(): String = "(uop $child)"
 
     override fun synEq(other: Any?): Boolean {
         if (other == null || other !is UnaryOp) {
@@ -95,7 +90,6 @@ abstract class Quantifier : UnaryOp() {
  * Interface defining a function to check syntactic equality
  */
 interface SyntacticEquality {
-
     /**
      * Check if two terms are syntactically (as opposed to referentially) identical
      * @param other Object to check for syntactic equality

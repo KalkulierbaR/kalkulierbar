@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestPrune {
-
     private val dpll = DPLL()
 
     @Test
@@ -18,8 +17,16 @@ class TestPrune {
         assertEquals(listOf(), state.tree[2].children)
         assertEquals(1, state.tree[2].parent)
         assertEquals(true, state.tree[2].isLeaf)
-        val clauseSet2 = state.tree[2].diff.apply(state.clauseSet).clone()
-        val clauseSet0 = state.tree[0].diff.apply(state.clauseSet).clone()
+        val clauseSet2 =
+            state.tree[2]
+                .diff
+                .apply(state.clauseSet)
+                .clone()
+        val clauseSet0 =
+            state.tree[0]
+                .diff
+                .apply(state.clauseSet)
+                .clone()
 
         // Nothing happens and tests remain the same
         state = dpll.applyMoveOnState(state, MovePrune(2))
@@ -27,7 +34,13 @@ class TestPrune {
         assertEquals(listOf(), state.tree[2].children)
         assertEquals(1, state.tree[2].parent)
         assertEquals(true, state.tree[2].isLeaf)
-        assertEquals(clauseSet2.toString(), state.tree[2].diff.apply(state.clauseSet).toString())
+        assertEquals(
+            clauseSet2.toString(),
+            state.tree[2]
+                .diff
+                .apply(state.clauseSet)
+                .toString(),
+        )
 
         // Annotation Prune fails
         assertFailsWith<IllegalMove> {
@@ -39,7 +52,13 @@ class TestPrune {
         assertEquals(1, state.tree.size)
         assertEquals(listOf(), state.tree[0].children)
         assertEquals(true, state.tree[0].isLeaf)
-        assertEquals(clauseSet0.toString(), state.tree[0].diff.apply(state.clauseSet).toString())
+        assertEquals(
+            clauseSet0.toString(),
+            state.tree[0]
+                .diff
+                .apply(state.clauseSet)
+                .toString(),
+        )
     }
 
     @Test

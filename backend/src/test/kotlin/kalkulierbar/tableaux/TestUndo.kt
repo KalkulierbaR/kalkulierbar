@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestUndo {
-
     val instance = PropositionalTableaux()
     private val opts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = true)
 

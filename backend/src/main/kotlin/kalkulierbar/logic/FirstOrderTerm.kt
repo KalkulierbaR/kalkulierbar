@@ -9,13 +9,14 @@ import kotlinx.serialization.modules.subclass
 
 // Context object for FO term serialization
 // Tells kotlinx.serialize about child types of FirstOrderTerm
-val FoTermModule = SerializersModule {
-    polymorphic(FirstOrderTerm::class) {
-        subclass(QuantifiedVariable::class)
-        subclass(Function::class)
-        subclass(Constant::class)
+val FoTermModule =
+    SerializersModule {
+        polymorphic(FirstOrderTerm::class) {
+            subclass(QuantifiedVariable::class)
+            subclass(Function::class)
+            subclass(Constant::class)
+        }
     }
-}
 
 @Serializable
 abstract class FirstOrderTerm : SyntacticEquality {
@@ -33,8 +34,11 @@ abstract class FirstOrderTerm : SyntacticEquality {
 
 @Serializable
 @SerialName("QuantifiedVariable")
-class QuantifiedVariable(var spelling: String) : FirstOrderTerm() {
+class QuantifiedVariable(
+    var spelling: String,
+) : FirstOrderTerm() {
     override fun toString() = spelling
+
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)
 
     override fun clone(qm: Map<String, Quantifier>): QuantifiedVariable {
@@ -59,9 +63,13 @@ class QuantifiedVariable(var spelling: String) : FirstOrderTerm() {
 
 @Serializable
 @SerialName("Constant")
-class Constant(val spelling: String) : FirstOrderTerm() {
+class Constant(
+    val spelling: String,
+) : FirstOrderTerm() {
     override fun toString() = spelling
+
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)
+
     override fun clone(qm: Map<String, Quantifier>) = Constant(spelling)
 
     override fun synEq(other: Any?): Boolean {
@@ -75,9 +83,14 @@ class Constant(val spelling: String) : FirstOrderTerm() {
 
 @Serializable
 @SerialName("Function")
-class Function(val spelling: String, var arguments: List<FirstOrderTerm>) : FirstOrderTerm() {
+class Function(
+    val spelling: String,
+    var arguments: List<FirstOrderTerm>,
+) : FirstOrderTerm() {
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
+
     override fun <ReturnType> accept(visitor: FirstOrderTermVisitor<ReturnType>) = visitor.visit(this)
+
     override fun clone(qm: Map<String, Quantifier>) = Function(spelling, arguments.map { it.clone(qm) })
 
     @Suppress("ReturnCount")

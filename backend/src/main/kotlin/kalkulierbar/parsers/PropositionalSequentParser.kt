@@ -6,7 +6,6 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.transform.ChangeEquivalences
 
 object PropositionalSequentParser {
-
     /**
      * Parses a string directly into a PSCState using the PropositionalParser
      * to parse single formulas separated by ',' in the input string
@@ -33,7 +32,10 @@ object PropositionalSequentParser {
         }
     }
 
-    private fun parseFormulas(formulaList: String, inputPosition: Int): List<LogicNode> {
+    private fun parseFormulas(
+        formulaList: String,
+        inputPosition: Int,
+    ): List<LogicNode> {
         val rawFormulas = formulaList.split(",")
 
         return rawFormulas.mapIndexedNotNull { i, formula ->

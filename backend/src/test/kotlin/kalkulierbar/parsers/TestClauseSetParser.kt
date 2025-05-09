@@ -6,28 +6,29 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestClauseSetParser {
-
     private val invalidStrings = listOf("", ",a", ";a", "a,b,;c", "a,b,", "a;;b,c;d", "!!a", "a,!!b;c", "a,!", "a\n;", "a\n\n", "a;;")
 
-    val valid = listOf(
-        Pair("a", "{a}"),
-        Pair("!a", "{!a}"),
-        Pair("a;b", "{a}, {b}"),
-        Pair("a,b", "{a, b}"),
-        Pair("a, b ;    c", "{a, b}, {c}"),
-        Pair("a\nb", "{a}, {b}"),
-        Pair("a\nb\n", "{a}, {b}"),
-        Pair("a; ", "{a}"),
-        Pair("fUnkYvAR;!McVariable,thefirst", "{fUnkYvAR}, {!McVariable, thefirst}"),
-    )
+    val valid =
+        listOf(
+            Pair("a", "{a}"),
+            Pair("!a", "{!a}"),
+            Pair("a;b", "{a}, {b}"),
+            Pair("a,b", "{a, b}"),
+            Pair("a, b ;    c", "{a, b}, {c}"),
+            Pair("a\nb", "{a}, {b}"),
+            Pair("a\nb\n", "{a}, {b}"),
+            Pair("a; ", "{a}"),
+            Pair("fUnkYvAR;!McVariable,thefirst", "{fUnkYvAR}, {!McVariable, thefirst}"),
+        )
 
-    private val validNonGeneric = listOf(
-        Pair("a", "{a}"),
-        Pair("-a", "{!a}"),
-        Pair("a|b", "{a}, {b}"),
-        Pair("a&b", "{a, b}"),
-        Pair("fUnkYvAR|-McVariable&thefirst", "{fUnkYvAR}, {!McVariable, thefirst}"),
-    )
+    private val validNonGeneric =
+        listOf(
+            Pair("a", "{a}"),
+            Pair("-a", "{!a}"),
+            Pair("a|b", "{a}, {b}"),
+            Pair("a&b", "{a, b}"),
+            Pair("fUnkYvAR|-McVariable&thefirst", "{fUnkYvAR}, {!McVariable, thefirst}"),
+        )
 
     @Test
     fun testInvalidStrings() {

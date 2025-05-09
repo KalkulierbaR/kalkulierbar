@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestParseFormulaState {
-
     val instance = PropositionalTableaux()
     private val opts = TableauxParam(TableauxType.UNCONNECTED, false, false)
 

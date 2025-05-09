@@ -7,7 +7,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestPrune {
-
     val instance = SignedModalTableaux()
     val parser = ModalLogicParser()
 

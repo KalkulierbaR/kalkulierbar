@@ -11,27 +11,36 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class PropositionalResolution : GenericResolution<String>,
-    JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>() {
+class PropositionalResolution :
+    JSONCalculus<ResolutionState, ResolutionMove, ResolutionParam>(),
+    GenericResolution<String> {
     override val identifier = "prop-resolution"
 
-    override val serializer = Json {
-        serializersModule = resolutionMoveModule
-        encodeDefaults = true
-    }
+    override val serializer =
+        Json {
+            serializersModule = resolutionMoveModule
+            encodeDefaults = true
+        }
     override val stateSerializer = ResolutionState.serializer()
     override val moveSerializer = ResolutionMove.serializer()
 
-    override fun parseFormulaToState(formula: String, params: ResolutionParam?): ResolutionState {
-        val parsed = if (params == null) {
-            FlexibleClauseSetParser.parse(formula)
-        } else {
-            FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
-        }
+    override fun parseFormulaToState(
+        formula: String,
+        params: ResolutionParam?,
+    ): ResolutionState {
+        val parsed =
+            if (params == null) {
+                FlexibleClauseSetParser.parse(formula)
+            } else {
+                FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
+            }
         return ResolutionState(parsed, params?.visualHelp ?: VisualHelp.NONE)
     }
 
-    override fun applyMoveOnState(state: ResolutionState, move: ResolutionMove): ResolutionState {
+    override fun applyMoveOnState(
+        state: ResolutionState,
+        move: ResolutionMove,
+    ): ResolutionState {
         when (move) {
             is MoveResolve -> state.resolve(move.c1, move.c2, move.literal)
             is MoveHide -> state.hide(move.c1)
@@ -49,7 +58,10 @@ class PropositionalResolution : GenericResolution<String>,
      * @param state The state to apply the move on
      * @param clauseID Id of clause to apply the move on
      */
-    fun factorize(state: ResolutionState, clauseID: Int) {
+    fun factorize(
+        state: ResolutionState,
+        clauseID: Int,
+    ) {
         val clauses = state.clauseSet.clauses
 
         // Verify that clause id is valid
@@ -144,7 +156,8 @@ class PropositionalResolution : GenericResolution<String>,
 class ResolutionState(
     override val clauseSet: ClauseSet<String>,
     override val visualHelp: VisualHelp,
-) : GenericResolutionState<String>, ProtectedState() {
+) : ProtectedState(),
+    GenericResolutionState<String> {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<String>()
 
@@ -152,10 +165,11 @@ class ResolutionState(
 
     override var seal = ""
 
-    override fun getHash(): String {
-        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode"
-    }
+    override fun getHash(): String = "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode"
 }
 
 @Serializable
-data class ResolutionParam(val cnfStrategy: CnfStrategy, val visualHelp: VisualHelp)
+data class ResolutionParam(
+    val cnfStrategy: CnfStrategy,
+    val visualHelp: VisualHelp,
+)

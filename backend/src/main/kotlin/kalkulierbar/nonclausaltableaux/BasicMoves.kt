@@ -23,7 +23,10 @@ import kalkulierbar.logic.util.UnifierEquivalence
  * @param nodeID: node ID to apply move on
  * @return new state after applying move
  */
-fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
+fun applyAlpha(
+    state: NcTableauxState,
+    nodeID: Int,
+): NcTableauxState {
     val nodes = state.tree
     checkNodeRestrictions(state, nodeID)
 
@@ -66,7 +69,10 @@ fun applyAlpha(state: NcTableauxState, nodeID: Int): NcTableauxState {
  * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
+fun applyBeta(
+    state: NcTableauxState,
+    nodeID: Int,
+): NcTableauxState {
     checkNodeRestrictions(state, nodeID)
     val node = state.tree[nodeID]
 
@@ -108,7 +114,10 @@ fun applyBeta(state: NcTableauxState, nodeID: Int): NcTableauxState {
  * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
+fun applyGamma(
+    state: NcTableauxState,
+    nodeID: Int,
+): NcTableauxState {
     val nodes = state.tree
     checkNodeRestrictions(state, nodeID)
 
@@ -159,7 +168,10 @@ fun applyGamma(state: NcTableauxState, nodeID: Int): NcTableauxState {
  * @param nodeID: ID of node to apply move on
  * @return new state after applying move
  */
-fun applyDelta(state: NcTableauxState, nodeID: Int): NcTableauxState {
+fun applyDelta(
+    state: NcTableauxState,
+    nodeID: Int,
+): NcTableauxState {
     val nodes = state.tree
     checkNodeRestrictions(state, nodeID)
 
@@ -223,12 +235,13 @@ fun applyClose(
     val (nodeRelation, closeRelation) = checkCloseRelation(nodeFormula, closeNodeFormula)
 
     // Use user-supplied variable assignment if given, calculate MGU otherwise
-    val unifier: Map<String, FirstOrderTerm> = varAssign
-        ?: try {
-            Unification.unify(nodeRelation, closeRelation)
-        } catch (e: UnificationImpossible) {
-            throw IllegalMove("Cannot unify '$nodeRelation' and '$closeRelation': ${e.message}")
-        }
+    val unifier: Map<String, FirstOrderTerm> =
+        varAssign
+            ?: try {
+                Unification.unify(nodeRelation, closeRelation)
+            } catch (e: UnificationImpossible) {
+                throw IllegalMove("Cannot unify '$nodeRelation' and '$closeRelation': ${e.message}")
+            }
 
     if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, nodeRelation, closeRelation)) {
         state.statusMessage = "The unifier you specified is not an MGU"
@@ -264,7 +277,11 @@ fun applyClose(
 /**
  * Check restrictions for nodeID and closeID
  */
-private fun checkCloseIDRestrictions(state: NcTableauxState, nodeID: Int, closeID: Int) {
+private fun checkCloseIDRestrictions(
+    state: NcTableauxState,
+    nodeID: Int,
+    closeID: Int,
+) {
     checkNodeRestrictions(state, nodeID)
     state.checkNodeID(closeID)
 
@@ -281,7 +298,10 @@ private fun checkCloseIDRestrictions(state: NcTableauxState, nodeID: Int, closeI
  * @return Relations in input formulae
  */
 @Suppress("ThrowsCount")
-private fun checkCloseRelation(nodeFormula: LogicNode, closeNodeFormula: LogicNode): Pair<Relation, Relation> {
+private fun checkCloseRelation(
+    nodeFormula: LogicNode,
+    closeNodeFormula: LogicNode,
+): Pair<Relation, Relation> {
     when {
         nodeFormula is Not -> {
             if (nodeFormula.child !is Relation) {
@@ -312,7 +332,10 @@ private fun checkCloseRelation(nodeFormula: LogicNode, closeNodeFormula: LogicNo
 /**
  * Check nodeID valid + already closed
  */
-fun checkNodeRestrictions(state: NcTableauxState, nodeID: Int) {
+fun checkNodeRestrictions(
+    state: NcTableauxState,
+    nodeID: Int,
+) {
     state.checkNodeID(nodeID)
     // Verify that node is not already closed
     val node = state.tree[nodeID]
