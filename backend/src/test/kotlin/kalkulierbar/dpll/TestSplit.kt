@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestSplit {
-
     private val dpll = DPLL()
 
     @Test
@@ -32,8 +31,22 @@ class TestSplit {
         assertEquals(true, state.tree[1].isLeaf)
         assertEquals(true, state.tree[2].isLeaf)
 
-        assertEquals("[{!a, b, c}, {c}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{!a, b, c}, {!c}]", state.tree[2].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals(
+            "[{!a, b, c}, {c}]",
+            state.tree[1]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
+        assertEquals(
+            "[{!a, b, c}, {!c}]",
+            state.tree[2]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
     }
 
     @Test
@@ -63,18 +76,37 @@ class TestSplit {
         assertEquals(true, state.tree[3].isLeaf)
         assertEquals(true, state.tree[4].isLeaf)
 
-        assertEquals("[{!a}, {b, c}, {b}, {a}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals(
+            "[{!a}, {b, c}, {b}, {a}]",
+            state.tree[1]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
         assertEquals(
             "[{!a}, {b, c}, {b}, {!a}]",
-            state.tree[2].diff.apply(state.clauseSet).clauses.toString(),
+            state.tree[2]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
         )
         assertEquals(
             "[{!a}, {b, c}, {b}, {b}]",
-            state.tree[3].diff.apply(state.clauseSet).clauses.toString(),
+            state.tree[3]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
         )
         assertEquals(
             "[{!a}, {b, c}, {b}, {!b}]",
-            state.tree[4].diff.apply(state.clauseSet).clauses.toString(),
+            state.tree[4]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
         )
     }
 
@@ -99,8 +131,22 @@ class TestSplit {
         assertEquals(true, state.tree[1].isLeaf)
         assertEquals(true, state.tree[2].isLeaf)
 
-        assertEquals("[{a, b, c}, {42}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{a, b, c}, {!42}]", state.tree[2].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals(
+            "[{a, b, c}, {42}]",
+            state.tree[1]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
+        assertEquals(
+            "[{a, b, c}, {!42}]",
+            state.tree[2]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
     }
 
     @Test

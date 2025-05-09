@@ -10,7 +10,11 @@ import kalkulierbar.IllegalMove
  * @param closeNodeID Ancestor of the leaf to be used for closure
  * @return New state after rule was applied
  */
-fun applyMoveCloseBranch(state: TableauxState, leafID: Int, closeNodeID: Int): TableauxState {
+fun applyMoveCloseBranch(
+    state: TableauxState,
+    leafID: Int,
+    closeNodeID: Int,
+): TableauxState {
     ensureBasicCloseability(state, leafID, closeNodeID)
 
     val leaf = state.tree[leafID]
@@ -36,7 +40,11 @@ fun applyMoveCloseBranch(state: TableauxState, leafID: Int, closeNodeID: Int): T
  * @return New state after rule was applied
  */
 @Suppress("ThrowsCount")
-fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int): TableauxState {
+fun applyMoveExpandLeaf(
+    state: TableauxState,
+    leafID: Int,
+    clauseID: Int,
+): TableauxState {
     ensureExpandability(state, leafID, clauseID)
     val clause = state.clauseSet.clauses[clauseID]
     val leaf = state.tree[leafID]
@@ -67,7 +75,11 @@ fun applyMoveExpandLeaf(state: TableauxState, leafID: Int, clauseID: Int): Table
  * @param lemmaID ID of the proof tree node to create a lemma from
  * @return new proof state with lemma applied
  */
-fun applyMoveUseLemma(state: TableauxState, leafID: Int, lemmaID: Int): TableauxState {
+fun applyMoveUseLemma(
+    state: TableauxState,
+    leafID: Int,
+    lemmaID: Int,
+): TableauxState {
     // Get lemma atom and verify all preconditions
     val atom = state.getLemma(leafID, lemmaID)
 
@@ -123,7 +135,10 @@ fun applyMoveUndo(state: TableauxState): TableauxState {
  *  @param move The last move executed
  *  @return New state after undoing latest close move
  */
-private fun undoClose(state: TableauxState, move: MoveAutoClose): TableauxState {
+private fun undoClose(
+    state: TableauxState,
+    move: MoveAutoClose,
+): TableauxState {
     val leafID = move.id1
     val leaf = state.tree[leafID]
 
@@ -146,7 +161,10 @@ private fun undoClose(state: TableauxState, move: MoveAutoClose): TableauxState 
  *  @param move The last move executed
  *  @return New state after undoing latest expand move
  */
-private fun undoExpand(state: TableauxState, move: MoveExpand): TableauxState {
+private fun undoExpand(
+    state: TableauxState,
+    move: MoveExpand,
+): TableauxState {
     val leafID = move.id1
     val leaf = state.tree[leafID]
     val children = leaf.children
@@ -166,4 +184,7 @@ private fun undoExpand(state: TableauxState, move: MoveExpand): TableauxState {
 }
 
 // Undoing a lemma expansion is the same as undoing a regular expand move
-private fun undoLemma(state: TableauxState, move: MoveLemma) = undoExpand(state, MoveExpand(move.id1, move.id2))
+private fun undoLemma(
+    state: TableauxState,
+    move: MoveLemma,
+) = undoExpand(state, MoveExpand(move.id1, move.id2))

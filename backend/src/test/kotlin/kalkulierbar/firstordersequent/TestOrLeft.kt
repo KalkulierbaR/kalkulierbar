@@ -10,7 +10,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class TestOrLeft {
-
     val instance = FirstOrderSequent()
     val parser = FirstOrderParser()
 

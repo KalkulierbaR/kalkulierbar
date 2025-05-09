@@ -12,14 +12,16 @@ import kotlinx.serialization.json.Json
  * For calculus specification see docs/PropositionalTableaux.md
  */
 @Suppress("TooManyFunctions")
-class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxState, TableauxMove, TableauxParam>() {
-
+class PropositionalTableaux :
+    JSONCalculus<TableauxState, TableauxMove, TableauxParam>(),
+    GenericTableaux<String> {
     override val identifier = "prop-tableaux"
 
-    override val serializer = Json {
-        serializersModule = tableauxMoveModule
-        encodeDefaults = true
-    }
+    override val serializer =
+        Json {
+            serializersModule = tableauxMoveModule
+            encodeDefaults = true
+        }
     override val stateSerializer = TableauxState.serializer()
     override val moveSerializer = TableauxMove.serializer()
 
@@ -29,15 +31,17 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      * @param formula propositional clause set, format a,!b;!c,d
      * @return parsed state object
      */
-    override fun parseFormulaToState(formula: String, params: TableauxParam?): TableauxState {
-        return if (params == null) {
+    override fun parseFormulaToState(
+        formula: String,
+        params: TableauxParam?,
+    ): TableauxState =
+        if (params == null) {
             val clauses = FlexibleClauseSetParser.parse(formula)
             TableauxState(clauses)
         } else {
             val clauses = FlexibleClauseSetParser.parse(formula, params.cnfStrategy)
             TableauxState(clauses, params.type, params.regular, params.backtracking)
         }
-    }
 
     /**
      * Takes in a state object and a move and applies the move to the state if possible
@@ -47,7 +51,10 @@ class PropositionalTableaux : GenericTableaux<String>, JSONCalculus<TableauxStat
      * @return state after the move was applied
      */
     @Suppress("ReturnCount")
-    override fun applyMoveOnState(state: TableauxState, move: TableauxMove): TableauxState {
+    override fun applyMoveOnState(
+        state: TableauxState,
+        move: TableauxMove,
+    ): TableauxState {
         // Pass expand, close, undo moves to relevant subfunction
         return when (move) {
             is MoveAutoClose -> applyMoveCloseBranch(state, move.id1, move.id2)

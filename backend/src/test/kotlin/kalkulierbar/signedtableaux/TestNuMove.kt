@@ -8,7 +8,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class TestNuMove {
-
     val instance = SignedModalTableaux()
     val parser = ModalLogicParser()
 

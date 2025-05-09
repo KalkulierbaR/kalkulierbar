@@ -12,10 +12,11 @@ import kalkulierbar.logic.QuantifiedVariable
 import kalkulierbar.logic.Relation
 import kalkulierbar.logic.UniversalQuantifier
 
-data class CompoundSignature(val name: String, val arity: Int) {
-    override fun toString(): String {
-        return "$name($arity)"
-    }
+data class CompoundSignature(
+    val name: String,
+    val arity: Int,
+) {
+    override fun toString(): String = "$name($arity)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -41,18 +42,15 @@ data class Signature(
     val boundVariables: Set<String>,
 ) {
     companion object {
-        fun empty(): Signature {
-            return Signature(
+        fun empty(): Signature =
+            Signature(
                 constants = setOf(),
                 functions = setOf(),
                 relations = setOf(),
                 boundVariables = setOf(),
             )
-        }
 
-        fun of(formula: LogicNode): Signature {
-            return SignatureExtractor.extract(formula)
-        }
+        fun of(formula: LogicNode): Signature = SignatureExtractor.extract(formula)
 
         fun of(formulas: Collection<LogicNode>): Signature {
             var sig = empty()
@@ -67,38 +65,25 @@ data class Signature(
         }
     }
 
-    fun getAllIdentifiers(): Set<String> {
-        return getConstantsAndFunctionNames() + relations.map { it.name } + boundVariables
-    }
+    fun getAllIdentifiers(): Set<String> = getConstantsAndFunctionNames() + relations.map { it.name } + boundVariables
 
-    fun getConstantsAndFunctionNames(): Set<String> {
-        return constants + functions.map { it.name }
-    }
+    fun getConstantsAndFunctionNames(): Set<String> = constants + functions.map { it.name }
 
-    fun getFunctionArity(name: String): Int? {
-        return functions.find { it.name == name }?.arity
-    }
+    fun getFunctionArity(name: String): Int? = functions.find { it.name == name }?.arity
 
-    operator fun plus(sig: Signature): Signature {
-        return Signature(
+    operator fun plus(sig: Signature): Signature =
+        Signature(
             constants = constants + sig.constants,
             functions = functions + sig.functions,
             relations = relations + sig.relations,
             boundVariables = boundVariables + sig.boundVariables,
         )
-    }
 
-    fun hasConst(c: String): Boolean {
-        return constants.contains(c)
-    }
+    fun hasConst(c: String): Boolean = constants.contains(c)
 
-    fun hasFunction(name: String): Boolean {
-        return functions.any { it.name == name }
-    }
+    fun hasFunction(name: String): Boolean = functions.any { it.name == name }
 
-    fun hasConstOrFunction(name: String): Boolean {
-        return hasConst(name) || hasFunction(name)
-    }
+    fun hasConstOrFunction(name: String): Boolean = hasConst(name) || hasFunction(name)
 
     fun check(term: FirstOrderTerm) {
         val checker = SignatureAdherenceChecker(this)
@@ -205,7 +190,6 @@ class SignatureAdherenceChecker(
     private val sig: Signature,
     private val allowNewConstants: Boolean = true,
 ) : FirstOrderTermVisitor<Unit>() {
-
     override fun visit(node: Constant) {
         if (!allowNewConstants && !sig.hasConst(node.spelling)) {
             throw UnknownFunctionException("Unknown constant '${node.spelling}'")

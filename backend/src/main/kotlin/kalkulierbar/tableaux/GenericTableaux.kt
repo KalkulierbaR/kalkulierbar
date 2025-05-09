@@ -35,7 +35,10 @@ interface GenericTableauxState<AtomType> {
      * @return true iff the parentID is a true ancestor of the childID
      */
     @Suppress("ReturnCount")
-    fun nodeIsParentOf(parentID: Int, childID: Int): Boolean {
+    fun nodeIsParentOf(
+        parentID: Int,
+        childID: Int,
+    ): Boolean {
         val child = tree[childID]
         if (child.parent == parentID) {
             return true
@@ -104,7 +107,10 @@ interface GenericTableauxState<AtomType> {
      * @return Atom representing the lemma node to be appended to the leaf
      */
     @Suppress("ThrowsCount", "ComplexMethod")
-    fun getLemma(leafID: Int, lemmaID: Int): Atom<AtomType> {
+    fun getLemma(
+        leafID: Int,
+        lemmaID: Int,
+    ): Atom<AtomType> {
         // Verify that subtree root for lemma creation exists
         if (lemmaID >= tree.size || lemmaID < 0) {
             throw IllegalMove("Node with ID $lemmaID does not exist")

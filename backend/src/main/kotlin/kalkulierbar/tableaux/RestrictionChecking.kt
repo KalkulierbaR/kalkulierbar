@@ -53,7 +53,10 @@ fun <AtomType> verifyExpandRegularity(
  * @param state current state object with the expansion already applied
  * @param leafID ID of the expanded leaf
  */
-fun <AtomType> verifyExpandConnectedness(state: GenericTableauxState<AtomType>, leafID: Int) {
+fun <AtomType> verifyExpandConnectedness(
+    state: GenericTableauxState<AtomType>,
+    leafID: Int,
+) {
     val leaf = state.tree[leafID]
     val children = leaf.children
 
@@ -87,7 +90,10 @@ fun <AtomType> verifyExpandConnectedness(state: GenericTableauxState<AtomType>, 
  * @param ctype type of connectedness to check for
  * @return true iff the proof tree is strongly/weakly connected
  */
-fun <AtomType> checkConnectedness(state: GenericTableauxState<AtomType>, ctype: TableauxType): Boolean {
+fun <AtomType> checkConnectedness(
+    state: GenericTableauxState<AtomType>,
+    ctype: TableauxType,
+): Boolean {
     val startNodes = state.root.children // root is excluded from connectedness criteria
 
     if (ctype == TableauxType.UNCONNECTED) {
@@ -200,7 +206,11 @@ private fun <AtomType> checkRegularitySubtree(
  * @param clauseID The clause to expand at the leaf
  */
 @Suppress("ThrowsCount")
-fun <AtomType> ensureExpandability(state: GenericTableauxState<AtomType>, leafID: Int, clauseID: Int) {
+fun <AtomType> ensureExpandability(
+    state: GenericTableauxState<AtomType>,
+    leafID: Int,
+    clauseID: Int,
+) {
     // Don't allow further expand moves if connectedness requires close moves to be applied first
     if (!checkConnectedness(state, state.type)) {
         throw IllegalMove(
@@ -246,7 +256,11 @@ fun <AtomType> ensureExpandability(state: GenericTableauxState<AtomType>, leafID
  * @param closeNodeID Node to close with
  */
 @Suppress("ComplexMethod", "ThrowsCount")
-fun <AtomType> ensureBasicCloseability(state: GenericTableauxState<AtomType>, leafID: Int, closeNodeID: Int) {
+fun <AtomType> ensureBasicCloseability(
+    state: GenericTableauxState<AtomType>,
+    leafID: Int,
+    closeNodeID: Int,
+) {
     // Verify that both leaf and closeNode are valid nodes
     if (leafID >= state.tree.size || leafID < 0) {
         throw IllegalMove("Node with ID $leafID does not exist")

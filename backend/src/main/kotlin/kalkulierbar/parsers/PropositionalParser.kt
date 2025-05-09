@@ -18,7 +18,6 @@ import kalkulierbar.logic.Var
  */
 @Suppress("TooManyFunctions")
 open class PropositionalParser {
-
     protected var tokens = mutableListOf<Token>()
 
     /**
@@ -26,7 +25,10 @@ open class PropositionalParser {
      * @param formula input formula
      * @return LogicNode representing the formula
      */
-    open fun parse(formula: String, positionInBaseString: Int = 0): LogicNode {
+    open fun parse(
+        formula: String,
+        positionInBaseString: Int = 0,
+    ): LogicNode {
         tokens = Tokenizer.tokenize(formula, false, positionInBaseString)
         if (tokens.isEmpty()) {
             throw EmptyFormulaException("Expected a formula but got an empty String")
@@ -106,21 +108,20 @@ open class PropositionalParser {
      * Parses a unary not
      * @return LogicNode representing the negated formula
      */
-    protected open fun parseNot(): LogicNode {
-        return if (nextTokenIs(TokenType.NOT)) {
+    protected open fun parseNot(): LogicNode =
+        if (nextTokenIs(TokenType.NOT)) {
             consume()
             Not(parseParen())
         } else {
             parseParen()
         }
-    }
 
     /**
      * Parses a parenthesis in a formula
      * @return LogicNode representing the contents of the parenthesis
      */
-    protected open fun parseParen(): LogicNode {
-        return if (nextTokenIs(TokenType.LPAREN)) {
+    protected open fun parseParen(): LogicNode =
+        if (nextTokenIs(TokenType.LPAREN)) {
             consume()
             val exp = parseEquiv()
             consume(TokenType.RPAREN)
@@ -128,7 +129,6 @@ open class PropositionalParser {
         } else {
             parseVar()
         }
-    }
 
     /**
      * Parses a variable in a formula
@@ -148,17 +148,13 @@ open class PropositionalParser {
      * @param expected expected token type
      * @return true iff the next token is of the expected type
      */
-    protected fun nextTokenIs(expected: TokenType): Boolean {
-        return tokens.size > 0 && tokens.first().type == expected
-    }
+    protected fun nextTokenIs(expected: TokenType): Boolean = tokens.size > 0 && tokens.first().type == expected
 
     /**
      * Check if the next token is a variable
      * @return true iff the next token is a variable
      */
-    protected fun nextTokenIsIdentifier(): Boolean {
-        return nextTokenIs(TokenType.LOWERID) || nextTokenIs(TokenType.CAPID)
-    }
+    protected fun nextTokenIsIdentifier(): Boolean = nextTokenIs(TokenType.LOWERID) || nextTokenIs(TokenType.CAPID)
 
     /**
      * Consume the next token from the token list

@@ -9,7 +9,10 @@ import kotlin.math.sqrt
 
 interface GenericSequentCalculus {
     @Suppress("MagicNumber")
-    fun stateToStat(state: GenericSequentCalculusState, name: String?): Map<String, String> {
+    fun stateToStat(
+        state: GenericSequentCalculusState,
+        name: String?,
+    ): Map<String, String> {
         val multiplier = if (state.showOnlyApplicableRules) 0.9 else 1.0
         val score = multiplier * (1 / sqrt(state.tree.size.toDouble())) * 1000
         return mapOf(
@@ -53,7 +56,6 @@ class TreeNode(
     val rightFormulas: MutableList<LogicNode>,
     var isClosed: Boolean,
     val lastMove: SequentCalculusMove?,
-
 ) : GenericTreeNode {
     constructor(
         parent: Int,
@@ -67,9 +69,7 @@ class TreeNode(
         rightFormulas: MutableList<LogicNode>,
     ) : this(null, mutableListOf(), leftFormulas, rightFormulas, false, null)
 
-    override fun toString(): String {
-        return leftFormulas.joinToString() + " ⊢ " + rightFormulas.joinToString()
-    }
+    override fun toString(): String = leftFormulas.joinToString() + " ⊢ " + rightFormulas.joinToString()
 }
 
 @Serializable

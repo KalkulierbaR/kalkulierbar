@@ -12,7 +12,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class TestAx {
-
     val instance = PropositionalSequent()
     val parser = PropositionalParser()
 

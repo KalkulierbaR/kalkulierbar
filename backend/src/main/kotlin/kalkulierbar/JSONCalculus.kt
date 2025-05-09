@@ -11,7 +11,6 @@ import kotlinx.serialization.json.Json
  */
 @Suppress("TooManyFunctions")
 abstract class JSONCalculus<State, Move, Param> : Calculus {
-
     protected abstract val serializer: Json
     protected abstract val moveSerializer: KSerializer<Move>
     protected abstract val stateSerializer: KSerializer<State>
@@ -23,7 +22,10 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param params optional parameters for the calculus
      * @return complete state representation of the input formula
      */
-    override fun parseFormula(formula: String, params: String?): String {
+    override fun parseFormula(
+        formula: String,
+        params: String?,
+    ): String {
         val paramsObj = if (params == null) null else jsonToParam(params)
         return stateToJson(parseFormulaToState(formula, paramsObj))
     }
@@ -33,7 +35,10 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param formula logic formula in some given format
      * @return parsed state object
      */
-    abstract fun parseFormulaToState(formula: String, params: Param?): State
+    abstract fun parseFormulaToState(
+        formula: String,
+        params: Param?,
+    ): State
 
     override fun validate(state: String): String {
         val stateObj = jsonToState(state)
@@ -45,9 +50,7 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param state The current state
      * @return Whether it is valid
      */
-    open fun validateOnState(state: State): Boolean {
-        return true
-    }
+    open fun validateOnState(state: State): Boolean = true
 
     /**
      * Takes in a state representation and a move and applies the move on the state if possible.
@@ -56,7 +59,10 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param move move to apply in the given state
      * @return state representation after move was applied
      */
-    override fun applyMove(state: String, move: String): String {
+    override fun applyMove(
+        state: String,
+        move: String,
+    ): String {
         val stateObj = jsonToState(state)
         val moveObj = jsonToMove(move)
         return stateToJson(applyMoveOnState(stateObj, moveObj))
@@ -69,7 +75,10 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
      * @param move move to apply in the given state
      * @return state after the move was applied
      */
-    abstract fun applyMoveOnState(state: State, move: Move): State
+    abstract fun applyMoveOnState(
+        state: State,
+        move: Move,
+    ): State
 
     /**
      * Checks if a given state represents a valid, closed proof.
@@ -149,4 +158,7 @@ abstract class JSONCalculus<State, Move, Param> : Calculus {
 }
 
 @Serializable
-data class CloseMessage(val closed: Boolean, val msg: String)
+data class CloseMessage(
+    val closed: Boolean,
+    val msg: String,
+)

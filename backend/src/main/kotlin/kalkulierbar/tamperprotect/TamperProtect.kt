@@ -13,7 +13,6 @@ import org.komputing.khash.keccak.extensions.digestKeccak
  */
 class TamperProtect {
     companion object Companion {
-
         /**
          * Calculates a checksum over the supplied string
          * @param string Input string / state fingerprint to 'sign'
@@ -30,9 +29,10 @@ class TamperProtect {
          * @param hash TamperProtect checksum of the data in uppercase hex format
          * @return true iff the checksum is valid for the provided input
          */
-        fun verify(string: String, hash: String): Boolean {
-            return seal(string) == hash
-        }
+        fun verify(
+            string: String,
+            hash: String,
+        ): Boolean = seal(string) == hash
 
         private fun toHex(bytes: ByteArray) = bytes.joinToString("") { String.format("%02X", it) }
     }

@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestCheckModel {
-
     private val dpll = DPLL()
 
     @Test
@@ -41,7 +40,8 @@ class TestCheckModel {
         assertEquals("model ✓", state.tree[2].label)
         assertEquals(true, state.tree[2].modelVerified)
 
-        assertFailsWith<IllegalMove> { // Doubled check
+        assertFailsWith<IllegalMove> {
+            // Doubled check
             state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to false, "b" to true)))
         }
 
@@ -75,13 +75,16 @@ class TestCheckModel {
             dpll.applyMoveOnState(state, MoveModelCheck(3, mapOf("a" to true)))
         }
         // Problem
-        assertFailsWith<IllegalMove> { // Empty map
+        assertFailsWith<IllegalMove> {
+            // Empty map
             dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf()))
         }
-        assertFailsWith<IllegalMove> { // Not model node
+        assertFailsWith<IllegalMove> {
+            // Not model node
             dpll.applyMoveOnState(state, MoveModelCheck(0, mapOf("a" to true)))
         }
-        assertFailsWith<IllegalMove> { // Not model node
+        assertFailsWith<IllegalMove> {
+            // Not model node
             dpll.applyMoveOnState(state, MoveModelCheck(1, mapOf("a" to true)))
         }
     }

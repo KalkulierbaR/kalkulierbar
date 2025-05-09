@@ -20,9 +20,7 @@ import kalkulierbar.logic.UniversalQuantifier
  * An exception will be thrown if this requirement is not met
  */
 class NegationNormalForm : DoNothingVisitor() {
-
     companion object Companion {
-
         /**
          * Apply the NNF transformation to a formula
          * @param formula Formula to transform

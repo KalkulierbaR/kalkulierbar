@@ -15,9 +15,7 @@ import kalkulierbar.logic.UniversalQuantifier
  * A double-bound variable X will be renamed 'X', 'Xv1', 'Xv2' etc
  */
 class UniqueVariables : DoNothingVisitor() {
-
     companion object Companion {
-
         /**
          * Re-name variables in a given formula to make them uniquely bound
          * @param formula Formula to transform

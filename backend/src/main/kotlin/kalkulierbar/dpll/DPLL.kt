@@ -10,14 +10,18 @@ import kotlinx.serialization.modules.plus
 class DPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
     override val identifier = "dpll"
 
-    override val serializer = Json {
-        serializersModule = dpllMoveModule + clausesetDiffModule
-        encodeDefaults = true
-    }
+    override val serializer =
+        Json {
+            serializersModule = dpllMoveModule + clausesetDiffModule
+            encodeDefaults = true
+        }
     override val moveSerializer = DPLLMove.serializer()
     override val stateSerializer = DPLLState.serializer()
 
-    override fun parseFormulaToState(formula: String, params: Unit?): DPLLState {
+    override fun parseFormulaToState(
+        formula: String,
+        params: Unit?,
+    ): DPLLState {
         val clauses = FlexibleClauseSetParser.parse(formula)
         val state = DPLLState(clauses)
         state.tree.add(TreeNode(null, NodeType.ROOT, "true", Identity()))
@@ -25,7 +29,10 @@ class DPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         return state
     }
 
-    override fun applyMoveOnState(state: DPLLState, move: DPLLMove): DPLLState {
+    override fun applyMoveOnState(
+        state: DPLLState,
+        move: DPLLMove,
+    ): DPLLState {
         when (move) {
             is MovePropagate -> propagate(state, move.branch, move.baseClause, move.propClause, move.propAtom)
             is MoveSplit -> split(state, move.branch, move.literal)
@@ -44,12 +51,13 @@ class DPLL : JSONCalculus<DPLLState, DPLLMove, Unit>() {
         // (-> every proper leaf is either closed or has a model)
         val done = state.tree.all { !it.isLeaf || it.isAnnotation }
 
-        val msg = if (closed) {
-            "The proof is closed and proves the unsatisfiability of the clause set"
-        } else {
-            val donemsg = if (done) "- however, all branches are completed. The clause set is satisfiable." else "yet."
-            "The proof is not closed $donemsg"
-        }
+        val msg =
+            if (closed) {
+                "The proof is closed and proves the unsatisfiability of the clause set"
+            } else {
+                val donemsg = if (done) "- however, all branches are completed. The clause set is satisfiable." else "yet."
+                "The proof is not closed $donemsg"
+            }
 
         return CloseMessage(closed, msg)
     }

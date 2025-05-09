@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestPropositionalJson {
-
     val instance = PropositionalTableaux()
 
     /*
@@ -58,8 +57,8 @@ class TestPropositionalJson {
                 |"tree":[{"parent":null,"spelling":"true","negated":false,
                 |"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],
                 |"backtracking":false,
-                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
-                .trimMargin()
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}
+            """.trimMargin()
         val state = instance.jsonToState(json)
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!a}, {!b}|" +
@@ -78,8 +77,8 @@ class TestPropositionalJson {
                 |[{"parent":null,"spelling":"true","negated":false,
                 |"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],
                 |"backtracking":false,
-                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
-                .trimMargin()
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}
+            """.trimMargin()
 
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
@@ -96,8 +95,8 @@ class TestPropositionalJson {
                 |[{"parent":null,"spelling":"true","negated":false,
                 |"isClosed":false,"closeRef":null,"children":[]}],
                 |"moveHistory":[],"backtracking":false,
-                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
-                .trimMargin()
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}
+            """.trimMargin()
 
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
@@ -113,8 +112,8 @@ class TestPropositionalJson {
                 |"backtracking":false,"tree":[{"parent":null,"spelling":"true","negated":false,
                 |"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],
                 |"backtracking":false,
-                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
-                .trimMargin()
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}
+            """.trimMargin()
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }
@@ -129,8 +128,8 @@ class TestPropositionalJson {
                 |"backtracking":false,"tree":[{"parent":null,"spelling":"true","negated":false,
                 |"isClosed":false,"closeRef":null,"children":[]}],"moveHistory":[],
                 |"backtracking":false,
-                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}"""
-                .trimMargin()
+                |"seal":"9FB4C2B77422E91BAEB40529CEEBB8660F54A2DA64E0E27BAAFD41E61819D9A1"}
+            """.trimMargin()
 
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)

@@ -6,8 +6,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("var")
-class Var(var spelling: String) : LogicNode() {
-
+class Var(
+    var spelling: String,
+) : LogicNode() {
     override fun toString() = spelling
 
     override fun clone(qm: Map<String, Quantifier>) = Var(spelling)
@@ -25,8 +26,9 @@ class Var(var spelling: String) : LogicNode() {
 
 @Serializable
 @SerialName("not")
-class Not(override var child: LogicNode) : UnaryOp() {
-
+class Not(
+    override var child: LogicNode,
+) : UnaryOp() {
     override fun toString() = "¬$child"
 
     override fun clone(qm: Map<String, Quantifier>) = Not(child.clone(qm))
@@ -44,8 +46,10 @@ class Not(override var child: LogicNode) : UnaryOp() {
 
 @Serializable
 @SerialName("and")
-class And(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
-
+class And(
+    override var leftChild: LogicNode,
+    override var rightChild: LogicNode,
+) : BinaryOp() {
     override fun toString() = "($leftChild ∧ $rightChild)"
 
     override fun clone(qm: Map<String, Quantifier>) = And(leftChild.clone(qm), rightChild.clone(qm))
@@ -63,8 +67,10 @@ class And(override var leftChild: LogicNode, override var rightChild: LogicNode)
 
 @Serializable
 @SerialName("or")
-class Or(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
-
+class Or(
+    override var leftChild: LogicNode,
+    override var rightChild: LogicNode,
+) : BinaryOp() {
     override fun toString() = "($leftChild ∨ $rightChild)"
 
     override fun clone(qm: Map<String, Quantifier>) = Or(leftChild.clone(qm), rightChild.clone(qm))
@@ -82,8 +88,10 @@ class Or(override var leftChild: LogicNode, override var rightChild: LogicNode) 
 
 @Serializable
 @SerialName("impl")
-class Impl(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
-
+class Impl(
+    override var leftChild: LogicNode,
+    override var rightChild: LogicNode,
+) : BinaryOp() {
     override fun toString() = "($leftChild → $rightChild)"
 
     override fun clone(qm: Map<String, Quantifier>) = Impl(leftChild.clone(qm), rightChild.clone(qm))
@@ -101,8 +109,10 @@ class Impl(override var leftChild: LogicNode, override var rightChild: LogicNode
 
 @Serializable
 @SerialName("equiv")
-class Equiv(override var leftChild: LogicNode, override var rightChild: LogicNode) : BinaryOp() {
-
+class Equiv(
+    override var leftChild: LogicNode,
+    override var rightChild: LogicNode,
+) : BinaryOp() {
     override fun toString() = "($leftChild <=> $rightChild)"
 
     override fun clone(qm: Map<String, Quantifier>) = Equiv(leftChild.clone(qm), rightChild.clone(qm))
@@ -120,8 +130,11 @@ class Equiv(override var leftChild: LogicNode, override var rightChild: LogicNod
 
 @Serializable
 @SerialName("relation")
-class Relation(val spelling: String, var arguments: List<FirstOrderTerm>) : SyntacticEquality, LogicNode() {
-
+class Relation(
+    val spelling: String,
+    var arguments: List<FirstOrderTerm>,
+) : LogicNode(),
+    SyntacticEquality {
     override fun toString() = "$spelling(${arguments.joinToString(", ")})"
 
     override fun clone(qm: Map<String, Quantifier>): Relation {
@@ -166,7 +179,6 @@ class UniversalQuantifier(
     override var child: LogicNode,
     override val boundVariables: MutableList<QuantifiedVariable>,
 ) : Quantifier() {
-
     override fun toString() = "(∀$varName: $child)"
 
     override fun clone(qm: Map<String, Quantifier>): UniversalQuantifier {
@@ -217,7 +229,6 @@ class ExistentialQuantifier(
     override var child: LogicNode,
     override val boundVariables: MutableList<QuantifiedVariable>,
 ) : Quantifier() {
-
     override fun toString() = "(∃$varName: $child)"
 
     override fun clone(qm: Map<String, Quantifier>): ExistentialQuantifier {
@@ -263,8 +274,9 @@ class ExistentialQuantifier(
 
 @Serializable
 @SerialName("box")
-class Box(override var child: LogicNode) : UnaryOp() {
-
+class Box(
+    override var child: LogicNode,
+) : UnaryOp() {
     override fun toString() = "□$child"
 
     override fun clone(qm: Map<String, Quantifier>) = Box(child.clone(qm))
@@ -282,8 +294,9 @@ class Box(override var child: LogicNode) : UnaryOp() {
 
 @Serializable
 @SerialName("diamond")
-class Diamond(override var child: LogicNode) : UnaryOp() {
-
+class Diamond(
+    override var child: LogicNode,
+) : UnaryOp() {
     override fun toString() = "◇$child"
 
     override fun clone(qm: Map<String, Quantifier>) = Diamond(child.clone(qm))

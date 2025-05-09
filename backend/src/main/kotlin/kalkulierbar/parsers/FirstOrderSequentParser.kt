@@ -6,7 +6,6 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.transform.ChangeEquivalences
 
 object FirstOrderSequentParser {
-
     /**
      * Parses a string directly into a FOSCState using the FirstOrderParser
      * to parse single formulas separated by ',' in the input string
@@ -33,7 +32,10 @@ object FirstOrderSequentParser {
         }
     }
 
-    private fun parseFormulas(formulaList: String, inputPosition: Int): List<LogicNode> {
+    private fun parseFormulas(
+        formulaList: String,
+        inputPosition: Int,
+    ): List<LogicNode> {
         val rawFormulas = splitToFormulas(formulaList)
 
         return rawFormulas.mapIndexedNotNull { i, formula ->

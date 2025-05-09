@@ -12,7 +12,6 @@ import kotlin.test.Test
 
 // based on issue #56 in internal gitlab, now inaccessible
 class TestIssue56 {
-
     @Test
     fun testPropositional() {
         val instance = PropositionalTableaux()

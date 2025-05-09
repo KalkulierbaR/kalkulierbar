@@ -7,7 +7,6 @@ import kalkulierbar.InvalidFormulaFormat
  */
 class Tokenizer {
     companion object Companion {
-
         // Single-character tokens can be handled in one step
         private val oneCharToken = Regex("[\\(\\)!&\\|,\\:]")
         private val whitespace = Regex("\\s")
@@ -26,7 +25,11 @@ class Tokenizer {
          * @param formula Input formula to tokenize
          * @return list of extracted tokens
          */
-        fun tokenize(formula: String, extended: Boolean = false, positionInBaseString: Int = 0): MutableList<Token> {
+        fun tokenize(
+            formula: String,
+            extended: Boolean = false,
+            positionInBaseString: Int = 0,
+        ): MutableList<Token> {
             val tokens = mutableListOf<Token>()
             var i = 0
 
@@ -63,16 +66,17 @@ class Tokenizer {
 
             // If the next token is one char only, we can add it to the list directly
             if (oneCharToken matches formula[i].toString()) {
-                val ttype = when (formula[i]) {
-                    '&' -> TokenType.AND
-                    '|' -> TokenType.OR
-                    '!' -> TokenType.NOT
-                    '(' -> TokenType.LPAREN
-                    ')' -> TokenType.RPAREN
-                    ',' -> TokenType.COMMA
-                    ':' -> TokenType.COLON
-                    else -> TokenType.UNKNOWN
-                }
+                val ttype =
+                    when (formula[i]) {
+                        '&' -> TokenType.AND
+                        '|' -> TokenType.OR
+                        '!' -> TokenType.NOT
+                        '(' -> TokenType.LPAREN
+                        ')' -> TokenType.RPAREN
+                        ',' -> TokenType.COMMA
+                        ':' -> TokenType.COLON
+                        else -> TokenType.UNKNOWN
+                    }
 
                 tokens.add(Token(ttype, formula[i].toString(), i))
                 i += 1
@@ -131,14 +135,34 @@ class Tokenizer {
 /**
  * Class representing a single token
  */
-data class Token(val type: TokenType, val spelling: String, val srcPosition: Int) {
+data class Token(
+    val type: TokenType,
+    val spelling: String,
+    val srcPosition: Int,
+) {
     override fun toString() = spelling
 }
 
-enum class TokenType(private val stringRep: String) {
-    AND("&"), OR("|"), NOT("!"), IMPLICATION("->"), EQUIVALENCE("<=>"), LPAREN("("), RPAREN(")"),
-    COMMA(","), COLON(":"), CAPID("uppercase identifier"), LOWERID("lowercase identifier"),
-    UNIVERSALQUANT("\\all"), EXISTENTIALQUANT("\\ex"), UNKNOWN("unknown token"), BOX("[]"), DIAMOND("<>");
+enum class TokenType(
+    private val stringRep: String,
+) {
+    AND("&"),
+    OR("|"),
+    NOT("!"),
+    IMPLICATION("->"),
+    EQUIVALENCE("<=>"),
+    LPAREN("("),
+    RPAREN(")"),
+    COMMA(","),
+    COLON(":"),
+    CAPID("uppercase identifier"),
+    LOWERID("lowercase identifier"),
+    UNIVERSALQUANT("\\all"),
+    EXISTENTIALQUANT("\\ex"),
+    UNKNOWN("unknown token"),
+    BOX("[]"),
+    DIAMOND("<>"),
+    ;
 
     override fun toString() = stringRep
 }

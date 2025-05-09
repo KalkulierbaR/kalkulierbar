@@ -9,10 +9,9 @@ import kotlinx.serialization.Serializable
 class FirstOrderSequentState(
     override val tree: MutableList<TreeNode> = mutableListOf(),
     override var showOnlyApplicableRules: Boolean = false,
-) : GenericSequentCalculusState, ProtectedState() {
+) : ProtectedState(),
+    GenericSequentCalculusState {
     override var seal = ""
 
-    override fun getHash(): String {
-        return "fosc|${tree.joinToString()}|$showOnlyApplicableRules"
-    }
+    override fun getHash(): String = "fosc|${tree.joinToString()}|$showOnlyApplicableRules"
 }
