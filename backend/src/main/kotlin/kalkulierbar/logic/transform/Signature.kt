@@ -65,8 +65,6 @@ data class Signature(
         }
     }
 
-    fun getAllIdentifiers(): Set<String> = getConstantsAndFunctionNames() + relations.map { it.name } + boundVariables
-
     fun getConstantsAndFunctionNames(): Set<String> = constants + functions.map { it.name }
 
     fun getFunctionArity(name: String): Int? = functions.find { it.name == name }?.arity

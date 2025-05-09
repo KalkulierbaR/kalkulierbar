@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package kalkulierbar.sequent
 
 import kalkulierbar.IllegalMove
