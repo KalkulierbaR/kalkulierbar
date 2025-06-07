@@ -33,7 +33,7 @@
         "@material/radio": "4.0.0",
         "@material/switch": "4.0.0",
         "firebase-tools": "14.3.1",
-        "preact": "10.26.6",
+        "preact": "10.26.8",
         "preact-iso": "2.9.1",
         "preact-markup": "2.1.1",
         "preact-render-to-string": "6.5.13",
@@ -61,5 +61,5 @@
     "peerDependencies": {
         "prettier": ">2.0.0"
     },
-    "packageManager": "yarn@4.9.1"
+    "packageManager": "yarn@4.9.2"
 }
