@@ -1524,9 +1524,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@preact/preset-vite@npm:2.10.1":
-  version: 2.10.1
-  resolution: "@preact/preset-vite@npm:2.10.1"
+"@preact/preset-vite@npm:2.10.2":
+  version: 2.10.2
+  resolution: "@preact/preset-vite@npm:2.10.2"
   dependencies:
     "@babel/plugin-transform-react-jsx": "npm:^7.22.15"
     "@babel/plugin-transform-react-jsx-development": "npm:^7.22.5"
@@ -1534,12 +1534,12 @@ __metadata:
     "@rollup/pluginutils": "npm:^4.1.1"
     babel-plugin-transform-hook-names: "npm:^1.0.2"
     debug: "npm:^4.3.4"
-    kolorist: "npm:^1.8.0"
+    picocolors: "npm:^1.1.1"
     vite-prerender-plugin: "npm:^0.5.3"
   peerDependencies:
     "@babel/core": 7.x
-    vite: 2.x || 3.x || 4.x || 5.x || 6.x
-  checksum: 10/5b175638b82f34436dfa80716c1687c49c174cdfe6d1ac63ea70fa39ac7f4bd2db7bba630fc48be85261df083b0974f8e7abd2f06b4edec4fc33babca5f61a88
+    vite: 2.x || 3.x || 4.x || 5.x || 6.x || 7.x
+  checksum: 10/fc348b122264c14925b694699369d5ad46f9f20c4a176dce0592756838e93c313d7590d8978dfdf3be0160d3c486b67316fee9bb120f79103c887f57a5a8cec9
   languageName: node
   linkType: hard
 
@@ -6066,7 +6066,7 @@ __metadata:
     "@eslint/js": "npm:9.29.0"
     "@material/radio": "npm:4.0.0"
     "@material/switch": "npm:4.0.0"
-    "@preact/preset-vite": "npm:2.10.1"
+    "@preact/preset-vite": "npm:2.10.2"
     "@types/eslint": "npm:^9.6.1"
     "@typescript-eslint/eslint-plugin": "npm:8.34.1"
     "@typescript-eslint/parser": "npm:8.34.1"
@@ -6110,7 +6110,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kolorist@npm:^1.6.0, kolorist@npm:^1.8.0":
+"kolorist@npm:^1.6.0":
   version: 1.8.0
   resolution: "kolorist@npm:1.8.0"
   checksum: 10/71d5d122951cc65f2f14c3e1d7f8fd91694b374647d4f6deec3816d018cd04a44edd9578d93e00c82c2053b925e5d30a0565746c4171f4ca9fce1a13bd5f3315
