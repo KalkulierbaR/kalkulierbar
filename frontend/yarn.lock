@@ -4607,9 +4607,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-tools@npm:14.11.0":
-  version: 14.11.0
-  resolution: "firebase-tools@npm:14.11.0"
+"firebase-tools@npm:14.11.1":
+  version: 14.11.1
+  resolution: "firebase-tools@npm:14.11.1"
   dependencies:
     "@electric-sql/pglite": "npm:^0.3.3"
     "@electric-sql/pglite-tools": "npm:^0.2.8"
@@ -4687,7 +4687,7 @@ __metadata:
     zod-to-json-schema: "npm:^3.24.5"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10/992e905be37bda6030e530b8f3e27a9060bfcc26f0667dc3e2d0f597fd480d6467f95e4d75f1cab37ef16ff15abcbbd36c7ad82a868d698585a3e4609d546858
+  checksum: 10/dacf7d4fa53614a3686b30e51c82daec89f3165713f357abe3ca8e53211d5b2d36a679a1e89104a20d270ea991d1d84f16f3e3538472542eb0edabd6c476907b
   languageName: node
   linkType: hard
 
@@ -6075,7 +6075,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:8.37.0"
     "@typescript-eslint/parser": "npm:8.37.0"
     eslint: "npm:9.31.0"
-    firebase-tools: "npm:14.11.0"
+    firebase-tools: "npm:14.11.1"
     husky: "npm:9.1.7"
     lint-staged: "npm:15.5.0"
     per-env: "npm:1.0.2"
