@@ -4,7 +4,7 @@ plugins {
     application
     id("org.jmailen.kotlinter") version "5.1.1"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("com.gradleup.shadow") version "8.3.8"
+    id("com.gradleup.shadow") version "8.3.9"
     id("java")
     id("jacoco")
 }
@@ -31,7 +31,7 @@ dependencies {
 
     // Testing
     testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.13.3")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.13.4")
 
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }
