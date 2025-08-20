@@ -4,7 +4,7 @@ plugins {
     application
     id("org.jmailen.kotlinter") version "5.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("com.gradleup.shadow") version "8.3.9"
+    id("com.gradleup.shadow") version "9.0.1"
     id("java")
     id("jacoco")
 }
