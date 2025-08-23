@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.serialization") version "2.2.0"
+    kotlin("jvm") version "2.2.10"
+    kotlin("plugin.serialization") version "2.2.10"
     application
     id("org.jmailen.kotlinter") version "5.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("com.gradleup.shadow") version "9.0.1"
+    id("com.gradleup.shadow") version "9.0.2"
     id("java")
     id("jacoco")
 }
