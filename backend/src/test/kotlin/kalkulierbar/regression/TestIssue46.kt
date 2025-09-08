@@ -18,11 +18,8 @@ class TestIssue46 {
     fun testTransformation() {
         for ((formula, expected) in testStrings) {
             val parsed = FirstOrderParser.parse(formula)
-            println(parsed)
             val nnf = NegationNormalForm.transform(parsed)
-            println(nnf)
             val transformed = UniqueVariables.transform(nnf)
-            println(transformed)
             assertEquals(expected, transformed.toString())
         }
     }

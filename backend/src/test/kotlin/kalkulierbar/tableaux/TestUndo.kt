@@ -4,6 +4,7 @@ import kalkulierbar.IllegalMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 
 class TestUndo {
     val instance = PropositionalTableaux()
@@ -33,7 +34,7 @@ class TestUndo {
 
         state = instance.applyMoveOnState(state, MoveExpand(0, 0))
 
-        assertEquals(false, state.usedBacktracking)
+        assertFalse(state.usedBacktracking)
 
         state = instance.applyMoveOnState(state, MoveUndo())
 

@@ -4,6 +4,8 @@ import kalkulierbar.IllegalMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class TestPrune {
     private val dpll = DPLL()
@@ -16,7 +18,7 @@ class TestPrune {
         assertEquals(3, state.tree.size)
         assertEquals(listOf(), state.tree[2].children)
         assertEquals(1, state.tree[2].parent)
-        assertEquals(true, state.tree[2].isLeaf)
+        assertTrue(state.tree[2].isLeaf)
         val clauseSet2 =
             state.tree[2]
                 .diff
@@ -33,7 +35,7 @@ class TestPrune {
         assertEquals(3, state.tree.size)
         assertEquals(listOf(), state.tree[2].children)
         assertEquals(1, state.tree[2].parent)
-        assertEquals(true, state.tree[2].isLeaf)
+        assertTrue(state.tree[2].isLeaf)
         assertEquals(
             clauseSet2.toString(),
             state.tree[2]
@@ -51,7 +53,7 @@ class TestPrune {
         state = dpll.applyMoveOnState(state, MovePrune(0))
         assertEquals(1, state.tree.size)
         assertEquals(listOf(), state.tree[0].children)
-        assertEquals(true, state.tree[0].isLeaf)
+        assertTrue(state.tree[0].isLeaf)
         assertEquals(
             clauseSet0.toString(),
             state.tree[0]
@@ -67,12 +69,12 @@ class TestPrune {
         state = dpll.applyMoveOnState(state, MoveSplit(0, "b"))
         assertEquals(3, state.tree.size)
         assertEquals(listOf(1, 2), state.tree[0].children)
-        assertEquals(false, state.tree[0].isLeaf)
+        assertFalse(state.tree[0].isLeaf)
 
         state = dpll.applyMoveOnState(state, MovePrune(0))
         assertEquals(1, state.tree.size)
         assertEquals(listOf(), state.tree[0].children)
-        assertEquals(true, state.tree[0].isLeaf)
+        assertTrue(state.tree[0].isLeaf)
     }
 
     @Test
@@ -82,11 +84,11 @@ class TestPrune {
         state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to true)))
 
         assertEquals("model ✓", state.tree[2].label)
-        assertEquals(true, state.tree[2].modelVerified)
+        assertTrue(state.tree[2].modelVerified!!)
 
         state = dpll.applyMoveOnState(state, MovePrune(2))
         assertEquals("model ✓", state.tree[2].label)
-        assertEquals(true, state.tree[2].modelVerified)
+        assertTrue(state.tree[2].modelVerified!!)
     }
 
     @Test

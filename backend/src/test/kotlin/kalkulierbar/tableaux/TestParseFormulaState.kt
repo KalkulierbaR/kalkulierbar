@@ -4,6 +4,7 @@ import kalkulierbar.InvalidFormulaFormat
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 
 class TestParseFormulaState {
     val instance = PropositionalTableaux()
@@ -82,6 +83,6 @@ class TestParseFormulaState {
     fun testParseDefaultParams() {
         val state = instance.parseFormulaToState("a;b", null)
         assertEquals(TableauxType.UNCONNECTED, state.type)
-        assertEquals(false, state.regular)
+        assertFalse(state.regular)
     }
 }

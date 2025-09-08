@@ -118,12 +118,4 @@ class TestCloseBranchFO {
         assertEquals(state.tree[6].isClosed, true)
         assertEquals(state.tree[6].closeRef, 2)
     }
-
-    // Prints ClauseSet of each state
-    @Test
-    fun printStateClauseSet() {
-        for (state in states) {
-            println(state.clauseSet.toString())
-        }
-    }
 }

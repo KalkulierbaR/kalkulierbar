@@ -5,6 +5,8 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class TestLemma {
     val instance = PropositionalTableaux()
@@ -39,7 +41,7 @@ class TestLemma {
         state = instance.applyMoveOnState(state, MoveLemma(2, 1))
 
         assertEquals(1, state.tree[6].lemmaSource)
-        assertEquals(true, state.tree[6].negated)
+        assertTrue(state.tree[6].negated)
 
         instance.applyMoveOnState(state, MoveAutoClose(6, 2))
     }
@@ -57,7 +59,7 @@ class TestLemma {
         state = instance.applyMoveOnState(state, MoveLemma(3, 2))
 
         assertEquals(2, state.tree[6].lemmaSource)
-        assertEquals(true, state.tree[6].negated)
+        assertTrue(state.tree[6].negated)
 
         instance.applyMoveOnState(state, MoveAutoClose(6, 3))
     }
@@ -76,7 +78,7 @@ class TestLemma {
         state = instance.applyMoveOnState(state, MoveLemma(2, 1))
 
         assertEquals(1, state.tree[6].lemmaSource)
-        assertEquals(false, state.tree[6].negated)
+        assertFalse(state.tree[6].negated)
     }
 
     @Test

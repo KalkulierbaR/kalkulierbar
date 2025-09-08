@@ -3,6 +3,7 @@ package kalkulierbar.signedtableaux
 import kalkulierbar.IllegalMove
 import kalkulierbar.parsers.ModalLogicParser
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
@@ -14,11 +15,7 @@ class TestAlpha {
     fun testBasicAnd() {
         var state = instance.parseFormulaToState("!(a & b)", null)
 
-        println(state.assumption)
-
         state = instance.applyMoveOnState(state, Negation(0, null))
-
-        println(state.assumption)
 
         state = instance.applyMoveOnState(state, AlphaMove(1, null))
         val nodes = state.tree
@@ -28,7 +25,7 @@ class TestAlpha {
         var state3 = instance.parseFormulaToState("!b", null)
         state3 = instance.applyMoveOnState(state3, Negation(0, null))
 
-        assertTrue(state.tree[1].children.size == 1)
+        assertEquals(1, state.tree[1].children.size)
         assertTrue(nodes[2].formula.synEq(state2.tree[1].formula))
         assertTrue(nodes[3].formula.synEq(state3.tree[1].formula))
     }
@@ -49,7 +46,7 @@ class TestAlpha {
         val formula1 = parser.parse("a")
         val formula2 = parser.parse("b")
 
-        assertTrue(state.tree[0].children.size == 1)
+        assertEquals(1, state.tree[0].children.size)
         assertTrue(nodes[1].formula.synEq(formula1))
         assertTrue(nodes[2].formula.synEq(formula2))
     }
@@ -74,7 +71,7 @@ class TestAlpha {
 
         val formula2 = parser.parse("b")
 
-        assertTrue(state.tree[0].children.size == 1)
+        assertEquals(1, state.tree[0].children.size)
         assertTrue(nodes[1].formula.synEq(formula1))
         assertTrue(nodes[2].formula.synEq(formula2))
     }

@@ -3,6 +3,7 @@ package kalkulierbar.tableaux
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
+import kotlin.test.assertNull
 
 class TestMGUWarning {
     val instance = FirstOrderTableaux()
@@ -28,7 +29,7 @@ class TestMGUWarning {
         val move1 = MoveCloseAssign(2, 1, mapOf("X_1" to "c"))
         state = instance.applyMoveOnState(state, move1)
 
-        assertEquals(null, state.statusMessage)
+        assertNull(state.statusMessage)
 
         state = instance.parseFormulaToState("/all X: R(X) & /all Y: !R(Y)", null)
         state = instance.applyMoveOnState(state, MoveExpand(0, 0))
@@ -37,7 +38,7 @@ class TestMGUWarning {
         val move2 = MoveCloseAssign(2, 1, mapOf("Y_2" to "X_1"))
         state = instance.applyMoveOnState(state, move2)
 
-        assertEquals(null, state.statusMessage)
+        assertNull(state.statusMessage)
     }
 
     @Test
@@ -50,9 +51,7 @@ class TestMGUWarning {
         val move1 = MoveCloseAssign(2, 1, mapOf("X_1" to "X_1", "Y_2" to "X_1"))
         state = instance.applyMoveOnState(state, move1)
 
-        assertEquals(null, state.statusMessage)
-
-        println("Second case")
+        assertNull(state.statusMessage)
 
         // Test other valid MGU
         state = instance.parseFormulaToState("/all X: R(X) & /all Y: !R(Y)", null)
@@ -62,7 +61,7 @@ class TestMGUWarning {
         val move2 = MoveCloseAssign(2, 1, mapOf("X_1" to "Y_2", "Y_2" to "Y_2"))
         state = instance.applyMoveOnState(state, move2)
 
-        assertEquals(null, state.statusMessage)
+        assertNull(state.statusMessage)
     }
 
     @Test
@@ -79,17 +78,17 @@ class TestMGUWarning {
     @Test
     fun testMessageReset() {
         var state = instance.parseFormulaToState("/all X: (R(X)|Q(c)) & /all Y: !R(Y)", null)
-        assertEquals(null, state.statusMessage)
+        assertNull(state.statusMessage)
         state = instance.applyMoveOnState(state, MoveExpand(0, 1))
-        assertEquals(null, state.statusMessage)
+        assertNull(state.statusMessage)
         state = instance.applyMoveOnState(state, MoveExpand(1, 0))
-        assertEquals(null, state.statusMessage)
+        assertNull(state.statusMessage)
 
         val move = MoveCloseAssign(2, 1, mapOf("X_2" to "c", "Y_1" to "c"))
         state = instance.applyMoveOnState(state, move)
         assertNotEquals(null, state.statusMessage)
 
         state = instance.applyMoveOnState(state, MoveExpand(3, 1))
-        assertEquals(null, state.statusMessage)
+        assertNull(state.statusMessage)
     }
 }
