@@ -9,6 +9,7 @@ import kalkulierbar.logic.transform.TseytinCNF
 import org.junit.jupiter.api.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 
 class TestPropositionalLogic {
     private lateinit var v1: Var
@@ -59,7 +60,7 @@ class TestPropositionalLogic {
         val expected2 = ClauseSet(mutableListOf(Clause(mutableListOf(Atom("MyTestVar"))))).toString()
         val expected3 = ClauseSet(mutableListOf(Clause(mutableListOf(Atom("MyT35tV4r"))))).toString()
 
-        assertEquals(false, expected1 == expected2)
+        assertNotEquals(expected1, expected2)
         assertEquals(expected1, NaiveCNF.transform(v1).toString())
         assertEquals(expected2, NaiveCNF.transform(v2).toString())
         assertEquals(expected3, NaiveCNF.transform(v3).toString())

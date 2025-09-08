@@ -152,12 +152,4 @@ class TestAutoCloseBranchFO {
             instance.applyMoveOnState(state, MoveAutoClose(2, 1))
         }
     }
-
-    // Prints ClauseSet of each state
-    @Test
-    fun printStateClauseSet() {
-        for (state in states) {
-            println(state.clauseSet.toString())
-        }
-    }
 }

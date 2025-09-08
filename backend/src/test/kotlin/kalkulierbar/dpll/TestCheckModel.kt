@@ -4,6 +4,9 @@ import kalkulierbar.IllegalMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class TestCheckModel {
     private val dpll = DPLL()
@@ -13,7 +16,7 @@ class TestCheckModel {
         var state = dpll.parseFormulaToState("a,b;a", null)
         state = dpll.applyMoveOnState(state, MovePropagate(0, 1, 0, 0))
         assertEquals("model", state.tree[2].label)
-        assertEquals(null, state.tree[2].modelVerified)
+        assertNull(state.tree[2].modelVerified)
 
         assertFailsWith<IllegalMove> {
             dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to false)))
@@ -21,10 +24,10 @@ class TestCheckModel {
 
         state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to true)))
         assertEquals("model ✓", state.tree[2].label)
-        assertEquals(true, state.tree[2].modelVerified)
+        assertTrue(state.tree[2].modelVerified!!)
 
         val closeMessage = dpll.checkCloseOnState(state)
-        assertEquals(false, closeMessage.closed)
+        assertFalse(closeMessage.closed)
     }
 
     @Test
@@ -38,7 +41,7 @@ class TestCheckModel {
 
         state = dpll.applyMoveOnState(state, MoveModelCheck(2, mapOf("a" to false, "b" to true)))
         assertEquals("model ✓", state.tree[2].label)
-        assertEquals(true, state.tree[2].modelVerified)
+        assertTrue(state.tree[2].modelVerified!!)
 
         assertFailsWith<IllegalMove> {
             // Doubled check
@@ -46,7 +49,7 @@ class TestCheckModel {
         }
 
         val closeMessage = dpll.checkCloseOnState(state)
-        assertEquals(false, closeMessage.closed)
+        assertFalse(closeMessage.closed)
     }
 
     @Test
@@ -59,7 +62,7 @@ class TestCheckModel {
         assertEquals("closed", state.tree[2].label)
 
         val closeMessage = dpll.checkCloseOnState(state)
-        assertEquals(true, closeMessage.closed)
+        assertTrue(closeMessage.closed)
     }
 
     @Test

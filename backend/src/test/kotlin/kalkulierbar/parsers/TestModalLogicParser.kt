@@ -5,6 +5,8 @@ import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class TestModalLogicParser {
     private val parser = ModalLogicParser()
@@ -104,9 +106,9 @@ class TestModalLogicParser {
             val state = instance.parseFormulaToState(formula, null)
             assertEquals(expected, state.tree[0].formula.toString())
             if (formula.contains("T")) {
-                assertEquals(true, state.assumption)
+                assertTrue(state.assumption)
             } else {
-                assertEquals(false, state.assumption)
+                assertFalse(state.assumption)
             }
         }
     }

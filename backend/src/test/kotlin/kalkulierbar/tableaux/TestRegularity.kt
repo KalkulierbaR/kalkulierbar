@@ -4,6 +4,8 @@ import kalkulierbar.IllegalMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class TestRegularity {
     val instance = PropositionalTableaux()
@@ -37,7 +39,7 @@ class TestRegularity {
 
         state = createState(nodes, state)
 
-        assertEquals(true, checkRegularity(state))
+        assertTrue(checkRegularity(state))
     }
 
     @Test
@@ -55,7 +57,7 @@ class TestRegularity {
 
         state = createState(nodes, state)
 
-        assertEquals(true, checkRegularity(state))
+        assertTrue(checkRegularity(state))
     }
 
     @Test
@@ -71,20 +73,20 @@ class TestRegularity {
 
         state = createState(nodes, state)
 
-        assertEquals(true, checkRegularity(state))
+        assertTrue(checkRegularity(state))
     }
 
     @Test
     fun testRegularityValidD() {
         val state = instance.parseFormulaToState("true,false;!true", opts)
-        assertEquals(true, checkRegularity(state))
+        assertTrue(checkRegularity(state))
     }
 
     @Test
     fun testRegularityValidE() {
         var state = instance.parseFormulaToState("a", opts)
         state = createState(listOf(TableauxNode(0, "a", false)), state)
-        assertEquals(true, checkRegularity(state))
+        assertTrue(checkRegularity(state))
     }
 
     @Test
@@ -99,7 +101,7 @@ class TestRegularity {
 
         state = createState(nodes, state)
 
-        assertEquals(false, checkRegularity(state))
+        assertFalse(checkRegularity(state))
     }
 
     @Test
@@ -116,7 +118,7 @@ class TestRegularity {
 
         state = createState(nodes, state)
 
-        assertEquals(false, checkRegularity(state))
+        assertFalse(checkRegularity(state))
     }
 
     @Test
@@ -134,7 +136,7 @@ class TestRegularity {
 
         state = createState(nodes, state)
 
-        assertEquals(false, checkRegularity(state))
+        assertFalse(checkRegularity(state))
     }
 
     @Test
@@ -150,7 +152,7 @@ class TestRegularity {
 
         state = createState(nodes, state)
 
-        assertEquals(false, checkRegularity(state))
+        assertFalse(checkRegularity(state))
     }
 
     @Test

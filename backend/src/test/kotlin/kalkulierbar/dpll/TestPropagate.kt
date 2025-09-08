@@ -4,6 +4,9 @@ import kalkulierbar.IllegalMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class TestPropagate {
     private val dpll = DPLL()
@@ -48,7 +51,7 @@ class TestPropagate {
         state = dpll.applyMoveOnState(state, MovePropagate(1, 0, 2, 0))
 
         assertEquals(4, state.tree.size)
-        assertEquals(null, state.tree[0].parent)
+        assertNull(state.tree[0].parent)
         assertEquals(0, state.tree[1].parent)
         assertEquals(1, state.tree[2].parent)
         assertEquals(2, state.tree[3].parent)
@@ -58,15 +61,15 @@ class TestPropagate {
         assertEquals(mutableListOf(3), state.tree[2].children)
         assertEquals(mutableListOf(), state.tree[3].children)
 
-        assertEquals(false, state.tree[0].isLeaf)
-        assertEquals(false, state.tree[1].isLeaf)
-        assertEquals(false, state.tree[2].isLeaf)
-        assertEquals(true, state.tree[3].isLeaf)
+        assertFalse(state.tree[0].isLeaf)
+        assertFalse(state.tree[1].isLeaf)
+        assertFalse(state.tree[2].isLeaf)
+        assertTrue(state.tree[3].isLeaf)
 
-        assertEquals(false, state.tree[0].isAnnotation)
-        assertEquals(false, state.tree[1].isAnnotation)
-        assertEquals(false, state.tree[2].isAnnotation)
-        assertEquals(true, state.tree[3].isAnnotation)
+        assertFalse(state.tree[0].isAnnotation)
+        assertFalse(state.tree[1].isAnnotation)
+        assertFalse(state.tree[2].isAnnotation)
+        assertTrue(state.tree[3].isAnnotation)
 
         assertEquals("true", state.tree[0].label)
         assertEquals("prop", state.tree[1].label)

@@ -44,7 +44,6 @@ class TestConnectedness {
 
         val isConnected = checkConnectedness(state, TableauxType.WEAKLYCONNECTED)
         assertTrue(isConnected)
-        println(state.getHash())
         assertEquals(
             "tableauxstate|WEAKLYCONNECTED|false|false|false|{!a, b}, {a}|[true;p;null;-;i;o;(1)|" +
                 "a;p;0;-;i;o;(2,3)|a;n;1;1;l;c;()|b;p;1;-;i;o;(4,5)|a;n;3;1;l;c;()|b;p;3;-;l;o;()]|[]",
@@ -89,7 +88,6 @@ class TestConnectedness {
 
         val isConnected = checkConnectedness(state, TableauxType.STRONGLYCONNECTED)
         assertTrue(!isConnected)
-        println(state.getHash())
         assertEquals(
             "tableauxstate|STRONGLYCONNECTED|false|false|false|{!a, b}, {a}|[true;p;null;-;i;o;(1)|" +
                 "a;p;0;-;i;o;(2,3)|a;n;1;1;l;c;()|b;p;1;-;i;o;(4,5)|a;n;3;-;l;o;()|b;p;3;-;l;o;()]|[]",
@@ -130,7 +128,6 @@ class TestConnectedness {
             state = instance.applyMoveOnState(state, MoveExpand(1, 0))
         }
 
-        println(state.getHash())
         assertEquals(
             "tableauxstate|STRONGLYCONNECTED|false|false|false|{!a, b}, {a}|" +
                 "[true;p;null;-;i;o;(1,2)|a;n;0;-;i;o;(3,4)|b;p;0;-;l;o;()|a;n;1;-;l;o;()|" +
