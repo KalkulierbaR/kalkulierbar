@@ -40,21 +40,6 @@
     cursor: pointer;
 }
 
-.link {
-    fill: none;
-    stroke: var(--kbar-link-color);
-    stroke-width: 2px;
-}
-
-.trans {
-    // FIXME: Use an existing color variable or define a new one.
-    fill: rgba(255, 0, 0, 0);
-}
-
-.line--text {
-    fill: var(--kbar-primary-text-color);
-    cursor: default;
-}
 .unselected {
     fill: var(--kbar-accent-light-color-secondary);
 }
