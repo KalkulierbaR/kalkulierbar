@@ -6,7 +6,6 @@ import {
 } from "../../../../types/calculus/sequent";
 import { LayoutItem } from "../../../../types/layout";
 import { classMap } from "../../../../util/class-map";
-import { parseFormula } from "../../../../util/sequent";
 import SmallRec from "../../../svg/small-rectangle";
 
 import * as style from "./style.module.scss";
@@ -69,7 +68,7 @@ const FormulaTreeNode: preact.FunctionalComponent<Props> = ({
                 x={xCord}
                 y={node.y}
             >
-                {parseFormula(formula)}
+                {formula.text}
             </text>
         </g>
     );

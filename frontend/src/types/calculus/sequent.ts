@@ -26,9 +26,32 @@ export interface FormulaNode {
     arguments: FormulaNode[] | null;
 }
 
-export type SequentTreeLayoutNode = SequentNode & { id: number };
+export interface Turnstyle {
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+}
 
-export type FormulaTreeLayoutNode = FormulaNode & { id: string };
+export interface SequentTreeLayoutNode {
+    id: number;
+    parent: number | null;
+    antecedent: FormulaTreeLayoutNode[];
+    turnstyle: Turnstyle;
+    succedent: FormulaTreeLayoutNode[];
+    width: number;
+    isClosed: boolean;
+    lastMove: PropSequentMove | null;
+}
+
+export interface FormulaTreeLayoutNode {
+    id: string;
+    text: string;
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+}
 
 export type VarAssign = KStringMap<string>;
 
