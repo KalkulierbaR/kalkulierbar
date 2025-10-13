@@ -1,10 +1,15 @@
 .link {
     fill: none;
-    stroke: var(--kbar-8dp-color);
+    stroke: var(--kbar-link-color);
     stroke-width: 2px;
 }
 
-.svg {
-    display: block;
-    margin: 0 auto;
+.trans {
+    // FIXME: Use an existing color variable or define a new one.
+    fill: rgba(255, 0, 0, 0);
+}
+
+.line--text {
+    fill: var(--kbar-primary-text-color);
+    cursor: default;
 }

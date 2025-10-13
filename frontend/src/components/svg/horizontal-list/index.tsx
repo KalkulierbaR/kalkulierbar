@@ -1,29 +1,26 @@
-import preact, { h, RefObject } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import preact, { Fragment } from "preact";
 
 import {
-    FormulaNode,
     FormulaTreeLayoutNode,
     SequentTreeLayoutNode,
+    Turnstyle,
 } from "../../../types/calculus/sequent";
 import { LayoutItem } from "../../../types/layout";
 import { classMap } from "../../../util/class-map";
-import { parseFormula } from "../../../util/sequent";
-import { estimateSVGTextWidth } from "../../../util/text-width";
 import FormulaTreeNode from "../../calculus/sequent/formula-node";
 
 import * as style from "./style.module.scss";
 
 interface Props {
-    textRef: RefObject<SVGTextElement>;
     /**
      * The Formulars to put in the left side
      */
-    leftFormulas: FormulaNode[];
+    antecedent: Array<FormulaTreeLayoutNode>;
     /**
      * The Formulars to put in the right side
      */
-    rightFormulas: FormulaNode[];
+    succedent: Array<FormulaTreeLayoutNode>;
+    turnstyle: Turnstyle;
     /**
      * The Node the list will be inside
      */
@@ -44,11 +41,6 @@ interface Props {
      */
     selectedListIndex?: string;
 }
-
-const NODE_SPACING = 4;
-const SEPERATOR_SPACING = 12;
-const RECTANGLE_PUFFER = 4;
-const NODE_PUFFER = 16;
 
 interface CommaProps {
     /**
@@ -95,10 +87,6 @@ interface FormulaProps {
      */
     selectedListIndex: string | undefined;
     /**
-     * the x coordinate in which the Formula is drawn
-     */
-    xCoord: number;
-    /**
      * Callback for selecting a formula
      */
     selectFormulaCallback: (
@@ -115,7 +103,6 @@ const Formula: preact.FunctionalComponent<FormulaProps> = ({
     formula,
     node,
     selectedListIndex,
-    xCoord,
     selectFormulaCallback,
     selected,
 }) => {
@@ -123,12 +110,7 @@ const Formula: preact.FunctionalComponent<FormulaProps> = ({
         <FormulaTreeNode
             formula={formula}
             node={node}
-            xCoord={
-                xCoord +
-                (estimateSVGTextWidth(parseFormula(formula)) +
-                    RECTANGLE_PUFFER) /
-                    2
-            }
+            xCoord={formula.x + node.x - node.data.width / 2}
             selectedListIndex={selectedListIndex}
             selectFormulaCallback={selectFormulaCallback}
             selected={selected}
@@ -162,7 +144,7 @@ const Seperator: preact.FunctionalComponent<SeperatorProps> = ({
                 [style.text]: true,
                 [style.textClosed]: isClosed,
             })}
-            text-anchor="left"
+            text-anchor="middle"
             x={x}
             y={y}
         >
@@ -171,151 +153,149 @@ const Seperator: preact.FunctionalComponent<SeperatorProps> = ({
     );
 };
 
-/**
- * Creates an array which contains the htmlCode for the given Sequence. (formulas, commas and the sequenceSeperator)
- * @param {FormulaNode[]}leftFormulas the formulas on the left hand side of the sequence
- * @param {FormulaNode[]}rightFormulas the formulas on the right hand side of the sequence
- * @param {LayoutItem<SequentTreeLayoutNode>}node the overlaying node in which the sequence is to be drawn
- * @param {string | undefined} selectedListIndex index of formula
- * @param {number} dimsX dimension x
- * @param {Function<FormulaTreeLayoutNode>} selectFormulaCallback Callback for selecting a formula
- * @param {boolean}selected Whether or not the current node is selected
- * @returns {any} HTML
- */
-// FIXME: Turn into preact component?
-const getSequence = (
-    leftFormulas: FormulaNode[],
-    rightFormulas: FormulaNode[],
-    node: LayoutItem<SequentTreeLayoutNode>,
-    selectedListIndex: string | undefined,
-    dimsX: number,
+interface SemiSeqentProps {
+    prefix: string;
+    formulas: Array<FormulaTreeLayoutNode>;
+    /**
+     * the overlaying node in which the sequence is to be drawn
+     */
+    node: LayoutItem<SequentTreeLayoutNode>;
+    /**
+     * index of formula
+     */
+    selectedListIndex?: string;
+    /**
+     * Callback for selecting a formula
+     * @param n the selected node
+     * @returns
+     */
     selectFormulaCallback: (
         formula: FormulaTreeLayoutNode,
         nodeId: number,
-    ) => void,
-    selected: boolean,
-) => {
-    let totalSize = 0;
-    leftFormulas.forEach((elem, index) => {
-        totalSize += estimateSVGTextWidth(
-            parseFormula(elem) + RECTANGLE_PUFFER,
-        );
-        if (index < leftFormulas.length - 1) {
-            totalSize += NODE_SPACING;
-        }
-    });
+    ) => void;
+    /**
+     * Whether or not the current node is selected
+     */
+    selected: boolean;
+}
 
-    totalSize += SEPERATOR_SPACING;
-
-    rightFormulas.forEach((elem, index) => {
-        totalSize += estimateSVGTextWidth(
-            parseFormula(elem) + RECTANGLE_PUFFER,
-        );
-        if (index < rightFormulas.length - 1) {
-            totalSize += NODE_SPACING;
-        }
-    });
-
-    totalSize = dimsX + NODE_PUFFER / 2;
-
-    const nodeArray: h.JSX.Element[] = [];
-    leftFormulas.forEach((elem, index) => {
-        const formulaLayoutNode: FormulaTreeLayoutNode = {
-            ...elem,
-            id: `l${index}`,
-        };
-        nodeArray.push(
-            <Formula
-                formula={formulaLayoutNode}
-                node={node}
-                selectedListIndex={selectedListIndex}
-                xCoord={totalSize}
-                selectFormulaCallback={selectFormulaCallback}
-                selected={selected}
-            />,
-        );
-        totalSize +=
-            estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
-        if (index === leftFormulas.length - 1) return;
-
-        nodeArray.push(
-            <Comma x={totalSize} y={node.y} isClosed={node.data.isClosed} />,
-        );
-        totalSize += NODE_SPACING;
-    });
-
-    nodeArray.push(
-        <Seperator x={totalSize} y={node.y} isClosed={node.data.isClosed} />,
+const SemiSequent: preact.FunctionalComponent<SemiSeqentProps> = ({
+    prefix,
+    formulas,
+    node,
+    selectedListIndex,
+    selectFormulaCallback,
+    selected,
+}) => {
+    return (
+        <Fragment>
+            {formulas.map((f, i) => (
+                <Fragment key={`${prefix}${i}`}>
+                    <Formula
+                        formula={f}
+                        node={node}
+                        selectedListIndex={selectedListIndex}
+                        selectFormulaCallback={selectFormulaCallback}
+                        selected={selected}
+                    />
+                    {i == formulas.length - 1 ? null : Comma}
+                </Fragment>
+            ))}
+        </Fragment>
     );
-    totalSize += SEPERATOR_SPACING;
-
-    rightFormulas.forEach((elem, index) => {
-        const formulaLayoutNode: FormulaTreeLayoutNode = {
-            ...elem,
-            id: `r${index}`,
-        };
-        nodeArray.push(
-            <Formula
-                formula={formulaLayoutNode}
-                node={node}
-                selectedListIndex={selectedListIndex}
-                xCoord={totalSize}
-                selectFormulaCallback={selectFormulaCallback}
-                selected={selected}
-            />,
-        );
-        totalSize +=
-            estimateSVGTextWidth(parseFormula(elem)) + RECTANGLE_PUFFER;
-        if (index === rightFormulas.length - 1) return;
-
-        nodeArray.push(
-            <Comma x={totalSize} y={node.y} isClosed={node.data.isClosed} />,
-        );
-        totalSize += NODE_SPACING;
-    });
-
-    return nodeArray;
 };
 
-const horizontalList: preact.FunctionalComponent<Props> = ({
-    textRef,
-    leftFormulas,
-    rightFormulas,
+interface SequentProps {
+    /**
+     * the formulas on the left hand side of the sequencenodeName(
+     */
+    antecedent: Array<FormulaTreeLayoutNode>;
+    /**
+     * the formulas on the right hand side of the sequence
+     */
+    succedent: Array<FormulaTreeLayoutNode>;
+    turnstyle: Turnstyle;
+    /**
+     * the overlaying node in which the sequence is to be drawn
+     */
+    node: LayoutItem<SequentTreeLayoutNode>;
+    /**
+     * index of formula
+     */
+    selectedListIndex?: string;
+    /**
+     * Callback for selecting a formula
+     * @param n the selected node
+     * @returns
+     */
+    selectFormulaCallback: (
+        formula: FormulaTreeLayoutNode,
+        nodeId: number,
+    ) => void;
+    /**
+     * Whether or not the current node is selected
+     */
+    selected: boolean;
+}
+
+const Sequent: preact.FunctionalComponent<SequentProps> = ({
+    antecedent,
+    succedent,
+    node,
+    selectedListIndex,
+    turnstyle,
+    selectFormulaCallback,
+    selected,
+}) => {
+    return (
+        <Fragment>
+            <SemiSequent
+                prefix="l"
+                formulas={antecedent}
+                node={node}
+                selectedListIndex={selectedListIndex}
+                selectFormulaCallback={selectFormulaCallback}
+                selected={selected}
+            />
+            <Seperator
+                x={turnstyle.x + node.x - node.data.width / 2}
+                y={node.y}
+                isClosed={node.data.isClosed}
+            />
+            <SemiSequent
+                prefix="r"
+                formulas={succedent}
+                node={node}
+                selectedListIndex={selectedListIndex}
+                selectFormulaCallback={selectFormulaCallback}
+                selected={selected}
+            />
+        </Fragment>
+    );
+};
+
+const HorizontalList: preact.FunctionalComponent<Props> = ({
+    antecedent,
+    succedent,
+    turnstyle,
     node,
     selected,
     selectFormulaCallback,
     selectedListIndex,
 }) => {
-    const [dims, setDims] = useState({ x: 0, y: 0, height: 0, width: 0 });
-
-    // Gets the bounding box of the text inside the horizontal list
-    useEffect(() => {
-        if (!textRef.current) {
-            return;
-        }
-
-        const box = textRef.current.getBBox();
-        box.width += 16;
-        box.x -= 8;
-        box.height += 8;
-        box.y -= 4;
-        setDims(box);
-    });
-
-    // FIXME: Why this identity mapping?
     return (
         <g>
-            {getSequence(
-                leftFormulas,
-                rightFormulas,
-                node,
-                selectedListIndex,
-                dims.x,
-                selectFormulaCallback,
-                selected,
-            )}
+            <Sequent
+                antecedent={antecedent}
+                succedent={succedent}
+                turnstyle={turnstyle}
+                node={node}
+                selectedListIndex={selectedListIndex}
+                selectFormulaCallback={selectFormulaCallback}
+                selected={selected}
+            />
         </g>
     );
 };
 
-export default horizontalList;
+export default HorizontalList;
