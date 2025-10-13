@@ -31,7 +31,7 @@ dependencies {
 
     // Testing
     testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.14.0")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "6.0.0")
 
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }
