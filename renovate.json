@@ -3,7 +3,7 @@
   "extends": [
     "github>juliushenke/renovate-preset"
   ],
-  "baseBranches": [
+  "baseBranchPatterns": [
     "master"
   ],
   "assignees": [
@@ -15,23 +15,36 @@
       "allowedVersions": "<=3.0.5"
     },
     {
-      "matchPackageNames": ["@material/radio", "@material/switch"],
+      "matchPackageNames": [
+        "@material/radio",
+        "@material/switch"
+      ],
       "allowedVersions": "<5.0.0"
     },
     {
-      "matchPackageNames": ["@types/node", "node"],
+      "matchPackageNames": [
+        "@types/node",
+        "node"
+      ],
       "allowedVersions": "^18"
     },
     {
-      "matchPackageNames": ["husky"],
+      "matchPackageNames": [
+        "husky"
+      ],
       "allowedVersions": "<8.0.0"
     },
     {
-      "matchPackageNames": ["lint-staged"],
+      "matchPackageNames": [
+        "lint-staged"
+      ],
       "allowedVersions": "<13.0.0"
     },
     {
-      "matchPackageNames": ["css-loader", "sass-loader"],
+      "matchPackageNames": [
+        "css-loader",
+        "sass-loader"
+      ],
       "enabled": false
     },
     {
@@ -39,7 +52,9 @@
       "extends": [
         "github>juliushenke/renovate-preset:minor.json"
       ],
-      "matchPackageNames": ["!/^(typescript|preact)$/"],
+      "matchPackageNames": [
+        "!/^(typescript|preact)$/"
+      ],
       "matchFileNames": [
         "**/frontend/**"
       ]
