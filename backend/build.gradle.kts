@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.2.20"
-    kotlin("plugin.serialization") version "2.2.20"
+    kotlin("jvm") version "2.2.21"
+    kotlin("plugin.serialization") version "2.2.21"
     application
     id("org.jmailen.kotlinter") version "5.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
@@ -31,7 +31,7 @@ dependencies {
 
     // Testing
     testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "6.0.0")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "6.0.1")
 
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }
