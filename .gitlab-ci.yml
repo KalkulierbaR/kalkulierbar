@@ -6,7 +6,7 @@ stages:
 # Frontend yarn build & test
 test-frontend:
   stage: test
-  image: node@sha256:a84dedcbbcf651db49178dd876bad1ea63bc6770891337a05246991bceca55a7
+  image: node@sha256:7478f3725ef76ce6ba257a6818ea43c5eb7eb5bd424f0c3df3a80ff77203305e
   before_script:
     - cd frontend
   script:
@@ -29,7 +29,7 @@ test-backend:
 # Frontend deploy to firebase
 deploy-frontend:
   stage: deploy
-  image: node@sha256:a84dedcbbcf651db49178dd876bad1ea63bc6770891337a05246991bceca55a7
+  image: node@sha256:7478f3725ef76ce6ba257a6818ea43c5eb7eb5bd424f0c3df3a80ff77203305e
   before_script:
     - cd frontend
     - yarn
