@@ -6233,9 +6233,9 @@ __metadata:
     lint-staged: "npm:15.5.0"
     per-env: "npm:1.0.2"
     preact: "npm:10.27.2"
-    preact-iso: "npm:2.11.0"
+    preact-iso: "npm:2.11.1"
     preact-markup: "npm:2.1.1"
-    preact-render-to-string: "npm:6.6.3"
+    preact-render-to-string: "npm:6.6.4"
     prettier: "npm:3.6.2"
     react-hint: "npm:3.2.1"
     sass: "npm:1.93.3"
@@ -6243,7 +6243,7 @@ __metadata:
     sha3: "npm:2.1.4"
     typescript: "npm:5.9.3"
     vite: "npm:7.1.12"
-    vite-plugin-sass-dts: "npm:1.3.34"
+    vite-plugin-sass-dts: "npm:1.3.35"
   peerDependencies:
     prettier: ">2.0.0"
   languageName: unknown
@@ -7860,13 +7860,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact-iso@npm:2.11.0":
-  version: 2.11.0
-  resolution: "preact-iso@npm:2.11.0"
+"preact-iso@npm:2.11.1":
+  version: 2.11.1
+  resolution: "preact-iso@npm:2.11.1"
   peerDependencies:
     preact: ">=10 || >= 11.0.0-0"
     preact-render-to-string: ">=6.4.0"
-  checksum: 10/5f39de9fb5a1690896d5ef25cbe372cd89e5f5bcc5df2f1b608580ffc5a51f511b81ec845fa120f911f6a23f9e8d2d78089cb2218d9075d6a58a553d4cf7b44d
+  checksum: 10/d42ab706ea72274ca0ad429898d8627a83e5b7ac3b55e6b57651509dedea6314f6b084120b024794e078875fcd2b405eac9ee3e932369bcca16c1a46b60e10d5
   languageName: node
   linkType: hard
 
@@ -7879,12 +7879,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact-render-to-string@npm:6.6.3":
-  version: 6.6.3
-  resolution: "preact-render-to-string@npm:6.6.3"
+"preact-render-to-string@npm:6.6.4":
+  version: 6.6.4
+  resolution: "preact-render-to-string@npm:6.6.4"
   peerDependencies:
     preact: ">=10 || >= 11.0.0-0"
-  checksum: 10/55f72b0554c27632e89bb45364933e31f1d75e81991044dc318c188cc299b4151603568e06efa00d20afe19be443e07a3259c5a4cbad0c38b18bb8a20899371e
+  checksum: 10/2d0a73e41e4be7274dc23a20af57c4140153edc360e4f23f45979772d08bc16afe2bf34745cbac9511807de66c81d04521c31d0de73678766c63c6da7aad6678
   languageName: node
   linkType: hard
 
@@ -9790,9 +9790,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-sass-dts@npm:1.3.34":
-  version: 1.3.34
-  resolution: "vite-plugin-sass-dts@npm:1.3.34"
+"vite-plugin-sass-dts@npm:1.3.35":
+  version: 1.3.35
+  resolution: "vite-plugin-sass-dts@npm:1.3.35"
   dependencies:
     postcss-js: "npm:^4.0.1"
   peerDependencies:
@@ -9800,7 +9800,7 @@ __metadata:
     prettier: ^2.7 || ^3
     sass-embedded: ^1.78.0
     vite: ^7
-  checksum: 10/d1842f087ac61f64b9f044d714d2724d108f4cdaaff47df370efbb6e69d1edae46bf9f575f70e2d7d9a7197770008c6e4b40d6014a4aaa1cbc158facede52d9b
+  checksum: 10/55ff90ed7cb813f8fc7ef7a725bb7a3bdf9ed7c65fcc9584a516892878e988765fcbde330d3db4d9323b7a6c6d9298fe69fd82242634b3a1557c18ec129e6ef2
   languageName: node
   linkType: hard
 
