@@ -58,29 +58,35 @@ class NaiveCNF : LogicNodeVisitor<ClauseSet<String>>() {
                 // Eliminate double negation
                 res = child.child.accept(this)
             }
+
             is Or -> {
                 // De-Morgan Or
                 res = And(Not(child.leftChild), Not(child.rightChild)).accept(this)
             }
+
             is And -> {
                 // De-Morgan And
                 res = Or(Not(child.leftChild), Not(child.rightChild)).accept(this)
             }
+
             is Impl -> {
                 // !(a->b) = !(!a v b) = a^!b
                 res = And(child.leftChild, Not(child.rightChild)).accept(this)
             }
+
             is Equiv -> {
                 val implA = Impl(child.leftChild, child.rightChild)
                 val implB = Impl(child.rightChild, child.leftChild)
                 // Translate equivalence into implications
                 res = Not(And(implA, implB)).accept(this)
             }
+
             is Var -> {
                 val atom = Atom(child.spelling, true)
                 val clause = Clause(mutableListOf(atom))
                 res = ClauseSet(mutableListOf(clause))
             }
+
             else -> {
                 val msg = "Unknown LogicNode encountered during naive CNF transformation"
                 throw FormulaConversionException(msg)

@@ -313,6 +313,7 @@ private fun checkCloseRelation(
             val nodeRelation = nodeFormula.child as Relation
             return Pair(nodeRelation, closeNodeFormula)
         }
+
         closeNodeFormula is Not -> {
             if (closeNodeFormula.child !is Relation) {
                 throw IllegalMove("Close node formula '$closeNodeFormula' is not a negated relation")
@@ -323,6 +324,7 @@ private fun checkCloseRelation(
             val closeRelation = closeNodeFormula.child as Relation
             return Pair(nodeFormula, closeRelation)
         }
+
         else -> {
             throw IllegalMove("Neither '$nodeFormula' nor '$closeNodeFormula' are negated")
         }
