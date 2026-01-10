@@ -4717,9 +4717,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-tools@npm:14.27.0":
-  version: 14.27.0
-  resolution: "firebase-tools@npm:14.27.0"
+"firebase-tools@npm:15.1.0":
+  version: 15.1.0
+  resolution: "firebase-tools@npm:15.1.0"
   dependencies:
     "@apphosting/build": "npm:^0.1.6"
     "@apphosting/common": "npm:^0.0.8"
@@ -4784,7 +4784,6 @@ __metadata:
     stream-chain: "npm:^2.2.4"
     stream-json: "npm:^1.7.3"
     superstatic: "npm:^10.0.0"
-    tar: "npm:^6.1.11"
     tcp-port-used: "npm:^1.0.2"
     tmp: "npm:^0.2.3"
     triple-beam: "npm:^1.3.0"
@@ -4799,7 +4798,7 @@ __metadata:
     zod-to-json-schema: "npm:^3.24.5"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10/bf769de5e7ba877f71000e39e27627b0e3aff7c72c9421ab669b4eacfd10378ceea432371ae5c3627856d195e8f0166cec4f9574390fede6d651e81aaf109c17
+  checksum: 10/20bf5341fdb3fa6637d07b47fb4bfa4f0e08dca8fe150068b30f1f01bc32112f46df9612f9b609c2f450c11226f292f608f16426197f86b0cde5386e2095cb79
   languageName: node
   linkType: hard
 
@@ -6260,7 +6259,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:8.52.0"
     "@typescript-eslint/parser": "npm:8.52.0"
     eslint: "npm:9.39.2"
-    firebase-tools: "npm:14.27.0"
+    firebase-tools: "npm:15.1.0"
     husky: "npm:9.1.7"
     lint-staged: "npm:15.5.0"
     per-env: "npm:1.0.2"
