@@ -91,6 +91,7 @@ fun applyAlpha(
             alpha1 = SignedModalTableauxNode(leafID, node.prefix, true, formula.leftChild)
             alpha2 = SignedModalTableauxNode(nodes.size, node.prefix, true, formula.rightChild)
         }
+
         is Or -> {
             // Alpha move can only be applied if the node sign is FALSE if the Formula is OR
             if (node.sign) {
@@ -99,6 +100,7 @@ fun applyAlpha(
             alpha1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
             alpha2 = SignedModalTableauxNode(nodes.size, node.prefix, false, formula.rightChild)
         }
+
         is Impl -> {
             // Alpha move can only be applied if the node sign is FALSE if the Formula is IMPL
             if (node.sign) {
@@ -107,7 +109,10 @@ fun applyAlpha(
             alpha1 = SignedModalTableauxNode(leafID, node.prefix, true, formula.leftChild)
             alpha2 = SignedModalTableauxNode(nodes.size, node.prefix, false, formula.rightChild)
         }
-        else -> throw IllegalMove("Alpha rule can not be applied on the node '$node'")
+
+        else -> {
+            throw IllegalMove("Alpha rule can not be applied on the node '$node'")
+        }
     }
 
     // The left formula is will be add to the node first, right formula will be added as the child of left formula
@@ -161,6 +166,7 @@ fun applyBeta(
             beta1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
             beta2 = SignedModalTableauxNode(leafID, node.prefix, false, formula.rightChild)
         }
+
         is Or -> {
             if (!node.sign) {
                 throw IllegalMove("Beta rule can only be applied on a disjunction if the sign is True")
@@ -168,6 +174,7 @@ fun applyBeta(
             beta1 = SignedModalTableauxNode(leafID, node.prefix, true, formula.leftChild)
             beta2 = SignedModalTableauxNode(leafID, node.prefix, true, formula.rightChild)
         }
+
         is Impl -> {
             if (!node.sign) {
                 throw IllegalMove("Beta rule can only be applied on an implication if the sign is True")
@@ -175,7 +182,10 @@ fun applyBeta(
             beta1 = SignedModalTableauxNode(leafID, node.prefix, false, formula.leftChild)
             beta2 = SignedModalTableauxNode(leafID, node.prefix, true, formula.rightChild)
         }
-        else -> throw IllegalMove("Beta rule can not be applied on the node '$node'")
+
+        else -> {
+            throw IllegalMove("Beta rule can not be applied on the node '$node'")
+        }
     }
 
     // The formula will be split, the leftFormula will be added to the leftBranch of the leaf and the
@@ -236,13 +246,17 @@ fun applyNu(
                 }
                 SignedModalTableauxNode(leafID, newPrefix, true, formula.child)
             }
+
             is Diamond -> {
                 if (node.sign) {
                     throw IllegalMove("Nu rule can only be applied on DIAMOND if the sign is False")
                 }
                 SignedModalTableauxNode(leafID, newPrefix, false, formula.child)
             }
-            else -> throw IllegalMove("Nu rule can not be applied on the node '$node'")
+
+            else -> {
+                throw IllegalMove("Nu rule can not be applied on the node '$node'")
+            }
         }
 
     state.addChildren(leafID, nu0)
@@ -302,13 +316,17 @@ fun applyPi(
                 }
                 SignedModalTableauxNode(leafID, newPrefix, false, formula.child)
             }
+
             is Diamond -> {
                 if (!node.sign) {
                     throw IllegalMove("Pi rule can only be applied on diamond if the sign is True")
                 }
                 SignedModalTableauxNode(leafID, newPrefix, true, formula.child)
             }
-            else -> throw IllegalMove("Pi rule can not be applied on the node '$node'")
+
+            else -> {
+                throw IllegalMove("Pi rule can not be applied on the node '$node'")
+            }
         }
 
     state.addChildren(leafID, pi0)

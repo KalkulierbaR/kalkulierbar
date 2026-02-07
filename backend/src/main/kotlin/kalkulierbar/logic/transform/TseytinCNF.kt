@@ -52,12 +52,30 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
      */
     private fun getName(node: LogicNode): String =
         when (node) {
-            is Not -> "not$index"
-            is Or -> "or$index"
-            is And -> "and$index"
-            is Impl -> "impl$index"
-            is Equiv -> "equiv$index"
-            is Var -> "var${node.spelling}"
+            is Not -> {
+                "not$index"
+            }
+
+            is Or -> {
+                "or$index"
+            }
+
+            is And -> {
+                "and$index"
+            }
+
+            is Impl -> {
+                "impl$index"
+            }
+
+            is Equiv -> {
+                "equiv$index"
+            }
+
+            is Var -> {
+                "var${node.spelling}"
+            }
+
             else -> {
                 val msg = "Unknown LogicNode encountered during naive CNF transformation"
                 throw FormulaConversionException(msg)
