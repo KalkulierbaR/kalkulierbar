@@ -6478,7 +6478,7 @@ __metadata:
     preact: "npm:10.28.3"
     preact-iso: "npm:2.11.1"
     preact-markup: "npm:2.1.1"
-    preact-render-to-string: "npm:6.6.6"
+    preact-render-to-string: "npm:6.6.7"
     prettier: "npm:3.8.1"
     react-hint: "npm:3.2.1"
     sass: "npm:1.97.3"
@@ -8184,12 +8184,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact-render-to-string@npm:6.6.6":
-  version: 6.6.6
-  resolution: "preact-render-to-string@npm:6.6.6"
+"preact-render-to-string@npm:6.6.7":
+  version: 6.6.7
+  resolution: "preact-render-to-string@npm:6.6.7"
   peerDependencies:
     preact: ">=10 || >= 11.0.0-0"
-  checksum: 10/58b9ea7c7216fa9c75bac083ca3feff4f24c6a7cc6bfc482a8d4d53633011fa1a95687b283a26e153d6914099abac2fa946cd0ab55eeaf2729617ff8364de8b1
+  checksum: 10/e15f9e30462af6358f88b298b8ae19d9efcd649c569f1540e522c5e1af6d7181b7617eaff1ab2433e9c7fcae092f6c73f852ce93e858a71318cbe9b5a5319b58
   languageName: node
   linkType: hard
 
