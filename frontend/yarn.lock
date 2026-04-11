@@ -6479,7 +6479,7 @@ __metadata:
     preact-iso: "npm:2.11.1"
     preact-markup: "npm:2.1.1"
     preact-render-to-string: "npm:6.6.7"
-    prettier: "npm:3.8.1"
+    prettier: "npm:3.8.2"
     react-hint: "npm:3.2.1"
     sass: "npm:1.97.3"
     serve: "npm:14.2.6"
@@ -8207,12 +8207,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.8.1":
-  version: 3.8.1
-  resolution: "prettier@npm:3.8.1"
+"prettier@npm:3.8.2":
+  version: 3.8.2
+  resolution: "prettier@npm:3.8.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10/3da1cf8c1ef9bea828aa618553696c312e951f810bee368f6887109b203f18ee869fe88f66e65f9cf60b7cb1f2eae859892c860a300c062ff8ec69c381fc8dbd
+  checksum: 10/fd784175bc600c07eb2c44d7ec4ee7133f95f26492adad61b6a15c06f438b858181faf096ab74163d7f49500ad80cff4479c6abb084e161a2e85a9df5974ecd1
   languageName: node
   linkType: hard
 
