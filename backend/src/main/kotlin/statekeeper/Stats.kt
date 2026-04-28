@@ -21,11 +21,11 @@ object Stats {
             override fun run() = flush()
         }
 
-    /**
-     * Read contents of the stats file
-     * Creates an empty StatContainer if none exists
-     */
     init {
+        /*
+         * Read contents of the stats file
+         * Creates an empty StatContainer if none exists
+         */
         @Suppress("TooGenericExceptionCaught")
         data =
             try {

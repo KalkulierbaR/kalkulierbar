@@ -48,23 +48,29 @@ class NegationNormalForm : DoNothingVisitor() {
                 // Eliminate double negation
                 res = child.child.accept(this)
             }
+
             is Or -> {
                 // De-Morgan Or
                 res = And(Not(child.leftChild), Not(child.rightChild)).accept(this)
             }
+
             is And -> {
                 // De-Morgan And
                 res = Or(Not(child.leftChild), Not(child.rightChild)).accept(this)
             }
+
             is UniversalQuantifier -> {
                 res = ExistentialQuantifier(child.varName, Not(child.child), child.boundVariables).accept(this)
             }
+
             is ExistentialQuantifier -> {
                 res = UniversalQuantifier(child.varName, Not(child.child), child.boundVariables).accept(this)
             }
+
             is Relation -> {
                 res = node
             }
+
             else -> {
                 val msg = "Unknown LogicNode encountered during Negation Normal Form transformation"
                 throw FormulaConversionException(msg)
