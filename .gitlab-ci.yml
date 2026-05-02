@@ -18,7 +18,7 @@ test-frontend:
 # Backend gradle build & test
 test-backend:
   stage: test
-  image: gradle:jdk11@sha256:0fa50b624c362f81147294d61a9d0d198b17942bb3d50f5a2e7134616416e73f
+  image: gradle:jdk11@sha256:035d077ee5b84a75d6a03515678b85620027b557b08ca22f693fbf5162c93fa5
   before_script:
     - cd backend
   script:
