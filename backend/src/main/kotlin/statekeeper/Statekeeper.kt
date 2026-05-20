@@ -23,7 +23,7 @@ object StateKeeper {
     private val storage = File("kbar-state.json")
     private val state: AppState
 
-    /**
+    /*
      * Read contents of the state storage file
      * Creates a default config file if none exists already
      */

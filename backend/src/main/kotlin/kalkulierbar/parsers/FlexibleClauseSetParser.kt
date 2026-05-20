@@ -73,8 +73,14 @@ object FlexibleClauseSetParser {
         val res: ClauseSet<String>
 
         when (strategy) {
-            CnfStrategy.NAIVE -> res = NaiveCNF.transform(formula)
-            CnfStrategy.TSEYTIN -> res = TseytinCNF.transform(formula)
+            CnfStrategy.NAIVE -> {
+                res = NaiveCNF.transform(formula)
+            }
+
+            CnfStrategy.TSEYTIN -> {
+                res = TseytinCNF.transform(formula)
+            }
+
             CnfStrategy.OPTIMAL -> {
                 val tseytin = TseytinCNF.transform(formula)
                 // Naive transformation might fail for large a large formula

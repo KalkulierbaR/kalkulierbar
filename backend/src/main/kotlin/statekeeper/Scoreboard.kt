@@ -20,7 +20,7 @@ object Scoreboard {
 
     private const val READONLY = false
 
-    /**
+    /*
      * Read contents of the scoreboard storage file
      * Creates an empty scoreboard if none exists
      */

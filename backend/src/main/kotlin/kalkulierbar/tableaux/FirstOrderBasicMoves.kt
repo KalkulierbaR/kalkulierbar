@@ -65,7 +65,6 @@ fun applyMoveCloseBranch(
     return closeBranchCommon(state, leafID, closeNodeID, varAssign)
 }
 
-@Suppress("ThrowsCount")
 /**
  * Close a branch using either computed or manually entered variable assignments
  * NOTE: This does NOT verify closeability.
@@ -76,6 +75,7 @@ fun applyMoveCloseBranch(
  * @param varAssign Map of variable names and terms to replace them with
  * @return state with the close move applied
  */
+@Suppress("ThrowsCount")
 private fun closeBranchCommon(
     state: FoTableauxState,
     leafID: Int,

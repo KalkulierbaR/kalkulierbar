@@ -37,9 +37,11 @@ fun propagate(
     val diff =
         when (baseAtom) {
             propAtom -> RemoveClause(propID)
+
             // If the selected clause contains the negation of the atom known to be true,
             // that atom cannot be true and can be removed from the clause
             propAtom.not() -> RemoveAtom(propID, atomID)
+
             else -> throw IllegalMove("Selected atom '$propAtom' is not compatible with '$baseAtom'")
         }
 

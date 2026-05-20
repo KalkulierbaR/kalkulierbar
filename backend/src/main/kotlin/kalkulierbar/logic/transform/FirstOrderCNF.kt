@@ -62,6 +62,7 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
                 val clause = Clause(mutableListOf(atom))
                 res = ClauseSet(mutableListOf(clause))
             }
+
             else -> {
                 val msg = "Unknown LogicNode encountered during first order CNF transformation"
                 throw FormulaConversionException(msg)
