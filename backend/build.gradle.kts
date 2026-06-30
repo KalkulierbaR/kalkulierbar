@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.0.21"
-    kotlin("plugin.serialization") version "2.0.21"
+    kotlin("jvm") version "2.4.0"
+    kotlin("plugin.serialization") version "2.4.0"
     application
-    id("org.jmailen.kotlinter") version "3.16.0"
+    id("org.jmailen.kotlinter") version "5.5.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.gradleup.shadow") version "9.4.3"
     id("java")
     id("jacoco")
 }
@@ -18,20 +18,20 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // JVM dependency
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
     // Web framework
-    implementation("io.javalin:javalin:5.6.5")
+    implementation("io.javalin:javalin:6.7.0")
 
     // Logging
-    implementation("org.slf4j:slf4j-simple:2.0.17")
+    implementation("org.slf4j:slf4j-simple:2.0.18")
 
     // Hashing
     implementation("com.github.komputing.khash:keccak:1.1.3")
 
     // Testing
     testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.12.1")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "6.1.0")
 
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }
@@ -46,15 +46,12 @@ tasks {
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+kotlin {
+    jvmToolchain(21)
 }
 
 detekt {
@@ -64,6 +61,6 @@ detekt {
 }
 
 kotlinter {
-    ignoreFailures = false
+    ignoreFormatFailures = false
     reporters = arrayOf("checkstyle", "plain")
 }

@@ -10,14 +10,15 @@ import kotlinx.serialization.modules.subclass
 
 // Context object for clause set diff serialization
 // Tells kotlinx.serialize about child types of CsDiff
-val clausesetDiffModule = SerializersModule {
-    polymorphic(CsDiff::class) {
-        subclass(Identity::class)
-        subclass(RemoveClause::class)
-        subclass(AddClause::class)
-        subclass(RemoveAtom::class)
+val clausesetDiffModule =
+    SerializersModule {
+        polymorphic(CsDiff::class) {
+            subclass(Identity::class)
+            subclass(RemoveClause::class)
+            subclass(AddClause::class)
+            subclass(RemoveAtom::class)
+        }
     }
-}
 
 @Serializable
 abstract class CsDiff {
@@ -40,7 +41,9 @@ class Identity : CsDiff() {
  */
 @Serializable
 @SerialName("cd-delclause")
-class RemoveClause(val id: Int) : CsDiff() {
+class RemoveClause(
+    val id: Int,
+) : CsDiff() {
     override fun apply(cs: ClauseSet<String>): ClauseSet<String> {
         val new = cs.clone()
         new.clauses.removeAt(id)
@@ -55,7 +58,9 @@ class RemoveClause(val id: Int) : CsDiff() {
  */
 @Serializable
 @SerialName("cd-addclause")
-class AddClause(val clause: Clause<String>) : CsDiff() {
+class AddClause(
+    val clause: Clause<String>,
+) : CsDiff() {
     override fun apply(cs: ClauseSet<String>): ClauseSet<String> {
         val new = cs.clone()
         new.add(clause)
@@ -70,7 +75,10 @@ class AddClause(val clause: Clause<String>) : CsDiff() {
  */
 @Serializable
 @SerialName("cd-delatom")
-class RemoveAtom(val cid: Int, val aid: Int) : CsDiff() {
+class RemoveAtom(
+    val cid: Int,
+    val aid: Int,
+) : CsDiff() {
     override fun apply(cs: ClauseSet<String>): ClauseSet<String> {
         val new = cs.clone()
         new.clauses[cid].atoms.removeAt(aid)

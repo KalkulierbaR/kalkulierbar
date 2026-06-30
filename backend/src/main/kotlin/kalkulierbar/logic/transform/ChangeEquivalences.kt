@@ -7,7 +7,6 @@ import kalkulierbar.logic.LogicNode
 
 class ChangeEquivalences : DoNothingVisitor() {
     companion object Companion {
-
         fun transform(formula: LogicNode): LogicNode {
             val instance = ChangeEquivalences()
             return formula.accept(instance)

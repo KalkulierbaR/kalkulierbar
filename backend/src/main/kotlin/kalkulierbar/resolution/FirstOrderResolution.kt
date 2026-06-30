@@ -17,18 +17,22 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 class FirstOrderResolution :
-    GenericResolution<Relation>,
-    JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>() {
+    JSONCalculus<FoResolutionState, ResolutionMove, FoResolutionParam>(),
+    GenericResolution<Relation> {
     override val identifier = "fo-resolution"
 
-    override val serializer = Json {
-        serializersModule = resolutionMoveModule + FoTermModule
-        encodeDefaults = true
-    }
+    override val serializer =
+        Json {
+            serializersModule = resolutionMoveModule + FoTermModule
+            encodeDefaults = true
+        }
     override val stateSerializer = FoResolutionState.serializer()
     override val moveSerializer = ResolutionMove.serializer()
 
-    override fun parseFormulaToState(formula: String, params: FoResolutionParam?): FoResolutionState {
+    override fun parseFormulaToState(
+        formula: String,
+        params: FoResolutionParam?,
+    ): FoResolutionState {
         val parsed = FirstOrderParser.parse(formula)
         val clauses = FirstOrderCNF.transform(parsed)
 
@@ -40,7 +44,10 @@ class FirstOrderResolution :
         return state
     }
 
-    override fun applyMoveOnState(state: FoResolutionState, move: ResolutionMove): FoResolutionState {
+    override fun applyMoveOnState(
+        state: FoResolutionState,
+        move: ResolutionMove,
+    ): FoResolutionState {
         // Reset status message
         state.statusMessage = null
 
@@ -81,7 +88,8 @@ class FirstOrderResolution :
 class FoResolutionState(
     override val clauseSet: ClauseSet<Relation>,
     override val visualHelp: VisualHelp,
-) : GenericResolutionState<Relation>, ProtectedState() {
+) : ProtectedState(),
+    GenericResolutionState<Relation> {
     override var newestNode = -1
     override val hiddenClauses = ClauseSet<Relation>()
     var clauseCounter = 0
@@ -91,9 +99,7 @@ class FoResolutionState(
 
     override var seal = ""
 
-    override fun getHash(): String {
-        return "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode|$clauseCounter"
-    }
+    override fun getHash(): String = "resolutionstate|$clauseSet|$hiddenClauses|$visualHelp|$newestNode|$clauseCounter"
 
     /**
      * Append a unique suffix to the quantified variables in a clause
@@ -115,10 +121,13 @@ class FoResolutionState(
      * Append initial suffixes to all clauses
      */
     fun initSuffix() {
-        for (i in clauseSet.clauses.indices)
+        for (i in clauseSet.clauses.indices) {
             setSuffix(i)
+        }
     }
 }
 
 @Serializable
-data class FoResolutionParam(val visualHelp: VisualHelp)
+data class FoResolutionParam(
+    val visualHelp: VisualHelp,
+)

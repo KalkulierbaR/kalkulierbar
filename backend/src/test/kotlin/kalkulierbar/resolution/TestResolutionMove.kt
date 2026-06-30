@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestResolutionMove {
-
     val instance = PropositionalResolution()
 
     @Test

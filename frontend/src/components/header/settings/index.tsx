@@ -46,6 +46,12 @@ const ServerInput: preact.FunctionalComponent<ServerInputProps> = ({
 
     const dispatchServer = useCallback(() => {
         let serverLocation = serverInput.trim();
+        if (serverLocation.endsWith("/")) {
+            serverLocation = serverLocation.substring(
+                0,
+                serverLocation.length - 1,
+            );
+        }
         const simpleDomainRegex = "^[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+$";
         const localhostRegex = "^localhost:\\d+$";
         if (serverLocation.match(simpleDomainRegex)) {

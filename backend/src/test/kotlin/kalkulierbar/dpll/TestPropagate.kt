@@ -4,9 +4,11 @@ import kalkulierbar.IllegalMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class TestPropagate {
-
     private val dpll = DPLL()
 
     @Test
@@ -14,7 +16,14 @@ class TestPropagate {
         var state = dpll.parseFormulaToState("a;!a,b,c", null)
         state = dpll.applyMoveOnState(state, MovePropagate(0, 0, 1, 0))
 
-        assertEquals("{b, c}", state.tree[1].diff.apply(state.clauseSet).clauses[1].toString())
+        assertEquals(
+            "{b, c}",
+            state.tree[1]
+                .diff
+                .apply(state.clauseSet)
+                .clauses[1]
+                .toString(),
+        )
         assertEquals(NodeType.PROP, state.tree[1].type)
     }
 
@@ -23,7 +32,14 @@ class TestPropagate {
         var state = dpll.parseFormulaToState("a;a,b,c", null)
         state = dpll.applyMoveOnState(state, MovePropagate(0, 0, 1, 0))
 
-        assertEquals("{a}", state.tree[1].diff.apply(state.clauseSet).clauses[0].toString())
+        assertEquals(
+            "{a}",
+            state.tree[1]
+                .diff
+                .apply(state.clauseSet)
+                .clauses[0]
+                .toString(),
+        )
         assertEquals(3, state.tree.size)
         assertEquals(NodeType.MODEL, state.tree[2].type)
     }
@@ -35,7 +51,7 @@ class TestPropagate {
         state = dpll.applyMoveOnState(state, MovePropagate(1, 0, 2, 0))
 
         assertEquals(4, state.tree.size)
-        assertEquals(null, state.tree[0].parent)
+        assertNull(state.tree[0].parent)
         assertEquals(0, state.tree[1].parent)
         assertEquals(1, state.tree[2].parent)
         assertEquals(2, state.tree[3].parent)
@@ -45,25 +61,46 @@ class TestPropagate {
         assertEquals(mutableListOf(3), state.tree[2].children)
         assertEquals(mutableListOf(), state.tree[3].children)
 
-        assertEquals(false, state.tree[0].isLeaf)
-        assertEquals(false, state.tree[1].isLeaf)
-        assertEquals(false, state.tree[2].isLeaf)
-        assertEquals(true, state.tree[3].isLeaf)
+        assertFalse(state.tree[0].isLeaf)
+        assertFalse(state.tree[1].isLeaf)
+        assertFalse(state.tree[2].isLeaf)
+        assertTrue(state.tree[3].isLeaf)
 
-        assertEquals(false, state.tree[0].isAnnotation)
-        assertEquals(false, state.tree[1].isAnnotation)
-        assertEquals(false, state.tree[2].isAnnotation)
-        assertEquals(true, state.tree[3].isAnnotation)
+        assertFalse(state.tree[0].isAnnotation)
+        assertFalse(state.tree[1].isAnnotation)
+        assertFalse(state.tree[2].isAnnotation)
+        assertTrue(state.tree[3].isAnnotation)
 
         assertEquals("true", state.tree[0].label)
         assertEquals("prop", state.tree[1].label)
         assertEquals("prop", state.tree[2].label)
         assertEquals("model", state.tree[3].label)
 
-        assertEquals("[{a}, {!a, b}, {a, c}]", state.tree[0].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{a}, {b}, {a, c}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals(
+            "[{a}, {!a, b}, {a, c}]",
+            state.tree[0]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
+        assertEquals(
+            "[{a}, {b}, {a, c}]",
+            state.tree[1]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
         val newClauseSet = state.tree[1].diff.apply(state.clauseSet)
-        assertEquals("[{a}, {b}]", state.tree[2].diff.apply(newClauseSet).clauses.toString())
+        assertEquals(
+            "[{a}, {b}]",
+            state.tree[2]
+                .diff
+                .apply(newClauseSet)
+                .clauses
+                .toString(),
+        )
     }
 
     @Test
@@ -108,7 +145,8 @@ class TestPropagate {
             // Same branch twice
             state = dpll.applyMoveOnState(state, MovePropagate(0, 0, 2, 0))
         }
-        assertFailsWith<IllegalMove> { // Propagate Annotation
+        assertFailsWith<IllegalMove> {
+            // Propagate Annotation
             dpll.applyMoveOnState(state, MovePropagate(0, 0, 1, 0))
             dpll.applyMoveOnState(state, MovePropagate(2, 0, 1, 0))
         }

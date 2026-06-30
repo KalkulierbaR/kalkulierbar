@@ -19,7 +19,6 @@ import kalkulierbar.logic.Var
  * Does NOT support first order formulae
  */
 class TseytinCNF : LogicNodeVisitor<Unit>() {
-
     companion object Companion {
         /**
          * Transforms a propositional formula into a ClauseSet that is equivalent with regards to satisfiability
@@ -51,20 +50,37 @@ class TseytinCNF : LogicNodeVisitor<Unit>() {
      * @param node LogicNode to get variable name of
      * @return Tseytin variable name of the node
      */
-    private fun getName(node: LogicNode): String {
-        return when (node) {
-            is Not -> "not$index"
-            is Or -> "or$index"
-            is And -> "and$index"
-            is Impl -> "impl$index"
-            is Equiv -> "equiv$index"
-            is Var -> "var${node.spelling}"
+    private fun getName(node: LogicNode): String =
+        when (node) {
+            is Not -> {
+                "not$index"
+            }
+
+            is Or -> {
+                "or$index"
+            }
+
+            is And -> {
+                "and$index"
+            }
+
+            is Impl -> {
+                "impl$index"
+            }
+
+            is Equiv -> {
+                "equiv$index"
+            }
+
+            is Var -> {
+                "var${node.spelling}"
+            }
+
             else -> {
                 val msg = "Unknown LogicNode encountered during naive CNF transformation"
                 throw FormulaConversionException(msg)
             }
         }
-    }
 
     /**
      * A single variable does not get its own snippet

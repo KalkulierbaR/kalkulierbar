@@ -12,18 +12,23 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 @Suppress("TooManyFunctions")
-class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxState, TableauxMove, FoTableauxParam>() {
-
+class FirstOrderTableaux :
+    JSONCalculus<FoTableauxState, TableauxMove, FoTableauxParam>(),
+    GenericTableaux<Relation> {
     override val identifier = "fo-tableaux"
 
-    override val serializer = Json {
-        serializersModule = FoTermModule + tableauxMoveModule
-        encodeDefaults = true
-    }
+    override val serializer =
+        Json {
+            serializersModule = FoTermModule + tableauxMoveModule
+            encodeDefaults = true
+        }
     override val stateSerializer = FoTableauxState.serializer()
     override val moveSerializer = TableauxMove.serializer()
 
-    override fun parseFormulaToState(formula: String, params: FoTableauxParam?): FoTableauxState {
+    override fun parseFormulaToState(
+        formula: String,
+        params: FoTableauxParam?,
+    ): FoTableauxState {
         val clauses = FirstOrderCNF.transform(FirstOrderParser.parse(formula))
 
         if (params == null) {
@@ -39,7 +44,10 @@ class FirstOrderTableaux : GenericTableaux<Relation>, JSONCalculus<FoTableauxSta
         )
     }
 
-    override fun applyMoveOnState(state: FoTableauxState, move: TableauxMove): FoTableauxState {
+    override fun applyMoveOnState(
+        state: FoTableauxState,
+        move: TableauxMove,
+    ): FoTableauxState {
         // Reset status message
         state.statusMessage = null
 

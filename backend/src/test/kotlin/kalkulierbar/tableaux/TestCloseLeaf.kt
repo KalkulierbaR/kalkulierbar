@@ -4,9 +4,11 @@ import kalkulierbar.IllegalMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class TestCloseLeaf {
-
     val instance = PropositionalTableaux()
     private val opts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
 
@@ -14,15 +16,16 @@ class TestCloseLeaf {
     fun testApplyCloseValidA() {
         var state = instance.parseFormulaToState("a,b;!b", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "a", false),
-            TableauxNode(0, "b", false),
-            TableauxNode(2, "b", true),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "a", false),
+                TableauxNode(0, "b", false),
+                TableauxNode(2, "b", true),
+            )
         state = createArtificialExpandState(nodes, state)
         state = instance.applyMoveOnState(state, MoveAutoClose(3, 2))
 
-        assertEquals(true, state.tree[3].isClosed)
+        assertTrue(state.tree[3].isClosed)
         assertEquals(2, state.tree[3].closeRef)
         assertEquals(
             "tableauxstate|UNCONNECTED|false|false|false|{a, b}, {!b}|" +
@@ -35,19 +38,20 @@ class TestCloseLeaf {
     fun testApplyCloseValidB() {
         var state = instance.parseFormulaToState("a,b,c;!a;!b;!c", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "b", true),
-            TableauxNode(1, "a", false),
-            TableauxNode(1, "b", false),
-            TableauxNode(1, "c", false),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "b", true),
+                TableauxNode(1, "a", false),
+                TableauxNode(1, "b", false),
+                TableauxNode(1, "c", false),
+            )
         state = createArtificialExpandState(nodes, state)
         state = instance.applyMoveOnState(state, MoveAutoClose(3, 1))
 
-        assertEquals(true, state.tree[3].isClosed)
+        assertTrue(state.tree[3].isClosed)
 
-        assertEquals(false, state.tree[2].isClosed)
-        assertEquals(false, state.tree[4].isClosed)
+        assertFalse(state.tree[2].isClosed)
+        assertFalse(state.tree[4].isClosed)
 
         assertEquals(1, state.tree[3].closeRef)
         assertEquals(
@@ -62,22 +66,23 @@ class TestCloseLeaf {
     fun testApplyCloseValidC() {
         var state = instance.parseFormulaToState("a,b,c;!a;!b;!c", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "a", false),
-            TableauxNode(0, "b", false),
-            TableauxNode(0, "c", false),
-            TableauxNode(1, "a", true),
-            TableauxNode(2, "b", true),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "a", false),
+                TableauxNode(0, "b", false),
+                TableauxNode(0, "c", false),
+                TableauxNode(1, "a", true),
+                TableauxNode(2, "b", true),
+            )
         state = createArtificialExpandState(nodes, state)
 
         state = instance.applyMoveOnState(state, MoveAutoClose(4, 1))
         state = instance.applyMoveOnState(state, MoveAutoClose(5, 2))
 
-        assertEquals(true, state.tree[4].isClosed)
-        assertEquals(true, state.tree[5].isClosed)
+        assertTrue(state.tree[4].isClosed)
+        assertTrue(state.tree[5].isClosed)
 
-        assertEquals(false, state.tree[3].isClosed)
+        assertFalse(state.tree[3].isClosed)
 
         assertEquals(1, state.tree[4].closeRef)
         assertEquals(2, state.tree[5].closeRef)
@@ -110,12 +115,13 @@ class TestCloseLeaf {
     fun testCloseIndexOOB() {
         var state = instance.parseFormulaToState("a,b;c", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "a", false),
-            TableauxNode(0, "b", false),
-            TableauxNode(1, "a", false),
-            TableauxNode(1, "b", false),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "a", false),
+                TableauxNode(0, "b", false),
+                TableauxNode(1, "a", false),
+                TableauxNode(1, "b", false),
+            )
         state = createArtificialExpandState(nodes, state)
 
         val hash = state.getHash()
@@ -135,10 +141,11 @@ class TestCloseLeaf {
     fun testCloseOnNonLeaf() {
         var state = instance.parseFormulaToState("a,b;c", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "c", false),
-            TableauxNode(1, "c", false),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "c", false),
+                TableauxNode(1, "c", false),
+            )
         state = createArtificialExpandState(nodes, state)
 
         val hash = state.getHash()
@@ -158,15 +165,16 @@ class TestCloseLeaf {
     fun testCloseWithNonPath() {
         var state = instance.parseFormulaToState("a,b;!b", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "a", false),
-            TableauxNode(0, "b", false),
-            TableauxNode(1, "a", false),
-            TableauxNode(1, "b", false),
-            TableauxNode(2, "b", true),
-            TableauxNode(5, "a", false),
-            TableauxNode(5, "b", false),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "a", false),
+                TableauxNode(0, "b", false),
+                TableauxNode(1, "a", false),
+                TableauxNode(1, "b", false),
+                TableauxNode(2, "b", true),
+                TableauxNode(5, "a", false),
+                TableauxNode(5, "b", false),
+            )
         state = createArtificialExpandState(nodes, state)
 
         val hash = state.getHash()
@@ -186,10 +194,11 @@ class TestCloseLeaf {
     fun testCloseClosedLeaf() {
         var state = instance.parseFormulaToState("c;!c", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "c", false),
-            TableauxNode(1, "c", true),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "c", false),
+                TableauxNode(1, "c", true),
+            )
         state = createArtificialExpandState(nodes, state)
         state = instance.applyMoveOnState(state, MoveAutoClose(2, 1))
 
@@ -202,10 +211,11 @@ class TestCloseLeaf {
     fun testCloseWrongVariable() {
         var state = instance.parseFormulaToState("a;!c", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "a", false),
-            TableauxNode(1, "c", true),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "a", false),
+                TableauxNode(1, "c", true),
+            )
         state = createArtificialExpandState(nodes, state)
 
         assertFailsWith<IllegalMove> {
@@ -217,9 +227,10 @@ class TestCloseLeaf {
     fun testCloseWithRoot() {
         var state = instance.parseFormulaToState("!true", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "true", true),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "true", true),
+            )
         state = createArtificialExpandState(nodes, state)
 
         assertFailsWith<IllegalMove> {
@@ -231,32 +242,31 @@ class TestCloseLeaf {
     fun testSubtreeCloseMarking() {
         var state = instance.parseFormulaToState("b,a;!b;!a,b", opts)
 
-        val nodes = listOf(
-            TableauxNode(0, "b", false),
-            TableauxNode(0, "a", false),
-            TableauxNode(1, "b", false),
-            TableauxNode(1, "a", false),
-            TableauxNode(2, "b", true),
-            TableauxNode(5, "a", true),
-            TableauxNode(5, "b", false),
-        )
+        val nodes =
+            listOf(
+                TableauxNode(0, "b", false),
+                TableauxNode(0, "a", false),
+                TableauxNode(1, "b", false),
+                TableauxNode(1, "a", false),
+                TableauxNode(2, "b", true),
+                TableauxNode(5, "a", true),
+                TableauxNode(5, "b", false),
+            )
         state = createArtificialExpandState(nodes, state)
 
         state = instance.applyMoveOnState(state, MoveAutoClose(7, 5))
 
-        assertEquals(true, state.tree[7].isClosed)
-        assertEquals(false, state.tree[5].isClosed)
+        assertTrue(state.tree[7].isClosed)
+        assertFalse(state.tree[5].isClosed)
 
         state = instance.applyMoveOnState(state, MoveAutoClose(6, 2))
 
-        println(state.getHash())
-
-        assertEquals(true, state.tree[7].isClosed)
-        assertEquals(true, state.tree[6].isClosed)
-        assertEquals(true, state.tree[5].isClosed)
-        assertEquals(true, state.tree[2].isClosed)
-        assertEquals(false, state.tree[0].isClosed)
-        assertEquals(null, state.tree[5].closeRef)
-        assertEquals(null, state.tree[2].closeRef)
+        assertTrue(state.tree[7].isClosed)
+        assertTrue(state.tree[6].isClosed)
+        assertTrue(state.tree[5].isClosed)
+        assertTrue(state.tree[2].isClosed)
+        assertFalse(state.tree[0].isClosed)
+        assertNull(state.tree[5].closeRef)
+        assertNull(state.tree[2].closeRef)
     }
 }

@@ -1,7 +1,10 @@
 package kalkulierbar.tableaux
 
 // ApplyClose state creation helper function
-fun createArtificialExpandState(nodes: List<TableauxNode>, state: TableauxState): TableauxState {
+fun createArtificialExpandState(
+    nodes: List<TableauxNode>,
+    state: TableauxState,
+): TableauxState {
     state.tree.addAll(nodes)
 
     for (i in nodes.indices) {

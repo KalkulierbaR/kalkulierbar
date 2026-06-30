@@ -12,19 +12,21 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 import kotlin.math.sqrt
 
-class SignedModalTableaux :
-    ScoredCalculus<SignedModalTableauxState, SignedModalTableauxMove, SignedModalTableauxParam>() {
-
-    override val serializer = Json {
-        serializersModule = FoTermModule + LogicModule + SignedModalTableauxMoveModule
-        encodeDefaults = true
-    }
+class SignedModalTableaux : ScoredCalculus<SignedModalTableauxState, SignedModalTableauxMove, SignedModalTableauxParam>() {
+    override val serializer =
+        Json {
+            serializersModule = FoTermModule + LogicModule + SignedModalTableauxMoveModule
+            encodeDefaults = true
+        }
     override val stateSerializer = SignedModalTableauxState.serializer()
     override val moveSerializer = SignedModalTableauxMove.serializer()
 
     override val identifier = "signed-modal-tableaux"
 
-    override fun parseFormulaToState(formula: String, params: SignedModalTableauxParam?): SignedModalTableauxState {
+    override fun parseFormulaToState(
+        formula: String,
+        params: SignedModalTableauxParam?,
+    ): SignedModalTableauxState {
         val signTrue = Regex("^\\s*\\\\sign\\s+T:")
         val signAny = Regex("^\\s*\\\\sign\\s+[FT]:")
 
@@ -123,7 +125,10 @@ class SignedModalTableaux :
      * @return The statistics for the given state
      */
     @Suppress("MagicNumber")
-    override fun scoreFromState(state: SignedModalTableauxState, name: String?): Map<String, String> {
+    override fun scoreFromState(
+        state: SignedModalTableauxState,
+        name: String?,
+    ): Map<String, String> {
         val multiplier = if (state.usedBacktracking) 0.9 else 1.0
         val score = multiplier * ((1 / sqrt(state.moveHistory.size.toDouble())) * 1000)
         return mapOf(

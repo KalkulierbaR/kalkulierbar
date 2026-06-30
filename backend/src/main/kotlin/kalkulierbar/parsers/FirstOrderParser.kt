@@ -18,7 +18,6 @@ import kalkulierbar.logic.UniversalQuantifier
  */
 @Suppress("TooManyFunctions", "ThrowsCount")
 class FirstOrderParser : PropositionalParser() {
-
     companion object {
         val instance = FirstOrderParser()
 
@@ -45,7 +44,10 @@ class FirstOrderParser : PropositionalParser() {
      * @param formula input formula
      * @return LogicNode representing the formula
      */
-    override fun parse(formula: String, positionInBaseString: Int): LogicNode {
+    override fun parse(
+        formula: String,
+        positionInBaseString: Int,
+    ): LogicNode {
         // Clear quantifier scope to avoid problems on instance re-use
         quantifierScope.clear()
         arities.clear()
@@ -119,14 +121,13 @@ class FirstOrderParser : PropositionalParser() {
      * Parses a unary not
      * @return LogicNode representing the negated formula
      */
-    override fun parseNot(): LogicNode {
-        return if (nextTokenIs(TokenType.NOT)) {
+    override fun parseNot(): LogicNode =
+        if (nextTokenIs(TokenType.NOT)) {
             consume()
             Not(parseNot())
         } else {
             parseQuantifier()
         }
-    }
 
     /**
      * Parses a series of 0 or more quantifiers, both existential and universal
@@ -181,8 +182,8 @@ class FirstOrderParser : PropositionalParser() {
      * Parses a parenthesis in a formula
      * @return LogicNode representing the contents of the parenthesis
      */
-    override fun parseParen(): LogicNode {
-        return if (nextTokenIs(TokenType.LPAREN)) {
+    override fun parseParen(): LogicNode =
+        if (nextTokenIs(TokenType.LPAREN)) {
             consume()
             val exp = parseEquiv()
             consume(TokenType.RPAREN)
@@ -190,7 +191,6 @@ class FirstOrderParser : PropositionalParser() {
         } else {
             parseAtomic()
         }
-    }
 
     /**
      * Parses an atomic formula / a relation

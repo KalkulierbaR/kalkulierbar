@@ -24,8 +24,9 @@ import kalkulierbar.logic.UniversalQuantifier
  *       especially if only a subformula is being skolemized
  * @param signature signature of the formula; used to avoid duplicate names skolem constants
  */
-class Skolemization(private val signature: Signature) : DoNothingVisitor() {
-
+class Skolemization(
+    private val signature: Signature,
+) : DoNothingVisitor() {
     companion object Companion {
         /**
          * Skolemize a formula
@@ -128,7 +129,6 @@ class SkolemTermReplacer(
     private val replacementMap: Map<QuantifiedVariable, FirstOrderTerm>,
     private val bindingQuantifiers: List<UniversalQuantifier>,
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
-
     /**
      * Instantiate variables with their Skolem terms as necessary
      * @param node QuantifiedVariable encountered

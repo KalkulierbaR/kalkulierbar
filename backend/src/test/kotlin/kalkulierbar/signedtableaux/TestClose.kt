@@ -3,6 +3,7 @@ package kalkulierbar.signedtableaux
 import kalkulierbar.parsers.ModalLogicParser
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class TestClose {
     val instance = SignedModalTableaux()
@@ -25,7 +26,7 @@ class TestClose {
         val stateTopDown = instance.applyMoveOnState(state, CloseMove(4, 6))
         // val stateDownTop = instance.applyMoveOnState(state, CloseMove(6, 4))
 
-        stateTopDown.tree.forEach { node -> assertEquals(true, node.isClosed) }
-        // stateDownTop.nodes.forEach { node -> assertEquals(true, node.isClosed) }
+        stateTopDown.tree.forEach { node -> assertTrue(node.isClosed) }
+        // stateDownTop.nodes.forEach { node -> assertTrue(node.isClosed) }
     }
 }

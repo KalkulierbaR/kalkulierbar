@@ -11,7 +11,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class TestAndRight {
-
     val instance = PropositionalSequent()
     val parser = PropositionalParser()
 

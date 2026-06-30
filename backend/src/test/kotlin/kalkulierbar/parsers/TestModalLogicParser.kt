@@ -5,69 +5,75 @@ import kalkulierbar.signedtableaux.SignedModalTableaux
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class TestModalLogicParser {
     private val parser = ModalLogicParser()
     private val instance = SignedModalTableaux()
 
-    private val invalid = listOf(
-        "",
-        "-->a",
-        "<--",
-        "--><=>",
-        "!->",
-        "a!",
-        "a-->",
-        "b<=>",
-        "<->a",
-        "<->",
-        "(a&b v2",
-        "(a|b",
-    )
+    private val invalid =
+        listOf(
+            "",
+            "-->a",
+            "<--",
+            "--><=>",
+            "!->",
+            "a!",
+            "a-->",
+            "b<=>",
+            "<->a",
+            "<->",
+            "(a&b v2",
+            "(a|b",
+        )
 
-    private val invalidSigned = listOf(
-        "\\sign B: a",
-        "\\sign T : a",
-        "\\sig n T: a",
-        "\\si gn T: a",
-        "\\s ign T: a",
-        "\\ sign T: a",
-        "\\sign FT: a",
-        "\\signT: a",
-        "\\sign T: a & b \\sign T: a",
-        "a & b \\sign T: a",
-        "a & \\sign T: a",
-        "\\sign TF: a",
-    )
+    private val invalidSigned =
+        listOf(
+            "\\sign B: a",
+            "\\sign T : a",
+            "\\sig n T: a",
+            "\\si gn T: a",
+            "\\s ign T: a",
+            "\\ sign T: a",
+            "\\sign FT: a",
+            "\\signT: a",
+            "\\sign T: a & b \\sign T: a",
+            "a & b \\sign T: a",
+            "a & \\sign T: a",
+            "\\sign TF: a",
+        )
 
-    private val validSigned = listOf(
-        "\\sign T: a" to "a",
-        "\\sign F: a" to "a",
-        "     \\sign T: a" to "a",
-        "     \\sign F: a" to "a",
-        "\\sign       T: a" to "a",
-        "\\sign       F: a" to "a",
-        "\\sign T:      a" to "a",
-        "\\sign F:      a" to "a",
-        "   \\sign       T: a" to "a",
-        "   \\sign       F: a" to "a",
-    )
+    private val validSigned =
+        listOf(
+            "\\sign T: a" to "a",
+            "\\sign F: a" to "a",
+            "     \\sign T: a" to "a",
+            "     \\sign F: a" to "a",
+            "\\sign       T: a" to "a",
+            "\\sign       F: a" to "a",
+            "\\sign T:      a" to "a",
+            "\\sign F:      a" to "a",
+            "   \\sign       T: a" to "a",
+            "   \\sign       F: a" to "a",
+        )
 
-    private val valid = mapOf(
-        "a" to "a",
-        "!a" to "¬a",
-        "a -> b" to "(a → b)",
-        "a-> b" to "(a → b)",
-        "a    ->b" to "(a → b)",
-        "a->b" to "(a → b)",
-        "a<->(b -> (!(c)))" to "(a <=> (b → ¬c))",
-        "(b & a <-> (a) | !b)" to "((b ∧ a) <=> (a ∨ ¬b))",
-        "[]a" to "□a",
-        "[](a&b)" to "□(a ∧ b)",
-        "<>(a&b)" to "◇(a ∧ b)",
-        "[]<>(a)" to "□◇a",
-        "[][](a)" to "□□a",
-    )
+    private val valid =
+        mapOf(
+            "a" to "a",
+            "!a" to "¬a",
+            "a -> b" to "(a → b)",
+            "a-> b" to "(a → b)",
+            "a    ->b" to "(a → b)",
+            "a->b" to "(a → b)",
+            "a<->(b -> (!(c)))" to "(a <=> (b → ¬c))",
+            "(b & a <-> (a) | !b)" to "((b ∧ a) <=> (a ∨ ¬b))",
+            "[]a" to "□a",
+            "[](a&b)" to "□(a ∧ b)",
+            "<>(a&b)" to "◇(a ∧ b)",
+            "[]<>(a)" to "□◇a",
+            "[][](a)" to "□□a",
+        )
 
     @Test
     fun testInvalidStrings() {
@@ -100,9 +106,9 @@ class TestModalLogicParser {
             val state = instance.parseFormulaToState(formula, null)
             assertEquals(expected, state.tree[0].formula.toString())
             if (formula.contains("T")) {
-                assertEquals(true, state.assumption)
+                assertTrue(state.assumption)
             } else {
-                assertEquals(false, state.assumption)
+                assertFalse(state.assumption)
             }
         }
     }

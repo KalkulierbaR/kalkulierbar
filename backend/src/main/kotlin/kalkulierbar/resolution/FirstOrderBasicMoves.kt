@@ -44,8 +44,8 @@ fun resolveMove(
         } catch (e: UnificationImpossible) {
             throw IllegalMove("Could not unify '$literal1' and '$literal2': ${e.message}")
         }
-    } // Else check varAssign == mgu
-    else {
+    } else {
+        // Else check varAssign == mgu
         val sig = Signature.of(state.clauseSet)
         unifier.values.forEach { sig.check(it) }
         if (!UnifierEquivalence.isMGUorNotUnifiable(unifier, literal1, literal2)) {
@@ -57,7 +57,10 @@ fun resolveMove(
     val instance1 = state.clauseSet.clauses.size - 1
     instantiate(state, c2, unifier)
     val instance2 = state.clauseSet.clauses.size - 1
-    val literal = state.clauseSet.clauses[instance1].atoms[c1lit].lit
+    val literal =
+        state.clauseSet.clauses[instance1]
+            .atoms[c1lit]
+            .lit
 
     state.resolve(instance1, instance2, literal, true)
 
@@ -136,7 +139,11 @@ private fun instantiateReturn(
  * @param atomIDs List of IDs of literals for unification (The literals should be equal)
  */
 @Suppress("ThrowsCount")
-fun factorize(state: FoResolutionState, clauseID: Int, atomIDs: List<Int>) {
+fun factorize(
+    state: FoResolutionState,
+    clauseID: Int,
+    atomIDs: List<Int>,
+) {
     val clauses = state.clauseSet.clauses
 
     // Verify that clause id is valid
@@ -237,12 +244,13 @@ fun hyper(
         val sidePremiss = clauses[sClauseID]
 
         val newSidePremis = instantiateReturn(sidePremiss, mgu)
-        newMainPremiss = buildClause(
-            newMainPremiss,
-            instantiateReturn(mainPremiss.atoms[mAtomID], mgu),
-            newSidePremis,
-            newSidePremis.atoms[sAtomID],
-        )
+        newMainPremiss =
+            buildClause(
+                newMainPremiss,
+                instantiateReturn(mainPremiss.atoms[mAtomID], mgu),
+                newSidePremis,
+                newSidePremis.atoms[sAtomID],
+            )
     }
 
     // Check there are no negative atoms anymore
@@ -262,7 +270,11 @@ fun hyper(
  * @return Mapping to unify whole clause
  */
 @Suppress("ThrowsCount")
-private fun unifySingleClause(clause: Clause<Relation>, a1: Int, a2: Int): Map<String, FirstOrderTerm> {
+private fun unifySingleClause(
+    clause: Clause<Relation>,
+    a1: Int,
+    a2: Int,
+): Map<String, FirstOrderTerm> {
     val atoms = clause.atoms
     // Verify that atom ids are valid
     if (a1 == a2) {

@@ -15,7 +15,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestAdmin {
-
     private val date = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(Instant.now())!!
     private val key = "WildFlowers/UncomfortableMoons"
 
@@ -125,32 +124,38 @@ class TestAdmin {
 
     @Test
     fun testExamples() {
-        var example = """{"name": "example1", "description": "Does some stuff", 
-            |"calculus": "fo-resolution","formula": "/ex X: R(X)", "params": "Some params here"}"""
-            .trimMargin()
+        var example =
+            """{"name": "example1", "description": "Does some stuff", 
+            |"calculus": "fo-resolution","formula": "/ex X: R(X)", "params": "Some params here"}
+            """.trimMargin()
         var fingerprint = "kbae|$example"
         var payloadWithKey = "$fingerprint|$date|$key"
         var mac = toHex(payloadWithKey.digestKeccak(parameter = KeccakParameter.SHA3_256))
         StateKeeper.addExample(example, mac)
-        var expected = """{"disabled": [], "examples": 
+        var expected =
+            """{"disabled": [], "examples": 
             |[{"name":"example1","description":"Does some stuff",
-            |"calculus":"fo-resolution","formula":"/ex X: R(X)","params":"Some params here"}]}"""
-            .trimMargin().replace("\n", "")
+            |"calculus":"fo-resolution","formula":"/ex X: R(X)","params":"Some params here"}]}
+            """.trimMargin()
+                .replace("\n", "")
         assertEquals(expected, StateKeeper.getConfig())
 
-        example = """{"name": "example2", "description": "Does some crazy stuff", 
-            |"calculus": "fo-tableaux","formula": "/all X: P(X)", "params": "Some params here"}"""
-            .trimMargin()
+        example =
+            """{"name": "example2", "description": "Does some crazy stuff", 
+            |"calculus": "fo-tableaux","formula": "/all X: P(X)", "params": "Some params here"}
+            """.trimMargin()
         fingerprint = "kbae|$example"
         payloadWithKey = "$fingerprint|$date|$key"
         mac = toHex(payloadWithKey.digestKeccak(parameter = KeccakParameter.SHA3_256))
         StateKeeper.addExample(example, mac)
-        expected = """{"disabled": [], "examples":
+        expected =
+            """{"disabled": [], "examples":
             | [{"name":"example1","description":"Does some stuff","calculus":"fo-resolution",
             |"formula":"/ex X: R(X)","params":"Some params here"}, 
             |{"name":"example2","description":"Does some crazy stuff",
-            |"calculus":"fo-tableaux","formula":"/all X: P(X)","params":"Some params here"}]}"""
-            .trimMargin().replace("\n", "")
+            |"calculus":"fo-tableaux","formula":"/all X: P(X)","params":"Some params here"}]}
+            """.trimMargin()
+                .replace("\n", "")
         assertEquals(expected, StateKeeper.getConfig())
 
         // Wrong ID
@@ -184,19 +189,22 @@ class TestAdmin {
         payloadWithKey = "$fingerprint|$date|$key"
         mac = toHex(payloadWithKey.digestKeccak(parameter = KeccakParameter.SHA3_256))
         StateKeeper.delExample(exampleIdString, mac)
-        expected = """{"disabled": [], "examples": 
+        expected =
+            """{"disabled": [], "examples": 
             |[{"name":"example2","description":"Does some crazy stuff",
-            |"calculus":"fo-tableaux","formula":"/all X: P(X)","params":"Some params here"}]}"""
-            .trimMargin().replace("\n", "")
+            |"calculus":"fo-tableaux","formula":"/all X: P(X)","params":"Some params here"}]}
+            """.trimMargin()
+                .replace("\n", "")
         assertEquals(expected, StateKeeper.getConfig())
     }
 
     @Test
     fun testInvalidExample() {
         // Missing field
-        var example = """{"name": "example1", "calculus": "fo-resolution",
+        var example =
+            """{"name": "example1", "calculus": "fo-resolution",
             |"formula": "/ex X: R(X)", "params": "Some params here"}
-        """.trimMargin()
+            """.trimMargin()
         var fingerprint = "kbae|$example"
         var payloadWithKey = "$fingerprint|$date|$key"
         var mac = toHex(payloadWithKey.digestKeccak(parameter = KeccakParameter.SHA3_256))
@@ -205,9 +213,10 @@ class TestAdmin {
         }
 
         // Wrong mac
-        example = """{"name": "example1", "description": "Does some stuff", 
-            |"calculus": "fo-resolution","formula": "/ex X: R(X)", "params": "Some params here"}"""
-            .trimMargin()
+        example =
+            """{"name": "example1", "description": "Does some stuff", 
+            |"calculus": "fo-resolution","formula": "/ex X: R(X)", "params": "Some params here"}
+            """.trimMargin()
         fingerprint = "kbae|$example"
         payloadWithKey = "$fingerprint|20200101|$key"
         mac = toHex(payloadWithKey.digestKeccak(parameter = KeccakParameter.SHA3_256))

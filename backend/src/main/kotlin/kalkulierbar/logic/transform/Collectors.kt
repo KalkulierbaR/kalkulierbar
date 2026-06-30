@@ -12,7 +12,6 @@ import kalkulierbar.logic.UniversalQuantifier
  * Collects free variables in a logic-node formula structure
  */
 class FreeVariableCollector : DoNothingCollector() {
-
     companion object {
         private val instance = FreeVariableCollector()
 
@@ -57,9 +56,7 @@ class FreeVariableCollector : DoNothingCollector() {
 class FreeVariableTermCollector(
     val boundVariables: Set<QuantifiedVariable>,
 ) : FirstOrderTermVisitor<Set<QuantifiedVariable>>() {
-    override fun visit(node: Constant): Set<QuantifiedVariable> {
-        return mutableSetOf()
-    }
+    override fun visit(node: Constant): Set<QuantifiedVariable> = mutableSetOf()
 
     override fun visit(node: QuantifiedVariable): Set<QuantifiedVariable> {
         // return node if free

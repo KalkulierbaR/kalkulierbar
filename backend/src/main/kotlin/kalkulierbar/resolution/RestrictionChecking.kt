@@ -9,7 +9,11 @@ import kalkulierbar.IllegalMove
  * @param atomMap Maps an atom of the main premiss to an atom of a side premiss
  */
 @Suppress("ThrowsCount")
-fun <AtomType> checkHyperID(state: GenericResolutionState<AtomType>, clauseID: Int, atomMap: Map<Int, Pair<Int, Int>>) {
+fun <AtomType> checkHyperID(
+    state: GenericResolutionState<AtomType>,
+    clauseID: Int,
+    atomMap: Map<Int, Pair<Int, Int>>,
+) {
     val clauses = state.clauseSet.clauses
 
     // Check for valid clause id
@@ -35,7 +39,13 @@ fun <AtomType> checkHyperID(state: GenericResolutionState<AtomType>, clauseID: I
 }
 
 @Suppress("ThrowsCount")
-fun resolveCheckID(state: FoResolutionState, c1: Int, c2: Int, c1lit: Int, c2lit: Int) {
+fun resolveCheckID(
+    state: FoResolutionState,
+    c1: Int,
+    c2: Int,
+    c1lit: Int,
+    c2lit: Int,
+) {
     if (c1 < 0 || c1 >= state.clauseSet.clauses.size) {
         throw IllegalMove("There is no clause with id $c1")
     }

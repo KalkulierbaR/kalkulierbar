@@ -11,7 +11,6 @@ import kalkulierbar.logic.LogicNode
  */
 class SkolemNormalForm {
     companion object Companion {
-
         /**
          * Apply the SNF transformation to a formula
          * @param formula Formula to transform

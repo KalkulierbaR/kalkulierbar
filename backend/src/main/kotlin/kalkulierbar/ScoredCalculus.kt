@@ -9,7 +9,10 @@ abstract class ScoredCalculus<State, Move, Param> : JSONCalculus<State, Move, Pa
      * @param name the name of the user
      * @return The score for the given state
      */
-    abstract fun scoreFromState(state: State, name: String?): Map<String, String>
+    abstract fun scoreFromState(
+        state: State,
+        name: String?,
+    ): Map<String, String>
 
     /**
      * Returns the initial formula of the state.
@@ -24,7 +27,10 @@ abstract class ScoredCalculus<State, Move, Param> : JSONCalculus<State, Move, Pa
      * @param name the name of the user
      * @return The score for the given state
      */
-    fun getScore(json: String, name: String?): Map<String, String> {
+    fun getScore(
+        json: String,
+        name: String?,
+    ): Map<String, String> {
         val state = jsonToState(json)
         if (!checkCloseOnState(state).closed) {
             throw IllegalMove("Cannot get score for unclosed proof")

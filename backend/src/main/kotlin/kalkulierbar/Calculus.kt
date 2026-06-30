@@ -18,7 +18,10 @@ interface Calculus {
      * @param params optional parameters for the calculus
      * @return complete state representation of the input formula
      */
-    fun parseFormula(formula: String, params: String?): String
+    fun parseFormula(
+        formula: String,
+        params: String?,
+    ): String
 
     /**
      * Takes a state representation and evaluates whether it is a valid state
@@ -34,7 +37,10 @@ interface Calculus {
      * @param move move to apply in the given state
      * @return state representation after move was applied
      */
-    fun applyMove(state: String, move: String): String
+    fun applyMove(
+        state: String,
+        move: String,
+    ): String
 
     /**
      * Checks if a given state represents a valid, closed proof.

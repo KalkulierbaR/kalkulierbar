@@ -11,43 +11,39 @@ import kalkulierbar.logic.Not
  * box and diamond.
  */
 class ModalLogicParser : PropositionalParser() {
-
     /**
      * Parses a unary not
      * @return LogicNode representing the negated formula
      */
-    override fun parseNot(): LogicNode {
-        return if (nextTokenIs(TokenType.NOT)) {
+    override fun parseNot(): LogicNode =
+        if (nextTokenIs(TokenType.NOT)) {
             consume()
             Not(parseParen())
         } else {
             parseBox()
         }
-    }
 
     /**
      * Parses a unary always
      * @return LogicNode representing the negated formula
      */
-    private fun parseBox(): LogicNode {
-        return if (nextTokenIs(TokenType.BOX)) {
+    private fun parseBox(): LogicNode =
+        if (nextTokenIs(TokenType.BOX)) {
             consume()
             Box(parseBox())
         } else {
             parseDiamond()
         }
-    }
 
     /**
      * Parses a unary sometimes
      * @return LogicNode representing the negated formula
      */
-    private fun parseDiamond(): LogicNode {
-        return if (nextTokenIs(TokenType.DIAMOND)) {
+    private fun parseDiamond(): LogicNode =
+        if (nextTokenIs(TokenType.DIAMOND)) {
             consume()
             Diamond(parseBox())
         } else {
             parseParen()
         }
-    }
 }

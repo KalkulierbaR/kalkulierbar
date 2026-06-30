@@ -6,20 +6,20 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestDimacsLikeParser {
-
     private val invalidStrings = listOf("", " a", "0 a", "a b  0 c", "a b ", "a 0 0 b c 0 d", "--a", "a --b 0 c", "a -", "a 0 0")
 
-    val valid = listOf(
-        Pair("a", "{a}"),
-        Pair("-a", "{!a}"),
-        Pair("a 0 b", "{a}, {b}"),
-        Pair("a b", "{a, b}"),
-        Pair("a b 0 c", "{a, b}, {c}"),
-        Pair("a\n 0 b", "{a}, {b}"),
-        Pair("a 0 b 0", "{a}, {b}"),
-        Pair("fUnkYvAR 0 -McVariable thefirst", "{fUnkYvAR}, {!McVariable, thefirst}"),
-        Pair("1 -2 0 3", "{1, !2}, {3}"),
-    )
+    val valid =
+        listOf(
+            Pair("a", "{a}"),
+            Pair("-a", "{!a}"),
+            Pair("a 0 b", "{a}, {b}"),
+            Pair("a b", "{a, b}"),
+            Pair("a b 0 c", "{a, b}, {c}"),
+            Pair("a\n 0 b", "{a}, {b}"),
+            Pair("a 0 b 0", "{a}, {b}"),
+            Pair("fUnkYvAR 0 -McVariable thefirst", "{fUnkYvAR}, {!McVariable, thefirst}"),
+            Pair("1 -2 0 3", "{1, !2}, {3}"),
+        )
 
     @Test
     fun testInvalidStrings() {

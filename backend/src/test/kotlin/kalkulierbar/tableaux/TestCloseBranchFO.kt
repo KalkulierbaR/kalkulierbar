@@ -7,24 +7,25 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestCloseBranchFO {
-
     val instance = FirstOrderTableaux()
     private val param = FoTableauxParam(TableauxType.UNCONNECTED, true, backtracking = false, manualVarAssign = true)
-    private val paramNotReg = FoTableauxParam(
-        TableauxType.UNCONNECTED,
-        regular = false,
-        backtracking = false,
-        manualVarAssign = true,
-    )
+    private val paramNotReg =
+        FoTableauxParam(
+            TableauxType.UNCONNECTED,
+            regular = false,
+            backtracking = false,
+            manualVarAssign = true,
+        )
     private var states = mutableListOf<FoTableauxState>()
     private var notRegStates = mutableListOf<FoTableauxState>()
 
-    val formula = listOf(
-        "\\all X: R(X) & R(c) & !R(c)",
-        "\\all X: \\ex Y: R(X,Y) & \\ex Z: \\all W: !R(Z, W)", // R(X, sk1(X)), !R(sk2, W)
-        "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
-        "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))",
-    )
+    val formula =
+        listOf(
+            "\\all X: R(X) & R(c) & !R(c)",
+            "\\all X: \\ex Y: R(X,Y) & \\ex Z: \\all W: !R(Z, W)", // R(X, sk1(X)), !R(sk2, W)
+            "\\all A: (\\all B: (R(A) -> R(B) & !R(A) | !R(B)))",
+            "\\all A: (R(A) -> !\\ex B: (R(A) & !R(B) -> R(B) | R(A)))",
+        )
 
     @BeforeTest
     fun createStates() {
@@ -116,13 +117,5 @@ class TestCloseBranchFO {
         assertEquals(state.tree[5].closeRef, 2)
         assertEquals(state.tree[6].isClosed, true)
         assertEquals(state.tree[6].closeRef, 2)
-    }
-
-    // Prints ClauseSet of each state
-    @Test
-    fun printStateClauseSet() {
-        for (state in states) {
-            println(state.clauseSet.toString())
-        }
     }
 }

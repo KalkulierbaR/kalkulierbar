@@ -4,9 +4,10 @@ import kalkulierbar.IllegalMove
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class TestSplit {
-
     private val dpll = DPLL()
 
     @Test
@@ -28,12 +29,26 @@ class TestSplit {
         assertEquals(0, state.tree[1].parent)
         assertEquals(0, state.tree[2].parent)
 
-        assertEquals(false, state.tree[0].isLeaf)
-        assertEquals(true, state.tree[1].isLeaf)
-        assertEquals(true, state.tree[2].isLeaf)
+        assertFalse(state.tree[0].isLeaf)
+        assertTrue(state.tree[1].isLeaf)
+        assertTrue(state.tree[2].isLeaf)
 
-        assertEquals("[{!a, b, c}, {c}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{!a, b, c}, {!c}]", state.tree[2].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals(
+            "[{!a, b, c}, {c}]",
+            state.tree[1]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
+        assertEquals(
+            "[{!a, b, c}, {!c}]",
+            state.tree[2]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
     }
 
     @Test
@@ -57,24 +72,43 @@ class TestSplit {
         assertEquals(1, state.tree[3].parent)
         assertEquals(1, state.tree[4].parent)
 
-        assertEquals(false, state.tree[0].isLeaf)
-        assertEquals(false, state.tree[1].isLeaf)
-        assertEquals(true, state.tree[2].isLeaf)
-        assertEquals(true, state.tree[3].isLeaf)
-        assertEquals(true, state.tree[4].isLeaf)
+        assertFalse(state.tree[0].isLeaf)
+        assertFalse(state.tree[1].isLeaf)
+        assertTrue(state.tree[2].isLeaf)
+        assertTrue(state.tree[3].isLeaf)
+        assertTrue(state.tree[4].isLeaf)
 
-        assertEquals("[{!a}, {b, c}, {b}, {a}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals(
+            "[{!a}, {b, c}, {b}, {a}]",
+            state.tree[1]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
         assertEquals(
             "[{!a}, {b, c}, {b}, {!a}]",
-            state.tree[2].diff.apply(state.clauseSet).clauses.toString(),
+            state.tree[2]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
         )
         assertEquals(
             "[{!a}, {b, c}, {b}, {b}]",
-            state.tree[3].diff.apply(state.clauseSet).clauses.toString(),
+            state.tree[3]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
         )
         assertEquals(
             "[{!a}, {b, c}, {b}, {!b}]",
-            state.tree[4].diff.apply(state.clauseSet).clauses.toString(),
+            state.tree[4]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
         )
     }
 
@@ -95,12 +129,26 @@ class TestSplit {
         assertEquals(0, state.tree[1].parent)
         assertEquals(0, state.tree[2].parent)
 
-        assertEquals(false, state.tree[0].isLeaf)
-        assertEquals(true, state.tree[1].isLeaf)
-        assertEquals(true, state.tree[2].isLeaf)
+        assertFalse(state.tree[0].isLeaf)
+        assertTrue(state.tree[1].isLeaf)
+        assertTrue(state.tree[2].isLeaf)
 
-        assertEquals("[{a, b, c}, {42}]", state.tree[1].diff.apply(state.clauseSet).clauses.toString())
-        assertEquals("[{a, b, c}, {!42}]", state.tree[2].diff.apply(state.clauseSet).clauses.toString())
+        assertEquals(
+            "[{a, b, c}, {42}]",
+            state.tree[1]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
+        assertEquals(
+            "[{a, b, c}, {!42}]",
+            state.tree[2]
+                .diff
+                .apply(state.clauseSet)
+                .clauses
+                .toString(),
+        )
     }
 
     @Test

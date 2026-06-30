@@ -9,8 +9,9 @@ import kalkulierbar.logic.Relation
  * class to instantiate variables in a logic-node formula
  * @param replacementMap Map of variable instantiations to perform
  */
-class LogicNodeVariableInstantiator(private val replacementMap: Map<String, FirstOrderTerm>) : DoNothingVisitor() {
-
+class LogicNodeVariableInstantiator(
+    private val replacementMap: Map<String, FirstOrderTerm>,
+) : DoNothingVisitor() {
     companion object {
         /**
          * Instantiate the variables given in the map with their respective FO Term replacements
@@ -19,7 +20,10 @@ class LogicNodeVariableInstantiator(private val replacementMap: Map<String, Firs
          * @param map Map of variable instantiations to perform
          * @return Term with instantiations applied
          */
-        fun transform(formula: LogicNode, map: Map<String, FirstOrderTerm>): LogicNode {
+        fun transform(
+            formula: LogicNode,
+            map: Map<String, FirstOrderTerm>,
+        ): LogicNode {
             val instance = LogicNodeVariableInstantiator(map)
             return formula.accept(instance)
         }
@@ -37,10 +41,10 @@ class LogicNodeVariableInstantiator(private val replacementMap: Map<String, Firs
  * LogicNode visitor to re-name Quantified Variables in formula
  * @param replacementMap Map of all variables to replace and their new Variable name
  */
-class SelectiveSuffixAppender(private val replacementMap: Map<QuantifiedVariable, String>) : DoNothingVisitor() {
-
+class SelectiveSuffixAppender(
+    private val replacementMap: Map<QuantifiedVariable, String>,
+) : DoNothingVisitor() {
     companion object Companion {
-
         /**
          * Re-name variables in a given formula
          * @param formula Formula to transform
@@ -48,7 +52,11 @@ class SelectiveSuffixAppender(private val replacementMap: Map<QuantifiedVariable
          * @param suffix: suffix to be added to selected quantified variables
          * @return Equivalent formula with possibly different variable names
          */
-        fun transform(formula: LogicNode, vars: List<QuantifiedVariable>, suffix: String): LogicNode {
+        fun transform(
+            formula: LogicNode,
+            vars: List<QuantifiedVariable>,
+            suffix: String,
+        ): LogicNode {
             val map = vars.associateWith { it.spelling + suffix }
             val instance = SelectiveSuffixAppender(map)
             return formula.accept(instance)

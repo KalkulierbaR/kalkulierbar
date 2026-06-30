@@ -5,20 +5,21 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 class TestConnectednessFO {
-
     val instance = FirstOrderTableaux()
-    private val weak = FoTableauxParam(
-        TableauxType.WEAKLYCONNECTED,
-        regular = false,
-        backtracking = true,
-        manualVarAssign = false,
-    )
-    private val strong = FoTableauxParam(
-        TableauxType.STRONGLYCONNECTED,
-        regular = false,
-        backtracking = true,
-        manualVarAssign = false,
-    )
+    private val weak =
+        FoTableauxParam(
+            TableauxType.WEAKLYCONNECTED,
+            regular = false,
+            backtracking = true,
+            manualVarAssign = false,
+        )
+    private val strong =
+        FoTableauxParam(
+            TableauxType.STRONGLYCONNECTED,
+            regular = false,
+            backtracking = true,
+            manualVarAssign = false,
+        )
 
     /*
         Test strong connectedness

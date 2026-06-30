@@ -10,7 +10,6 @@ import kalkulierbar.logic.transform.FirstOrderTermVisitor
 
 class UnifierEquivalence {
     companion object {
-
         /**
          * Checks if a given unifier an MGU
          * Note: This will ALSO return true if there is no MGU for the given relations
@@ -19,7 +18,11 @@ class UnifierEquivalence {
          * @param r2 Second Relation to unify
          * @return true iff the unifier is an MGU or no MGU exists for the given relations
          */
-        fun isMGUorNotUnifiable(unifier: Map<String, FirstOrderTerm>, r1: Relation, r2: Relation): Boolean {
+        fun isMGUorNotUnifiable(
+            unifier: Map<String, FirstOrderTerm>,
+            r1: Relation,
+            r2: Relation,
+        ): Boolean {
             val mgu: Map<String, FirstOrderTerm>
 
             try {
@@ -39,7 +42,10 @@ class UnifierEquivalence {
          * @param u2 Second unifier
          * @return true iff a variable renaming scheme exists under which u1 and u2 are equal
          */
-        fun equiv(u1: Map<String, FirstOrderTerm>, u2: Map<String, FirstOrderTerm>): Boolean {
+        fun equiv(
+            u1: Map<String, FirstOrderTerm>,
+            u2: Map<String, FirstOrderTerm>,
+        ): Boolean {
             val termPairs = mutableListOf<Pair<FirstOrderTerm, FirstOrderTerm>>()
             val keys = u1.keys.union(u2.keys)
 
@@ -61,9 +67,7 @@ class UnifierEquivalence {
          * @param list List of pairs of terms to rename
          * @return List of pairs of terms with canonical names applied
          */
-        private fun canonicalVarNames(
-            list: List<Pair<FirstOrderTerm, FirstOrderTerm>>,
-        ): List<Pair<FirstOrderTerm, FirstOrderTerm>> {
+        private fun canonicalVarNames(list: List<Pair<FirstOrderTerm, FirstOrderTerm>>): List<Pair<FirstOrderTerm, FirstOrderTerm>> {
             val canon1 = VariableCanonicizer()
             val canon2 = VariableCanonicizer()
 
@@ -82,7 +86,6 @@ class UnifierEquivalence {
  *          are unsure whether this might be a problem.
  */
 class VariableCanonicizer : FirstOrderTermVisitor<FirstOrderTerm>() {
-
     private var counter = 0
     private val replacements = mutableMapOf<String, String>()
 

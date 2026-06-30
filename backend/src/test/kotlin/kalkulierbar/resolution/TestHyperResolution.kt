@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestHyperResolution {
-
     private val prop = PropositionalResolution()
     private val fo = FirstOrderResolution()
 
@@ -110,11 +109,12 @@ class TestHyperResolution {
 
     @Test
     fun testFoIndexChecks() {
-        val state = fo.parseFormulaToState(
-            "(S(a) | !S(b) | !S(c) | !S(d)) & (R(b) " +
-                "| R(c)) & (Q(c) | Q(k)) & (P(d) | P(g) | P(h))",
-            null,
-        )
+        val state =
+            fo.parseFormulaToState(
+                "(S(a) | !S(b) | !S(c) | !S(d)) & (R(b) " +
+                    "| R(c)) & (Q(c) | Q(k)) & (P(d) | P(g) | P(h))",
+                null,
+            )
 
         assertFailsWith<IllegalMove> {
             fo.applyMoveOnState(state, MoveHyper(-1, mapOf()))
@@ -177,11 +177,12 @@ class TestHyperResolution {
 
     @Test
     fun testFoValidB() {
-        var state = fo.parseFormulaToState(
-            "/all X: (R(a) | !R(X) | R(X) | R(d)) & (R(e) " +
-                "| R(f) | R(b) | R(g))",
-            null,
-        )
+        var state =
+            fo.parseFormulaToState(
+                "/all X: (R(a) | !R(X) | R(X) | R(d)) & (R(e) " +
+                    "| R(f) | R(b) | R(g))",
+                null,
+            )
         state = fo.applyMoveOnState(state, MoveHyper(0, mapOf(1 to Pair(1, 2))))
 
         assertEquals(
@@ -193,12 +194,13 @@ class TestHyperResolution {
 
     @Test
     fun aTPError() {
-        var state = fo.parseFormulaToState(
-            "F(a) & !G(a) & /all W:(!F(W) " +
-                "| H(W)) & /all Z:(!J(Z) | !I(Z) | F(Z)) & /all X: /all Y:(!H(X) " +
-                "| G(X) | !H(Y) | !I(Y)) & J(b) & I(b)",
-            null,
-        )
+        var state =
+            fo.parseFormulaToState(
+                "F(a) & !G(a) & /all W:(!F(W) " +
+                    "| H(W)) & /all Z:(!J(Z) | !I(Z) | F(Z)) & /all X: /all Y:(!H(X) " +
+                    "| G(X) | !H(Y) | !I(Y)) & J(b) & I(b)",
+                null,
+            )
         state = fo.applyMoveOnState(state, MoveHyper(3, mapOf(0 to Pair(5, 0), 1 to Pair(6, 0))))
 
         assertEquals(

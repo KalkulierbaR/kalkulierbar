@@ -11,41 +11,50 @@ import kotlinx.serialization.modules.subclass
 
 // Context object for move serialization
 // Tells kotlinx.serialize about child types of NcTableauxMove
-val NcMoveModule = SerializersModule {
-    polymorphic(NcTableauxMove::class) {
-        subclass(AlphaMove::class)
-        subclass(BetaMove::class)
-        subclass(GammaMove::class)
-        subclass(DeltaMove::class)
-        subclass(CloseMove::class)
-        subclass(UndoMove::class)
+val NcMoveModule =
+    SerializersModule {
+        polymorphic(NcTableauxMove::class) {
+            subclass(AlphaMove::class)
+            subclass(BetaMove::class)
+            subclass(GammaMove::class)
+            subclass(DeltaMove::class)
+            subclass(CloseMove::class)
+            subclass(UndoMove::class)
+        }
     }
-}
 
 @Serializable
 abstract class NcTableauxMove
 
 @Serializable
 @SerialName("alpha")
-class AlphaMove(val nodeID: Int) : NcTableauxMove() {
+class AlphaMove(
+    val nodeID: Int,
+) : NcTableauxMove() {
     override fun toString() = "(alpha|$nodeID)"
 }
 
 @Serializable
 @SerialName("beta")
-class BetaMove(val nodeID: Int) : NcTableauxMove() {
+class BetaMove(
+    val nodeID: Int,
+) : NcTableauxMove() {
     override fun toString() = "(beta|$nodeID)"
 }
 
 @Serializable
 @SerialName("gamma")
-class GammaMove(val nodeID: Int) : NcTableauxMove() {
+class GammaMove(
+    val nodeID: Int,
+) : NcTableauxMove() {
     override fun toString() = "(gamma|$nodeID)"
 }
 
 @Serializable
 @SerialName("delta")
-class DeltaMove(val nodeID: Int) : NcTableauxMove() {
+class DeltaMove(
+    val nodeID: Int,
+) : NcTableauxMove() {
     override fun toString() = "(delta|$nodeID)"
 }
 

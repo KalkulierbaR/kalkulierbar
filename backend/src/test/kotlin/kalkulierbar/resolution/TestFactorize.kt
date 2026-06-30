@@ -7,7 +7,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestFactorize {
-
     private val prop = PropositionalResolution()
     private val fo = FirstOrderResolution()
 

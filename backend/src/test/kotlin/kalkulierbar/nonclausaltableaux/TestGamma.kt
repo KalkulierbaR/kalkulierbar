@@ -7,7 +7,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestGamma {
-
     val instance = NonClausalTableaux()
 
     @Test

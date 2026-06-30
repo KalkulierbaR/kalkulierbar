@@ -21,7 +21,8 @@ class FoTableauxState(
     override val regular: Boolean = false,
     override val backtracking: Boolean = false,
     val manualVarAssign: Boolean = false,
-) : GenericTableauxState<Relation>, ProtectedState() {
+) : ProtectedState(),
+    GenericTableauxState<Relation> {
     override val tree = mutableListOf(FoTableauxNode(null, Relation("true", listOf()), false))
     val moveHistory = mutableListOf<TableauxMove>()
     override var usedBacktracking = false
@@ -89,7 +90,10 @@ class FoTableauxState(
      * @return true iff the ancestry contains a suitable unification partner
      */
     @Suppress("EmptyCatchBlock")
-    private fun nodeAncestryContainsUnifiable(nodeID: Int, atom: Atom<Relation>): Boolean {
+    private fun nodeAncestryContainsUnifiable(
+        nodeID: Int,
+        atom: Atom<Relation>,
+    ): Boolean {
         var node = tree[nodeID]
 
         // Walk up the tree from start node
@@ -100,7 +104,8 @@ class FoTableauxState(
                 try {
                     Unification.unify(node.relation, atom.lit)
                     return true
-                } catch (e: UnificationImpossible) {}
+                } catch (e: UnificationImpossible) {
+                }
             }
         }
 
@@ -154,7 +159,6 @@ class FoTableauxNode(
     override val negated: Boolean,
     override val lemmaSource: Int? = null,
 ) : GenericTableauxNode<Relation> {
-
     override var isClosed = false
     override var closeRef: Int? = null
     override val children = mutableListOf<Int>()
@@ -163,9 +167,7 @@ class FoTableauxNode(
     override val literalStem
         get() = "${relation.spelling}${relation.arguments.size}"
 
-    override fun toString(): String {
-        return if (negated) "!$relation" else "$relation"
-    }
+    override fun toString(): String = if (negated) "!$relation" else "$relation"
 
     override fun toAtom() = Atom(relation.clone(), negated)
 

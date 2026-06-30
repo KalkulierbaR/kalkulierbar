@@ -52,12 +52,13 @@ interface GenericResolutionState<AtomType> {
         val c2 = clauses[clause2]
 
         // If the frontend did not pass a resolution target, we'll try to find one ourselves
-        val resCandidates = if (literal == null) {
-            getAutoResolutionCandidates(c1, c2)
-        } else {
-            // Filter clauses for atoms with correct literal
-            filterClause(c1, c2, literal)
-        }
+        val resCandidates =
+            if (literal == null) {
+                getAutoResolutionCandidates(c1, c2)
+            } else {
+                // Filter clauses for atoms with correct literal
+                filterClause(c1, c2, literal)
+            }
 
         val (a1, a2) = resCandidates
 
@@ -93,5 +94,7 @@ interface GenericResolutionState<AtomType> {
 }
 
 enum class VisualHelp {
-    NONE, HIGHLIGHT, REARRANGE
+    NONE,
+    HIGHLIGHT,
+    REARRANGE,
 }

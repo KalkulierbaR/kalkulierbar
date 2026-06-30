@@ -6,7 +6,7 @@ stages:
 # Frontend yarn build & test
 test-frontend:
   stage: test
-  image: node
+  image: node@sha256:b46a10d964ad15136ebdf9012142131481caa0697d7a4d4eafe4bbabd818f876
   before_script:
     - cd frontend
   script:
@@ -18,7 +18,7 @@ test-frontend:
 # Backend gradle build & test
 test-backend:
   stage: test
-  image: gradle:jdk11
+  image: gradle:jdk11@sha256:1b8aedd98fe6ee29dd72cd5270dbbcf9641e39ed64e574ff3078a42952fd5ac4
   before_script:
     - cd backend
   script:
@@ -29,7 +29,7 @@ test-backend:
 # Frontend deploy to firebase
 deploy-frontend:
   stage: deploy
-  image: node
+  image: node@sha256:b46a10d964ad15136ebdf9012142131481caa0697d7a4d4eafe4bbabd818f876
   before_script:
     - cd frontend
     - yarn

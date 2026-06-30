@@ -17,7 +17,6 @@ import kalkulierbar.logic.UniversalQuantifier
  * based on Skolem normal form
  */
 class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
-
     companion object Companion {
         /**
          * Transforms a first order formula into an equivalent ClauseSet
@@ -63,6 +62,7 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
                 val clause = Clause(mutableListOf(atom))
                 res = ClauseSet(mutableListOf(clause))
             }
+
             else -> {
                 val msg = "Unknown LogicNode encountered during first order CNF transformation"
                 throw FormulaConversionException(msg)
@@ -117,7 +117,5 @@ class FirstOrderCNF : LogicNodeVisitor<ClauseSet<Relation>>() {
      * @param node Universal quantifier encountered
      * @return ClauseSet representing the sub-formula without the quantifier
      */
-    override fun visit(node: UniversalQuantifier): ClauseSet<Relation> {
-        return node.child.accept(this)
-    }
+    override fun visit(node: UniversalQuantifier): ClauseSet<Relation> = node.child.accept(this)
 }

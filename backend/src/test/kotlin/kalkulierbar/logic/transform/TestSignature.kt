@@ -6,39 +6,43 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
 class TestSignature {
-    private val validFormulas = mapOf(
-        "P(f(a, b))" to "Σ(constants={a, b}, functions={f(2)}, relations={P(1)}, bound={})",
-        "P(a, g(f(f(f(a))), b, f(c))) & Q(a, b, c)"
-            to "Σ(constants={a, b, c}, functions={f(1), g(3)}, relations={P(2), Q(3)}, bound={})",
-        "/all X: /all Y: /all Z: (P(X, Y) & P(Y, Z) -> P(X, Z)) & P(a, f(a, a)) & P(f(a, a), g(a, a, a, a))"
-            to "Σ(constants={a}, functions={f(2), g(4)}, relations={P(2)}, bound={X, Y, Z})",
-    )
+    private val validFormulas =
+        mapOf(
+            "P(f(a, b))" to "Σ(constants={a, b}, functions={f(2)}, relations={P(1)}, bound={})",
+            "P(a, g(f(f(f(a))), b, f(c))) & Q(a, b, c)"
+                to "Σ(constants={a, b, c}, functions={f(1), g(3)}, relations={P(2), Q(3)}, bound={})",
+            "/all X: /all Y: /all Z: (P(X, Y) & P(Y, Z) -> P(X, Z)) & P(a, f(a, a)) & P(f(a, a), g(a, a, a, a))"
+                to "Σ(constants={a}, functions={f(2), g(4)}, relations={P(2)}, bound={X, Y, Z})",
+        )
 
-    private val mixedArity = listOf(
-        "P(a) & P(a, b)",
-        "P(f(a, b), f(c), f(a, b, c))",
-        "P(a, a(b))",
-        "P(a(a))",
-    )
+    private val mixedArity =
+        listOf(
+            "P(a) & P(a, b)",
+            "P(f(a, b), f(c), f(a, b, c))",
+            "P(a, a(b))",
+            "P(a(a))",
+        )
 
     private val sig1 = signature("Σ(constants={a, b, c}, functions={f(1), g(3)}, relations={P(2), Q(3)}, bound={})")
-    private val validTerms = listOf(
-        "a",
-        "b",
-        "c",
-        "f(a)",
-        "f(f(b))",
-        "g(f(a), b, g(c, b, f(a)))",
-        "d",
-    )
-    private val invalidTerms = listOf(
-        "a(b)",
-        "f",
-        "f(a, a)",
-        "g(a)",
-        "g(a, b)",
-        "f(g(a, a, b, c))",
-    )
+    private val validTerms =
+        listOf(
+            "a",
+            "b",
+            "c",
+            "f(a)",
+            "f(f(b))",
+            "g(f(a), b, g(c, b, f(a)))",
+            "d",
+        )
+    private val invalidTerms =
+        listOf(
+            "a(b)",
+            "f",
+            "f(a, a)",
+            "g(a)",
+            "g(a, b)",
+            "f(g(a, a, b, c))",
+        )
 
     private fun compound(s: String): CompoundSignature {
         val regex = Regex("^(\\w+)\\((\\d+)\\)$")

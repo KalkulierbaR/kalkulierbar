@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestFirstOrderJson {
-
     val instance = FirstOrderTableaux()
 
     /*
@@ -62,8 +61,8 @@ class TestFirstOrderJson {
                 |"spelling":"true()"}],"moveHistory":[],"usedBacktracking":false,
                 |"expansionCounter":0,
                 |"seal":"47E0E51B486CDF0FEB644B195CFBCB08E61C2556BD67D84B86B08CB658055ACB",
-                |"renderedClauseSet":["R(X)","!R(c)"]}"""
-                .trimMargin()
+                |"renderedClauseSet":["R(X)","!R(c)"]}
+            """.trimMargin()
         val state = instance.jsonToState(json)
         val hash =
             "fotableaux|\\all X: R(X) & !R(c)|0|UNCONNECTED|false|false|false|false|{R(X)}, " +
@@ -84,8 +83,8 @@ class TestFirstOrderJson {
                 |"closeRef":null,"children":[],"spelling":"true()"}],"moveHistory":[],
                 |"usedBacktracking":false,"expansionCounter":0,
                 |"seal":"47E0E51B486CDF0FEB644B195CFBCB08E61C2556BD67D84B86B08CB658055ACB",
-                |"renderedClauseSet":["R(X)","!R(c)"]}"""
-                .trimMargin()
+                |"renderedClauseSet":["R(X)","!R(c)"]}
+            """.trimMargin()
         assertFailsWith<JsonParseException> {
             instance.jsonToState(json)
         }

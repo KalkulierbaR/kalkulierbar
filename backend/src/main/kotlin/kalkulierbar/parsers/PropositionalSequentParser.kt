@@ -6,7 +6,6 @@ import kalkulierbar.logic.LogicNode
 import kalkulierbar.logic.transform.ChangeEquivalences
 
 object PropositionalSequentParser {
-
     /**
      * Parses a string directly into a PSCState using the PropositionalParser
      * to parse single formulas separated by ',' in the input string
@@ -22,18 +21,25 @@ object PropositionalSequentParser {
                 val i = sides[0].length + 2 + sides[1].length // position of first extra '|-' symbol
                 throw InvalidFormulaFormat("Incorrect formula syntax at char $i")
             }
+
             // The Input String consists of exactly one '|-'
             sides.size == 2 -> {
                 val leftFormulas = parseFormulas(sides[0], 0)
                 val rightFormulas = parseFormulas(sides[1], sides[0].length + 2)
                 Pair(leftFormulas, rightFormulas)
             }
+
             // The input string doesn't contain '|-'. All Formulas will be added to the right side of the state.
-            else -> Pair(listOf(), parseFormulas(sides[0], 0))
+            else -> {
+                Pair(listOf(), parseFormulas(sides[0], 0))
+            }
         }
     }
 
-    private fun parseFormulas(formulaList: String, inputPosition: Int): List<LogicNode> {
+    private fun parseFormulas(
+        formulaList: String,
+        inputPosition: Int,
+    ): List<LogicNode> {
         val rawFormulas = formulaList.split(",")
 
         return rawFormulas.mapIndexedNotNull { i, formula ->

@@ -7,17 +7,17 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestExpandLeaf {
-
     val instance = PropositionalTableaux()
     private val opts = TableauxParam(TableauxType.UNCONNECTED, regular = false, backtracking = false)
 
     @Test
     fun testApplyMoveNullValues() {
-        val state = instance.parseFormula(
-            "a,b;c",
-            "{\"type\":\"UNCONNECTED\",\"regular\":" +
-                "false,\"backtracking\":false}",
-        )
+        val state =
+            instance.parseFormula(
+                "a,b;c",
+                "{\"type\":\"UNCONNECTED\",\"regular\":" +
+                    "false,\"backtracking\":false}",
+            )
 
         assertFailsWith<JsonParseException> {
             instance.applyMove(state, "{\"type\":\"e\", \"id1\": null, \"id2\": 2}")

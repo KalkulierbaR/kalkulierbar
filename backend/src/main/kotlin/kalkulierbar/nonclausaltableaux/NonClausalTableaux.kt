@@ -11,22 +11,28 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 
 class NonClausalTableaux : JSONCalculus<NcTableauxState, NcTableauxMove, Unit>() {
-
-    override val serializer = Json {
-        serializersModule = FoTermModule + LogicModule + NcMoveModule
-        encodeDefaults = true
-    }
+    override val serializer =
+        Json {
+            serializersModule = FoTermModule + LogicModule + NcMoveModule
+            encodeDefaults = true
+        }
     override val stateSerializer = NcTableauxState.serializer()
     override val moveSerializer = NcTableauxMove.serializer()
 
     override val identifier = "nc-tableaux"
 
-    override fun parseFormulaToState(formula: String, params: Unit?): NcTableauxState {
+    override fun parseFormulaToState(
+        formula: String,
+        params: Unit?,
+    ): NcTableauxState {
         val parsedFormula = NegationNormalForm.transform(FirstOrderParser.parse(formula))
         return NcTableauxState(parsedFormula)
     }
 
-    override fun applyMoveOnState(state: NcTableauxState, move: NcTableauxMove): NcTableauxState {
+    override fun applyMoveOnState(
+        state: NcTableauxState,
+        move: NcTableauxMove,
+    ): NcTableauxState {
         // Clear status message
         state.statusMessage = null
 

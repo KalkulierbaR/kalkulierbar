@@ -43,18 +43,20 @@ fun <AtomType> getAutoResolutionCandidates(
     c2: Clause<AtomType>,
 ): Pair<Atom<AtomType>, Atom<AtomType>> {
     // Find literals present in both clauses
-    var sharedAtoms = c1.atoms.filter { c1atom ->
-        c2.atoms.any { literalsAreEqual(c1atom.lit, it.lit) }
-    }
+    var sharedAtoms =
+        c1.atoms.filter { c1atom ->
+            c2.atoms.any { literalsAreEqual(c1atom.lit, it.lit) }
+        }
 
     if (sharedAtoms.isEmpty()) {
         throw IllegalMove("Clauses '$c1' and '$c2' contain no common literals")
     }
 
     // Sort out atoms not present in opposite polarity in c2 (shared atoms came from c1 originally)
-    sharedAtoms = sharedAtoms.filter {
-        c2.atoms.contains(it.not())
-    }
+    sharedAtoms =
+        sharedAtoms.filter {
+            c2.atoms.contains(it.not())
+        }
 
     if (sharedAtoms.isEmpty()) {
         throw IllegalMove(
@@ -84,8 +86,9 @@ fun <AtomType> buildClause(
     c2: Clause<AtomType>,
     a2: Atom<AtomType>,
 ): Clause<AtomType> {
-    val atoms = c1.atoms.filter { it != a1 }.toMutableList() +
-        c2.atoms.filter { it != a2 }.toMutableList()
+    val atoms =
+        c1.atoms.filter { it != a1 }.toMutableList() +
+            c2.atoms.filter { it != a2 }.toMutableList()
     return Clause(atoms.toMutableList())
 }
 
@@ -121,7 +124,10 @@ fun <AtomType> findResCandidates(
  * @param b Second atom
  * @return Boolean
  */
-fun <AtomType> literalsAreEqual(a: AtomType, b: AtomType): Boolean {
+fun <AtomType> literalsAreEqual(
+    a: AtomType,
+    b: AtomType,
+): Boolean {
     // Use syntactic equality for literal comparison if defined
     return if (a is SyntacticEquality && b is SyntacticEquality) {
         a.synEq(b)

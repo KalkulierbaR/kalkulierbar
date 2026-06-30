@@ -8,31 +8,33 @@ import kotlin.test.assertFailsWith
 class TestPropParser {
     private val parser = PropositionalParser()
 
-    private val invalid = listOf(
-        "",
-        "-->a",
-        "<--",
-        "--><=>",
-        "!->",
-        "a!",
-        "a-->",
-        "b<=>",
-        "<->a",
-        "<->",
-        "(a&b v2",
-        "(a|b",
-    )
+    private val invalid =
+        listOf(
+            "",
+            "-->a",
+            "<--",
+            "--><=>",
+            "!->",
+            "a!",
+            "a-->",
+            "b<=>",
+            "<->a",
+            "<->",
+            "(a&b v2",
+            "(a|b",
+        )
 
-    private val valid = mapOf(
-        "a" to "a",
-        "!a" to "¬a",
-        "a -> b" to "(a → b)",
-        "a-> b" to "(a → b)",
-        "a    ->b" to "(a → b)",
-        "a->b" to "(a → b)",
-        "a<->(b -> (!(c)))" to "(a <=> (b → ¬c))",
-        "(b & a <-> (a) | !b)" to "((b ∧ a) <=> (a ∨ ¬b))",
-    )
+    private val valid =
+        mapOf(
+            "a" to "a",
+            "!a" to "¬a",
+            "a -> b" to "(a → b)",
+            "a-> b" to "(a → b)",
+            "a    ->b" to "(a → b)",
+            "a->b" to "(a → b)",
+            "a<->(b -> (!(c)))" to "(a <=> (b → ¬c))",
+            "(b & a <-> (a) | !b)" to "((b ∧ a) <=> (a ∨ ¬b))",
+        )
 
     @Test
     fun testInvalidStrings() {

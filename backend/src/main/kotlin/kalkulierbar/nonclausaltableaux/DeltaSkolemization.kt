@@ -18,7 +18,6 @@ class DeltaSkolemization(
     private val toReplace: List<QuantifiedVariable>,
     private val term: FirstOrderTerm,
 ) : DoNothingVisitor() {
-
     companion object Companion {
         /**
          * Remove existential quantifier at top from a formula and replace bound
@@ -98,7 +97,6 @@ class DeltaSkolemTermReplacer(
     private val toReplace: List<QuantifiedVariable>,
     private val term: FirstOrderTerm,
 ) : FirstOrderTermVisitor<FirstOrderTerm>() {
-
     /**
      * Instantiate variables with their Skolem terms as necessary
      * @param node QuantifiedVariable encountered

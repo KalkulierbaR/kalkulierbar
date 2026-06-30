@@ -7,7 +7,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TestAlpha {
-
     val instance = NonClausalTableaux()
 
     @Test
@@ -81,7 +80,6 @@ class TestAlpha {
     @Test
     fun testComplex() {
         val formula = FirstOrderParser.parse("P(c) & (P(d) | Q(c) & Q(q)) & (P(e) & P(f))")
-        println(formula)
         var state = NcTableauxState(formula)
 
         state = instance.applyMoveOnState(state, AlphaMove(0))

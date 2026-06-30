@@ -7,7 +7,6 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 class TestClose {
-
     val instance = NonClausalTableaux()
 
     @Test

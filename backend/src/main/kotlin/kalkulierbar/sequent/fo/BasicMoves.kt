@@ -26,7 +26,12 @@ import kalkulierbar.sequent.checkRight
  * @param instTerm: The term to instantiate with.
  * @return new state after applying move
  */
-fun applyAllLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, instTerm: String): FirstOrderSequentState {
+fun applyAllLeft(
+    state: FirstOrderSequentState,
+    nodeID: Int,
+    listIndex: Int,
+    instTerm: String,
+): FirstOrderSequentState {
     checkLeft(state, nodeID, listIndex)
 
     val node = state.tree[nodeID]
@@ -50,12 +55,13 @@ fun applyAllLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, ins
     newLeftFormulas.add(newFormula)
     newLeftFormulas = newLeftFormulas.distinct().toMutableList()
 
-    val newLeaf = TreeNode(
-        nodeID,
-        newLeftFormulas,
-        node.rightFormulas.distinct().toMutableList(),
-        AllLeft(nodeID, listIndex, instTerm),
-    )
+    val newLeaf =
+        TreeNode(
+            nodeID,
+            newLeftFormulas,
+            node.rightFormulas.distinct().toMutableList(),
+            AllLeft(nodeID, listIndex, instTerm),
+        )
 
     state.addChildren(nodeID, newLeaf)
 
@@ -108,12 +114,13 @@ fun applyAllRight(
     newRightFormulas.remove(formula)
     newRightFormulas = newRightFormulas.distinct().toMutableList()
 
-    val newLeaf = TreeNode(
-        nodeID,
-        node.leftFormulas.distinct().toMutableList(),
-        newRightFormulas,
-        AllRight(nodeID, listIndex, instTerm),
-    )
+    val newLeaf =
+        TreeNode(
+            nodeID,
+            node.leftFormulas.distinct().toMutableList(),
+            newRightFormulas,
+            AllRight(nodeID, listIndex, instTerm),
+        )
 
     state.addChildren(nodeID, newLeaf)
 
@@ -129,7 +136,12 @@ fun applyAllRight(
  * @param varAssign: instTerm The term to instantiate with. Must be a constant.
  * @return new state after applying move
  */
-fun applyExLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, instTerm: String?): FirstOrderSequentState {
+fun applyExLeft(
+    state: FirstOrderSequentState,
+    nodeID: Int,
+    listIndex: Int,
+    instTerm: String?,
+): FirstOrderSequentState {
     checkLeft(state, nodeID, listIndex)
 
     val node = state.tree[nodeID]
@@ -161,12 +173,13 @@ fun applyExLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, inst
     newLeftFormulas.remove(formula)
     newLeftFormulas = newLeftFormulas.distinct().toMutableList()
 
-    val newLeaf = TreeNode(
-        nodeID,
-        newLeftFormulas,
-        node.rightFormulas.distinct().toMutableList(),
-        ExLeft(nodeID, listIndex, instTerm),
-    )
+    val newLeaf =
+        TreeNode(
+            nodeID,
+            newLeftFormulas,
+            node.rightFormulas.distinct().toMutableList(),
+            ExLeft(nodeID, listIndex, instTerm),
+        )
     state.addChildren(nodeID, newLeaf)
 
     return state
@@ -181,7 +194,12 @@ fun applyExLeft(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, inst
  * @param instTerm: The term to instantiate with.
  * @return new state after applying move
  */
-fun applyExRight(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, instTerm: String): FirstOrderSequentState {
+fun applyExRight(
+    state: FirstOrderSequentState,
+    nodeID: Int,
+    listIndex: Int,
+    instTerm: String,
+): FirstOrderSequentState {
     checkRight(state, nodeID, listIndex)
 
     val node = state.tree[nodeID]
@@ -204,18 +222,22 @@ fun applyExRight(state: FirstOrderSequentState, nodeID: Int, listIndex: Int, ins
     newRightFormulas.add(newFormula)
     newRightFormulas = newRightFormulas.distinct().toMutableList()
 
-    val newLeaf = TreeNode(
-        nodeID,
-        node.leftFormulas.distinct().toMutableList(),
-        newRightFormulas,
-        ExRight(nodeID, listIndex, instTerm),
-    )
+    val newLeaf =
+        TreeNode(
+            nodeID,
+            node.leftFormulas.distinct().toMutableList(),
+            newRightFormulas,
+            ExRight(nodeID, listIndex, instTerm),
+        )
     state.addChildren(nodeID, newLeaf)
 
     return state
 }
 
-fun checkAdherenceToSignature(term: FirstOrderTerm, node: TreeNode) {
+fun checkAdherenceToSignature(
+    term: FirstOrderTerm,
+    node: TreeNode,
+) {
     if (term is Constant) return
     val sig = Signature.of(node.leftFormulas + node.rightFormulas)
     sig.check(term)
@@ -227,7 +249,10 @@ fun checkAdherenceToSignature(term: FirstOrderTerm, node: TreeNode) {
  * @param node The sequence in which to look for the variableName
  * @param varName The variable name to be compared with
  */
-private fun checkIfVariableNameIsAlreadyInUse(node: TreeNode, varName: String): Boolean {
+private fun checkIfVariableNameIsAlreadyInUse(
+    node: TreeNode,
+    varName: String,
+): Boolean {
     val sig = Signature.of(node.leftFormulas + node.rightFormulas)
     return sig.hasConstOrFunction(varName)
 }
@@ -235,7 +260,10 @@ private fun checkIfVariableNameIsAlreadyInUse(node: TreeNode, varName: String): 
 /**
  * Tries to find a variable Name which leads to solving the proof
  */
-private fun getFreshConstantName(node: TreeNode, quantVar: String): String {
+private fun getFreshConstantName(
+    node: TreeNode,
+    quantVar: String,
+): String {
     val sig = Signature.of(node.leftFormulas + node.rightFormulas)
 
     val baseName = quantVar.lowercase()
