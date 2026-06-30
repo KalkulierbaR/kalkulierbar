@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.3.21"
-    kotlin("plugin.serialization") version "2.3.21"
+    kotlin("jvm") version "2.4.0"
+    kotlin("plugin.serialization") version "2.4.0"
     application
-    id("org.jmailen.kotlinter") version "5.3.0"
+    id("org.jmailen.kotlinter") version "5.5.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("com.gradleup.shadow") version "9.3.1"
+    id("com.gradleup.shadow") version "9.4.3"
     id("java")
     id("jacoco")
 }
@@ -18,7 +18,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // JVM dependency
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
     // Web framework
     implementation("io.javalin:javalin:6.7.0")
@@ -31,7 +31,7 @@ dependencies {
 
     // Testing
     testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "6.0.3")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "6.1.0")
 
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }
