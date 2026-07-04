@@ -6151,7 +6151,7 @@ __metadata:
     husky: "npm:9.1.7"
     lint-staged: "npm:15.5.0"
     per-env: "npm:1.0.2"
-    preact: "npm:10.29.2"
+    preact: "npm:10.29.4"
     preact-iso: "npm:2.12.0"
     preact-markup: "npm:2.1.1"
     preact-render-to-string: "npm:6.7.0"
@@ -7962,10 +7962,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:10.29.2":
-  version: 10.29.2
-  resolution: "preact@npm:10.29.2"
-  checksum: 10/933ab114157448fbb60ab92a4e3d1394c6cc8a29ce77cc454b061797fa1e689929ca5b8cda55cf74a042c929351302f8d8db0456e0ab01fd0ebb1d204ba29192
+"preact@npm:10.29.4":
+  version: 10.29.4
+  resolution: "preact@npm:10.29.4"
+  checksum: 10/f1d6e2a557bbe6e5338d5b34daa2c09dad6080bbe91204ca592dfb374ed7c5263b3a08d118aba3c643d4db1dcbfea17e9b2412ada5c47867236896ff0ef0fe84
   languageName: node
   linkType: hard
 
