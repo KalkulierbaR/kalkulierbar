@@ -560,9 +560,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:3.3.5":
-  version: 3.3.5
-  resolution: "@eslint/eslintrc@npm:3.3.5"
+"@eslint/eslintrc@npm:3.3.6":
+  version: 3.3.6
+  resolution: "@eslint/eslintrc@npm:3.3.6"
   dependencies:
     ajv: "npm:^6.14.0"
     debug: "npm:^4.3.2"
@@ -570,10 +570,10 @@ __metadata:
     globals: "npm:^14.0.0"
     ignore: "npm:^5.2.0"
     import-fresh: "npm:^3.2.1"
-    js-yaml: "npm:^4.1.1"
+    js-yaml: "npm:^4.3.0"
     minimatch: "npm:^3.1.5"
     strip-json-comments: "npm:^3.1.1"
-  checksum: 10/edabb65693d82a88cac3b2cf932a0f825e986b5e0a21ef08782d07e3a61ad87d39db67cfd5aeb146fd5053e5e24e389dbe5649ab22936a71d633c7b32a7e6d86
+  checksum: 10/8d1d501069faf7c1c73e37181ec403dd2d1509f8da85f226531f6a7fdd9a9326fc6d2ea2e8192515992578cf9e7ed87f9d7ce3f1bfc6d0f0e77796d18e0e8ef6
   languageName: node
   linkType: hard
 
@@ -5951,14 +5951,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "js-yaml@npm:4.1.1"
+"js-yaml@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "js-yaml@npm:4.3.0"
   dependencies:
     argparse: "npm:^2.0.1"
   bin:
     js-yaml: bin/js-yaml.js
-  checksum: 10/a52d0519f0f4ef5b4adc1cde466cb54c50d56e2b4a983b9d5c9c0f2f99462047007a6274d7e95617a21d3c91fde3ee6115536ed70991cd645ba8521058b78f77
+  checksum: 10/2bcec3a8118d7f744badeb04e14366578d234a736f353d41fe35d2305e4ce2409a8e041d277f07cd6bbc8aaa12128d650a68ce43247072519bede20962d2126f
   languageName: node
   linkType: hard
 
@@ -6138,7 +6138,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "kalkulierbar@workspace:."
   dependencies:
-    "@eslint/eslintrc": "npm:3.3.5"
+    "@eslint/eslintrc": "npm:3.3.6"
     "@eslint/js": "npm:10.0.1"
     "@material/radio": "npm:4.0.0"
     "@material/switch": "npm:4.0.0"
@@ -6151,7 +6151,7 @@ __metadata:
     husky: "npm:9.1.7"
     lint-staged: "npm:15.5.0"
     per-env: "npm:1.0.2"
-    preact: "npm:10.29.4"
+    preact: "npm:10.29.7"
     preact-iso: "npm:2.12.0"
     preact-markup: "npm:2.1.1"
     preact-render-to-string: "npm:6.7.0"
@@ -7962,10 +7962,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:10.29.4":
-  version: 10.29.4
-  resolution: "preact@npm:10.29.4"
-  checksum: 10/f1d6e2a557bbe6e5338d5b34daa2c09dad6080bbe91204ca592dfb374ed7c5263b3a08d118aba3c643d4db1dcbfea17e9b2412ada5c47867236896ff0ef0fe84
+"preact@npm:10.29.7":
+  version: 10.29.7
+  resolution: "preact@npm:10.29.7"
+  peerDependencies:
+    preact-render-to-string: ">=5"
+  peerDependenciesMeta:
+    preact-render-to-string:
+      optional: true
+  checksum: 10/df5cfe53e429253f0bbda316ba851584f5e6d7b5f6c674ccbc4d428025cc3cf42380bbfea3d214a5829c22acb7218b004656eb019c96da7b83284f313de00290
   languageName: node
   linkType: hard
 
