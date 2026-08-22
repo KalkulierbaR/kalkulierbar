@@ -20,13 +20,6 @@
     },
     {
       "matchPackageNames": [
-        "@types/node",
-        "node"
-      ],
-      "allowedVersions": "^18"
-    },
-    {
-      "matchPackageNames": [
         "husky"
       ],
       "allowedVersions": "<8.0.0"
