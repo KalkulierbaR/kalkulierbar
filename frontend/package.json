@@ -27,7 +27,7 @@
         ]
     },
     "engines": {
-        "node": "^18"
+        "node": "^24.0.0"
     },
     "dependencies": {
         "@material/radio": "4.0.0",
