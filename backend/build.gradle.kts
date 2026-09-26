@@ -24,7 +24,7 @@ dependencies {
     implementation("io.javalin:javalin:6.7.0")
 
     // Logging
-    implementation("org.slf4j:slf4j-simple:2.0.19")
+    implementation("org.slf4j:slf4j-simple:2.0.20")
 
     // Hashing
     implementation("com.github.komputing.khash:keccak:1.1.3")
