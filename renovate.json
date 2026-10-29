@@ -1,14 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "github>juliushenke/renovate-preset#v3.0.1"
-  ],
-  "assignees": [
-    "JuliusHenke"
+    "github>juliushenke/renovate-preset#v3.1.0"
   ],
   "packageRules": [
     {
-      "matchPackageNames": "preact-cli",
+      "matchPackageNames": [
+        "preact-cli"
+      ],
       "allowedVersions": "<=3.0.5"
     },
     {
@@ -40,7 +39,7 @@
     {
       "groupName": "frontend-minor",
       "extends": [
-        "github>juliushenke/renovate-preset:minor.json"
+        "github>juliushenke/renovate-preset:minor#v3.1.0"
       ],
       "matchPackageNames": [
         "!/^(typescript|preact)$/"
