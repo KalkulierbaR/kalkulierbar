@@ -18,7 +18,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // JVM dependency
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.12.0")
 
     // Web framework
     implementation("io.javalin:javalin:6.7.0")
