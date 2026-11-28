@@ -32,7 +32,7 @@
     "dependencies": {
         "@material/radio": "4.0.0",
         "@material/switch": "4.0.0",
-        "firebase-tools": "15.36.0",
+        "firebase-tools": "15.37.0",
         "preact": "10.29.8",
         "preact-iso": "2.12.2",
         "preact-markup": "2.1.1",
@@ -46,8 +46,8 @@
         "@eslint/js": "10.0.1",
         "@preact/preset-vite": "2.10.6",
         "@types/eslint": "9.6.1",
-        "@typescript-eslint/eslint-plugin": "8.72.2",
-        "@typescript-eslint/parser": "8.72.2",
+        "@typescript-eslint/eslint-plugin": "8.74.0",
+        "@typescript-eslint/parser": "8.74.0",
         "eslint": "10.15.0",
         "husky": "9.1.7",
         "lint-staged": "15.5.0",
@@ -61,5 +61,5 @@
     "peerDependencies": {
         "prettier": ">2.0.0"
     },
-    "packageManager": "yarn@4.18.1"
+    "packageManager": "yarn@4.19.0"
 }
